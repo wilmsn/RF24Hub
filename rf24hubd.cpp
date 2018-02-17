@@ -32,7 +32,6 @@ void parse_config (struct config_parameters * parms) {
     else
       strncpy (value, s, PARAM_MAXLEN);
     trim (value);
-//      printf(" \"%s\" : \"%s\" : %d \n", name, value, strlen(value));
     /* Copy into correct entry in parameters struct */
     if      (strcmp(name, "db_hostname")==0) strcpy (parms->db_hostname, value);
     else if (strcmp(name, "db_port")==0)              parms->db_port = atoi(value);
@@ -178,10 +177,7 @@ void exec_tn_cmd(const char *tn_cmd) {
 }
 
 void prepare_tn_cmd(MYSQL *db,  uint16_t orderno, char *value) {
-//	char sql_stmt[300], 
 	char telnet_cmd[200];
-//		 debug[250];
-//    bool got_value = false;
 	sprintf (sql_stmt, "select fhem_dev from sensor where sensor_id = ( select sensor_id from jobbuffer where orderno = %d ) and fhem_dev is not null LIMIT 1 ", orderno);
 	if (mysql_query(db, sql_stmt)) {
 		sprintf(debug,"Query failed: %s\n", mysql_error(db));
@@ -204,8 +200,6 @@ void prepare_tn_cmd(MYSQL *db,  uint16_t orderno, char *value) {
 }
 	
 void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message) {
-//	char debug[250],
-//		 sql_stmt[200],
 	char cmp1[10], 
 		 cmp2[10], 
 		 cmp3[10];
@@ -232,7 +226,6 @@ void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message
 		}
 		sprintf(cmp2, "node");
 		sprintf(cmp3, "init");
-//    printf("Test1: %d %d %s %d :%s:%s:\n", strcmp(wort1,cmp1), strcmp(wort2,cmp2), wort3, strcmp(wort4,cmp3), wort4, cmp3);
 		if (( strcmp(wort1,cmp1) == 0 ) && (strcmp(wort2,cmp2) == 0) && (wort3 != NULL) && (strcmp(wort4,cmp3) == 0) ) {
 			tn_input_ok = true;
 			node_init(db, getnodeadr(wort3), 1);
@@ -275,8 +268,6 @@ void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message
 *
 ********************************************************************************************/
 uint16_t node_init(MYSQL *db, uint16_t initnode, uint16_t orderno ) {
-//	char debug[250],
-//		 sql_stmt[200];
 	// delete old entries for this node
 	sprintf (sql_stmt, "delete from jobbuffer where node_id = '0%o'",initnode);
     do_sql(db,sql_stmt); 
@@ -367,14 +358,11 @@ void do_sql(MYSQL *db, char *sqlstmt) {
 
 
 bool is_jobbuffer_entry(MYSQL *db, uint16_t orderno) {
-	char mysql_stmt[150];
-//	char mydebug[150];
-//    int recordcount = 0;
     MYSQL_ROW row;	
 	bool retval=false;
-	sprintf(mysql_stmt, "select count(*) from jobbuffer where orderno = %u ", orderno );
-	logmsg(9,mysql_stmt);	
-	if (mysql_query(db, mysql_stmt)) {
+	sprintf(sql_stmt, "select count(*) from jobbuffer where orderno = %u ", orderno );
+	logmsg(8,sql_stmt);	
+	if (mysql_query(db, sql_stmt)) {
 		sprintf(debug,"Query failed: %s\n", mysql_error(db));
 		logmsg(2,debug);
 	} else {
@@ -401,7 +389,6 @@ void del_jobbuffer_entry(MYSQL *db, uint16_t orderno) {
 }
 
 void store_sensor_value(MYSQL *db, uint16_t orderno, char *value, bool d1, bool d2) {
-//	char sql_stmt[500];
 	if ( tn_active ) { 
 		prepare_tn_cmd(db, orderno, value); 
 	}
@@ -417,7 +404,6 @@ void store_sensor_value(MYSQL *db, uint16_t orderno, char *value, bool d1, bool 
 *
 ********************************************************************************************/
 void sighandler(int signal) {
-//    char debug[80];
 	sprintf(debug, "SIGTERM: Shutting down ... ");
 	logmsg(1, debug);
     unlink(parms.pidfilename);
@@ -468,8 +454,6 @@ void logmsg(int mesgloglevel, char *mymsg){
 
 int main(int argc, char* argv[]) {
     pid_t pid;
-//	char debug[300];
-//	char sql_stmt[300];
 	int c;
 	long starttime=time(0);
 	long sent_time;
