@@ -148,12 +148,12 @@ void exec_tn_cmd(const char *tn_cmd) {
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
         sprintf(debug,"ERROR: opening socket");
-		logmsg(3,debug);
+		logmsg(2,debug);
 	}	
     server = gethostbyname(parms.telnet_hostname);
     if (server == NULL) {
         sprintf(debug,"ERROR: no such host\n");
-		logmsg(3,debug);
+		logmsg(2,debug);
     }
     bzero((char *) &serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
@@ -163,12 +163,12 @@ void exec_tn_cmd(const char *tn_cmd) {
     serv_addr.sin_port = htons(portno);
     if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0) { 
         sprintf(debug,"ERROR: connecting");
-		logmsg(3,debug);
+		logmsg(2,debug);
 	} else {	
 		n = write(sockfd,tn_cmd,strlen(tn_cmd));
 		if (n < 0) {
 			sprintf(debug,"ERROR: writing to socket");
-			logmsg(3,debug);
+			logmsg(2,debug);
 		} else {
 			sprintf(debug,"Telnet to %s Port %d CMD: %s successfull",parms.telnet_hostname, portno, tn_cmd);
 			logmsg(7,debug);
@@ -178,9 +178,9 @@ void exec_tn_cmd(const char *tn_cmd) {
 }
 
 void prepare_tn_cmd(MYSQL *db,  uint16_t orderno, char *value) {
-	char sql_stmt[300], 
-		 telnet_cmd[200], 
-		 debug[250];
+//	char sql_stmt[300], 
+	char telnet_cmd[200];
+//		 debug[250];
 //    bool got_value = false;
 	sprintf (sql_stmt, "select fhem_dev from sensor where sensor_id = ( select sensor_id from jobbuffer where orderno = %d ) and fhem_dev is not null LIMIT 1 ", orderno);
 	if (mysql_query(db, sql_stmt)) {
@@ -196,7 +196,7 @@ void prepare_tn_cmd(MYSQL *db,  uint16_t orderno, char *value) {
 			while ((row = mysql_fetch_row(result))) {
 				sprintf(telnet_cmd,"set %s %s \n", row[0], value);
 				sprintf(debug,"Telnet-CMD: %s\n", telnet_cmd);
-				logmsg(7,debug);				
+				logmsg(8,debug);				
 				exec_tn_cmd(telnet_cmd);
 			}
 		}
@@ -204,9 +204,9 @@ void prepare_tn_cmd(MYSQL *db,  uint16_t orderno, char *value) {
 }
 	
 void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message) {
-	char debug[250],
-		 sql_stmt[200],
-		 cmp1[10], 
+//	char debug[250],
+//		 sql_stmt[200],
+	char cmp1[10], 
 		 cmp2[10], 
 		 cmp3[10];
 	char *wort1, *wort2, *wort3, *wort4;
@@ -216,16 +216,9 @@ void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message
 	sprintf(debug,"Incoming telnet data: %s\n",buffer);
 	logmsg(7, debug);
 	wort1 = strtok(buffer, delimiter);
-//	if(wort1 != NULL) {
-		wort2 = strtok(NULL, delimiter);
-//	}
-//	if(wort2 != NULL) {
-		wort3 = strtok(NULL, delimiter);
-//	}
-//	if(wort3 != NULL) {
-		wort4 = strtok(NULL, delimiter);
-//	}
-//    printf("Test: %s %s %s %s \n", wort1, wort2, wort3, wort4);
+	wort2 = strtok(NULL, delimiter);
+	wort3 = strtok(NULL, delimiter);
+	wort4 = strtok(NULL, delimiter);
     if ( wort4 != NULL ) {
 		sprintf(cmp1, "set");
 		sprintf(cmp2, "sensor");
@@ -282,8 +275,8 @@ void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message
 *
 ********************************************************************************************/
 uint16_t node_init(MYSQL *db, uint16_t initnode, uint16_t orderno ) {
-	char debug[250],
-		 sql_stmt[200];
+//	char debug[250],
+//		 sql_stmt[200];
 	// delete old entries for this node
 	sprintf (sql_stmt, "delete from jobbuffer where node_id = '0%o'",initnode);
     do_sql(db,sql_stmt); 
@@ -365,10 +358,10 @@ uint16_t getnodeadr(char *node) {
 
 void do_sql(MYSQL *db, char *sqlstmt) {
 	if (mysql_query(db, sqlstmt)) {
-		sprintf(debug, "%s\n", mysql_error(db));
+		sprintf(debug, "%s", mysql_error(db));
 		logmsg(1, debug);
 	}
-    sprintf(debug, "%s\n", sqlstmt);
+    sprintf(debug, "%s", sqlstmt);
 	logmsg(7, debug);
 }
 
@@ -407,14 +400,14 @@ void del_jobbuffer_entry(MYSQL *db, uint16_t orderno) {
 	ordersqlrefresh=true;
 }
 
-void store_sensor_value(MYSQL *db, uint16_t orderno, char *value) {
-	char sql_stmt[500];
+void store_sensor_value(MYSQL *db, uint16_t orderno, char *value, bool d1, bool d2) {
+//	char sql_stmt[500];
 	if ( tn_active ) { 
 		prepare_tn_cmd(db, orderno, value); 
 	}
 	sprintf(sql_stmt,"insert into sensordata (sensor_ID, utime, value) select sensor_id, UNIX_TIMESTAMP(), %s from jobbuffer where orderno = %u ", value, orderno);
 	do_sql(db, sql_stmt);
-	sprintf(sql_stmt,"update sensor set value= %s, Utime = UNIX_TIMESTAMP() where sensor_ID = (select sensor_id from jobbuffer where orderno = %u ) ", value, orderno);
+	sprintf(sql_stmt,"update sensor set value= %s, Utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where sensor_ID = (select sensor_id from jobbuffer where orderno = %u ) ", value, orderno, d1, d2);
 	do_sql(db, sql_stmt);
 }
 
@@ -424,8 +417,8 @@ void store_sensor_value(MYSQL *db, uint16_t orderno, char *value) {
 *
 ********************************************************************************************/
 void sighandler(int signal) {
-    char debug[80];
-	sprintf(debug, "\nSIGTERM: Shutting down ...");
+//    char debug[80];
+	sprintf(debug, "SIGTERM: Shutting down ... ");
 	logmsg(1, debug);
     unlink(parms.pidfilename);
 //	msgctl(msqid, IPC_RMID, NULL);
@@ -442,11 +435,11 @@ void logmsg(int mesgloglevel, char *mymsg){
 	if ( logmode == logfile ) {
 		if (mesgloglevel <= verboselevel) {
 			char buf[3];
-			logfile_ptr = fopen (logfilename,"a");
-			if (logfile_ptr!=NULL) {
+			logfile_ptr = fopen (parms.logfilename,"a");
+			if ( logfile_ptr != NULL ) {
 				time_t now = time(0);
 				tm *ltm = localtime(&now);
-				fprintf (logfile_ptr, "Sensorhubd: %d.", ltm->tm_year + 1900 );
+				fprintf (logfile_ptr, "rf24hubd: %d.", ltm->tm_year + 1900 );
 				if ( ltm->tm_mon + 1 < 10) sprintf(buf,"0%d",ltm->tm_mon + 1); else sprintf(buf,"%d",ltm->tm_mon + 1);
 				fprintf (logfile_ptr, "%s.", buf );
 				if ( ltm->tm_mday < 10) sprintf(buf,"0%d",ltm->tm_mday); else sprintf(buf,"%d",ltm->tm_mday);
@@ -460,23 +453,23 @@ void logmsg(int mesgloglevel, char *mymsg){
 				fclose (logfile_ptr);
 			}
 		}	
-    } else if ( logmode == interactive ) {
+    } else {  // logmode == interactive 
 		if (mesgloglevel <= verboselevel) {
 			fprintf(stdout, "%s\n", mymsg); 
 		}
-	} else { // log via systemlog
-		if (mesgloglevel <= verboselevel) {
-			openlog ( "sensorhubd", LOG_PID | LOG_CONS| LOG_NDELAY, LOG_LOCAL0 );
-			syslog( LOG_NOTICE, "%s\n", mymsg);
-			closelog();
-		}
+//	} else { // log via systemlog
+//		if (mesgloglevel <= verboselevel) {
+//			openlog ( "sensorhubd", LOG_PID | LOG_CONS| LOG_NDELAY, LOG_LOCAL0 );
+//			syslog( LOG_NOTICE, "%s\n", mymsg);
+//			closelog();
+//		}
 	}
 }
 
 int main(int argc, char* argv[]) {
     pid_t pid;
-	char debug[300];
-	char sql_stmt[300];
+//	char debug[300];
+//	char sql_stmt[300];
 	int c;
 	long starttime=time(0);
 	long sent_time;
@@ -563,17 +556,19 @@ int main(int argc, char* argv[]) {
 
     // starts logging
     logfile_ptr = fopen (parms.logfilename,"a");
-    if (logfile_ptr==NULL) {
+    if ( logfile_ptr == NULL ) {
         fprintf(stdout,"Could not open %s for writing\n Printig logs to console\n", parms.logfilename );
     } else {
-        sprintf(debug, "Start logging to %s\n", parms.logfilename);
+		log2logfile = true;
+        fclose(logfile_ptr);
+		sprintf(debug, "Start logging to %s", parms.logfilename);
         logmsg(2, debug);
     }
     // open database
-    sprintf(debug,"Maria-DB:\n");
+    sprintf(debug,"Maria-DB:");
     logmsg(2, debug);
     MYSQL *db = mysql_init(NULL);
-    sprintf(debug,"MySQL client version: %s\n", mysql_get_client_info());
+    sprintf(debug,"MySQL client version: %s", mysql_get_client_info());
     logmsg(2, debug);
     if (db == NULL) {
         fprintf(stderr, "%s\n", mysql_error(db));
@@ -595,7 +590,7 @@ int main(int argc, char* argv[]) {
     // run as daemon if started with -d
     if (start_daemon) {
         // make sure that we have a logfile
-        if (logfile_ptr==NULL) {
+        if ( ! log2logfile ) {
             fprintf(stdout,"Logfile is needed if runs as deamon ... exiting\n");
             unlink(parms.pidfilename);
             exit(1);
@@ -609,12 +604,14 @@ int main(int argc, char* argv[]) {
                 chdir ("/");
                 umask (0);
                 sprintf(debug, "Starting up ....");
-                logmsg(1,debug);
+                logmsg(2,debug);
             } else if (pid > 0) {
                 // Parentprozess -> exit and return to shell
                 // write a message to the console
                 sprintf(debug, "Starting rf24hubd as daemon...");
+                logmsg(2,debug);
                 fprintf(stdout, debug);
+                fprintf(stdout, "\n");
                 // and exit
                 exit (0);
             } else {
@@ -639,26 +636,26 @@ int main(int argc, char* argv[]) {
     fprintf (pidfile_ptr, "%d", pid );
     fclose(pidfile_ptr);
     sprintf(debug, "sensorhub running with PID: %d", pid);
-    logmsg(1, debug);
+    logmsg(2, debug);
     if ( tn_port_set && tn_host_set ) {
         tn_active = true;
         sprintf(debug, "telnet session started: Host: %s Port: %d ", parms.telnet_hostname, parms.telnet_port);
-        logmsg(1, debug);
+        logmsg(2, debug);
     }
 	create_socket=0;
 	if ( in_port_set ) {
     /* open incoming port for messages */
 		if ((create_socket=socket( AF_INET, SOCK_STREAM, 0)) > 0) {
-			sprintf (debug,"Socket für eingehende Messages auf Port %i angelegt\n", parms.incoming_port);
-			logmsg(1, debug);
+			sprintf (debug,"Socket für eingehende Messages auf Port %i angelegt", parms.incoming_port);
+			logmsg(2, debug);
 		}
 		address.sin_family = AF_INET;
 		address.sin_addr.s_addr = INADDR_ANY;
 		address.sin_port = htons (parms.incoming_port);
 		setsockopt( create_socket, SOL_SOCKET, SO_REUSEADDR, &y, sizeof(int) );
 		if (bind( create_socket, (struct sockaddr *) &address, sizeof (address)) == 0 ) {
-			sprintf (debug,"Binding Socket OK\n");
-			logmsg(1, debug);
+			sprintf (debug,"Binding Socket OK");
+			logmsg(2, debug);
 		}
 		listen (create_socket, 5);
 		addrlen = sizeof (struct sockaddr_in);
@@ -667,23 +664,23 @@ int main(int argc, char* argv[]) {
 		fcntl( create_socket, F_SETFL, save_fd );
 	}
     sleep(2);
-    sprintf(debug, "starting radio on channel ... %d \n", parms.rf24network_channel);
-    logmsg(1, debug);
+    sprintf(debug, "starting radio on channel ... %d ", parms.rf24network_channel);
+    logmsg(2, debug);
     radio.begin();
     delay(5);
-    sprintf(debug, "starting network ... \n");
-    logmsg(1, debug);
+    sprintf(debug, "starting network ... ");
+    logmsg(2, debug);
     network.begin( parms.rf24network_channel, 0);
     radio.setDataRate(parms.rf24network_speed);
     if (verboselevel > 5) { radio.printDetails(); }
-    sprintf(debug,"\%s up and running .... \n",PRGNAME);
-    logmsg(1, debug);
+    sprintf(debug,"\%s up and running .... ",PRGNAME);
+    logmsg(2, debug);
 	
 	// Cleanup inside Database
 	sprintf(sql_stmt,"delete from jobbuffer");
 	do_sql(db, sql_stmt);
-    sprintf(debug,"Database cleanup compleate \n");
-    logmsg(1, debug);
+    sprintf(debug,"Database cleanup compleate ");
+    logmsg(2, debug);
     
 	// Main Loop
     while(1) {
@@ -700,7 +697,7 @@ int main(int argc, char* argv[]) {
 					sprintf(client_message,"sensorhub> ");
 					write(new_socket , client_message , strlen(client_message));
 					sprintf (debug,"Der Client %s ist verbunden ...\n", inet_ntoa (address.sin_addr));
-					logmsg(7, debug);
+					logmsg(6, debug);
 				}
 			} else {
 				save_fd = fcntl( new_socket, F_GETFL );
@@ -721,59 +718,57 @@ int main(int argc, char* argv[]) {
 //
 // Receive loop: react on the message from the nodes
 //
+            rf24_carrier = radio.testCarrier();
+			rf24_rpd = radio.testRPD();
 			network.read(rxheader,&payload,sizeof(payload));
 			sprintf(debug, DEBUGSTR "Received: Channel: %u from Node: %o to Node: %o Orderno %d Value %s "
 						, rxheader.type, rxheader.from_node, rxheader.to_node, payload.orderno, payload.value);
-			logmsg(7, debug);
+			logmsg(6, debug);
 			uint16_t sendernode=rxheader.from_node;
 			switch (rxheader.type) {
-
 				case 1 ... 99: {
 				// Sensor 
 					if (is_jobbuffer_entry(db, payload.orderno)) {
-						store_sensor_value(db, payload.orderno, payload.value);
+						store_sensor_value(db, payload.orderno, payload.value, rf24_carrier, rf24_rpd);
 						sprintf(debug, DEBUGSTR "Value of  %u on Node: %o is %s ", rxheader.type, sendernode, payload.value);
-						logmsg(7, debug);       
-						//prepare_tn_cmd(MYSQL *db,  uint16_t orderno, char *value)
-//						prepare_tn_cmd(db, payload.orderno, payload.value);
+						logmsg(6, debug);       
 						del_jobbuffer_entry(db, payload.orderno);
 					}
 				}
 				break; 
- 
 				case 101: {
 				// battery voltage
 					if (is_jobbuffer_entry(db, payload.orderno)) {
-						store_sensor_value(db, payload.orderno, payload.value);
+						store_sensor_value(db, payload.orderno, payload.value, rf24_carrier, rf24_rpd);
 						sprintf(debug, DEBUGSTR "Voltage of Node: %o is %s ", sendernode, payload.value);
-						logmsg(7, debug);        
-						sprintf(sql_stmt,"update node set U_Batt = %s where Node_ID = '0%o'", payload.value, sendernode);
-						//do_sqlite_sql(sql_stmt);
+						logmsg(6, debug);        
+						sprintf(sql_stmt,"update node set U_Batt = %s, signal_quality = '%d%d', last_contact = unix_timestamp() where Node_ID = '0%o'", payload.value, rf24_carrier, rf24_rpd, sendernode);
+						do_sql(db, sql_stmt);
 						del_jobbuffer_entry(db, payload.orderno);
 					}
 				}
 				break; 
 				case 111: { // Init Sleeptime 1
 					sprintf(debug, DEBUGSTR "Node: %o: Sleeptime1 set to %s ", sendernode, payload.value);
-					logmsg(7, debug);        
+					logmsg(6, debug);        
 					del_jobbuffer_entry(db, payload.orderno);  
 				}	
 				break; 
 				case 112: { // Init Sleeptime 2
 					sprintf(debug, DEBUGSTR "Node: %o: Sleeptime2 set to %s ", sendernode, payload.value);
-					logmsg(7, debug);        
+					logmsg(6, debug);        
 					del_jobbuffer_entry(db, payload.orderno);  
 				}
 				break; 
 				case 113: { // Init Sleeptime 3
 					sprintf(debug, DEBUGSTR "Node: %o: Sleeptime3 set to %s ", sendernode, payload.value);
-					logmsg(7, debug);        
+					logmsg(6, debug);        
 					del_jobbuffer_entry(db, payload.orderno);
 				}
 				break; 				
 				case 114: { // Init Sleeptime 4
 					sprintf(debug, DEBUGSTR "Node: %o: Sleeptime4 set to %s ", sendernode, payload.value);
-					logmsg(7, debug);        
+					logmsg(6, debug);        
 					del_jobbuffer_entry(db, payload.orderno);
 				}
 				break; 
@@ -781,19 +776,19 @@ int main(int argc, char* argv[]) {
                     bool radio_always_on = strtof (payload.value, &pEnd) > 0.5;
 					if ( radio_always_on ) sprintf(debug, "Node: %o: Radio allways on", sendernode);
 					else sprintf(debug, "Node: %o: Radio allways off", sendernode);
-					logmsg(7, debug);        
+					logmsg(6, debug);        
 					del_jobbuffer_entry(db, payload.orderno);
 				}					
 				break;  
 				case 116: { // Init Voltagedivider
 					sprintf(debug, "Node: %o: Set Voltagedivider to: %s.", sendernode, payload.value);
-					logmsg(7, debug);        
+					logmsg(6, debug);        
 					del_jobbuffer_entry(db, payload.orderno);
 				}
 				break;  
 				case 118: {
 					sprintf(debug, DEBUGSTR "Node: %o Init finished.", sendernode);
-					logmsg(7, debug);        
+					logmsg(6, debug);        
 					del_jobbuffer_entry(db, payload.orderno);
 				}
 				break; 
@@ -820,7 +815,7 @@ int main(int argc, char* argv[]) {
 			// if we got new jobs refresh the order array first
 				for (int i=1; i<7; i++) {
 					sprintf (sql_stmt, "select orderno, node_id, channel, value, priority from jobbuffer where substr(node_id,length(node_id),1) = '%d' order by CAST(node_id as integer), priority, channel asc LIMIT 1 ",i);
-					logmsg(9,sql_stmt);	
+					logmsg(8,sql_stmt);	
 					if (mysql_query(db, sql_stmt)) {
 						sprintf(debug,"Query failed: %s\n", mysql_error(db));
 						logmsg(2,debug);
@@ -828,7 +823,7 @@ int main(int argc, char* argv[]) {
 						MYSQL_RES *result = mysql_store_result(db);
 						if (!result) {
 							sprintf(debug,"Couldn't get results set: %s\n", mysql_error(db));
-							logmsg(9,debug);
+							logmsg(2,debug);
 						} else {
 							MYSQL_ROW row;
 							order[i].orderno = 0;
@@ -841,7 +836,7 @@ int main(int argc, char* argv[]) {
 //								sprintf(debug,"orderno: %d Node: %d Channel: %d Value: %s Name: %s Prio: %d"
 //											,sqlite3_column_int (stmt, 0), sqlite3_column_int (stmt, 1), sqlite3_column_int (stmt, 2)
 //											,sqlite3_column_text (stmt, 3), sqlite3_column_text (stmt, 4), sqlite3_column_int (stmt, 5));
-//								logmsg(9,debug);					
+//								logmsg(6,debug);					
 							}
 							ordersqlrefresh=false;
 							mysql_free_result(result);
@@ -861,11 +856,11 @@ int main(int argc, char* argv[]) {
 						if (network.write(txheader,&payload,sizeof(payload))) {
 							sprintf(debug, DEBUGSTR "Send: Channel: %u from Node: 0%o to Node: 0%o orderno %d Value %s "
 									, txheader.type, txheader.from_node, txheader.to_node, payload.orderno, payload.value);
-							logmsg(7, debug); 
+							logmsg(6, debug); 
 						} else {		
 							sprintf(debug, DEBUGSTR "Failed: Channel: %u from Node: 0%o to Node: 0%o orderno %d Value %s "
 									, txheader.type, txheader.from_node, txheader.to_node, payload.orderno, payload.value);
-							logmsg(7, debug); 
+							logmsg(6, debug); 
 						}  
 					}
 					i++; 

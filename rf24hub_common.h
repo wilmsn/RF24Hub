@@ -10,7 +10,8 @@
 // Structure of our payload
 struct payload_t {
   uint16_t      orderno;    // the orderno as primary key for our message for the nodes
-  char          value[10];   // the information that is send to the node
+//  uint16_t		flags;      // a field for varies flags
+  char          value[10];  // the information that is send to the node
 };
 payload_t payload;
 

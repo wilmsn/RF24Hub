@@ -48,7 +48,6 @@ V1.0 Initial version after comming from sensorhub
 
 enum logmode_t { systemlog, interactive, logfile };
 logmode_t logmode;
-int loglevel=4;
 int verboselevel = 2;
 int sockfd;
 bool start_daemon=false, debugmode=false, tn_host_set = false, tn_port_set = false, tn_active = false, in_port_set = false;
@@ -101,6 +100,9 @@ struct config_parameters parms;
 int orderloopcount=0;
 int ordersqlexeccount=0;
 bool ordersqlrefresh=true;
+bool log2logfile=false;
+bool rf24_carrier=false;
+bool rf24_rpd=false;
 
 RF24NetworkHeader rxheader;
 RF24NetworkHeader txheader;
@@ -108,8 +110,8 @@ RF24NetworkHeader txheader;
 char buffer1[50];
 char buffer2[50];
 char debug[DEBUGSTRINGSIZE];
-//char info_exec_sql[]="Info: SQL executed via do_sql: ";
-char msg_startup[]="Startup sensorhubd";
+char sql_stmt[SQLSTRINGSIZE];
+
 uint16_t getnodeadr(char *node);
 char config_file[PARAM_MAXLEN_CONFIGFILE];
 

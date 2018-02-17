@@ -9,9 +9,9 @@ rf24hub_config.h ==> all global definitions go here
 //
 // default values: can be overwritten in config file
 //
-#define LOGFILE "/var/log/sensorhubd.log"
-#define PIDFILE "/var/run/sensorhubd.pid"
-#define DEFAULT_CONFIG_FILE "/etc/sensorhub/sensorhub.cfg"
+#define LOGFILE "/var/log/rf24hubd.log"
+#define PIDFILE "/var/run/rf24hubd.pid"
+#define DEFAULT_CONFIG_FILE "/etc/rf24hub/rf24hub.cfg"
 // The radiochannel for the sensorhub
 #define RADIOCHANNEL 10
 // Transmission speed
@@ -35,5 +35,6 @@ rf24hub_config.h ==> all global definitions go here
 #define ERRSTR "ERROR: "
 #define DEBUGSTR "DEBUG: "
 #define DEBUGSTRINGSIZE 500
+#define SQLSTRINGSIZE 500
 
 #endif // _RF24HUB_CONFIG_H_
