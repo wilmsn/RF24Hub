@@ -398,7 +398,7 @@ void store_sensor_value(MYSQL *db, uint16_t orderno, float value, bool d1, bool 
 	}
 	sprintf(sql_stmt,"insert into sensordata (sensor_ID, utime, value) select sensor_id, UNIX_TIMESTAMP(), %f from jobbuffer where orderno = %u ", value, orderno);
 	do_sql(db, sql_stmt);
-	sprintf(sql_stmt,"update sensor set value= %f, Utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where sensor_ID = (select sensor_id from jobbuffer where orderno = %u ) ", value, orderno, d1, d2);
+	sprintf(sql_stmt,"update sensor set value= %f, Utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where sensor_ID in (select sensor_id from jobbuffer where orderno = %u ) ", value, d1, d2, orderno);
 	do_sql(db, sql_stmt);
 }
 
