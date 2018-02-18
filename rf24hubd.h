@@ -78,7 +78,7 @@ struct order_t {
   uint16_t       to_node;     // the destination node
   unsigned char  channel;     // The channel to address the sensor
   char			 name[30];    // The name of this sensor in FHEM 
-  char 		     value[5];    // the information that is send to the node
+  float		     value;    // the information that is send to the node
 };
 order_t order[7]; // we do not handle more than 6 orders (one per subnode 1...6) at one time
 

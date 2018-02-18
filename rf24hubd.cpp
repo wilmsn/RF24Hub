@@ -177,7 +177,7 @@ void exec_tn_cmd(const char *tn_cmd) {
     close(sockfd);
 }
 
-void prepare_tn_cmd(MYSQL *db,  uint16_t orderno, char *value) {
+void prepare_tn_cmd(MYSQL *db,  uint16_t orderno, float value) {
 	char telnet_cmd[200];
 	sprintf (sql_stmt, "select fhem_dev from sensor where sensor_id = ( select sensor_id from jobbuffer where orderno = %d ) and fhem_dev is not null LIMIT 1 ", orderno);
 	if (mysql_query(db, sql_stmt)) {
@@ -191,7 +191,7 @@ void prepare_tn_cmd(MYSQL *db,  uint16_t orderno, char *value) {
 		} else {
 			MYSQL_ROW row;
 			while ((row = mysql_fetch_row(result))) {
-				sprintf(telnet_cmd,"set %s %s \n", row[0], value);
+				sprintf(telnet_cmd,"set %s %f \n", row[0], value);
 				sprintf(debug,"Telnet-CMD: %s\n", telnet_cmd);
 				logmsg(8,debug);				
 				exec_tn_cmd(telnet_cmd);
@@ -392,13 +392,13 @@ void del_jobbuffer_entry(MYSQL *db, uint16_t orderno) {
 	ordersqlrefresh=true;
 }
 
-void store_sensor_value(MYSQL *db, uint16_t orderno, char *value, bool d1, bool d2) {
+void store_sensor_value(MYSQL *db, uint16_t orderno, float value, bool d1, bool d2) {
 	if ( tn_active ) { 
 		prepare_tn_cmd(db, orderno, value); 
 	}
-	sprintf(sql_stmt,"insert into sensordata (sensor_ID, utime, value) select sensor_id, UNIX_TIMESTAMP(), %s from jobbuffer where orderno = %u ", value, orderno);
+	sprintf(sql_stmt,"insert into sensordata (sensor_ID, utime, value) select sensor_id, UNIX_TIMESTAMP(), %f from jobbuffer where orderno = %u ", value, orderno);
 	do_sql(db, sql_stmt);
-	sprintf(sql_stmt,"update sensor set value= %s, Utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where sensor_ID = (select sensor_id from jobbuffer where orderno = %u ) ", value, orderno, d1, d2);
+	sprintf(sql_stmt,"update sensor set value= %f, Utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where sensor_ID = (select sensor_id from jobbuffer where orderno = %u ) ", value, orderno, d1, d2);
 	do_sql(db, sql_stmt);
 }
 
@@ -710,7 +710,7 @@ int main(int argc, char* argv[]) {
             rf24_carrier = radio.testCarrier();
 			rf24_rpd = radio.testRPD();
 			network.read(rxheader,&payload,sizeof(payload));
-			sprintf(debug, DEBUGSTR "Received: Channel: %u from Node: %o to Node: %o Orderno %d Value %s "
+			sprintf(debug, DEBUGSTR "Received: Channel: %u from Node: %o to Node: %o Orderno %d Value %f "
 						, rxheader.type, rxheader.from_node, rxheader.to_node, payload.orderno, payload.value);
 			logmsg(6, debug);
 			uint16_t sendernode=rxheader.from_node;
@@ -719,7 +719,7 @@ int main(int argc, char* argv[]) {
 				// Sensor 
 					if (is_jobbuffer_entry(db, payload.orderno)) {
 						store_sensor_value(db, payload.orderno, payload.value, rf24_carrier, rf24_rpd);
-						sprintf(debug, DEBUGSTR "Value of  %u on Node: %o is %s ", rxheader.type, sendernode, payload.value);
+						sprintf(debug, DEBUGSTR "Value of  %u on Node: %o is %f ", rxheader.type, sendernode, payload.value);
 						logmsg(6, debug);       
 						del_jobbuffer_entry(db, payload.orderno);
 					}
@@ -729,40 +729,40 @@ int main(int argc, char* argv[]) {
 				// battery voltage
 					if (is_jobbuffer_entry(db, payload.orderno)) {
 						store_sensor_value(db, payload.orderno, payload.value, rf24_carrier, rf24_rpd);
-						sprintf(debug, DEBUGSTR "Voltage of Node: %o is %s ", sendernode, payload.value);
+						sprintf(debug, DEBUGSTR "Voltage of Node: %o is %f ", sendernode, payload.value);
 						logmsg(6, debug);        
-						sprintf(sql_stmt,"update node set U_Batt = %s, signal_quality = '%d%d', last_contact = unix_timestamp() where Node_ID = '0%o'", payload.value, rf24_carrier, rf24_rpd, sendernode);
+						sprintf(sql_stmt,"update node set U_Batt = %f, signal_quality = '%d%d', last_contact = unix_timestamp() where Node_ID = '0%o'", payload.value, rf24_carrier, rf24_rpd, sendernode);
 						do_sql(db, sql_stmt);
 						del_jobbuffer_entry(db, payload.orderno);
 					}
 				}
 				break; 
 				case 111: { // Init Sleeptime 1
-					sprintf(debug, DEBUGSTR "Node: %o: Sleeptime1 set to %s ", sendernode, payload.value);
+					sprintf(debug, DEBUGSTR "Node: %o: Sleeptime1 set to %f ", sendernode, payload.value);
 					logmsg(6, debug);        
 					del_jobbuffer_entry(db, payload.orderno);  
 				}	
 				break; 
 				case 112: { // Init Sleeptime 2
-					sprintf(debug, DEBUGSTR "Node: %o: Sleeptime2 set to %s ", sendernode, payload.value);
+					sprintf(debug, DEBUGSTR "Node: %o: Sleeptime2 set to %f ", sendernode, payload.value);
 					logmsg(6, debug);        
 					del_jobbuffer_entry(db, payload.orderno);  
 				}
 				break; 
 				case 113: { // Init Sleeptime 3
-					sprintf(debug, DEBUGSTR "Node: %o: Sleeptime3 set to %s ", sendernode, payload.value);
+					sprintf(debug, DEBUGSTR "Node: %o: Sleeptime3 set to %f ", sendernode, payload.value);
 					logmsg(6, debug);        
 					del_jobbuffer_entry(db, payload.orderno);
 				}
 				break; 				
 				case 114: { // Init Sleeptime 4
-					sprintf(debug, DEBUGSTR "Node: %o: Sleeptime4 set to %s ", sendernode, payload.value);
+					sprintf(debug, DEBUGSTR "Node: %o: Sleeptime4 set to %f ", sendernode, payload.value);
 					logmsg(6, debug);        
 					del_jobbuffer_entry(db, payload.orderno);
 				}
 				break; 
 				case 115: { // Init Radiobuffer
-                    bool radio_always_on = strtof (payload.value, &pEnd) > 0.5;
+                    bool radio_always_on = payload.value > 0.5;
 					if ( radio_always_on ) sprintf(debug, "Node: %o: Radio allways on", sendernode);
 					else sprintf(debug, "Node: %o: Radio allways off", sendernode);
 					logmsg(6, debug);        
@@ -770,7 +770,7 @@ int main(int argc, char* argv[]) {
 				}					
 				break;  
 				case 116: { // Init Voltagedivider
-					sprintf(debug, "Node: %o: Set Voltagedivider to: %s.", sendernode, payload.value);
+					sprintf(debug, "Node: %o: Set Voltagedivider to: %f.", sendernode, payload.value);
 					logmsg(6, debug);        
 					del_jobbuffer_entry(db, payload.orderno);
 				}
@@ -820,7 +820,7 @@ int main(int argc, char* argv[]) {
 								order[i].orderno = strtoul(row[0], &pEnd,10);
 								order[i].to_node  = getnodeadr(row[1]);
 								order[i].channel  = strtoul(row[2], &pEnd,10);
-								sprintf(order[i].value, "%s", row[3]);
+								order[i].value    = strtof(row[3], &pEnd);
 //						sprintf(order[i].name, "%s", sqlite3_column_text (stmt, 4));
 //								sprintf(debug,"orderno: %d Node: %d Channel: %d Value: %s Name: %s Prio: %d"
 //											,sqlite3_column_int (stmt, 0), sqlite3_column_int (stmt, 1), sqlite3_column_int (stmt, 2)
@@ -841,13 +841,13 @@ int main(int argc, char* argv[]) {
 						payload.orderno = order[i].orderno;
 						txheader.to_node  = order[i].to_node;
 						txheader.type  = order[i].channel;
-						sprintf(payload.value, "%s", order[i].value);
+						payload.value = order[i].value;
 						if (network.write(txheader,&payload,sizeof(payload))) {
-							sprintf(debug, DEBUGSTR "Send: Channel: %u from Node: 0%o to Node: 0%o orderno %d Value %s "
+							sprintf(debug, DEBUGSTR "Send: Channel: %u from Node: 0%o to Node: 0%o orderno %d Value %f "
 									, txheader.type, txheader.from_node, txheader.to_node, payload.orderno, payload.value);
 							logmsg(6, debug); 
 						} else {		
-							sprintf(debug, DEBUGSTR "Failed: Channel: %u from Node: 0%o to Node: 0%o orderno %d Value %s "
+							sprintf(debug, DEBUGSTR "Failed: Channel: %u from Node: 0%o to Node: 0%o orderno %d Value %f "
 									, txheader.type, txheader.from_node, txheader.to_node, payload.orderno, payload.value);
 							logmsg(6, debug); 
 						}  
