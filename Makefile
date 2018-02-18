@@ -14,6 +14,7 @@
 PREFIX=/usr/local
 EXECDIR=${PREFIX}/bin
 INCLUDEDIR=${PREFIX}/include
+INCLUDEDIR1=/usr/include/mysql
 MYSQLLIBS := $(shell mysql_config --libs) 
 
 ARCH=armv6zk
@@ -30,7 +31,7 @@ all: rf24hubd
 
 # Make the sensorhub deamon
 rf24hubd: rf24hubd.cpp
-	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -lrf24-bcm -lrf24network ${MYSQLLIBS} $^ -o $@
+	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24network ${MYSQLLIBS} $^ -o $@
 
 # clear build files
 clean:
