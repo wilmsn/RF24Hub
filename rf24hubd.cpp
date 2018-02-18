@@ -89,6 +89,7 @@ void print_config (struct config_parameters * parms) {
 }
 
 void usage(const char *prgname) {
+    fprintf(stdout, "%s version %s\n", prgname, prgversion);
     fprintf(stdout, "Usage: %s <option>\n", prgname);
     fprintf(stdout, "with options: \n");
     fprintf(stdout, "   -h or -? or --help \n");
@@ -218,7 +219,10 @@ void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message
 		sprintf(cmp2, "sensor");
 		if (( strcmp(wort1,cmp1) == 0 ) && (strcmp(wort2,cmp2) == 0) && (wort3 != NULL) && (wort4 != NULL) ) {
 			tn_input_ok = true;
-			sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value,sensor_id,priority,utime) select %u, node_id, channel, %s, %s, 11, UNIX_TIMESTAMP() from sensor where sensor_id = %s ", orderno++, wort4, wort3, wort3);
+			// delete old entries for the same sensor with the same value
+			sprintf(sql_stmt,"delete from jobbuffer where sensor_id = %s and value = %s ", wort3, wort4);
+			do_sql(db, sql_stmt);
+			sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value,sensor_id,priority,utime) select %u, node_id, channel, %s, sensor_id, 11, UNIX_TIMESTAMP() from sensor where sensor_id = %s ", orderno++, wort4, wort3);
 			do_sql(db, sql_stmt);
 			ordersqlrefresh = true;
 			sprintf(client_message,"Command received => OK\n");
@@ -474,12 +478,6 @@ int main(int argc, char* argv[]) {
 	const int y = 1;
 	bool wait4message = false;
 	
-	// check if started as root
-	if ( getuid()!=0 ) {
-           fprintf(stdout, "sensorhubd has to be startet as user root\n");
-          exit(1);
-        }
-
     // processing argc and argv[]
 	while (1) {
 		static struct option long_options[] = {	
@@ -523,6 +521,13 @@ int main(int argc, char* argv[]) {
         putchar ('\n');
     }
     // END processing argc and argv[]
+
+	// check if started as root
+	if ( getuid()!=0 ) {
+           fprintf(stdout, "sensorhubd has to be startet as user root\n");
+          exit(1);
+        }
+
     // check if config file is readable
     if ( strcmp(config_file,"x") == 0 ) strcpy(config_file,DEFAULT_CONFIG_FILE);
     if (fopen (config_file, "r") == NULL) {
@@ -677,7 +682,7 @@ int main(int argc, char* argv[]) {
 				if (new_socket > 0) {
 					wait4message = true;
 					// send something like a prompt. perl telnet is waiting for it otherwise we get error
-					// use this in perl: my $t = new Net::Telnet (Timeout => 2, Port => 7001, Prompt => '/OK/');
+					// use this in perl: my $t = new Net::Telnet (Timeout => 2, Port => 7001, Prompt => '/sensorhub>/');
 					sprintf(client_message,"sensorhub> ");
 					write(new_socket , client_message , strlen(client_message));
 					sprintf (debug,"Der Client %s ist verbunden ...\n", inet_ntoa (address.sin_addr));
@@ -798,7 +803,7 @@ int main(int argc, char* argv[]) {
 			do_sql(db, sql_stmt);
 			// if we got new jobs refresh the order array first
 				for (int i=1; i<7; i++) {
-					sprintf (sql_stmt, "select orderno, node_id, channel, value, priority from jobbuffer where substr(node_id,length(node_id),1) = '%d' order by CAST(node_id as integer), priority, channel asc LIMIT 1 ",i);
+					sprintf (sql_stmt, "select orderno, node_id, channel, value, priority from jobbuffer where substr(node_id,length(node_id),1) = '%d' order by CAST(node_id as integer), priority, channel, utime asc LIMIT 1 ",i);
 					logmsg(8,sql_stmt);	
 					if (mysql_query(db, sql_stmt)) {
 						sprintf(debug,"Query failed: %s\n", mysql_error(db));

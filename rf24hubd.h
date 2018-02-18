@@ -12,6 +12,7 @@ V1.0 Initial version after comming from sensorhub
 #ifndef _RF24HUBD_H_   /* Include guard */
 #define _RF24HUBD_H_
 
+#define PRGVERSION "1.0"
 //--------- End of global define -----------------
 
 #include "rf24hub_common.h"
@@ -61,6 +62,7 @@ MYSQL     *db;
 MYSQL_RES *res;
 MYSQL_ROW row;
 char* pEnd;
+const char* prgversion=PRGVERSION;
 
 // Setup for GPIO 25 CE and CE0 CSN with SPI Speed @ 8Mhz
 RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
