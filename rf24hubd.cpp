@@ -253,7 +253,7 @@ void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message
 //		write(new_socket , client_message , strlen(client_message));
 //		sprintf(client_message,"   Sends one initialisation parameter to the node\n");
 //		write(new_socket , client_message , strlen(client_message));
-//		sprintf(client_message,"   valid are: sleeptime1...4, radiomode, voltagecorrection\n");
+//		sprintf(client_message,"   valid are: sleeptime1...4, radiomode, voltagefactor\n");
 //		write(new_socket , client_message , strlen(client_message));
 		sprintf(client_message,"\n");
 		write(new_socket , client_message , strlen(client_message));
@@ -275,7 +275,7 @@ uint16_t node_init(MYSQL *db, uint16_t initnode, uint16_t orderno ) {
 	// delete old entries for this node
 	sprintf (sql_stmt, "delete from jobbuffer where node_id = '0%o'",initnode);
     do_sql(db,sql_stmt); 
-	sprintf (sql_stmt, "select sleeptime1, sleeptime2, sleeptime3, sleeptime4, radiomode, voltagecorrection from node where node_id = '0%o' LIMIT 1 ",initnode);
+	sprintf (sql_stmt, "select sleeptime1, sleeptime2, sleeptime3, sleeptime4, radiomode, voltagefactor from node where node_id = '0%o' LIMIT 1 ",initnode);
 	if (mysql_query(db, sql_stmt)) {
 		sprintf(debug,"Query failed: %s\n", mysql_error(db));
 		logmsg(2,debug);
@@ -769,8 +769,8 @@ int main(int argc, char* argv[]) {
 					del_jobbuffer_entry(db, payload.orderno);
 				}					
 				break;  
-				case 116: { // Init Voltagedivider
-					sprintf(debug, "Node: %o: Set Voltagedivider to: %f.", sendernode, payload.value);
+				case 116: { // Init Voltagefactor
+					sprintf(debug, "Node: %o: Set Voltagefactor to: %f.", sendernode, payload.value);
 					logmsg(6, debug);        
 					del_jobbuffer_entry(db, payload.orderno);
 				}
