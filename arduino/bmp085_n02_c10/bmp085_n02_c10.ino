@@ -10,8 +10,8 @@
 #define STATUSLED A0
 #define STATUSLED_ON HIGH
 #define STATUSLED_OFF LOW
-//#define SLEEP delay
-#define SLEEP sleep4ms
+#define SLEEP delay
+//#define SLEEP sleep4ms
 
 // ------ End of configuration part ------------
 
@@ -101,35 +101,43 @@ void action_loop(void) {
         case 111:
           // sleeptimer1
           sleeptime1=atof(payload.value);
+          Serial.println("111 detected");
         break;
         case 112:
           // sleeptimer2
           sleeptime2=atof(payload.value);
+          Serial.println("112 detected");
         break;
         case 113:
           // sleeptimer3
           sleeptime3=atof(payload.value);
+          Serial.println("113 detected");
         break;
         case 114:
           // sleeptimer4
           sleeptime4=atof(payload.value);
+          Serial.println("114 detected");
           break;
         case 115:
           // radio on (=1) or off (=0) when sleep
           if ( atof(payload.value) > 0.5) radiomode=radio_listen; else radiomode=radio_sleep;
+          Serial.println("115 detected");
         break;
         case 116:
           // Voltage factor
           vcc.m_correction = atof(payload.value);
+          Serial.println("116 detected");
         break; 
         case 118:
         // init_finished (=1)
           init_finished = (1 == 1); //( payload.value > 0.5);
+          Serial.println("118 detected");
           break;
 //        default:
         // Default: just send the paket back - no action here  
       }
       network.write(txheader,&payload,sizeof(payload));
+      Serial.println("NW Write....");
       orderno_p2=orderno_p1;
       orderno_p1=payload.orderno;
     }
@@ -140,7 +148,7 @@ void setup(void) {
   pinMode(STATUSLED, OUTPUT);
   digitalWrite(STATUSLED,STATUSLED_ON);
   Serial.begin(115200);
-  Serial.println("Programstart Testnode01");
+  Serial.println("Programstart Testnode02");
   printf_begin();
   SPI.begin();
   //****
@@ -162,7 +170,7 @@ void setup(void) {
   bool do_transmit = true;
   while ( ! init_finished ) {
     if ( (last_send + 1000 < millis()) && do_transmit ) {
-      Serial.println("Testnode01 send 119");
+      Serial.println("Testnode02 send 119");
       txheader.type=119;
       payload.orderno=0;
       network.write(txheader,&payload,sizeof(payload));
@@ -173,8 +181,10 @@ void setup(void) {
     if ( network.available() ) {
       do_transmit = false;
       network.read(rxheader,&payload,sizeof(payload));
-      Serial.print("Testnode01 received ");
-      Serial.println(rxheader.type);
+      Serial.print("Testnode02 received ");
+      Serial.print(rxheader.type);
+      Serial.print(" ");
+      Serial.println(payload.value);
       init_transmit=false;
       init_loop_counter=0;
       action_loop();
@@ -188,7 +198,7 @@ void setup(void) {
   Serial.print("Humidity:    "); Serial.print(si7021.readHumidity(), 2);
   Serial.print("\tTemperature: "); Serial.println(si7021.readTemperature(), 2);
 }
-
+ 
 void sleep12(unsigned int sleeptime) {
   if ( radiomode == radio_sleep ) {
     radio.stopListening();
@@ -202,10 +212,19 @@ void sleep12(unsigned int sleeptime) {
 }
 
 void loop(void) {
+  uint8_t n_update = 0;
   digitalWrite(STATUSLED,STATUSLED_ON);
-  Serial.print("Testnode01 active: ");
+  Serial.print("Testnode 02 active: ");
   Serial.println(networkuptime);
-  network.update();
+  n_update = network.update();
+  Serial.print("Network update:");
+  Serial.println(n_update);
+  if ( n_update > 0 ) {
+    Serial.print("Durchgangsverkehr Channel: ");
+    Serial.println(n_update);
+    sleepmode = sleep4;
+    networkuptime = 0;
+  }
   //{
   //  network_busy = true;
   //  networkuptime = 0;
@@ -222,7 +241,7 @@ void loop(void) {
     sleepmode = sleep4;
     networkuptime = 0;
     network.read(rxheader,&payload,sizeof(payload));
-    Serial.print("Testnode01 received");
+    Serial.print("Testnode02 received");
     Serial.println(rxheader.type);
     action_loop();
   }

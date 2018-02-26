@@ -42,7 +42,7 @@ CREATE TABLE node
    is_online          INT,
    signal_quality     VARCHAR(10),
    last_contact       INT,
-   voltagecorrection  FLOAT,
+   voltagefactor      FLOAT,
    PRIMARY KEY (node_id)
 )
 ENGINE=InnoDB;
@@ -59,17 +59,17 @@ DROP TABLE IF EXISTS sensor;
 
 CREATE TABLE sensor
 (
-   Sensor_ID    INT            NOT NULL,
-   Sensor_Name  VARCHAR(30),
-   Add_Info     VARCHAR(100),
-   Node_ID      VARCHAR(10)    NOT NULL,
-   Channel      INT            NOT NULL,
-   Value        FLOAT,
-   Utime        INT,
+   sensor_id    INT            NOT NULL,
+   sensor_name  VARCHAR(30),
+   add_info     VARCHAR(100),
+   node_id      VARCHAR(10)    NOT NULL,
+   channel      INT            NOT NULL,
+   value        FLOAT,
+   utime        INT,
    store_days   INT,
    fhem_dev     VARCHAR(50),
    type         CHAR(1),
-   PRIMARY KEY (Sensor_ID)
+   PRIMARY KEY (sensor_id)
 )
 ENGINE=InnoDB;
 
@@ -78,16 +78,16 @@ DROP TABLE IF EXISTS sensordata;
 
 CREATE TABLE sensordata
 (
-   Sensor_ID  INT     NOT NULL,
-   Utime      INT     NOT NULL,
-   Value      FLOAT,
-   PRIMARY KEY (Sensor_ID, Utime)
+   sensor_id  INT     NOT NULL,
+   utime      INT     NOT NULL,
+   value      FLOAT,
+   PRIMARY KEY (sensor_id, utime)
 )
 ENGINE=InnoDB;
 
 CREATE INDEX sensordata_utime_idx
-   ON sensordata (Utime ASC);
+   ON sensordata (utime ASC);
 
 CREATE INDEX sensordata_id_utime_idx
-   ON sensordata (Sensor_ID ASC, Utime ASC);
+   ON sensordata (sensor_id ASC, utime ASC);
 

@@ -219,8 +219,8 @@ void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message
 		sprintf(cmp2, "sensor");
 		if (( strcmp(wort1,cmp1) == 0 ) && (strcmp(wort2,cmp2) == 0) && (wort3 != NULL) && (wort4 != NULL) ) {
 			tn_input_ok = true;
-			// delete old entries for the same sensor with the same value
-			sprintf(sql_stmt,"delete from jobbuffer where sensor_id = %s and value = %s ", wort3, wort4);
+			// delete old entries for the same sensor
+			sprintf(sql_stmt,"delete from jobbuffer where sensor_id = %s ", wort3);
 			do_sql(db, sql_stmt);
 			sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value,sensor_id,priority,utime) select %u, node_id, channel, %s, sensor_id, 11, UNIX_TIMESTAMP() from sensor where sensor_id = %s ", orderno++, wort4, wort3);
 			do_sql(db, sql_stmt);
@@ -275,7 +275,7 @@ uint16_t node_init(MYSQL *db, uint16_t initnode, uint16_t orderno ) {
 	// delete old entries for this node
 	sprintf (sql_stmt, "delete from jobbuffer where node_id = '0%o'",initnode);
     do_sql(db,sql_stmt); 
-	sprintf (sql_stmt, "select sleeptime1, sleeptime2, sleeptime3, sleeptime4, radiomode, voltagecorrection from node where node_id = '0%o' LIMIT 1 ",initnode);
+	sprintf (sql_stmt, "select sleeptime1, sleeptime2, sleeptime3, sleeptime4, radiomode, voltagefactor from node where node_id = '0%o' LIMIT 1 ",initnode);
 	if (mysql_query(db, sql_stmt)) {
 		sprintf(debug,"Query failed: %s\n", mysql_error(db));
 		logmsg(2,debug);
@@ -398,7 +398,7 @@ void store_sensor_value(MYSQL *db, uint16_t orderno, char *value, bool d1, bool 
 	}
 	sprintf(sql_stmt,"insert into sensordata (sensor_ID, utime, value) select sensor_id, UNIX_TIMESTAMP(), %s from jobbuffer where orderno = %u ", value, orderno);
 	do_sql(db, sql_stmt);
-	sprintf(sql_stmt,"update sensor set value= %s, Utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where sensor_ID = (select sensor_id from jobbuffer where orderno = %u ) ", value, orderno, d1, d2);
+	sprintf(sql_stmt,"update sensor set value= %s, Utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where sensor_ID = (select sensor_id from jobbuffer where orderno = %u ) ", value, d1, d2, orderno);
 	do_sql(db, sql_stmt);
 }
 
