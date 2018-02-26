@@ -16,7 +16,7 @@ rf24hub_config.h ==> all global definitions go here
 #define RADIOCHANNEL 10
 // Transmission speed
 #define RADIOSPEED RF24_1MBPS
-#define PRGNAME "Sensorhub"
+#define PRGNAME "rf24hub"
 //
 // END default values: can be overwritten in config file
 //
