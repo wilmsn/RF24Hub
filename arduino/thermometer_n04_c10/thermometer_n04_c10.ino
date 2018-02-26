@@ -20,12 +20,12 @@ V3: Upgrade to Lowpower Library; display of a battery symbol
 // The outputpin for batterycontrol for the voltagedivider
 #define VMESS_OUT 1
 #define VMESS_IN A0
-// 4 voltages for the battery (empty ... full)
-#define U0 3.5
-#define U1 3.6
-#define U2 3.7
-#define U3 3.8
-#define U4 3.9
+// 5 voltages for the battery (empty ... full)
+#define U0 3.6
+#define U1 3.7
+#define U2 3.8
+#define U3 3.9
+#define U4 4.0
 // How many cycles do we stay awake on network activity
 #define STAYAWAKEDEFAULT 20
 // set X0 and Y0 of battery symbol ( is 10 * 5 pixel )
@@ -99,17 +99,16 @@ unsigned int sleeptime2 = 10;
 unsigned int sleeptime3 = 1;
 // Time to keep the network up if it was busy
 unsigned int sleeptime4 = 5;
-unsigned int init_loop_counter = 0;
-unsigned int loop_counter = 0;
+//unsigned int loop_counter = 0;
 boolean init_finished = false;
 boolean init_transmit = true;
-boolean network_busy = false;
+//boolean network_busy = false;
 boolean display_down = false;
 boolean low_voltage_flag = false;
 float networkuptime = 0;
 float temp;
 float voltagefactor = 1;
-int free_loop_counter = 0;
+//int free_loop_counter = 0;
 //Some Var for restore after sleep of display
 float field1_val, field2_val, field3_val, field4_val;
 float cur_voltage;
@@ -125,16 +124,16 @@ RF24Network network(radio);
 
 void display_sleep(boolean dmode) {
   display_down = dmode;
-  if ( ! low_voltage_flag ) {
-    if ( dmode ) { // Display go to sleep
-      myGLCD.enableSleep(); 
-    } else {
+  if ( dmode ) { // Display go to sleep
+    myGLCD.enableSleep(); 
+  } else {
+    if ( ! low_voltage_flag ) {
       myGLCD.disableSleep(); 
-        get_temp();
-        print_field(field1_val,1);
-        print_field(field2_val,2);
-        print_field(field3_val,3);
-        print_field(field4_val,4);
+      get_temp();
+      print_field(field1_val,1);
+      print_field(field2_val,2);
+      print_field(field3_val,3);
+      print_field(field4_val,4);
     }
   }  
 }
@@ -145,7 +144,7 @@ void action_loop(void) {
       case 1: {
         // Temperature
         dtostrf(get_temp(),7,2,payload.value);
-        free_loop_counter = 0;
+//        free_loop_counter = 0;
        break; }
       case 21:
         // Set field 1
@@ -181,8 +180,11 @@ void action_loop(void) {
        break;
        case 101:  
       // battery voltage
-        draw_battery(BATT_X0,BATT_Y0,vcc.Read_Volts());
-        dtostrf(vcc.Read_Volts(),7,2,payload.value);
+        float ubatt;
+        ubatt = vcc.Read_Volts();
+        draw_battery(BATT_X0,BATT_Y0,ubatt);
+        dtostrf(ubatt,7,2,payload.value);
+        low_voltage_flag = ubatt < 3.65;
         break;
         case 111:
           // sleeptimer1
@@ -219,13 +221,10 @@ void action_loop(void) {
 }  
 
 void setup(void) {
-  pinMode(STATUSLED, OUTPUT);     
-  pinMode(VMESS_OUT, OUTPUT);  
-  pinMode(VMESS_IN, INPUT);
-  analogReference(INTERNAL);
-  digitalWrite(STATUSLED,STATUSLED_ON); 
+  unsigned long last_send=millis();
+  pinMode(STATUSLED, OUTPUT);
+  digitalWrite(STATUSLED,STATUSLED_ON);
   SPI.begin();
-  radio.begin();
   //****
   // put anything else to init here
   //****
@@ -235,38 +234,41 @@ void setup(void) {
   sensors.begin(); 
   get_temp();
   cur_voltage=vcc.Read_Volts();
-  draw_battery(BATT_X0, BATT_Y0,cur_voltage);
+  draw_battery(BATT_X0, BATT_Y0, cur_voltage);
+  print_field(cur_voltage,4);
+  draw_antenna(ANT_X0, ANT_Y0);
   //####
   // end aditional init
   //####
+  radio.begin();
+  radio.setPALevel(RF24_PA_MAX);
+//  radio.setRetries(15,2);
   network.begin(RADIOCHANNEL, NODE);
-  radio.setDataRate(RF24_1MBPS);
-//  radio.setRetries(15,2); // delay 4000us, 2 retries
+//  radio.setDataRate(RF24_250KBPS);
+  delay(200);
   // initialisation beginns
+  bool do_transmit = true;
   while ( ! init_finished ) {
-    if ( init_transmit && init_loop_counter < 1 ) {
+    if ( (last_send + 1000 < millis()) && do_transmit ) {
       txheader.type=119;
       payload.orderno=0;
-      sprintf(payload.value,"0");
       network.write(txheader,&payload,sizeof(payload));
-      init_loop_counter=10;
+      last_send = millis();
     }
     network.update();
+    if ( last_send + 10000 < millis()) { do_transmit = true; }
     if ( network.available() ) {
+      do_transmit = false;
       network.read(rxheader,&payload,sizeof(payload));
       init_transmit=false;
-      init_loop_counter=0;
-      action_loop(); 
+      action_loop();
+      last_send = millis();
     }
-    delay(30);
-    init_loop_counter--;
-    //just in case of initialisation is interrupted
-    if (init_loop_counter < -1000) init_transmit=true;
   }
-  digitalWrite(STATUSLED,STATUSLED_OFF); 
-  network_busy=true;
+  digitalWrite(STATUSLED,STATUSLED_OFF);
+  sleepmode=sleep4;
+  networkuptime = 0;    
   display_down=false;
-  draw_antenna(ANT_X0, ANT_Y0);
 }
 
 void draw_therm(byte x, byte y) {
@@ -473,54 +475,64 @@ void draw_wait(byte x, byte y, int waitcount ) {
   }
 }
 
+void sleep12(unsigned int sleeptime) {
+  if ( radiomode == radio_sleep ) {
+    radio.stopListening();
+    wipe_antenna(ANT_X0, ANT_Y0);
+    radio.powerDown();
+  }
+  sleep4ms((unsigned int)(sleeptime)); 
+  if ( radiomode == radio_sleep ) {
+    radio.powerUp();
+    draw_antenna(ANT_X0, ANT_Y0);
+    radio.startListening();
+  }
+}
+
 void loop(void) {
-  network.update();
+  uint8_t n_update = 0;
+  n_update = network.update();
+  if ( n_update > 0 ) {
+    sleepmode = sleep4;
+    networkuptime = 0;
+  }
   if ( network.available() ) {
     sleepmode = sleep4;
     networkuptime = 0;
     network.read(rxheader,&payload,sizeof(payload));
+    Serial.print("Testnode02 received");
+    Serial.println(rxheader.type);
     action_loop();
+  }
+  if ( networkuptime < 0.1 ) {
+  //*****************
+  // Put anything you want to run frequently here
+  //*****************  
+  get_temp();
+  //#################
+  // END run frequently
+  //#################
   }
   sleep4ms(200);
   networkuptime += 0.2;    
   switch (sleepmode) {
     case sleep1:
-      if ( radiomode == radio_sleep ) {
-        radio.stopListening();
-        radio.powerDown();
-        wipe_antenna(ANT_X0, ANT_Y0);
-      }
-      sleep4ms((unsigned int)(sleeptime1*1000)); 
+      sleep12((unsigned int)(sleeptime1*1000)); 
       sleepmode = sleep3;
       next_sleepmode = sleep2;
       networkuptime = 0;    
-      if ( radiomode == radio_sleep ) {
-        radio.powerUp();
-        draw_antenna(ANT_X0, ANT_Y0);
-        radio.startListening();
-      }
     break;
     case sleep2:
-      if ( radiomode == radio_sleep ) {
-        radio.stopListening();
-        radio.powerDown();
-        wipe_antenna(ANT_X0, ANT_Y0);
-      }
-      sleep4ms((unsigned int)(sleeptime2*1000)); 
+      sleep12((unsigned int)(sleeptime2*1000)); 
       sleepmode = sleep3;
       next_sleepmode = sleep2;
       networkuptime = 0;    
-      if ( radiomode == radio_sleep ) {
-        radio.powerUp();
-        draw_antenna(ANT_X0, ANT_Y0);
-        radio.startListening();
-      }
     break;
     case sleep3:
       if ( networkuptime > sleeptime3) sleepmode = next_sleepmode;    
     break;
     case sleep4:
-      if ( networkuptime > sleeptime3) sleepmode = sleep1;        
+      if ( networkuptime > sleeptime4) sleepmode = sleep1;        
     break;
   } 
 }

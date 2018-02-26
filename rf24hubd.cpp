@@ -286,24 +286,48 @@ uint16_t node_init(MYSQL *db, uint16_t initnode, uint16_t orderno ) {
 		} else {
 			MYSQL_ROW row;
 			if ((row = mysql_fetch_row(result))) {
+				//Initialisation of basic node parameters (111...116)
+				//Sleeptime 1 
 				sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority) values (%d,'0%o',111,'%s',1)",orderno++, initnode, row[0]);
 				do_sql(db, sql_stmt);
+				//Sleeptime 2 
 				sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority) values (%d,'0%o',112,'%s',1)",orderno++, initnode, row[1]);
 				do_sql(db, sql_stmt);
+				//Sleeptime 3 
 				sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority) values (%d,'0%o',113,'%s',1)",orderno++, initnode, row[2]);
 				do_sql(db, sql_stmt);
+				//Sleeptime 4 
 				sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority) values (%d,'0%o',114,'%s',1)",orderno++, initnode, row[3]);
 				do_sql(db, sql_stmt);
+				//Radiomode 
 				sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority) values (%d,'0%o',115,'%s',1)",orderno++, initnode, row[4]);
 				do_sql(db, sql_stmt);
+				//Voltagefactor 
 				sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority) values (%d,'0%o',116,'%s',1)",orderno++, initnode, row[5]);
-				do_sql(db, sql_stmt);
-				sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority) values (%d,'0%o',118,'1',1)",orderno++, initnode);
 				do_sql(db, sql_stmt);
 			}
 			mysql_free_result(result);
 		}
 	}
+    //Initialisation of extra parameters from node_init 
+	sprintf (sql_stmt, "select channel, value, prio from node_init where node_id = '0%o' ",initnode);
+	if (mysql_query(db, sql_stmt)) {
+		sprintf(debug,"Query failed: %s\n", mysql_error(db));
+		logmsg(2,debug);
+	} else {
+		MYSQL_RES *result = mysql_store_result(db);
+		if (!result) {
+			sprintf(debug,"Couldn't get results set: %s\n", mysql_error(db));
+		} else {
+			MYSQL_ROW row;
+			while ((row = mysql_fetch_row(result))) {
+				sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority) values (%d,'0%o',%s,'%s', %s)",orderno++, initnode, row[0], row[1], row[2]);
+				do_sql(db, sql_stmt);
+			}
+			mysql_free_result(result);
+		}
+	}
+    //Initialisation of actors: set it to the last known value 
 	sprintf (sql_stmt, "select channel, value from sensor where type = 'a' and node_id = '0%o' ",initnode);
 	if (mysql_query(db, sql_stmt)) {
 		sprintf(debug,"Query failed: %s\n", mysql_error(db));
@@ -315,13 +339,15 @@ uint16_t node_init(MYSQL *db, uint16_t initnode, uint16_t orderno ) {
 		} else {
 			MYSQL_ROW row;
 			while ((row = mysql_fetch_row(result))) {
-				sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority) values (%d,'0%o',%s,'%s',6)",orderno++, initnode, row[0], row[1]);
+				sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority) values (%d,'0%o',%s,'%s',12)",orderno++, initnode, row[0], row[1]);
 				do_sql(db, sql_stmt);
 			}
 			mysql_free_result(result);
 		}
 	}
-	
+    //Initialisation finished: send 118	
+	sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority) values (%d,'0%o',118,'1',1)",orderno++, initnode);
+	do_sql(db, sql_stmt);	
 	return orderno;
 }
 
