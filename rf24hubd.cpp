@@ -3,7 +3,7 @@
 /*******************************************************************************************
 *
 * Configfilehandling
-* default place to look at is: DEFAULT_CONFIG_FILE (see sensorhub.h)
+* default place to look at is: DEFAULT_CONFIG_FILE (see rf24hub.h)
 *
 ********************************************************************************************/
 
@@ -449,7 +449,7 @@ void logmsg(int mesgloglevel, char *mymsg){
 		}
 //	} else { // log via systemlog
 //		if (mesgloglevel <= verboselevel) {
-//			openlog ( "sensorhubd", LOG_PID | LOG_CONS| LOG_NDELAY, LOG_LOCAL0 );
+//			openlog ( "rf24hubd", LOG_PID | LOG_CONS| LOG_NDELAY, LOG_LOCAL0 );
 //			syslog( LOG_NOTICE, "%s\n", mymsg);
 //			closelog();
 //		}
@@ -524,7 +524,7 @@ int main(int argc, char* argv[]) {
 
 	// check if started as root
 	if ( getuid()!=0 ) {
-           fprintf(stdout, "sensorhubd has to be startet as user root\n");
+           fprintf(stdout, "rf24hubd has to be startet as user root\n");
           exit(1);
         }
 
@@ -584,7 +584,7 @@ int main(int argc, char* argv[]) {
             unlink(parms.pidfilename);
             exit(1);
         } else {
-            // starts sensorhub as a deamon
+            // starts rf24hub as a deamon
             // no messages to console!
             debugmode=false;
             pid = fork ();
@@ -624,7 +624,7 @@ int main(int argc, char* argv[]) {
     }
     fprintf (pidfile_ptr, "%d", pid );
     fclose(pidfile_ptr);
-    sprintf(debug, "sensorhub running with PID: %d", pid);
+    sprintf(debug, "rf24hub running with PID: %d", pid);
     logmsg(2, debug);
     if ( tn_port_set && tn_host_set ) {
         tn_active = true;
@@ -682,8 +682,8 @@ int main(int argc, char* argv[]) {
 				if (new_socket > 0) {
 					wait4message = true;
 					// send something like a prompt. perl telnet is waiting for it otherwise we get error
-					// use this in perl: my $t = new Net::Telnet (Timeout => 2, Port => 7001, Prompt => '/sensorhub>/');
-					sprintf(client_message,"sensorhub> ");
+					// use this in perl: my $t = new Net::Telnet (Timeout => 2, Port => 7001, Prompt => '/rf24hub>/');
+					sprintf(client_message,"rf24hub> ");
 					write(new_socket , client_message , strlen(client_message));
 					sprintf (debug,"Der Client %s ist verbunden ...\n", inet_ntoa (address.sin_addr));
 					logmsg(6, debug);
