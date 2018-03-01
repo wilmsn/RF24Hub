@@ -56,7 +56,6 @@ float sleeptime2 = 5;
 float sleeptime3 = 1;
 // Time to keep the network up if it was busy
 float sleeptime4 = 5;
-unsigned int init_loop_counter = 0;
 boolean init_finished = false;
 boolean init_transmit = true;
 float networkuptime = 0;
@@ -186,7 +185,6 @@ void setup(void) {
       Serial.print(" ");
       Serial.println(payload.value);
       init_transmit=false;
-      init_loop_counter=0;
       action_loop();
       last_send = millis();
     }
@@ -218,14 +216,11 @@ void loop(void) {
   Serial.print("Testnode 02 active: ");
   Serial.println(networkuptime);
   n_update = network.update();
+  if ( radio.rxFifoFull() ) { Serial.println("#####> rxFiFoFull !!!"); }
+  if ( radio.failureDetected ) { Serial.println("#####> Failure detected !!!"); }
+  
   Serial.print("Network update:");
   Serial.println(n_update);
-  if ( n_update > 0 ) {
-    Serial.print("Durchgangsverkehr Channel: ");
-    Serial.println(n_update);
-    sleepmode = sleep4;
-    networkuptime = 0;
-  }
   if ( network.available() ) {
     sleepmode = sleep4;
     networkuptime = 0;
@@ -233,6 +228,11 @@ void loop(void) {
     Serial.print("Testnode02 received");
     Serial.println(rxheader.type);
     action_loop();
+  } else if ( n_update > 0 ) {
+    Serial.print("Durchgangsverkehr Channel: ");
+    Serial.println(n_update);
+    sleepmode = sleep4;
+    networkuptime = 0;
   }
   if ( networkuptime < 0.1 ) {
   //*****************
