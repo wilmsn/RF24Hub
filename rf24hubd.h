@@ -77,6 +77,7 @@ struct order_t {
   uint16_t 	     orderno;     // the orderno as primary key for our message for the nodes
   uint16_t       to_node;     // the destination node
   unsigned char  channel;     // The channel to address the sensor
+  unsigned int   flags;       // Some flags as part of payload
   char			 name[30];    // The name of this sensor in FHEM 
   float		     value;    // the information that is send to the node
 };
@@ -117,31 +118,79 @@ char sql_stmt[SQLSTRINGSIZE];
 uint16_t getnodeadr(char *node);
 char config_file[PARAM_MAXLEN_CONFIGFILE];
 
+
+/*******************************************************************************************
+*
+* Configfilehandling
+* default place to look at is: DEFAULT_CONFIG_FILE (see sensorhub.h)
+*
+********************************************************************************************/
+
+void parse_config (struct config_parameters * parms);
+
+void print_config (struct config_parameters * parms);
+
+void usage(const char *prgname);
+
+/*
+ * trim: get rid of trailing and leading whitespace...
+ *       ...including the annoying "\n" from fgets()
+ */
 char * trim (char * s);
 
-uint16_t node_init(MYSQL *db, uint16_t initnode, uint16_t orderno ); 
+/*******************************************************************************************
+*
+* Telnethandling
+* Used for communication with FHEM
+*
+********************************************************************************************/
 
-long runtime(long starttime);
+void exec_tn_cmd(const char *tn_cmd);
 
-void logmsg(int mesgloglevel, char *mymsg);
+void prepare_tn_cmd(MYSQL *db,  uint16_t orderno, float value);
 
-void log_db_err(int rc, char *errstr, char *mysql);
+void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message);
+
+/*******************************************************************************************
+*
+* Nodehandling 
+* Used for communication with the nodes
+*
+********************************************************************************************/
+
+uint16_t node_init(MYSQL *db, uint16_t initnode, uint16_t orderno );
+
+uint16_t getnodeadr(char *node);
+/*******************************************************************************************
+*
+* Databasehandling 
+* Used for communication with MariaDB
+*
+********************************************************************************************/
+
+void db_check_error(MYSQL *db);
+
+void do_sql(MYSQL *db, char *sqlstmt);
 
 bool is_jobbuffer_entry(MYSQL *db, uint16_t orderno);
 
 void del_jobbuffer_entry(MYSQL *db, uint16_t orderno);
 
-void exec_tn_cmd(const char *tn_cmd);
+void store_sensor_value(MYSQL *db, uint16_t orderno, float value, bool d1, bool d2);
 
-void prepare_tn_cmd(MYSQL *db,  uint16_t orderno, char *value);
-
-void do_sql(MYSQL *db, char *sqlstmt);
-
-void store_sensor_value(MYSQL *db, uint16_t orderno, char *value);
+/*******************************************************************************************
+*
+* All the rest 
+*
+********************************************************************************************/
 
 void sighandler(int signal);
 
-void usage(const char *prgname);
+long runtime(long starttime);
+
+void logmsg(int mesgloglevel, char *mymsg);
+
+
 
 int main(int argc, char* argv[]);
 

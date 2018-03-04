@@ -180,33 +180,27 @@ void exec_tn_cmd(const char *tn_cmd) {
 void prepare_tn_cmd(MYSQL *db,  uint16_t orderno, float value) {
 	char telnet_cmd[200];
 	sprintf (sql_stmt, "select fhem_dev from sensor where sensor_id = ( select sensor_id from jobbuffer where orderno = %d ) and fhem_dev is not null LIMIT 1 ", orderno);
-	if (mysql_query(db, sql_stmt)) {
-		sprintf(debug,"Query failed: %s\n", mysql_error(db));
-		logmsg(2,debug);
-	} else {
-		MYSQL_RES *result = mysql_store_result(db);
-		if (!result) {
-			sprintf(debug,"Couldn't get results set: %s\n", mysql_error(db));
-			logmsg(2,debug);
-		} else {
-			MYSQL_ROW row;
-			while ((row = mysql_fetch_row(result))) {
-				sprintf(telnet_cmd,"set %s %f \n", row[0], value);
-				sprintf(debug,"Telnet-CMD: %s\n", telnet_cmd);
-				logmsg(8,debug);				
-				exec_tn_cmd(telnet_cmd);
-			}
-		}
+	mysql_query(db, sql_stmt);
+	db_check_error(db);
+	MYSQL_RES *result = mysql_store_result(db);
+	db_check_error(db);
+	MYSQL_ROW row;
+	while ((row = mysql_fetch_row(result))) {
+		sprintf(telnet_cmd,"set %s %f \n", row[0], value);
+		sprintf(debug,"Telnet-CMD: %s\n", telnet_cmd);
+		logmsg(8,debug);				
+		exec_tn_cmd(telnet_cmd);
 	}
 }
 	
 void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message) {
-	char cmp1[10], 
+	char cmp1[10], cmp1a[10], 
 		 cmp2[10], 
 		 cmp3[10];
 	char *wort1, *wort2, *wort3, *wort4;
 	bool tn_input_ok=false;
 	char delimiter[] = " ";
+	unsigned int myflags = 0;
 	trim(buffer);
 	sprintf(debug,"Incoming telnet data: %s\n",buffer);
 	logmsg(7, debug);
@@ -216,13 +210,19 @@ void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message
 	wort4 = strtok(NULL, delimiter);
     if ( wort4 != NULL ) {
 		sprintf(cmp1, "set");
+		sprintf(cmp1a, "setlast");
 		sprintf(cmp2, "sensor");
-		if (( strcmp(wort1,cmp1) == 0 ) && (strcmp(wort2,cmp2) == 0) && (wort3 != NULL) && (wort4 != NULL) ) {
+		if ( (( strcmp(wort1,cmp1) == 0 ) || ( strcmp(wort1,cmp1a) == 0 )) && (strcmp(wort2,cmp2) == 0) && (wort3 != NULL) && (wort4 != NULL) ) {
 			tn_input_ok = true;
 			// delete old entries for the same sensor with the same value
 			sprintf(sql_stmt,"delete from jobbuffer where sensor_id = %s and value = %s ", wort3, wort4);
 			do_sql(db, sql_stmt);
-			sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value,sensor_id,priority,utime) select %u, node_id, channel, %s, sensor_id, 11, UNIX_TIMESTAMP() from sensor where sensor_id = %s ", orderno++, wort4, wort3);
+			if ( strcmp(wort1,cmp1) == 0 ) {
+				myflags = 0;
+			} else {
+				myflags = 1;
+			}
+			sprintf(sql_stmt,"insert into jobbuffer(orderno,flags,node_id,channel,value,sensor_id,priority,utime) select %u, %u, node_id, channel, %s, sensor_id, 11, UNIX_TIMESTAMP() from sensor where sensor_id = %s ", orderno++, myflags, wort4, wort3);
 			do_sql(db, sql_stmt);
 			ordersqlrefresh = true;
 			sprintf(client_message,"Command received => OK\n");
@@ -276,52 +276,38 @@ uint16_t node_init(MYSQL *db, uint16_t initnode, uint16_t orderno ) {
 	sprintf (sql_stmt, "delete from jobbuffer where node_id = '0%o'",initnode);
     do_sql(db,sql_stmt); 
 	sprintf (sql_stmt, "select sleeptime1, sleeptime2, sleeptime3, sleeptime4, radiomode, voltagefactor from node where node_id = '0%o' LIMIT 1 ",initnode);
-	if (mysql_query(db, sql_stmt)) {
-		sprintf(debug,"Query failed: %s\n", mysql_error(db));
-		logmsg(2,debug);
-	} else {
-		MYSQL_RES *result = mysql_store_result(db);
-		if (!result) {
-			sprintf(debug,"Couldn't get results set: %s\n", mysql_error(db));
-		} else {
-			MYSQL_ROW row;
-			if ((row = mysql_fetch_row(result))) {
-				sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority, utime) values (%d,'0%o',111,'%s',1,unix_timestamp())",orderno++, initnode, row[0]);
-				do_sql(db, sql_stmt);
-				sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority, utime) values (%d,'0%o',112,'%s',1,unix_timestamp())",orderno++, initnode, row[1]);
-				do_sql(db, sql_stmt);
-				sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority, utime) values (%d,'0%o',113,'%s',1,unix_timestamp())",orderno++, initnode, row[2]);
-				do_sql(db, sql_stmt);
-				sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority, utime) values (%d,'0%o',114,'%s',1,unix_timestamp())",orderno++, initnode, row[3]);
-				do_sql(db, sql_stmt);
-				sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority, utime) values (%d,'0%o',115,'%s',1,unix_timestamp())",orderno++, initnode, row[4]);
-				do_sql(db, sql_stmt);
-				sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority, utime) values (%d,'0%o',116,'%s',1,unix_timestamp())",orderno++, initnode, row[5]);
-				do_sql(db, sql_stmt);
-				sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority, utime) values (%d,'0%o',118,'1',1,unix_timestamp())",orderno++, initnode);
-				do_sql(db, sql_stmt);
-			}
-			mysql_free_result(result);
-		}
+	mysql_query(db, sql_stmt);
+	db_check_error(db);
+	MYSQL_RES *result = mysql_store_result(db);
+	db_check_error(db);
+	MYSQL_ROW row;
+	if ((row = mysql_fetch_row(result))) {
+		sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority, utime) values (%d,'0%o',111,'%s',1,unix_timestamp())",orderno++, initnode, row[0]);
+		do_sql(db, sql_stmt);
+		sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority, utime) values (%d,'0%o',112,'%s',1,unix_timestamp())",orderno++, initnode, row[1]);
+		do_sql(db, sql_stmt);
+		sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority, utime) values (%d,'0%o',113,'%s',1,unix_timestamp())",orderno++, initnode, row[2]);
+		do_sql(db, sql_stmt);
+		sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority, utime) values (%d,'0%o',114,'%s',1,unix_timestamp())",orderno++, initnode, row[3]);
+		do_sql(db, sql_stmt);
+		sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority, utime) values (%d,'0%o',115,'%s',1,unix_timestamp())",orderno++, initnode, row[4]);
+		do_sql(db, sql_stmt);
+		sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority, utime) values (%d,'0%o',116,'%s',1,unix_timestamp())",orderno++, initnode, row[5]);
+		do_sql(db, sql_stmt);
+		sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority, utime) values (%d,'0%o',118,'1',1,unix_timestamp())",orderno++, initnode);
+		do_sql(db, sql_stmt);
 	}
+	mysql_free_result(result);
 	sprintf (sql_stmt, "select channel, value from sensor where type = 'a' and node_id = '0%o' ",initnode);
-	if (mysql_query(db, sql_stmt)) {
-		sprintf(debug,"Query failed: %s\n", mysql_error(db));
-		logmsg(2,debug);
-	} else {
-		MYSQL_RES *result = mysql_store_result(db);
-		if (!result) {
-			sprintf(debug,"Couldn't get results set: %s\n", mysql_error(db));
-		} else {
-			MYSQL_ROW row;
-			while ((row = mysql_fetch_row(result))) {
-				sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority, utime) values (%d,'0%o',%s,'%s',6, unix_timestamp())",orderno++, initnode, row[0], row[1]);
-				do_sql(db, sql_stmt);
-			}
-			mysql_free_result(result);
-		}
+	mysql_query(db, sql_stmt);
+	db_check_error(db);
+	result = mysql_store_result(db);
+	db_check_error(db);
+	while ((row = mysql_fetch_row(result))) {
+		sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value, priority, utime) values (%d,'0%o',%s,'%s',6, unix_timestamp())",orderno++, initnode, row[0], row[1]);
+		do_sql(db, sql_stmt);
 	}
-	
+	mysql_free_result(result);
 	return orderno;
 }
 
@@ -351,6 +337,13 @@ uint16_t getnodeadr(char *node) {
 *
 ********************************************************************************************/
 
+void db_check_error(MYSQL *db) {
+	if (mysql_errno(db) != 0) {
+		sprintf(debug, "DB-Fehler: %s\n", mysql_error(db));
+        logmsg(2, debug);
+    }
+}
+
 void do_sql(MYSQL *db, char *sqlstmt) {
 	if (mysql_query(db, sqlstmt)) {
 		sprintf(debug, "%s", mysql_error(db));
@@ -366,19 +359,12 @@ bool is_jobbuffer_entry(MYSQL *db, uint16_t orderno) {
 	bool retval=false;
 	sprintf(sql_stmt, "select count(*) from jobbuffer where orderno = %u ", orderno );
 	logmsg(8,sql_stmt);	
-	if (mysql_query(db, sql_stmt)) {
-		sprintf(debug,"Query failed: %s\n", mysql_error(db));
-		logmsg(2,debug);
-	} else {
-		MYSQL_RES *result = mysql_store_result(db);
-		if (!result) {
-			sprintf(debug,"Couldn't get results set: %s\n", mysql_error(db));
-			logmsg(2,debug);
-		} else {
-			row = mysql_fetch_row(result);
-			retval=(row[0] > 0);
-		}
-	}
+	mysql_query(db, sql_stmt);
+	db_check_error(db);
+	MYSQL_RES *result = mysql_store_result(db);
+	db_check_error(db);
+	row = mysql_fetch_row(result);
+	retval=(row[0] > 0);
 	return retval;
 }
 
@@ -803,34 +789,23 @@ int main(int argc, char* argv[]) {
 			do_sql(db, sql_stmt);
 			// if we got new jobs refresh the order array first
 				for (int i=1; i<7; i++) {
-					sprintf (sql_stmt, "select orderno, node_id, channel, value, priority from jobbuffer where substr(node_id,length(node_id),1) = '%d' order by CAST(node_id as integer), priority, channel, utime asc LIMIT 1 ",i);
+					sprintf (sql_stmt, "select orderno, node_id, channel, value, priority, flags from jobbuffer where substr(node_id,length(node_id),1) = '%d' order by CAST(node_id as integer), priority, channel, utime asc LIMIT 1 ",i);
 					logmsg(8,sql_stmt);	
-					if (mysql_query(db, sql_stmt)) {
-						sprintf(debug,"Query failed: %s\n", mysql_error(db));
-						logmsg(2,debug);
-					} else {
-						MYSQL_RES *result = mysql_store_result(db);
-						if (!result) {
-							sprintf(debug,"Couldn't get results set: %s\n", mysql_error(db));
-							logmsg(2,debug);
-						} else {
-							MYSQL_ROW row;
-							order[i].orderno = 0;
-							while ((row = mysql_fetch_row(result))) {
-								order[i].orderno = strtoul(row[0], &pEnd,10);
-								order[i].to_node  = getnodeadr(row[1]);
-								order[i].channel  = strtoul(row[2], &pEnd,10);
-								order[i].value    = strtof(row[3], &pEnd);
-//						sprintf(order[i].name, "%s", sqlite3_column_text (stmt, 4));
-//								sprintf(debug,"orderno: %d Node: %d Channel: %d Value: %s Name: %s Prio: %d"
-//											,sqlite3_column_int (stmt, 0), sqlite3_column_int (stmt, 1), sqlite3_column_int (stmt, 2)
-//											,sqlite3_column_text (stmt, 3), sqlite3_column_text (stmt, 4), sqlite3_column_int (stmt, 5));
-//								logmsg(6,debug);					
-							}
-							ordersqlrefresh=false;
-							mysql_free_result(result);
-						}
+					mysql_query(db, sql_stmt);
+					db_check_error(db);
+					MYSQL_RES *result = mysql_store_result(db);
+					db_check_error(db);
+					MYSQL_ROW row;
+					order[i].orderno = 0;
+					while ((row = mysql_fetch_row(result))) {
+						order[i].orderno = strtoul(row[0], &pEnd,10);
+						order[i].to_node  = getnodeadr(row[1]);
+						order[i].channel  = strtoul(row[2], &pEnd,10);
+						order[i].value    = strtof(row[3], &pEnd);
+						order[i].flags    = strtof(row[5], &pEnd);
 					}
+					ordersqlrefresh=false;
+					mysql_free_result(result);
 				}
 			}
 			if ( (order[1].orderno || order[2].orderno || order[3].orderno || order[4].orderno || order[5].orderno || order[6].orderno)) {
@@ -839,16 +814,17 @@ int main(int argc, char* argv[]) {
 					if (order[i].orderno) {
 						txheader.from_node = 0;
 						payload.orderno = order[i].orderno;
+						payload.flags = order[i].flags;
 						txheader.to_node  = order[i].to_node;
 						txheader.type  = order[i].channel;
 						payload.value = order[i].value;
 						if (network.write(txheader,&payload,sizeof(payload))) {
-							sprintf(debug, DEBUGSTR "Send: Channel: %u from Node: 0%o to Node: 0%o orderno %d Value %f "
-									, txheader.type, txheader.from_node, txheader.to_node, payload.orderno, payload.value);
+							sprintf(debug, DEBUGSTR "Send: Channel: %u from Node: 0%o to Node: 0%o orderno %d Flags: %u Value %f "
+									, txheader.type, txheader.from_node, txheader.to_node, payload.orderno, payload.flags, payload.value);
 							logmsg(6, debug); 
 						} else {		
-							sprintf(debug, DEBUGSTR "Failed: Channel: %u from Node: 0%o to Node: 0%o orderno %d Value %f "
-									, txheader.type, txheader.from_node, txheader.to_node, payload.orderno, payload.value);
+							sprintf(debug, DEBUGSTR "Failed: Channel: %u from Node: 0%o to Node: 0%o orderno %d Flags: %u Value %f "
+									, txheader.type, txheader.from_node, txheader.to_node, payload.orderno, payload.flags, payload.value);
 							logmsg(6, debug); 
 						}  
 					}
