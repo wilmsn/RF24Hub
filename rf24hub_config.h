@@ -22,6 +22,7 @@ rf24hub_config.h ==> all global definitions go here
 //
 //-------------------------------------------------------
 //
+#define MAXNODES 20
 #define PARAM_MAXLEN 80
 #define PARAM_MAXLEN_CONFIGFILE 40
 #define PARAM_MAXLEN_LOGFILE 40

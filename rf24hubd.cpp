@@ -780,64 +780,80 @@ int main(int argc, char* argv[]) {
 //
 // Orderloop: Tell the nodes what they have to do
 //
-		akt_time=runtime(starttime);
-		if ( akt_time > sent_time + 499 ) {  // send every 500 milliseconds
-			sent_time=akt_time;
-			if ( ordersqlrefresh ) { 
-			// Do we have old jobs - delete them
-			sprintf (sql_stmt, "delete from jobbuffer where utime < (unix_timestamp() - 1000) ");
-			do_sql(db, sql_stmt);
-			// if we got new jobs refresh the order array first
-				for (int i=1; i<7; i++) {
-					sprintf (sql_stmt, "select orderno, node_id, channel, value, priority, flags from jobbuffer where substr(node_id,length(node_id),1) = '%d' order by CAST(node_id as integer), priority, channel, utime asc LIMIT 1 ",i);
-					logmsg(8,sql_stmt);	
-					mysql_query(db, sql_stmt);
-					db_check_error(db);
-					MYSQL_RES *result = mysql_store_result(db);
-					db_check_error(db);
-					MYSQL_ROW row;
-					order[i].orderno = 0;
-					while ((row = mysql_fetch_row(result))) {
-						order[i].orderno = strtoul(row[0], &pEnd,10);
-						order[i].to_node  = getnodeadr(row[1]);
-						order[i].channel  = strtoul(row[2], &pEnd,10);
-						order[i].value    = strtof(row[3], &pEnd);
-						order[i].flags    = strtof(row[5], &pEnd);
-					}
-					ordersqlrefresh=false;
-					mysql_free_result(result);
-				}
-			}
-			if ( (order[1].orderno || order[2].orderno || order[3].orderno || order[4].orderno || order[5].orderno || order[6].orderno)) {
-				int i=1;
-				while (i<7) {
-					if (order[i].orderno) {
-						txheader.from_node = 0;
-						payload.orderno = order[i].orderno;
-						payload.flags = order[i].flags;
-						txheader.to_node  = order[i].to_node;
-						txheader.type  = order[i].channel;
-						payload.value = order[i].value;
-						if (network.write(txheader,&payload,sizeof(payload))) {
-							sprintf(debug, DEBUGSTR "Send: Channel: %u from Node: 0%o to Node: 0%o orderno %d Flags: %u Value %f "
-									, txheader.type, txheader.from_node, txheader.to_node, payload.orderno, payload.flags, payload.value);
-							logmsg(6, debug); 
-						} else {		
-							sprintf(debug, DEBUGSTR "Failed: Channel: %u from Node: 0%o to Node: 0%o orderno %d Flags: %u Value %f "
-									, txheader.type, txheader.from_node, txheader.to_node, payload.orderno, payload.flags, payload.value);
-							logmsg(6, debug); 
-						}  
-					}
-					i++; 
-				}
-			}
-		} 
-		usleep(10000); 
+                akt_time=runtime(starttime);
+                if ( akt_time > sent_time + 199 ) {  // send every 200 milliseconds
+                        sent_time=akt_time;
+                        if ( ordersqlrefresh ) {
+                                int init_order_ptr = 0;
+                        // Do we have old jobs - delete them
+                                sprintf (sql_stmt, "delete from jobbuffer where utime < (unix_timestamp() - 1000) ");
+                                do_sql(db, sql_stmt);
+                        // if we got new jobs refresh the order array first
+                                sprintf (sql_stmt, "select distinct node_id from jobbuffer");
+                                logmsg(8,sql_stmt);
+                                mysql_query(db, sql_stmt);
+                                db_check_error(db);
+                                MYSQL_RES *result = mysql_store_result(db);
+                                db_check_error(db);
+                                MYSQL_ROW row;
+                                while ( (row = mysql_fetch_row(result)) ) {
+                                    sprintf (sql_stmt, "select orderno, node_id, channel, value, flags from jobbuffer where node_id = '%s' order by priority asc, channel asc limit 1", row[0]);
+                                    logmsg(8,sql_stmt);
+                                    mysql_query(db, sql_stmt);
+                                    db_check_error(db);
+                                    MYSQL_RES *result1 = mysql_store_result(db);
+                                    db_check_error(db);
+                                    MYSQL_ROW row1;
+                                    if ((row1 = mysql_fetch_row(result1))) {
+                                        order[init_order_ptr].orderno  = strtoul(row1[0], &pEnd,10);
+                                        order[init_order_ptr].to_node  = getnodeadr(row1[1]);
+                                        order[init_order_ptr].channel  = strtoul(row1[2], &pEnd,10);
+										order[init_order_ptr].flags    = strtoul(row1[4], &pEnd,10);
+										order[init_order_ptr].value    = strtof(row1[3], &pEnd);
+                                        init_order_ptr++;
+                                    }
+                                }
+                                ordersqlrefresh=false;
+                                mysql_free_result(result);
+                                while ( init_order_ptr < MAXNODES) {
+                                        order[init_order_ptr].orderno = 0;
+                                        init_order_ptr++;
+                                }
+                        }
+// Look if we have something to send
+                        bool do_loop = true;
+                        while ( order[order_ptr].orderno == 0 && do_loop ) {
+                                if ( order_ptr < MAXNODES ) {
+                                        order_ptr++;
+                                } else {
+                                        order_ptr=0;
+                                        do_loop = false;
+                                }
+                        }
+                        if      ( order[order_ptr].orderno != 0 ) {
+                                txheader.from_node = 0;
+                                payload.orderno = order[order_ptr].orderno;
+                                txheader.to_node  = order[order_ptr].to_node;
+								payload.flags = order[order_ptr].flags;
+                                txheader.type  = order[order_ptr].channel;
+                                payload.value  = order[order_ptr].value;
+                                if (network.write(txheader,&payload,sizeof(payload))) {
+                                        sprintf(debug, DEBUGSTR "Send: Channel: %u from Node: 0%o to Node: 0%o orderno %d Value %f "
+                                                        , txheader.type, txheader.from_node, txheader.to_node, payload.orderno, payload.value);
+                                        logmsg(6, debug);
+                                } else {
+                                        sprintf(debug, DEBUGSTR "Failed: Channel: %u from Node: 0%o to Node: 0%o orderno %d Value %f "
+                                                        , txheader.type, txheader.from_node, txheader.to_node, payload.orderno, payload.value);
+                                        logmsg(6, debug);
+                                }
+                                order_ptr++;
+                        }
+                }
+                usleep(2000);
 //
-//  end orderloop 
+//  end orderloop
 //
-	} // while(1)
-	return 0;
+        } // while(1)
+        return 0;
 }
-
 

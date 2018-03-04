@@ -63,6 +63,7 @@ MYSQL_RES *res;
 MYSQL_ROW row;
 char* pEnd;
 const char* prgversion=PRGVERSION;
+int order_ptr;
 
 // Setup for GPIO 25 CE and CE0 CSN with SPI Speed @ 8Mhz
 RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
