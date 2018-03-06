@@ -542,18 +542,35 @@ int main(int argc, char* argv[]) {
     // open database
     sprintf(debug,"Maria-DB:");
     logmsg(2, debug);
-    MYSQL *db = mysql_init(NULL);
     sprintf(debug,"MySQL client version: %s", mysql_get_client_info());
     logmsg(2, debug);
-    if (db == NULL) {
-        fprintf(stderr, "%s\n", mysql_error(db));
-        mysql_close(db);
-        exit(1);
+    MYSQL *db = mysql_init(NULL);
+    int mysql_wait_count = 0;
+    while (db == NULL) {
+		sprintf(debug,"Waiting for Database: %d Sec.", 20-mysql_wait_count);
+		logmsg(2, debug);		
+		if ( mysql_wait_count < 20 ) {
+			mysql_wait_count++;
+			delay(1000);
+			db = mysql_init(NULL);
+		} else {
+			fprintf(stderr, "%s\n", mysql_error(db));
+            mysql_close(db);
+            exit(1);
+		}
     }
-    if (mysql_real_connect(db, parms.db_hostname, parms.db_username, parms.db_password, parms.db_schema, parms.db_port, NULL, 0) == NULL) {
-        fprintf(stderr, "%s\n", mysql_error(db));
-        mysql_close(db);
-        exit(1);
+    mysql_wait_count = 0;
+    while (mysql_real_connect(db, parms.db_hostname, parms.db_username, parms.db_password, parms.db_schema, parms.db_port, NULL, 0) == NULL) {
+		sprintf(debug,"Waiting for Database: %d Sec.", 20-mysql_wait_count);
+		logmsg(2, debug);		
+		if ( mysql_wait_count < 20 ) {
+			mysql_wait_count++;
+			delay(1000);
+		} else {
+			fprintf(stderr, "%s\n", mysql_error(db));
+			mysql_close(db);
+			exit(1);
+		}
     }
     sprintf(debug, "Connected to host %s with DB %s on port %d", parms.db_hostname, mysql_get_server_info(db), parms.db_port);
     logmsg(2, debug);
