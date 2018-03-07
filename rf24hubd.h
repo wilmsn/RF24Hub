@@ -77,12 +77,26 @@ uint16_t orderno, init_orderno;
 struct order_t {
   uint16_t 	     orderno;     // the orderno as primary key for our message for the nodes
   uint16_t       to_node;     // the destination node
-  unsigned char  channel;     // The channel to address the sensor
+  unsigned char  type;        // Becomes networkheader.type
   unsigned int   flags;       // Some flags as part of payload
-  char			 name[30];    // The name of this sensor in FHEM 
-  float		     value;    // the information that is send to the node
+  unsigned char  channel1;
+  float		     value1;    // the information that is send to the node
+  unsigned char  channel2;
+  float		     value2;    // the information that is send to the node
+  unsigned char  channel3;
+  float		     value3;    // the information that is send to the node
+  unsigned char  channel4;
+  float		     value4;    // the information that is send to the node
 };
-order_t order[7]; // we do not handle more than 6 orders (one per subnode 1...6) at one time
+order_t order[MAXNODES]; // we do not handle more than 6 orders (one per subnode 1...6) at one time
+
+struct telnet_buffer_t {
+	uint32_t     sensor;
+	uint16_t     node;
+	uint16_t     channel;
+	float        value;
+};
+telnet_buffer_t telnet_buffer[MAXTELNETBUFFER];
 
 struct config_parameters {
   char logfilename[PARAM_MAXLEN_LOGFILE];
@@ -148,10 +162,15 @@ char * trim (char * s);
 
 void exec_tn_cmd(const char *tn_cmd);
 
-void prepare_tn_cmd(MYSQL *db,  uint16_t orderno, float value);
+void prepare_tn_cmd(MYSQL *db,  uint16_t node, uint8_t sensor, float value);
+
+void fill_telnet_buffer( uint32_t sensor, uint16_t node, uint16_t channel, float value);
+
+void telnet_buffer2db( MYSQL *db, uint16_t node );
 
 void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message);
 
+void telnet_buffer2db( MYSQL *db, uint16_t node );
 /*******************************************************************************************
 *
 * Nodehandling 
@@ -177,7 +196,9 @@ bool is_jobbuffer_entry(MYSQL *db, uint16_t orderno);
 
 void del_jobbuffer_entry(MYSQL *db, uint16_t orderno);
 
-void store_sensor_value(MYSQL *db, uint16_t orderno, float value, bool d1, bool d2);
+void store_sensor_value(MYSQL *db, uint16_t node, uint8_t sensor, float value, bool d1, bool d2);
+
+void process_sensor(MYSQL *db, uint16_t node, uint8_t sensor, float value, bool d1, bool d2);
 
 /*******************************************************************************************
 *
