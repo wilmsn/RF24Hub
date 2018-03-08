@@ -178,7 +178,7 @@ void telnet_buffer2db( MYSQL *db, uint16_t node );
 *
 ********************************************************************************************/
 
-uint16_t node_init(MYSQL *db, uint16_t initnode, uint16_t orderno );
+void node_init(MYSQL *db, uint16_t initnode );
 
 uint16_t getnodeadr(char *node);
 /*******************************************************************************************

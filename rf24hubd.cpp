@@ -3,7 +3,7 @@
 /*******************************************************************************************
 *
 * Configfilehandling
-* default place to look at is: DEFAULT_CONFIG_FILE (see sensorhub.h)
+* default place to look at is: DEFAULT_CONFIG_FILE (see rf24hubd.h)
 *
 ********************************************************************************************/
 
@@ -177,9 +177,9 @@ void exec_tn_cmd(const char *tn_cmd) {
     close(sockfd);
 }
 
-void prepare_tn_cmd(MYSQL *db,  uint16_t node, uint8_t sensor, float value) {
+void prepare_tn_cmd(MYSQL *db,  uint16_t node, uint8_t channel, float value) {
 	char telnet_cmd[200];
-	sprintf (sql_stmt, "select fhem_dev from sensor where node_id = '0%o' and sensor_id = %u and fhem_dev is not null LIMIT 1 ", node, sensor);
+	sprintf (sql_stmt, "select fhem_dev from sensor where node_id = '0%o' and channel = %u and fhem_dev is not null LIMIT 1 ", node, channel);
 	mysql_query(db, sql_stmt);
 	db_check_error(db);
 	MYSQL_RES *result = mysql_store_result(db);
@@ -195,7 +195,7 @@ void prepare_tn_cmd(MYSQL *db,  uint16_t node, uint8_t sensor, float value) {
 
 void fill_telnet_buffer( uint32_t sensor, uint16_t node, uint16_t channel, float value) {
 	int i=0;
-	while ( telnet_buffer[i].sensor > 0 && i < MAXTELNETBUFFER) i++;
+	while ( (telnet_buffer[i].sensor > 0) && (telnet_buffer[i].sensor != sensor )  && ( i < MAXTELNETBUFFER ) ) i++;
 	telnet_buffer[i].sensor=sensor;
 	telnet_buffer[i].node=node;
 	telnet_buffer[i].channel=channel;
@@ -223,13 +223,17 @@ void telnet_buffer2db( MYSQL *db, uint16_t node ) {
 	while ( ! finished ) {
 		for (int j=0; j<4; j++) { tb[j].s=0; tb[j].c=0; tb[j].v=0; }
 		int k=0;
-//		bool sql_ready = false;
 		while ( k < 4 && i < MAXTELNETBUFFER ) {
+//printf("**** i: %d k: %d \n",i,k);				
 			while ( telnet_buffer[i].node != node && i < MAXTELNETBUFFER ) i++;
 			if ( telnet_buffer[i].node == node ) {
 				tb[k].s = telnet_buffer[i].sensor;
 				tb[k].c = telnet_buffer[i].channel;
 				tb[k].v = telnet_buffer[i].value;
+				telnet_buffer[i].sensor = 0;
+				telnet_buffer[i].channel = 0;
+				telnet_buffer[i].value = 0;
+				telnet_buffer[i].node = 0;
 				k++;
 				i++;
 			}
@@ -238,11 +242,12 @@ void telnet_buffer2db( MYSQL *db, uint16_t node ) {
 				if ( i > MAXTELNETBUFFER-1 ) { flags = 0x01; finished=true; } else flags = 0x00;
 				if (orderno > 50000) orderno=1; else orderno++;
 				sprintf(sql_stmt,"insert into jobbuffer(orderno,flags,node_id,n_type,sensor_id1,channel1,value1,sensor_id2,channel2,value2,sensor_id3,channel3,value3,sensor_id4,channel4,value4) values(%u,%u,'0%o',%u, %u,%u,%f,%u,%u,%f,%u,%u,%f,%u,%u,%f)"
-				,orderno,flags,node,m,tb[0].s,tb[0].c,tb[0].v,tb[1].s,tb[1].c,tb[1].v,tb[2].s,tb[2].c,tb[2].v,tb[3].s,tb[3].c,tb[3].v);
+				,orderno++,flags,node,m,tb[0].s,tb[0].c,tb[0].v,tb[1].s,tb[1].c,tb[1].v,tb[2].s,tb[2].c,tb[2].v,tb[3].s,tb[3].c,tb[3].v);
 				do_sql(db, sql_stmt);
 				m++;
 			}
-		}	
+		}
+		if ( i > MAXTELNETBUFFER-1 ) finished=true;
 	}	
 }
 	
@@ -296,7 +301,7 @@ void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message
 		sprintf(cmp3, "init");
 		if (( strcmp(wort1,cmp1) == 0 ) && (strcmp(wort2,cmp2) == 0) && (wort3 != NULL) && (strcmp(wort4,cmp3) == 0) ) {
 			tn_input_ok = true;
-			node_init(db, getnodeadr(wort3), 1);
+			node_init(db, getnodeadr(wort3));
 			ordersqlrefresh = true;
 			sprintf(client_message,"Command received => OK\n");
 			write(new_socket , client_message , strlen(client_message));
@@ -335,7 +340,7 @@ void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message
 * Used for communication with the nodes
 *
 ********************************************************************************************/
-uint16_t node_init(MYSQL *db, uint16_t node, uint16_t orderno ) {
+void node_init(MYSQL *db, uint16_t node ) {
 	// delete old entries for this node
 	sprintf (sql_stmt, "delete from jobbuffer where node_id = '0%o'",node);
     do_sql(db,sql_stmt); 
@@ -366,7 +371,7 @@ uint16_t node_init(MYSQL *db, uint16_t node, uint16_t orderno ) {
 	}
 	mysql_free_result(result);
 	telnet_buffer2db( db, node );
-	return orderno;
+//	return orderno;
 }
 
 uint16_t getnodeadr(char *node) {
@@ -415,14 +420,18 @@ void do_sql(MYSQL *db, char *sqlstmt) {
 bool is_jobbuffer_entry(MYSQL *db, uint16_t orderno) {
     MYSQL_ROW row;	
 	bool retval=false;
-	sprintf(sql_stmt, "select count(*) from jobbuffer where orderno = %u ", orderno );
+	sprintf(sql_stmt, "select orderno from jobbuffer where orderno = %u ", orderno );
 	logmsg(8,sql_stmt);	
 	mysql_query(db, sql_stmt);
 	db_check_error(db);
 	MYSQL_RES *result = mysql_store_result(db);
 	db_check_error(db);
-	row = mysql_fetch_row(result);
-	retval=(row[0] > 0);
+	retval = ( row = mysql_fetch_row(result) );
+/*	if ( retval ) {
+		printf("\n\n***>Orderno %u is valid \n\n", orderno);
+	} else {
+		printf("\n\n***>Orderno %u is NOT valid \n\n", orderno);
+	}  */
 	return retval;
 }
 
@@ -436,28 +445,28 @@ void del_jobbuffer_entry(MYSQL *db, uint16_t orderno) {
 	ordersqlrefresh=true;
 }
 
-void store_sensor_value(MYSQL *db, uint16_t node, uint8_t sensor, float value, bool d1, bool d2) {
+void store_sensor_value(MYSQL *db, uint16_t node, uint8_t channel, float value, bool d1, bool d2) {
 	if ( tn_active ) { 
-		prepare_tn_cmd(db, node, sensor, value); 
+		prepare_tn_cmd(db, node, channel, value); 
 	}
-	sprintf(sql_stmt,"insert into sensordata (sensor_ID, utime, value) select sensor_id, UNIX_TIMESTAMP(), %f from sensor where node_id = '0%o' and channel = %u ", value, node, sensor);
+	sprintf(sql_stmt,"insert into sensordata (sensor_ID, utime, value) select sensor_id, UNIX_TIMESTAMP(), %f from sensor where node_id = '0%o' and channel = %u ", value, node, channel);
 	do_sql(db, sql_stmt);
-	sprintf(sql_stmt,"update sensor set value= %f, Utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where node_id = '0%o' and channel = %u ", value, d1, d2, node, sensor);
+	sprintf(sql_stmt,"update sensor set value= %f, Utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where node_id = '0%o' and channel = %u ", value, d1, d2, node, channel);
 	do_sql(db, sql_stmt);
 }
 
-void process_sensor(MYSQL *db, uint16_t node, uint8_t sensor, float value, bool d1, bool d2) {
-			switch (sensor) {
+void process_sensor(MYSQL *db, uint16_t node, uint8_t channel, float value, bool d1, bool d2) {
+			switch (channel) {
 				case 1 ... 99: {
-				// Sensor 
-					store_sensor_value(db, node, sensor, value, d1, d2);
-					sprintf(debug, DEBUGSTR "Value of  %u on Node: %o is %f ", sensor, node, value);
+				// Sensor or Actor
+					store_sensor_value(db, node, channel, value, d1, d2);
+					sprintf(debug, DEBUGSTR "Value of  %u on Node: %o is %f ", channel, node, value);
 					logmsg(6, debug);       
 				}
 				break; 
 				case 101: {
 				// battery voltage
-					store_sensor_value(db, node, sensor, value, d1, d2);
+					store_sensor_value(db, node, channel, value, d1, d2);
 					sprintf(debug, DEBUGSTR "Voltage of Node: %o is %f ", node, value);
 					logmsg(6, debug);        
 					sprintf(sql_stmt,"update node set U_Batt = %f, signal_quality = '%d%d', last_contact = unix_timestamp() where Node_ID = '0%o'", value, d1, d2, node);
@@ -630,7 +639,7 @@ int main(int argc, char* argv[]) {
 
 	// check if started as root
 	if ( getuid()!=0 ) {
-           fprintf(stdout, "sensorhubd has to be startet as user root\n");
+           fprintf(stdout, "rf24hubd has to be startet as user root\n");
           exit(1);
         }
 
@@ -707,7 +716,7 @@ int main(int argc, char* argv[]) {
             unlink(parms.pidfilename);
             exit(1);
         } else {
-            // starts sensorhub as a deamon
+            // starts rf24hubd as a deamon
             // no messages to console!
             debugmode=false;
             pid = fork ();
@@ -747,7 +756,7 @@ int main(int argc, char* argv[]) {
     }
     fprintf (pidfile_ptr, "%d", pid );
     fclose(pidfile_ptr);
-    sprintf(debug, "sensorhub running with PID: %d", pid);
+    sprintf(debug, "rf24hubd running with PID: %d", pid);
     logmsg(2, debug);
     if ( tn_port_set && tn_host_set ) {
         tn_active = true;
@@ -837,7 +846,7 @@ int main(int argc, char* argv[]) {
             rf24_carrier = radio.testCarrier();
 			rf24_rpd = radio.testRPD();
 			network.read(rxheader,&payload,sizeof(payload));
-			sprintf(debug, DEBUGSTR "Received: Channel: %u from Node: %o to Node: %o Orderno %d (Sensor/Value): (%u/%f) (%u/%f) (%u/%f) (%u/%f) "
+			sprintf(debug, DEBUGSTR "Received: Type: %u from Node: %o to Node: %o Orderno %d (Channel/Value): (%u/%f) (%u/%f) (%u/%f) (%u/%f) "
 						, rxheader.type, rxheader.from_node, rxheader.to_node, payload.orderno
 						, payload.channel1, payload.value1, payload.channel2, payload.value2, payload.channel3, payload.value3, payload.channel4, payload.value4);
 			logmsg(6, debug);
@@ -850,7 +859,7 @@ int main(int argc, char* argv[]) {
 				del_jobbuffer_entry(db, payload.orderno);
 			}
 			if ( rxheader.type == 119 ) {
-					orderno = node_init(db, rxheader.from_node, orderno);
+					node_init(db, rxheader.from_node);
 					ordersqlrefresh=true;
 			}	
 			
@@ -933,12 +942,12 @@ int main(int argc, char* argv[]) {
                                 payload.channel4  = order[order_ptr].channel4;
                                 payload.value4  = order[order_ptr].value4;
                                 if (network.write(txheader,&payload,sizeof(payload))) {
-                                        sprintf(debug, DEBUGSTR "Send: Type: %u from Node: 0%o to Node: 0%o orderno %d (Sensor1/Value) (%u/%f) (%u/%f) (%u/%f) (%u/%f)"
+                                        sprintf(debug, DEBUGSTR "Send: Type: %u from Node: 0%o to Node: 0%o orderno %d (Channel/Value) (%u/%f) (%u/%f) (%u/%f) (%u/%f)"
                                                         , txheader.type, txheader.from_node, txheader.to_node, payload.orderno
 														, payload.channel1, payload.value1, payload.channel2, payload.value2, payload.channel3, payload.value3, payload.channel4, payload.value4);
                                         logmsg(6, debug);
                                 } else {
-                                        sprintf(debug, DEBUGSTR "Failed: Type: %u from Node: 0%o to Node: 0%o orderno %d (Sensor1/Value) (%u/%f) (%u/%f) (%u/%f) (%u/%f)"
+                                        sprintf(debug, DEBUGSTR "Failed: Type: %u from Node: 0%o to Node: 0%o orderno %d (Channel/Value) (%u/%f) (%u/%f) (%u/%f) (%u/%f)"
                                                         , txheader.type, txheader.from_node, txheader.to_node, payload.orderno
 														, payload.channel1, payload.value1, payload.channel2, payload.value2, payload.channel3, payload.value3, payload.channel4, payload.value4);
                                         logmsg(6, debug);
