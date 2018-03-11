@@ -9,6 +9,8 @@ Main features:
  - can send telnet commands to a third party controler (i use FHEM)
  - configuration via config file
 
+Attention: This Brunch uses a different payload structure!!!!!
+==============================================================
 More details (german only): https://wilmie.myhome-server.de/wiki/index.php?title=RF24Hub
 
 Environment:

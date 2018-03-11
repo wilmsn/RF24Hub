@@ -7,11 +7,16 @@
 // The CS Pin of the Radio module
 #define RADIO_CSN_PIN 9
 // The pin of the statusled
-#define STATUSLED A0
-#define STATUSLED_ON HIGH
-#define STATUSLED_OFF LOW
 #define SLEEP delay
 //#define SLEEP sleep4ms
+//define some sleeptime as default values
+#define SLEEPTIME1 10
+#define SLEEPTIME2 10
+#define SLEEPTIME3 2
+#define SLEEPTIME4 5
+#define STATUSLED LED_BUILTIN
+#define STATUSLED_ON HIGH
+#define STATUSLED_OFF LOW
 
 // ------ End of configuration part ------------
 
@@ -36,8 +41,18 @@ ISR(WDT_vect) { watchdogEvent(); }
 
 // Structure of our payload
 struct payload_t {
-  uint16_t   orderno;
-  char    value[10];
+  uint16_t  orderno;      // the orderno as primary key for our message for the nodes
+  uint16_t  flags;        // a field for varies flags
+                          // flags are defined as:
+                          // 0x01: if set: last message, node goes into sleeptime1 else: goes into sleeptime2
+  uint8_t   sensor1;      // internal address of sensor1
+  uint8_t   sensor2;      // internal address of sensor2
+  uint8_t   sensor3;      // internal address of sensor3
+  uint8_t   sensor4;      // internal address of sensor4
+  float     value1;       // value of sensor1
+  float     value2;       // value of sensor2
+  float     value3;       // value of sensor3
+  float     value4;       // value of sensor4
 };
 
 payload_t payload;
@@ -49,17 +64,17 @@ RF24NetworkHeader rxheader;
 RF24NetworkHeader txheader(0);
 // all sleeptime* values in seconds 
 // Time for the fist sleep after an activity of this node
-float sleeptime1 = 5;
+float       sleeptime1 = 5;
 // Time for the 2. to N. sleeploop
-float sleeptime2 = 5;
+float       sleeptime2 = 5;
 // Time to sleep after wakeup with radio on
-float sleeptime3 = 1;
+float       sleeptime3 = 1;
 // Time to keep the network up if it was busy
-float sleeptime4 = 5;
-boolean init_finished = false;
-boolean init_transmit = true;
-float networkuptime = 0;
-uint16_t   orderno_p1, orderno_p2;
+float       sleeptime4 = 5;
+boolean     init_finished = false;
+boolean     init_transmit = true;
+float       networkuptime = 0;
+uint16_t    orderno_p1, orderno_p2;
 
 // Usage: radio(CE_pin, CS_pin)
 RF24 radio(RADIO_CE_PIN,RADIO_CSN_PIN);
@@ -68,26 +83,24 @@ RF24 radio(RADIO_CE_PIN,RADIO_CSN_PIN);
 RF24Network network(radio);
 
 
-void action_loop(void) {
-    txheader.type=rxheader.type;
-    char* pEnd;
-    if (payload.orderno != orderno_p1 && payload.orderno != orderno_p1) {
-      switch (rxheader.type) {
+float action_loop(unsigned char sensor, float value) {
+  float retval;
+      switch (sensor) {
         case 1:
         //Temperature from BMP085
-        dtostrf(bmp.readTemperature(), 4, 2,payload.value);
+        retval = bmp.readTemperature();
         break;
         case 2:
         //Temperature from BMP085
-        dtostrf(pow(((95*0.0065)/(bmp.readTemperature()+273.15)+1),5.257)*bmp.readPressure()/100.0, 4, 1,payload.value);
+        retval = pow(((95*0.0065)/(bmp.readTemperature()+273.15)+1),5.257)*bmp.readPressure()/100.0;
         break;
         case 3:
         //Humidity from SI7021
-        dtostrf(si7021.readHumidity(), 4, 2,payload.value);
+        retval = si7021.readHumidity();
         break;
         case 4:
         //Temperature from SI7021
-        dtostrf(si7021.readTemperature(), 4, 2,payload.value);
+        retval = si7021.readTemperature();
         break;
         case 21:
         //****
@@ -95,36 +108,36 @@ void action_loop(void) {
         break;
         case 101:
           // battery voltage => vcc.Read_Volts();
-          dtostrf(vcc.Read_Volts(), 4, 2,payload.value);
+          retval = vcc.Read_Volts();
         break;
         case 111:
           // sleeptimer1
-          sleeptime1=atof(payload.value);
+          sleeptime1=value;
           Serial.println("111 detected");
         break;
         case 112:
           // sleeptimer2
-          sleeptime2=atof(payload.value);
+          sleeptime2=value;
           Serial.println("112 detected");
         break;
         case 113:
           // sleeptimer3
-          sleeptime3=atof(payload.value);
+          sleeptime3=value;
           Serial.println("113 detected");
         break;
         case 114:
           // sleeptimer4
-          sleeptime4=atof(payload.value);
+          sleeptime4=value;
           Serial.println("114 detected");
           break;
         case 115:
           // radio on (=1) or off (=0) when sleep
-          if ( atof(payload.value) > 0.5) radiomode=radio_listen; else radiomode=radio_sleep;
+          if ( value > 0.5) radiomode=radio_listen; else radiomode=radio_sleep;
           Serial.println("115 detected");
         break;
         case 116:
           // Voltage factor
-          vcc.m_correction = atof(payload.value);
+          vcc.m_correction = value;
           Serial.println("116 detected");
         break; 
         case 118:
@@ -134,12 +147,8 @@ void action_loop(void) {
           break;
 //        default:
         // Default: just send the paket back - no action here  
-      }
-      network.write(txheader,&payload,sizeof(payload));
-      Serial.println("NW Write....");
-      orderno_p2=orderno_p1;
-      orderno_p1=payload.orderno;
     }
+    return retval;
 }
 
 void setup(void) {
@@ -165,6 +174,12 @@ void setup(void) {
 //  radio.setDataRate(RF24_250KBPS);
   delay(200);
   radio.printDetails();
+  sleeptime1 = SLEEPTIME1;
+  sleeptime2 = SLEEPTIME2;
+  sleeptime3 = SLEEPTIME3;
+  sleeptime4 = SLEEPTIME4;
+  radiomode=radio_listen;
+  init_finished = true;
   // initialisation beginns
   bool do_transmit = true;
   while ( ! init_finished ) {
@@ -172,6 +187,8 @@ void setup(void) {
       Serial.println("Testnode02 send 119");
       txheader.type=119;
       payload.orderno=0;
+      payload.sensor1=119;
+      payload.value1=0;
       network.write(txheader,&payload,sizeof(payload));
       last_send = millis();
     }
@@ -183,9 +200,13 @@ void setup(void) {
       Serial.print("Testnode02 received ");
       Serial.print(rxheader.type);
       Serial.print(" ");
-      Serial.println(payload.value);
+//      Serial.println(payload.value);
       init_transmit=false;
-      action_loop();
+//      action_loop();
+      action_loop(payload.sensor1, payload.value1);
+      action_loop(payload.sensor2, payload.value2);
+      action_loop(payload.sensor3, payload.value3);
+      action_loop(payload.sensor4, payload.value4);
       last_send = millis();
     }
   }
@@ -224,14 +245,41 @@ void loop(void) {
   if ( network.available() ) {
     sleepmode = sleep4;
     networkuptime = 0;
+    if ((payload.flags & 0x01) == 0x01 ) {
+      next_sleepmode = sleep1;
+    } else {
+      next_sleepmode = sleep2;
+    }
     network.read(rxheader,&payload,sizeof(payload));
-    Serial.print("Testnode02 received");
-    Serial.println(rxheader.type);
-    action_loop();
+    Serial.print("Testnode02 received: ");
+    Serial.print(rxheader.type);
+    Serial.print(" ");
+    Serial.print(payload.sensor1);
+    Serial.print(" ");
+    Serial.print(payload.value1);
+    Serial.print(" ");
+    Serial.print(payload.sensor2);
+    Serial.print(" ");
+    Serial.print(payload.value2);
+    Serial.print(" ");
+    Serial.print(payload.sensor3);
+    Serial.print(" ");
+    Serial.print(payload.value3);
+    Serial.print(" ");
+    Serial.print(payload.sensor4);
+    Serial.print(" ");
+    Serial.println(payload.value4);
+    payload.value1 = action_loop(payload.sensor1, payload.value1);
+    payload.value2 = action_loop(payload.sensor2, payload.value2);
+    payload.value3 = action_loop(payload.sensor3, payload.value3);
+    payload.value4 = action_loop(payload.sensor4, payload.value4);
+    txheader.type=rxheader.type;
+    network.write(txheader,&payload,sizeof(payload));    
   } else if ( n_update > 0 ) {
     Serial.print("Durchgangsverkehr Channel: ");
     Serial.println(n_update);
     sleepmode = sleep4;
+    next_sleepmode = sleep2;
     networkuptime = 0;
   }
   if ( networkuptime < 0.1 ) {
@@ -266,7 +314,7 @@ void loop(void) {
     break;
     case sleep4:
       Serial.println("Enter Sleepmode 4");
-      if ( networkuptime > sleeptime4) sleepmode = sleep1;        
+      if ( networkuptime > sleeptime4) sleepmode = next_sleepmode;        
     break;
   } 
 }

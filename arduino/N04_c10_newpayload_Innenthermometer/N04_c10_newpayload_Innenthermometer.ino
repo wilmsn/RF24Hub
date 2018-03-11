@@ -11,6 +11,11 @@ V3: Upgrade to Lowpower Library; display of a battery symbol
 #define RADIO_CE_PIN 10
 // The CS Pin of the Radio module
 #define RADIO_CSN_PIN 9
+//define some sleeptime as default values
+#define SLEEPTIME1 10
+#define SLEEPTIME2 10
+#define SLEEPTIME3 2
+#define SLEEPTIME4 5
 // The pin of the statusled
 #define STATUSLED 3
 #define STATUSLED_ON LOW
@@ -18,16 +23,14 @@ V3: Upgrade to Lowpower Library; display of a battery symbol
 #define ONE_WIRE_BUS 8
 
 // The outputpin for batterycontrol for the voltagedivider
-#define VMESS_OUT 1
+#define VMESS_OUT A3
 #define VMESS_IN A0
-// 5 voltages for the battery (empty ... full)
+// 4 voltages for the battery (empty ... full)
 #define U0 3.6
 #define U1 3.7
 #define U2 3.8
 #define U3 3.9
 #define U4 4.0
-// How many cycles do we stay awake on network activity
-#define STAYAWAKEDEFAULT 20
 // set X0 and Y0 of battery symbol ( is 10 * 5 pixel )
 #define BATT_X0 74
 #define BATT_Y0 0
@@ -48,13 +51,17 @@ V3: Upgrade to Lowpower Library; display of a battery symbol
 #include <SPI.h>
 #include <sleeplib.h>
 #include <Vcc.h>
-
 //****
 // some includes for your sensor(s) here
 //****
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <LCD5110_Graph.h>
+
+boolean display_down = false;
+
+const float VccCorrection = 1.0/1.0;  // Measured Vcc by multimeter divided by reported Vcc
+Vcc vcc(VccCorrection);
 
 ISR(WDT_vect) { watchdogEvent(); }
 
@@ -66,9 +73,6 @@ DallasTemperature sensors(&oneWire);
 
 LCD5110 myGLCD(7,6,5,2,4);
 
-Vcc vcc(1.0);
-
-
 extern uint8_t SmallFont[];
 extern uint8_t BigNumbers[];
 
@@ -78,41 +82,44 @@ extern uint8_t BigNumbers[];
 
 // Structure of our payload
 struct payload_t {
-  uint16_t   orderno;
-  char    value[10];
+  uint16_t  orderno;      // the orderno as primary key for our message for the nodes
+  uint16_t  flags;        // a field for varies flags
+                          // flags are defined as:
+                          // 0x01: if set: last message, node goes into sleeptime1 else: goes into sleeptime2
+  uint8_t   sensor1;      // internal address of sensor1
+  uint8_t   sensor2;      // internal address of sensor2
+  uint8_t   sensor3;      // internal address of sensor3
+  uint8_t   sensor4;      // internal address of sensor4
+  float     value1;       // value of sensor1
+  float     value2;       // value of sensor2
+  float     value3;       // value of sensor3
+  float     value4;       // value of sensor4
 };
 
 payload_t payload;    
 
-enum radiomode_t { radio_sleep, radio_listen } radiomode;
+enum radiomode_t { radio_sleep, radio_listen } radiomode = radio_sleep;
 enum sleepmode_t { sleep1, sleep2, sleep3, sleep4} sleepmode = sleep1, next_sleepmode = sleep2;
-
 
 RF24NetworkHeader rxheader;
 RF24NetworkHeader txheader(0);
 // all sleeptime* values in seconds 
 // Time for the fist sleep after an activity of this node
-unsigned int sleeptime1 = 60;
+float sleeptime1 = SLEEPTIME1;
 // Time for the 2. to N. sleeploop
-unsigned int sleeptime2 = 10;
+float sleeptime2 = SLEEPTIME2;
 // Time to sleep after wakeup with radio on
-unsigned int sleeptime3 = 1;
+float sleeptime3 = SLEEPTIME3;
 // Time to keep the network up if it was busy
-unsigned int sleeptime4 = 5;
-//unsigned int loop_counter = 0;
-boolean init_finished = false;
-boolean init_transmit = true;
-//boolean network_busy = false;
-boolean display_down = false;
-boolean low_voltage_flag = false;
-float networkuptime = 0;
-float temp;
-float voltagefactor = 1;
-//int free_loop_counter = 0;
+float sleeptime4 = SLEEPTIME4;
+boolean     init_finished = false;
+float       networkuptime = 0;
+uint16_t    orderno_p1, orderno_p2;
+boolean     low_voltage_flag = false;
+float       temp;
 //Some Var for restore after sleep of display
-float field1_val, field2_val, field3_val, field4_val;
-float cur_voltage;
-String valuestr="";
+float       field1_val, field2_val, field3_val, field4_val;
+float       cur_voltage;
 
 
 // nRF24L01(+) radio attached using Getting Started board 
@@ -124,51 +131,50 @@ RF24Network network(radio);
 
 void display_sleep(boolean dmode) {
   display_down = dmode;
-  if ( dmode ) { // Display go to sleep
-    myGLCD.enableSleep(); 
-  } else {
-    if ( ! low_voltage_flag ) {
+  if ( ! low_voltage_flag ) {
+    if ( dmode ) { // Display go to sleep
+      myGLCD.enableSleep(); 
+    } else {
       myGLCD.disableSleep(); 
-      get_temp();
-      print_field(field1_val,1);
-      print_field(field2_val,2);
-      print_field(field3_val,3);
-      print_field(field4_val,4);
+        get_temp();
+        print_field(field1_val,1);
+        print_field(field2_val,2);
+        print_field(field3_val,3);
+        print_field(field4_val,4);
     }
   }  
 }
 
-void action_loop(void) {
-    txheader.type=rxheader.type;
-    switch (rxheader.type) {
+float action_loop(unsigned char channel, float value) {
+  float retval = value;
+    switch (channel) {
       case 1: {
         // Temperature
-        dtostrf(get_temp(),7,2,payload.value);
-//        free_loop_counter = 0;
+        retval = get_temp();
        break; }
       case 21:
         // Set field 1
-        field1_val=atof(payload.value);
+        field1_val = value;
         print_field(field1_val,1);
        break;
       case 22:
         // Set field 2
-        field2_val=atof(payload.value);
+        field2_val=value;
         print_field(field2_val,2);
        break;
       case 23:
         // Set field 3
-        field3_val=atof(payload.value);
+        field3_val=value;
         print_field(field3_val,3);
        break;
       case 24:
         // Set field 4
-        field4_val=atof(payload.value);
+        field4_val=value;
         print_field(field4_val,4);
        break;
       case 31:
         // Displaylight ON <-> OFF
-        if (atof(payload.value) < 0.5) {
+        if (value < 0.5) {
           digitalWrite(STATUSLED,STATUSLED_OFF); 
         } else  {
           digitalWrite(STATUSLED,STATUSLED_ON);
@@ -176,55 +182,52 @@ void action_loop(void) {
        break;
       case 41:
         // Display Sleepmode ON <-> OFF
-        display_sleep(atof(payload.value) < 0.5);
+        display_sleep(value < 0.5);
        break;
-       case 101:  
+      case 101:  
       // battery voltage
-        float ubatt;
-        ubatt = vcc.Read_Volts();
-        draw_battery(BATT_X0,BATT_Y0,ubatt);
-        dtostrf(ubatt,7,2,payload.value);
-        low_voltage_flag = ubatt < 3.65;
+        cur_voltage = vcc.Read_Volts();
+        retval = cur_voltage;
+        draw_battery(BATT_X0,BATT_Y0,cur_voltage);
+        break;      
+      case 111:
+      // sleeptimer1
+        sleeptime1 = value;
         break;
-        case 111:
-          // sleeptimer1
-          sleeptime1=atoi(payload.value);
+      case 112:
+      // sleeptimer2
+        sleeptime2 = value;
         break;
-        case 112:
-          // sleeptimer2
-          sleeptime2=atoi(payload.value);
+      case 113:
+      // sleeptimer3
+        sleeptime3 = value;
         break;
-        case 113:
-          // sleeptimer3
-          sleeptime3=atoi(payload.value);
+      case 114:
+      // sleeptimer4
+        sleeptime4 = value;
         break;
-        case 114:
-          // sleeptimer4
-          sleeptime4=atoi(payload.value);
-          break;
-        case 115:
-          // radio on (=1) or off (=0) when sleep
-          if ( atof(payload.value) > 0.5) radiomode=radio_listen; else radiomode=radio_sleep;
+      case 115:
+      // radio on (=1) or off (=0) when sleep
+        if ( value > 0.5) radiomode=radio_listen; else radiomode=radio_sleep;
         break;
-        case 116:
-         // Voltage devider
-          vcc.m_correction = atof(payload.value);
-        break; 
-        case 118:
-        // init_finished (=1)
-          init_finished = (1 == 1); //( payload.value > 0.5);
-          break;
-//        default:
-        // Default: just send the paket back - no action here  
+      case 116:
+      // Voltage devider
+        vcc.m_correction = value;
+        break;
+      case 118:
+      // init_finished (=1)
+        init_finished = ( true );
+        break;
     }  
-    network.write(txheader,&payload,sizeof(payload));
+    return retval;
 }  
 
 void setup(void) {
   unsigned long last_send=millis();
-  pinMode(STATUSLED, OUTPUT);
-  digitalWrite(STATUSLED,STATUSLED_ON);
+  pinMode(STATUSLED, OUTPUT);     
+  digitalWrite(STATUSLED,STATUSLED_ON); 
   SPI.begin();
+  radio.begin();
   //****
   // put anything else to init here
   //****
@@ -233,42 +236,46 @@ void setup(void) {
   myGLCD.clrScr();
   sensors.begin(); 
   get_temp();
-  cur_voltage=vcc.Read_Volts();
-  draw_battery(BATT_X0, BATT_Y0, cur_voltage);
-  print_field(cur_voltage,4);
-  draw_antenna(ANT_X0, ANT_Y0);
+  cur_voltage = vcc.Read_Volts();
+  draw_battery(BATT_X0, BATT_Y0,cur_voltage);
   //####
   // end aditional init
   //####
-  radio.begin();
-  radio.setPALevel(RF24_PA_MAX);
-//  radio.setRetries(15,2);
+  draw_antenna(ANT_X0, ANT_Y0);
   network.begin(RADIOCHANNEL, NODE);
-//  radio.setDataRate(RF24_250KBPS);
-  delay(200);
+  //radio.setDataRate( RF24_250KBPS );
+  radio.setPALevel( RF24_PA_MAX ) ;
   // initialisation beginns
   bool do_transmit = true;
   while ( ! init_finished ) {
-    if ( (last_send + 1000 < millis()) && do_transmit ) {
+    // send only one message every second
+    if ( do_transmit &&  last_send + 1000 < millis() ) {
       txheader.type=119;
       payload.orderno=0;
+      payload.sensor1=119;
+      payload.value1=0;
       network.write(txheader,&payload,sizeof(payload));
       last_send = millis();
     }
     network.update();
-    if ( last_send + 10000 < millis()) { do_transmit = true; }
+    if ( last_send + 100000 < millis()) { do_transmit = true; }
     if ( network.available() ) {
       do_transmit = false;
       network.read(rxheader,&payload,sizeof(payload));
-      init_transmit=false;
-      action_loop();
+      action_loop(payload.sensor1, payload.value1);
+      action_loop(payload.sensor2, payload.value2);
+      action_loop(payload.sensor3, payload.value3);
+      action_loop(payload.sensor4, payload.value4);
       last_send = millis();
+      txheader.type=1;
+      network.write(txheader,&payload,sizeof(payload));
     }
   }
-  digitalWrite(STATUSLED,STATUSLED_OFF);
+  delay(100);
+  digitalWrite(STATUSLED,STATUSLED_OFF); 
+  wipe_antenna(ANT_X0, ANT_Y0);
   sleepmode=sleep4;
   networkuptime = 0;    
-  display_down=false;
 }
 
 void draw_therm(byte x, byte y) {
@@ -484,25 +491,33 @@ void sleep12(unsigned int sleeptime) {
   sleep4ms((unsigned int)(sleeptime)); 
   if ( radiomode == radio_sleep ) {
     radio.powerUp();
-    draw_antenna(ANT_X0, ANT_Y0);
     radio.startListening();
+    draw_antenna(ANT_X0, ANT_Y0);
   }
 }
 
 void loop(void) {
   uint8_t n_update = 0;
   n_update = network.update();
-  if ( n_update > 0 ) {
-    sleepmode = sleep4;
-    networkuptime = 0;
-  }
   if ( network.available() ) {
     sleepmode = sleep4;
     networkuptime = 0;
+    if ((payload.flags & 0x01) == 0x01 ) {
+      next_sleepmode = sleep1;
+    } else {
+      next_sleepmode = sleep2;
+    }
     network.read(rxheader,&payload,sizeof(payload));
-    Serial.print("Testnode02 received");
-    Serial.println(rxheader.type);
-    action_loop();
+    payload.value1 = action_loop(payload.sensor1, payload.value1);
+    payload.value2 = action_loop(payload.sensor2, payload.value2);
+    payload.value3 = action_loop(payload.sensor3, payload.value3);
+    payload.value4 = action_loop(payload.sensor4, payload.value4);
+    txheader.type=rxheader.type;
+    network.write(txheader,&payload,sizeof(payload));    
+  } else if ( n_update > 0 ) {
+    sleepmode = sleep4;
+    next_sleepmode = sleep2;
+    networkuptime = 0;
   }
   if ( networkuptime < 0.1 ) {
   //*****************
@@ -513,8 +528,8 @@ void loop(void) {
   // END run frequently
   //#################
   }
-  sleep4ms(200);
-  networkuptime += 0.2;    
+  delay(100);
+  networkuptime += 0.1;    
   switch (sleepmode) {
     case sleep1:
       sleep12((unsigned int)(sleeptime1*1000)); 
@@ -532,9 +547,8 @@ void loop(void) {
       if ( networkuptime > sleeptime3) sleepmode = next_sleepmode;    
     break;
     case sleep4:
-      if ( networkuptime > sleeptime4) sleepmode = sleep1;        
+      if ( networkuptime > sleeptime4) sleepmode = next_sleepmode;        
     break;
   } 
 }
-
 

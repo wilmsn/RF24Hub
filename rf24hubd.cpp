@@ -3,7 +3,7 @@
 /*******************************************************************************************
 *
 * Configfilehandling
-* default place to look at is: DEFAULT_CONFIG_FILE (see rf24hub.h)
+* default place to look at is: DEFAULT_CONFIG_FILE (see rf24hubd.h)
 *
 ********************************************************************************************/
 
@@ -143,17 +143,17 @@ void exec_tn_cmd(const char *tn_cmd) {
 	char debug[200];
     
 	sprintf(debug,"DEBUG: %s\n", tn_cmd);
-	logmsg(7,debug);
+	logmsg(VERBOSETELNET,debug);
     portno = parms.telnet_port;
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
         sprintf(debug,"ERROR: opening socket");
-		logmsg(2,debug);
+		logmsg(VERBOSECRITICAL,debug);
 	}	
     server = gethostbyname(parms.telnet_hostname);
     if (server == NULL) {
         sprintf(debug,"ERROR: no such host\n");
-		logmsg(2,debug);
+		logmsg(VERBOSECRITICAL,debug);
     }
     bzero((char *) &serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
@@ -163,80 +163,87 @@ void exec_tn_cmd(const char *tn_cmd) {
     serv_addr.sin_port = htons(portno);
     if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0) { 
         sprintf(debug,"ERROR: connecting");
-		logmsg(2,debug);
+		logmsg(VERBOSECRITICAL,debug);
 	} else {	
 		n = write(sockfd,tn_cmd,strlen(tn_cmd));
 		if (n < 0) {
 			sprintf(debug,"ERROR: writing to socket");
-			logmsg(2,debug);
+			logmsg(VERBOSECRITICAL,debug);
 		} else {
 			sprintf(debug,"Telnet to %s Port %d CMD: %s successfull",parms.telnet_hostname, portno, tn_cmd);
-			logmsg(7,debug);
+			logmsg(VERBOSETELNET,debug);
 		}		
 	}		 
     close(sockfd);
 }
 
-void prepare_tn_cmd(MYSQL *db,  uint16_t orderno, char *value) {
+void prepare_tn_cmd(uint16_t node, uint8_t channel, float value) {
 	char telnet_cmd[200];
-	sprintf (sql_stmt, "select fhem_dev from sensor where sensor_id = ( select sensor_id from jobbuffer where orderno = %d ) and fhem_dev is not null LIMIT 1 ", orderno);
-	if (mysql_query(db, sql_stmt)) {
-		sprintf(debug,"Query failed: %s\n", mysql_error(db));
-		logmsg(2,debug);
-	} else {
-		MYSQL_RES *result = mysql_store_result(db);
-		if (!result) {
-			sprintf(debug,"Couldn't get results set: %s\n", mysql_error(db));
-			logmsg(2,debug);
-		} else {
-			MYSQL_ROW row;
-			while ((row = mysql_fetch_row(result))) {
-				sprintf(telnet_cmd,"set %s %s \n", row[0], value);
-				sprintf(debug,"Telnet-CMD: %s\n", telnet_cmd);
-				logmsg(8,debug);				
-				exec_tn_cmd(telnet_cmd);
-			}
+	for(int i=0; i<SENSORLENGTH; i++) {
+		if ( sensor[i].node == node && sensor[i].channel == channel ) {
+			sprintf(telnet_cmd,"set %s %f \n", sensor[i].fhem_dev, value);
 		}
 	}
+	sprintf(debug,"Telnet-CMD: %s\n", telnet_cmd);
+	logmsg(VERBOSETELNET,debug);				
+	exec_tn_cmd(telnet_cmd);
 }
 	
 void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message) {
-	char cmp1[10], 
-		 cmp2[10], 
-		 cmp3[10];
+	char cmp_init[]="init", 
+		 cmp_sensor[]="sensor",
+		 cmp_set[]="set",
+		 cmp_setlast[]="setlast",
+		 cmp_node[]="node",
+		 cmp_list[]="list",
+		 cmp_order[]="order";	 
 	char *wort1, *wort2, *wort3, *wort4;
+//	uint8_t channel = 0;
+	uint16_t node = 0;
 	bool tn_input_ok=false;
 	char delimiter[] = " ";
 	trim(buffer);
-	sprintf(debug,"Incoming telnet data: %s\n",buffer);
-	logmsg(7, debug);
+	sprintf(debug,"Incoming telnet data: %s ",buffer);
+	logmsg(VERBOSETELNET, debug);
 	wort1 = strtok(buffer, delimiter);
 	wort2 = strtok(NULL, delimiter);
 	wort3 = strtok(NULL, delimiter);
 	wort4 = strtok(NULL, delimiter);
-    if ( wort4 != NULL ) {
-		sprintf(cmp1, "set");
-		sprintf(cmp2, "sensor");
-		if (( strcmp(wort1,cmp1) == 0 ) && (strcmp(wort2,cmp2) == 0) && (wort3 != NULL) && (wort4 != NULL) ) {
-			tn_input_ok = true;
-			// delete old entries for the same sensor
-			sprintf(sql_stmt,"delete from jobbuffer where sensor_id = %s ", wort3);
-			do_sql(db, sql_stmt);
-			sprintf(sql_stmt,"insert into jobbuffer(orderno,node_id,channel,value,sensor_id,priority,utime) select %u, node_id, channel, %s, sensor_id, 11, UNIX_TIMESTAMP() from sensor where sensor_id = %s ", orderno++, wort4, wort3);
-			do_sql(db, sql_stmt);
-			ordersqlrefresh = true;
-			sprintf(client_message,"Command received => OK\n");
-			write(new_socket , client_message , strlen(client_message));
+	// set/setlast sensor <sensor> <value>
+	// sets a sensor to a value, setlast starts the request over air
+	if ( (( strcmp(wort1,cmp_set) == 0 ) || ( strcmp(wort1,cmp_setlast) == 0 )) && (strcmp(wort2,cmp_sensor) == 0) && (wort3 != NULL) && (wort4 != NULL) ) {
+		tn_input_ok = true;
+		// just add the sensor to the buffer
+		node = set_sensor( strtoul(wort3, &pEnd, 10), strtof(wort4, &pEnd));
+		if ( strcmp(wort1,cmp_setlast) == 0 ) {
+			print_order_buffer();
+			get_order(node);
 		}
-		sprintf(cmp2, "node");
-		sprintf(cmp3, "init");
-		if (( strcmp(wort1,cmp1) == 0 ) && (strcmp(wort2,cmp2) == 0) && (wort3 != NULL) && (strcmp(wort4,cmp3) == 0) ) {
-			tn_input_ok = true;
-			node_init(db, getnodeadr(wort3), 1);
-			ordersqlrefresh = true;
-			sprintf(client_message,"Command received => OK\n");
-			write(new_socket , client_message , strlen(client_message));
+	}
+    // set node <node> init
+	// sends the init sequence to a node
+	if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_node) == 0) && (wort3 != NULL) && (strcmp(wort4,cmp_init) == 0) ) {
+		tn_input_ok = true;
+		init_node(db, getnodeadr(wort3));
+	}
+    // list order
+	// lists the current orderbuffer
+	if (( strcmp(wort1,cmp_list) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (wort3 == NULL) && (wort4 == NULL) ) {
+		tn_input_ok = true;
+		for (int i=0; i < ORDERBUFFERLENGTH; i++) {
+			if ( order_buffer[i].node > 0 ) {
+				sprintf(client_message,"Onr: %u,\tentry:\t%lu,\tnode:\t0%o,\tchannel:\t%u\tval:\t%f\n", 
+					order_buffer[i].orderno, order_buffer[i].entrytime, order_buffer[i].node,
+					order_buffer[i].channel, order_buffer[i].value );
+				write(new_socket , client_message , strlen(client_message));
+			}				
 		}
+	}	
+    // init
+	// initialisation of rf24hubd: reloads data from database
+	if (( strcmp(wort1,cmp_init) == 0 ) && (wort2 == NULL) && (wort3 == NULL) && (wort4 == NULL) ) {
+		tn_input_ok = true;
+		init_system(db);
 	}
 	if ( ! tn_input_ok) {
 		sprintf(client_message,"Usage:\n");
@@ -249,15 +256,20 @@ void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message
 		write(new_socket , client_message , strlen(client_message));
 		sprintf(client_message,"   Inits the Node <nodenumber>. Use <nodenumber> like '041'\n");
 		write(new_socket , client_message , strlen(client_message));
-//		sprintf(client_message,"set node <nodenumber> <initvalue>\n");
-//		write(new_socket , client_message , strlen(client_message));
-//		sprintf(client_message,"   Sends one initialisation parameter to the node\n");
-//		write(new_socket , client_message , strlen(client_message));
-//		sprintf(client_message,"   valid are: sleeptime1...4, radiomode, voltagecorrection\n");
-//		write(new_socket , client_message , strlen(client_message));
+		sprintf(client_message,"init \n");
+		write(new_socket , client_message , strlen(client_message));
+		sprintf(client_message,"   Reinitialisation of rf24hub (all open ordes will be deleted)\n");
+		write(new_socket , client_message , strlen(client_message));
+		sprintf(client_message,"list order\n");
+		write(new_socket , client_message , strlen(client_message));
+		sprintf(client_message,"   lists the content of the order queue\n");
+		write(new_socket , client_message , strlen(client_message));
 		sprintf(client_message,"\n");
 		write(new_socket , client_message , strlen(client_message));
-	} 						
+	} else {
+		sprintf(client_message,"Command received => OK\n");
+		write(new_socket , client_message , strlen(client_message));
+	}		
 }
 	
 /*******************************************************************************************
@@ -271,84 +283,30 @@ void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message
 * Used for communication with the nodes
 *
 ********************************************************************************************/
-uint16_t node_init(MYSQL *db, uint16_t initnode, uint16_t orderno ) {
+void init_node(MYSQL *db, uint16_t node ) {
 	// delete old entries for this node
-	sprintf (sql_stmt, "delete from jobbuffer where node_id = '0%o'",initnode);
-    do_sql(db,sql_stmt); 
-	sprintf (sql_stmt, "select sleeptime1, sleeptime2, sleeptime3, sleeptime4, radiomode, voltagefactor from node where node_id = '0%o' LIMIT 1 ",initnode);
-	if (mysql_query(db, sql_stmt)) {
-		sprintf(debug,"Query failed: %s\n", mysql_error(db));
-		logmsg(2,debug);
-	} else {
-		MYSQL_RES *result = mysql_store_result(db);
-		if (!result) {
-			sprintf(debug,"Couldn't get results set: %s\n", mysql_error(db));
-		} else {
-			MYSQL_ROW row;
-			if ((row = mysql_fetch_row(result))) {
-				//Initialisation of basic node parameters (111...116)
-				//Sleeptime 1 
-				sprintf(sql_stmt,"insert into jobbuffer(orderno, node_id, channel, value, priority, utime) values (%d,'0%o',111,'%s',1,UNIX_TIMESTAMP())",orderno++, initnode, row[0]);
-				do_sql(db, sql_stmt);
-				//Sleeptime 2 
-				sprintf(sql_stmt,"insert into jobbuffer(orderno, node_id, channel, value, priority, utime) values (%d,'0%o',112,'%s',1,UNIX_TIMESTAMP())",orderno++, initnode, row[1]);
-				do_sql(db, sql_stmt);
-				//Sleeptime 3 
-				sprintf(sql_stmt,"insert into jobbuffer(orderno, node_id, channel, value, priority, utime) values (%d,'0%o',113,'%s',1,UNIX_TIMESTAMP())",orderno++, initnode, row[2]);
-				do_sql(db, sql_stmt);
-				//Sleeptime 4 
-				sprintf(sql_stmt,"insert into jobbuffer(orderno, node_id, channel, value, priority, utime) values (%d,'0%o',114,'%s',1,UNIX_TIMESTAMP())",orderno++, initnode, row[3]);
-				do_sql(db, sql_stmt);
-				//Radiomode 
-				sprintf(sql_stmt,"insert into jobbuffer(orderno, node_id, channel, value, priority, utime) values (%d,'0%o',115,'%s',1,UNIX_TIMESTAMP())",orderno++, initnode, row[4]);
-				do_sql(db, sql_stmt);
-				//Voltagefactor 
-				sprintf(sql_stmt,"insert into jobbuffer(orderno, node_id, channel, value, priority, utime) values (%d,'0%o',116,'%s',1,UNIX_TIMESTAMP())",orderno++, initnode, row[5]);
-				do_sql(db, sql_stmt);
-			}
-			mysql_free_result(result);
+	sprintf (sql_stmt, "select sleeptime1, sleeptime2, sleeptime3, sleeptime4, radiomode, voltagefactor from node where node_id = '0%o' LIMIT 1 ",node);
+	mysql_query(db, sql_stmt);
+	db_check_error(db);
+	MYSQL_RES *result = mysql_store_result(db);
+	db_check_error(db);
+	MYSQL_ROW row;
+	if ((row = mysql_fetch_row(result))) {
+		fill_order_buffer( node, 111, strtof(row[0], &pEnd));
+		fill_order_buffer( node, 112, strtof(row[1], &pEnd));
+		fill_order_buffer( node, 113, strtof(row[2], &pEnd));
+		fill_order_buffer( node, 114, strtof(row[3], &pEnd));
+		fill_order_buffer( node, 115, strtof(row[4], &pEnd));
+		fill_order_buffer( node, 116, strtof(row[5], &pEnd));
+		fill_order_buffer( node, 118, 1.0);
+	}
+	mysql_free_result(result);
+    for (int i=0; i < SENSORLENGTH; i++) {
+		if (sensor[i].node == node && sensor[i].s_type == 'a') {
+			fill_order_buffer( node, sensor[i].channel, sensor[i].last_val);
 		}
 	}
-    //Initialisation of extra parameters from node_init 
-	sprintf (sql_stmt, "select channel, value, prio from node_init where node_id = '0%o' ",initnode);
-	if (mysql_query(db, sql_stmt)) {
-		sprintf(debug,"Query failed: %s\n", mysql_error(db));
-		logmsg(2,debug);
-	} else {
-		MYSQL_RES *result = mysql_store_result(db);
-		if (!result) {
-			sprintf(debug,"Couldn't get results set: %s\n", mysql_error(db));
-		} else {
-			MYSQL_ROW row;
-			while ((row = mysql_fetch_row(result))) {
-				sprintf(sql_stmt,"insert into jobbuffer(orderno, node_id, channel, value, priority, utime) values (%d,'0%o',%s,'%s',%s,UNIX_TIMESTAMP())",orderno++, initnode, row[0], row[1], row[2]);
-				do_sql(db, sql_stmt);
-			}
-			mysql_free_result(result);
-		}
-	}
-    //Initialisation of actors: set it to the last known value 
-	sprintf (sql_stmt, "select channel, value from sensor where type = 'a' and node_id = '0%o' ",initnode);
-	if (mysql_query(db, sql_stmt)) {
-		sprintf(debug,"Query failed: %s\n", mysql_error(db));
-		logmsg(2,debug);
-	} else {
-		MYSQL_RES *result = mysql_store_result(db);
-		if (!result) {
-			sprintf(debug,"Couldn't get results set: %s\n", mysql_error(db));
-		} else {
-			MYSQL_ROW row;
-			while ((row = mysql_fetch_row(result))) {
-				sprintf(sql_stmt,"insert into jobbuffer(orderno, node_id, channel, value, priority, utime) values (%d,'0%o',%s,'%s',12,UNIX_TIMESTAMP())",orderno++, initnode, row[0], row[1]);
-				do_sql(db, sql_stmt);
-			}
-			mysql_free_result(result);
-		}
-	}
-    //Initialisation finished: send 118	
-	sprintf(sql_stmt,"insert into jobbuffer(orderno, node_id, channel, value, priority, utime) values (%d,'0%o',118,'1',1,UNIX_TIMESTAMP())",orderno++, initnode);
-	do_sql(db, sql_stmt);	
-	return orderno;
+	get_order(node);
 }
 
 uint16_t getnodeadr(char *node) {
@@ -365,6 +323,186 @@ uint16_t getnodeadr(char *node) {
 	return mynodeadr;
 }
 
+
+void init_order(unsigned int element) {
+	order[element].orderno = 0;
+	order[element].node = 0;
+	order[element].type = 0;
+	order[element].flags = 0;
+	order[element].channel1 = 0;
+	order[element].value1 = 0;
+	order[element].channel2 = 0;
+	order[element].value2 = 0;
+	order[element].channel3 = 0;
+	order[element].value3 = 0;
+	order[element].channel4 = 0;
+	order[element].value4 = 0;
+	order[element].entrytime = 0;
+	order[element].last_send = 0;
+	
+}
+
+void print_order(void) {
+	if ( verboselevel > 8 ) {
+		sprintf(debug,"Content of Order:");
+		logmsg(VERBOSEOTHER,debug);
+		for (int i=0; i < ORDERLENGTH; i++) {
+			if ( order[i].orderno > 0 ) {
+				sprintf(debug, "Onr:\t%u,\tnode:\t0%o,\ttype:\t%u\tflags:\t%u (%u/%f) (%u/%f) (%u/%f) (%u/%f) %lu %lu", 
+					order[i].orderno,
+					order[i].node,
+					order[i].type,
+					order[i].flags,
+					order[i].channel1,
+					order[i].value1,
+					order[i].channel2,
+					order[i].value2,
+					order[i].channel3,
+					order[i].value3,
+					order[i].channel4,
+					order[i].value4,
+					order[i].entrytime,
+					order[i].last_send );
+				logmsg(VERBOSEOTHER,debug);
+			}
+		}
+	}	
+}
+
+void init_order_buffer(unsigned int element) {
+	order_buffer[element].orderno = 0;
+	order_buffer[element].entrytime = 0;
+	order_buffer[element].node = 0;
+	order_buffer[element].channel = 0;
+	order_buffer[element].value = 0;
+}
+
+void fill_order_buffer( uint16_t node, uint16_t channel, float value) {
+	int i=0;
+	while ( (order_buffer[i].node > 0) && !((order_buffer[i].node == node) && (order_buffer[i].channel == channel ))  && ( i < ORDERBUFFERLENGTH ) ) {
+        printf("++>i: %d; %u =? %u;  %u =? %u Bool: %d %d %d\n", i, order_buffer[i].node, node, order_buffer[i].channel, channel, (order_buffer[i].node > 0),!((order_buffer[i].node == node) && (order_buffer[i].channel == channel )),( i < ORDERBUFFERLENGTH ));
+		i++;
+	}
+	order_buffer[i].orderno = 0;
+	order_buffer[i].entrytime = millis();
+	order_buffer[i].node = node;
+	order_buffer[i].channel = channel;
+	order_buffer[i].value = value;
+}
+
+void print_order_buffer(void) {
+	if ( verboselevel > 8 ) {
+		sprintf(debug,"Content of Order_Buffer:");
+		logmsg(VERBOSEOTHER,debug);
+		for (int i=0; i < ORDERBUFFERLENGTH; i++) {
+			if ( order_buffer[i].node > 0 ) {
+				sprintf(debug,"Onr: %u,\tentry:\t%lu,\tnode:\t0%o,\tchannel:\t%u\tval:\t%f", 
+					order_buffer[i].orderno,
+					order_buffer[i].entrytime,
+					order_buffer[i].node,
+					order_buffer[i].channel,
+					order_buffer[i].value );
+				logmsg(VERBOSEOTHER,debug);
+			}				
+		}
+	}	
+}
+
+bool is_valid_orderno(uint16_t myorderno) {
+	bool retval = false;
+	for (int i=0; i < ORDERBUFFERLENGTH; i++) {
+		if ( myorderno == order_buffer[i].orderno ) retval = true;
+	}
+	return retval;
+}
+
+bool delete_orderno(uint16_t myorderno) {
+	bool retval = false;
+	uint16_t node = 0;
+	for (int i=0; i < ORDERBUFFERLENGTH; i++) {
+		if ( myorderno == order_buffer[i].orderno ) {
+			retval = true;
+			init_order_buffer(i);
+		}
+	}
+	for (int i=0; i < ORDERLENGTH; i++) {
+		if ( myorderno == order[i].orderno ) {
+			retval = true;
+			node = order[i].node;
+			init_order(i);
+		}
+	}
+	get_order(node);
+	return retval;
+}
+
+void get_order(uint16_t node) {
+    int order_ptr=0;
+	int j = 0;
+	orderno++;
+	// if we have old orders for this node ==> delete them! 
+	for (int i=0; i < ORDERLENGTH; i++) {
+		if ( order[i].node == node ) {
+			order[i].node = 0;
+			order[i].orderno = 0;
+		}
+	}
+	//look for the first free position in order[]
+	while ( order_ptr < ORDERLENGTH && order[order_ptr].orderno > 0) order_ptr++; 
+	//collect the data for this order
+	for (int i=0; i < ORDERBUFFERLENGTH; i++) {
+		if (node == order_buffer[i].node && j < 4) {
+			order_buffer[i].orderno = orderno;
+			if (j == 0) {
+				order[order_ptr].orderno = orderno;
+				order[order_ptr].node = node;
+				order[order_ptr].entrytime = millis();
+				order[order_ptr].flags = 0x00;
+				order[order_ptr].channel1 = order_buffer[i].channel;
+				order[order_ptr].value1 = order_buffer[i].value;				
+			}
+			if (j == 1) {
+				order[order_ptr].channel2 = order_buffer[i].channel;
+				order[order_ptr].value2 = order_buffer[i].value;				
+			}
+			if (j == 2) {
+				order[order_ptr].channel3 = order_buffer[i].channel;
+				order[order_ptr].value3 = order_buffer[i].value;				
+			}
+			if (j == 3) {
+				order[order_ptr].channel4 = order_buffer[i].channel;
+				order[order_ptr].value4 = order_buffer[i].value;	
+			}
+			j++;
+		}
+	}
+	order[order_ptr].flags = 0x01;
+}	
+
+uint16_t set_sensor(uint32_t mysensor, float value) {
+	int i = 0;
+	uint16_t node = 0;
+	while ( (sensor[i].sensor != mysensor) && (i < SENSORLENGTH) ) i++;
+	if ( i < SENSORLENGTH ) {
+		fill_order_buffer( sensor[i].node, sensor[i].channel, value);
+		node = sensor[i].node;
+	}
+	return node;
+}
+
+uint16_t get_sensor(uint32_t mysensor) {
+	int i = 0;
+	uint16_t node = 0;
+	while (sensor[i].sensor != mysensor && i < SENSORLENGTH) {
+		i++;
+	}
+	if ( i < SENSORLENGTH) {
+		fill_order_buffer( sensor[i].node, sensor[i].channel, sensor[i].last_val);
+		node = sensor[i].node;
+	}
+	return node;
+}
+
 /*******************************************************************************************
 *
 * END Nodehandling 
@@ -377,57 +515,142 @@ uint16_t getnodeadr(char *node) {
 *
 ********************************************************************************************/
 
+void db_check_error(MYSQL *db) {
+	if (mysql_errno(db) != 0) {
+		sprintf(debug, "DB-Fehler: %s\n", mysql_error(db));
+        logmsg(VERBOSECRITICAL, debug);
+    }
+}
+
 void do_sql(MYSQL *db, char *sqlstmt) {
 	if (mysql_query(db, sqlstmt)) {
 		sprintf(debug, "%s", mysql_error(db));
-		logmsg(1, debug);
+		logmsg(VERBOSECRITICAL, debug);
 	}
     sprintf(debug, "%s", sqlstmt);
-	logmsg(7, debug);
+	logmsg(VERBOSESQL, debug);
 }
 
-
-bool is_jobbuffer_entry(MYSQL *db, uint16_t orderno) {
-    MYSQL_ROW row;	
-	bool retval=false;
-	sprintf(sql_stmt, "select count(*) from jobbuffer where orderno = %u ", orderno );
-	logmsg(8,sql_stmt);	
-	if (mysql_query(db, sql_stmt)) {
-		sprintf(debug,"Query failed: %s\n", mysql_error(db));
-		logmsg(2,debug);
-	} else {
-		MYSQL_RES *result = mysql_store_result(db);
-		if (!result) {
-			sprintf(debug,"Couldn't get results set: %s\n", mysql_error(db));
-			logmsg(2,debug);
-		} else {
-			row = mysql_fetch_row(result);
-			retval=(row[0] > 0);
+void print_sensor(void) {
+	printf("Sensor Array: \n");
+	for (int i = 0; i < SENSORLENGTH; i++) {
+		if (sensor[i].sensor > 0 ) {
+			sprintf(debug, "Sensor: %u Node: 0%o Channel: %u Type: %c Value: %f FHEM: %s",
+				sensor[i].sensor,
+				sensor[i].node,
+				sensor[i].channel,
+				sensor[i].s_type,
+				sensor[i].last_val,
+				sensor[i].fhem_dev);
+			logmsg(VERBOSEOTHER, debug);
 		}
 	}
-	return retval;
 }
 
-void del_jobbuffer_entry(MYSQL *db, uint16_t orderno) {
-	char mysql_stmt[150];
-	char mydebug[100];
-	sprintf(mysql_stmt, " delete from jobbuffer where orderno = %u ", orderno  );
-	do_sql(db, mysql_stmt);
-	sprintf(mydebug, "Info: del_jobbuffer_entry: orderno %d deleted", orderno);
-    logmsg(8, mydebug);               
-	ordersqlrefresh=true;
-}
-
-void store_sensor_value(MYSQL *db, uint16_t orderno, char *value, bool d1, bool d2) {
-	if ( tn_active ) { 
-		prepare_tn_cmd(db, orderno, value); 
+void init_system(MYSQL *db) {
+	int i = 0;
+	char cmp_s[]="s",cmp_a[]="a";
+	for (int i=0; i<SENSORLENGTH; i++) {
+		sensor[i].sensor = 0;
+		sensor[i].node = 0;
+		sensor[i].channel = 0;
+		sensor[i].last_val = 0;
+	}		
+	sprintf (sql_stmt, "select sensor_id, node_id, channel, value, fhem_dev, s_type from sensor ");
+	logmsg(VERBOSESQL, sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error(db);
+	MYSQL_RES *result = mysql_store_result(db);
+	db_check_error(db);
+	MYSQL_ROW row;
+	while ((row = mysql_fetch_row(result))) {
+		sensor[i].sensor = strtoul(row[0], &pEnd,10);
+		sensor[i].node = getnodeadr(row[1]);
+		sensor[i].channel = strtoul(row[2], &pEnd,10);
+		sensor[i].last_val = strtof(row[3], &pEnd);
+		if ( row[4] != NULL ) sprintf(sensor[i].fhem_dev,"%s",row[4]); else sprintf(sensor[i].fhem_dev,"unknown");
+		if (strcmp(row[5],cmp_s) == 0) sensor[i].s_type = 's';
+		if (strcmp(row[5],cmp_a) == 0) sensor[i].s_type = 'a';
+		i++;
 	}
-	sprintf(sql_stmt,"insert into sensordata (sensor_ID, utime, value) select sensor_id, UNIX_TIMESTAMP(), %s from jobbuffer where orderno = %u ", value, orderno);
+	mysql_free_result(result);	
+	print_sensor();
+	for (unsigned int i=0; i<ORDERLENGTH; i++) init_order(i);
+	for (unsigned int i=0; i<ORDERBUFFERLENGTH; i++) init_order_buffer(i);
+}
+
+void store_sensor_value(MYSQL *db, uint16_t node, uint8_t channel, float value, bool d1, bool d2) {
+	if ( tn_active ) { 
+		prepare_tn_cmd(node, channel, value); 
+	}
+	sprintf(sql_stmt,"insert into sensordata (sensor_ID, utime, value) select sensor_id, UNIX_TIMESTAMP(), %f from sensor where node_id = '0%o' and channel = %u ", value, node, channel);
 	do_sql(db, sql_stmt);
-	sprintf(sql_stmt,"update sensor set value= %s, Utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where sensor_ID = (select sensor_id from jobbuffer where orderno = %u ) ", value, d1, d2, orderno);
+	sprintf(sql_stmt,"update sensor set value= %f, Utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where node_id = '0%o' and channel = %u ", value, d1, d2, node, channel);
 	do_sql(db, sql_stmt);
 }
 
+void process_sensor(MYSQL *db, uint16_t node, uint8_t channel, float value, bool d1, bool d2) {
+			switch (channel) {
+				case 1 ... 99: {
+				// Sensor or Actor
+					store_sensor_value(db, node, channel, value, d1, d2);
+					sprintf(debug, DEBUGSTR "Value of  %u on Node: %o is %f ", channel, node, value);
+					logmsg(VERBOSECONFIG, debug);       
+				}
+				break; 
+				case 101: {
+				// battery voltage
+					store_sensor_value(db, node, channel, value, d1, d2);
+					sprintf(debug, DEBUGSTR "Voltage of Node: %o is %f ", node, value);
+					logmsg(VERBOSECONFIG, debug);        
+					sprintf(sql_stmt,"update node set U_Batt = %f, signal_quality = '%d%d', last_contact = unix_timestamp() where Node_ID = '0%o'", value, d1, d2, node);
+					do_sql(db, sql_stmt);
+				}
+				break; 
+				case 111: { // Init Sleeptime 1
+					sprintf(debug, DEBUGSTR "Node: %o: Sleeptime1 set to %f ", node, value);
+					logmsg(VERBOSECONFIG, debug);        
+				}	
+				break; 
+				case 112: { // Init Sleeptime 2
+					sprintf(debug, DEBUGSTR "Node: %o: Sleeptime2 set to %f ", node, value);
+					logmsg(VERBOSECONFIG, debug);        
+				}
+				break; 
+				case 113: { // Init Sleeptime 3
+					sprintf(debug, DEBUGSTR "Node: %o: Sleeptime3 set to %f ", node, value);
+					logmsg(VERBOSECONFIG, debug);        
+				}
+				break; 				
+				case 114: { // Init Sleeptime 4
+					sprintf(debug, DEBUGSTR "Node: %o: Sleeptime4 set to %f ", node, value);
+					logmsg(VERBOSECONFIG, debug);        
+				}
+				break; 
+				case 115: { // Init Radiobuffer
+                    bool radio_always_on = value > 0.5;
+					if ( radio_always_on ) sprintf(debug, "Node: %o: Radio allways on", node);
+					else sprintf(debug, "Node: %o: Radio allways off", node);
+					logmsg(VERBOSECONFIG, debug);        
+				}					
+				break;  
+				case 116: { // Init Voltagefactor
+					sprintf(debug, "Node: %o: Set Voltagefactor to: %f.", node, value);
+					logmsg(VERBOSECONFIG, debug);        
+				}
+				break;  
+				case 118: {
+					sprintf(debug, DEBUGSTR "Node: %o Init finished.", node);
+					logmsg(VERBOSECONFIG, debug);        
+				}
+				break; 
+				default: { 
+				// nothing right now
+				}
+			}
+	
+	
+}	
 /*******************************************************************************************
 *
 * All the rest 
@@ -435,7 +658,7 @@ void store_sensor_value(MYSQL *db, uint16_t orderno, char *value, bool d1, bool 
 ********************************************************************************************/
 void sighandler(int signal) {
 	sprintf(debug, "SIGTERM: Shutting down ... ");
-	logmsg(1, debug);
+	logmsg(VERBOSECRITICAL, debug);
     unlink(parms.pidfilename);
 //	msgctl(msqid, IPC_RMID, NULL);
     exit (0);
@@ -475,7 +698,7 @@ void logmsg(int mesgloglevel, char *mymsg){
 		}
 //	} else { // log via systemlog
 //		if (mesgloglevel <= verboselevel) {
-//			openlog ( "rf24hubd", LOG_PID | LOG_CONS| LOG_NDELAY, LOG_LOCAL0 );
+//			openlog ( "sensorhubd", LOG_PID | LOG_CONS| LOG_NDELAY, LOG_LOCAL0 );
 //			syslog( LOG_NOTICE, "%s\n", mymsg);
 //			closelog();
 //		}
@@ -577,26 +800,43 @@ int main(int argc, char* argv[]) {
 		log2logfile = true;
         fclose(logfile_ptr);
 		sprintf(debug, "Start logging to %s", parms.logfilename);
-        logmsg(2, debug);
+        logmsg(VERBOSESTARTUP, debug);
     }
     // open database
     sprintf(debug,"Maria-DB:");
-    logmsg(2, debug);
-    MYSQL *db = mysql_init(NULL);
+    logmsg(VERBOSESTARTUP, debug);
     sprintf(debug,"MySQL client version: %s", mysql_get_client_info());
-    logmsg(2, debug);
-    if (db == NULL) {
-        fprintf(stderr, "%s\n", mysql_error(db));
-        mysql_close(db);
-        exit(1);
+    logmsg(VERBOSESTARTUP, debug);
+    MYSQL *db = mysql_init(NULL);
+    int mysql_wait_count = 0;
+    while (db == NULL) {
+		sprintf(debug,"Waiting for Database: %d Sec.", 20-mysql_wait_count);
+		logmsg(VERBOSESTARTUP, debug);		
+		if ( mysql_wait_count < 20 ) {
+			mysql_wait_count++;
+			delay(1000);
+			db = mysql_init(NULL);
+		} else {
+			fprintf(stderr, "%s\n", mysql_error(db));
+            mysql_close(db);
+            exit(1);
+		}
     }
-    if (mysql_real_connect(db, parms.db_hostname, parms.db_username, parms.db_password, parms.db_schema, parms.db_port, NULL, 0) == NULL) {
-        fprintf(stderr, "%s\n", mysql_error(db));
-        mysql_close(db);
-        exit(1);
+    mysql_wait_count = 0;
+    while (mysql_real_connect(db, parms.db_hostname, parms.db_username, parms.db_password, parms.db_schema, parms.db_port, NULL, 0) == NULL) {
+		sprintf(debug,"Waiting for Database: %d Sec.", 20-mysql_wait_count);
+		logmsg(VERBOSESTARTUP, debug);		
+		if ( mysql_wait_count < 20 ) {
+			mysql_wait_count++;
+			delay(1000);
+		} else {
+			fprintf(stderr, "%s\n", mysql_error(db));
+			mysql_close(db);
+			exit(1);
+		}
     }
     sprintf(debug, "Connected to host %s with DB %s on port %d", parms.db_hostname, mysql_get_server_info(db), parms.db_port);
-    logmsg(2, debug);
+    logmsg(VERBOSESTARTUP, debug);
 
     // init SIGTERM and SIGINT handling
     signal(SIGTERM, sighandler);
@@ -610,7 +850,7 @@ int main(int argc, char* argv[]) {
             unlink(parms.pidfilename);
             exit(1);
         } else {
-            // starts rf24hub as a deamon
+            // starts rf24hubd as a deamon
             // no messages to console!
             debugmode=false;
             pid = fork ();
@@ -638,31 +878,31 @@ int main(int argc, char* argv[]) {
     }
     // check for PID file, set if not exists terminate else create it
     if( access( parms.pidfilename, F_OK ) != -1 ) {
-        fprintf(stdout, "PIDFILE: %s exists, terminating\n\n", parms.pidfilename);
+        fprintf(stderr, "PIDFILE: %s exists, terminating\n\n", parms.pidfilename);
         exit(1);
     }
     pid=getpid();
     pidfile_ptr = fopen (parms.pidfilename,"w");
     if (pidfile_ptr==NULL) {
         sprintf(debug,"Can't write PIDFILE: %s! Exit programm ....\n", parms.pidfilename);
-        fprintf(stdout, debug);
+        fprintf(stderr, debug);
         exit (1);
     }
     fprintf (pidfile_ptr, "%d", pid );
     fclose(pidfile_ptr);
-    sprintf(debug, "rf24hub running with PID: %d", pid);
-    logmsg(2, debug);
+    sprintf(debug, "rf24hubd running with PID: %d", pid);
+    logmsg(VERBOSESTARTUP, debug);
     if ( tn_port_set && tn_host_set ) {
         tn_active = true;
         sprintf(debug, "telnet session started: Host: %s Port: %d ", parms.telnet_hostname, parms.telnet_port);
-        logmsg(2, debug);
+        logmsg(VERBOSESTARTUP, debug);
     }
 	create_socket=0;
 	if ( in_port_set ) {
     /* open incoming port for messages */
 		if ((create_socket=socket( AF_INET, SOCK_STREAM, 0)) > 0) {
 			sprintf (debug,"Socket für eingehende Messages auf Port %i angelegt", parms.incoming_port);
-			logmsg(2, debug);
+			logmsg(VERBOSESTARTUP, debug);
 		}
 		address.sin_family = AF_INET;
 		address.sin_addr.s_addr = INADDR_ANY;
@@ -670,7 +910,7 @@ int main(int argc, char* argv[]) {
 		setsockopt( create_socket, SOL_SOCKET, SO_REUSEADDR, &y, sizeof(int) );
 		if (bind( create_socket, (struct sockaddr *) &address, sizeof (address)) == 0 ) {
 			sprintf (debug,"Binding Socket OK");
-			logmsg(2, debug);
+			logmsg(VERBOSESTARTUP, debug);
 		}
 		listen (create_socket, 5);
 		addrlen = sizeof (struct sockaddr_in);
@@ -680,22 +920,25 @@ int main(int argc, char* argv[]) {
 	}
     sleep(2);
     sprintf(debug, "starting radio on channel ... %d ", parms.rf24network_channel);
-    logmsg(2, debug);
+    logmsg(VERBOSESTARTUP, debug);
     radio.begin();
     delay(5);
     sprintf(debug, "starting network ... ");
-    logmsg(2, debug);
+    logmsg(VERBOSESTARTUP, debug);
     network.begin( parms.rf24network_channel, 0);
     radio.setDataRate(parms.rf24network_speed);
-    if (verboselevel > 5) { radio.printDetails(); }
+    if (verboselevel >= VERBOSECONFIG) { radio.printDetails(); }
     sprintf(debug,"\%s up and running .... ",PRGNAME);
-    logmsg(2, debug);
+    logmsg(VERBOSESTARTUP, debug);
 	
 	// Cleanup inside Database
-	sprintf(sql_stmt,"delete from jobbuffer");
-	do_sql(db, sql_stmt);
-    sprintf(debug,"Database cleanup compleate ");
-    logmsg(2, debug);
+//	sprintf(sql_stmt,"delete from jobbuffer");
+//	do_sql(db, sql_stmt);
+//    sprintf(debug,"Database cleanup compleate ");
+//    logmsg(2, debug);
+	
+	// Init Arrays
+    init_system(db);
     
 	// Main Loop
     while(1) {
@@ -711,8 +954,8 @@ int main(int argc, char* argv[]) {
 					// use this in perl: my $t = new Net::Telnet (Timeout => 2, Port => 7001, Prompt => '/rf24hub>/');
 					sprintf(client_message,"rf24hub> ");
 					write(new_socket , client_message , strlen(client_message));
-					sprintf (debug,"Der Client %s ist verbunden ...\n", inet_ntoa (address.sin_addr));
-					logmsg(6, debug);
+					sprintf (debug,"Client %s ist connected ...", inet_ntoa (address.sin_addr));
+					logmsg(VERBOSECONFIG, debug);
 				}
 			} else {
 				save_fd = fcntl( new_socket, F_GETFL );
@@ -736,154 +979,75 @@ int main(int argc, char* argv[]) {
             rf24_carrier = radio.testCarrier();
 			rf24_rpd = radio.testRPD();
 			network.read(rxheader,&payload,sizeof(payload));
-			sprintf(debug, DEBUGSTR "Received: Channel: %u from Node: %o to Node: %o Orderno %d Value %s "
-						, rxheader.type, rxheader.from_node, rxheader.to_node, payload.orderno, payload.value);
-			logmsg(6, debug);
-			uint16_t sendernode=rxheader.from_node;
-			switch (rxheader.type) {
-				case 1 ... 99: {
-				// Sensor 
-					if (is_jobbuffer_entry(db, payload.orderno)) {
-						store_sensor_value(db, payload.orderno, payload.value, rf24_carrier, rf24_rpd);
-						sprintf(debug, DEBUGSTR "Value of  %u on Node: %o is %s ", rxheader.type, sendernode, payload.value);
-						logmsg(6, debug);       
-						del_jobbuffer_entry(db, payload.orderno);
-					}
-				}
-				break; 
-				case 101: {
-				// battery voltage
-					if (is_jobbuffer_entry(db, payload.orderno)) {
-						store_sensor_value(db, payload.orderno, payload.value, rf24_carrier, rf24_rpd);
-						sprintf(debug, DEBUGSTR "Voltage of Node: %o is %s ", sendernode, payload.value);
-						logmsg(6, debug);        
-						sprintf(sql_stmt,"update node set U_Batt = %s, signal_quality = '%d%d', last_contact = unix_timestamp() where Node_ID = '0%o'", payload.value, rf24_carrier, rf24_rpd, sendernode);
-						do_sql(db, sql_stmt);
-						del_jobbuffer_entry(db, payload.orderno);
-					}
-				}
-				break; 
-				case 111: { // Init Sleeptime 1
-					sprintf(debug, DEBUGSTR "Node: %o: Sleeptime1 set to %s ", sendernode, payload.value);
-					logmsg(6, debug);        
-					del_jobbuffer_entry(db, payload.orderno);  
-				}	
-				break; 
-				case 112: { // Init Sleeptime 2
-					sprintf(debug, DEBUGSTR "Node: %o: Sleeptime2 set to %s ", sendernode, payload.value);
-					logmsg(6, debug);        
-					del_jobbuffer_entry(db, payload.orderno);  
-				}
-				break; 
-				case 113: { // Init Sleeptime 3
-					sprintf(debug, DEBUGSTR "Node: %o: Sleeptime3 set to %s ", sendernode, payload.value);
-					logmsg(6, debug);        
-					del_jobbuffer_entry(db, payload.orderno);
-				}
-				break; 				
-				case 114: { // Init Sleeptime 4
-					sprintf(debug, DEBUGSTR "Node: %o: Sleeptime4 set to %s ", sendernode, payload.value);
-					logmsg(6, debug);        
-					del_jobbuffer_entry(db, payload.orderno);
-				}
-				break; 
-				case 115: { // Init Radiobuffer
-                    bool radio_always_on = strtof (payload.value, &pEnd) > 0.5;
-					if ( radio_always_on ) sprintf(debug, "Node: %o: Radio allways on", sendernode);
-					else sprintf(debug, "Node: %o: Radio allways off", sendernode);
-					logmsg(6, debug);        
-					del_jobbuffer_entry(db, payload.orderno);
-				}					
-				break;  
-				case 116: { // Init Voltagedivider
-					sprintf(debug, "Node: %o: Set Voltagedivider to: %s.", sendernode, payload.value);
-					logmsg(6, debug);        
-					del_jobbuffer_entry(db, payload.orderno);
-				}
-				break;  
-				case 118: {
-					sprintf(debug, DEBUGSTR "Node: %o Init finished.", sendernode);
-					logmsg(6, debug);        
-					del_jobbuffer_entry(db, payload.orderno);
-				}
-				break; 
-				case 119: {
-					orderno = node_init(db, rxheader.from_node, orderno);
-					ordersqlrefresh=true;
-				}	
-				break;  
-				default: { // By default just delete this job from the jobbuffer
-					del_jobbuffer_entry(db, payload.orderno);
-				}
+			sprintf(debug, DEBUGSTR "Received: Type: %u from Node: %o to Node: %o Orderno %d (Channel/Value): (%u/%f) (%u/%f) (%u/%f) (%u/%f) "
+						, rxheader.type, rxheader.from_node, rxheader.to_node, payload.orderno
+						, payload.channel1, payload.value1, payload.channel2, payload.value2, payload.channel3, payload.value3, payload.channel4, payload.value4);
+			logmsg(VERBOSERF24, debug);
+//			uint16_t sendernode=rxheader.from_node;
+			if (is_valid_orderno(payload.orderno)) {
+				if ( payload.channel1 > 0 ) process_sensor(db, rxheader.from_node, payload.channel1, payload.value1, rf24_carrier, rf24_rpd);
+				if ( payload.channel2 > 0 ) process_sensor(db, rxheader.from_node, payload.channel2, payload.value2, rf24_carrier, rf24_rpd);
+				if ( payload.channel3 > 0 ) process_sensor(db, rxheader.from_node, payload.channel3, payload.value3, rf24_carrier, rf24_rpd);
+				if ( payload.channel4 > 0 ) process_sensor(db, rxheader.from_node, payload.channel4, payload.value4, rf24_carrier, rf24_rpd);
+				delete_orderno(payload.orderno);
 			}
+			if ( rxheader.type == 119 ) {
+					init_node(db, rxheader.from_node);
+					ordersqlrefresh=true;
+			}	
+			
 		} // network.available
 //
 // Orderloop: Tell the nodes what they have to do
 //
-		akt_time=runtime(starttime);
-		if ( akt_time > sent_time + 499 ) {  // send every 500 milliseconds
-			sent_time=akt_time;
-			if ( ordersqlrefresh ) { 
-			// Do we have old jobs - delete them
-			sprintf (sql_stmt, "delete from jobbuffer where utime < (unix_timestamp() - 1000) ");
-			do_sql(db, sql_stmt);
-			// if we got new jobs refresh the order array first
-				for (int i=1; i<7; i++) {
-					sprintf (sql_stmt, "select orderno, node_id, channel, value, priority from jobbuffer where substr(node_id,length(node_id),1) = '%d' order by CAST(node_id as integer), priority, channel, utime asc LIMIT 1 ",i);
-					logmsg(8,sql_stmt);	
-					if (mysql_query(db, sql_stmt)) {
-						sprintf(debug,"Query failed: %s\n", mysql_error(db));
-						logmsg(2,debug);
-					} else {
-						MYSQL_RES *result = mysql_store_result(db);
-						if (!result) {
-							sprintf(debug,"Couldn't get results set: %s\n", mysql_error(db));
-							logmsg(2,debug);
-						} else {
-							MYSQL_ROW row;
-							order[i].orderno = 0;
-							while ((row = mysql_fetch_row(result))) {
-								order[i].orderno = strtoul(row[0], &pEnd,10);
-								order[i].to_node  = getnodeadr(row[1]);
-								order[i].channel  = strtoul(row[2], &pEnd,10);
-								sprintf(order[i].value, "%s", row[3]);
-							}
-							ordersqlrefresh=false;
-							mysql_free_result(result);
-						}
-					}
-				}
-			}
-			if ( (order[1].orderno || order[2].orderno || order[3].orderno || order[4].orderno || order[5].orderno || order[6].orderno)) {
-				int i=1;
-				while (i<7) {
-					if (order[i].orderno) {
-						txheader.from_node = 0;
-						payload.orderno = order[i].orderno;
-						txheader.to_node  = order[i].to_node;
-						txheader.type  = order[i].channel;
-						sprintf(payload.value, "%s", order[i].value);
-						if (network.write(txheader,&payload,sizeof(payload))) {
-							sprintf(debug, DEBUGSTR "Send: Channel: %u from Node: 0%o to Node: 0%o orderno %d Value %s "
-									, txheader.type, txheader.from_node, txheader.to_node, payload.orderno, payload.value);
-							logmsg(6, debug); 
-						} else {		
-							sprintf(debug, DEBUGSTR "Failed: Channel: %u from Node: 0%o to Node: 0%o orderno %d Value %s "
-									, txheader.type, txheader.from_node, txheader.to_node, payload.orderno, payload.value);
-							logmsg(6, debug); 
-						}
-						
-					}
-					i++; 
-				}
-			}
-		} 
-		usleep(10000); 
+                akt_time=runtime(starttime);
+                if ( akt_time > sent_time + 199 ) {  // send every 200 milliseconds
+                        sent_time=akt_time;
+				
+// Look if we have something to send
+                        bool do_loop = true;
+                        while ( order[order_ptr].orderno == 0 && do_loop ) {
+                                if ( order_ptr < ORDERLENGTH - 1 ) {
+                                        order_ptr++;
+                                } else {
+                                        order_ptr=0;
+                                        do_loop = false;
+                                }
+                        }
+//						printf(" %u\n", order_ptr);
+                        if      ( order[order_ptr].orderno != 0 ) {
+                                txheader.from_node = 0;
+                                payload.orderno = order[order_ptr].orderno;
+                                txheader.to_node  = order[order_ptr].node;
+								payload.flags = order[order_ptr].flags;
+                                txheader.type  = order[order_ptr].type;
+                                payload.channel1  = order[order_ptr].channel1;
+                                payload.value1  = order[order_ptr].value1;
+                                payload.channel2  = order[order_ptr].channel2;
+                                payload.value2  = order[order_ptr].value2;
+                                payload.channel3  = order[order_ptr].channel3;
+                                payload.value3  = order[order_ptr].value3;
+                                payload.channel4  = order[order_ptr].channel4;
+                                payload.value4  = order[order_ptr].value4;
+                                if (network.write(txheader,&payload,sizeof(payload))) {
+                                        sprintf(debug, DEBUGSTR "Send: Type: %u from Node: 0%o to Node: 0%o orderno %d (Channel/Value) (%u/%f) (%u/%f) (%u/%f) (%u/%f)"
+                                                        , txheader.type, txheader.from_node, txheader.to_node, payload.orderno
+														, payload.channel1, payload.value1, payload.channel2, payload.value2, payload.channel3, payload.value3, payload.channel4, payload.value4);
+                                        logmsg(VERBOSERF24, debug);
+                                } else {
+                                        sprintf(debug, DEBUGSTR "Failed: Type: %u from Node: 0%o to Node: 0%o orderno %d (Channel/Value) (%u/%f) (%u/%f) (%u/%f) (%u/%f)"
+                                                        , txheader.type, txheader.from_node, txheader.to_node, payload.orderno
+														, payload.channel1, payload.value1, payload.channel2, payload.value2, payload.channel3, payload.value3, payload.channel4, payload.value4);
+                                        logmsg(VERBOSERF24, debug);
+                                }
+                                order_ptr++;
+                        }
+                }
+                usleep(2000);
 //
-//  end orderloop 
+//  end orderloop
 //
-	} // while(1)
-	return 0;
+        } // while(1)
+        return 0;
 }
-
 

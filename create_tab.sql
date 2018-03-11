@@ -16,8 +16,9 @@ DROP TABLE IF EXISTS jobbuffer;
 CREATE TABLE jobbuffer
 (
    orderno    INT,
+   flags      INT UNSIGNED   DEFAULT 0,
    node_id    VARCHAR(10),
-   channel    INT,
+   channel    INT UNSIGNED,
    value      FLOAT,
    sensor_id  INT,
    priority   INT,
