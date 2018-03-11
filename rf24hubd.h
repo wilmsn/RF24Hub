@@ -73,30 +73,46 @@ RF24Network network(radio);
 
 uint16_t orderno, init_orderno;
 
+// structure to handle the sensors, filled from DB
+struct sensor_t {
+	uint32_t     	sensor;
+	uint16_t       	node;   		// the destination node
+	uint16_t     	channel;
+    char			s_type;
+	char			fhem_dev[FHEMDEVLENGTH];
+    float			last_val;	
+};
+struct sensor_t 	sensor[SENSORLENGTH];
+
 // Structure to handle the orderqueue
 struct order_t {
-  uint16_t 	     orderno;     // the orderno as primary key for our message for the nodes
-  uint16_t       to_node;     // the destination node
-  unsigned char  type;        // Becomes networkheader.type
-  unsigned int   flags;       // Some flags as part of payload
-  unsigned char  channel1;
-  float		     value1;    // the information that is send to the node
-  unsigned char  channel2;
-  float		     value2;    // the information that is send to the node
-  unsigned char  channel3;
-  float		     value3;    // the information that is send to the node
-  unsigned char  channel4;
-  float		     value4;    // the information that is send to the node
+	uint16_t 	    orderno;   		// the orderno as primary key for our message for the nodes
+	uint16_t       	node;   		// the destination node
+	unsigned char  	type;      		// Becomes networkheader.type
+	unsigned int   	flags;     		// Some flags as part of payload
+	unsigned char  	channel1;		// The channel for the sensor 1
+	float		    value1;    		// the information that is send to sensor 1
+	unsigned char  	channel2;  		// The channel for the sensor 2
+	float		    value2;   	 	// the information that is send to sensor 2
+	unsigned char  	channel3;  		// The channel for the sensor 3
+	float		    value3;    		// the information that is send to sensor 3
+	unsigned char  	channel4;  		// The channel for the sensor 1
+	float		    value4;    		// the information that is send to sensor 4
+	unsigned long	entrytime;
+	unsigned long  	last_send;		// Timestamp for last sending of this record
 };
-order_t order[MAXNODES]; // we do not handle more than 6 orders (one per subnode 1...6) at one time
+struct order_t 	order[ORDERLENGTH]; 
 
-struct telnet_buffer_t {
-	uint32_t     sensor;
-	uint16_t     node;
-	uint16_t     channel;
-	float        value;
+// structure for the order_buffer
+struct order_buffer_t {
+	uint16_t 	    orderno;   	// the orderno as primary key for our message for the nodes
+	unsigned long	entrytime;
+	uint16_t     	node;
+	uint16_t     	channel;
+	float        	value;
 };
-telnet_buffer_t telnet_buffer[MAXTELNETBUFFER];
+struct order_buffer_t 		order_buffer[ORDERBUFFERLENGTH];
+
 
 struct config_parameters {
   char logfilename[PARAM_MAXLEN_LOGFILE];
@@ -164,13 +180,8 @@ void exec_tn_cmd(const char *tn_cmd);
 
 void prepare_tn_cmd(MYSQL *db,  uint16_t node, uint8_t sensor, float value);
 
-void fill_telnet_buffer( uint32_t sensor, uint16_t node, uint16_t channel, float value);
-
-void telnet_buffer2db( MYSQL *db, uint16_t node );
-
 void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message);
 
-void telnet_buffer2db( MYSQL *db, uint16_t node );
 /*******************************************************************************************
 *
 * Nodehandling 
@@ -178,9 +189,33 @@ void telnet_buffer2db( MYSQL *db, uint16_t node );
 *
 ********************************************************************************************/
 
-void node_init(MYSQL *db, uint16_t initnode );
+void init_node(MYSQL *db, uint16_t initnode );
+
+void print_sensor(void);
+
+void init_system(MYSQL *db);
 
 uint16_t getnodeadr(char *node);
+
+void init_order(unsigned int element);
+
+void print_order(void);
+
+void init_order_buffer(unsigned int element);
+
+void print_order_buffer(void);
+
+void fill_order_buffer( uint16_t node, uint16_t channel, float value);
+
+bool is_valid_orderno(uint16_t myorderno);
+
+bool delete_orderno(uint16_t myorderno);
+
+void get_order(uint16_t node);
+
+uint16_t set_sensor(uint32_t mysensor, float value);
+
+uint16_t get_sensor(uint32_t mysensor);
 /*******************************************************************************************
 *
 * Databasehandling 
@@ -191,10 +226,6 @@ uint16_t getnodeadr(char *node);
 void db_check_error(MYSQL *db);
 
 void do_sql(MYSQL *db, char *sqlstmt);
-
-bool is_jobbuffer_entry(MYSQL *db, uint16_t orderno);
-
-void del_jobbuffer_entry(MYSQL *db, uint16_t orderno);
 
 void store_sensor_value(MYSQL *db, uint16_t node, uint8_t sensor, float value, bool d1, bool d2);
 
@@ -207,8 +238,6 @@ void process_sensor(MYSQL *db, uint16_t node, uint8_t sensor, float value, bool 
 ********************************************************************************************/
 
 void sighandler(int signal);
-
-long runtime(long starttime);
 
 void logmsg(int mesgloglevel, char *mymsg);
 

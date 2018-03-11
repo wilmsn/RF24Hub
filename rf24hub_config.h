@@ -22,8 +22,10 @@ rf24hub_config.h ==> all global definitions go here
 //
 //-------------------------------------------------------
 //
-#define MAXNODES 20
-#define MAXTELNETBUFFER 20
+#define ORDERLENGTH 80
+#define ORDERBUFFERLENGTH 20
+#define SENSORLENGTH 80
+#define FHEMDEVLENGTH 40
 #define PARAM_MAXLEN 80
 #define PARAM_MAXLEN_CONFIGFILE 40
 #define PARAM_MAXLEN_LOGFILE 40
@@ -38,5 +40,14 @@ rf24hub_config.h ==> all global definitions go here
 #define DEBUGSTR "DEBUG: "
 #define DEBUGSTRINGSIZE 500
 #define SQLSTRINGSIZE 500
+// Verboselevel
+#define VERBOSECRITICAL 1
+#define VERBOSESTARTUP 2
+#define VERBOSECONFIG 5
+#define VERBOSERF24 6
+#define VERBOSETELNET 7
+#define VERBOSESQL 8
+#define VERBOSEOTHER 9
+
 
 #endif // _RF24HUB_CONFIG_H_
