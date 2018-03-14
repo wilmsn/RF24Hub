@@ -24,6 +24,10 @@ rf24hub_config.h ==> all global definitions go here
 #define KEEPINBUFFERTIME 1200000    
 #define SENSORLENGTH 80
 #define FHEMDEVLENGTH 40
+// Interval to send a request to the node in millisec.
+#define SENDINTERVAL 500
+// Interval for deleting unsend order requests in millisec.
+#define DELETEINTERVAL 900000
 #define PARAM_MAXLEN 80
 #define PARAM_MAXLEN_CONFIGFILE 40
 #define PARAM_MAXLEN_LOGFILE 40
