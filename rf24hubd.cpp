@@ -491,6 +491,7 @@ void get_order(uint16_t node) {
     unsigned int order_ptr=0;
 	int j = 0;
 	orderno++;
+	order_waiting = true;
 	sprintf(debug, "get_order: node: 0%o orderno: %u", node, orderno);
 	logmsg(VERBOSEOTHER,debug);
 	// if we have old orders for this node ==> delete them! 
@@ -1089,11 +1090,13 @@ int main(int argc, char* argv[]) {
 			}
 			del_time = akt_time;
 		}
-		if ( akt_time > next_time ) {  // go transmitting if its time to do ..
+		if ( order_waiting && akt_time > next_time ) {  // go transmitting if its time to do ..
 			next_time = akt_time + SENDINTERVAL;
 			// Look if we have something to send
+			order_waiting = false;
 			for ( int order_ptr=0; order_ptr<ORDERLENGTH; order_ptr++) {
 				if (order[order_ptr].orderno != 0) {
+					order_waiting = true;
 					// this orders are ready to send
 					if ( akt_time > order[order_ptr].last_send + SENDINTERVAL ) {
 						if ( node_is_next(order[order_ptr].node) ) {
@@ -1135,7 +1138,7 @@ int main(int argc, char* argv[]) {
 					} else {
 						if ( next_time > order[order_ptr].last_send + SENDINTERVAL ) next_time = order[order_ptr].last_send + SENDINTERVAL;
 					}
-				}
+				}	
 			}
 		}
 		// Order seems to be empty if akt_time still greater than next_time
@@ -1146,7 +1149,7 @@ int main(int argc, char* argv[]) {
 					logmsg(VERBOSEOTHER, debug);
 				}
 		}
-		usleep(2000);
+		if ( order_waiting ) usleep(2000); else usleep(200000);
 //
 //  end orderloop
 //
