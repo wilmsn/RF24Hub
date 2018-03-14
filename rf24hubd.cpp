@@ -665,6 +665,11 @@ void store_sensor_value(MYSQL *db, uint16_t node, uint8_t channel, float value, 
 	do_sql(db, sql_stmt);
 	sprintf(sql_stmt,"update sensor set value= %f, utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where node_id = '0%o' and channel = %u ", value, d1, d2, node, channel);
 	do_sql(db, sql_stmt);
+	for(int i=0; i<SENSORLENGTH; i++) {
+		if ( sensor[i].node == node && sensor[i].channel == channel ) {
+			sensor[i].last_val = value;
+		}
+	}
 }
 
 void process_sensor(MYSQL *db, uint16_t node, uint8_t channel, float value, bool d1, bool d2) {
