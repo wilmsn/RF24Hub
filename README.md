@@ -28,7 +28,7 @@ With:
 
 Quick start guide:
 =================
-0. prerequisite
+0. Prerequisite
 
    MariaDB is installed
    You created a user and a database to be used with rf24hub
@@ -56,11 +56,11 @@ Quick start guide:
 
     sudo make install
 
-6. Clone the sensorhub Repro
+6. Clone the RF24Hub Repro
 
    git clone https://github.com/wilmsn/RF24Hub.git RF24Hub
 
-7. Change to the sensorhub folder and compile it
+7. Change to the RF24Hub folder and compile it
 
    cd RF24Hub
 
@@ -74,7 +74,7 @@ Quick start guide:
    Add the configuration of this node to the table node inside the database
    Add at least one sensor to the table sensor
 
-   ./rf24hubd -v9  #Just stop it with ctrl-c
+   sudo ./rf24hubd -v9  #Just stop it with ctrl-c
 
 9. If everything works, install it
 

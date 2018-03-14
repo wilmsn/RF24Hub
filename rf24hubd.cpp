@@ -634,7 +634,7 @@ void init_system(MYSQL *db) {
 		sensor[i].channel = 0;
 		sensor[i].last_val = 0;
 	}		
-	sprintf (sql_stmt, "select sensor_id, node_id, channel, value, fhem_dev, s_type from sensor ");
+	sprintf (sql_stmt, "select sensor_id, node_id, channel, value, fhem_dev, s_type from sensor where sensor_id is not null and node_id is not null and channel is not null");
 	logmsg(VERBOSESQL, sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error(db);
@@ -642,10 +642,10 @@ void init_system(MYSQL *db) {
 	db_check_error(db);
 	MYSQL_ROW row;
 	while ((row = mysql_fetch_row(result))) {
-		sensor[i].sensor = strtoul(row[0], &pEnd,10);
-		sensor[i].node = getnodeadr(row[1]);
-		sensor[i].channel = strtoul(row[2], &pEnd,10);
-		sensor[i].last_val = strtof(row[3], &pEnd);
+		if ( row[0] != NULL ) sensor[i].sensor = strtoul(row[0], &pEnd,10);
+		if ( row[1] != NULL ) sensor[i].node = getnodeadr(row[1]);
+		if ( row[2] != NULL ) sensor[i].channel = strtoul(row[2], &pEnd,10);
+		if ( row[3] != NULL ) sensor[i].last_val = strtof(row[3], &pEnd); else sensor[i].last_val = 0;
 		if ( row[4] != NULL ) sprintf(sensor[i].fhem_dev,"%s",row[4]); else sprintf(sensor[i].fhem_dev,"not_set");
 		if (strcmp(row[5],cmp_s) == 0) sensor[i].s_type = 's';
 		if (strcmp(row[5],cmp_a) == 0) sensor[i].s_type = 'a';
@@ -663,7 +663,7 @@ void store_sensor_value(MYSQL *db, uint16_t node, uint8_t channel, float value, 
 	}
 	sprintf(sql_stmt,"insert into sensordata (sensor_ID, utime, value) select sensor_id, UNIX_TIMESTAMP(), %f from sensor where node_id = '0%o' and channel = %u ", value, node, channel);
 	do_sql(db, sql_stmt);
-	sprintf(sql_stmt,"update sensor set value= %f, Utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where node_id = '0%o' and channel = %u ", value, d1, d2, node, channel);
+	sprintf(sql_stmt,"update sensor set value= %f, utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where node_id = '0%o' and channel = %u ", value, d1, d2, node, channel);
 	do_sql(db, sql_stmt);
 }
 
@@ -681,7 +681,7 @@ void process_sensor(MYSQL *db, uint16_t node, uint8_t channel, float value, bool
 			store_sensor_value(db, node, channel, value, d1, d2);
 			sprintf(debug, DEBUGSTR "Voltage of Node: %o is %f ", node, value);
 			logmsg(VERBOSECONFIG, debug);        
-			sprintf(sql_stmt,"update node set U_Batt = %f, signal_quality = '%d%d', last_contact = unix_timestamp() where Node_ID = '0%o'", value, d1, d2, node);
+			sprintf(sql_stmt,"update node set u_batt = %f, signal_quality = '%d%d', last_contact = unix_timestamp() where node_id = '0%o'", value, d1, d2, node);
 			do_sql(db, sql_stmt);
 		}
 		break; 
@@ -965,7 +965,7 @@ int main(int argc, char* argv[]) {
     }
     fprintf (pidfile_ptr, "%d", pid );
     fclose(pidfile_ptr);
-    sprintf(debug, "rf24hubd running with PID: %d", pid);
+    sprintf(debug, "%s running with PID: %d", PRGNAME, pid);
     logmsg(VERBOSESTARTUP, debug);
     if ( tn_port_set && tn_host_set ) {
         tn_active = true;
