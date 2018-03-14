@@ -663,7 +663,7 @@ void store_sensor_value(MYSQL *db, uint16_t node, uint8_t channel, float value, 
 	}
 	sprintf(sql_stmt,"insert into sensordata (sensor_ID, utime, value) select sensor_id, UNIX_TIMESTAMP(), %f from sensor where node_id = '0%o' and channel = %u ", value, node, channel);
 	do_sql(db, sql_stmt);
-	sprintf(sql_stmt,"update sensor set value= %f, Utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where node_id = '0%o' and channel = %u ", value, d1, d2, node, channel);
+	sprintf(sql_stmt,"update sensor set value= %f, utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where node_id = '0%o' and channel = %u ", value, d1, d2, node, channel);
 	do_sql(db, sql_stmt);
 }
 
@@ -681,7 +681,7 @@ void process_sensor(MYSQL *db, uint16_t node, uint8_t channel, float value, bool
 			store_sensor_value(db, node, channel, value, d1, d2);
 			sprintf(debug, DEBUGSTR "Voltage of Node: %o is %f ", node, value);
 			logmsg(VERBOSECONFIG, debug);        
-			sprintf(sql_stmt,"update node set U_Batt = %f, signal_quality = '%d%d', last_contact = unix_timestamp() where Node_ID = '0%o'", value, d1, d2, node);
+			sprintf(sql_stmt,"update node set u_batt = %f, signal_quality = '%d%d', last_contact = unix_timestamp() where node_id = '0%o'", value, d1, d2, node);
 			do_sql(db, sql_stmt);
 		}
 		break; 
