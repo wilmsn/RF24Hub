@@ -491,6 +491,7 @@ void get_order(uint16_t node) {
     unsigned int order_ptr=0;
 	int j = 0;
 	orderno++;
+	order_waiting = true;
 	sprintf(debug, "get_order: node: 0%o orderno: %u", node, orderno);
 	logmsg(VERBOSEOTHER,debug);
 	// if we have old orders for this node ==> delete them! 
@@ -665,6 +666,11 @@ void store_sensor_value(MYSQL *db, uint16_t node, uint8_t channel, float value, 
 	do_sql(db, sql_stmt);
 	sprintf(sql_stmt,"update sensor set value= %f, utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where node_id = '0%o' and channel = %u ", value, d1, d2, node, channel);
 	do_sql(db, sql_stmt);
+	for(int i=0; i<SENSORLENGTH; i++) {
+		if ( sensor[i].node == node && sensor[i].channel == channel ) {
+			sensor[i].last_val = value;
+		}
+	}
 }
 
 void process_sensor(MYSQL *db, uint16_t node, uint8_t channel, float value, bool d1, bool d2) {
@@ -784,11 +790,10 @@ void logmsg(int mesgloglevel, char *mymsg){
 int main(int argc, char* argv[]) {
     pid_t pid;
 	int c;
-	uint64_t send_time, akt_time, del_time;
-	unsigned int order_ptr = 0;
+	uint64_t akt_time, del_time, next_time;
     akt_time = mymillis();
-	send_time = akt_time;
 	del_time = akt_time;
+	next_time = akt_time;
 	orderno = 1;
 	logmode = interactive;
 	strcpy(config_file,"x");
@@ -1072,7 +1077,7 @@ int main(int argc, char* argv[]) {
 // Orderloop: Tell the nodes what they have to do
 //
 		akt_time=mymillis();
-		if ( akt_time > del_time + 60000 ) {
+		if ( akt_time > del_time + DELETEINTERVAL ) {
 // Cleanup old entries
 			for(int i=0; i<ORDERLENGTH; i++) {
 				if ((order[i].orderno > 0) && (order[i].entrytime + KEEPINBUFFERTIME < akt_time) ) {
@@ -1085,59 +1090,66 @@ int main(int argc, char* argv[]) {
 			}
 			del_time = akt_time;
 		}
-		if ( akt_time > send_time + 99 ) {  // check every 100 milliseconds
-			send_time=akt_time;
-// Look if we have something to send
-			bool do_loop = true;
-			while ( order[order_ptr].orderno == 0 && do_loop ) {
-				if ( order_ptr < ORDERLENGTH - 1 ) {
-					order_ptr++;
-				} else {
-					order_ptr=0;
-					do_loop = false;
-				}
-			}
-			if (order[order_ptr].orderno != 0) {
-				if (node_is_next(order[order_ptr].node) && (akt_time > order[order_ptr].last_send + 500) ) {
-					txheader.from_node = 0;
-					payload.orderno = order[order_ptr].orderno;
-					txheader.to_node  = order[order_ptr].node;
-					payload.flags = order[order_ptr].flags;
-					txheader.type  = order[order_ptr].type;
-					payload.channel1  = order[order_ptr].channel1;
-					payload.value1  = order[order_ptr].value1;
-					payload.channel2  = order[order_ptr].channel2;
-					payload.value2  = order[order_ptr].value2;
-					payload.channel3  = order[order_ptr].channel3;
-					payload.value3  = order[order_ptr].value3;
-					payload.channel4  = order[order_ptr].channel4;
-					payload.value4  = order[order_ptr].value4;
-					if (network.write(txheader,&payload,sizeof(payload))) {
-						if ( verboselevel > 4 ) {
-							sprintf(debug, DEBUGSTR "Send: Type: %u from Node: 0%o to Node: 0%o orderno %d (Channel/Value) (%u/%f) (%u/%f) (%u/%f) (%u/%f)"
-									, txheader.type, txheader.from_node, txheader.to_node, payload.orderno
-									, payload.channel1, payload.value1, payload.channel2, payload.value2, payload.channel3, payload.value3, payload.channel4, payload.value4);
-							logmsg(VERBOSERF24, debug);
+		if ( order_waiting && akt_time > next_time ) {  // go transmitting if its time to do ..
+			next_time = akt_time + SENDINTERVAL;
+			// Look if we have something to send
+			order_waiting = false;
+			for ( int order_ptr=0; order_ptr<ORDERLENGTH; order_ptr++) {
+				if (order[order_ptr].orderno != 0) {
+					order_waiting = true;
+					// this orders are ready to send
+					if ( akt_time > order[order_ptr].last_send + SENDINTERVAL ) {
+						if ( node_is_next(order[order_ptr].node) ) {
+							txheader.from_node = 0;
+							payload.orderno = order[order_ptr].orderno;
+							txheader.to_node  = order[order_ptr].node;
+							payload.flags = order[order_ptr].flags;
+							txheader.type  = order[order_ptr].type;
+							payload.channel1  = order[order_ptr].channel1;
+							payload.value1  = order[order_ptr].value1;
+							payload.channel2  = order[order_ptr].channel2;
+							payload.value2  = order[order_ptr].value2;
+							payload.channel3  = order[order_ptr].channel3;
+							payload.value3  = order[order_ptr].value3;
+							payload.channel4  = order[order_ptr].channel4;
+							payload.value4  = order[order_ptr].value4;
+							if (network.write(txheader,&payload,sizeof(payload))) {
+								if ( verboselevel >= VERBOSERF24  ) {
+									sprintf(debug, DEBUGSTR "Send: Type: %u from Node: 0%o to Node: 0%o orderno %d (Channel/Value) (%u/%f) (%u/%f) (%u/%f) (%u/%f)"
+											, txheader.type, txheader.from_node, txheader.to_node, payload.orderno
+											, payload.channel1, payload.value1, payload.channel2, payload.value2, payload.channel3, payload.value3, payload.channel4, payload.value4);
+									logmsg(VERBOSERF24, debug);
+								}
+							} else {
+								if ( verboselevel >= VERBOSERF24 ) {
+									sprintf(debug, DEBUGSTR "Failed: Type: %u from Node: 0%o to Node: 0%o orderno %d (Channel/Value) (%u/%f) (%u/%f) (%u/%f) (%u/%f)"
+												, txheader.type, txheader.from_node, txheader.to_node, payload.orderno
+												, payload.channel1, payload.value1, payload.channel2, payload.value2, payload.channel3, payload.value3, payload.channel4, payload.value4);
+									logmsg(VERBOSERF24, debug);
+								}
+							}
+							order[order_ptr].last_send = akt_time;
+						} else {
+							if ( verboselevel > 4 ) {
+								sprintf(debug,"Node 0%o blocked!!!!!",order[order_ptr].node);
+								logmsg(VERBOSEOTHER, debug);
+							}
 						}
 					} else {
-						if ( verboselevel > 4 ) {
-							sprintf(debug, DEBUGSTR "Failed: Type: %u from Node: 0%o to Node: 0%o orderno %d (Channel/Value) (%u/%f) (%u/%f) (%u/%f) (%u/%f)"
-										, txheader.type, txheader.from_node, txheader.to_node, payload.orderno
-										, payload.channel1, payload.value1, payload.channel2, payload.value2, payload.channel3, payload.value3, payload.channel4, payload.value4);
-							logmsg(VERBOSERF24, debug);
-						}
+						if ( next_time > order[order_ptr].last_send + SENDINTERVAL ) next_time = order[order_ptr].last_send + SENDINTERVAL;
 					}
-					order[order_ptr].last_send = akt_time;
-				} else {
-					if ( verboselevel > 4 ) {
-						sprintf(debug,"Node 0%o blocked!!!!!",order[order_ptr].node);
-						logmsg(VERBOSEOTHER, debug);
-					}
-				}
+				}	
 			}
-			order_ptr++;
 		}
-		usleep(2000);
+		// Order seems to be empty if akt_time still greater than next_time
+		if ( akt_time > next_time ) {
+			next_time = akt_time + SENDINTERVAL;
+				if ( verboselevel >= VERBOSEOTHER ) {
+					sprintf(debug,"Order empty increment next_send by %d ms", SENDINTERVAL);
+					logmsg(VERBOSEOTHER, debug);
+				}
+		}
+		if ( order_waiting ) usleep(2000); else usleep(200000);
 //
 //  end orderloop
 //
