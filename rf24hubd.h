@@ -63,7 +63,7 @@ MYSQL_RES *res;
 MYSQL_ROW row;
 char* pEnd;
 const char* prgversion=PRGVERSION;
-int order_ptr;
+
 
 // Setup for GPIO 25 CE and CE0 CSN with SPI Speed @ 8Mhz
 RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
@@ -98,15 +98,15 @@ struct order_t {
 	float		    value3;    		// the information that is send to sensor 3
 	unsigned char  	channel4;  		// The channel for the sensor 1
 	float		    value4;    		// the information that is send to sensor 4
-	unsigned long	entrytime;
-	unsigned long  	last_send;		// Timestamp for last sending of this record
+	uint64_t		entrytime;
+	uint64_t	  	last_send;		// Timestamp for last sending of this record
 };
 struct order_t 	order[ORDERLENGTH]; 
 
 // structure for the order_buffer
 struct order_buffer_t {
 	uint16_t 	    orderno;   	// the orderno as primary key for our message for the nodes
-	unsigned long	entrytime;
+	uint64_t		entrytime;
 	uint16_t     	node;
 	uint16_t     	channel;
 	float        	value;
@@ -156,6 +156,8 @@ char config_file[PARAM_MAXLEN_CONFIGFILE];
 * default place to look at is: DEFAULT_CONFIG_FILE (see sensorhub.h)
 *
 ********************************************************************************************/
+
+void init_parameters (struct config_parameters * parms);
 
 void parse_config (struct config_parameters * parms);
 
@@ -216,6 +218,9 @@ void get_order(uint16_t node);
 uint16_t set_sensor(uint32_t mysensor, float value);
 
 uint16_t get_sensor(uint32_t mysensor);
+
+bool node_is_next(uint16_t node);
+
 /*******************************************************************************************
 *
 * Databasehandling 
@@ -236,6 +241,7 @@ void process_sensor(MYSQL *db, uint16_t node, uint8_t sensor, float value, bool 
 * All the rest 
 *
 ********************************************************************************************/
+uint64_t mymillis(void);
 
 void sighandler(int signal);
 

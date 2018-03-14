@@ -12,10 +12,6 @@ rf24hub_config.h ==> all global definitions go here
 #define LOGFILE "/var/log/rf24hubd.log"
 #define PIDFILE "/var/run/rf24hubd.pid"
 #define DEFAULT_CONFIG_FILE "/etc/rf24hub/rf24hub.cfg"
-// The radiochannel for the sensorhub
-#define RADIOCHANNEL 10
-// Transmission speed
-#define RADIOSPEED RF24_1MBPS
 #define PRGNAME "rf24hub"
 //
 // END default values: can be overwritten in config file
@@ -24,6 +20,8 @@ rf24hub_config.h ==> all global definitions go here
 //
 #define ORDERLENGTH 80
 #define ORDERBUFFERLENGTH 20
+// How long do we try to deliver (in msec) => 20 Min.
+#define KEEPINBUFFERTIME 1200000    
 #define SENSORLENGTH 80
 #define FHEMDEVLENGTH 40
 #define PARAM_MAXLEN 80

@@ -64,13 +64,13 @@ RF24NetworkHeader rxheader;
 RF24NetworkHeader txheader(0);
 // all sleeptime* values in seconds 
 // Time for the fist sleep after an activity of this node
-float       sleeptime1 = 5;
+float       sleeptime1 = SLEEPTIME1;
 // Time for the 2. to N. sleeploop
-float       sleeptime2 = 5;
+float       sleeptime2 = SLEEPTIME2;
 // Time to sleep after wakeup with radio on
-float       sleeptime3 = 1;
+float       sleeptime3 = SLEEPTIME3;
 // Time to keep the network up if it was busy
-float       sleeptime4 = 5;
+float       sleeptime4 = SLEEPTIME4;
 boolean     init_finished = false;
 boolean     init_transmit = true;
 float       networkuptime = 0;
@@ -113,35 +113,48 @@ float action_loop(unsigned char sensor, float value) {
         case 111:
           // sleeptimer1
           sleeptime1=value;
+          retval=value;
           Serial.println("111 detected");
         break;
         case 112:
           // sleeptimer2
           sleeptime2=value;
-          Serial.println("112 detected");
+          retval=value;
+         Serial.println("112 detected");
         break;
         case 113:
           // sleeptimer3
           sleeptime3=value;
+          retval=value;
           Serial.println("113 detected");
         break;
         case 114:
           // sleeptimer4
           sleeptime4=value;
+          retval=value;
           Serial.println("114 detected");
           break;
         case 115:
           // radio on (=1) or off (=0) when sleep
-          if ( value > 0.5) radiomode=radio_listen; else radiomode=radio_sleep;
-          Serial.println("115 detected");
+          Serial.print("115 detected ");
+          if ( value > 0.5) {
+            radiomode=radio_listen; 
+            Serial.println("Radio always on");
+          } else {
+            radiomode=radio_sleep;
+            Serial.println("Radio sleeps");
+          }
+          retval=value;
         break;
         case 116:
           // Voltage factor
           vcc.m_correction = value;
+          retval=value;
           Serial.println("116 detected");
         break; 
         case 118:
         // init_finished (=1)
+          retval=1;
           init_finished = (1 == 1); //( payload.value > 0.5);
           Serial.println("118 detected");
           break;
@@ -174,12 +187,8 @@ void setup(void) {
 //  radio.setDataRate(RF24_250KBPS);
   delay(200);
   radio.printDetails();
-  sleeptime1 = SLEEPTIME1;
-  sleeptime2 = SLEEPTIME2;
-  sleeptime3 = SLEEPTIME3;
-  sleeptime4 = SLEEPTIME4;
   radiomode=radio_listen;
-  init_finished = true;
+  init_finished = false;
   // initialisation beginns
   bool do_transmit = true;
   while ( ! init_finished ) {
@@ -199,14 +208,16 @@ void setup(void) {
       network.read(rxheader,&payload,sizeof(payload));
       Serial.print("Testnode02 received ");
       Serial.print(rxheader.type);
-      Serial.print(" ");
+      Serial.println(" ");
 //      Serial.println(payload.value);
       init_transmit=false;
 //      action_loop();
-      action_loop(payload.sensor1, payload.value1);
-      action_loop(payload.sensor2, payload.value2);
-      action_loop(payload.sensor3, payload.value3);
-      action_loop(payload.sensor4, payload.value4);
+      payload.value1=action_loop(payload.sensor1, payload.value1);
+      payload.value2=action_loop(payload.sensor2, payload.value2);
+      payload.value3=action_loop(payload.sensor3, payload.value3);
+      payload.value4=action_loop(payload.sensor4, payload.value4);
+      txheader.type=60;
+      network.write(txheader,&payload,sizeof(payload));
       last_send = millis();
     }
   }
