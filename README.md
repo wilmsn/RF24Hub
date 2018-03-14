@@ -74,7 +74,7 @@ Quick start guide:
    Add the configuration of this node to the table node inside the database
    Add at least one sensor to the table sensor
 
-   ./rf24hubd -v9  #Just stop it with ctrl-c
+   sudo ./rf24hubd -v9  #Just stop it with ctrl-c
 
 9. If everything works, install it
 
