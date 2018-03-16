@@ -189,7 +189,7 @@ void prepare_tn_cmd(uint16_t node, uint8_t channel, float value) {
 	exec_tn_cmd(telnet_cmd);
 }
 	
-void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message) {
+void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_message) {
 	char cmp_init[]="init", 
 		 cmp_sensor[]="sensor",
 		 cmp_set[]="set",
@@ -231,17 +231,17 @@ void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message
 	if (( strcmp(wort1,cmp_list) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (wort3 == NULL) && (wort4 == NULL) ) {
 		tn_input_ok = true;
 		sprintf(client_message,"----- Orderbuffer: ------\n"); 
-		write(new_socket , client_message , strlen(client_message));
+		write(new_tn_in_socket , client_message , strlen(client_message));
 		for (int i=0; i < ORDERBUFFERLENGTH; i++) {
 			if ( order_buffer[i].node > 0 ) {
 				sprintf(client_message,"Onr:\t%u,\tentry:\t%llu (%d sec.),\tnode:\t0%o,\tchannel:\t%u\tval:\t%f\n", 
 					order_buffer[i].orderno, order_buffer[i].entrytime, (int)(order_buffer[i].entrytime - mymillis())/1000, order_buffer[i].node,
 					order_buffer[i].channel, order_buffer[i].value );
-				write(new_socket , client_message , strlen(client_message));
+				write(new_tn_in_socket , client_message , strlen(client_message));
 			}				
 		}
 		sprintf(client_message,"----- Order: ------\n"); 
-		write(new_socket , client_message , strlen(client_message));
+		write(new_tn_in_socket , client_message , strlen(client_message));
 		for (int i=0; i < ORDERLENGTH; i++) {
 			if ( order[i].node > 0 ) {
 				sprintf(client_message,"Onr:\t%u,\tentry:\t%llu (%d sec.),\tnode:\t0%o,\ttype:\t%u\tflags:\t%u\t(channel/Value)\t(%u/%f)\t(%u/%f)\t(%u/%f)\t(%u/%f)\n", 
@@ -250,7 +250,7 @@ void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message
 					,order[i].channel2, order[i].value2
 					,order[i].channel3, order[i].value3
 					,order[i].channel4, order[i].value4);
-				write(new_socket , client_message , strlen(client_message));
+				write(new_tn_in_socket , client_message , strlen(client_message));
 			}				
 		}
 	}	
@@ -259,28 +259,28 @@ void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message
 	if (( strcmp(wort1,cmp_html) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (wort3 == NULL) && (wort4 == NULL) ) {
 		tn_input_ok = true;
 		sprintf(client_message,"\n<center><big>Orderbuffer</big><table><tr><th>OrderNo</th><th>EntryTime</th><th>Node</th><th>Channel</th><th>Value</th></tr>\n"); 
-		write(new_socket , client_message , strlen(client_message));
+		write(new_tn_in_socket , client_message , strlen(client_message));
 		for (int i=0; i < ORDERBUFFERLENGTH; i++) {
 			if ( order_buffer[i].node > 0 ) {
 				sprintf(client_message,"<tr><td>%u</td><td>%llu (%d sec.)</td><td>0%o</td><td>%u</td><td>%f</td></tr>\n", 
 					order_buffer[i].orderno, order_buffer[i].entrytime, (int)(order_buffer[i].entrytime - mymillis())/1000, order_buffer[i].node,
 					order_buffer[i].channel, order_buffer[i].value );
-				write(new_socket , client_message , strlen(client_message));
+				write(new_tn_in_socket , client_message , strlen(client_message));
 			}				
 		}
 		sprintf(client_message,"</table><br><big>Order</big><br><table><tr><th>OrderNo</th><th>EntryTime</th><th>Node</th><th>Type</th><th>Flags</th><th>Channel</th><th>Value</th></tr>\n"); 
-		write(new_socket , client_message , strlen(client_message));
+		write(new_tn_in_socket , client_message , strlen(client_message));
 		for (int i=0; i < ORDERLENGTH; i++) {
 			if ( order[i].node > 0 ) {
 				sprintf(client_message,"<tr><td>%u</td><td>%llu (%d sec.)</td><td>0%o</td><td>%u</td><td>%u</td><td>%u<br>%u<br>%u<br>%u</td><td>%f<br>%f<br>%f<br>%f</td></tr>\n", 
 					order[i].orderno, order[i].entrytime, (int)(order[i].entrytime - mymillis())/1000, order[i].node, order[i].type, order[i].flags
 					,order[i].channel1, order[i].channel2, order[i].channel3, order[i].channel4
 					,order[i].value1, order[i].value2, order[i].value3, order[i].value4);
-				write(new_socket , client_message , strlen(client_message));
+				write(new_tn_in_socket , client_message , strlen(client_message));
 			}				
 		}
 		sprintf(client_message,"</table></center>\n"); 
-		write(new_socket , client_message , strlen(client_message));
+		write(new_tn_in_socket , client_message , strlen(client_message));
 	}	
     // init
 	// initialisation of rf24hubd: reloads data from database
@@ -290,28 +290,30 @@ void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message
 	}
 	if ( ! tn_input_ok) {
 		sprintf(client_message,"Usage:\n");
-		write(new_socket , client_message , strlen(client_message));
+		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"set sensor <sensornumber> <sensorvalue>\n");
-		write(new_socket , client_message , strlen(client_message));
+		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"   Sets the sensor <sensornumber> to the value <sensorvalue>\n");
-		write(new_socket , client_message , strlen(client_message));
+		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"set node <nodenumber> init\n");
-		write(new_socket , client_message , strlen(client_message));
+		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"   Inits the Node <nodenumber>. Use <nodenumber> like '041'\n");
-		write(new_socket , client_message , strlen(client_message));
+		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"init \n");
-		write(new_socket , client_message , strlen(client_message));
+		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"   Reinitialisation of rf24hub (all open ordes will be deleted)\n");
-		write(new_socket , client_message , strlen(client_message));
+		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"list order\n");
-		write(new_socket , client_message , strlen(client_message));
+		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"   lists the content of the order queue\n");
-		write(new_socket , client_message , strlen(client_message));
+		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"\n");
-		write(new_socket , client_message , strlen(client_message));
+		write(new_tn_in_socket , client_message , strlen(client_message));
+		sprintf(client_message,"%s version %s\n", PRGNAME, PRGVERSION);
+		write(new_tn_in_socket , client_message , strlen(client_message));
 	} else {
 		sprintf(client_message,"Command received => OK\n");
-		write(new_socket , client_message , strlen(client_message));
+		write(new_tn_in_socket , client_message , strlen(client_message));
 	}		
 }
 	
@@ -557,28 +559,16 @@ uint16_t set_sensor(uint32_t mysensor, float value) {
 }
 
 uint16_t get_sensor(uint32_t mysensor) {
-	int i = 0;
-	uint16_t node = 0;
-	while (sensor[i].sensor != mysensor && i < SENSORLENGTH) {
-		i++;
-	}
-	if ( i < SENSORLENGTH) {
-		fill_order_buffer( sensor[i].node, sensor[i].channel, sensor[i].last_val);
-		node = sensor[i].node;
-	}
-	return node;
+	return set_sensor(mysensor, 0);
 }
 
 bool node_is_next(const uint16_t node) {
 	bool retval = true;
-//	printf("Node: 0%o    ",node);
 	for(int i=0; i<ORDERLENGTH; i++) {
 		if ((order[i].node !=0) && ( node != order[i].node ) && ((node & order[i].node) == order[i].node) ) {
 			retval = false;
-//			printf(" node: 0%o  order.node: 0%o\n", node, order[i].node);
 		}			
 	}
-//	if (retval) printf("true\n"); else printf("false\n");
 	return retval;
 }
 /*******************************************************************************************
@@ -799,7 +789,7 @@ int main(int argc, char* argv[]) {
 	strcpy(config_file,"x");
 
 	/* vars for telnet socket handling */
-	int create_socket, new_socket, MsgLen;
+	int tn_in_socket, new_tn_in_socket, MsgLen;
 	socklen_t addrlen;
 	char *buffer =  (char*) malloc (BUF);
 	struct sockaddr_in address;
@@ -828,7 +818,6 @@ int main(int argc, char* argv[]) {
             break;
 			case 'v':
                 verboselevel = (optarg[0] - '0') * 1;
-                debugmode=true;
             break;
             case 'c':
                 strcpy(config_file, optarg);
@@ -840,7 +829,7 @@ int main(int argc, char* argv[]) {
             break;
             default:
                 usage (argv[0]);
-                abort ();
+                exit (0);
         }
     }
     /* Print any remaining command line arguments (not options). */
@@ -865,13 +854,27 @@ int main(int argc, char* argv[]) {
     }
     // Reading and processing and printing config file
     printf ("Reading configuration from %s\n",config_file);
-//    printf ("Initializing parameters to default values...\n");
-//    init_parameters (&parms);
     printf ("Reading config file...\n");
     parse_config (&parms);
     printf ("Startup Parameters:\n");
     print_config (&parms);
-
+    // check for PID file, if exists terminate else create it
+    if( access( parms.pidfilename, F_OK ) != -1 ) {
+        fprintf(stderr, "PIDFILE: %s exists, terminating\n\n", parms.pidfilename);
+        exit(1);
+    }
+    pid=getpid();
+    pidfile_ptr = fopen (parms.pidfilename,"w");
+    if (pidfile_ptr==NULL) {
+        sprintf(debug,"Can't write PIDFILE: %s! Exit programm ....\n", parms.pidfilename);
+        fprintf(stderr, debug);
+        exit (1);
+    }
+    fprintf (pidfile_ptr, "%d", pid );
+    fclose(pidfile_ptr);
+    sprintf(debug, "%s running with PID: %d", PRGNAME, pid);
+    logmsg(VERBOSESTARTUP, debug);
+	
     // starts logging
     logfile_ptr = fopen (parms.logfilename,"a");
     if ( logfile_ptr == NULL ) {
@@ -882,6 +885,7 @@ int main(int argc, char* argv[]) {
 		sprintf(debug, "Start logging to %s", parms.logfilename);
         logmsg(VERBOSESTARTUP, debug);
     }
+
     // open database
     sprintf(debug,"Maria-DB:");
     logmsg(VERBOSESTARTUP, debug);
@@ -899,6 +903,7 @@ int main(int argc, char* argv[]) {
 		} else {
 			fprintf(stderr, "%s\n", mysql_error(db));
             mysql_close(db);
+			unlink(parms.pidfilename);
             exit(1);
 		}
     }
@@ -912,6 +917,7 @@ int main(int argc, char* argv[]) {
 		} else {
 			fprintf(stderr, "%s\n", mysql_error(db));
 			mysql_close(db);
+			unlink(parms.pidfilename);
 			exit(1);
 		}
     }
@@ -932,7 +938,6 @@ int main(int argc, char* argv[]) {
         } else {
             // starts rf24hubd as a deamon
             // no messages to console!
-            debugmode=false;
             pid = fork ();
             if (pid == 0) {
                 // Child prozess
@@ -956,47 +961,31 @@ int main(int argc, char* argv[]) {
             }
         }
     }
-    // check for PID file, set if not exists terminate else create it
-    if( access( parms.pidfilename, F_OK ) != -1 ) {
-        fprintf(stderr, "PIDFILE: %s exists, terminating\n\n", parms.pidfilename);
-        exit(1);
-    }
-    pid=getpid();
-    pidfile_ptr = fopen (parms.pidfilename,"w");
-    if (pidfile_ptr==NULL) {
-        sprintf(debug,"Can't write PIDFILE: %s! Exit programm ....\n", parms.pidfilename);
-        fprintf(stderr, debug);
-        exit (1);
-    }
-    fprintf (pidfile_ptr, "%d", pid );
-    fclose(pidfile_ptr);
-    sprintf(debug, "%s running with PID: %d", PRGNAME, pid);
-    logmsg(VERBOSESTARTUP, debug);
     if ( tn_port_set && tn_host_set ) {
         tn_active = true;
         sprintf(debug, "telnet session started: Host: %s Port: %d ", parms.telnet_hostname, parms.telnet_port);
         logmsg(VERBOSESTARTUP, debug);
     }
-	create_socket=0;
+	tn_in_socket=0;
 	if ( in_port_set ) {
     /* open incoming port for messages */
-		if ((create_socket=socket( AF_INET, SOCK_STREAM, 0)) > 0) {
+		if ((tn_in_socket=socket( AF_INET, SOCK_STREAM, 0)) > 0) {
 			sprintf (debug,"Socket für eingehende Messages auf Port %i angelegt", parms.incoming_port);
 			logmsg(VERBOSESTARTUP, debug);
 		}
 		address.sin_family = AF_INET;
 		address.sin_addr.s_addr = INADDR_ANY;
 		address.sin_port = htons (parms.incoming_port);
-		setsockopt( create_socket, SOL_SOCKET, SO_REUSEADDR, &y, sizeof(int) );
-		if (bind( create_socket, (struct sockaddr *) &address, sizeof (address)) == 0 ) {
+		setsockopt( tn_in_socket, SOL_SOCKET, SO_REUSEADDR, &y, sizeof(int) );
+		if (bind( tn_in_socket, (struct sockaddr *) &address, sizeof (address)) == 0 ) {
 			sprintf (debug,"Binding Socket OK");
 			logmsg(VERBOSESTARTUP, debug);
 		}
-		listen (create_socket, 5);
+		listen (tn_in_socket, 5);
 		addrlen = sizeof (struct sockaddr_in);
-		save_fd = fcntl( create_socket, F_GETFL );
+		save_fd = fcntl( tn_in_socket, F_GETFL );
 		save_fd |= O_NONBLOCK;
-		fcntl( create_socket, F_SETFL, save_fd );
+		fcntl( tn_in_socket, F_SETFL, save_fd );
 	}
     sleep(2);
     sprintf(debug, "starting radio on channel ... %d ", parms.rf24network_channel);
@@ -1022,26 +1011,26 @@ int main(int argc, char* argv[]) {
 		if ( in_port_set ) {
 			char client_message[30];
 			if ( ! wait4message ) {  
-				new_socket = accept ( create_socket, (struct sockaddr *) &address, &addrlen );
-				if (new_socket > 0) {
+				new_tn_in_socket = accept ( tn_in_socket, (struct sockaddr *) &address, &addrlen );
+				if (new_tn_in_socket > 0) {
 					wait4message = true;
 					// send something like a prompt. perl telnet is waiting for it otherwise we get error
 					// use this in perl: my $t = new Net::Telnet (Timeout => 2, Port => 7001, Prompt => '/rf24hub>/');
 					sprintf(client_message,"rf24hub> ");
-					write(new_socket , client_message , strlen(client_message));
+					write(new_tn_in_socket , client_message , strlen(client_message));
 					sprintf (debug,"Client %s ist connected ...", inet_ntoa (address.sin_addr));
 					logmsg(VERBOSECONFIG, debug);
 				}
 			} else {
-				save_fd = fcntl( new_socket, F_GETFL );
+				save_fd = fcntl( new_tn_in_socket, F_GETFL );
 				save_fd |= O_NONBLOCK;
-				fcntl( new_socket, F_SETFL, save_fd );
+				fcntl( new_tn_in_socket, F_SETFL, save_fd );
 				/* Process data  */
 				sprintf(buffer,"                                                                               ");
-				MsgLen = recv(new_socket, buffer, BUF, 0);
+				MsgLen = recv(new_tn_in_socket, buffer, BUF, 0);
 				if (MsgLen>0) {
-					process_tn_in(db, new_socket, buffer, client_message);
-					close (new_socket);
+					process_tn_in(db, new_tn_in_socket, buffer, client_message);
+					close (new_tn_in_socket);
 					wait4message = false;
 				}
 			}	 
@@ -1058,10 +1047,8 @@ int main(int argc, char* argv[]) {
 						, rxheader.type, rxheader.from_node, rxheader.to_node, payload.orderno
 						, payload.channel1, payload.value1, payload.channel2, payload.value2, payload.channel3, payload.value3, payload.channel4, payload.value4);
 			logmsg(VERBOSERF24, debug);
-//			uint16_t sendernode=rxheader.from_node;
 			if ( rxheader.type == 119 ) {
 					init_node(db, rxheader.from_node);
-//					ordersqlrefresh=true;
 			} else {	
 				if (is_valid_orderno(payload.orderno)) {
 					if ( payload.channel1 > 0 ) process_sensor(db, rxheader.from_node, payload.channel1, payload.value1, rf24_carrier, rf24_rpd);
