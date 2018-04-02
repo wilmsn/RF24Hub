@@ -12,7 +12,7 @@ rf24hub_config.h ==> all global definitions go here
 #define LOGFILE "/var/log/rf24hubd.log"
 #define PIDFILE "/var/run/rf24hubd.pid"
 #define DEFAULT_CONFIG_FILE "/etc/rf24hub/rf24hub.cfg"
-#define PRGNAME "rf24hub"
+
 //
 // END default values: can be overwritten in config file
 //

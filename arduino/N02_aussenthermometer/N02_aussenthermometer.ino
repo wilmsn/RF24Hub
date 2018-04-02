@@ -10,8 +10,6 @@
 #define STATUSLED 7
 #define STATUSLED_ON HIGH
 #define STATUSLED_OFF LOW
-//#define SLEEP delay
-#define SLEEP sleep4ms
 #define SLEEPTIME1 10
 #define SLEEPTIME2 10
 #define SLEEPTIME3 2
@@ -24,7 +22,6 @@
 #include <SPI.h>
 #include <sleeplib.h>
 #include <Vcc.h>
-#include "printf.h"
 #include <Wire.h>
 #include <Adafruit_BMP085.h>
 
@@ -185,7 +182,7 @@ void sleep12(unsigned int sleeptime) {
     radio.stopListening();
     radio.powerDown();
   }
-  SLEEP((unsigned int)(sleeptime)); 
+  sleep4ms((unsigned int)(sleeptime)); 
   if ( radiomode == radio_sleep ) {
     radio.powerUp();
     radio.startListening();
@@ -210,7 +207,7 @@ void loop(void) {
     txheader.type=rxheader.type;
     network.write(txheader,&payload,sizeof(payload));    
   }
-  SLEEP(200);
+  sleep4ms(100);
   networkup++;    
   switch (sleepmode) {
     case sleep1:

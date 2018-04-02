@@ -12,6 +12,7 @@ V1.0 Initial version after comming from sensorhub
 #ifndef _RF24HUBD_H_   /* Include guard */
 #define _RF24HUBD_H_
 
+#define PRGNAME "rf24hub"
 #define PRGVERSION "1.0"
 //--------- End of global define -----------------
 
@@ -51,7 +52,7 @@ enum logmode_t { systemlog, interactive, logfile };
 logmode_t logmode;
 int verboselevel = 2;
 int sockfd;
-bool start_daemon=false, debugmode=false, tn_host_set = false, tn_port_set = false, tn_active = false, in_port_set = false, order_waiting = false;
+bool start_daemon=false, tn_host_set = false, tn_port_set = false, tn_active = false, in_port_set = false, order_waiting = false;
 char logfilename[300];
 char tn_hostname[20], tn_portno[7];
 struct sockaddr_in serv_addr;
