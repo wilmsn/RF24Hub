@@ -515,10 +515,10 @@ void get_order(uint16_t node) {
 	logmsg(VERBOSEOTHER,debug);
 	//collect the data for this order
 	for (int i=0; i < ORDERBUFFERLENGTH; i++) {
-		if (node == order_buffer[i].node && j < 4) {
+		if (node == order_buffer[i].node) {
 			sprintf(debug, "get_order: j is: %d order_ptr is: %u", j, order_ptr);
 			logmsg(VERBOSEOTHER,debug);
-			order_buffer[i].orderno = orderno;
+			if ( j < 4 ) order_buffer[i].orderno = orderno;
 			if (j == 0) {
 				order[order_ptr].orderno = orderno;
 				order[order_ptr].node = node;
@@ -543,7 +543,7 @@ void get_order(uint16_t node) {
 			j++;
 		}
 	}
-	if (j < 4) order[order_ptr].flags = 0x01;
+	if (j < 5) order[order_ptr].flags = 0x01;
 	print_order();
 }	
 
