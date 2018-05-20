@@ -738,8 +738,10 @@ void sighandler(int signal) {
 
 uint64_t mymillis(void) {
 	struct timeval tv;
+	uint64_t timebuf;
 	gettimeofday(&tv, NULL);
-	return (uint64_t)(time(NULL)*1000 + (tv.tv_usec / 1000));
+	timebuf = ((tv.tv_sec & 0x000FFFFF) * 1000 + (tv.tv_usec / 1000)) - start_time;
+	return timebuf;
 }
 
 void logmsg(int mesgloglevel, char *mymsg){
@@ -781,6 +783,8 @@ int main(int argc, char* argv[]) {
     pid_t pid;
 	int c;
 	uint64_t akt_time, del_time, next_time;
+	start_time = 0;
+	start_time = mymillis();
     akt_time = mymillis();
 	del_time = akt_time;
 	next_time = akt_time;
