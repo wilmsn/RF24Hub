@@ -64,6 +64,7 @@ MYSQL_RES *res;
 MYSQL_ROW row;
 char* pEnd;
 const char* prgversion=PRGVERSION;
+uint64_t start_time;
 
 
 // Setup for GPIO 25 CE and CE0 CSN with SPI Speed @ 8Mhz
