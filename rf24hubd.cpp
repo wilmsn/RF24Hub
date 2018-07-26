@@ -563,12 +563,23 @@ uint16_t get_sensor(uint32_t mysensor) {
 }
 
 bool node_is_next(const uint16_t node) {
-	bool retval = true;
-	for(int i=0; i<ORDERLENGTH; i++) {
-		if ((order[i].node !=0) && ( node != order[i].node ) && ((node & order[i].node) == order[i].node) ) {
-			retval = false;
+  /*
+  Make sure that childs will not addressed until a parent needs to be addressed
+  */
+	bool retval;
+  retval = true;
+/* temporary disabled 
+  for(int i=0; i<ORDERLENGTH; i++) {
+		if ( order[i].node != 0 ) {
+      if ( node != order[i].node ) {
+        if ((node & order[i].node) == order[i].node) {
+			    retval = false;
+      		sprintf(debug, "node_is_next=false: i:%d node:%x order[%d].node:%x\n", i,node, i, order[i].node);
+          logmsg(9, debug);
+        }
+      }
 		}			
-	}
+	} */
 	return retval;
 }
 /*******************************************************************************************
