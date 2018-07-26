@@ -23,13 +23,14 @@
 #include <sleeplib.h>
 #include <Vcc.h>
 #include <Wire.h>
-#include <Adafruit_BMP085.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BME280.h>
 
 
 const float VccCorrection = 1.0/1.0;  // Measured Vcc by multimeter divided by reported Vcc
 
 Vcc vcc(VccCorrection);
-Adafruit_BMP085 bmp;
+Adafruit_BME280 bme;
 
 ISR(WDT_vect) { watchdogEvent(); }
 
@@ -83,12 +84,16 @@ float action_loop(unsigned char channel, float value) {
   float retval = value;
     switch (channel) {
         case 1:
-        //Temperature from BMP085
-        retval=bmp.readTemperature();
+        //Temperature from BME280
+        retval=bme.readTemperature();
         break;
         case 2:
-        //Temperature from BMP085
-        retval=pow(((95*0.0065)/(bmp.readTemperature()+273.15)+1),5.257)*bmp.readPressure()/100.0;
+        //Temperature from BME280
+        retval=pow(((95*0.0065)/(bme.readTemperature()+273.15)+1),5.257)*bme.readPressure()/100.0;
+        break;
+        case 3:
+        //Humidity from BME280
+        retval=bme.readHumidity();
         break;
         case 101:
           // battery voltage => vcc.Read_Volts();
@@ -136,7 +141,7 @@ void setup(void) {
   //****
   // put anything else to init here
   //****
-  bmp.begin();
+  bme.begin();
   //####
   // end aditional init
   //####
