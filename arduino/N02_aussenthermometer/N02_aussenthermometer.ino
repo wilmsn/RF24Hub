@@ -205,6 +205,7 @@ void loop(void) {
       next_sleepmode = sleep2;
     }
     network.read(rxheader,&payload,sizeof(payload));
+    bme.takeForcedMeasurement();
     payload.value1 = action_loop(payload.sensor1, payload.value1);
     payload.value2 = action_loop(payload.sensor2, payload.value2);
     payload.value3 = action_loop(payload.sensor3, payload.value3);
