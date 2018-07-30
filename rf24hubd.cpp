@@ -215,9 +215,15 @@ void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_m
 		tn_input_ok = true;
 		// just add the sensor to the buffer
 		node = set_sensor( strtoul(wort3, &pEnd, 10), strtof(wort4, &pEnd));
-		if ( strcmp(wort1,cmp_setlast) == 0 ) {
-			get_order(node);
-			print_order_buffer();
+		if ( node == 0 ) {
+			sprintf(debug,"Sensor (%s) not in cache ==> running initialisation!",wort3);
+			logmsg(VERBOSETELNET, debug);
+			init_system(db);
+		} else {
+			if ( strcmp(wort1,cmp_setlast) == 0 ) {
+				get_order(node);
+				print_order_buffer();
+			}
 		}
 	}
     // set node <node> init
@@ -550,7 +556,7 @@ void get_order(uint16_t node) {
 uint16_t set_sensor(uint32_t mysensor, float value) {
 	int i = 0;
 	uint16_t node = 0;
-	while ( (sensor[i].sensor != mysensor) && (i < SENSORLENGTH) ) i++;
+	while ( (sensor[i].sensor != mysensor) && (i < SENSORLENGTH - 1) ) i++;
 	if ( i < SENSORLENGTH ) {
 		fill_order_buffer( sensor[i].node, sensor[i].channel, value);
 		node = sensor[i].node;
