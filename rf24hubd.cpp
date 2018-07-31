@@ -236,22 +236,22 @@ void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_m
 	// lists the current orderbuffer
 	if (( strcmp(wort1,cmp_list) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (wort3 == NULL) && (wort4 == NULL) ) {
 		tn_input_ok = true;
-		sprintf(client_message,"----- Orderbuffer: ------\n"); 
+		sprintf(client_message,"----- Orderbuffer(max(%d): ------\n", (int)ORDERBUFFERLENGTH); 
 		write(new_tn_in_socket , client_message , strlen(client_message));
-		for (int i=0; i < ORDERBUFFERLENGTH; i++) {
+		for (int i=0; i < ORDERBUFFERLENGTH -1; i++) {
 			if ( order_buffer[i].node > 0 ) {
-				sprintf(client_message,"Onr:\t%u,\tentry:\t%llu (%d sec.),\tnode:\t0%o,\tchannel:\t%u\tval:\t%f\n", 
-					order_buffer[i].orderno, order_buffer[i].entrytime, (int)(order_buffer[i].entrytime - mymillis())/1000, order_buffer[i].node,
+				sprintf(client_message,"order_buffer[%d]\t Onr:\t%u,\tentry:\t%llu (%d sec.),\tnode:\t0%o,\tchannel:\t%u\tval:\t%f\n", 
+					i,order_buffer[i].orderno, order_buffer[i].entrytime, (int)(order_buffer[i].entrytime - mymillis())/1000, order_buffer[i].node,
 					order_buffer[i].channel, order_buffer[i].value );
 				write(new_tn_in_socket , client_message , strlen(client_message));
 			}				
 		}
-		sprintf(client_message,"----- Order: ------\n"); 
+		sprintf(client_message,"----- Order(max %d): ------\n", (int)ORDERLENGTH); 
 		write(new_tn_in_socket , client_message , strlen(client_message));
-		for (int i=0; i < ORDERLENGTH; i++) {
+		for (int i=0; i < ORDERLENGTH -1; i++) {
 			if ( order[i].node > 0 ) {
-				sprintf(client_message,"Onr:\t%u,\tentry:\t%llu (%d sec.),\tnode:\t0%o,\ttype:\t%u\tflags:\t%u\t(channel/Value)\t(%u/%f)\t(%u/%f)\t(%u/%f)\t(%u/%f)\n", 
-					order[i].orderno, order[i].entrytime, (int)(order[i].entrytime - mymillis())/1000, order[i].node, order[i].type, order[i].flags
+				sprintf(client_message,"order[%d]\t Onr:\t%u,\tentry:\t%llu (%d sec.),\tnode:\t0%o,\ttype:\t%u\tflags:\t%u\t(channel/Value)\t(%u/%f)\t(%u/%f)\t(%u/%f)\t(%u/%f)\n", 
+					i,order[i].orderno, order[i].entrytime, (int)(order[i].entrytime - mymillis())/1000, order[i].node, order[i].type, order[i].flags
 					,order[i].channel1, order[i].value1
 					,order[i].channel2, order[i].value2
 					,order[i].channel3, order[i].value3
@@ -266,7 +266,7 @@ void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_m
 		tn_input_ok = true;
 		sprintf(client_message,"\n<center><big>Orderbuffer</big><table><tr><th>OrderNo</th><th>EntryTime</th><th>Node</th><th>Channel</th><th>Value</th></tr>\n"); 
 		write(new_tn_in_socket , client_message , strlen(client_message));
-		for (int i=0; i < ORDERBUFFERLENGTH; i++) {
+		for (int i=0; i < ORDERBUFFERLENGTH -1; i++) {
 			if ( order_buffer[i].node > 0 ) {
 				sprintf(client_message,"<tr><td>%u</td><td>%llu (%d sec.)</td><td>0%o</td><td>%u</td><td>%f</td></tr>\n", 
 					order_buffer[i].orderno, order_buffer[i].entrytime, (int)(order_buffer[i].entrytime - mymillis())/1000, order_buffer[i].node,
@@ -276,7 +276,7 @@ void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_m
 		}
 		sprintf(client_message,"</table><br><big>Order</big><br><table><tr><th>OrderNo</th><th>EntryTime</th><th>Node</th><th>Type</th><th>Flags</th><th>Channel</th><th>Value</th></tr>\n"); 
 		write(new_tn_in_socket , client_message , strlen(client_message));
-		for (int i=0; i < ORDERLENGTH; i++) {
+		for (int i=0; i < ORDERLENGTH -1; i++) {
 			if ( order[i].node > 0 ) {
 				sprintf(client_message,"<tr><td>%u</td><td>%llu (%d sec.)</td><td>0%o</td><td>%u</td><td>%u</td><td>%u<br>%u<br>%u<br>%u</td><td>%f<br>%f<br>%f<br>%f</td></tr>\n", 
 					order[i].orderno, order[i].entrytime, (int)(order[i].entrytime - mymillis())/1000, order[i].node, order[i].type, order[i].flags
@@ -399,7 +399,7 @@ void print_order(void) {
 	if ( verboselevel > 8 ) {
 		sprintf(debug,"======= Content of Order: ==========");
 		logmsg(VERBOSEOTHER,debug);
-		for (int i=0; i < ORDERLENGTH; i++) {
+		for (int i=0; i < ORDERLENGTH -1; i++) {
 			if ( order[i].orderno > 0 ) {
 				sprintf(debug, "order[%d] = Onr:\t%u,\tnode:\t0%o,\ttype:\t%u\tflags:\t%u (%u/%f) (%u/%f) (%u/%f) (%u/%f) Entry: %llu Last_Send: %llu", 
 					i,
@@ -435,7 +435,7 @@ void init_order_buffer(unsigned int element) {
 
 void fill_order_buffer( uint16_t node, uint16_t channel, float value) {
 	int i=0;
-	while ( (order_buffer[i].node > 0) && !((order_buffer[i].node == node) && (order_buffer[i].channel == channel ))  && ( i < ORDERBUFFERLENGTH ) ) {
+	while ( (order_buffer[i].node > 0) && !((order_buffer[i].node == node) && (order_buffer[i].channel == channel ))  && ( i < ORDERBUFFERLENGTH -1 ) ) {
 		i++;
 	}
 	order_buffer[i].orderno = 0;
@@ -449,9 +449,10 @@ void print_order_buffer(void) {
 	if ( verboselevel > 8 ) {
 		sprintf(debug,"======= Content of Order_Buffer: ==========");
 		logmsg(VERBOSEOTHER,debug);
-		for (int i=0; i < ORDERBUFFERLENGTH; i++) {
+		for (int i=0; i < ORDERBUFFERLENGTH -1; i++) {
 			if ( order_buffer[i].node > 0 ) {
-				sprintf(debug,"Onr: %u,\tentry:\t%llu,\tnode:\t0%o,\tchannel:\t%u\tval:\t%f", 
+				sprintf(debug,"order_buffer[%d]\t Onr: %u,\tentry:\t%llu,\tnode:\t0%o,\tchannel:\t%u\tval:\t%f", 
+					i,
 					order_buffer[i].orderno,
 					order_buffer[i].entrytime,
 					order_buffer[i].node,
@@ -467,7 +468,7 @@ void print_order_buffer(void) {
 
 bool is_valid_orderno(uint16_t myorderno) {
 	bool retval = false;
-	for (int i=0; i < ORDERBUFFERLENGTH; i++) {
+	for (int i=0; i < ORDERBUFFERLENGTH -1; i++) {
 		if ( myorderno == order_buffer[i].orderno ) retval = true;
 	}
 	return retval;
@@ -477,13 +478,13 @@ bool delete_orderno(uint16_t myorderno) {
 	bool retval = false;
 	uint16_t node = 0;
 	if ( myorderno > 0 ) {
-		for (int i=0; i < ORDERBUFFERLENGTH; i++) {
+		for (int i=0; i < ORDERBUFFERLENGTH -1; i++) {
 			if ( myorderno == order_buffer[i].orderno ) {
 				retval = true;
 				init_order_buffer(i);
 			}
 		}
-		for (int i=0; i < ORDERLENGTH; i++) {
+		for (int i=0; i < ORDERLENGTH -1; i++) {
 			if ( myorderno == order[i].orderno ) {
 				retval = true;
 				node = order[i].node;
@@ -503,7 +504,7 @@ void get_order(uint16_t node) {
 	sprintf(debug, "get_order: node: 0%o orderno: %u", node, orderno);
 	logmsg(VERBOSEOTHER,debug);
 	// if we have old orders for this node ==> delete them! 
-	for (int i=0; i < ORDERLENGTH; i++) {
+	for (int i=0; i < ORDERLENGTH -1; i++) {
 		if ( order[i].node == node ) {
 			order[i].node = 0;
 			order[i].orderno = 0;
@@ -512,7 +513,7 @@ void get_order(uint16_t node) {
 	//look for the first free position in order[]
 	sprintf(debug, "get_order: order_ptr is: %u; order[order_ptr].orderno is %u", order_ptr, order[order_ptr].orderno);
 	logmsg(VERBOSEOTHER,debug);	
-	while ( order_ptr < ORDERLENGTH && order[order_ptr].orderno > 0) {
+	while ( order_ptr < ORDERLENGTH -1 && order[order_ptr].orderno > 0) {
 		order_ptr++; 
 		sprintf(debug, "get_order: order_ptr is: %u; order[order_ptr].orderno is %u", order_ptr, order[order_ptr].orderno);
 		logmsg(VERBOSEOTHER,debug);
@@ -520,7 +521,7 @@ void get_order(uint16_t node) {
 	sprintf(debug, "get_order: order_ptr is: %u", order_ptr);
 	logmsg(VERBOSEOTHER,debug);
 	//collect the data for this order
-	for (int i=0; i < ORDERBUFFERLENGTH; i++) {
+	for (int i=0; i < ORDERBUFFERLENGTH -1; i++) {
 		if (node == order_buffer[i].node) {
 			sprintf(debug, "get_order: j is: %d order_ptr is: %u", j, order_ptr);
 			logmsg(VERBOSEOTHER,debug);
@@ -575,7 +576,7 @@ bool node_is_next(const uint16_t node) {
 	bool retval;
   retval = true;
 /* temporary disabled 
-  for(int i=0; i<ORDERLENGTH; i++) {
+  for(int i=0; i<ORDERLENGTH -1; i++) {
 		if ( order[i].node != 0 ) {
       if ( node != order[i].node ) {
         if ((node & order[i].node) == order[i].node) {
@@ -661,8 +662,8 @@ void init_system(MYSQL *db) {
 	}
 	mysql_free_result(result);	
 	print_sensor();
-	for (unsigned int i=0; i<ORDERLENGTH; i++) init_order(i);
-	for (unsigned int i=0; i<ORDERBUFFERLENGTH; i++) init_order_buffer(i);
+	for (unsigned int i=0; i<ORDERLENGTH -1; i++) init_order(i);
+	for (unsigned int i=0; i<ORDERBUFFERLENGTH -1; i++) init_order_buffer(i);
 }
 
 void store_sensor_value(MYSQL *db, uint16_t node, uint8_t channel, float value, bool d1, bool d2) {
@@ -884,17 +885,6 @@ int main(int argc, char* argv[]) {
         fprintf(stderr, "PIDFILE: %s exists, terminating\n\n", parms.pidfilename);
         exit(1);
     }
-    pid=getpid();
-    pidfile_ptr = fopen (parms.pidfilename,"w");
-    if (pidfile_ptr==NULL) {
-        sprintf(debug,"Can't write PIDFILE: %s! Exit programm ....\n", parms.pidfilename);
-        fprintf(stderr, debug);
-        exit (1);
-    }
-    fprintf (pidfile_ptr, "%d", pid );
-    fclose(pidfile_ptr);
-    sprintf(debug, "%s running with PID: %d", PRGNAME, pid);
-    logmsg(VERBOSESTARTUP, debug);
 	
     // starts logging
     logfile_ptr = fopen (parms.logfilename,"a");
@@ -982,6 +972,18 @@ int main(int argc, char* argv[]) {
             }
         }
     }
+    // get pid and write it to pidfile
+    pid=getpid();
+    pidfile_ptr = fopen (parms.pidfilename,"w");
+    if (pidfile_ptr==NULL) {
+        sprintf(debug,"Can't write PIDFILE: %s! Exit programm ....\n", parms.pidfilename);
+        fprintf(stderr, debug);
+        exit (1);
+    }
+    fprintf (pidfile_ptr, "%d", pid );
+    fclose(pidfile_ptr);
+    sprintf(debug, "%s running with PID: %d", PRGNAME, pid);
+    logmsg(VERBOSESTARTUP, debug);
     if ( tn_port_set && tn_host_set ) {
         tn_active = true;
         sprintf(debug, "telnet session started: Host: %s Port: %d ", parms.telnet_hostname, parms.telnet_port);
@@ -1087,7 +1089,7 @@ int main(int argc, char* argv[]) {
 		akt_time=mymillis();
 		if ( akt_time > del_time + DELETEINTERVAL ) {
 // Cleanup old entries
-			for(int i=0; i<ORDERLENGTH; i++) {
+			for(int i=0; i<ORDERLENGTH -1; i++) {
 				if ((order[i].orderno > 0) && (order[i].entrytime + KEEPINBUFFERTIME < akt_time) ) {
 					if ( verboselevel > 4 ) {
 						sprintf(debug, "Deleted order[%d] OrderNo: %u for Node: 0%o ", i, order[i].orderno, order[i].node);
@@ -1102,7 +1104,7 @@ int main(int argc, char* argv[]) {
 			next_time = akt_time + SENDINTERVAL;
 			// Look if we have something to send
 			order_waiting = false;
-			for ( int order_ptr=0; order_ptr<ORDERLENGTH; order_ptr++) {
+			for ( int order_ptr=0; order_ptr<ORDERLENGTH -1; order_ptr++) {
 				if (order[order_ptr].orderno != 0) {
 					order_waiting = true;
 					// this orders are ready to send
