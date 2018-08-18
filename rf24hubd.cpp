@@ -100,6 +100,10 @@ void usage(const char *prgname) {
     fprintf(stdout, "         Set configfilename\n");
     fprintf(stdout, "   -v or --verbose <verboselevel>\n");
     fprintf(stdout, "         Set verboselevel (1...9)\n");
+    fprintf(stdout, "   -s or --scanner <scanlevel>\n");
+    fprintf(stdout, "         Set scannlevel (0...9) and scan all channels\n");
+    fprintf(stdout, "   -t or --scannchannel <channel>\n");
+    fprintf(stdout, "         Scanns the single channel <channel>\n");
     fprintf(stdout, "For clean exit use \"CTRL-C\" or \"kill -15 <pid>\"\n\n");
 }
 
@@ -797,6 +801,134 @@ void logmsg(int mesgloglevel, char *mymsg){
 	}
 }
 
+void channelscanner (uint8_t channel) {
+  int values=0;
+  printf("Scanning channel %u: \n",channel);
+  radio.begin();
+  for (int i=0; i < 1000; i++) {
+      radio.setChannel(channel);
+
+      // Listen for a little
+      radio.startListening();
+      usleep(1000);
+
+
+      // Did we get a carrier?
+      if ( radio.testCarrier() ){
+        values++;
+        printf("X");
+      } else {
+        printf(".");
+      }
+      radio.stopListening();
+
+  }
+  printf("\n\n 1000 passes: Detect %d times a carrier \n", values);
+}
+
+void scanner(char scanlevel) {
+  // we have channel 0...125 => 126 channels
+  const uint8_t num_channels = 126;
+  uint8_t values[num_channels];
+  int num_reps;
+  int wait;
+
+   radio.begin();
+   switch (scanlevel) {
+     case '0':
+       num_reps=1;
+       wait=100;
+     break;
+    case '1':
+       num_reps=5;
+       wait=100;
+     break;
+    case '2':
+       num_reps=10;
+       wait=200;
+     break;
+    case '3':
+       num_reps=20;
+       wait=200;
+     break;
+    case '4':
+       num_reps=30;
+       wait=200;
+     break;
+    case '5':
+       num_reps=30;
+       wait=500;
+     break;
+    case '6':
+       num_reps=50;
+       wait=500;
+     break;
+    case '7':
+       num_reps=100;
+       wait=500;
+     break;
+    case '8':
+       num_reps=200;
+       wait=500;
+     break;
+    case '9':
+       num_reps=500;
+       wait=1000;
+     break;
+    default:
+       num_reps=30;
+       wait=500;
+   }
+   for (uint8_t i = 0; i < num_channels; i++) {
+     values[i]=0;
+   }
+   printf("Scanning all channels %d passes, listen %d microseconds to each channel\n", num_reps, wait);
+  printf("\t\t000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011111111111111111111111111\n");
+  printf("\t\t000000000011111111112222222222333333333344444444445555555555666666666677777777778888888888999999999900000000001111111111222222\n");
+  printf("\t\t012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345\n");
+  printf("\t\t------------------------------------------------------------------------------------------------------------------------------\n");
+  for (int rep_counter = 0; rep_counter < num_reps; rep_counter++) {
+    printf("\nPass: %d/%d \t", rep_counter+1, num_reps);
+    for (uint8_t i = 0; i < num_channels; i++) {
+
+      // Select this channel
+      radio.setChannel(i);
+ 
+      // Listen for a little
+      radio.startListening();
+      usleep(wait);
+      
+ 
+      // Did we get a carrier?
+      if ( radio.testCarrier() ){
+        values[i]++;
+        printf("X");
+      } else {
+        printf(".");
+      }
+      radio.stopListening();
+    }
+  }
+  printf("\n\n");
+  printf("\t\t000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011111111111111111111111111\n");
+  printf("\t\t000000000011111111112222222222333333333344444444445555555555666666666677777777778888888888999999999900000000001111111111222222\n");
+  printf("\t\t012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345\n"); 
+  printf("\t\t------------------------------------------------------------------------------------------------------------------------------\n");
+  printf("\t\t");
+  for (uint8_t i = 0; i < num_channels; i++) {
+    if (values[i] == 0) {
+      printf(".");
+    } else {
+      if (values[i] > 9 ) {
+        printf("X");
+      } else {
+        printf("%u",values[i]);
+      }
+    }
+  }
+  printf("\n"); 
+}
+
 int main(int argc, char* argv[]) {
     pid_t pid;
 	int c;
@@ -824,16 +956,47 @@ int main(int argc, char* argv[]) {
 		static struct option long_options[] = {	
 			{"daemon",  no_argument, 0, 'd'},
 			{"verbose",  required_argument, 0, 'v'},
-            {"configfile",    required_argument, 0, 'c'},
-            {"help", no_argument, 0, 'h'},
-            {0, 0, 0, 0} 
+            		{"configfile",    required_argument, 0, 'c'},
+			{"scanner", required_argument, 0, 's'},
+                        {"scannchannel", required_argument, 0, 't'},
+            		{"help", no_argument, 0, 'h'},
+            		{0, 0, 0, 0} 
 		};
         /* getopt_long stores the option index here. */
         int option_index = 0;
-        c = getopt_long (argc, argv, "?dhv:c:",long_options, &option_index);
+        c = getopt_long (argc, argv, "?dht:s:v:c:",long_options, &option_index);
         /* Detect the end of the options. */
         if (c == -1) break;
         switch (c) {
+            case 't':
+                      uint8_t channel;
+                      if ( optarg[0] ) {
+                        channel=optarg[0]-'0';
+                        if ( optarg[1] ) {
+                          channel=channel*10+optarg[1]-'0';
+                          if ( optarg[2] ) {
+                            channel=channel*10+optarg[2]-'0';
+                          }
+                        }
+                        if (channel < 126) {
+                          channelscanner(channel); 
+                        } else {
+                          printf("Error Channel must be in 0 ... 125\n");
+                        }
+                      } else {
+                        printf("Error Channel required\n");
+                      }
+                      exit(0);
+                      break;
+
+            case 's':
+                      if (optarg[0] && ! optarg[1]) {
+                         scanner(optarg[0]);
+                      } else {
+                         usage(argv[0]);
+                      }
+                      exit(0);
+                      break;
             case 'd':
 				start_daemon = true;
 				logmode = logfile;
@@ -1063,7 +1226,7 @@ int main(int argc, char* argv[]) {
 //
 // Receive loop: react on the message from the nodes
 //
-            rf24_carrier = radio.testCarrier();
+//            rf24_carrier = radio.testCarrier();
 			rf24_rpd = radio.testRPD();
 			network.read(rxheader,&payload,sizeof(payload));
 			sprintf(debug, DEBUGSTR "Received: Type: %u from Node: %o to Node: %o Orderno %d (Channel/Value): (%u/%f) (%u/%f) (%u/%f) (%u/%f) "
