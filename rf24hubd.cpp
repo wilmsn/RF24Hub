@@ -562,7 +562,7 @@ uint16_t set_sensor(uint32_t mysensor, float value) {
 	int i = 0;
 	uint16_t node = 0;
 	while ( (sensor[i].sensor != mysensor) && (i < SENSORLENGTH - 1) ) i++;
-	if ( i < SENSORLENGTH ) {
+	if ( i < SENSORLENGTH - 1 ) {
 		fill_order_buffer( sensor[i].node, sensor[i].channel, value);
 		node = sensor[i].node;
 	}
@@ -806,21 +806,20 @@ void channelscanner (uint8_t channel) {
   printf("Scanning channel %u: \n",channel);
   radio.begin();
   for (int i=0; i < 1000; i++) {
-      radio.setChannel(channel);
+    radio.setChannel(channel);
 
-      // Listen for a little
-      radio.startListening();
-      usleep(1000);
+    // Listen for a little
+    radio.startListening();
+    usleep(1000);
 
-
-      // Did we get a carrier?
-      if ( radio.testCarrier() ){
-        values++;
-        printf("X");
-      } else {
-        printf(".");
-      }
-      radio.stopListening();
+    // Did we get a carrier?
+    if ( radio.testCarrier() ){
+      values++;
+      printf("X");
+    } else {
+      printf(".");
+    }
+    radio.stopListening();
 
   }
   printf("\n\n 1000 passes: Detect %d times a carrier \n", values);
@@ -833,56 +832,56 @@ void scanner(char scanlevel) {
   int num_reps;
   int wait;
 
-   radio.begin();
-   switch (scanlevel) {
-     case '0':
+  radio.begin();
+  switch (scanlevel) {
+    case '0':
        num_reps=1;
        wait=100;
-     break;
+    break;
     case '1':
        num_reps=5;
        wait=100;
-     break;
+    break;
     case '2':
        num_reps=10;
        wait=200;
-     break;
+    break;
     case '3':
        num_reps=20;
        wait=200;
-     break;
+    break;
     case '4':
        num_reps=30;
        wait=200;
-     break;
+    break;
     case '5':
        num_reps=30;
        wait=500;
-     break;
+    break;
     case '6':
        num_reps=50;
        wait=500;
-     break;
+    break;
     case '7':
        num_reps=100;
        wait=500;
-     break;
+    break;
     case '8':
        num_reps=200;
        wait=500;
-     break;
+    break;
     case '9':
        num_reps=500;
        wait=1000;
-     break;
+    break;
     default:
        num_reps=30;
        wait=500;
-   }
-   for (uint8_t i = 0; i < num_channels; i++) {
-     values[i]=0;
-   }
-   printf("Scanning all channels %d passes, listen %d microseconds to each channel\n", num_reps, wait);
+  }
+  for (uint8_t i = 0; i < num_channels; i++) {
+    values[i]=0;
+  }
+  printf("Scanning all channels %d passes, listen %d microseconds to each channel\n", num_reps, wait);
   printf("\t\t000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011111111111111111111111111\n");
   printf("\t\t000000000011111111112222222222333333333344444444445555555555666666666677777777778888888888999999999900000000001111111111222222\n");
   printf("\t\t012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345\n");
@@ -898,7 +897,6 @@ void scanner(char scanlevel) {
       radio.startListening();
       usleep(wait);
       
- 
       // Did we get a carrier?
       if ( radio.testCarrier() ){
         values[i]++;
