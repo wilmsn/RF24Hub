@@ -190,6 +190,10 @@ float action_loop(unsigned char channel, float value) {
       // battery voltage
         retval = cur_voltage;
         break;      
+      case 110:
+      // contrast of LCD Display
+        myGLCD.setContrast(value);
+        break;
       case 111:
       // sleeptimer1
         sleeptime1 = value;
