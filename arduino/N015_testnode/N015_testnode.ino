@@ -1,19 +1,20 @@
 // Define a valid radiochannel here
 #define RADIOCHANNEL 90
 // This node: Use octal numbers starting with "0": "041" is child 4 of node 1
-#define NODE 02
+#define NODE 015
 // The CE Pin of the Radio module
 #define RADIO_CE_PIN 10
 // The CS Pin of the Radio module
 #define RADIO_CSN_PIN 9
 // The pin of the statusled
-#define STATUSLED 7
+#define STATUSLED A1
 #define STATUSLED_ON HIGH
 #define STATUSLED_OFF LOW
-#define SLEEPTIME1 10
-#define SLEEPTIME2 10
+#define SLEEPTIME1 2
+#define SLEEPTIME2 2
 #define SLEEPTIME3 2
 #define SLEEPTIME4 5
+#define ONE_WIRE_BUS 8
 
 // ------ End of configuration part ------------
 
@@ -22,18 +23,20 @@
 #include <SPI.h>
 #include <sleeplib.h>
 #include <Vcc.h>
-#include <Wire.h>
-#include <Adafruit_Sensor.h>
-#include <Adafruit_BME280.h>
-
+#include <OneWire.h> 
+#include <DallasTemperature.h> 
 
 const float VccCorrection = 1.0/1.0;  // Measured Vcc by multimeter divided by reported Vcc
 
 Vcc vcc(VccCorrection);
-Adafruit_BME280 bme;
 
 ISR(WDT_vect) { watchdogEvent(); }
 
+// Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
+OneWire oneWire(ONE_WIRE_BUS); 
+// Pass our oneWire reference to Dallas Temperature.
+DallasTemperature sensors(&oneWire); 
+ 
 // Structure of our payload
 struct payload_t {
   uint16_t  orderno;      // the orderno as primary key for our message for the nodes
@@ -79,21 +82,20 @@ RF24 radio(RADIO_CE_PIN,RADIO_CSN_PIN);
 // Network uses that radio
 RF24Network network(radio);
 
-
-float action_loop(unsigned char channel, float value) {
-  float retval = value;
+float action_loop(uint8_t channel, float value) {
+//  float retval = value;
+  float retval;
+    retval = 3;
     switch (channel) {
         case 1:
-        //Temperature from BME280
-        retval=bme.readTemperature();
-        break;
-        case 2:
-        //Temperature from BME280
-        retval=pow(((95*0.0065)/(bme.readTemperature()+273.15)+1),5.257)*bme.readPressure()/100.0;
-        break;
-        case 3:
-        //Humidity from BME280
-        retval=bme.readHumidity();
+        //Temperature 
+  sensors.requestTemperatures(); // Send the command to get temperatures
+  temp=sensors.getTempCByIndex(0);
+//          if (temp == DEVICE_DISCONNECTED_C) {
+//              temp = -88.8;
+//          }
+          retval=temp;
+//          retval=1.234;
         break;
         case 101:
           // battery voltage => vcc.Read_Volts();
@@ -102,33 +104,40 @@ float action_loop(unsigned char channel, float value) {
         case 111:
           // sleeptimer1
           sleeptime1=value;
+          retval=111;
         break;
         case 112:
           // sleeptimer2
           sleeptime2=value;
+          retval=112;
         break;
         case 113:
           // sleeptimer3
           sleeptime3=value;
+          retval=113;
         break;
         case 114:
           // sleeptimer4
           sleeptime4=value;
+          retval=114;
           break;
         case 115:
           // radio on (=1) or off (=0) when sleep
           if ( value > 0.5) radiomode=radio_listen; else radiomode=radio_sleep;
+          retval=115;
         break;
         case 116:
           // Voltage factor
           vcc.m_correction = value;
+          retval=116;
         break; 
         case 118:
         // init_finished (=1)
           init_finished = true; //( payload.value > 0.5);
+          retval=118;
           break;
-//        default:
-        // Default: just send the paket back - no action here  
+        default:
+          retval=value;
       }
     return retval;
 }  
@@ -141,7 +150,7 @@ void setup(void) {
   //****
   // put anything else to init here
   //****
-  bme.begin();
+  sensors.begin(); 
   //####
   // end aditional init
   //####
@@ -167,6 +176,7 @@ void setup(void) {
     if ( network.available() ) {
       do_transmit = false;
       network.read(rxheader,&payload,sizeof(payload));
+//delay(500);
       payload.value1 = action_loop(payload.sensor1, payload.value1);
       payload.value2 = action_loop(payload.sensor2, payload.value2);
       payload.value3 = action_loop(payload.sensor3, payload.value3);
@@ -182,12 +192,12 @@ void setup(void) {
   networkup = 0;    
 }
 
-void sleep12(float sleeptime) {
+void sleep12(unsigned int sleeptime) {
   if ( radiomode == radio_sleep ) {
     radio.stopListening();
     radio.powerDown();
   }
-  sleep4s(sleeptime); 
+  sleep4ms((unsigned int)(sleeptime)); 
   if ( radiomode == radio_sleep ) {
     radio.powerUp();
     radio.startListening();
@@ -205,25 +215,27 @@ void loop(void) {
       next_sleepmode = sleep2;
     }
     network.read(rxheader,&payload,sizeof(payload));
-    bme.takeForcedMeasurement();
+  digitalWrite(STATUSLED,STATUSLED_ON);
+//delay(100);
     payload.value1 = action_loop(payload.sensor1, payload.value1);
     payload.value2 = action_loop(payload.sensor2, payload.value2);
     payload.value3 = action_loop(payload.sensor3, payload.value3);
     payload.value4 = action_loop(payload.sensor4, payload.value4);
     txheader.type=rxheader.type;
     network.write(txheader,&payload,sizeof(payload));    
+  digitalWrite(STATUSLED,STATUSLED_OFF);
   }
   sleep4ms(100);
   networkup++;    
   switch (sleepmode) {
     case sleep1:
-      sleep12(sleeptime1); 
+      sleep12((unsigned int)(sleeptime1*1000)); 
       sleepmode = sleep3;
       next_sleepmode = sleep2;
       networkup = 0;    
     break;
     case sleep2:
-      sleep12(sleeptime2); 
+      sleep12((unsigned int)(sleeptime2*1000)); 
       sleepmode = sleep3;
       next_sleepmode = sleep2;
       networkup = 0;    

@@ -1,19 +1,32 @@
 // Define a valid radiochannel here
 #define RADIOCHANNEL 90
 // This node: Use octal numbers starting with "0": "041" is child 4 of node 1
-#define NODE 02
-// The CE Pin of the Radio module
+#define NODE 04
+// Sleeptime during the loop in ms -> if 0 ATMega always busy
 #define RADIO_CE_PIN 10
 // The CS Pin of the Radio module
 #define RADIO_CSN_PIN 9
+//define some sleeptime as default values
+#define SLEEPTIME1 1
+#define SLEEPTIME2 1
+#define SLEEPTIME3 5
+#define SLEEPTIME4 5
 // The pin of the statusled
-#define STATUSLED 7
+//#define STATUSLED A2
+#define STATUSLED A2
 #define STATUSLED_ON HIGH
 #define STATUSLED_OFF LOW
-#define SLEEPTIME1 10
-#define SLEEPTIME2 10
-#define SLEEPTIME3 2
-#define SLEEPTIME4 5
+// The pin of the relais
+#define RELAIS1 4
+#define RELAIS2 5
+#define RELAIS_ON LOW
+#define RELAIS_OFF HIGH
+
+// The outputpin for batterycontrol for the voltagedivider
+#define VMESS_OUT 5
+// The inputpin for batterycontrol
+#define VMESS_IN A0
+// Sleeptime when network is busy
 
 // ------ End of configuration part ------------
 
@@ -22,17 +35,10 @@
 #include <SPI.h>
 #include <sleeplib.h>
 #include <Vcc.h>
-#include <Wire.h>
-#include <Adafruit_Sensor.h>
-#include <Adafruit_BME280.h>
-
-
-const float VccCorrection = 1.0/1.0;  // Measured Vcc by multimeter divided by reported Vcc
-
-Vcc vcc(VccCorrection);
-Adafruit_BME280 bme;
 
 ISR(WDT_vect) { watchdogEvent(); }
+const float VccCorrection = 1.0/1.0;  // Measured Vcc by multimeter divided by reported Vcc
+Vcc vcc(VccCorrection);
 
 // Structure of our payload
 struct payload_t {
@@ -55,8 +61,8 @@ payload_t payload;
 enum radiomode_t { radio_sleep, radio_listen } radiomode = radio_sleep;
 enum sleepmode_t { sleep1, sleep2, sleep3, sleep4} sleepmode = sleep1, next_sleepmode = sleep2;
 
-RF24NetworkHeader rxheader;
-RF24NetworkHeader txheader(0);
+RF24NetworkHeader   rxheader;
+RF24NetworkHeader   txheader(0);
 // all sleeptime* values in seconds 
 // Time for the fist sleep after an activity of this node
 float               sleeptime1 = SLEEPTIME1;
@@ -68,8 +74,10 @@ float               sleeptime3 = SLEEPTIME3;
 float               sleeptime4 = SLEEPTIME4;
 boolean             init_finished = false;
 unsigned int        networkup = 0;
-float               temp;
+uint16_t            orderno_p1, orderno_p2;
+boolean             low_voltage_flag = false;
 //Some Var for restore after sleep of display
+float               field1_val, field2_val, field3_val, field4_val;
 float               cur_voltage;
 uint8_t             n_update = 0;
 
@@ -79,78 +87,91 @@ RF24 radio(RADIO_CE_PIN,RADIO_CSN_PIN);
 // Network uses that radio
 RF24Network network(radio);
 
-
 float action_loop(unsigned char channel, float value) {
   float retval = value;
     switch (channel) {
-        case 1:
-        //Temperature from BME280
-        retval=bme.readTemperature();
+      case 1:
+        //****
+        // insert here: payload.value=[result from sensor]
+       break;
+      case 21:
+        if ( value > 0.5 ) {
+          digitalWrite(RELAIS1, RELAIS_ON);
+        } else {
+          digitalWrite(RELAIS1, RELAIS_OFF);
+        }
+       break;
+      case 22:
+        if ( value > 0.5 ) {
+          digitalWrite(RELAIS2, RELAIS_ON);
+        } else {
+          digitalWrite(RELAIS2, RELAIS_OFF);
+        }
+       break;
+      case 31:
+        //****
+        // insert here: action = payload.value
+        // Switch the StatusLED ON or OFF
+        if ( value > 0.5 ) {
+          digitalWrite(STATUSLED,STATUSLED_ON);
+        } else {
+          digitalWrite(STATUSLED,STATUSLED_OFF);
+        }
+       break;
+      case 101:
+      // battery voltage
+        retval = cur_voltage;
         break;
-        case 2:
-        //Temperature from BME280
-        retval=pow(((95*0.0065)/(bme.readTemperature()+273.15)+1),5.257)*bme.readPressure()/100.0;
+      case 111:
+      // sleeptimer1
+        sleeptime1=value;
         break;
-        case 3:
-        //Humidity from BME280
-        retval=bme.readHumidity();
+      case 112:
+      // sleeptimer2
+        sleeptime2=value;
         break;
-        case 101:
-          // battery voltage => vcc.Read_Volts();
-          retval=vcc.Read_Volts();
+      case 113:
+      // sleeptimer3
+        sleeptime3=value;
         break;
-        case 111:
-          // sleeptimer1
-          sleeptime1=value;
+      case 114:
+      // sleeptimer4
+        sleeptime4=value;
         break;
-        case 112:
-          // sleeptimer2
-          sleeptime2=value;
+      case 115:
+      // radio on (=1) or off (=0) when sleep
+        if ( value > 0.5) radiomode = radio_listen; else radiomode = radio_sleep;
         break;
-        case 113:
-          // sleeptimer3
-          sleeptime3=value;
+      case 116:
+      // Voltage devider
+        vcc.m_correction = value;
         break;
-        case 114:
-          // sleeptimer4
-          sleeptime4=value;
-          break;
-        case 115:
-          // radio on (=1) or off (=0) when sleep
-          if ( value > 0.5) radiomode=radio_listen; else radiomode=radio_sleep;
+      case 118:
+      // init_finished (=1)
+        init_finished = ( value > 0.5);
         break;
-        case 116:
-          // Voltage factor
-          vcc.m_correction = value;
-        break; 
-        case 118:
-        // init_finished (=1)
-          init_finished = true; //( payload.value > 0.5);
-          break;
-//        default:
-        // Default: just send the paket back - no action here  
-      }
+//      default:
+      // Default: just send the paket back - no action here  
+    }  
     return retval;
 }  
 
 void setup(void) {
   unsigned long last_send=millis();
   pinMode(STATUSLED, OUTPUT);
+  pinMode(RELAIS1, OUTPUT);
+  pinMode(RELAIS2, OUTPUT);
   digitalWrite(STATUSLED,STATUSLED_ON);
+  digitalWrite(RELAIS1,RELAIS_ON);
+  digitalWrite(RELAIS2,RELAIS_OFF);
   SPI.begin();
-  //****
-  // put anything else to init here
-  //****
-  bme.begin();
-  //####
-  // end aditional init
-  //####
   radio.begin();
-  radio.setPALevel(RF24_PA_MAX);
-//  radio.setRetries(15,2);
+  cur_voltage = vcc.Read_Volts();
   network.begin(RADIOCHANNEL, NODE);
   radio.setDataRate(RF24_250KBPS);
-  delay(200);
+  radio.setPALevel(RF24_PA_MAX);
+  // initialisation beginns
+  // initialisation beginns
   bool do_transmit = true;
   while ( ! init_finished ) {
     // send only one message every second
@@ -180,6 +201,8 @@ void setup(void) {
   digitalWrite(STATUSLED,STATUSLED_OFF); 
   sleepmode=sleep4;
   networkup = 0;    
+  digitalWrite(STATUSLED,STATUSLED_OFF);
+  digitalWrite(RELAIS1,RELAIS_OFF);
 }
 
 void sleep12(float sleeptime) {
@@ -192,6 +215,13 @@ void sleep12(float sleeptime) {
     radio.powerUp();
     radio.startListening();
   }
+  //*****************
+  // Put anything you want to run frequently here
+  //*****************  
+  cur_voltage = vcc.Read_Volts();
+  //#################
+  // END run frequently
+  //#################
 }
 
 void loop(void) {
@@ -205,15 +235,23 @@ void loop(void) {
       next_sleepmode = sleep2;
     }
     network.read(rxheader,&payload,sizeof(payload));
-    bme.takeForcedMeasurement();
+    if ( payload.sensor1 == 1 || payload.sensor1 == 2 || payload.sensor1 == 3 || 
+         payload.sensor2 == 1 || payload.sensor2 == 2 || payload.sensor2 == 3 ||
+         payload.sensor3 == 1 || payload.sensor3 == 2 || payload.sensor3 == 3 ||
+         payload.sensor4 == 1 || payload.sensor4 == 2 || payload.sensor4 == 3 ) {
+    }
     payload.value1 = action_loop(payload.sensor1, payload.value1);
     payload.value2 = action_loop(payload.sensor2, payload.value2);
     payload.value3 = action_loop(payload.sensor3, payload.value3);
     payload.value4 = action_loop(payload.sensor4, payload.value4);
     txheader.type=rxheader.type;
     network.write(txheader,&payload,sizeof(payload));    
+  } 
+  if ( n_update > 0 ) {
+    sleepmode = sleep4;
+    networkup = 0;
   }
-  sleep4ms(100);
+  delay(80);
   networkup++;    
   switch (sleepmode) {
     case sleep1:
