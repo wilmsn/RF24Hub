@@ -194,6 +194,18 @@ void prepare_tn_cmd(uint16_t node, uint8_t channel, float value) {
 }
 	
 void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_message) {
+/* Messages can llook like this:
+       <word1		word2		word3		word4 				function>
+		init													Reinitialization of rf24hubd (reads actual values from database)
+		list		order										Lists open orders in textform
+		html 		order										Lists open orders in HTML form
+		set			sensor		<sensor#> 	<value>				Sets Sensor to Value (Store in Orderbuffer only)
+					node		<node#>		init				Initialize this Node (Send Initdata to the Node) 
+					verbose		<value>							Sets Verboselevel to new Value (1...9)
+		setlast		sensor		<sensor#> 	<value>				Sets Sensor to Value and starts sending (Store in Orderbuffer and transfer all requests for this Node to Order)
+			
+*/
+			
 	char cmp_init[]="init", 
 		 cmp_sensor[]="sensor",
 		 cmp_set[]="set",
@@ -201,7 +213,8 @@ void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_m
 		 cmp_node[]="node",
 		 cmp_list[]="list",
 		 cmp_html[]="html",
-		 cmp_order[]="order";	 
+		 cmp_order[]="order",	 
+		 cmp_verbose[]="verbose";	 
 	char *wort1, *wort2, *wort3, *wort4;
 	uint16_t node = 0;
 	bool tn_input_ok=false;
@@ -235,6 +248,14 @@ void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_m
 	if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_node) == 0) && (wort3 != NULL) && (strcmp(wort4,cmp_init) == 0) ) {
 		tn_input_ok = true;
 		init_node(db, getnodeadr(wort3));
+	}
+    // set verbose <new verboselevel>
+	// sets the new verboselevel
+	if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (wort3 != NULL) && (wort4 == 0) ) {
+        if ( wort3[0] > '0' && wort3[0] < '9' + 1 ) {
+			tn_input_ok = true;
+			verboselevel = (wort3[0] - '0') * 1;
+		}	
 	}
     // list order
 	// lists the current orderbuffer
@@ -301,9 +322,11 @@ void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_m
 	if ( ! tn_input_ok) {
 		sprintf(client_message,"Usage:\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
-		sprintf(client_message,"set sensor <sensornumber> <sensorvalue>\n");
+		sprintf(client_message,"set[last] sensor <sensornumber> <sensorvalue>\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"   Sets the sensor <sensornumber> to the value <sensorvalue>\n");
+		write(new_tn_in_socket , client_message , strlen(client_message));
+		sprintf(client_message,"   'set' stores only; 'setlast' executes all settings for this node\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"set node <nodenumber> init\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
@@ -316,6 +339,10 @@ void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_m
 		sprintf(client_message,"list order\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"   lists the content of the order queue\n");
+		write(new_tn_in_socket , client_message , strlen(client_message));
+		sprintf(client_message,"set verbose <verboselevel>\n");
+		write(new_tn_in_socket , client_message , strlen(client_message));
+		sprintf(client_message,"   sets a new verboselevel <1..9> are valid levels\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
