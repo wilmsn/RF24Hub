@@ -81,10 +81,11 @@ struct sensor_t {
 	uint16_t       	node;   		// the destination node
 	uint16_t     	channel;
     char			s_type;
+	char			sensor_name[SENSORNAMELENGTH];
 	char			fhem_dev[FHEMDEVLENGTH];
     float			last_val;	
 };
-struct sensor_t 	sensor[SENSORLENGTH];
+struct sensor_t 	sensor[SENSORARRAYSIZE];
 
 // Structure to handle the orderqueue
 struct order_t {
