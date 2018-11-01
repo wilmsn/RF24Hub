@@ -1,20 +1,27 @@
+// How long do we try to init this node 100000(in ms) = 100 sec. 
+#define MAXINIT 100000
 // Define a valid radiochannel here
 #define RADIOCHANNEL 90
 // This node: Use octal numbers starting with "0": "041" is child 4 of node 1
-#define NODE 015
+#define NODE 05
 // The CE Pin of the Radio module
 #define RADIO_CE_PIN 10
 // The CS Pin of the Radio module
 #define RADIO_CSN_PIN 9
 // The pin of the statusled
-#define STATUSLED A1
-#define STATUSLED_ON HIGH
-#define STATUSLED_OFF LOW
-#define SLEEPTIME1 2
-#define SLEEPTIME2 2
+#define STATUSLED 3
+#define STATUSLED_ON LOW
+#define STATUSLED_OFF HIGH
+// sleeptime 1...4 is NOT used for always on NODES
+#define SLEEPTIME1 5
+#define SLEEPTIME2 5
 #define SLEEPTIME3 2
 #define SLEEPTIME4 5
 #define ONE_WIRE_BUS 8
+
+#define RELAIS1 3
+#define RELAIS_ON LOW
+#define RELAIS_OFF HIGH
 
 // ------ End of configuration part ------------
 
@@ -23,8 +30,9 @@
 #include <SPI.h>
 #include <sleeplib.h>
 #include <Vcc.h>
-#include <OneWire.h> 
-#include <DallasTemperature.h> 
+#include <OneWire.h>
+#include <DallasTemperature.h>
+
 
 const float VccCorrection = 1.0/1.0;  // Measured Vcc by multimeter divided by reported Vcc
 
@@ -33,10 +41,11 @@ Vcc vcc(VccCorrection);
 ISR(WDT_vect) { watchdogEvent(); }
 
 // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
-OneWire oneWire(ONE_WIRE_BUS); 
-// Pass our oneWire reference to Dallas Temperature.
-DallasTemperature sensors(&oneWire); 
+OneWire oneWire(ONE_WIRE_BUS);
  
+// Pass our oneWire reference to Dallas Temperature.
+DallasTemperature sensors(&oneWire);
+
 // Structure of our payload
 struct payload_t {
   uint16_t  orderno;      // the orderno as primary key for our message for the nodes
@@ -70,7 +79,7 @@ float               sleeptime3 = SLEEPTIME3;
 // Time to keep the network up if it was busy
 float               sleeptime4 = SLEEPTIME4;
 boolean             init_finished = false;
-unsigned int        networkup = 0;
+float               networkuptime = 0.0;
 float               temp;
 //Some Var for restore after sleep of display
 float               cur_voltage;
@@ -82,17 +91,20 @@ RF24 radio(RADIO_CE_PIN,RADIO_CSN_PIN);
 // Network uses that radio
 RF24Network network(radio);
 
-float action_loop(uint8_t channel, float value) {
+
+float action_loop(unsigned char channel, float value) {
   float retval = value;
     switch (channel) {
         case 1:
-        //Temperature 
-        sensors.requestTemperatures(); // Send the command to get temperatures
-        temp=sensors.getTempCByIndex(0);
-          if (temp == DEVICE_DISCONNECTED_C) {
-             temp = -88.8;
-          }
-          retval=temp;
+            get_temp();
+            retval=temp;
+        break;    
+        case 21:
+            if ( value > 0.5 ) {
+              digitalWrite(RELAIS1,RELAIS_ON);
+            } else {
+              digitalWrite(RELAIS1,RELAIS_OFF);  
+            }
         break;
         case 101:
           // battery voltage => vcc.Read_Volts();
@@ -123,17 +135,18 @@ float action_loop(uint8_t channel, float value) {
           vcc.m_correction = value;
         break; 
         case 118:
-        // init_finished (=1)
-          init_finished = true; //( payload.value > 0.5);
-          break;
-        default:
-          retval=value;
+          // init_finished (value=1)
+          if ( value > 0.5 ) init_finished = true; 
+        break;
+//        default:
+        // Default: just send the paket back - no action here  
       }
     return retval;
 }  
 
 void setup(void) {
   unsigned long last_send=millis();
+  unsigned long init_start=millis();
   pinMode(STATUSLED, OUTPUT);
   digitalWrite(STATUSLED,STATUSLED_ON);
   SPI.begin();
@@ -141,6 +154,8 @@ void setup(void) {
   // put anything else to init here
   //****
   sensors.begin(); 
+  sensors.setResolution(10);
+  get_temp();
   //####
   // end aditional init
   //####
@@ -166,73 +181,37 @@ void setup(void) {
     if ( network.available() ) {
       do_transmit = false;
       network.read(rxheader,&payload,sizeof(payload));
-      payload.value1 = action_loop(payload.sensor1, payload.value1);
-      payload.value2 = action_loop(payload.sensor2, payload.value2);
-      payload.value3 = action_loop(payload.sensor3, payload.value3);
-      payload.value4 = action_loop(payload.sensor4, payload.value4);
+      if ( payload.sensor1 > 0 ) payload.value1 = action_loop(payload.sensor1, payload.value1);
+      if ( payload.sensor2 > 0 ) payload.value2 = action_loop(payload.sensor2, payload.value2);
+      if ( payload.sensor3 > 0 ) payload.value3 = action_loop(payload.sensor3, payload.value3);
+      if ( payload.sensor4 > 0 ) payload.value4 = action_loop(payload.sensor4, payload.value4);
       last_send = millis();
       txheader.type=1;
       network.write(txheader,&payload,sizeof(payload));
     }
+    if ( millis() - init_start > MAXINIT ) init_finished = true;
   }
-  delay(100);
   digitalWrite(STATUSLED,STATUSLED_OFF); 
   sleepmode=sleep4;
-  networkup = 0;    
+  networkuptime = 0.0;    
+  delay(100);
 }
 
-void sleep12(unsigned int sleeptime) {
-  if ( radiomode == radio_sleep ) {
-    radio.stopListening();
-    radio.powerDown();
-  }
-  sleep4ms((unsigned int)(sleeptime)); 
-  if ( radiomode == radio_sleep ) {
-    radio.powerUp();
-    radio.startListening();
-  }
+void get_temp(void) {
+  sensors.requestTemperatures(); // Send the command to get temperatures
+  temp=sensors.getTempCByIndex(0);
 }
 
 void loop(void) {
   n_update = network.update();
   if ( network.available() ) {
-    sleepmode = sleep4;
-    networkup = 0;
-    if ((payload.flags & 0x01) == 0x01 ) {
-      next_sleepmode = sleep1;
-    } else {
-      next_sleepmode = sleep2;
-    }
     network.read(rxheader,&payload,sizeof(payload));
-  digitalWrite(STATUSLED,STATUSLED_ON);
-    payload.value1 = action_loop(payload.sensor1, payload.value1);
-    payload.value2 = action_loop(payload.sensor2, payload.value2);
-    payload.value3 = action_loop(payload.sensor3, payload.value3);
-    payload.value4 = action_loop(payload.sensor4, payload.value4);
+    if ( payload.sensor1 > 0 ) payload.value1 = action_loop(payload.sensor1, payload.value1);
+    if ( payload.sensor2 > 0 ) payload.value2 = action_loop(payload.sensor2, payload.value2);
+    if ( payload.sensor3 > 0 ) payload.value3 = action_loop(payload.sensor3, payload.value3);
+    if ( payload.sensor4 > 0 ) payload.value4 = action_loop(payload.sensor4, payload.value4);
     txheader.type=rxheader.type;
-//    network.write(txheader,&payload,sizeof(payload));    
-  digitalWrite(STATUSLED,STATUSLED_OFF);
+    network.write(txheader,&payload,sizeof(payload));    
   }
-  sleep4ms(100);
-  networkup++;    
-  switch (sleepmode) {
-    case sleep1:
-      sleep12((unsigned int)(sleeptime1*1000)); 
-      sleepmode = sleep3;
-      next_sleepmode = sleep2;
-      networkup = 0;    
-    break;
-    case sleep2:
-      sleep12((unsigned int)(sleeptime2*1000)); 
-      sleepmode = sleep3;
-      next_sleepmode = sleep2;
-      networkup = 0;    
-    break;
-    case sleep3:
-      if ( networkup > 10*sleeptime3) sleepmode = next_sleepmode;    
-    break;
-    case sleep4:
-      if ( networkup > 10*sleeptime4) sleepmode = next_sleepmode;        
-    break;
-  } 
+  delay(100);
 }
