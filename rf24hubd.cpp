@@ -183,7 +183,7 @@ void exec_tn_cmd(const char *tn_cmd) {
 
 void prepare_tn_cmd(uint16_t node, uint8_t channel, float value) {
 	char telnet_cmd[200];
-	for(int i=0; i<SENSORLENGTH; i++) {
+	for(int i=0; i<SENSORARRAYSIZE; i++) {
 		if ( sensor[i].node == node && sensor[i].channel == channel ) {
 			sprintf(telnet_cmd,"set %s %f \n", sensor[i].fhem_dev, value);
 		}
@@ -217,6 +217,7 @@ void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_m
 		 cmp_verbose[]="verbose";	 
 	char *wort1, *wort2, *wort3, *wort4;
 	uint16_t node = 0;
+	uint32_t akt_sensor = 0;
 	bool tn_input_ok=false;
 	char delimiter[] = " ";
 	trim(buffer);
@@ -230,8 +231,22 @@ void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_m
 	// sets a sensor to a value, setlast starts the request over air
 	if ( (( strcmp(wort1,cmp_set) == 0 ) || ( strcmp(wort1,cmp_setlast) == 0 )) && (strcmp(wort2,cmp_sensor) == 0) && (wort3 != NULL) && (wort4 != NULL) ) {
 		tn_input_ok = true;
+		// In word3 we may have a) the number of the sensor b) the name of the sensor c) the fhem_dev of a sensor
+		// for the processing we need the number of the sensor ==> find it!
+		for (int i = 0; i < SENSORARRAYSIZE; i++) {
+			if ( (sensor[i].sensor > 0) && ((strcmp(wort3,sensor[i].fhem_dev) == 0) || (strcmp(wort3,sensor[i].sensor_name) == 0) || ( sensor[i].sensor == strtoul(wort3, &pEnd, 10)) ) ) {
+				sprintf(debug, "Sensor found: %u Node: 0%o Channel: %u FHEM: %s Name %s", 
+								sensor[i].sensor,
+								sensor[i].node,
+								sensor[i].channel,
+								sensor[i].fhem_dev,
+								sensor[i].sensor_name);
+				logmsg(VERBOSETELNET, debug);
+				akt_sensor = sensor[i].sensor;
+			}
+		}		
 		// just add the sensor to the buffer
-		node = set_sensor( strtoul(wort3, &pEnd, 10), strtof(wort4, &pEnd));
+		node = set_sensor( akt_sensor, strtof(wort4, &pEnd));
 		if ( node == 0 ) {
 			sprintf(debug,"Sensor (%s) not in cache ==> running initialisation!",wort3);
 			logmsg(VERBOSETELNET, debug);
@@ -385,7 +400,7 @@ void init_node(MYSQL *db, uint16_t node ) {
 		fill_order_buffer( node, 118, 1.0);
 	}
 	mysql_free_result(result);
-    for (int i=0; i < SENSORLENGTH; i++) {
+    for (int i=0; i < SENSORARRAYSIZE; i++) {
 		if (sensor[i].node == node && sensor[i].s_type == 'a') {
 			fill_order_buffer( node, sensor[i].channel, sensor[i].last_val);
 		}
@@ -423,7 +438,6 @@ void init_order(unsigned int element) {
 	order[element].value4 = 0;
 	order[element].entrytime = 0;
 	order[element].last_send = 0;
-	
 }
 
 void print_order(void) {
@@ -588,8 +602,8 @@ void get_order(uint16_t node) {
 uint16_t set_sensor(uint32_t mysensor, float value) {
 	int i = 0;
 	uint16_t node = 0;
-	while ( (sensor[i].sensor != mysensor) && (i < SENSORLENGTH - 1) ) i++;
-	if ( i < SENSORLENGTH - 1 ) {
+	while ( (sensor[i].sensor != mysensor) && (i < SENSORARRAYSIZE - 1) ) i++;
+	if ( i < SENSORARRAYSIZE - 1 ) {
 		fill_order_buffer( sensor[i].node, sensor[i].channel, value);
 		node = sensor[i].node;
 	}
@@ -651,7 +665,7 @@ void do_sql(MYSQL *db, char *sqlstmt) {
 void print_sensor(void) {
 	sprintf(debug,"Sensor Array:");
 	logmsg(VERBOSEOTHER, debug);
-	for (int i = 0; i < SENSORLENGTH; i++) {
+	for (int i = 0; i < SENSORARRAYSIZE; i++) {
 		if (sensor[i].sensor > 0 ) {
 			sprintf(debug, "Sensor: %u Node: 0%o Channel: %u Type: %c Value: %f FHEM: %s",
 				sensor[i].sensor,
@@ -668,13 +682,13 @@ void print_sensor(void) {
 void init_system(MYSQL *db) {
 	int i = 0;
 	char cmp_s[]="s",cmp_a[]="a";
-	for (int i=0; i<SENSORLENGTH; i++) {
+	for (int i=0; i<SENSORARRAYSIZE; i++) {
 		sensor[i].sensor = 0;
 		sensor[i].node = 0;
 		sensor[i].channel = 0;
 		sensor[i].last_val = 0;
 	}		
-	sprintf (sql_stmt, "select sensor_id, node_id, channel, value, fhem_dev, s_type from sensor where sensor_id is not null and node_id is not null and channel is not null");
+	sprintf (sql_stmt, "select sensor_id, node_id, channel, value, fhem_dev, s_type, sensor_name from sensor where sensor_id is not null and node_id is not null and channel is not null");
 	logmsg(VERBOSESQL, sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error(db);
@@ -689,6 +703,7 @@ void init_system(MYSQL *db) {
 		if ( row[4] != NULL ) sprintf(sensor[i].fhem_dev,"%s",row[4]); else sprintf(sensor[i].fhem_dev,"not_set");
 		if (strcmp(row[5],cmp_s) == 0) sensor[i].s_type = 's';
 		if (strcmp(row[5],cmp_a) == 0) sensor[i].s_type = 'a';
+		if ( row[6] != NULL ) sprintf(sensor[i].sensor_name,"%s",row[6]); else sprintf(sensor[i].sensor_name,"not_set");
 		i++;
 	}
 	mysql_free_result(result);	
@@ -705,7 +720,7 @@ void store_sensor_value(MYSQL *db, uint16_t node, uint8_t channel, float value, 
 	do_sql(db, sql_stmt);
 	sprintf(sql_stmt,"update sensor set value= %f, utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where node_id = '0%o' and channel = %u ", value, d1, d2, node, channel);
 	do_sql(db, sql_stmt);
-	for(int i=0; i<SENSORLENGTH; i++) {
+	for(int i=0; i<SENSORARRAYSIZE; i++) {
 		if ( sensor[i].node == node && sensor[i].channel == channel ) {
 			sensor[i].last_val = value;
 		}
