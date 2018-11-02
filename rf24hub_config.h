@@ -23,8 +23,7 @@ rf24hub_config.h ==> all global definitions go here
 // How long do we try to deliver (in msec) => 20 Min.
 #define KEEPINBUFFERTIME 1200000    
 #define SENSORARRAYSIZE 80
-#define FHEMDEVLENGTH 80
-#define SENSORNAMELENGTH 80 
+#define FHEMDEVLENGTH 50
 // Interval to send a request to the node in millisec.
 #define SENDINTERVAL 500
 // Interval for deleting unsend order requests in millisec.

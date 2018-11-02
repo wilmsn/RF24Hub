@@ -1,5 +1,3 @@
-DROP TABLE IF EXISTS battery;
-
 CREATE TABLE battery
 (
    battery_id       INT           NOT NULL,
@@ -11,40 +9,10 @@ CREATE TABLE battery
 )
 ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS node;
-
-CREATE TABLE node
-(
-   node_id         VARCHAR(10)    NOT NULL,
-   node_name       VARCHAR(50),
-   add_info        VARCHAR(500),
-   u_batt          FLOAT,
-   sleeptime1      INT,
-   sleeptime2      INT,
-   sleeptime3      INT,
-   sleeptime4      INT,
-   radiomode       INT,
-   battery_id      INT            NOT NULL,
-   is_online       INT,
-   signal_quality  VARCHAR(10),
-   last_contact    INT,
-   voltagefactor   FLOAT,
-   PRIMARY KEY (node_id)
-)
-ENGINE=InnoDB;
-
-ALTER TABLE node
-  ADD CONSTRAINT battery_id FOREIGN KEY (battery_id)
-  REFERENCES battery (battery_id)
-  ON UPDATE RESTRICT
-  ON DELETE RESTRICT;
-
-DROP TABLE IF EXISTS sensor;
-
 CREATE TABLE sensor
 (
    sensor_id       INT            NOT NULL,
-   sensor_name     VARCHAR(30),
+   sensor_name     VARCHAR(50),
    add_info        VARCHAR(100),
    node_id         VARCHAR(10)    NOT NULL,
    channel         INT            NOT NULL,
@@ -58,7 +26,43 @@ CREATE TABLE sensor
 )
 ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS sensordata;
+CREATE TABLE node
+(
+   node_id         VARCHAR(10)    NOT NULL,
+   node_name       VARCHAR(50),
+   add_info        VARCHAR(500),
+   u_batt          FLOAT,
+   sleeptime1      FLOAT,
+   sleeptime2      FLOAT,
+   sleeptime3      FLOAT,
+   sleeptime4      FLOAT,
+   radiomode       FLOAT,
+   battery_id      INT            NOT NULL,
+   is_online       INT,
+   signal_quality  VARCHAR(10),
+   last_contact    INT,
+   voltagefactor   FLOAT,
+   html_sort       INT,
+   html_show       CHAR(1),
+   PRIMARY KEY (node_id)
+)
+ENGINE=InnoDB;
+
+ALTER TABLE node
+  ADD CONSTRAINT battery_id FOREIGN KEY (battery_id)
+  REFERENCES battery (battery_id)
+  ON UPDATE RESTRICT
+  ON DELETE RESTRICT;
+
+CREATE TABLE node_init
+(
+   node_id  VARCHAR(10)   NOT NULL,
+   channel  INT,
+   prio     INT,
+   value    FLOAT,
+   PRIMARY KEY (node_id, channel)
+)
+ENGINE=InnoDB;
 
 CREATE TABLE sensordata
 (
@@ -71,7 +75,3 @@ ENGINE=InnoDB;
 
 CREATE INDEX sensordata_utime_idx
    ON sensordata (utime ASC);
-
-CREATE INDEX sensordata_id_utime_idx
-   ON sensordata (sensor_id ASC, utime ASC);
-

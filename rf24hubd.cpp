@@ -235,12 +235,11 @@ void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_m
 		// for the processing we need the number of the sensor ==> find it!
 		for (int i = 0; i < SENSORARRAYSIZE; i++) {
 			if ( (sensor[i].sensor > 0) && ((strcmp(wort3,sensor[i].fhem_dev) == 0) || ( sensor[i].sensor == strtoul(wort3, &pEnd, 10)) ) ) {
-				sprintf(debug, "Sensor found: %u Node: 0%o Channel: %u FHEM: %s Name %s", 
+				sprintf(debug, "Sensor found: %u Node: 0%o Channel: %u FHEM: %s", 
 								sensor[i].sensor,
 								sensor[i].node,
 								sensor[i].channel,
-								sensor[i].fhem_dev,
-								sensor[i].sensor_name);
+								sensor[i].fhem_dev);
 				logmsg(VERBOSETELNET, debug);
 				akt_sensor = sensor[i].sensor;
 			}
@@ -688,7 +687,7 @@ void init_system(MYSQL *db) {
 		sensor[i].channel = 0;
 		sensor[i].last_val = 0;
 	}		
-	sprintf (sql_stmt, "select sensor_id, node_id, channel, value, fhem_dev, s_type, sensor_name from sensor where sensor_id is not null and node_id is not null and channel is not null");
+	sprintf (sql_stmt, "select sensor_id, node_id, channel, value, fhem_dev, s_type from sensor where sensor_id is not null and node_id is not null and channel is not null");
 	logmsg(VERBOSESQL, sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error(db);
@@ -703,7 +702,6 @@ void init_system(MYSQL *db) {
 		if ( row[4] != NULL ) sprintf(sensor[i].fhem_dev,"%s",row[4]); else sprintf(sensor[i].fhem_dev,"not_set");
 		if (strcmp(row[5],cmp_s) == 0) sensor[i].s_type = 's';
 		if (strcmp(row[5],cmp_a) == 0) sensor[i].s_type = 'a';
-		if ( row[6] != NULL ) sprintf(sensor[i].sensor_name,"%s",row[6]); else sprintf(sensor[i].sensor_name,"not_set");
 		i++;
 	}
 	mysql_free_result(result);	
