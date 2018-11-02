@@ -234,7 +234,7 @@ void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_m
 		// In word3 we may have a) the number of the sensor b) the name of the sensor c) the fhem_dev of a sensor
 		// for the processing we need the number of the sensor ==> find it!
 		for (int i = 0; i < SENSORARRAYSIZE; i++) {
-			if ( (sensor[i].sensor > 0) && ((strcmp(wort3,sensor[i].fhem_dev) == 0) || (strcmp(wort3,sensor[i].sensor_name) == 0) || ( sensor[i].sensor == strtoul(wort3, &pEnd, 10)) ) ) {
+			if ( (sensor[i].sensor > 0) && ((strcmp(wort3,sensor[i].fhem_dev) == 0) || ( sensor[i].sensor == strtoul(wort3, &pEnd, 10)) ) ) {
 				sprintf(debug, "Sensor found: %u Node: 0%o Channel: %u FHEM: %s Name %s", 
 								sensor[i].sensor,
 								sensor[i].node,
