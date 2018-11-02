@@ -21,6 +21,7 @@ CREATE TABLE sensor
    store_days      INT,
    fhem_dev        VARCHAR(50),
    signal_quality  VARCHAR(10),
+   html_show       CHAR(1),
    s_type          CHAR(1),
    PRIMARY KEY (sensor_id)
 )
