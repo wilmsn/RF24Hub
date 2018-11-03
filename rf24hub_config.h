@@ -12,18 +12,18 @@ rf24hub_config.h ==> all global definitions go here
 #define LOGFILE "/var/log/rf24hubd.log"
 #define PIDFILE "/var/run/rf24hubd.pid"
 #define DEFAULT_CONFIG_FILE "/etc/rf24hub/rf24hub.cfg"
-#define PRGNAME "rf24hub"
+
 //
 // END default values: can be overwritten in config file
 //
 //-------------------------------------------------------
 //
 #define ORDERLENGTH 80
-#define ORDERBUFFERLENGTH 20
+#define ORDERBUFFERLENGTH 80
 // How long do we try to deliver (in msec) => 20 Min.
 #define KEEPINBUFFERTIME 1200000    
-#define SENSORLENGTH 80
-#define FHEMDEVLENGTH 40
+#define SENSORARRAYSIZE 80
+#define FHEMDEVLENGTH 50
 // Interval to send a request to the node in millisec.
 #define SENDINTERVAL 500
 // Interval for deleting unsend order requests in millisec.

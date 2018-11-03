@@ -100,6 +100,10 @@ void usage(const char *prgname) {
     fprintf(stdout, "         Set configfilename\n");
     fprintf(stdout, "   -v or --verbose <verboselevel>\n");
     fprintf(stdout, "         Set verboselevel (1...9)\n");
+    fprintf(stdout, "   -s or --scanner <scanlevel>\n");
+    fprintf(stdout, "         Set scannlevel (0...9) and scan all channels\n");
+    fprintf(stdout, "   -t or --scannchannel <channel>\n");
+    fprintf(stdout, "         Scanns the single channel <channel>\n");
     fprintf(stdout, "For clean exit use \"CTRL-C\" or \"kill -15 <pid>\"\n\n");
 }
 
@@ -179,7 +183,7 @@ void exec_tn_cmd(const char *tn_cmd) {
 
 void prepare_tn_cmd(uint16_t node, uint8_t channel, float value) {
 	char telnet_cmd[200];
-	for(int i=0; i<SENSORLENGTH; i++) {
+	for(int i=0; i<SENSORARRAYSIZE; i++) {
 		if ( sensor[i].node == node && sensor[i].channel == channel ) {
 			sprintf(telnet_cmd,"set %s %f \n", sensor[i].fhem_dev, value);
 		}
@@ -190,6 +194,18 @@ void prepare_tn_cmd(uint16_t node, uint8_t channel, float value) {
 }
 	
 void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_message) {
+/* Messages can llook like this:
+       <word1		word2		word3		word4 				function>
+		init													Reinitialization of rf24hubd (reads actual values from database)
+		list		order										Lists open orders in textform
+		html 		order										Lists open orders in HTML form
+		set			sensor		<sensor#> 	<value>				Sets Sensor to Value (Store in Orderbuffer only)
+					node		<node#>		init				Initialize this Node (Send Initdata to the Node) 
+					verbose		<value>							Sets Verboselevel to new Value (1...9)
+		setlast		sensor		<sensor#> 	<value>				Sets Sensor to Value and starts sending (Store in Orderbuffer and transfer all requests for this Node to Order)
+			
+*/
+			
 	char cmp_init[]="init", 
 		 cmp_sensor[]="sensor",
 		 cmp_set[]="set",
@@ -197,9 +213,11 @@ void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_m
 		 cmp_node[]="node",
 		 cmp_list[]="list",
 		 cmp_html[]="html",
-		 cmp_order[]="order";	 
+		 cmp_order[]="order",	 
+		 cmp_verbose[]="verbose";	 
 	char *wort1, *wort2, *wort3, *wort4;
 	uint16_t node = 0;
+	uint32_t akt_sensor = 0;
 	bool tn_input_ok=false;
 	char delimiter[] = " ";
 	trim(buffer);
@@ -213,11 +231,30 @@ void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_m
 	// sets a sensor to a value, setlast starts the request over air
 	if ( (( strcmp(wort1,cmp_set) == 0 ) || ( strcmp(wort1,cmp_setlast) == 0 )) && (strcmp(wort2,cmp_sensor) == 0) && (wort3 != NULL) && (wort4 != NULL) ) {
 		tn_input_ok = true;
+		// In word3 we may have a) the number of the sensor b) the name of the sensor c) the fhem_dev of a sensor
+		// for the processing we need the number of the sensor ==> find it!
+		for (int i = 0; i < SENSORARRAYSIZE; i++) {
+			if ( (sensor[i].sensor > 0) && ((strcmp(wort3,sensor[i].fhem_dev) == 0) || ( sensor[i].sensor == strtoul(wort3, &pEnd, 10)) ) ) {
+				sprintf(debug, "Sensor found: %u Node: 0%o Channel: %u FHEM: %s", 
+								sensor[i].sensor,
+								sensor[i].node,
+								sensor[i].channel,
+								sensor[i].fhem_dev);
+				logmsg(VERBOSETELNET, debug);
+				akt_sensor = sensor[i].sensor;
+			}
+		}		
 		// just add the sensor to the buffer
-		node = set_sensor( strtoul(wort3, &pEnd, 10), strtof(wort4, &pEnd));
-		if ( strcmp(wort1,cmp_setlast) == 0 ) {
-			get_order(node);
-			print_order_buffer();
+		node = set_sensor( akt_sensor, strtof(wort4, &pEnd));
+		if ( node == 0 ) {
+			sprintf(debug,"Sensor (%s) not in cache ==> running initialisation!",wort3);
+			logmsg(VERBOSETELNET, debug);
+			init_system(db);
+		} else {
+			if ( strcmp(wort1,cmp_setlast) == 0 ) {
+				get_order(node);
+				print_order_buffer();
+			}
 		}
 	}
     // set node <node> init
@@ -226,26 +263,34 @@ void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_m
 		tn_input_ok = true;
 		init_node(db, getnodeadr(wort3));
 	}
+    // set verbose <new verboselevel>
+	// sets the new verboselevel
+	if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (wort3 != NULL) && (wort4 == 0) ) {
+        if ( wort3[0] > '0' && wort3[0] < '9' + 1 ) {
+			tn_input_ok = true;
+			verboselevel = (wort3[0] - '0') * 1;
+		}	
+	}
     // list order
 	// lists the current orderbuffer
 	if (( strcmp(wort1,cmp_list) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (wort3 == NULL) && (wort4 == NULL) ) {
 		tn_input_ok = true;
-		sprintf(client_message,"----- Orderbuffer: ------\n"); 
+		sprintf(client_message,"----- Orderbuffer(max(%d): ------\n", (int)ORDERBUFFERLENGTH); 
 		write(new_tn_in_socket , client_message , strlen(client_message));
-		for (int i=0; i < ORDERBUFFERLENGTH; i++) {
+		for (int i=0; i < ORDERBUFFERLENGTH -1; i++) {
 			if ( order_buffer[i].node > 0 ) {
-				sprintf(client_message,"Onr:\t%u,\tentry:\t%llu (%d sec.),\tnode:\t0%o,\tchannel:\t%u\tval:\t%f\n", 
-					order_buffer[i].orderno, order_buffer[i].entrytime, (int)(order_buffer[i].entrytime - mymillis())/1000, order_buffer[i].node,
+				sprintf(client_message,"order_buffer[%d]\t Onr:\t%u,\tentry:\t%llu (%d sec.),\tnode:\t0%o,\tchannel:\t%u\tval:\t%f\n", 
+					i,order_buffer[i].orderno, order_buffer[i].entrytime, (int)(order_buffer[i].entrytime - mymillis())/1000, order_buffer[i].node,
 					order_buffer[i].channel, order_buffer[i].value );
 				write(new_tn_in_socket , client_message , strlen(client_message));
 			}				
 		}
-		sprintf(client_message,"----- Order: ------\n"); 
+		sprintf(client_message,"----- Order(max %d): ------\n", (int)ORDERLENGTH); 
 		write(new_tn_in_socket , client_message , strlen(client_message));
-		for (int i=0; i < ORDERLENGTH; i++) {
+		for (int i=0; i < ORDERLENGTH -1; i++) {
 			if ( order[i].node > 0 ) {
-				sprintf(client_message,"Onr:\t%u,\tentry:\t%llu (%d sec.),\tnode:\t0%o,\ttype:\t%u\tflags:\t%u\t(channel/Value)\t(%u/%f)\t(%u/%f)\t(%u/%f)\t(%u/%f)\n", 
-					order[i].orderno, order[i].entrytime, (int)(order[i].entrytime - mymillis())/1000, order[i].node, order[i].type, order[i].flags
+				sprintf(client_message,"order[%d]\t Onr:\t%u,\tentry:\t%llu (%d sec.),\tnode:\t0%o,\ttype:\t%u\tflags:\t%u\t(channel/Value)\t(%u/%f)\t(%u/%f)\t(%u/%f)\t(%u/%f)\n", 
+					i,order[i].orderno, order[i].entrytime, (int)(order[i].entrytime - mymillis())/1000, order[i].node, order[i].type, order[i].flags
 					,order[i].channel1, order[i].value1
 					,order[i].channel2, order[i].value2
 					,order[i].channel3, order[i].value3
@@ -260,7 +305,7 @@ void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_m
 		tn_input_ok = true;
 		sprintf(client_message,"\n<center><big>Orderbuffer</big><table><tr><th>OrderNo</th><th>EntryTime</th><th>Node</th><th>Channel</th><th>Value</th></tr>\n"); 
 		write(new_tn_in_socket , client_message , strlen(client_message));
-		for (int i=0; i < ORDERBUFFERLENGTH; i++) {
+		for (int i=0; i < ORDERBUFFERLENGTH -1; i++) {
 			if ( order_buffer[i].node > 0 ) {
 				sprintf(client_message,"<tr><td>%u</td><td>%llu (%d sec.)</td><td>0%o</td><td>%u</td><td>%f</td></tr>\n", 
 					order_buffer[i].orderno, order_buffer[i].entrytime, (int)(order_buffer[i].entrytime - mymillis())/1000, order_buffer[i].node,
@@ -270,7 +315,7 @@ void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_m
 		}
 		sprintf(client_message,"</table><br><big>Order</big><br><table><tr><th>OrderNo</th><th>EntryTime</th><th>Node</th><th>Type</th><th>Flags</th><th>Channel</th><th>Value</th></tr>\n"); 
 		write(new_tn_in_socket , client_message , strlen(client_message));
-		for (int i=0; i < ORDERLENGTH; i++) {
+		for (int i=0; i < ORDERLENGTH -1; i++) {
 			if ( order[i].node > 0 ) {
 				sprintf(client_message,"<tr><td>%u</td><td>%llu (%d sec.)</td><td>0%o</td><td>%u</td><td>%u</td><td>%u<br>%u<br>%u<br>%u</td><td>%f<br>%f<br>%f<br>%f</td></tr>\n", 
 					order[i].orderno, order[i].entrytime, (int)(order[i].entrytime - mymillis())/1000, order[i].node, order[i].type, order[i].flags
@@ -291,9 +336,11 @@ void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_m
 	if ( ! tn_input_ok) {
 		sprintf(client_message,"Usage:\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
-		sprintf(client_message,"set sensor <sensornumber> <sensorvalue>\n");
+		sprintf(client_message,"set[last] sensor <sensornumber> <sensorvalue>\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"   Sets the sensor <sensornumber> to the value <sensorvalue>\n");
+		write(new_tn_in_socket , client_message , strlen(client_message));
+		sprintf(client_message,"   'set' stores only; 'setlast' executes all settings for this node\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"set node <nodenumber> init\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
@@ -306,6 +353,10 @@ void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_m
 		sprintf(client_message,"list order\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"   lists the content of the order queue\n");
+		write(new_tn_in_socket , client_message , strlen(client_message));
+		sprintf(client_message,"set verbose <verboselevel>\n");
+		write(new_tn_in_socket , client_message , strlen(client_message));
+		sprintf(client_message,"   sets a new verboselevel <1..9> are valid levels\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
@@ -348,7 +399,7 @@ void init_node(MYSQL *db, uint16_t node ) {
 		fill_order_buffer( node, 118, 1.0);
 	}
 	mysql_free_result(result);
-    for (int i=0; i < SENSORLENGTH; i++) {
+    for (int i=0; i < SENSORARRAYSIZE; i++) {
 		if (sensor[i].node == node && sensor[i].s_type == 'a') {
 			fill_order_buffer( node, sensor[i].channel, sensor[i].last_val);
 		}
@@ -386,14 +437,13 @@ void init_order(unsigned int element) {
 	order[element].value4 = 0;
 	order[element].entrytime = 0;
 	order[element].last_send = 0;
-	
 }
 
 void print_order(void) {
 	if ( verboselevel > 8 ) {
 		sprintf(debug,"======= Content of Order: ==========");
 		logmsg(VERBOSEOTHER,debug);
-		for (int i=0; i < ORDERLENGTH; i++) {
+		for (int i=0; i < ORDERLENGTH -1; i++) {
 			if ( order[i].orderno > 0 ) {
 				sprintf(debug, "order[%d] = Onr:\t%u,\tnode:\t0%o,\ttype:\t%u\tflags:\t%u (%u/%f) (%u/%f) (%u/%f) (%u/%f) Entry: %llu Last_Send: %llu", 
 					i,
@@ -429,7 +479,7 @@ void init_order_buffer(unsigned int element) {
 
 void fill_order_buffer( uint16_t node, uint16_t channel, float value) {
 	int i=0;
-	while ( (order_buffer[i].node > 0) && !((order_buffer[i].node == node) && (order_buffer[i].channel == channel ))  && ( i < ORDERBUFFERLENGTH ) ) {
+	while ( (order_buffer[i].node > 0) && !((order_buffer[i].node == node) && (order_buffer[i].channel == channel ))  && ( i < ORDERBUFFERLENGTH -1 ) ) {
 		i++;
 	}
 	order_buffer[i].orderno = 0;
@@ -443,9 +493,10 @@ void print_order_buffer(void) {
 	if ( verboselevel > 8 ) {
 		sprintf(debug,"======= Content of Order_Buffer: ==========");
 		logmsg(VERBOSEOTHER,debug);
-		for (int i=0; i < ORDERBUFFERLENGTH; i++) {
+		for (int i=0; i < ORDERBUFFERLENGTH -1; i++) {
 			if ( order_buffer[i].node > 0 ) {
-				sprintf(debug,"Onr: %u,\tentry:\t%llu,\tnode:\t0%o,\tchannel:\t%u\tval:\t%f", 
+				sprintf(debug,"order_buffer[%d]\t Onr: %u,\tentry:\t%llu,\tnode:\t0%o,\tchannel:\t%u\tval:\t%f", 
+					i,
 					order_buffer[i].orderno,
 					order_buffer[i].entrytime,
 					order_buffer[i].node,
@@ -461,7 +512,7 @@ void print_order_buffer(void) {
 
 bool is_valid_orderno(uint16_t myorderno) {
 	bool retval = false;
-	for (int i=0; i < ORDERBUFFERLENGTH; i++) {
+	for (int i=0; i < ORDERBUFFERLENGTH -1; i++) {
 		if ( myorderno == order_buffer[i].orderno ) retval = true;
 	}
 	return retval;
@@ -471,13 +522,13 @@ bool delete_orderno(uint16_t myorderno) {
 	bool retval = false;
 	uint16_t node = 0;
 	if ( myorderno > 0 ) {
-		for (int i=0; i < ORDERBUFFERLENGTH; i++) {
+		for (int i=0; i < ORDERBUFFERLENGTH -1; i++) {
 			if ( myorderno == order_buffer[i].orderno ) {
 				retval = true;
 				init_order_buffer(i);
 			}
 		}
-		for (int i=0; i < ORDERLENGTH; i++) {
+		for (int i=0; i < ORDERLENGTH -1; i++) {
 			if ( myorderno == order[i].orderno ) {
 				retval = true;
 				node = order[i].node;
@@ -497,7 +548,7 @@ void get_order(uint16_t node) {
 	sprintf(debug, "get_order: node: 0%o orderno: %u", node, orderno);
 	logmsg(VERBOSEOTHER,debug);
 	// if we have old orders for this node ==> delete them! 
-	for (int i=0; i < ORDERLENGTH; i++) {
+	for (int i=0; i < ORDERLENGTH -1; i++) {
 		if ( order[i].node == node ) {
 			order[i].node = 0;
 			order[i].orderno = 0;
@@ -506,7 +557,7 @@ void get_order(uint16_t node) {
 	//look for the first free position in order[]
 	sprintf(debug, "get_order: order_ptr is: %u; order[order_ptr].orderno is %u", order_ptr, order[order_ptr].orderno);
 	logmsg(VERBOSEOTHER,debug);	
-	while ( order_ptr < ORDERLENGTH && order[order_ptr].orderno > 0) {
+	while ( order_ptr < ORDERLENGTH -1 && order[order_ptr].orderno > 0) {
 		order_ptr++; 
 		sprintf(debug, "get_order: order_ptr is: %u; order[order_ptr].orderno is %u", order_ptr, order[order_ptr].orderno);
 		logmsg(VERBOSEOTHER,debug);
@@ -514,7 +565,7 @@ void get_order(uint16_t node) {
 	sprintf(debug, "get_order: order_ptr is: %u", order_ptr);
 	logmsg(VERBOSEOTHER,debug);
 	//collect the data for this order
-	for (int i=0; i < ORDERBUFFERLENGTH; i++) {
+	for (int i=0; i < ORDERBUFFERLENGTH -1; i++) {
 		if (node == order_buffer[i].node) {
 			sprintf(debug, "get_order: j is: %d order_ptr is: %u", j, order_ptr);
 			logmsg(VERBOSEOTHER,debug);
@@ -550,8 +601,8 @@ void get_order(uint16_t node) {
 uint16_t set_sensor(uint32_t mysensor, float value) {
 	int i = 0;
 	uint16_t node = 0;
-	while ( (sensor[i].sensor != mysensor) && (i < SENSORLENGTH) ) i++;
-	if ( i < SENSORLENGTH ) {
+	while ( (sensor[i].sensor != mysensor) && (i < SENSORARRAYSIZE - 1) ) i++;
+	if ( i < SENSORARRAYSIZE - 1 ) {
 		fill_order_buffer( sensor[i].node, sensor[i].channel, value);
 		node = sensor[i].node;
 	}
@@ -563,12 +614,23 @@ uint16_t get_sensor(uint32_t mysensor) {
 }
 
 bool node_is_next(const uint16_t node) {
-	bool retval = true;
-	for(int i=0; i<ORDERLENGTH; i++) {
-		if ((order[i].node !=0) && ( node != order[i].node ) && ((node & order[i].node) == order[i].node) ) {
-			retval = false;
+  /*
+  Make sure that childs will not addressed until a parent needs to be addressed
+  */
+	bool retval;
+  retval = true;
+/* temporary disabled 
+  for(int i=0; i<ORDERLENGTH -1; i++) {
+		if ( order[i].node != 0 ) {
+      if ( node != order[i].node ) {
+        if ((node & order[i].node) == order[i].node) {
+			    retval = false;
+      		sprintf(debug, "node_is_next=false: i:%d node:%x order[%d].node:%x\n", i,node, i, order[i].node);
+          logmsg(9, debug);
+        }
+      }
 		}			
-	}
+	} */
 	return retval;
 }
 /*******************************************************************************************
@@ -602,7 +664,7 @@ void do_sql(MYSQL *db, char *sqlstmt) {
 void print_sensor(void) {
 	sprintf(debug,"Sensor Array:");
 	logmsg(VERBOSEOTHER, debug);
-	for (int i = 0; i < SENSORLENGTH; i++) {
+	for (int i = 0; i < SENSORARRAYSIZE; i++) {
 		if (sensor[i].sensor > 0 ) {
 			sprintf(debug, "Sensor: %u Node: 0%o Channel: %u Type: %c Value: %f FHEM: %s",
 				sensor[i].sensor,
@@ -619,7 +681,7 @@ void print_sensor(void) {
 void init_system(MYSQL *db) {
 	int i = 0;
 	char cmp_s[]="s",cmp_a[]="a";
-	for (int i=0; i<SENSORLENGTH; i++) {
+	for (int i=0; i<SENSORARRAYSIZE; i++) {
 		sensor[i].sensor = 0;
 		sensor[i].node = 0;
 		sensor[i].channel = 0;
@@ -644,8 +706,8 @@ void init_system(MYSQL *db) {
 	}
 	mysql_free_result(result);	
 	print_sensor();
-	for (unsigned int i=0; i<ORDERLENGTH; i++) init_order(i);
-	for (unsigned int i=0; i<ORDERBUFFERLENGTH; i++) init_order_buffer(i);
+	for (unsigned int i=0; i<ORDERLENGTH -1; i++) init_order(i);
+	for (unsigned int i=0; i<ORDERBUFFERLENGTH -1; i++) init_order_buffer(i);
 }
 
 void store_sensor_value(MYSQL *db, uint16_t node, uint8_t channel, float value, bool d1, bool d2) {
@@ -656,7 +718,7 @@ void store_sensor_value(MYSQL *db, uint16_t node, uint8_t channel, float value, 
 	do_sql(db, sql_stmt);
 	sprintf(sql_stmt,"update sensor set value= %f, utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where node_id = '0%o' and channel = %u ", value, d1, d2, node, channel);
 	do_sql(db, sql_stmt);
-	for(int i=0; i<SENSORLENGTH; i++) {
+	for(int i=0; i<SENSORARRAYSIZE; i++) {
 		if ( sensor[i].node == node && sensor[i].channel == channel ) {
 			sensor[i].last_val = value;
 		}
@@ -779,6 +841,132 @@ void logmsg(int mesgloglevel, char *mymsg){
 	}
 }
 
+void channelscanner (uint8_t channel) {
+  int values=0;
+  printf("Scanning channel %u: \n",channel);
+  radio.begin();
+  for (int i=0; i < 1000; i++) {
+    radio.setChannel(channel);
+
+    // Listen for a little
+    radio.startListening();
+    usleep(1000);
+
+    // Did we get a carrier?
+    if ( radio.testCarrier() ){
+      values++;
+      printf("X");
+    } else {
+      printf(".");
+    }
+    radio.stopListening();
+
+  }
+  printf("\n\n 1000 passes: Detect %d times a carrier \n", values);
+}
+
+void scanner(char scanlevel) {
+  // we have channel 0...125 => 126 channels
+  const uint8_t num_channels = 126;
+  uint8_t values[num_channels];
+  int num_reps;
+  int wait;
+
+  radio.begin();
+  switch (scanlevel) {
+    case '0':
+       num_reps=1;
+       wait=100;
+    break;
+    case '1':
+       num_reps=5;
+       wait=100;
+    break;
+    case '2':
+       num_reps=10;
+       wait=200;
+    break;
+    case '3':
+       num_reps=20;
+       wait=200;
+    break;
+    case '4':
+       num_reps=30;
+       wait=200;
+    break;
+    case '5':
+       num_reps=30;
+       wait=500;
+    break;
+    case '6':
+       num_reps=50;
+       wait=500;
+    break;
+    case '7':
+       num_reps=100;
+       wait=500;
+    break;
+    case '8':
+       num_reps=200;
+       wait=500;
+    break;
+    case '9':
+       num_reps=500;
+       wait=1000;
+    break;
+    default:
+       num_reps=30;
+       wait=500;
+  }
+  for (uint8_t i = 0; i < num_channels; i++) {
+    values[i]=0;
+  }
+  printf("Scanning all channels %d passes, listen %d microseconds to each channel\n", num_reps, wait);
+  printf("\t\t000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011111111111111111111111111\n");
+  printf("\t\t000000000011111111112222222222333333333344444444445555555555666666666677777777778888888888999999999900000000001111111111222222\n");
+  printf("\t\t012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345\n");
+  printf("\t\t------------------------------------------------------------------------------------------------------------------------------\n");
+  for (int rep_counter = 0; rep_counter < num_reps; rep_counter++) {
+    printf("\nPass: %d/%d \t", rep_counter+1, num_reps);
+    for (uint8_t i = 0; i < num_channels; i++) {
+
+      // Select this channel
+      radio.setChannel(i);
+ 
+      // Listen for a little
+      radio.startListening();
+      usleep(wait);
+      
+      // Did we get a carrier?
+      if ( radio.testCarrier() ){
+        values[i]++;
+        printf("X");
+      } else {
+        printf(".");
+      }
+      radio.stopListening();
+    }
+  }
+  printf("\n\n");
+  printf("\t\t000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011111111111111111111111111\n");
+  printf("\t\t000000000011111111112222222222333333333344444444445555555555666666666677777777778888888888999999999900000000001111111111222222\n");
+  printf("\t\t012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345\n"); 
+  printf("\t\t------------------------------------------------------------------------------------------------------------------------------\n");
+  printf("\t\t");
+  for (uint8_t i = 0; i < num_channels; i++) {
+    if (values[i] == 0) {
+      printf(".");
+    } else {
+      if (values[i] > 9 ) {
+        printf("X");
+      } else {
+        printf("%u",values[i]);
+      }
+    }
+  }
+  printf("\n"); 
+}
+
 int main(int argc, char* argv[]) {
     pid_t pid;
 	int c;
@@ -806,16 +994,47 @@ int main(int argc, char* argv[]) {
 		static struct option long_options[] = {	
 			{"daemon",  no_argument, 0, 'd'},
 			{"verbose",  required_argument, 0, 'v'},
-            {"configfile",    required_argument, 0, 'c'},
-            {"help", no_argument, 0, 'h'},
-            {0, 0, 0, 0} 
+            		{"configfile",    required_argument, 0, 'c'},
+			{"scanner", required_argument, 0, 's'},
+                        {"scannchannel", required_argument, 0, 't'},
+            		{"help", no_argument, 0, 'h'},
+            		{0, 0, 0, 0} 
 		};
         /* getopt_long stores the option index here. */
         int option_index = 0;
-        c = getopt_long (argc, argv, "?dhv:c:",long_options, &option_index);
+        c = getopt_long (argc, argv, "?dht:s:v:c:",long_options, &option_index);
         /* Detect the end of the options. */
         if (c == -1) break;
         switch (c) {
+            case 't':
+                      uint8_t channel;
+                      if ( optarg[0] ) {
+                        channel=optarg[0]-'0';
+                        if ( optarg[1] ) {
+                          channel=channel*10+optarg[1]-'0';
+                          if ( optarg[2] ) {
+                            channel=channel*10+optarg[2]-'0';
+                          }
+                        }
+                        if (channel < 126) {
+                          channelscanner(channel); 
+                        } else {
+                          printf("Error Channel must be in 0 ... 125\n");
+                        }
+                      } else {
+                        printf("Error Channel required\n");
+                      }
+                      exit(0);
+                      break;
+
+            case 's':
+                      if (optarg[0] && ! optarg[1]) {
+                         scanner(optarg[0]);
+                      } else {
+                         usage(argv[0]);
+                      }
+                      exit(0);
+                      break;
             case 'd':
 				start_daemon = true;
 				logmode = logfile;
@@ -867,17 +1086,6 @@ int main(int argc, char* argv[]) {
         fprintf(stderr, "PIDFILE: %s exists, terminating\n\n", parms.pidfilename);
         exit(1);
     }
-    pid=getpid();
-    pidfile_ptr = fopen (parms.pidfilename,"w");
-    if (pidfile_ptr==NULL) {
-        sprintf(debug,"Can't write PIDFILE: %s! Exit programm ....\n", parms.pidfilename);
-        fprintf(stderr, debug);
-        exit (1);
-    }
-    fprintf (pidfile_ptr, "%d", pid );
-    fclose(pidfile_ptr);
-    sprintf(debug, "%s running with PID: %d", PRGNAME, pid);
-    logmsg(VERBOSESTARTUP, debug);
 	
     // starts logging
     logfile_ptr = fopen (parms.logfilename,"a");
@@ -965,6 +1173,18 @@ int main(int argc, char* argv[]) {
             }
         }
     }
+    // get pid and write it to pidfile
+    pid=getpid();
+    pidfile_ptr = fopen (parms.pidfilename,"w");
+    if (pidfile_ptr==NULL) {
+        sprintf(debug,"Can't write PIDFILE: %s! Exit programm ....\n", parms.pidfilename);
+        fprintf(stderr, debug);
+        exit (1);
+    }
+    fprintf (pidfile_ptr, "%d", pid );
+    fclose(pidfile_ptr);
+    sprintf(debug, "%s running with PID: %d", PRGNAME, pid);
+    logmsg(VERBOSESTARTUP, debug);
     if ( tn_port_set && tn_host_set ) {
         tn_active = true;
         sprintf(debug, "telnet session started: Host: %s Port: %d ", parms.telnet_hostname, parms.telnet_port);
@@ -1044,7 +1264,7 @@ int main(int argc, char* argv[]) {
 //
 // Receive loop: react on the message from the nodes
 //
-            rf24_carrier = radio.testCarrier();
+//            rf24_carrier = radio.testCarrier();
 			rf24_rpd = radio.testRPD();
 			network.read(rxheader,&payload,sizeof(payload));
 			sprintf(debug, DEBUGSTR "Received: Type: %u from Node: %o to Node: %o Orderno %d (Channel/Value): (%u/%f) (%u/%f) (%u/%f) (%u/%f) "
@@ -1070,7 +1290,7 @@ int main(int argc, char* argv[]) {
 		akt_time=mymillis();
 		if ( akt_time > del_time + DELETEINTERVAL ) {
 // Cleanup old entries
-			for(int i=0; i<ORDERLENGTH; i++) {
+			for(int i=0; i<ORDERLENGTH -1; i++) {
 				if ((order[i].orderno > 0) && (order[i].entrytime + KEEPINBUFFERTIME < akt_time) ) {
 					if ( verboselevel > 4 ) {
 						sprintf(debug, "Deleted order[%d] OrderNo: %u for Node: 0%o ", i, order[i].orderno, order[i].node);
@@ -1085,7 +1305,7 @@ int main(int argc, char* argv[]) {
 			next_time = akt_time + SENDINTERVAL;
 			// Look if we have something to send
 			order_waiting = false;
-			for ( int order_ptr=0; order_ptr<ORDERLENGTH; order_ptr++) {
+			for ( int order_ptr=0; order_ptr<ORDERLENGTH -1; order_ptr++) {
 				if (order[order_ptr].orderno != 0) {
 					order_waiting = true;
 					// this orders are ready to send

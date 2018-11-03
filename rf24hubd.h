@@ -84,7 +84,7 @@ struct sensor_t {
 	char			fhem_dev[FHEMDEVLENGTH];
     float			last_val;	
 };
-struct sensor_t 	sensor[SENSORLENGTH];
+struct sensor_t 	sensor[SENSORARRAYSIZE];
 
 // Structure to handle the orderqueue
 struct order_t {
