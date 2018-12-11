@@ -182,9 +182,9 @@ char * trim (char * s);
 
 void exec_tn_cmd(const char *tn_cmd);
 
-void prepare_tn_cmd(MYSQL *db,  uint16_t node, uint8_t sensor, float value);
+void prepare_tn_cmd(uint16_t node, uint8_t sensor, float value);
 
-void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message);
+void process_tn_in(int new_socket, char* buffer, char* client_message);
 
 /*******************************************************************************************
 *
@@ -193,11 +193,13 @@ void process_tn_in(MYSQL *db, int new_socket, char* buffer, char* client_message
 *
 ********************************************************************************************/
 
-void init_node(MYSQL *db, uint16_t initnode );
+void init_node(uint16_t initnode );
 
 void print_sensor(void);
 
-void init_system(MYSQL *db);
+void init_system(void);
+
+void exit_system(void);
 
 uint16_t getnodeadr(char *node);
 
@@ -230,13 +232,13 @@ bool node_is_next(uint16_t node);
 *
 ********************************************************************************************/
 
-void db_check_error(MYSQL *db);
+void db_check_error(void);
 
-void do_sql(MYSQL *db, char *sqlstmt);
+void do_sql(char *sqlstmt);
 
-void store_sensor_value(MYSQL *db, uint16_t node, uint8_t sensor, float value, bool d1, bool d2);
+void store_sensor_value(uint16_t node, uint8_t sensor, float value, bool d1, bool d2);
 
-void process_sensor(MYSQL *db, uint16_t node, uint8_t sensor, float value, bool d1, bool d2);
+void process_sensor(uint16_t node, uint8_t sensor, float value, bool d1, bool d2);
 
 /*******************************************************************************************
 *
