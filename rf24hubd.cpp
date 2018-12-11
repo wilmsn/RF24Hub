@@ -686,7 +686,25 @@ void init_system(MYSQL *db) {
 		sensor[i].node = 0;
 		sensor[i].channel = 0;
 		sensor[i].last_val = 0;
-	}		
+	}
+    // Copy sensordata and sensor to memorytable since yesterday
+	sprintf (sql_stmt, "truncate table sensor_im");
+	logmsg(VERBOSESQL, sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error(db);
+	sprintf (sql_stmt, "insert into sensor_im(sensor_id, sensor_name, add_info, node_id, channel, value, utime, store_days, fhem_dev, signal_quality, s_type, html_show) select sensor_id, sensor_name, add_info, node_id, channel, value, utime, store_days, fhem_dev, signal_quality, s_type, html_show from sensor");
+	logmsg(VERBOSESQL, sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error(db);
+	sprintf (sql_stmt, "truncate table sensordata_im");
+	logmsg(VERBOSESQL, sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error(db);
+	sprintf (sql_stmt, "insert into sensordata_im(sensor_id, utime, value) select sensor_id, utime, value from sensordata where utime > UNIX_TIMESTAMP(subdate(current_date, 1))");
+	logmsg(VERBOSESQL, sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error(db);
+	// END sensordata to memorytable
 	sprintf (sql_stmt, "select sensor_id, node_id, channel, value, fhem_dev, s_type from sensor where sensor_id is not null and node_id is not null and channel is not null");
 	logmsg(VERBOSESQL, sql_stmt);
 	mysql_query(db, sql_stmt);
@@ -714,9 +732,9 @@ void store_sensor_value(MYSQL *db, uint16_t node, uint8_t channel, float value, 
 	if ( tn_active ) { 
 		prepare_tn_cmd(node, channel, value); 
 	}
-	sprintf(sql_stmt,"insert into sensordata (sensor_ID, utime, value) select sensor_id, UNIX_TIMESTAMP(), %f from sensor where node_id = '0%o' and channel = %u ", value, node, channel);
+	sprintf(sql_stmt,"insert into sensordata_im (sensor_ID, utime, value) select sensor_id, UNIX_TIMESTAMP(), %f from sensor_im where node_id = '0%o' and channel = %u ", value, node, channel);
 	do_sql(db, sql_stmt);
-	sprintf(sql_stmt,"update sensor set value= %f, utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where node_id = '0%o' and channel = %u ", value, d1, d2, node, channel);
+	sprintf(sql_stmt,"update sensor_im set value= %f, utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where node_id = '0%o' and channel = %u ", value, d1, d2, node, channel);
 	do_sql(db, sql_stmt);
 	for(int i=0; i<SENSORARRAYSIZE; i++) {
 		if ( sensor[i].node == node && sensor[i].channel == channel ) {
