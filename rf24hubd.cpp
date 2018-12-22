@@ -193,7 +193,7 @@ void prepare_tn_cmd(uint16_t node, uint8_t channel, float value) {
 	exec_tn_cmd(telnet_cmd);
 }
 	
-void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_message) {
+void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 /* Messages can llook like this:
        <word1		word2		word3		word4 				function>
 		init													Reinitialization of rf24hubd (reads actual values from database)
@@ -249,7 +249,7 @@ void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_m
 		if ( node == 0 ) {
 			sprintf(debug,"Sensor (%s) not in cache ==> running initialisation!",wort3);
 			logmsg(VERBOSETELNET, debug);
-			init_system(db);
+			init_system();
 		} else {
 			if ( strcmp(wort1,cmp_setlast) == 0 ) {
 				get_order(node);
@@ -261,7 +261,7 @@ void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_m
 	// sends the init sequence to a node
 	if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_node) == 0) && (wort3 != NULL) && (strcmp(wort4,cmp_init) == 0) ) {
 		tn_input_ok = true;
-		init_node(db, getnodeadr(wort3));
+		init_node(getnodeadr(wort3));
 	}
     // set verbose <new verboselevel>
 	// sets the new verboselevel
@@ -331,7 +331,7 @@ void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_m
 	// initialisation of rf24hubd: reloads data from database
 	if (( strcmp(wort1,cmp_init) == 0 ) && (wort2 == NULL) && (wort3 == NULL) && (wort4 == NULL) ) {
 		tn_input_ok = true;
-		init_system(db);
+		init_system();
 	}
 	if ( ! tn_input_ok) {
 		sprintf(client_message,"Usage:\n");
@@ -379,15 +379,15 @@ void process_tn_in(MYSQL *db, int new_tn_in_socket, char* buffer, char* client_m
 * Used for communication with the nodes
 *
 ********************************************************************************************/
-void init_node(MYSQL *db, uint16_t node ) {
+void init_node(uint16_t node ) {
 	// delete old entries for this node
 	sprintf(debug,"Init of Node: 0%o", node);
 	logmsg(VERBOSEOTHER,debug);
 	sprintf (sql_stmt, "select sleeptime1, sleeptime2, sleeptime3, sleeptime4, radiomode, voltagefactor from node where node_id = '0%o' LIMIT 1 ",node);
 	mysql_query(db, sql_stmt);
-	db_check_error(db);
+	db_check_error();
 	MYSQL_RES *result = mysql_store_result(db);
-	db_check_error(db);
+	db_check_error();
 	MYSQL_ROW row;
 	if ((row = mysql_fetch_row(result))) {
 		fill_order_buffer( node, 111, strtof(row[0], &pEnd));
@@ -645,14 +645,14 @@ bool node_is_next(const uint16_t node) {
 *
 ********************************************************************************************/
 
-void db_check_error(MYSQL *db) {
+void db_check_error(void) {
 	if (mysql_errno(db) != 0) {
 		sprintf(debug, "DB-Fehler: %s\n", mysql_error(db));
         logmsg(VERBOSECRITICAL, debug);
     }
 }
 
-void do_sql(MYSQL *db, char *sqlstmt) {
+void do_sql(char *sqlstmt) {
 	if (mysql_query(db, sqlstmt)) {
 		sprintf(debug, "%s", mysql_error(db));
 		logmsg(VERBOSECRITICAL, debug);
@@ -678,7 +678,19 @@ void print_sensor(void) {
 	}
 }
 
-void init_system(MYSQL *db) {
+void exit_system(void) {
+    // Save data from sensordata_im and sensor_im to persistant tables
+	sprintf (sql_stmt, "update sensor a set value = ( select value from sensor_im where sensor_id = a.sensor_id ), utime = ( select utime from sensor_im where sensor_id = a.sensor_id )");
+	logmsg(VERBOSESQL, sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+	sprintf (sql_stmt, "insert into sensordata(sensor_id, utime, value) select sensor_id, utime, value from sensordata_im where (sensor_id,utime) not in (select sensor_id, utime from sensordata)");
+	logmsg(VERBOSESQL, sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+}
+
+void init_system(void) {
 	int i = 0;
 	char cmp_s[]="s",cmp_a[]="a";
 	for (int i=0; i<SENSORARRAYSIZE; i++) {
@@ -686,13 +698,31 @@ void init_system(MYSQL *db) {
 		sensor[i].node = 0;
 		sensor[i].channel = 0;
 		sensor[i].last_val = 0;
-	}		
+	}
+    // Copy sensordata and sensor to memorytable since yesterday
+	sprintf (sql_stmt, "truncate table sensor_im");
+	logmsg(VERBOSESQL, sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+	sprintf (sql_stmt, "insert into sensor_im(sensor_id, sensor_name, add_info, node_id, channel, value, utime, store_days, fhem_dev, signal_quality, s_type, html_show) select sensor_id, sensor_name, add_info, node_id, channel, value, utime, store_days, fhem_dev, signal_quality, s_type, html_show from sensor");
+	logmsg(VERBOSESQL, sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+	sprintf (sql_stmt, "truncate table sensordata_im");
+	logmsg(VERBOSESQL, sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+	sprintf (sql_stmt, "insert into sensordata_im(sensor_id, utime, value) select sensor_id, utime, value from sensordata where utime > UNIX_TIMESTAMP(subdate(current_date, 2))");
+	logmsg(VERBOSESQL, sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+	// END sensordata to memorytable
 	sprintf (sql_stmt, "select sensor_id, node_id, channel, value, fhem_dev, s_type from sensor where sensor_id is not null and node_id is not null and channel is not null");
 	logmsg(VERBOSESQL, sql_stmt);
 	mysql_query(db, sql_stmt);
-	db_check_error(db);
+	db_check_error();
 	MYSQL_RES *result = mysql_store_result(db);
-	db_check_error(db);
+	db_check_error();
 	MYSQL_ROW row;
 	while ((row = mysql_fetch_row(result))) {
 		if ( row[0] != NULL ) sensor[i].sensor = strtoul(row[0], &pEnd,10);
@@ -710,14 +740,14 @@ void init_system(MYSQL *db) {
 	for (unsigned int i=0; i<ORDERBUFFERLENGTH -1; i++) init_order_buffer(i);
 }
 
-void store_sensor_value(MYSQL *db, uint16_t node, uint8_t channel, float value, bool d1, bool d2) {
+void store_sensor_value(uint16_t node, uint8_t channel, float value, bool d1, bool d2) {
 	if ( tn_active ) { 
 		prepare_tn_cmd(node, channel, value); 
 	}
-	sprintf(sql_stmt,"insert into sensordata (sensor_ID, utime, value) select sensor_id, UNIX_TIMESTAMP(), %f from sensor where node_id = '0%o' and channel = %u ", value, node, channel);
-	do_sql(db, sql_stmt);
-	sprintf(sql_stmt,"update sensor set value= %f, utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where node_id = '0%o' and channel = %u ", value, d1, d2, node, channel);
-	do_sql(db, sql_stmt);
+	sprintf(sql_stmt,"insert into sensordata_im (sensor_ID, utime, value) select sensor_id, UNIX_TIMESTAMP(), %f from sensor_im where node_id = '0%o' and channel = %u ", value, node, channel);
+	do_sql(sql_stmt);
+	sprintf(sql_stmt,"update sensor_im set value= %f, utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where node_id = '0%o' and channel = %u ", value, d1, d2, node, channel);
+	do_sql(sql_stmt);
 	for(int i=0; i<SENSORARRAYSIZE; i++) {
 		if ( sensor[i].node == node && sensor[i].channel == channel ) {
 			sensor[i].last_val = value;
@@ -725,22 +755,22 @@ void store_sensor_value(MYSQL *db, uint16_t node, uint8_t channel, float value, 
 	}
 }
 
-void process_sensor(MYSQL *db, uint16_t node, uint8_t channel, float value, bool d1, bool d2) {
+void process_sensor(uint16_t node, uint8_t channel, float value, bool d1, bool d2) {
 	switch (channel) {
 		case 1 ... 99: {
 		// Sensor or Actor
-			store_sensor_value(db, node, channel, value, d1, d2);
+			store_sensor_value(node, channel, value, d1, d2);
 			sprintf(debug, DEBUGSTR "Value of  %u on Node: %o is %f ", channel, node, value);
 			logmsg(VERBOSECONFIG, debug);       
 		}
 		break; 
 		case 101: {
 		// battery voltage
-			store_sensor_value(db, node, channel, value, d1, d2);
+			store_sensor_value(node, channel, value, d1, d2);
 			sprintf(debug, DEBUGSTR "Voltage of Node: %o is %f ", node, value);
 			logmsg(VERBOSECONFIG, debug);        
 			sprintf(sql_stmt,"update node set u_batt = %f, signal_quality = '%d%d', last_contact = unix_timestamp() where node_id = '0%o'", value, d1, d2, node);
-			do_sql(db, sql_stmt);
+			do_sql(sql_stmt);
 		}
 		break; 
 		case 111: { // Init Sleeptime 1
@@ -791,6 +821,9 @@ void process_sensor(MYSQL *db, uint16_t node, uint8_t channel, float value, bool
 *
 ********************************************************************************************/
 void sighandler(int signal) {
+	sprintf(debug, "SIGTERM: Cleanup system ... saving *_im tables ...");
+	logmsg(VERBOSECRITICAL, debug);
+    exit_system(); 
 	sprintf(debug, "SIGTERM: Shutting down ... ");
 	logmsg(VERBOSECRITICAL, debug);
     unlink(parms.pidfilename);
@@ -1103,7 +1136,7 @@ int main(int argc, char* argv[]) {
     logmsg(VERBOSESTARTUP, debug);
     sprintf(debug,"MySQL client version: %s", mysql_get_client_info());
     logmsg(VERBOSESTARTUP, debug);
-    MYSQL *db = mysql_init(NULL);
+    db = mysql_init(NULL);
     int mysql_wait_count = 0;
     while (db == NULL) {
 		sprintf(debug,"Waiting for Database: %d Sec.", 20-mysql_wait_count);
@@ -1226,7 +1259,7 @@ int main(int argc, char* argv[]) {
     logmsg(VERBOSESTARTUP, debug);
 	
 	// Init Arrays
-    init_system(db);
+    init_system();
     
 	// Main Loop
     while(1) {
@@ -1253,7 +1286,7 @@ int main(int argc, char* argv[]) {
 				sprintf(buffer,"                                                                               ");
 				MsgLen = recv(new_tn_in_socket, buffer, BUF, 0);
 				if (MsgLen>0) {
-					process_tn_in(db, new_tn_in_socket, buffer, client_message);
+					process_tn_in(new_tn_in_socket, buffer, client_message);
 					close (new_tn_in_socket);
 					wait4message = false;
 				}
@@ -1272,13 +1305,13 @@ int main(int argc, char* argv[]) {
 						, payload.channel1, payload.value1, payload.channel2, payload.value2, payload.channel3, payload.value3, payload.channel4, payload.value4);
 			logmsg(VERBOSERF24, debug);
 			if ( rxheader.type == 119 ) {
-					init_node(db, rxheader.from_node);
+					init_node(rxheader.from_node);
 			} else {	
 				if (is_valid_orderno(payload.orderno)) {
-					if ( payload.channel1 > 0 ) process_sensor(db, rxheader.from_node, payload.channel1, payload.value1, rf24_carrier, rf24_rpd);
-					if ( payload.channel2 > 0 ) process_sensor(db, rxheader.from_node, payload.channel2, payload.value2, rf24_carrier, rf24_rpd);
-					if ( payload.channel3 > 0 ) process_sensor(db, rxheader.from_node, payload.channel3, payload.value3, rf24_carrier, rf24_rpd);
-					if ( payload.channel4 > 0 ) process_sensor(db, rxheader.from_node, payload.channel4, payload.value4, rf24_carrier, rf24_rpd);
+					if ( payload.channel1 > 0 ) process_sensor(rxheader.from_node, payload.channel1, payload.value1, rf24_carrier, rf24_rpd);
+					if ( payload.channel2 > 0 ) process_sensor(rxheader.from_node, payload.channel2, payload.value2, rf24_carrier, rf24_rpd);
+					if ( payload.channel3 > 0 ) process_sensor(rxheader.from_node, payload.channel3, payload.value3, rf24_carrier, rf24_rpd);
+					if ( payload.channel4 > 0 ) process_sensor(rxheader.from_node, payload.channel4, payload.value4, rf24_carrier, rf24_rpd);
 					delete_orderno(payload.orderno);
 				}
 			}
