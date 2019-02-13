@@ -6,7 +6,7 @@ V3: Upgrade to Lowpower Library; display of a battery symbol
 // Define a valid radiochannel here
 #define RADIOCHANNEL 90
 // This node: Use octal numbers starting with "0": "041" is child 4 of node 1
-#define NODE 045
+#define NODE 035
 // The CE Pin of the Radio module
 #define RADIO_CE_PIN 10
 // The CS Pin of the Radio module
@@ -17,14 +17,11 @@ V3: Upgrade to Lowpower Library; display of a battery symbol
 #define SLEEPTIME3 2
 #define SLEEPTIME4 5
 // The pin of the statusled
-#define STATUSLED 3
+#define STATUSLED A1
 #define STATUSLED_ON LOW
 #define STATUSLED_OFF HIGH
-#define ONE_WIRE_BUS 8
 
 // The outputpin for batterycontrol for the voltagedivider
-#define VMESS_OUT A3
-#define VMESS_IN A0
 // 4 voltages for the battery (empty ... full)
 #define U0 3.6
 #define U1 3.7
@@ -54,23 +51,21 @@ V3: Upgrade to Lowpower Library; display of a battery symbol
 //****
 // some includes for your sensor(s) here
 //****
-#include <OneWire.h>
-#include <DallasTemperature.h>
 #include <LCD5110_Graph.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BME280.h>
 
+float temp, pres, humi;
 boolean display_down = false;
 
 const float VccCorrection = 1.0/1.0;  // Measured Vcc by multimeter divided by reported Vcc
 Vcc vcc(VccCorrection);
+Adafruit_BME280 bme;
 
 ISR(WDT_vect) { watchdogEvent(); }
 
 // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
-OneWire oneWire(ONE_WIRE_BUS);
  
-// Pass our oneWire reference to Dallas Temperature.
-DallasTemperature sensors(&oneWire);
-
 LCD5110 myGLCD(7,6,5,2,4);
 
 extern uint8_t SmallFont[];
@@ -116,7 +111,6 @@ boolean             init_finished = false;
 unsigned int        networkup = 0;
 uint16_t            orderno_p1, orderno_p2;
 boolean             low_voltage_flag = false;
-float               temp;
 //Some Var for restore after sleep of display
 float               field1_val, field2_val, field3_val, field4_val;
 float               cur_voltage;
@@ -137,7 +131,6 @@ void display_sleep(boolean dmode) {
       myGLCD.enableSleep(); 
     } else {
       myGLCD.disableSleep(); 
-        get_temp();
         print_field(field1_val,1);
         print_field(field2_val,2);
         print_field(field3_val,3);
@@ -149,10 +142,18 @@ void display_sleep(boolean dmode) {
 float action_loop(unsigned char channel, float value) {
   float retval = value;
     switch (channel) {
-      case 1: {
-        // Temperature
-        retval = temp;
-       break; }
+        case 1:
+        //Temperature from BME280
+        retval=temp;
+        break;
+        case 2:
+        //Temperature from BME280
+        retval=pres;
+        break;
+        case 3:
+        //Humidity from BME280
+        retval=humi;
+        break;
       case 21:
         // Set field 1
         field1_val = value;
@@ -189,6 +190,10 @@ float action_loop(unsigned char channel, float value) {
       // battery voltage
         retval = cur_voltage;
         break;      
+      case 110:
+      // contrast of LCD Display
+        myGLCD.setContrast(value);
+        break;
       case 111:
       // sleeptimer1
         sleeptime1 = value;
@@ -233,9 +238,9 @@ void setup(void) {
   myGLCD.InitLCD();
   myGLCD.setContrast(65);
   myGLCD.clrScr();
-  sensors.begin(); 
-  get_temp();
+  bme.begin();
   cur_voltage = vcc.Read_Volts();
+  get_bme280();
   draw_battery(BATT_X0, BATT_Y0,cur_voltage);
   draw_wait(WAIT_X0,WAIT_Y0,17);
   draw_antenna(ANT_X0, ANT_Y0);
@@ -324,14 +329,6 @@ void draw_temp(float t) {
     }
     myGLCD.update();
   }
-}
-
-void get_temp(void) {
-  draw_therm(THERM_X0, THERM_Y0);
-  sensors.requestTemperatures(); // Send the command to get temperatures
-  temp=sensors.getTempCByIndex(0);
-  draw_temp(temp);
-  wipe_therm(THERM_X0, THERM_Y0);
 }
 
 void print_field(float val, int field) {
@@ -480,6 +477,14 @@ void draw_wait(byte x, byte y, int waitcount ) {
   }
 }
 
+void get_bme280(void) {
+    bme.takeForcedMeasurement();
+    temp=bme.readTemperature();
+    pres=pow(((95*0.0065)/(bme.readTemperature()+273.15)+1),5.257)*bme.readPressure()/100.0;
+    humi=bme.readHumidity();
+    draw_temp(temp);
+}
+
 void sleep12(unsigned int sleeptime) {
   draw_wait(WAIT_X0,WAIT_Y0,0);
 //  print_field(0,4);
@@ -497,8 +502,8 @@ void sleep12(unsigned int sleeptime) {
   //*****************
   // Put anything you want to run frequently here
   //*****************  
-  get_temp();
   cur_voltage = vcc.Read_Volts();
+  get_bme280();
   draw_battery(BATT_X0,BATT_Y0,cur_voltage);
   //#################
   // END run frequently
@@ -517,6 +522,12 @@ void loop(void) {
       next_sleepmode = sleep2;
     }
     network.read(rxheader,&payload,sizeof(payload));
+    if ( payload.sensor1 == 1 || payload.sensor1 == 2 || payload.sensor1 == 3 || 
+         payload.sensor2 == 1 || payload.sensor2 == 2 || payload.sensor2 == 3 ||
+         payload.sensor3 == 1 || payload.sensor3 == 2 || payload.sensor3 == 3 ||
+         payload.sensor4 == 1 || payload.sensor4 == 2 || payload.sensor4 == 3 ) {
+            bme.takeForcedMeasurement();
+    }
     payload.value1 = action_loop(payload.sensor1, payload.value1);
     payload.value2 = action_loop(payload.sensor2, payload.value2);
     payload.value3 = action_loop(payload.sensor3, payload.value3);

@@ -1,9 +1,9 @@
 // How long do we try to init this node 100000(in ms) = 100 sec. 
 #define MAXINIT 100000
 // Define a valid radiochannel here
-#define RADIOCHANNEL 95
+#define RADIOCHANNEL 90
 // This node: Use octal numbers starting with "0": "041" is child 4 of node 1
-#define NODE 01
+#define NODE 055
 // The CE Pin of the Radio module
 #define RADIO_CE_PIN 10
 // The CS Pin of the Radio module
@@ -12,10 +12,22 @@
 #define STATUSLED 3
 #define STATUSLED_ON HIGH
 #define STATUSLED_OFF LOW
-#define SLEEPTIME1 10
-#define SLEEPTIME2 10
+// sleeptime 1...4 is NOT used for always on NODES
+#define SLEEPTIME1 5
+#define SLEEPTIME2 5
 #define SLEEPTIME3 2
 #define SLEEPTIME4 5
+#define ONE_WIRE_BUS 8
+
+#define RELAIS1 3
+#define RELAIS_ON HIGH
+#define RELAIS_OFF LOW
+
+#define LED_MATRIX_DIN 5
+#define LED_MATRIX_CLK 6
+#define LED_MATRIX_CS 4
+#define LED_MATRIX_NUM_DEV 4
+#define LED_CHAR_SPACE 6
 
 // ------ End of configuration part ------------
 
@@ -24,13 +36,79 @@
 #include <SPI.h>
 #include <sleeplib.h>
 #include <Vcc.h>
+#include <OneWire.h>
+#include <DallasTemperature.h>
+#include <LED_Matrix.h>
 
+byte sprite[][8]={ 
+           {B00011000,
+            B00100100,
+            B00100100,
+            B00011000,
+            B01111110,
+            B00011000,
+            B00100100,
+            B01000010},
+
+          { B00011000,
+            B00100100,
+            B00100100,
+            B00011010,
+            B01111100,
+            B00011000,
+            B01100100,
+            B00000010},
+
+          { B00011000,
+            B00100100,
+            B00100100,
+            B00011010,
+            B00111100,
+            B01011000,
+            B00110100,
+            B00000100},
+
+          { B00011000,
+            B00100100,
+            B00100100,
+            B00011010,
+            B00111100,
+            B01011000,
+            B00011000,
+            B00011000},
+
+          { B00011000,
+            B00100100,
+            B00100100,
+            B00011010,
+            B00111100,
+            B01011000,
+            B00010100,
+            B00010000},
+
+          { B00011000,
+            B00100100,
+            B00100100,
+            B00011000,
+            B00111110,
+            B01011000,
+            B00010100,
+            B00010100}
+};
 
 const float VccCorrection = 1.0/1.0;  // Measured Vcc by multimeter divided by reported Vcc
+
+LED_Matrix matrix(LED_MATRIX_DIN,LED_MATRIX_CLK,LED_MATRIX_CS,LED_MATRIX_NUM_DEV);
 
 Vcc vcc(VccCorrection);
 
 ISR(WDT_vect) { watchdogEvent(); }
+
+// Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
+OneWire oneWire(ONE_WIRE_BUS);
+ 
+// Pass our oneWire reference to Dallas Temperature.
+DallasTemperature sensors(&oneWire);
 
 // Structure of our payload
 struct payload_t {
@@ -66,9 +144,12 @@ float               sleeptime3 = SLEEPTIME3;
 float               sleeptime4 = SLEEPTIME4;
 boolean             init_finished = false;
 float               networkuptime = 0.0;
+float               temp;
 //Some Var for restore after sleep of display
 float               cur_voltage;
 uint8_t             n_update = 0;
+int                 std_value = 0;
+int                 std_value_old = 0;
 
 // Usage: radio(CE_pin, CS_pin)
 RF24 radio(RADIO_CE_PIN,RADIO_CSN_PIN);
@@ -81,11 +162,24 @@ float action_loop(unsigned char channel, float value) {
   float retval = value;
     switch (channel) {
         case 1:
+            get_temp();
+            retval=temp;
+        break;    
+        case 21:
+            if ( value > 0.5 ) {
+              digitalWrite(RELAIS1,RELAIS_ON);
+            } else {
+              digitalWrite(RELAIS1,RELAIS_OFF);  
+            }
         break;
-        case 2:
+        case 31: 
+           std_value = (int) value;
         break;
-        case 3:
-        break;
+        case 41:
+           for(int address = 0; address < LED_MATRIX_NUM_DEV ; address++ ) {
+             matrix.setIntensity((byte)value);
+           } 
+        break;        
         case 101:
           // battery voltage => vcc.Read_Volts();
           retval=vcc.Read_Volts();
@@ -115,9 +209,9 @@ float action_loop(unsigned char channel, float value) {
           vcc.m_correction = value;
         break; 
         case 118:
-        // init_finished (=1)
-          init_finished = true; //( payload.value > 0.5);
-          break;
+          // init_finished (value=1)
+          if ( value > 0.5 ) init_finished = true; 
+        break;
 //        default:
         // Default: just send the paket back - no action here  
       }
@@ -133,6 +227,20 @@ void setup(void) {
   //****
   // put anything else to init here
   //****
+  sensors.begin(); 
+  sensors.setResolution(10);
+  get_temp();
+  matrix.begin();
+  matrix.setIntensity(5);
+  int pos=4;
+  matrix.printChar(pos,'i');
+  pos+=LED_CHAR_SPACE;
+  matrix.printChar(pos,'n');
+  pos+=LED_CHAR_SPACE;
+  matrix.printChar(pos,'i');
+  pos+=LED_CHAR_SPACE;
+  matrix.printChar(pos,'t');
+  matrix.display();
   //####
   // end aditional init
   //####
@@ -170,32 +278,33 @@ void setup(void) {
   }
   digitalWrite(STATUSLED,STATUSLED_OFF); 
   sleepmode=sleep4;
+  action_loop(41,12);
   networkuptime = 0.0;    
   delay(100);
 }
 
-void sleep12(float sleeptime) {
-  if ( radiomode == radio_sleep ) {
-    radio.stopListening();
-    radio.powerDown();
-  }
-  sleep4s(sleeptime); 
-  if ( radiomode == radio_sleep ) {
-    radio.powerUp();
-    radio.startListening();
+void get_temp(void) {
+  sensors.requestTemperatures(); // Send the command to get temperatures
+  temp=sensors.getTempCByIndex(0);
+}
+
+void drawSprite( byte* sprite, int x, int y, int width, int height )
+{
+  byte mask = B10000000;
+  for( int iy = 0; iy < height; iy++ )
+  {
+    for( int ix = 0; ix < width; ix++ )
+    {
+      matrix.setPixel(x + ix, y + iy, (bool)(sprite[iy] & mask ));
+      mask = mask >> 1;
+    }
+    mask = B10000000;
   }
 }
 
 void loop(void) {
   n_update = network.update();
   if ( network.available() ) {
-    sleepmode = sleep4;
-    networkuptime = 0.0;
-    if ((payload.flags & 0x01) == 0x01 ) {
-      next_sleepmode = sleep1;
-    } else {
-      next_sleepmode = sleep2;
-    }
     network.read(rxheader,&payload,sizeof(payload));
     if ( payload.sensor1 > 0 ) payload.value1 = action_loop(payload.sensor1, payload.value1);
     if ( payload.sensor2 > 0 ) payload.value2 = action_loop(payload.sensor2, payload.value2);
@@ -203,27 +312,29 @@ void loop(void) {
     if ( payload.sensor4 > 0 ) payload.value4 = action_loop(payload.sensor4, payload.value4);
     txheader.type=rxheader.type;
     network.write(txheader,&payload,sizeof(payload));    
+    if ( std_value != std_value_old ) {
+      std_value_old = std_value;
+      for (int x1 = 0; x1 < 6; x1++) {
+        for (int x2 = 0; x2 < 6; x2++) {
+          drawSprite( (byte*)&sprite[x2], x1 * 6 + x2, 0, 8, 8 );
+          matrix.display();
+          delay(100);
+        }
+      }
+      byte _std = std_value / 100;
+      byte _min = std_value % 100;
+      byte std_h, std_l, min_h,min_l;
+      std_h = _std/10;
+      std_l = _std - std_h * 10;
+      min_h = _min/10;
+      min_l = _min - min_h * 10;
+      matrix.printChar(2,'0'+std_h);
+      matrix.printChar(8,'0'+std_l);
+      matrix.printChar(14,':');
+      matrix.printChar(19,'0'+min_h);
+      matrix.printChar(25,'0'+min_l);
+      matrix.display();
+    }
   }
-  sleep4ms(100);
-  networkuptime+=0.1;    
-  switch (sleepmode) {
-    case sleep1:
-      sleep12(sleeptime1); 
-      sleepmode = sleep3;
-      next_sleepmode = sleep2;
-      networkuptime = 0;    
-    break;
-    case sleep2:
-      sleep12(sleeptime2); 
-      sleepmode = sleep3;
-      next_sleepmode = sleep2;
-      networkuptime = 0;    
-    break;
-    case sleep3:
-      if ( networkuptime > sleeptime3) sleepmode = next_sleepmode;    
-    break;
-    case sleep4:
-      if ( networkuptime > sleeptime4) sleepmode = next_sleepmode;        
-    break;
-  } 
+  delay(100);
 }
