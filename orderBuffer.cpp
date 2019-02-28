@@ -20,37 +20,24 @@ orderBuffer::orderBuffer(void)
  */
 int orderBuffer::newOrder(uint16_t node, uint16_t channel, float value, uint64_t entrytime)
 {
-    orderBuffer::orderBuffer_t *akt_orderBuffer_ptr;
+    orderBuffer::orderBuffer_t *akt_orderBuffer_ptr, *new_orderBuffer_ptr;
     orderBuffer::delNodeChannel(node, channel);
-    if (! orderBuffer::initial_orderBuffer_ptr) 
-    {
-        orderBuffer::initial_orderBuffer_ptr = new orderBuffer::orderBuffer_t;
-        if (! orderBuffer::initial_orderBuffer_ptr) return 0;
-        orderBuffer::initial_orderBuffer_ptr->orderno = 0;
-        orderBuffer::initial_orderBuffer_ptr->node = node;
-        orderBuffer::initial_orderBuffer_ptr->channel = channel;
-        orderBuffer::initial_orderBuffer_ptr->value = value;
-        orderBuffer::initial_orderBuffer_ptr->entrytime = entrytime;
-        orderBuffer::initial_orderBuffer_ptr->next = NULL;
+    new_orderBuffer_ptr = new orderBuffer::orderBuffer_t;
+    if (! orderBuffer::initial_orderBuffer_ptr) {
+        orderBuffer::initial_orderBuffer_ptr = new_orderBuffer_ptr;
+        akt_orderBuffer_ptr = new_orderBuffer_ptr;
+    } else {
         akt_orderBuffer_ptr = orderBuffer::initial_orderBuffer_ptr;
-    } 
-    else
-    {
-        akt_orderBuffer_ptr = orderBuffer::initial_orderBuffer_ptr;
-        while (akt_orderBuffer_ptr->next) {
-            akt_orderBuffer_ptr = akt_orderBuffer_ptr->next;
-        }
-        akt_orderBuffer_ptr->next = new orderBuffer::orderBuffer_t;
-        if (! akt_orderBuffer_ptr->next) return 0;
-        if ( ! orderBuffer::initial_orderBuffer_ptr->next ) orderBuffer::initial_orderBuffer_ptr->next = akt_orderBuffer_ptr->next;
-        akt_orderBuffer_ptr = akt_orderBuffer_ptr->next;
-        akt_orderBuffer_ptr->orderno = 0;
-        akt_orderBuffer_ptr->node = node;
-        akt_orderBuffer_ptr->channel = channel;
-        akt_orderBuffer_ptr->value = value;
-        akt_orderBuffer_ptr->entrytime = entrytime;
-        akt_orderBuffer_ptr->next = NULL;
+        while ( akt_orderBuffer_ptr->next ) akt_orderBuffer_ptr = akt_orderBuffer_ptr->next;
+        akt_orderBuffer_ptr->next = new_orderBuffer_ptr;
+        akt_orderBuffer_ptr = new_orderBuffer_ptr;
     }
+    akt_orderBuffer_ptr->orderno = 0;
+    akt_orderBuffer_ptr->node = node;
+    akt_orderBuffer_ptr->channel = channel;
+    akt_orderBuffer_ptr->value = value;
+    akt_orderBuffer_ptr->entrytime = entrytime;
+    akt_orderBuffer_ptr->next = NULL;
     return 1;
 }
 

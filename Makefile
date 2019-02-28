@@ -30,9 +30,13 @@ ifeq "$(shell uname -m)" "x86_64"
 CCFLAGS=-std=c++0x -pthread
 
 endif
-
+test_orderQueue: orderQueue.o test_orderQueue.o
+	$(CC) ${CCFLAGS} orderQueue.o test_orderQueue.o -o $@
+test_sensorBuffer: sensorBuffer.o test_sensorBuffer.o
+	$(CC) ${CCFLAGS} sensorBuffer.o test_sensorBuffer.o -o $@
 test_orderBuffer: orderBuffer.o test_orderBuffer.o
 	$(CC) ${CCFLAGS} orderBuffer.o test_orderBuffer.o -o $@
+	./$@
 
 # make all
 all: rf24hubd 
