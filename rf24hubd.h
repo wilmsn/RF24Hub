@@ -86,6 +86,25 @@ struct sensor_t {
 };
 struct sensor_t 	sensor[SENSORARRAYSIZE];
 
+// Structure to handle the orderqueue
+struct order_t {
+	uint16_t 	    orderno;   		// the orderno as primary key for our message for the nodes
+	uint16_t       	node;   		// the destination node
+	unsigned char  	type;      		// Becomes networkheader.type
+	unsigned int   	flags;     		// Some flags as part of payload
+	unsigned char  	channel1;		// The channel for the sensor 1
+	float		    value1;    		// the information that is send to sensor 1
+	unsigned char  	channel2;  		// The channel for the sensor 2
+	float		    value2;   	 	// the information that is send to sensor 2
+	unsigned char  	channel3;  		// The channel for the sensor 3
+	float		    value3;    		// the information that is send to sensor 3
+	unsigned char  	channel4;  		// The channel for the sensor 1
+	float		    value4;    		// the information that is send to sensor 4
+	uint64_t		entrytime;
+	uint64_t	  	last_send;		// Timestamp for last sending of this record
+};
+struct order_t 	order[ORDERLENGTH]; 
+
 // structure for the order_buffer
 struct order_buffer_t {
 	uint16_t 	    orderno;   	// the orderno as primary key for our message for the nodes
