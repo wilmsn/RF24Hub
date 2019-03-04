@@ -13,10 +13,9 @@
 #
 PREFIX=/usr/local
 EXECDIR=${PREFIX}/bin
-INCLUDEDIR=${PREFIX}/include
-INCLUDEDIR1=/usr/include/mysql
 CC=g++
-
+MARIADB_LIBS := $(shell mysql_config --libs) 
+MARIADB_INC := $(shell mysql_config --cflags)
 #ARCH=armv6zk
 ifeq "$(shell uname -m)" "armv7l"
 ARCH=armv7-a
@@ -27,23 +26,33 @@ endif
 
 ifeq "$(shell uname -m)" "x86_64"
 # For test builds on Linux PC
-CCFLAGS=-std=c++0x -pthread
+CCFLAGS=-pthread 
 
 endif
-test_orderQueue: orderQueue.o test_orderQueue.o
-	$(CC) ${CCFLAGS} orderQueue.o test_orderQueue.o -o $@
-test_sensorBuffer: sensorBuffer.o test_sensorBuffer.o
-	$(CC) ${CCFLAGS} sensorBuffer.o test_sensorBuffer.o -o $@
-test_orderBuffer: orderBuffer.o test_orderBuffer.o
-	$(CC) ${CCFLAGS} orderBuffer.o test_orderBuffer.o -o $@
-	./$@
 
 # make all
-all: rf24hubd 
+all: rf24hubd
 
+test_orderQueue: orderQueue.o test_orderQueue.o
+	$(CC) ${CCFLAGS} $^ -o $@
+test_sensorBuffer: sensorBuffer.o test_sensorBuffer.o
+	$(CC) ${CCFLAGS} $^ -o $@
+test_orderBuffer: orderBuffer.o test_orderBuffer.o
+	$(CC) ${CCFLAGS} $^ -o $@
+	./$@
+test_config: logmsg.o config.o test_config.o
+	$(CC) ${CCFLAGS} $^ -o $@
+	./$@ -c rf24hubd.cfg
+test_telnet: logmsg.o telnet.o config.o test_telnet.o
+	$(CC) ${CCFLAGS} -pthread $^ -o $@
+	./$@
+test_sql: logmsg.o config.o test_sql.o
+	$(CC) ${CCFLAGS} $^ -o $@ ${MARIADB_LIBS}
+	./$@
 # Make the sensorhub deamon
-rf24hubd: rf24hubd.cpp
-	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24network ${MYSQLLIBS} $^ -o $@
+rf24hubd: rf24hub_main.o config.o telnet.o
+	$(CC) ${CCFLAGS} -Wall ${MYSQLLIBS} $^ -o $@
+	./$@
 
 # clear build files
 clean:

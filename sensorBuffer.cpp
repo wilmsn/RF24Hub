@@ -30,6 +30,8 @@ int sensorBuffer::newSensor(uint32_t sensor, uint16_t node, uint16_t channel, ch
     akt_sensorBuffer_ptr->channel = channel;
     akt_sensorBuffer_ptr->s_type = s_type;
     akt_sensorBuffer_ptr->last_val = last_val;
+    akt_sensorBuffer_ptr->fhem_dev = static_cast<char*>(malloc(strlen(fhem_dev)+1));
+    printf("size: %lu\n",strlen(fhem_dev));
     strcpy(akt_sensorBuffer_ptr->fhem_dev, fhem_dev);
     akt_sensorBuffer_ptr->next = NULL;
     return 1;

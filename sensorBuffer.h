@@ -17,7 +17,7 @@ struct sensorBuffer_t {
 	uint16_t       	node;   		// the destination node
 	uint16_t     	channel;
     char			s_type;
-	char			fhem_dev[FHEMDEVLENGTH];
+	char			*fhem_dev;
     float			last_val;	
     sensorBuffer_t  *next;
 };

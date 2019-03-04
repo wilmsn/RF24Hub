@@ -1,8 +1,9 @@
 #include "orderBuffer.h"
 #include <thread>
 #include <stdint.h>
-#include <stdio.h> 
+#include <stdio.h>
 #include <iostream>
+
 
 void fill_order(orderBuffer *myorder)
 {
@@ -23,7 +24,7 @@ void fill_order(orderBuffer *myorder)
     myorder->newOrder(101,101,5,998);
     myorder->listOrder();
     std::cout << "Node 101 und Channel 101 sollten nur einmal vorhanden sein." << std::endl;
-    
+
 }
 
 
@@ -37,8 +38,8 @@ int main()
     fill_order(&myorderBuffer);
 //    std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
-    
-    
-    
+
+
+
     return 0;
 }
