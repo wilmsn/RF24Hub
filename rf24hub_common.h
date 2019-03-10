@@ -5,7 +5,19 @@
 #define _RF24HUBD_COMMON_H_
 
 #include <stdint.h>
+#include "rf24hub_config.h"
 
+#ifndef TESTBUILD
+#include <RF24/RF24.h>
+#include <RF24/utility/RPi/bcm2835.h>
+#include <RF24Network/RF24Network.h>
+#endif //TESTBUILD
+#ifdef TESTBUILD
+typedef enum { RF24_1MBPS = 0, RF24_2MBPS, RF24_250KBPS } rf24_datarate_e;
+
+
+
+#endif //TESTBUILD
 
 // Structure of our payload
 struct payload_t {
@@ -20,7 +32,11 @@ struct payload_t {
   float 		value3;       // the value from or for sensor3
   float 		value4;       // the value from or for sensor4
 };
-payload_t payload;
+extern payload_t payload;
+
+
+//extern char config_file[PARAM_MAXLEN_CONFIGFILE];
+extern void init_system(void);
 
 #endif // _RF24HUBD_COMMON_H_
 

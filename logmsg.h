@@ -5,13 +5,30 @@
 #include <string.h>
 #include <stdio.h>
 #include <time.h>
+#include <iostream>
+#include <fstream>
 
-extern FILE * logfile_ptr;
-enum logmode_t { interactive, logfile };
-extern logmode_t logmode;
-extern int verboselevel;
+class LOGMSG {
+    
+private:
 
+    bool log2console = false;
+    bool log2file = false;
+    std::string logfileName;
+    int verboselevel=2;
 
-void logmsg(int mesgloglevel, char *mymsg);
+public:
+    LOGMSG();
+    ~LOGMSG();
+    void setVerboseLevel(int);
+    int getVerboseLevel(void);
+    void setLog2File(std::string);
+    void unsetLog2File(void);
+    void setLog2Console(void);
+    void unsetLog2Console(void);
+//    int setLog2logfile(void);
+    void logmsg(int, std::string);
+
+};
 
 #endif //RF24HUB_LOGMSG_H

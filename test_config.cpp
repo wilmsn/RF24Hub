@@ -2,60 +2,51 @@
 #include "config.h"
 #include <unistd.h>
 #include <stdlib.h>
+#include <iostream> 
+#include <string> // for string class 
 
-bool tn_port_set = false;
-bool tn_host_set = false;
-bool in_port_set = false;
-bool start_daemon = false;
-logmode_t logmode;
-int verboselevel = 2;
-FILE * logfile_ptr;
-FILE * pidfile_ptr;
+using namespace std; 
 
-struct config_parameters parms;
-char config_file[PARAM_MAXLEN_CONFIGFILE];
 
 int main(int argc, char* argv[]) {
     char debug[DEBUGSTRINGSIZE];
-
-    processParams(argc, argv);
+    LOGMSG logmsg;
+    CONFIG cfg(PRGNAME, PRGVERSION, &logmsg);
+    cfg.processParams(argc, argv);
 	// check if started as root
-/*	if ( getuid()!=0 ) {
-           fprintf(stdout, "rf24hubd has to be startet as user root\n");
-          exit(1);
-        }
-*/
-    parseConfigFile (config_file);
-    printf ("Startup Parameters:\n");
-    printConfig();
-    // check for PID file, if exists terminate else create it
-    if( access( parms.pidfilename, F_OK ) != -1 ) {
-        fprintf(stderr, "PIDFILE: %s exists, terminating\n\n", parms.pidfilename);
+	if ( getuid()!=0 ) {
+		std::cout << "rf24hubd has to be startet as user root" << std::endl; 
         exit(1);
     }
+	std::cout << "Startup Parameters:" << std::endl; 
+    cfg.printConfig();
+    // check for PID file, if exists terminate else create it
+    if ( ! cfg.checkPidFileSet() ) return 1;
 	
     // starts logging
 	if ( getuid()==0 ) {
-        setPidfile();
+       cfg.setPidFile();
     }
-    sprintf(debug,"%s","Test einer Logmessage"); 
-    logmsg(1, debug);
-
-    sprintf(debug,"%s","###### Test #######"); 
-    logmsg(1, debug);
-    logmsg(1, debug);
-    logmsg(1, debug);
-    logmsg(1, debug);
-    logmsg(1, debug);
-    logmsg(1, debug);
-
-    sprintf(debug,"%s","Ausgabe der Usage:"); 
-    logmsg(1, debug);
     
-    usage();
+    if (cfg.startAsDeamon()) {
+        printf(">>>>> Starte als Deamon\n");
+    }
     
+    logmsg.logmsg(1, "Test einer Logmessage");
+
+    logmsg.logmsg(1, "###### Test #######");
+    logmsg.logmsg(2, "###### Test #######");
+    logmsg.logmsg(3, "###### Test #######");
+    logmsg.logmsg(4, "###### Test #######");
+    logmsg.logmsg(5, "###### Test #######");
+    logmsg.logmsg(6, "###### Test #######");
+
+    logmsg.logmsg(1, "Ausgabe der Usage:");
+    
+    cfg.usage();
+ 
 	if ( getuid()==0 ) {
-        removePidfile();
+        cfg.removePidFile();
     }
     return 0;
 }
