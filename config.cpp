@@ -28,10 +28,9 @@ char * trim (char * s) {
   return s;
 }
 
-CONFIG::CONFIG(string prgName, string prgVersion, LOGMSG * logmsg) {
+CONFIG::CONFIG(string prgName, string prgVersion) {
     CONFIG::prgName = prgName;
     CONFIG::prgVersion = prgVersion;
-    CONFIG::logmsg = logmsg;
 }
 
 
@@ -42,7 +41,7 @@ void CONFIG::processParams(int argc, char* argv[]) {
     int verboselevel = 0;
 	
     // by default we log to console
-    CONFIG::logmsg->setLog2Console();
+    CONFIG::setLog2Console();
 
     // processing argc and argv[]
 	while (1) {
@@ -205,10 +204,10 @@ void CONFIG::processParams(int argc, char* argv[]) {
   if ( logfile_set && ! interactive_mode) {
     std::string mylogfile;
     mylogfile = parms.logfilename;
-    CONFIG::logmsg->setLog2File(mylogfile);
-    CONFIG::logmsg->unsetLog2Console();
+    CONFIG::setLog2File(mylogfile);
+    CONFIG::unsetLog2Console();
   }
-  CONFIG::logmsg->setVerboseLevel(parms.verboselevel);
+  CONFIG::setVerboseLevel(parms.verboselevel);
 }
 
 void CONFIG::printConfig (void) {

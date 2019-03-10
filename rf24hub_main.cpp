@@ -8,8 +8,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
-LOGMSG logmsg;
-CONFIG cfg(PRGNAME, PRGVERSION, &logmsg);
+CONFIG cfg(PRGNAME, PRGVERSION);
 
 
 uint64_t mymillis(void) {
@@ -23,7 +22,7 @@ uint64_t mymillis(void) {
 
 
 void exit_system(void) {
-	logmsg.logmsg(VERBOSESTARTUP, "SIGTERM: Cleanup system ... saving *_im tables ...");
+	cfg.logmsg(VERBOSESTARTUP, "SIGTERM: Cleanup system ... saving *_im tables ...");
     // Save data from sensordata_im and sensor_im to persistant tables
 /*	sprintf (sql_stmt, "update sensor a set value = ( select value from sensor_im where sensor_id = a.sensor_id ), utime = ( select utime from sensor_im where sensor_id = a.sensor_id )");
 	logmsg(VERBOSESQL, sql_stmt);
@@ -38,7 +37,7 @@ void exit_system(void) {
 
 void sighandler(int signal) {
     exit_system(); 
-	logmsg.logmsg(VERBOSESTARTUP, "SIGTERM: Shutting down ... ");
+	cfg.logmsg(VERBOSESTARTUP, "SIGTERM: Shutting down ... ");
     cfg.removePidFile();
     exit (0);
 }
@@ -78,7 +77,7 @@ int main(int argc, char* argv[]) {
                 // Child prozess
                 chdir ("/");
                 umask (0);
-                logmsg.logmsg(VERBOSESTARTUP, "Starting up ....");
+                cfg.logmsg(VERBOSESTARTUP, "Starting up ....");
             } else if (pid > 0) {
                 // Parentprozess -> exit and return to shell
                 // write a message to the console

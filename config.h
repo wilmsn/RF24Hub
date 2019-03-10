@@ -23,7 +23,7 @@ using namespace std;
  * 2. Verbosemode
  * 
  */
-class CONFIG {
+class CONFIG : public LOGMSG{
     
 private:
     
@@ -54,7 +54,6 @@ bool logfile_set = false;
 
 int verboselevel;
 FILE * pidfile_ptr;
-LOGMSG * logmsg;
 
 string prgName;
 string prgVersion;
@@ -67,7 +66,7 @@ public:
  */
 //char * trim (char * s);
 
-CONFIG(string prgName, string prgVersion, LOGMSG* logmsg_ptr);
+CONFIG(string prgName, string prgVersion);
 
 
 void usage(void);
@@ -80,9 +79,9 @@ void parseConfigFile (char * config_file);
 
 int setPidFile(void);
 
-int checkPidFileSet(void);
-
 void removePidFile(void);
+
+int checkPidFileSet(void);
 
 int startAsDeamon(void);
 
