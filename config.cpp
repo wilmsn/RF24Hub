@@ -26,7 +26,7 @@ CONFIG::CONFIG(string prgName, string prgVersion) {
 }
 
 CONFIG::~CONFIG() {
-    CONFIG::logmsg(1,"Logfile closed");
+    if ( CONFIG::logfile_mode ) CONFIG::logmsg(VERBOSESTARTUP,"Logfile closed");
 }
 
 void CONFIG::processParams(int argc, char* argv[]) {
@@ -34,6 +34,7 @@ void CONFIG::processParams(int argc, char* argv[]) {
     strcpy(config_file,"x");
 	int c;
     int verboselevel = 0;
+    bool forceInteractive_mode = false;
 	
     // by default we log to console
     CONFIG::interactive_mode = true;
@@ -67,26 +68,25 @@ void CONFIG::processParams(int argc, char* argv[]) {
                           }
                         }
                         if (channel < 126) {
- //                         channelscanner(channel); 
+                            CONFIG::startChannelScanner=channel; 
                         } else {
                           printf("Error Channel must be in 0 ... 125\n");
                         }
                       } else {
                         printf("Error Channel required\n");
                       }
-                      exit(0);
                       break;
 
             case 's':
                       if (optarg[0] && ! optarg[1]) {
-//                         scanner(optarg[0]);
+                         CONFIG::startScanner = true;
+                         CONFIG::setScanLevel = (int) optarg[0]-'0';
                       } else {
                          CONFIG::usage();
                       }
-                      exit(0);
                       break;
             case 'i':
-				interactive_mode = true;
+				forceInteractive_mode = true;
             case 'd':
 				start_daemon = true;
             break;
@@ -173,7 +173,6 @@ void CONFIG::processParams(int argc, char* argv[]) {
     else if (strcmp(name, "logfile")==0) {
                 strcpy (CONFIG::parms.logfilename, value);
                 CONFIG::logfile_mode = true;
-                CONFIG::logmsg(VERBOSESTARTUP, "Logfile opened");
     }
     else if (strcmp(name, "pidfile")==0)     strcpy (CONFIG::parms.pidfilename, value);
     else if (strcmp(name, "rf24network_channel")==0) CONFIG::parms.rf24network_channel = atoi(value);
@@ -197,7 +196,16 @@ void CONFIG::processParams(int argc, char* argv[]) {
   }
   /* Close file */
   fclose (fp);
-  CONFIG::verboselevel = CONFIG::parms.verboselevel;
+  if ( CONFIG::logfile_mode ) {
+    CONFIG::interactive_mode = false;
+  }
+  if ( forceInteractive_mode ) {
+      CONFIG::start_daemon = false;
+      CONFIG::interactive_mode = true;
+      CONFIG::logfile_mode = false;
+  }
+  if ( CONFIG::logfile_mode ) CONFIG::logmsg(VERBOSESTARTUP, "Logfile opened");
+
 }
 
 void CONFIG::printConfig (void) {
@@ -246,11 +254,11 @@ int CONFIG::setPidFile(void) {
 }
 
 int CONFIG::checkPidFileSet(void) {
-    if( access( parms.pidfilename, F_OK ) != -1 ) {
+    if( access( CONFIG::parms.pidfilename, F_OK ) != -1 ) {
         fprintf(stderr, "PIDFILE: %s exists, terminating\n\n", CONFIG::parms.pidfilename);
-        return 0;
-    } else {
         return 1;
+    } else {
+        return 0;
     }
 }
 
@@ -259,7 +267,7 @@ void CONFIG::removePidFile(void) {
 }
 
 void CONFIG::logmsg(int mesgloglevel, std::string mymsg){
-	if (mesgloglevel <= CONFIG::verboselevel) {
+	if (mesgloglevel <= CONFIG::parms.verboselevel) {
         if ( CONFIG::logfile_mode ) {
             std::string line;
             char timestr[20];

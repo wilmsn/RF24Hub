@@ -77,6 +77,13 @@ bool interactive_mode = false;
 bool logfile_mode = false;
 // verboselevel(1..9): higher number more detailed logs
 int verboselevel = 2;
+// will start the scanner running over all channels
+bool startScanner = false;
+// set the level for the scanner
+int setScanLevel = 0;
+// will start a scanner for a single channels if set to 1..128; 0 is deaktivated
+int startChannelScanner = 0;
+
 
 
 CONFIG();

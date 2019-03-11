@@ -16,11 +16,12 @@ int main(int argc, char* argv[]) {
 		std::cout << "rf24hubd has to be startet as user root" << std::endl; 
         exit(1);
     }
+    // check for PID file, if exists terminate else create it
+    if ( cfg.checkPidFileSet() ) {
+        return 1;
+    }
 	std::cout << "Startup Parameters:" << std::endl; 
     cfg.printConfig();
-    // check for PID file, if exists terminate else create it
-    if ( cfg.checkPidFileSet() ) return 1;
-	
     // starts logging
 	if ( getuid()==0 ) {
        cfg.setPidFile();
@@ -30,8 +31,16 @@ int main(int argc, char* argv[]) {
         printf(">>>>> Starte als Deamon\n");
     }
     
-    printf("Logfile_mode: %d \n",cfg.logfile_mode);
-    printf("Logfile: %s \n",cfg.parms.logfilename);
+    if (cfg.startScanner) {
+        printf("Starte Scanner mit level: %d\n",cfg.setScanLevel);
+    }
+    
+    if (cfg.startChannelScanner) {
+        printf("Starte Channelscanner on channel: %d\n",cfg.startChannelScanner);
+    }
+        
+    printf(">>>Logfile_mode: %d \n",cfg.logfile_mode);
+    printf(">>>Logfile: %s \n",cfg.parms.logfilename);
     cfg.logmsg(1, "Test einer Logmessage");
 
     cfg.logmsg(1, "###### Test #######");
@@ -46,7 +55,7 @@ int main(int argc, char* argv[]) {
     cfg.usage();
  
 	if ( getuid()==0 ) {
-//        cfg.removePidFile();
+        cfg.removePidFile();
     }
     return 0;
 }
