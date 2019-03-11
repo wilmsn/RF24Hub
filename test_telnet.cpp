@@ -9,25 +9,16 @@
 int tn_in_socket, new_tn_in_socket;
 socklen_t addrlen;
 char *buffer =  (char*) malloc (BUF);
-struct sockaddr_in address;
 long save_fd;
 const int y = 1;
 bool wait4message = false;
 char debug[DEBUGSTRINGSIZE];
 char client_message[30];
-struct config_parameters parms;
-bool tn_port_set = false;
-bool tn_host_set = false;
-bool in_port_set = false;
-bool start_daemon = false;
-logmode_t logmode;
-int verboselevel = 2;
-FILE * logfile_ptr;
-FILE * pidfile_ptr;
+struct sockaddr_in address;
 
 char config_file[PARAM_MAXLEN_CONFIGFILE];
 
-
+CONFIG cfg("Test","V0");
 
 //tn_active = true;
 //tn_in_socket=0;
@@ -53,7 +44,6 @@ int main() {
 
     	// Main Loop
     while(1) { 
-        char debug[40];
         new_tn_in_socket = accept ( tn_in_socket, (struct sockaddr *) &address, &addrlen );
 		if (new_tn_in_socket > 0) {
             //receive_tn_in(new_tn_in_socket, &address);
@@ -61,8 +51,7 @@ int main() {
             t2.detach();
             //close (new_tn_in_socket);
         }
-        sprintf(debug,"%s",".");
-        logmsg(1,debug);
+        cfg.logmsg(1,".");
         usleep(20000);
         
         

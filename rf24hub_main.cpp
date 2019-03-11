@@ -1,14 +1,25 @@
 #include "rf24hub_common.h"
 #include "config.h"
-//#include "telnet.h"
-#include "logmsg.h"
-#include "DB-mariaDB.h"
+#include "telnet.h"
+//#include "DB-mariaDB.h"
 #include <sys/time.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <fcntl.h>
+#include <thread>
+#include <signal.h>
+
+using namespace std; 
 
 CONFIG cfg(PRGNAME, PRGVERSION);
+int tn_in_socket, new_tn_in_socket;
+socklen_t addrlen;
+char *buffer =  (char*) malloc (BUF);
+long save_fd;
+const int y = 1;
+char client_message[30];
+struct sockaddr_in address;
 
 
 uint64_t mymillis(void) {
@@ -42,7 +53,6 @@ void sighandler(int signal) {
     exit (0);
 }
 
-using namespace std; 
 
 
 int main(int argc, char* argv[]) {
@@ -62,14 +72,14 @@ int main(int argc, char* argv[]) {
 	if ( getuid()==0 ) {
        cfg.setPidFile();
     }
+
+    // init SIGTERM and SIGINT handling
+    signal(SIGTERM, sighandler);
+    signal(SIGINT, sighandler);
     
-    if (cfg.startAsDeamon()) {
+    if (cfg.start_daemon) {
         // make sure that we have a logfile
-        if ( ! cfg.checkLogFileSet() ) {
-            std::cout << "Error: Logfile is needed if runs as deamon ... exiting" << std::endl;
-            cfg.removePidFile();
-            exit(1);
-        } else {
+        if ( cfg.logfile_mode ) {
             // starts rf24hubd as a deamon
             // no messages to console!
             pid = fork ();
@@ -89,16 +99,51 @@ int main(int argc, char* argv[]) {
                 cfg.removePidFile();
                 exit (1);
             }
+        } else {
+            std::cout << "Error: Logfile is needed if runs as deamon ... exiting" << std::endl;
+            cfg.removePidFile();
+            exit(1);
         }
     }
+    if (cfg.in_port_set) {
+   		if ( (tn_in_socket=socket( AF_INET, SOCK_STREAM, 0)) > 0) {
+			cfg.logmsg(VERBOSESTARTUP, "Socket für eingehende Messages angelegt");
+		}
+		address.sin_family = AF_INET;
+		address.sin_addr.s_addr = INADDR_ANY;
+		address.sin_port = htons (cfg.parms.incoming_port);
+		setsockopt( tn_in_socket, SOL_SOCKET, SO_REUSEADDR, &y, sizeof(int) );
+		if (bind( tn_in_socket, (struct sockaddr *) &address, sizeof (address)) == 0 ) {
+			std::string debug = "Binding Socket on Port";
+            debug += cfg.parms.incoming_port;
+            debug += " OK";
+		}
+		listen (tn_in_socket, 5);
+		addrlen = sizeof (struct sockaddr_in);
+		save_fd = fcntl( tn_in_socket, F_GETFL );
+		save_fd |= O_NONBLOCK;
+		fcntl( tn_in_socket, F_SETFL, save_fd );
+    }
+    int i=1;
     while(1) {
         /* Handling of incoming messages */
+        new_tn_in_socket = accept ( tn_in_socket, (struct sockaddr *) &address, &addrlen );
+		if (new_tn_in_socket > 0) {
+            //receive_tn_in(new_tn_in_socket, &address);
+            std::thread t2(receive_tn_in, new_tn_in_socket, &address);
+            t2.detach();
+            //close (new_tn_in_socket);
+        }
 
         
-        sleep(3);
-
+        usleep(10000);
+    
+            
+        std::cout << "Test ..." << i << std::endl;
+        i++;
+        if (i>1000) i=1;
         
-        break;
+        //break;
     } // while(1)
     std::cout << "Exit programm..." << std::endl;
     exit_system();

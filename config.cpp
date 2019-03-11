@@ -1,19 +1,11 @@
 #include "config.h"
 //#include "rf24hub_common.h"
-#include <string.h>
-#include <stdio.h>
-#include <ctype.h>
-#include <stdlib.h>
-#include <time.h>
-#include <unistd.h>
-#include <getopt.h>
-#include <bits/stdint-uintn.h>
 
 /*
  * trim: get rid of trailing and leading whitespace...
  *       ...including the annoying "\n" from fgets()
  */
-char * trim (char * s) {
+char * CONFIG::trim (char * s) {
   /* Initialize start, end pointers */
   char *s1 = s, *s2 = &s[strlen (s) - 1];
   /* Trim and delimit right side */
@@ -33,6 +25,9 @@ CONFIG::CONFIG(string prgName, string prgVersion) {
     CONFIG::prgVersion = prgVersion;
 }
 
+CONFIG::~CONFIG() {
+    CONFIG::logmsg(1,"Logfile closed");
+}
 
 void CONFIG::processParams(int argc, char* argv[]) {
     char config_file[PARAM_MAXLEN_CONFIGFILE];
@@ -41,7 +36,7 @@ void CONFIG::processParams(int argc, char* argv[]) {
     int verboselevel = 0;
 	
     // by default we log to console
-    CONFIG::setLog2Console();
+    CONFIG::interactive_mode = true;
 
     // processing argc and argv[]
 	while (1) {
@@ -137,7 +132,7 @@ void CONFIG::processParams(int argc, char* argv[]) {
     /* Read lines */
     while ((s = fgets (buff, sizeof buff, fp)) != NULL) {
         /* Skip blank lines and comments */
-        trim(buff);
+        CONFIG::trim(buff);
         if (buff[0] == '\n' || buff[0] == '#')
             continue;
         /* Parse name/value pair from line */
@@ -152,48 +147,49 @@ void CONFIG::processParams(int argc, char* argv[]) {
             continue;
         else
             strncpy (value, s, PARAM_MAXLEN);
-        trim (value);
+        CONFIG::trim (value);
     /* Copy into correct entry in parameters struct */
-        if      (strcmp(name, "db_hostname")==0) strcpy (parms.db_hostname, value);
-        else if (strcmp(name, "db_port")==0)              parms.db_port = atoi(value);
-        else if (strcmp(name, "db_schema")==0)   strcpy (parms.db_schema, value);
-        else if (strcmp(name, "db_username")==0) strcpy (parms.db_username, value);
-        else if (strcmp(name, "db_password")==0) strcpy (parms.db_password, value);
+        if      (strcmp(name, "db_hostname")==0) strcpy (CONFIG::parms.db_hostname, value);
+        else if (strcmp(name, "db_port")==0)             CONFIG::parms.db_port = atoi(value);
+        else if (strcmp(name, "db_schema")==0)   strcpy (CONFIG::parms.db_schema, value);
+        else if (strcmp(name, "db_username")==0) strcpy (CONFIG::parms.db_username, value);
+        else if (strcmp(name, "db_password")==0) strcpy (CONFIG::parms.db_password, value);
         else if (strcmp(name, "verboselevel")==0) {
-            if (verboselevel) parms.verboselevel = verboselevel;
-            else parms.verboselevel = atoi(value);
+            if (verboselevel) CONFIG::parms.verboselevel = verboselevel;
+            else CONFIG::parms.verboselevel = atoi(value);
         }
     else if (strcmp(name, "telnet_hostname")==0) {
-                strcpy (parms.telnet_hostname, value);
-                tn_host_set=true;
+                strcpy (CONFIG::parms.telnet_hostname, value);
+                CONFIG::tn_host_set=true;
         }
     else if (strcmp(name, "telnet_port")==0) {
-                parms.telnet_port = atoi(value);
-                tn_port_set=true;
+                CONFIG::parms.telnet_port = atoi(value);
+                CONFIG::tn_port_set=true;
         }
     else if (strcmp(name, "incoming_port")==0) {
-                parms.incoming_port = atoi(value);
-                in_port_set=true;
+                CONFIG::parms.incoming_port = atoi(value);
+                CONFIG::in_port_set=true;
         }
     else if (strcmp(name, "logfile")==0) {
-                strcpy (parms.logfilename, value);
-                logfile_set = true;
+                strcpy (CONFIG::parms.logfilename, value);
+                CONFIG::logfile_mode = true;
+                CONFIG::logmsg(VERBOSESTARTUP, "Logfile opened");
     }
-    else if (strcmp(name, "pidfile")==0)     strcpy (parms.pidfilename, value);
-    else if (strcmp(name, "rf24network_channel")==0) parms.rf24network_channel = atoi(value);
+    else if (strcmp(name, "pidfile")==0)     strcpy (CONFIG::parms.pidfilename, value);
+    else if (strcmp(name, "rf24network_channel")==0) CONFIG::parms.rf24network_channel = atoi(value);
     else if (strcmp(name, "rf24network_speed")==0) {
                 if (strcmp(value, "RF24_2MBPS")==0) {
-                        parms.rf24network_speed = RF24_2MBPS;
+                        CONFIG::parms.rf24network_speed = RF24_2MBPS;
                 }
                 else if (strcmp(value, "RF24_250KBPS")==0) {
-                        parms.rf24network_speed = RF24_250KBPS;
+                        CONFIG::parms.rf24network_speed = RF24_250KBPS;
                 }
                 else if (strcmp(value, "RF24_1MBPS")==0) {
-                        parms.rf24network_speed = RF24_1MBPS;
+                        CONFIG::parms.rf24network_speed = RF24_1MBPS;
                 }
                 else {
                         printf ("%s: Unknown value for %s ! Use RF24_1MBPS \n", value, name);
-                        parms.rf24network_speed = RF24_1MBPS;
+                        CONFIG::parms.rf24network_speed = RF24_1MBPS;
                 }
     }
         else
@@ -201,27 +197,20 @@ void CONFIG::processParams(int argc, char* argv[]) {
   }
   /* Close file */
   fclose (fp);
-  if ( logfile_set && ! interactive_mode) {
-    std::string mylogfile;
-    mylogfile = parms.logfilename;
-    CONFIG::setLog2File(mylogfile);
-    CONFIG::unsetLog2Console();
-  }
-  CONFIG::setVerboseLevel(parms.verboselevel);
+  CONFIG::verboselevel = CONFIG::parms.verboselevel;
 }
 
 void CONFIG::printConfig (void) {
-    printf ("Logfile: %s\n", parms.logfilename);
-    printf ("PIDfile: %s\n", parms.pidfilename);
-    printf ("DB-Hostname: %s\n", parms.db_hostname);
-    printf ("DB-Port: %d\n", parms.db_port);
-    printf ("DB-Schema: %s\n", parms.db_schema);
-    printf ("DB-Username: %s\n", parms.db_username);
-    printf ("DB-Password: %s\n", parms.db_password);
-    printf ("Telnet-Hostname: %s\n", parms.telnet_hostname);
-    printf ("Telnet-Port: %d\n", parms.telnet_port);
-    printf ("Verboselevel: %d\n", parms.verboselevel);
-//    printf ("Ende print_config\n");
+    printf ("Logfile: %s\n", CONFIG::parms.logfilename);
+    printf ("PIDfile: %s\n", CONFIG::parms.pidfilename);
+    printf ("DB-Hostname: %s\n", CONFIG::parms.db_hostname);
+    printf ("DB-Port: %d\n", CONFIG::parms.db_port);
+    printf ("DB-Schema: %s\n", CONFIG::parms.db_schema);
+    printf ("DB-Username: %s\n", CONFIG::parms.db_username);
+    printf ("DB-Password: %s\n", CONFIG::parms.db_password);
+    printf ("Telnet-Hostname: %s\n", CONFIG::parms.telnet_hostname);
+    printf ("Telnet-Port: %d\n", CONFIG::parms.telnet_port);
+    printf ("Verboselevel: %d\n", CONFIG::parms.verboselevel);
 }
 
 void CONFIG::usage(void) {
@@ -250,14 +239,15 @@ void CONFIG::usage(void) {
 int CONFIG::setPidFile(void) {
     pid_t pid;
     pid=getpid();
-    pidfile_ptr = fopen (parms.pidfilename,"w");
+    pidfile_ptr = fopen (CONFIG::parms.pidfilename,"w");
     fprintf(pidfile_ptr,"%d",pid);
+    fclose(pidfile_ptr);
     return 1;
 }
 
 int CONFIG::checkPidFileSet(void) {
     if( access( parms.pidfilename, F_OK ) != -1 ) {
-        fprintf(stderr, "PIDFILE: %s exists, terminating\n\n", parms.pidfilename);
+        fprintf(stderr, "PIDFILE: %s exists, terminating\n\n", CONFIG::parms.pidfilename);
         return 0;
     } else {
         return 1;
@@ -265,13 +255,33 @@ int CONFIG::checkPidFileSet(void) {
 }
 
 void CONFIG::removePidFile(void) {
-        unlink(parms.pidfilename);
+        unlink(CONFIG::parms.pidfilename);
 }
 
-int CONFIG::startAsDeamon(void) {
-    return start_daemon;
-}
-
-int CONFIG::checkLogFileSet(void) {
-    return logfile_set;
+void CONFIG::logmsg(int mesgloglevel, std::string mymsg){
+	if (mesgloglevel <= CONFIG::verboselevel) {
+        if ( CONFIG::logfile_mode ) {
+            std::string line;
+            char timestr[20];
+			char m0[2], d0[2], mi0[2], s0[2];
+            m0[1]='\0'; d0[1]='\0'; mi0[1]='\0'; s0[1]='\0';
+            time_t now = time(0);
+			tm *ltm = localtime(&now);
+            m0[0] = (ltm->tm_mon < 10) ? '0' : '\0';
+            d0[0] = (ltm->tm_mday < 10) ? '0' : '\0';
+            mi0[0] = (ltm->tm_min < 10) ? '0' : '\0';
+            s0[0] = (ltm->tm_sec < 10) ? '0' : '\0';
+            sprintf(timestr, "%d.%s%d.%s%d %d:%s%d:%s%d",ltm->tm_year + 1900,m0,ltm->tm_mon+1,d0,ltm->tm_mday,ltm->tm_hour, mi0, ltm->tm_min, s0, ltm->tm_sec);
+            line = "[";
+            line += timestr;
+            line += "] ";
+            line += mymsg;
+            std::ofstream out(CONFIG::parms.logfilename, std::ios_base::app);
+            out << line << std::endl;
+            out.close();
+        }	
+        if ( CONFIG::interactive_mode ) {  // logmode == interactive 
+			std::cout << mymsg << std::endl; 
+		}
+    }
 }

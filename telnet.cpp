@@ -5,25 +5,22 @@
 #include <unistd.h>
 #include <netdb.h>
 #include <arpa/inet.h>
+//#define logmsg cfg.logmsg
 
 void exec_tn_cmd(const char *tn_cmd) {
     int sockfd, portno, n;
     struct sockaddr_in serv_addr;
     struct hostent *server;
-    char debug[DEBUGSTRINGSIZE];
     
-	sprintf(debug,"DEBUG: %s\n", tn_cmd);
-	logmsg(VERBOSETELNET,debug);
-    portno = parms.telnet_port;
+	cfg.logmsg(VERBOSETELNET,tn_cmd);
+    portno = cfg.parms.telnet_port;
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
-        sprintf(debug,"ERROR: opening socket");
-		logmsg(VERBOSECRITICAL,debug);
+		cfg.logmsg(VERBOSECRITICAL,"ERROR: opening socket");
 	}	
-    server = gethostbyname(parms.telnet_hostname);
+    server = gethostbyname(cfg.parms.telnet_hostname);
     if (server == NULL) {
-        sprintf(debug,"ERROR: no such host\n");
-		logmsg(VERBOSECRITICAL,debug);
+		cfg.logmsg(VERBOSECRITICAL,"ERROR: no such host");
     }
     bzero((char *) &serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
@@ -32,16 +29,20 @@ void exec_tn_cmd(const char *tn_cmd) {
          server->h_length);
     serv_addr.sin_port = htons(portno);
     if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0) { 
-        sprintf(debug,"ERROR: connecting");
-		logmsg(VERBOSECRITICAL,debug);
+		cfg.logmsg(VERBOSECRITICAL,"ERROR: connecting");
 	} else {	
 		n = write(sockfd,tn_cmd,strlen(tn_cmd));
 		if (n < 0) {
-			sprintf(debug,"ERROR: writing to socket");
-			logmsg(VERBOSECRITICAL,debug);
+			cfg.logmsg(VERBOSECRITICAL,"ERROR: writing to socket");
 		} else {
-			sprintf(debug,"Telnet to %s Port %d CMD: %s successfull",parms.telnet_hostname, portno, tn_cmd);
-			logmsg(VERBOSETELNET,debug);
+			string debug = "Telnet to ";
+            debug += cfg.parms.telnet_hostname;
+            debug += " Port ";
+            debug += portno;
+            debug += " CMD: ";
+            debug += tn_cmd;
+            debug += "successfull";
+			cfg.logmsg(VERBOSETELNET,debug);
 		}		
 	}		 
     close(sockfd);
@@ -49,23 +50,15 @@ void exec_tn_cmd(const char *tn_cmd) {
 
 void prepare_tn_cmd(uint16_t node, uint8_t channel, float value) {
 	char telnet_cmd[200];
-    char debug[DEBUGSTRINGSIZE];
-   /*
-	for(int i=0; i<SENSORARRAYSIZE; i++) {
-		if ( sensor[i].node == node && sensor[i].channel == channel ) {
-			sprintf(telnet_cmd,"set %s %f \n", sensor[i].fhem_dev, value);
-		}
-	}
-	*/
     sprintf(telnet_cmd,"set %s %f \n", "fhe_dev_test", 0.0);
-	sprintf(debug,"Telnet-CMD: %s\n", telnet_cmd);
-	logmsg(VERBOSETELNET,debug);				
+	std::string debug="Telnet-CMD: ";
+    debug += telnet_cmd;
+	cfg.logmsg(VERBOSETELNET,debug);				
 	exec_tn_cmd(telnet_cmd);
 }
 	
 void receive_tn_in(int new_tn_in_socket, struct sockaddr_in * address) {
                     char *buffer =  (char*) malloc (1024);
-                    char *debug =  (char*) malloc (1024);
      //               char buffer[1024];
                     char client_message[30];
                     int MsgLen;
@@ -73,8 +66,10 @@ void receive_tn_in(int new_tn_in_socket, struct sockaddr_in * address) {
                     // use this in perl: my $t = new Net::Telnet (Timeout => 2, Port => 7001, Prompt => '/rf24hub>/');
                     sprintf(client_message,"rf24hub> ");
                     write(new_tn_in_socket , client_message , strlen(client_message));
-                    sprintf (debug,"Client %s ist connected ...\n", inet_ntoa (address->sin_addr));
-                    logmsg(VERBOSECONFIG, debug);
+                    std::string debug = "Client ";
+                    debug += inet_ntoa (address->sin_addr);
+                    debug += " ist connected ..."; 
+                    cfg.logmsg(VERBOSECONFIG, debug);
                     sprintf(buffer,"                  ");
                     MsgLen = recv(new_tn_in_socket, buffer, BUF, 0);
                     sprintf(client_message,"%s",buffer);
@@ -84,7 +79,6 @@ void receive_tn_in(int new_tn_in_socket, struct sockaddr_in * address) {
                     //    process_tn_in(new_tn_in_socket, buffer, client_message);
                     close (new_tn_in_socket);
                     free(buffer);
-                    free(debug);
     //                 exit(0);
 }
 	
@@ -110,15 +104,15 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 		 cmp_html[]="html",
 		 cmp_order[]="order",	 
 		 cmp_verbose[]="verbose";	 
-    char debug[DEBUGSTRINGSIZE];
 	char *wort1, *wort2, *wort3, *wort4;
 	uint16_t node = 0;
 	uint32_t akt_sensor = 0;
 	bool tn_input_ok=false;
 	char delimiter[] = " ";
-	trim(buffer);
-	sprintf(debug,"Incoming telnet data: %s ",buffer);
-	logmsg(VERBOSETELNET, debug);
+	cfg.trim(buffer);
+	std::string debug="Incoming telnet data: ";
+    debug += buffer;
+	cfg.logmsg(VERBOSETELNET, debug);
 	wort1 = strtok(buffer, delimiter);
 	wort2 = strtok(NULL, delimiter);
 	wort3 = strtok(NULL, delimiter);
@@ -166,7 +160,7 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 	if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (wort3 != NULL) && (wort4 == 0) ) {
         if ( wort3[0] > '0' && wort3[0] < '9' + 1 ) {
 			tn_input_ok = true;
-			verboselevel = (wort3[0] - '0') * 1;
+			cfg.verboselevel = (wort3[0] - '0') * 1;
 		}	
 	}
     // list order

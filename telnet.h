@@ -1,8 +1,15 @@
 #include "rf24hub_common.h"
+#include "config.h"
+
+#include <sys/socket.h>
+#include <stdio.h>
+#include "rf24hub_common.h"
 #include <stdlib.h>
 #include <netinet/in.h>
 
 #define BUF 1024
+
+extern CONFIG cfg;
 
 void exec_tn_cmd(const char *tn_cmd);
 

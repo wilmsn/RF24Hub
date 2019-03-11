@@ -2,9 +2,17 @@
 #define RF24HUB_CONFIG_H
 
 #include <stdio.h>
-#include "logmsg.h"
-#include<iostream> 
-#include<string> // for string class 
+#include <iostream> 
+#include <string> // for string class 
+#include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
+#include <getopt.h>
+#include <fstream>
+#include <bits/stdint-uintn.h>
+#include "rf24hub_common.h"
 
 using namespace std; 
 
@@ -23,7 +31,7 @@ using namespace std;
  * 2. Verbosemode
  * 
  */
-class CONFIG : public LOGMSG{
+class CONFIG {
     
 private:
     
@@ -43,49 +51,88 @@ struct config_parameters {
   uint8_t rf24network_channel;
 };
 
-config_parameters parms;
-
-bool tn_host_set;
-bool tn_port_set;
-bool in_port_set;
-bool start_daemon;
-bool interactive_mode = false;
-bool logfile_set = false;
-
-int verboselevel;
 FILE * pidfile_ptr;
 
-string prgName;
-string prgVersion;
 char config_file[PARAM_MAXLEN_CONFIGFILE];
 
 public:
+
+// all the setings are stored in this struct
+config_parameters parms;
+// the programm name goes here
+string prgName;
+// the programm version goes here
+string prgVersion;
+// tn_host_set is true when an outgoing telnet hostname is set by configuration
+bool tn_host_set;
+// tn_port_set is true when an outgoing telnet port is set by configuration
+bool tn_port_set;
+// in_port_set is true when an incomine telnet port is set by configuration
+bool in_port_set;
+// start_daemon is true when start as a deamon is configured
+bool start_daemon;
+// interactive_mode = true: prints logs to console
+bool interactive_mode = false;
+// logfile_mode = true: prints logs to file 
+bool logfile_mode = false;
+// verboselevel(1..9): higher number more detailed logs
+int verboselevel = 2;
+
+
+CONFIG();
+CONFIG(string prgName, string prgVersion);
+~CONFIG();
+
 /*
  * trim: get rid of trailing and leading whitespace...
  *       ...including the annoying "\n" from fgets()
  */
-//char * trim (char * s);
+char * trim (char * s);
 
-CONFIG(string prgName, string prgVersion);
-
-
+/*
+ * prints a usage message for the programm
+ */
 void usage(void);
 
+/*
+ * reads all the command line parameters and processes them
+ * after that the config file willb e processed
+ * results are stored on parms.*
+ */ 
 void processParams(int argc, char* argv[]);
 
+/*
+ * prints the current config
+ */
 void printConfig (void);
 
-void parseConfigFile (char * config_file);
-
+/*
+ * If a pidfile is defined in the config file it will be set 
+ */
 int setPidFile(void);
 
+/*
+ * If a pidfile is set it will be set 
+ */
 void removePidFile(void);
 
+/*
+ * checks if a pid file is set (=true)
+ */
 int checkPidFileSet(void);
 
-int startAsDeamon(void);
+/*
+ * sets and opens the logfile to the given file
+ */
+void setLog2File(std::string);
 
-int checkLogFileSet(void);
+/*
+ * prints out a logmessage
+ * to console and/or to file
+ */
+void logmsg(int, std::string);
+
+
 };
 
 #endif  //RF24HUB_CONFIG_H

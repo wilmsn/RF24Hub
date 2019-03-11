@@ -40,19 +40,19 @@ test_sensorBuffer: sensorBuffer.o test_sensorBuffer.o
 test_orderBuffer: orderBuffer.o test_orderBuffer.o
 	$(CC) ${CCFLAGS} $^ -o $@
 	./$@
-test_config: logmsg.o config.o test_config.o
+test_config: config.o test_config.o
 	$(CC) ${CCFLAGS} $^ -o $@
 	#./$@ -c rf24hubd.cfg
 test_telnet: logmsg.o telnet.o config.o test_telnet.o
 	$(CC) ${CCFLAGS} -pthread $^ -o $@
-	./$@
+	#./$@
 test_sql: logmsg.o config.o test_sql.o
 	$(CC) ${CCFLAGS} $^ -o $@ ${MARIADB_LIBS}
 	./$@
 # Make the sensorhub deamon
-#rf24hubd: rf24hub_main.o config.o telnet.o DB-mariaDB.o logmsg.o
-#rf24hubd: rf24hub_main.o config.o logmsg.o telnet.o
-rf24hubd: rf24hub_main.o config.o logmsg.o
+#rf24hubd: rf24hub_main.o config.o telnet.o DB-mariaDB.o
+rf24hubd: rf24hub_main.o config.o telnet.o
+#rf24hubd: rf24hub_main.o config.o
 	$(CC) ${CCFLAGS} -Wall ${MYSQLLIBS} $^ -o $@ ${MARIADB_LIBS}
 	#./$@
 
