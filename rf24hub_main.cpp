@@ -1,7 +1,9 @@
 #include "rf24hub_common.h"
 #include "config.h"
 #include "telnet.h"
-//#include "DB-mariaDB.h"
+#include "DB-mariaDB.h"
+#include "sensorBuffer.h"
+#include "orderBuffer.h"
 #include <sys/time.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -13,12 +15,15 @@
 using namespace std; 
 
 CONFIG cfg(PRGNAME, PRGVERSION);
+DB db(&cfg);
+SENSORBUFFER sensorbuffer;
+ORDERBUFFER orderbuffer;
 int tn_in_socket, new_tn_in_socket;
 socklen_t addrlen;
-char *buffer =  (char*) malloc (BUF);
+//char *buffer =  (char*) malloc (BUF);
 long save_fd;
 const int y = 1;
-char client_message[30];
+//char client_message[30];
 struct sockaddr_in address;
 
 
@@ -57,16 +62,17 @@ void sighandler(int signal) {
 
 int main(int argc, char* argv[]) {
     pid_t pid;
+    string debug;
     cfg.processParams(argc, argv);
 	// check if started as root
 	if ( getuid()!=0 ) {
-		std::cout << "rf24hubd has to be startet as user root" << std::endl; 
+		cout << "rf24hubd has to be startet as user root" << endl; 
         exit(1);
     }
-	std::cout << "Startup Parameters:" << std::endl; 
+	cout << "Startup Parameters:" << endl; 
     cfg.printConfig();
     // check for PID file, if exists terminate else create it
-    if ( ! cfg.checkPidFileSet() ) return 1;
+    if ( cfg.checkPidFileSet() ) return 1;
 	
     // starts logging
 	if ( getuid()==0 ) {
@@ -91,7 +97,7 @@ int main(int argc, char* argv[]) {
             } else if (pid > 0) {
                 // Parentprozess -> exit and return to shell
                 // write a message to the console
-                std::cout << "Starting rf24hubd as daemon..." << std::endl;
+                cout << "Starting rf24hubd as daemon..." << endl;
                 // and exit
                 exit (0);
             } else {
@@ -100,7 +106,7 @@ int main(int argc, char* argv[]) {
                 exit (1);
             }
         } else {
-            std::cout << "Error: Logfile is needed if runs as deamon ... exiting" << std::endl;
+            cout << "Error: Logfile is needed if runs as deamon ... exiting" << endl;
             cfg.removePidFile();
             exit(1);
         }
@@ -114,7 +120,7 @@ int main(int argc, char* argv[]) {
 		address.sin_port = htons (cfg.parms.incoming_port);
 		setsockopt( tn_in_socket, SOL_SOCKET, SO_REUSEADDR, &y, sizeof(int) );
 		if (bind( tn_in_socket, (struct sockaddr *) &address, sizeof (address)) == 0 ) {
-			std::string debug = "Binding Socket on Port";
+			debug = "Binding Socket on Port";
             debug += cfg.parms.incoming_port;
             debug += " OK";
 		}
@@ -124,28 +130,35 @@ int main(int argc, char* argv[]) {
 		save_fd |= O_NONBLOCK;
 		fcntl( tn_in_socket, F_SETFL, save_fd );
     }
+    if ( ! db.init(cfg.parms.db_hostname, cfg.parms.db_port, cfg.parms.db_schema, cfg.parms.db_username, cfg.parms.db_password) ) {
+        cfg.logmsg(VERBOSECRITICAL,"Error connecting to Database");
+        exit(1);
+    }
+    db.initSystem();
+    db.fillSensorBuffer(&sensorbuffer);
+    sensorbuffer.listSensor();
     int i=1;
     while(1) {
         /* Handling of incoming messages */
         new_tn_in_socket = accept ( tn_in_socket, (struct sockaddr *) &address, &addrlen );
 		if (new_tn_in_socket > 0) {
             //receive_tn_in(new_tn_in_socket, &address);
-            std::thread t2(receive_tn_in, new_tn_in_socket, &address);
+            thread t2(receive_tn_in, new_tn_in_socket, &address);
             t2.detach();
             //close (new_tn_in_socket);
         }
 
         
-        usleep(10000);
+        usleep(100000);
     
             
-        std::cout << "Test ..." << i << std::endl;
+       // cout << "Test ..." << i << endl;
         i++;
         if (i>1000) i=1;
         
         //break;
     } // while(1)
-    std::cout << "Exit programm..." << std::endl;
+    cout << "Exit programm..." << endl;
     exit_system();
     cfg.removePidFile();
 	return 0;

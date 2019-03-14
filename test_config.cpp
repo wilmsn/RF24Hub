@@ -13,14 +13,14 @@ int main(int argc, char* argv[]) {
     cfg.processParams(argc, argv);
 	// check if started as root
 	if ( getuid()!=0 ) {
-		std::cout << "rf24hubd has to be startet as user root" << std::endl; 
+		cout << "rf24hubd has to be startet as user root" << endl; 
         exit(1);
     }
     // check for PID file, if exists terminate else create it
     if ( cfg.checkPidFileSet() ) {
         return 1;
     }
-	std::cout << "Startup Parameters:" << std::endl; 
+	cout << "Startup Parameters:" << endl; 
     cfg.printConfig();
     // starts logging
 	if ( getuid()==0 ) {

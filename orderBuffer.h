@@ -2,11 +2,11 @@
 
 
 */
-#ifndef _ORDERBUFFER_H_   
-#define _ORDERBUFFER_H_
+#ifndef ORDERBUFFER_H   
+#define ORDERBUFFER_H
 #include <stdint.h>
 
-class orderBuffer {
+class ORDERBUFFER {
 
     
 private:
@@ -20,20 +20,21 @@ struct orderBuffer_t {
     orderBuffer_t   *next;
 };
 
-    orderBuffer_t *initial_orderBuffer_ptr;
+    orderBuffer_t *initialBuffer_ptr;
 
     int delEntry(orderBuffer_t *orderBufferEntry);
     int delNodeChannel(uint16_t node, uint16_t channel);
     
 public:
-    int newOrder(uint16_t node, uint16_t channel, float value, uint64_t entrytime);
+    int newOrder(uint16_t node, uint16_t channel, float value);
     int delOldOrder(uint64_t entrytime);
     int delOrderNo(uint16_t orderno);
     int setOrderNo(uint16_t orderno, uint16_t node, uint16_t channel);
-    void listOrder(void);
+    void* listOrder(void * pos, char * msg);
     void listOrderHTML(void);
-    orderBuffer(void);
+    void * getInitialBuffer_ptr(void);
+    ORDERBUFFER();
 
 };
 
-#endif // _ORDERBUFFER_H_
+#endif // ORDERBUFFER_H

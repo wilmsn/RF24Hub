@@ -7,7 +7,7 @@
 #include <stdint.h>
 #include "rf24hub_config.h"
 
-class orderQueue {
+class ORDERQUEUE {
 
     
 private:
@@ -17,13 +17,14 @@ struct orderQueue_t {
 };
 
     orderQueue_t *initial_orderQueue_ptr;
-    int numOrdersWaiting;
     
 public:
+    int numOrdersWaiting;
+
+    ORDERQUEUE(void);
+    
     int newEntry();
     void listOrders(void);
-    int ordersWaiting(void);
-    orderQueue(void);
 
 };
 

@@ -7,7 +7,7 @@
 #include <stdint.h>
 #include "rf24hub_config.h"
 
-class sensorBuffer {
+class SENSORBUFFER {
 
     
 private:
@@ -27,9 +27,11 @@ struct sensorBuffer_t {
     int delEntry(sensorBuffer_t *sensorBufferEntry);
     
 public:
-    int newSensor(uint32_t sensor, uint16_t node, uint16_t channel, char s_type, char* fhem_dev, float last_val);
+    void clearSensor(void);
+    int newSensor(uint32_t sensor, uint16_t node, uint16_t channel, char* fhem_dev);
+    int findSensor(uint16_t *node, uint16_t *channel, char* fhem_dev);
     void listSensor(void);
-    sensorBuffer(void);
+    SENSORBUFFER(void);
 
 };
 

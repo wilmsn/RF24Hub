@@ -15,7 +15,7 @@ void fill_queue(orderQueue *myqueue)
 
 int main()
 {
-    orderQueue myorderQueue;
+    ORDERQUEUE orderQueue;
 
 //    std::thread t2(fill_order,&myorderBuffer);
 //    t2.detach();

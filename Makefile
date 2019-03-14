@@ -50,9 +50,7 @@ test_sql: logmsg.o config.o test_sql.o
 	$(CC) ${CCFLAGS} $^ -o $@ ${MARIADB_LIBS}
 	./$@
 # Make the sensorhub deamon
-#rf24hubd: rf24hub_main.o config.o telnet.o DB-mariaDB.o
-rf24hubd: rf24hub_main.o config.o telnet.o
-#rf24hubd: rf24hub_main.o config.o
+rf24hubd: rf24hub_main.o config.o telnet.o DB-mariaDB.o sensorBuffer.o orderBuffer.o
 	$(CC) ${CCFLAGS} -Wall ${MYSQLLIBS} $^ -o $@ ${MARIADB_LIBS}
 	#./$@
 

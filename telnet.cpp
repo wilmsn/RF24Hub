@@ -75,14 +75,15 @@ void receive_tn_in(int new_tn_in_socket, struct sockaddr_in * address) {
                     sprintf(client_message,"%s",buffer);
                     write(new_tn_in_socket , client_message , strlen(client_message));
                     printf("Buffer: %s Msglen: %d\n",buffer,MsgLen);
-                    //if (MsgLen>0) {
-                    //    process_tn_in(new_tn_in_socket, buffer, client_message);
+                    if (MsgLen>0) {
+                        process_tn_in(new_tn_in_socket, buffer);
+                    }
                     close (new_tn_in_socket);
                     free(buffer);
     //                 exit(0);
 }
 	
-void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
+void process_tn_in(int new_tn_in_socket, char* buffer) {
 /* Messages can llook like this:
        <word1		word2		word3		word4 				function>
 		init													Reinitialization of rf24hubd (reads actual values from database)
@@ -110,44 +111,33 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 	bool tn_input_ok=false;
 	char delimiter[] = " ";
 	cfg.trim(buffer);
-	std::string debug="Incoming telnet data: ";
+	string debug="Incoming telnet data: ";
     debug += buffer;
 	cfg.logmsg(VERBOSETELNET, debug);
 	wort1 = strtok(buffer, delimiter);
 	wort2 = strtok(NULL, delimiter);
 	wort3 = strtok(NULL, delimiter);
 	wort4 = strtok(NULL, delimiter);
+    char *client_message =  (char*) malloc (1024);
+
 	// set/setlast sensor <sensor> <value>
 	// sets a sensor to a value, setlast starts the request over air
 	if ( (( strcmp(wort1,cmp_set) == 0 ) || ( strcmp(wort1,cmp_setlast) == 0 )) && (strcmp(wort2,cmp_sensor) == 0) && (wort3 != NULL) && (wort4 != NULL) ) {
 		tn_input_ok = true;
-		// In word3 we may have a) the number of the sensor b) the name of the sensor c) the fhem_dev of a sensor
+        uint16_t       	my_node;   
+        uint16_t     	my_channel;
+        // In word3 we may have a) the number of the sensor b) the fhem_dev of a sensor
 		// for the processing we need the number of the sensor ==> find it!
-/*
-        for (int i = 0; i < SENSORARRAYSIZE; i++) {
-			if ( (sensor[i].sensor > 0) && ((strcmp(wort3,sensor[i].fhem_dev) == 0) || ( sensor[i].sensor == strtoul(wort3, &pEnd, 10)) ) ) {
-				sprintf(debug, "Sensor found: %u Node: 0%o Channel: %u FHEM: %s", 
-								sensor[i].sensor,
-								sensor[i].node,
-								sensor[i].channel,
-								sensor[i].fhem_dev);
-				logmsg(VERBOSETELNET, debug);
-				akt_sensor = sensor[i].sensor;
-			}
-		}		
+        if (sensorbuffer.findSensor(&my_node, &my_channel, wort3)) {
 		// just add the sensor to the buffer
-		node = set_sensor( akt_sensor, strtof(wort4, &pEnd));
-		if ( node == 0 ) {
-			sprintf(debug,"Sensor (%s) not in cache ==> running initialisation!",wort3);
-			logmsg(VERBOSETELNET, debug);
-			init_system();
-		} else {
-			if ( strcmp(wort1,cmp_setlast) == 0 ) {
-				get_order(node);
-				print_order_buffer();
-			}
-		}
-*/		
+printf("in Telnet >>>>>>\n");
+            orderbuffer.newOrder(my_node, my_channel, strtof(wort4,NULL));
+        } else {
+            debug = "Sensor ";
+            debug += wort3;
+            debug += "not found!";
+            cfg.logmsg(VERBOSECRITICAL,debug);
+        }
 	}
     // set node <node> init
 	// sends the init sequence to a node
@@ -167,32 +157,18 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 	// lists the current orderbuffer
 	if (( strcmp(wort1,cmp_list) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (wort3 == NULL) && (wort4 == NULL) ) {
 		tn_input_ok = true;
-		sprintf(client_message,"----- Orderbuffer(max(%d): ------\n", (int)ORDERBUFFERLENGTH); 
+        strcpy(client_message,"----- Orderbuffer: ------\n"); 
 		write(new_tn_in_socket , client_message , strlen(client_message));
-/*
-        for (int i=0; i < ORDERBUFFERLENGTH -1; i++) {
-			if ( order_buffer[i].node > 0 ) {
-				sprintf(client_message,"order_buffer[%d]\t Onr:\t%u,\tentry:\t%llu (%d sec.),\tnode:\t0%o,\tchannel:\t%u\tval:\t%f\n", 
-					i,order_buffer[i].orderno, order_buffer[i].entrytime, (int)(order_buffer[i].entrytime - mymillis())/1000, order_buffer[i].node,
-					order_buffer[i].channel, order_buffer[i].value );
-				write(new_tn_in_socket , client_message , strlen(client_message));
-			}				
-		}
-		sprintf(client_message,"----- Order(max %d): ------\n", (int)ORDERLENGTH); 
-		write(new_tn_in_socket , client_message , strlen(client_message));
-		for (int i=0; i < ORDERLENGTH -1; i++) {
-			if ( order[i].node > 0 ) {
-				sprintf(client_message,"order[%d]\t Onr:\t%u,\tentry:\t%llu (%d sec.),\tnode:\t0%o,\ttype:\t%u\tflags:\t%u\t(channel/Value)\t(%u/%f)\t(%u/%f)\t(%u/%f)\t(%u/%f)\n", 
-					i,order[i].orderno, order[i].entrytime, (int)(order[i].entrytime - mymillis())/1000, order[i].node, order[i].type, order[i].flags
-					,order[i].channel1, order[i].value1
-					,order[i].channel2, order[i].value2
-					,order[i].channel3, order[i].value3
-					,order[i].channel4, order[i].value4);
-				write(new_tn_in_socket , client_message , strlen(client_message));
-			}				
-		}
-*/		
-	}	
+        void * my_pos = orderbuffer.getInitialBuffer_ptr();
+//printf("tn test >>0<< my_pos initial: %p\n",my_pos);            
+        while (my_pos) {
+//printf("tn test >>1<< %p\n",my_pos);            
+            my_pos = orderbuffer.listOrder(my_pos, client_message);
+//printf("tn test >>2<< %p\n",my_pos);            
+            write(new_tn_in_socket , client_message , strlen(client_message));
+//printf("tn test >>3<< %p\n",my_pos);            
+        }
+    }	
     // html order
 	// lists the current order/orderbuffer for html page
 	if (( strcmp(wort1,cmp_html) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (wort3 == NULL) && (wort4 == NULL) ) {

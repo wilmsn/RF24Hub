@@ -16,6 +16,7 @@ char debug[DEBUGSTRINGSIZE];
 char client_message[30];
 struct sockaddr_in address;
 
+
 char config_file[PARAM_MAXLEN_CONFIGFILE];
 
 CONFIG cfg("Test","V0");
