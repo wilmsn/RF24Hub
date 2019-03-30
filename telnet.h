@@ -11,17 +11,19 @@
 
 using namespace std;
 
-#define BUF 1024
+#define TELNETBUFFERSIZE 128
 
 extern CONFIG cfg;
 extern SENSORBUFFER sensorbuffer;
 extern ORDERBUFFER orderbuffer;
 extern DB db;
 
+char * trim (char * s);
+
 void exec_tn_cmd(const char *tn_cmd);
 
 void prepare_tn_cmd(uint16_t node, uint8_t channel, float value);
 
-void process_tn_in(int new_tn_in_socket, char* buffer);
+void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message);
 
 void receive_tn_in(int new_tn_in_socket, struct sockaddr_in * address);

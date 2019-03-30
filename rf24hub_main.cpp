@@ -36,7 +36,6 @@ uint64_t mymillis(void) {
 }
 
 
-
 void exit_system(void) {
 	cfg.logmsg(VERBOSESTARTUP, "SIGTERM: Cleanup system ... saving *_im tables ...");
     // Save data from sensordata_im and sensor_im to persistant tables
@@ -149,7 +148,7 @@ int main(int argc, char* argv[]) {
         }
 
         
-        usleep(100000);
+        usleep(1000);
     
             
        // cout << "Test ..." << i << endl;
