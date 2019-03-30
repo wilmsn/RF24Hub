@@ -1,0 +1,7 @@
+[Unit]
+Description=rf24hubd: a server to control rf24 communication to the nodes 
+After=systemd-user-sessions.service
+After=mariadb.service
+[Service]
+Type=forking
+ExecStart=/usr/local/bin/rf24hubd -d

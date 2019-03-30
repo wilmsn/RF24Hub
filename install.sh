@@ -7,11 +7,15 @@
 ID=`id | cut -d "=" -f 2 | cut -d "(" -f 1`
 if [ $ID = 0 ]; then
   if [ -e /etc/init.d/rf24hub ]; then
+    /etc/init.d/rf24hub stop
+    rm /etc/init.d/rf24hub
+  fi
+  if [ -e /etc/systemd/system/rf24hub.service ]; then
     echo "Old installation found!"
     echo "Cleanup"
     echo "Stop rf24hub (if installed and running)"
-    /etc/init.d/rf24hub stop
-    rm /etc/init.d/rf24hub
+    systemctl stop rf24hub    
+    cp rf24hub.service /etc/systemd/system/
   fi
   if [ ! -e /etc/rf24hub/rf24hub.cfg ]; then
     if [ ! -d /etc/rf24hub ]; then
@@ -19,19 +23,18 @@ if [ $ID = 0 ]; then
     fi
     cp rf24hubd.cfg /etc/rf24hub/rf24hub.cfg
     echo "Please edit config template: /etc/rf24hub/rf24hub.cfg"
-    echo "and run \"sudo service rf24hub restart\" after that"
+    echo "and run \"sudo systemctl stop rf24hub; sudo systemctl start rf24hub\" after that"
   fi
   echo "Install as User Root";
   echo "copy rf24hubd ==> /usr/local/bin/rf24hubd"
   cp rf24hubd /usr/local/bin/rf24hubd
-  echo "  init_rf24hub ==> /etc/init.d/rf24hub"
-  cp ./init_rf24hub /etc/init.d/rf24hub
-  chown root:root /etc/init.d/rf24hub
-  chmod 755 /etc/init.d/rf24hub
-  echo "Register it:  update-rc.d rf24hub defaults"
-  update-rc.d rf24hub defaults
+  echo "  rf24hub.service ==> /etc/systemd/system/rf24hub.service"
+  cp ./rf24hub.service /etc/systemd/system/rf24hub.service
+  chown root:root /etc/systemd/system/rf24hub.service
+  chmod 444 /etc/systemd/system/rf24hub.service
+  systemctl daemon-reload
   echo "Start it up"
-  /etc/init.d/rf24hub start
+  systemctl start rf24hub
   ps -efa | grep rf24hubd | grep -v grep
 else
   echo "Error: not root ==> Please use user root"
