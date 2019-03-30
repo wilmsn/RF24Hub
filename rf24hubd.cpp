@@ -291,7 +291,7 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
     }
 	// set/setlast sensor <sensor> <value>
 	// sets a sensor to a value, setlast starts the request over air
-	if ( (( strcmp(wort1,cmp_set) == 0 ) || ( strcmp(wort1,cmp_setlast) == 0 )) && (strcmp(wort2,cmp_sensor) == 0) && (wort3 != NULL) && (wort4 != NULL) ) {
+	if ( (( strcmp(wort1,cmp_set) == 0 ) || ( strcmp(wort1,cmp_setlast) == 0 )) && (strcmp(wort2,cmp_sensor) == 0) && (strlen(wort3) > 1) && (strlen(wort4) > 0) ) {
 		tn_input_ok = true;
 		// In word3 we may have a) the number of the sensor b) the name of the sensor c) the fhem_dev of a sensor
 		// for the processing we need the number of the sensor ==> find it!
@@ -321,7 +321,7 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 	}
     // set node <node> init
 	// sends the init sequence to a node
-	if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_node) == 0) && (wort3 != NULL) && (strcmp(wort4,cmp_init) == 0) ) {
+	if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_node) == 0) && (strlen(wort3) > 1) && (strcmp(wort4,cmp_init) == 0) ) {
 		tn_input_ok = true;
 		init_node(getnodeadr(wort3));
 	}
@@ -335,7 +335,7 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 	}
     // list order
 	// lists the current orderbuffer
-	if (( strcmp(wort1,cmp_list) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (wort3 == NULL) && (wort4 == NULL) ) {
+	if (( strcmp(wort1,cmp_list) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
 		tn_input_ok = true;
 		sprintf(client_message,"----- Orderbuffer(max(%d): ------\n", (int)ORDERBUFFERLENGTH); 
 		write(new_tn_in_socket , client_message , strlen(client_message));
@@ -363,7 +363,7 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 	}	
     // html order
 	// lists the current order/orderbuffer for html page
-	if (( strcmp(wort1,cmp_html) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (wort3 == NULL) && (wort4 == NULL) ) {
+	if (( strcmp(wort1,cmp_html) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
 		tn_input_ok = true;
 		sprintf(client_message,"\n<center><big>Orderbuffer</big><table><tr><th>OrderNo</th><th>EntryTime</th><th>Node</th><th>Channel</th><th>Value</th></tr>\n"); 
 		write(new_tn_in_socket , client_message , strlen(client_message));
@@ -388,10 +388,10 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 		}
 		sprintf(client_message,"</table></center>\n"); 
 		write(new_tn_in_socket , client_message , strlen(client_message));
-	}	
+    }	
     // init
 	// initialisation of rf24hubd: reloads data from database
-	if (( strcmp(wort1,cmp_init) == 0 ) && (wort2 == NULL) && (wort3 == NULL) && (wort4 == NULL) ) {
+	if ( (strcmp(wort1,cmp_init) == 0) && (strlen(wort2) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
 		tn_input_ok = true;
 		init_system();
 	}
