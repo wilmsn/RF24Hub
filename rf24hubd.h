@@ -46,7 +46,11 @@ V1.0 Initial version after comming from sensorhub
 #include <netdb.h> 
 #include <arpa/inet.h>
 #include <fcntl.h>
+#include <thread>
+
 #define BUF 1024
+
+using namespace std;
 
 enum logmode_t { systemlog, interactive, logfile };
 logmode_t logmode;
