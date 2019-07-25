@@ -34,9 +34,9 @@ V1.0 Initial version after comming from sensorhub
 #include <sys/msg.h>
 #include <sys/socket.h>
 #include <stdio.h>
-#include <mysql/my_config.h>
-#include <mysql/my_global.h>
-#include <mysql/mysql.h>
+//#include <mariadb/my_config.h>
+//#include <mariadb/my_global.h>
+#include <mariadb/mysql.h>
 #include <unistd.h>
 #include <getopt.h>
 #include <syslog.h>

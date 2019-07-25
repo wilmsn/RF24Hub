@@ -29,7 +29,7 @@ all: rf24hubd
 
 # Make the sensorhub deamon
 rf24hubd: rf24hubd.cpp
-	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24network ${MYSQLLIBS} $^ -o $@
+	g++ ${CCFLAGS} -Wall -I ${MARIADB_INC} -lrf24-bcm -lrf24network ${MARIADB_LIBS} $^ -o $@
 
 # clear build files
 clean:

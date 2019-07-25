@@ -20,7 +20,7 @@ void parse_config (struct config_parameters * parms) {
     if (buff[0] == '\n' || buff[0] == '#')
       continue;
     /* Parse name/value pair from line */
-    char name[PARAM_MAXLEN], value[PARAM_MAXLEN];
+    char name[PARAM_MAXLEN+1], value[PARAM_MAXLEN+1];
     s = strtok (buff, "=");
     if (s==NULL)
       continue;
@@ -908,7 +908,7 @@ uint64_t mymillis(void) {
 void logmsg(int mesgloglevel, char *mymsg){
 	if ( logmode == logfile ) {
 		if (mesgloglevel <= verboselevel) {
-			char buf[3];
+			char buf[20];
 			logfile_ptr = fopen (parms.logfilename,"a");
 			if ( logfile_ptr != NULL ) {
 				time_t now = time(0);
