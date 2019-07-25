@@ -13,11 +13,9 @@
 #
 PREFIX=/usr/local
 EXECDIR=${PREFIX}/bin
-INCLUDEDIR=${PREFIX}/include
-INCLUDEDIR1=/usr/include/mysql
-MYSQLLIBS := $(shell mysql_config --libs) 
-
-ARCH=armv6zk
+CC=g++
+MARIADB_LIBS := $(shell mariadb_config --libs) 
+MARIADB_INC := $(shell mariadb_config --cflags)
 ifeq "$(shell uname -m)" "armv7l"
 ARCH=armv7-a
 endif
