@@ -14,8 +14,8 @@
 PREFIX=/usr/local
 EXECDIR=${PREFIX}/bin
 CC=g++
-MARIADB_LIBS := $(shell mysql_config --libs) 
-MARIADB_INC := $(shell mysql_config --cflags)
+MARIADB_LIBS := $(shell mariadb_config --libs) 
+MARIADB_INC := $(shell mariadb_config --cflags)
 #ARCH=armv6zk
 ifeq "$(shell uname -m)" "armv7l"
 ARCH=armv7-a
