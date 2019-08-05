@@ -244,20 +244,23 @@ void receive_udp_in(void) {
 	hints.ai_flags = AI_PASSIVE; // use my IP
 
 	if ((rv = getaddrinfo(NULL, "7002", &hints, &servinfo)) != 0) {
-		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
-		//return 1;
+        sprintf(debug, "ERROR: getaddrinfo: %s", gai_strerror(rv));
+        logmsg(VERBOSECRITICAL, debug);
+		exithandler();
 	}
 
 	// loop through all the results and bind to the first we can
 	for(p = servinfo; p != NULL; p = p->ai_next) {
 		if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
-			perror("listener: socket");
+            sprintf(debug, "ERROR: listener: socket");
+            logmsg(VERBOSECRITICAL, debug);
 			continue;
 		}
 
 		if (bind(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
 			close(sockfd);
-			perror("listener: bind");
+            sprintf(debug, "ERROR: listener: bind");
+            logmsg(VERBOSECRITICAL, debug);
 			continue;
 		}
 
@@ -265,8 +268,9 @@ void receive_udp_in(void) {
 	}
 
 	if (p == NULL) {
-		fprintf(stderr, "listener: failed to bind socket\n");
-		//return 2;
+        sprintf(debug, "ERROR: listener: failed to bind socket");
+        logmsg(VERBOSECRITICAL, debug);
+		exithandler();
 	}
 
 	freeaddrinfo(servinfo);
@@ -277,8 +281,9 @@ void receive_udp_in(void) {
 	
 //	if ((numbytes = recvfrom(sockfd, buf, MAXBUFLEN-1 , 0, (struct sockaddr *)&their_addr, &addr_len)) == -1) {
         if ((numbytes = recvfrom(sockfd, &udp_msg, sizeof(udp_msg), 0, (struct sockaddr *)&their_addr,  &addr_len)) == -1) {
-            perror("recvfrom");
-            exit(1);
+            sprintf(debug, "ERROR: recvfrom");
+            logmsg(VERBOSECRITICAL, debug);
+            exithandler();
         }
 
         printf("listener: got packet from %s\n",
@@ -955,6 +960,17 @@ void process_sensor(uint16_t node, uint8_t channel, float value, bool d1, bool d
 * All the rest 
 *
 ********************************************************************************************/
+void exithandler(void) {
+	sprintf(debug, "ERROR: Cleanup system ... saving *_im tables ...");
+	logmsg(VERBOSECRITICAL, debug);
+    exit_system(); 
+	sprintf(debug, "ERROR: Shutting down ... ");
+	logmsg(VERBOSECRITICAL, debug);
+    unlink(parms.pidfilename);
+//	msgctl(msqid, IPC_RMID, NULL);
+    exit (0);
+}
+
 void sighandler(int signal) {
 	sprintf(debug, "SIGTERM: Cleanup system ... saving *_im tables ...");
 	logmsg(VERBOSECRITICAL, debug);

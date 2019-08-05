@@ -263,6 +263,8 @@ void process_sensor(uint16_t node, uint8_t sensor, float value, bool d1, bool d2
 ********************************************************************************************/
 uint64_t mymillis(void);
 
+void exithandler(void);
+
 void sighandler(int signal);
 
 void logmsg(int mesgloglevel, char *mymsg);
