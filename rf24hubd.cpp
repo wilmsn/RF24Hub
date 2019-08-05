@@ -225,7 +225,76 @@ void receive_tn_in(int new_tn_in_socket, struct sockaddr_in * address) {
     free(client_message);
     //                 exit(0);
 }
+
+void receive_udp_in(void) {
+	int sockfd = 0;
+	struct addrinfo hints, *servinfo, *p;
+	int rv;
+	int numbytes;
+	struct sockaddr_storage their_addr;
+//	char buf[MAXBUFLEN];
+	socklen_t addr_len;
+	char s[INET6_ADDRSTRLEN];
+    struct udp_msg_t udp_msg;
+
+	memset(&hints, 0, sizeof hints);
+//	hints.ai_family = AF_UNSPEC; // set to AF_INET to force IPv4
+	hints.ai_family = AF_INET6; // set to AF_INET to force IPv4
+	hints.ai_socktype = SOCK_DGRAM;
+	hints.ai_flags = AI_PASSIVE; // use my IP
+
+	if ((rv = getaddrinfo(NULL, "7002", &hints, &servinfo)) != 0) {
+		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
+		//return 1;
+	}
+
+	// loop through all the results and bind to the first we can
+	for(p = servinfo; p != NULL; p = p->ai_next) {
+		if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
+			perror("listener: socket");
+			continue;
+		}
+
+		if (bind(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
+			close(sockfd);
+			perror("listener: bind");
+			continue;
+		}
+
+		break;
+	}
+
+	if (p == NULL) {
+		fprintf(stderr, "listener: failed to bind socket\n");
+		//return 2;
+	}
+
+	freeaddrinfo(servinfo);
+
+	printf("listener: waiting to recvfrom...\n");
+	addr_len = sizeof their_addr;
+    while(1) { 
 	
+//	if ((numbytes = recvfrom(sockfd, buf, MAXBUFLEN-1 , 0, (struct sockaddr *)&their_addr, &addr_len)) == -1) {
+        if ((numbytes = recvfrom(sockfd, &udp_msg, sizeof(udp_msg), 0, (struct sockaddr *)&their_addr,  &addr_len)) == -1) {
+            perror("recvfrom");
+            exit(1);
+        }
+
+        printf("listener: got packet from %s\n",
+		inet_ntop(their_addr.ss_family,	get_in_addr((struct sockaddr *)&their_addr), s, sizeof s));
+        printf("listener: packet is %d bytes long\n", numbytes);
+//	buf[numbytes] = '\0';
+//	printf("listener: packet contains \"%s\"\n", buf);
+        printf("listener: packet received \n");
+        printf("Network_number: %u \n",udp_msg.network_id);
+        printf("Msg_number: %u \n",udp_msg.msg_id);
+        printf("Sensor_id: %u \n",udp_msg.sensor_id);
+        printf("Sensor_value: %f \n",udp_msg.value);
+    }
+	close(sockfd);
+}
+
 void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 /* Messages can llook like this:
        <word1		word2		word3		word4 				function>
@@ -1066,6 +1135,16 @@ void scanner(char scanlevel) {
   printf("\n"); 
 }
 
+void *get_in_addr(struct sockaddr *sa)
+{
+	if (sa->sa_family == AF_INET) {
+		return &(((struct sockaddr_in*)sa)->sin_addr);
+	}
+
+	return &(((struct sockaddr_in6*)sa)->sin6_addr);
+}
+
+
 int main(int argc, char* argv[]) {
     pid_t pid;
 	int c;
@@ -1081,6 +1160,7 @@ int main(int argc, char* argv[]) {
 
 	/* vars for telnet socket handling */
 	int tn_in_socket, new_tn_in_socket;
+	
 	socklen_t addrlen;
 //	char *buffer =  (char*) malloc (BUF);
 	struct sockaddr_in address;
@@ -1311,6 +1391,17 @@ int main(int argc, char* argv[]) {
 		fcntl( tn_in_socket, F_SETFL, save_fd );
 	}
     sleep(2);
+	
+	
+ ///>>>>>>>> UDP Test <<<<<<<
+ 	if ( 1 ) {
+        thread t2(receive_udp_in);
+        t2.detach();
+    }
+	sleep(2);
+ ///>>>>>>>> END UDP Test <<<<<<<
+	
+
     sprintf(debug, "starting radio on channel ... %d ", parms.rf24network_channel);
     logmsg(VERBOSESTARTUP, debug);
     radio.begin();

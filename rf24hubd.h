@@ -48,6 +48,10 @@ V1.0 Initial version after comming from sensorhub
 #include <fcntl.h>
 #include <thread>
 
+#include <errno.h>
+#include <netinet/in.h>
+#include <netdb.h>
+
 #define BUF 1024
 
 using namespace std;
@@ -78,6 +82,14 @@ RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);
 RF24Network network(radio);
 
 uint16_t orderno, init_orderno;
+
+// a test structure for values comming via UDP
+struct udp_msg_t {
+	uint32_t 		network_id;
+	uint32_t		msg_id;
+	uint32_t		sensor_id;
+	float			value;
+};
 
 // structure to handle the sensors, filled from DB
 struct sensor_t {
@@ -255,7 +267,7 @@ void sighandler(int signal);
 
 void logmsg(int mesgloglevel, char *mymsg);
 
-
+void *get_in_addr(struct sockaddr *sa);
 
 int main(int argc, char* argv[]);
 
