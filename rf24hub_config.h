@@ -18,6 +18,7 @@ rf24hub_config.h ==> all global definitions go here
 //
 //-------------------------------------------------------
 //
+#define VERBOSELEVELDEFAULT 2
 #define ORDERLENGTH 80
 #define ORDERBUFFERLENGTH 80
 // How long do we try to deliver (in msec) => 20 Min.
