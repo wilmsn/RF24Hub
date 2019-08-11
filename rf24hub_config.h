@@ -50,6 +50,7 @@ rf24hub_config.h ==> all global definitions go here
 #define VERBOSETELNET 7
 #define VERBOSESQL 8
 #define VERBOSEOTHER 9
+#define TELNETBUFFERSIZE 800
 
 
 #endif // _RF24HUB_CONFIG_H_

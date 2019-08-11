@@ -193,6 +193,39 @@ void prepare_tn_cmd(uint16_t node, uint8_t channel, float value) {
 	exec_tn_cmd(telnet_cmd);
 }
 	
+void receive_tn_in(int new_tn_in_socket, struct sockaddr_in * address) {
+    char *buffer =  (char*) malloc (TELNETBUFFERSIZE);
+    char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
+    ssize_t MsgLen;
+    // send something like a prompt. perl telnet is waiting for it otherwise we get error
+    // use this in perl: my $t = new Net::Telnet (Timeout => 2, Port => 7001, Prompt => '/rf24hub>/');
+    sprintf(client_message,"rf24hub> ");
+    write(new_tn_in_socket , client_message , strlen(client_message));
+	sprintf (debug,"Client %s ist connected ...", inet_ntoa (address->sin_addr));
+	logmsg(VERBOSETELNET, debug);
+    sprintf(buffer,"                                 ");
+    MsgLen = recv(new_tn_in_socket, buffer, TELNETBUFFERSIZE, 0);
+//    sprintf(client_message,"%s",buffer);
+//    write(new_tn_in_socket , client_message , strlen(client_message));
+//    char msglen_str[10];
+//    sprintf(msglen_str,"%ld",MsgLen);
+	sprintf (debug,"Buffer: %s MsgLen: %d ", trim(buffer), MsgLen);
+	logmsg(VERBOSETELNET, debug);
+
+//    debug = "Buffer: \"";
+//    debug += trim(buffer);
+//    debug += "\" Msglen: ";
+//    debug += msglen_str;
+//    cfg.logmsg(VERBOSETELNET, debug);
+    if (MsgLen>0) {
+        process_tn_in(new_tn_in_socket, buffer, client_message);
+    }
+    close (new_tn_in_socket);
+    free(buffer);
+    free(client_message);
+    //                 exit(0);
+}
+	
 void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 /* Messages can llook like this:
        <word1		word2		word3		word4 				function>
@@ -215,6 +248,7 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 		 cmp_html[]="html",
 		 cmp_order[]="order",	 
 		 cmp_verbose[]="verbose";	 
+	char *wort1a, *wort2a, *wort3a, *wort4a;
 	char *wort1, *wort2, *wort3, *wort4;
 	uint16_t node = 0;
 	uint32_t akt_sensor = 0;
@@ -223,13 +257,41 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 	trim(buffer);
 	sprintf(debug,"Incoming telnet data: %s ",buffer);
 	logmsg(VERBOSETELNET, debug);
-	wort1 = strtok(buffer, delimiter);
-	wort2 = strtok(NULL, delimiter);
-	wort3 = strtok(NULL, delimiter);
-	wort4 = strtok(NULL, delimiter);
+	wort1a = strtok(buffer, delimiter);
+	wort2a = strtok(NULL, delimiter);
+	wort3a = strtok(NULL, delimiter);
+	wort4a = strtok(NULL, delimiter);
+    if (wort1a) { 
+        wort1 = static_cast<char*>(malloc(strlen(wort1a)+1));
+        strcpy(wort1, wort1a);
+    } else { 
+        wort1 = static_cast<char*>(malloc(1));
+        wort1[0] = '\0';
+    }
+    if (wort2a) { 
+        wort2 = static_cast<char*>(malloc(strlen(wort2a)+1));
+        strcpy(wort2, wort2a);
+    } else { 
+        wort2 = static_cast<char*>(malloc(1));
+        wort2[0] = '\0';
+    }
+    if (wort3a) { 
+        wort3 = static_cast<char*>(malloc(strlen(wort3a)+1));
+        strcpy(wort3, wort3a);
+    } else { 
+        wort3 = static_cast<char*>(malloc(1));
+        wort3[0] = '\0';
+    }
+    if (wort4a) { 
+        wort4 = static_cast<char*>(malloc(strlen(wort4a)+1));
+        strcpy(wort4, wort4a);
+    } else { 
+        wort4 = static_cast<char*>(malloc(1));
+        wort4[0] = '\0';
+    }
 	// set/setlast sensor <sensor> <value>
 	// sets a sensor to a value, setlast starts the request over air
-	if ( (( strcmp(wort1,cmp_set) == 0 ) || ( strcmp(wort1,cmp_setlast) == 0 )) && (strcmp(wort2,cmp_sensor) == 0) && (wort3 != NULL) && (wort4 != NULL) ) {
+	if ( (( strcmp(wort1,cmp_set) == 0 ) || ( strcmp(wort1,cmp_setlast) == 0 )) && (strcmp(wort2,cmp_sensor) == 0) && (strlen(wort3) > 1) && (strlen(wort4) > 0) ) {
 		tn_input_ok = true;
 		// In word3 we may have a) the number of the sensor b) the name of the sensor c) the fhem_dev of a sensor
 		// for the processing we need the number of the sensor ==> find it!
@@ -259,7 +321,7 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 	}
     // set node <node> init
 	// sends the init sequence to a node
-	if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_node) == 0) && (wort3 != NULL) && (strcmp(wort4,cmp_init) == 0) ) {
+	if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_node) == 0) && (strlen(wort3) > 1) && (strcmp(wort4,cmp_init) == 0) ) {
 		tn_input_ok = true;
 		init_node(getnodeadr(wort3));
 	}
@@ -273,7 +335,7 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 	}
     // list order
 	// lists the current orderbuffer
-	if (( strcmp(wort1,cmp_list) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (wort3 == NULL) && (wort4 == NULL) ) {
+	if (( strcmp(wort1,cmp_list) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
 		tn_input_ok = true;
 		sprintf(client_message,"----- Orderbuffer(max(%d): ------\n", (int)ORDERBUFFERLENGTH); 
 		write(new_tn_in_socket , client_message , strlen(client_message));
@@ -301,7 +363,7 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 	}	
     // html order
 	// lists the current order/orderbuffer for html page
-	if (( strcmp(wort1,cmp_html) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (wort3 == NULL) && (wort4 == NULL) ) {
+	if (( strcmp(wort1,cmp_html) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
 		tn_input_ok = true;
 		sprintf(client_message,"\n<center><big>Orderbuffer</big><table><tr><th>OrderNo</th><th>EntryTime</th><th>Node</th><th>Channel</th><th>Value</th></tr>\n"); 
 		write(new_tn_in_socket , client_message , strlen(client_message));
@@ -326,10 +388,10 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 		}
 		sprintf(client_message,"</table></center>\n"); 
 		write(new_tn_in_socket , client_message , strlen(client_message));
-	}	
+    }	
     // init
 	// initialisation of rf24hubd: reloads data from database
-	if (( strcmp(wort1,cmp_init) == 0 ) && (wort2 == NULL) && (wort3 == NULL) && (wort4 == NULL) ) {
+	if ( (strcmp(wort1,cmp_init) == 0) && (strlen(wort2) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
 		tn_input_ok = true;
 		init_system();
 	}
@@ -366,6 +428,10 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 		sprintf(client_message,"Command received => OK\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
 	}		
+	free(wort1);
+    free(wort2);
+    free(wort3);
+    free(wort4);
 }
 	
 /*******************************************************************************************
@@ -1014,13 +1080,13 @@ int main(int argc, char* argv[]) {
 	strcpy(config_file,"x");
 
 	/* vars for telnet socket handling */
-	int tn_in_socket, new_tn_in_socket, MsgLen;
+	int tn_in_socket, new_tn_in_socket;
 	socklen_t addrlen;
-	char *buffer =  (char*) malloc (BUF);
+//	char *buffer =  (char*) malloc (BUF);
 	struct sockaddr_in address;
 	long save_fd;
 	const int y = 1;
-	bool wait4message = false;
+//	bool wait4message = false;
 	
     // processing argc and argv[]
 	while (1) {
@@ -1266,7 +1332,16 @@ int main(int argc, char* argv[]) {
 		if (orderno > 50000) orderno = 1;
         /* Handling of incoming messages */
 		if ( in_port_set ) {
-			char client_message[30];
+//			char client_message[30];
+            new_tn_in_socket = accept ( tn_in_socket, (struct sockaddr *) &address, &addrlen );
+            if (new_tn_in_socket > 0) {
+                //receive_tn_in(new_tn_in_socket, &address);
+                thread t2(receive_tn_in, new_tn_in_socket, &address);
+                t2.detach();
+                //close (new_tn_in_socket);
+            }
+            
+/*            
 			if ( ! wait4message ) {  
 				new_tn_in_socket = accept ( tn_in_socket, (struct sockaddr *) &address, &addrlen );
 				if (new_tn_in_socket > 0) {
@@ -1282,7 +1357,7 @@ int main(int argc, char* argv[]) {
 				save_fd = fcntl( new_tn_in_socket, F_GETFL );
 				save_fd |= O_NONBLOCK;
 				fcntl( new_tn_in_socket, F_SETFL, save_fd );
-				/* Process data  */
+				// Process data  //
 				sprintf(buffer,"                                                                               ");
 				MsgLen = recv(new_tn_in_socket, buffer, BUF, 0);
 				if (MsgLen>0) {
@@ -1291,6 +1366,7 @@ int main(int argc, char* argv[]) {
 					wait4message = false;
 				}
 			}	 
+			*/
 		}
 		network.update();
 		if ( network.available() ) {
