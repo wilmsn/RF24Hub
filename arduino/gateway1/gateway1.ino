@@ -67,6 +67,10 @@ void setup() {
   display.print("channel ");
   display.println(RADIOCHANNEL);
 
+  uint16_t mypipe;
+  mypipe = network.addressOfPipe(01,1);
+  display.print("PipeAdress:"); display.println(mypipe);   
+
 }
 
 void loop() {

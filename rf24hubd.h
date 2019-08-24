@@ -12,20 +12,20 @@ V1.0 Initial version after comming from sensorhub
 #ifndef _RF24HUBD_H_   /* Include guard */
 #define _RF24HUBD_H_
 
-#define PRGNAME "rf24hub"
-#define PRGVERSION "1.0"
 //--------- End of global define -----------------
 
 #include "rf24hub_common.h"
 #include "rf24hub_config.h"
+#include "config.h"
+#include "telnet.h"
 
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
 #include <string> 
-#include <RF24/RF24.h>
-#include <RF24/utility/RPi/bcm2835.h>
-#include <RF24Network/RF24Network.h>
+//#include <RF24/RF24.h>
+//#include <RF24/utility/RPi/bcm2835.h>
+//#include <RF24Network/RF24Network.h>
 #include <time.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -34,6 +34,8 @@ V1.0 Initial version after comming from sensorhub
 #include <sys/msg.h>
 #include <sys/socket.h>
 #include <stdio.h>
+//#include <mariadb/my_config.h>
+//#include <mariadb/my_global.h>
 #include <mariadb/mysql.h>
 #include <unistd.h>
 #include <getopt.h>
@@ -44,34 +46,57 @@ V1.0 Initial version after comming from sensorhub
 #include <netdb.h> 
 #include <arpa/inet.h>
 #include <fcntl.h>
+#include <thread>
+
+#include <errno.h>
+#include <netinet/in.h>
+#include <netdb.h>
+
 #define BUF 1024
+
+using namespace std;
+
+struct udp_data_t udp_data;
 
 enum logmode_t { systemlog, interactive, logfile };
 logmode_t logmode;
+sockType_t sockType;
+
 int verboselevel = 2;
-int sockfd;
-bool start_daemon=false, tn_host_set = false, tn_port_set = false, tn_active = false, in_port_set = false, order_waiting = false;
-char logfilename[300];
-char tn_hostname[20], tn_portno[7];
-struct sockaddr_in serv_addr;
-struct hostent *server;
-FILE * pidfile_ptr;
-FILE * logfile_ptr;
-MYSQL     *db;
-MYSQL_RES *res;
-MYSQL_ROW row;
-char* pEnd;
-const char* prgversion=PRGVERSION;
-uint64_t start_time;
+
+struct sockaddr_in tcp_address, udp_address;
+struct sockaddr_storage tcp_client_addr, udp_client_addr; 
+socklen_t tcp_addrlen, udp_addrlen;
+int tcp_sockfd, udp_sockfd;
+int numbytes;
+
+//int sockfd;
+bool order_waiting = false;
+//struct sockaddr_in serv_addr;
+//struct hostent *server;
+//MYSQL     *db;
+//MYSQL_RES *res;
+//MYSQL_ROW row;
+//char* pEnd;
+//const char* prgversion=PRGVERSION;
+//uint64_t start_time;
 
 
 // Setup for GPIO 25 CE and CE0 CSN with SPI Speed @ 8Mhz
-RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
+//RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
 //RF24 radio(22,0,BCM2835_SPI_SPEED_1MHZ);
 
-RF24Network network(radio);
+//RF24Network network(radio);
 
-uint16_t orderno, init_orderno;
+//uint16_t orderno, init_orderno;
+
+// a test structure for values comming via UDP
+struct udp_msg_t {
+	uint32_t 		network_id;
+	uint32_t		msg_id;
+	uint32_t		sensor_id;
+	float			value;
+};
 
 // structure to handle the sensors, filled from DB
 struct sensor_t {
@@ -113,24 +138,6 @@ struct order_buffer_t {
 };
 struct order_buffer_t 		order_buffer[ORDERBUFFERLENGTH];
 
-
-struct config_parameters {
-  char logfilename[PARAM_MAXLEN_LOGFILE];
-  char pidfilename[PARAM_MAXLEN_PIDFILE];
-  char db_hostname[PARAM_MAXLEN_HOSTNAME];
-  int db_port;
-  char db_schema[PARAM_MAXLEN_DB_SCHEMA];
-  char db_username[PARAM_MAXLEN_DB_USERNAME];
-  char db_password[PARAM_MAXLEN_DB_PASSWORD];
-  char telnet_hostname[PARAM_MAXLEN_HOSTNAME];
-  int telnet_port;
-  int incoming_port;
-  rf24_datarate_e rf24network_speed;
-  uint8_t rf24network_channel;
-};
-
-struct config_parameters parms;
-
 int orderloopcount=0;
 int ordersqlexeccount=0;
 bool ordersqlrefresh=true;
@@ -138,38 +145,19 @@ bool log2logfile=false;
 bool rf24_carrier=false;
 bool rf24_rpd=false;
 
-RF24NetworkHeader rxheader;
-RF24NetworkHeader txheader;
+//RF24NetworkHeader rxheader;
+//RF24NetworkHeader txheader;
 
-char buffer1[50];
-char buffer2[50];
-char debug[DEBUGSTRINGSIZE];
-char sql_stmt[SQLSTRINGSIZE];
+//char buffer1[50];
+//char buffer2[50];
+//char sql_stmt[SQLSTRINGSIZE];
 
-uint16_t getnodeadr(char *node);
-char config_file[PARAM_MAXLEN_CONFIGFILE];
+//uint16_t getnodeadr(char *node);
+//char config_file[PARAM_MAXLEN_CONFIGFILE];
 
+string debug;
 
-/*******************************************************************************************
-*
-* Configfilehandling
-* default place to look at is: DEFAULT_CONFIG_FILE (see sensorhub.h)
-*
-********************************************************************************************/
-
-void init_parameters (struct config_parameters * parms);
-
-void parse_config (struct config_parameters * parms);
-
-void print_config (struct config_parameters * parms);
-
-void usage(const char *prgname);
-
-/*
- * trim: get rid of trailing and leading whitespace...
- *       ...including the annoying "\n" from fgets()
- */
-char * trim (char * s);
+CONFIG cfg(PRGNAME, PRGVERSION);
 
 /*******************************************************************************************
 *
@@ -245,11 +233,11 @@ void process_sensor(uint16_t node, uint8_t sensor, float value, bool d1, bool d2
 ********************************************************************************************/
 uint64_t mymillis(void);
 
+void exithandler(void);
+
 void sighandler(int signal);
 
-void logmsg(int mesgloglevel, char *mymsg);
-
-
+void *get_in_addr(struct sockaddr *sa);
 
 int main(int argc, char* argv[]);
 
