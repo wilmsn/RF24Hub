@@ -10,6 +10,9 @@ V0.1 Initial version
 #ifndef _RF24GATEWAY_H_   /* Include guard */
 #define _RF24GATEWAY_H_
 
+#define PRGNAME "rf24gateway"
+#define PRGVERSION "0.1"
+
 //--------- End of global define -----------------
 
 #include "rf24hub_common.h"

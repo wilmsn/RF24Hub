@@ -12,6 +12,9 @@ V1.0 Initial version after comming from sensorhub
 #ifndef _RF24HUBD_H_   /* Include guard */
 #define _RF24HUBD_H_
 
+#define PRGNAME "rf24hub"
+#define PRGVERSION "1.2"
+
 //--------- End of global define -----------------
 
 #include "rf24hub_common.h"

@@ -37,31 +37,37 @@ class CONFIG {
     
 private:
 
-struct configParameters_s {
-  string logFilename;
-  string pidFilename;
-  string dbHostname;
-  int dbPort;
-  string dbSchema;
-  string dbUsername;
-  string dbPassword;
-  string fhemHostname;
-  int fhemPort;
-  string telnetPort;
-  string udpPort;
-  int verboseLevel;
-  string rf24NetworkSpeed;
-  uint8_t rf24NetworkChannel;
-};
-
 FILE * pidfile_ptr;
 
 string configFile;
 
 public:
 
-// all the setings are stored in this struct
-configParameters_s parms;
+enum systempart_t { RF24HUB, RF24GATEWAY };
+systempart_t syspart_hub = RF24HUB;
+systempart_t syspart_GW = RF24GATEWAY;
+
+	
+// all the setings are stored in this variables
+
+string rf24HubHostName;
+string rf24HubLogFileName;
+string rf24HubPidFileName;
+string rf24HubTelnetPort;
+string rf24HubUdpPort;
+string rf24GWLogFileName;
+string rf24GWPidFileName;
+string rf24GWUdpPort;
+string dbHostName;
+string dbPort;
+string dbSchema;
+string dbUserName;
+string dbPassWord;
+string fhemHostName;
+string fhemPort;
+string rf24Speed;
+string rf24Channel;
+
 // the programm name goes here
 string prgName;
 // the programm version goes here
@@ -79,7 +85,7 @@ bool startDaemon;
 // interactiveMode = true: prints logs to console
 bool interactiveMode = false;
 // logfileMode = true: prints logs to file 
-bool logfileMode = false;
+bool logFileMode = false;
 // verboseLevel(1..9): higher number more detailed logs
 int verboseLevel = 2;
 // will start the scanner running over all channels
@@ -121,17 +127,17 @@ void printConfig (void);
 /*
  * If a pidfile is defined in the config file it will be set 
  */
-int setPidFile(void);
+int setPidFile(systempart_t);
 
 /*
  * If a pidfile is set it will be set 
  */
-void removePidFile(void);
+void removePidFile(systempart_t);
 
 /*
  * checks if a pid file is set (=true)
  */
-int checkPidFileSet(void);
+int checkPidFileSet(systempart_t);
 
 /*
  * sets and opens the logfile to the given file

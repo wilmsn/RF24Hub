@@ -24,7 +24,7 @@ CONFIG::CONFIG(string _prgName, string _prgVersion) {
 }
 
 CONFIG::~CONFIG() {
-    if ( logfileMode )  logmsg(VERBOSESTARTUP,"Logfile closed");
+    if ( logFileMode )  logmsg(VERBOSESTARTUP,"Logfile closed");
 }
 
 void CONFIG::processParams(int argc, char* argv[]) {
@@ -91,7 +91,6 @@ void CONFIG::processParams(int argc, char* argv[]) {
             break;
 			case 'v':
                 verboseLevel = (optarg[0] - '0') * 1;
-                parms.verboseLevel = verboseLevel;
             break;
             case 'c':
                 //std::string s;
@@ -149,43 +148,49 @@ void CONFIG::processParams(int argc, char* argv[]) {
             strncpy (value, s, PARAM_MAXLEN);
          trim (value);
     /* Copy into correct entry in parameters struct */
-    if      (strcmp(name, "db_hostname")==0) parms.dbHostname = value;
-    else if (strcmp(name, "db_port")==0)     parms.dbPort = atoi(value);
-    else if (strcmp(name, "db_schema")==0)   parms.dbSchema = value;
-    else if (strcmp(name, "db_username")==0) parms.dbUsername = value;
-    else if (strcmp(name, "db_password")==0) parms.dbPassword = value;
-    else if (strcmp(name, "verboselevel")==0) {
-            if (verboseLevel)  parms.verboseLevel = verboseLevel;
-            else  parms.verboseLevel = atoi(value);
+    if      (strcmp(name, "db_hostname")==0) dbHostName = value;
+    else if (strcmp(name, "db_port")==0)     dbPort = value;
+    else if (strcmp(name, "db_schema")==0)   dbSchema = value;
+    else if (strcmp(name, "db_username")==0) dbUserName = value;
+    else if (strcmp(name, "db_password")==0) dbPassWord = value;
+    else if (strcmp(name, "rf24hub_verboselevel")==0) {
+            if (! verboseLevel) verboseLevel = atoi(value);
+		}
+    else if (strcmp(name, "rf24hub_hostname")==0) {
+            rf24HubHostName = value;
         }
     else if (strcmp(name, "fhem_hostname")==0) {
-            parms.fhemHostname = value;
+            fhemHostName = value;
             fhemHostSet=true;
         }
     else if (strcmp(name, "fhem_port")==0) {
-            parms.fhemPort = atoi(value);
+            fhemPort = value;
             fhemPortSet=true;
         }
-    else if (strcmp(name, "telnet_port")==0) {
-            parms.telnetPort = value;
+    else if (strcmp(name, "rf24hub_tcp_port")==0) {
+            rf24HubTelnetPort = value;
             telnetPortSet=true;
         }
-    else if (strcmp(name, "udp_port")==0) {
-            parms.udpPort = value;
+    else if (strcmp(name, "rf24hub_udp_port")==0) {
+            rf24HubUdpPort = value;
             udpPortSet=true;
         }
-    else if (strcmp(name, "logfile")==0) {
-            parms.logFilename = value;
-            logfileMode = true;
+    else if (strcmp(name, "rf24hub_logfile")==0) {
+            rf24HubLogFileName = value;
+            logFileMode = true;
         }
-    else if (strcmp(name, "pidfile")==0)                parms.pidFilename = value;
-    else if (strcmp(name, "rf24network_channel")==0)    parms.rf24NetworkChannel = atoi(value);
-    else if (strcmp(name, "rf24network_speed")==0) {
+    else if (strcmp(name, "rf24hub_pidfile")==0) {
+            rf24HubPidFileName = value;
+		}
+    else if (strcmp(name, "rf24_channel")==0) {
+		   rf24Channel = value;
+	   }
+    else if (strcmp(name, "rf24_speed")==0) {
             if (strcmp(value, "RF24_2MBPS")==0 || strcmp(value, "RF24_250KBPS")==0 || strcmp(value, "RF24_1MBPS")==0) {
-                parms.rf24NetworkSpeed = value;
+                rf24Speed = value;
             } else {
                 cout << value << ": Unknown value for " << name << "! I use RF24_1MBPS " << endl;
-                parms.rf24NetworkSpeed = "RF24_1MBPS";
+                rf24Speed = "RF24_1MBPS";
             }
         } 
     else
@@ -193,36 +198,36 @@ void CONFIG::processParams(int argc, char* argv[]) {
   }
   /* Close file */
   fclose (fp);
-  if ( logfileMode ) {
+//  if ( logFileMode ) {
  //   interactiveMode = false;
-  }
+//  }
   if ( forceInteractiveMode ) {
       startDaemon = false;
       interactiveMode = true;
-      logfileMode = false;
+      logFileMode = false;
   }
-  if ( logfileMode ) logmsg(VERBOSESTARTUP, "Logfile opened");
+  if ( logFileMode ) logmsg(VERBOSESTARTUP, "Logfile opened");
 
 }
 
 void CONFIG::printConfig (void) {
-    cout << "Logfile: "        << parms.logFilename << endl;
-    cout << "PIDfile: "        << parms.pidFilename << endl;
-    cout << "DB-Hostname:"     << parms.dbHostname << endl;
-    cout << "DB-Port:"         << parms.dbPort << endl;
-    cout << "DB-Schema:"       << parms.dbSchema << endl;
-    cout << "DB-Username:"     << parms.dbUsername << endl;
-    cout << "DB-Password:"     << parms.dbPassword << endl;
-    cout << "FHEM-Hostname:"   << parms.fhemHostname << endl;
-    cout << "FHEM-Port:"       << parms.fhemPort << endl;
-    cout << "telnet Port:"     << parms.telnetPort << endl;
-    cout << "udp Port:"        << parms.udpPort << endl;
-    cout << "Verboselevel:"    << parms.verboseLevel << endl;
+    cout << "Logfile: "        << rf24HubLogFileName << endl;
+    cout << "PIDfile: "        << rf24HubPidFileName << endl;
+    cout << "DB-Hostname:"     << dbHostName << endl;
+    cout << "DB-Port:"         << dbPort << endl;
+    cout << "DB-Schema:"       << dbSchema << endl;
+    cout << "DB-Username:"     << dbUserName << endl;
+    cout << "DB-Password:"     << dbPassWord << endl;
+    cout << "FHEM-Hostname:"   << fhemHostName << endl;
+    cout << "FHEM-Port:"       << fhemPort << endl;
+    cout << "telnet Port:"     << rf24HubTelnetPort << endl;
+    cout << "udp Port:"        << rf24HubUdpPort << endl;
+    cout << "Verboselevel:"    << verboseLevel << endl;
 }
 
 void CONFIG::usage(void) {
-    cout << PRGNAME << " version " << PRGVERSION << endl;
-    cout << "Usage: " << PRGNAME << " <option>" << endl;
+    cout << prgName << " version " << prgVersion << endl;
+    cout << "Usage: " << prgName << " <option>" << endl;
     cout << "with options: " << endl;
     cout << "   -h or -? or --help" << endl;
     cout << "           Print help" << endl;
@@ -243,31 +248,48 @@ void CONFIG::usage(void) {
 
 
     // get pid and write it to pidfile
-int CONFIG::setPidFile(void) {
+int CONFIG::setPidFile(systempart_t syspart) {
     pid_t pid;
     pid=getpid();
-    pidfile_ptr = fopen (parms.pidFilename.c_str(),"w");
+    if ( syspart == RF24HUB ) {
+		pidfile_ptr = fopen (rf24HubPidFileName.c_str(),"w");
+	} 
+    if ( syspart == RF24GATEWAY ) {
+		pidfile_ptr = fopen (rf24GWPidFileName.c_str(),"w");
+	} 
     fprintf(pidfile_ptr,"%d",pid);
     fclose(pidfile_ptr);
     return 1;
 }
 
-int CONFIG::checkPidFileSet(void) {
-    if( access( parms.pidFilename.c_str(), F_OK ) != -1 ) {
-        cerr << "PIDFILE: "; cerr << parms.pidFilename; cerr << " exists, terminating" << endl;
-        return 1;
-    } else {
-        return 0;
-    }
+int CONFIG::checkPidFileSet(systempart_t syspart) {
+    string pidFileName;
+    if ( syspart == RF24HUB ) {
+		pidFileName=rf24HubPidFileName;
+	}
+    if ( syspart == RF24GATEWAY ) {
+		pidFileName=rf24GWPidFileName;
+	}
+	if( access( pidFileName.c_str(), F_OK ) != -1 ) {
+		cerr << "PIDFILE: "; cerr << pidFileName; cerr << " exists, terminating" << endl;
+		return 1;
+	} else {
+		return 0;
+	}
 }
 
-void CONFIG::removePidFile(void) {
-        unlink(parms.pidFilename.c_str());
+void CONFIG::removePidFile(systempart_t syspart) {
+    if ( syspart == RF24HUB ) {
+        unlink(rf24HubPidFileName.c_str());
+	}
+    if ( syspart == RF24GATEWAY ) {
+        unlink(rf24GWPidFileName.c_str());
+	}
 }
 
 void CONFIG::logmsg(int mesgloglevel, string mymsg){
-	if (mesgloglevel <= parms.verboseLevel) {
-        if ( logfileMode ) {
+	if (mesgloglevel <= verboseLevel) {
+        if ( logFileMode ) {
             string line;
             char timestr[20];
 			char m0[2], d0[2], mi0[2], s0[2];
@@ -283,7 +305,7 @@ void CONFIG::logmsg(int mesgloglevel, string mymsg){
             line += timestr;
             line += "] ";
             line += mymsg;
-            ofstream out(parms.logFilename, ios_base::app);
+            ofstream out(rf24HubLogFileName, ios_base::app);
             out << line << endl;
             out.close();
         }	

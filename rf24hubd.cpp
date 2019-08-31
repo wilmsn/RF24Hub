@@ -4,7 +4,7 @@ void sighandler(int signal) {
 //    exit_system(); 
 //	sprintf(debug, "SIGTERM: Shutting down ... ");
 	cfg.logmsg(VERBOSECRITICAL, "SIGTERM: Shutting down ... ");
-    cfg.removePidFile();
+    cfg.removePidFile(cfg.syspart_hub);
 //    unlink(parms.pidfilename);
 //	msgctl(msqid, IPC_RMID, NULL);
     exit (0);
@@ -14,7 +14,7 @@ void error_exit(int myerrno, char* error) {
 //    exit_system(); 
 //	sprintf(debug, "SIGTERM: Shutting down ... ");
 //	logmsg(VERBOSECRITICAL, debug);
-    cfg.removePidFile();
+    cfg.removePidFile(cfg.syspart_hub);
     //unlink(parms.pidfilename);
     exit (myerrno);
 }    
@@ -30,14 +30,14 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
     // check for PID file, if exists terminate else create it
-    if ( cfg.checkPidFileSet() ) {
+    if ( cfg.checkPidFileSet(cfg.syspart_hub) ) {
         return 1;
     }
 	cout << "Startup Parameters:" << endl; 
     cfg.printConfig();
     // starts logging
 	if ( getuid()==0 ) {
-       cfg.setPidFile();
+       cfg.setPidFile(cfg.syspart_hub);
     }
 
     signal(SIGTERM, sighandler);
@@ -45,9 +45,9 @@ int main(int argc, char* argv[]) {
 
     if (cfg.startDaemon) {
         // make sure that we have a logfile
-        if ( ! cfg.logfileMode ) {
+        if ( ! cfg.logFileMode ) {
             cout << "Logfile is needed if runs as deamon ... exiting" << endl; 
-            cfg.removePidFile();
+            cfg.removePidFile(cfg.syspart_hub);
             exit(1);
         } else {
             // starts rf24hubd as a deamon
@@ -70,19 +70,19 @@ int main(int argc, char* argv[]) {
             } else {
                 // nagativ is an error
             cout << "Fork ERROR ... exiting" << endl; 
-            cfg.removePidFile();
+            cfg.removePidFile(cfg.syspart_hub);
             exit(1);
             }
         }
     }
         
     if ( cfg.telnetPortSet ) {
-		openSocket(cfg.parms.telnetPort.c_str(),&tcp_address,&tcp_sockfd,TCP);
+		openSocket(cfg.rf24HubTelnetPort.c_str(),&tcp_address,&tcp_sockfd,TCP);
 	}
     if ( cfg.udpPortSet ) {
-		openSocket(cfg.parms.udpPort.c_str(),&udp_address,&udp_sockfd,UDP);
+		openSocket(cfg.rf24HubUdpPort.c_str(),&udp_address,&udp_sockfd,UDP);
 	}
-        
+cout << "test1" << endl;        
     while(1) {
         /* Handling of incoming messages */
 		if ( cfg.telnetPortSet ) {
