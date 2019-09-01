@@ -27,11 +27,15 @@ ifeq "$(ARCH)" "x86_64"
 endif
 
 # make all
-all: rf24hubd 
+all: rf24hubd rf24gwd
 
-# Make the sensorhub deamon
+# Make the rf24hub deamon
 rf24hubd: config.o database.o fhem.o telnet.o rf24hubd.cpp
 	g++ ${CCFLAGS} -Wall -I ${MARIADB_INC} ${MARIADB_LIBS} $^ -o $@
+
+# Make the rf24gateway deamon
+rf24gwd: config.o telnet.o rf24gwd.cpp
+	g++ ${CCFLAGS} -Wall $^ -o $@
 
 test_config: config.o test_config.o
 	$(CC) ${CCFLAGS} $^ -o $@
@@ -43,7 +47,7 @@ test_telnet: config.o telnet.o test_telnet.o
 
 # clear build files
 clean:
-	rm rf24hubd *.o
+	rm rf24hubd rf24gwd *.o
 
 # Install the sensorhub
 install: 

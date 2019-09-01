@@ -16,7 +16,7 @@
 /*************************************************
  * 
  * This module covers all 
- * the communication comeing in via telnet
+ * the communication comeing in via socket
  * 
  ************************************************/
  
@@ -24,6 +24,8 @@ extern CONFIG cfg;
 extern string debug; 
 extern sockType_t sockType;
 
-void openSocket(const char* port, struct sockaddr_in *address, int* handle, sockType_t sockType );
+void openSocket(const char* host, const char* port, struct sockaddr_in *address, int* handle, sockType_t sockType );
 
 void receiveTelnetMessage(int tn_socket, struct sockaddr_in * address);
+
+void sendUdpMessage(const char* host, const char* port, struct udp_data_t * udp_data );

@@ -21,10 +21,14 @@ char * CONFIG::trim (char * s) {
 CONFIG::CONFIG(string _prgName, string _prgVersion) {
      prgName = _prgName;
      prgVersion = _prgVersion;
+     prgIsHub = ( prgName == RF24HUB_PRGNAME );
+     prgIsGW = ( prgName == RF24GW_PRGNAME );
 }
 
 CONFIG::~CONFIG() {
-    if ( logFileMode )  logmsg(VERBOSESTARTUP,"Logfile closed");
+    if ( prgIsHub ) {
+		if ( logFileMode )  logmsg(VERBOSESTARTUP,"Rf24Hub: Logfile closed");
+	}
 }
 
 void CONFIG::processParams(int argc, char* argv[]) {
@@ -165,22 +169,27 @@ void CONFIG::processParams(int argc, char* argv[]) {
         }
     else if (strcmp(name, "fhem_port")==0) {
             fhemPort = value;
-            fhemPortSet=true;
+            fhemPortSet = true;
         }
     else if (strcmp(name, "rf24hub_tcp_port")==0) {
-            rf24HubTelnetPort = value;
-            telnetPortSet=true;
+            rf24HubTcpPort = value;
+            rf24HubTcpPortSet = true;
         }
     else if (strcmp(name, "rf24hub_udp_port")==0) {
             rf24HubUdpPort = value;
-            udpPortSet=true;
+            rf24HubUdpPortSet = true;
         }
     else if (strcmp(name, "rf24hub_logfile")==0) {
             rf24HubLogFileName = value;
-            logFileMode = true;
         }
     else if (strcmp(name, "rf24hub_pidfile")==0) {
             rf24HubPidFileName = value;
+		}
+    else if (strcmp(name, "rf24gw_logfile")==0) {
+            rf24GWLogFileName = value;
+        }
+    else if (strcmp(name, "rf24gw_pidfile")==0) {
+            rf24GWPidFileName = value;
 		}
     else if (strcmp(name, "rf24_channel")==0) {
 		   rf24Channel = value;
@@ -197,22 +206,29 @@ void CONFIG::processParams(int argc, char* argv[]) {
       cout << "WARNING: " << name << "/" << value << ": Unknown name/value pair!" << endl;
   }
   /* Close file */
-  fclose (fp);
+	fclose (fp);
 //  if ( logFileMode ) {
  //   interactiveMode = false;
 //  }
-  if ( forceInteractiveMode ) {
-      startDaemon = false;
-      interactiveMode = true;
-      logFileMode = false;
-  }
-  if ( logFileMode ) logmsg(VERBOSESTARTUP, "Logfile opened");
-
+	if ( forceInteractiveMode ) {
+		startDaemon = false;
+		interactiveMode = true;
+		logFileMode = false;
+	}
+	if ( logFileMode ) logmsg(VERBOSESTARTUP, "Logfile opened");
+	if ( prgIsGW ) {
+		logFileName = rf24GWLogFileName;
+		pidFileName = rf24GWPidFileName;
+	}
+	if ( prgIsHub ) {
+		logFileName = rf24HubLogFileName;
+		pidFileName = rf24HubPidFileName;
+	}
 }
 
 void CONFIG::printConfig (void) {
-    cout << "Logfile: "        << rf24HubLogFileName << endl;
-    cout << "PIDfile: "        << rf24HubPidFileName << endl;
+    cout << "Logfile: "        << logFileName << endl;
+    cout << "PIDfile: "        << pidFileName << endl;
     cout << "DB-Hostname:"     << dbHostName << endl;
     cout << "DB-Port:"         << dbPort << endl;
     cout << "DB-Schema:"       << dbSchema << endl;
@@ -220,9 +236,15 @@ void CONFIG::printConfig (void) {
     cout << "DB-Password:"     << dbPassWord << endl;
     cout << "FHEM-Hostname:"   << fhemHostName << endl;
     cout << "FHEM-Port:"       << fhemPort << endl;
-    cout << "telnet Port:"     << rf24HubTelnetPort << endl;
+    cout << "telnet Port:"     << rf24HubTcpPort << endl;
     cout << "udp Port:"        << rf24HubUdpPort << endl;
+    if ( rf24HubUdpPortSet ) cout << "rf24HubUdpPortSet = true" << endl; else cout << "rf24HubUdpPortSet = false" << endl;
     cout << "Verboselevel:"    << verboseLevel << endl;
+    
+    cout << prgName << " -- " << RF24HUB_PRGNAME << endl;
+    cout << prgName << " -- " << RF24GW_PRGNAME << endl;
+     if ( prgIsGW ) cout << "Bin GW" << endl;
+     if ( prgIsHub ) cout << "Bin Hub" << endl;
 }
 
 void CONFIG::usage(void) {
@@ -248,28 +270,17 @@ void CONFIG::usage(void) {
 
 
     // get pid and write it to pidfile
-int CONFIG::setPidFile(systempart_t syspart) {
+int CONFIG::setPidFile(void) {
     pid_t pid;
     pid=getpid();
-    if ( syspart == RF24HUB ) {
-		pidfile_ptr = fopen (rf24HubPidFileName.c_str(),"w");
-	} 
-    if ( syspart == RF24GATEWAY ) {
-		pidfile_ptr = fopen (rf24GWPidFileName.c_str(),"w");
-	} 
+	pidfile_ptr = fopen (pidFileName.c_str(),"w");
     fprintf(pidfile_ptr,"%d",pid);
     fclose(pidfile_ptr);
     return 1;
 }
 
-int CONFIG::checkPidFileSet(systempart_t syspart) {
+int CONFIG::checkPidFileSet(void) {
     string pidFileName;
-    if ( syspart == RF24HUB ) {
-		pidFileName=rf24HubPidFileName;
-	}
-    if ( syspart == RF24GATEWAY ) {
-		pidFileName=rf24GWPidFileName;
-	}
 	if( access( pidFileName.c_str(), F_OK ) != -1 ) {
 		cerr << "PIDFILE: "; cerr << pidFileName; cerr << " exists, terminating" << endl;
 		return 1;
@@ -278,13 +289,8 @@ int CONFIG::checkPidFileSet(systempart_t syspart) {
 	}
 }
 
-void CONFIG::removePidFile(systempart_t syspart) {
-    if ( syspart == RF24HUB ) {
-        unlink(rf24HubPidFileName.c_str());
-	}
-    if ( syspart == RF24GATEWAY ) {
-        unlink(rf24GWPidFileName.c_str());
-	}
+void CONFIG::removePidFile() {
+    unlink(pidFileName.c_str());
 }
 
 void CONFIG::logmsg(int mesgloglevel, string mymsg){
@@ -305,7 +311,7 @@ void CONFIG::logmsg(int mesgloglevel, string mymsg){
             line += timestr;
             line += "] ";
             line += mymsg;
-            ofstream out(rf24HubLogFileName, ios_base::app);
+            ofstream out(logFileName, ios_base::app);
             out << line << endl;
             out.close();
         }	

@@ -10,12 +10,13 @@ rf24hub_config.h ==> all global definitions go here
 
 
 //
-// default values: can be overwritten in config file
+// default values
 //
 #define DEFAULT_CONFIG_FILE "/etc/rf24hub/rf24hub.cfg"
-
+#define RF24HUB_PRGNAME "rf24hubd"
+#define RF24GW_PRGNAME "rf24gwd"
 //
-// END default values: can be overwritten in config file
+// END default values
 //
 //-------------------------------------------------------
 //

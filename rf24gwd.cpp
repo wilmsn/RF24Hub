@@ -1,4 +1,4 @@
-#include "rf24gateway.h"
+#include "rf24gwd.h"
 
 
 void sighandler(int signal) {
@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
             cfg.removePidFile();
             exit(1);
         } else {
-            // starts rf24hubd as a deamon
+            // starts rf24gateway as a deamon
             // no messages to console!
             pid = fork ();
             if (pid == 0) {
@@ -62,7 +62,7 @@ int main(int argc, char* argv[]) {
             } else if (pid > 0) {
                 // Parentprozess -> exit and return to shell
                 // write a message to the console
-                debug = "Starting rf24hubd as daemon...";
+                debug = "Starting rf24gateway as daemon...";
                 cfg.logmsg(2,debug);
                 cout << debug << endl;
                 // and exit
@@ -75,17 +75,32 @@ int main(int argc, char* argv[]) {
             }
         }
     }
-        
+/*        
     if ( cfg.udpPortSet ) {
 		openSocket(cfg.udpPort.c_str(),&udp_address,&udp_sockfd,UDP);
 	}
-        
+*/        
+/*            cout << "Test1" << endl; 
+            cout << cfg.rf24HubHostName << endl;
+    if ( cfg.rf24HubUdpPortSet ) {
+		openSocket(cfg.rf24HubHostName.c_str(), cfg.rf24HubUdpPort.c_str(),&udp_address,&udp_sockfd,UDP);
+	} */
+            cout << "Test2" << endl; 
+            udp_data.msg_id=100;
+            udp_data.network_id=2711;
+            udp_data.sensor_id=17;
+            udp_data.value=1.11;
     while(1) {
-        if ( cfg.udpPortSet ) {
-            numbytes = sendto(udp_sockfd, &udp_data, sizeof(udp_data), 0, (struct sockaddr *)&udp_address,  &udp_addrlen);
-            if (numbytes >0) {
-            }
-        }
+            cout << "Test3" << endl; 
+        sendUdpMessage(cfg.rf24HubHostName.c_str(), cfg.rf24HubUdpPort.c_str(), &udp_data); 
+            cout << "Test4" << endl; 
+ 		udp_data.msg_id++;
+
+//	printf("talker: sent %d bytes to %s\n", numbytes, argv[1]);
+
+    sleep(1);
+
+
 	}
     return 0;
 }

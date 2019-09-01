@@ -10,7 +10,6 @@ V0.1 Initial version
 #ifndef _RF24GATEWAY_H_   /* Include guard */
 #define _RF24GATEWAY_H_
 
-#define PRGNAME "rf24gateway"
 #define PRGVERSION "0.1"
 
 //--------- End of global define -----------------
@@ -18,14 +17,15 @@ V0.1 Initial version
 #include "rf24hub_common.h"
 #include "rf24hub_config.h"
 #include "config.h"
+#include "telnet.h"
 
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
 #include <string> 
-#include <RF24/RF24.h>
-#include <RF24/utility/RPi/bcm2835.h>
-#include <RF24Network/RF24Network.h>
+//#include <RF24/RF24.h>
+//#include <RF24/utility/RPi/bcm2835.h>
+//#include <RF24Network/RF24Network.h>
 #include <time.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -36,7 +36,7 @@ V0.1 Initial version
 #include <stdio.h>
 //#include <mariadb/my_config.h>
 //#include <mariadb/my_global.h>
-#include <mariadb/mysql.h>
+//#include <mariadb/mysql.h>
 #include <unistd.h>
 #include <getopt.h>
 #include <syslog.h>
@@ -59,7 +59,7 @@ using namespace std;
 
 
 // Setup for GPIO 25 CE and CE0 CSN with SPI Speed @ 8Mhz
-RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
+//RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
 //RF24 radio(22,0,BCM2835_SPI_SPEED_1MHZ);
 
 //RF24Network network(radio);
@@ -67,13 +67,10 @@ RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);
 uint16_t orderno, init_orderno;
 
 // a test structure for values comming via UDP
-struct udp_msg_t {
-	uint32_t 		network_id;
-	uint32_t		msg_id;
-	uint32_t		sensor_id;
-	float			value;
-};
-
+struct udp_data_t udp_data;
+struct sockaddr_in udp_address;
+socklen_t udp_addrlen;
+int udp_sockfd;
 
 //RF24NetworkHeader rxheader;
 //RF24NetworkHeader txheader;
@@ -82,7 +79,7 @@ struct udp_msg_t {
 
 string debug;
 
-CONFIG cfg(PRGNAME, PRGVERSION);
+CONFIG cfg(RF24GW_PRGNAME, PRGVERSION);
 
 
 int main(int argc, char* argv[]);

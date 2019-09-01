@@ -4,7 +4,7 @@ void sighandler(int signal) {
 //    exit_system(); 
 //	sprintf(debug, "SIGTERM: Shutting down ... ");
 	cfg.logmsg(VERBOSECRITICAL, "SIGTERM: Shutting down ... ");
-    cfg.removePidFile(cfg.syspart_hub);
+    cfg.removePidFile();
 //    unlink(parms.pidfilename);
 //	msgctl(msqid, IPC_RMID, NULL);
     exit (0);
@@ -14,7 +14,7 @@ void error_exit(int myerrno, char* error) {
 //    exit_system(); 
 //	sprintf(debug, "SIGTERM: Shutting down ... ");
 //	logmsg(VERBOSECRITICAL, debug);
-    cfg.removePidFile(cfg.syspart_hub);
+    cfg.removePidFile();
     //unlink(parms.pidfilename);
     exit (myerrno);
 }    
@@ -30,14 +30,14 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
     // check for PID file, if exists terminate else create it
-    if ( cfg.checkPidFileSet(cfg.syspart_hub) ) {
+    if ( cfg.checkPidFileSet() ) {
         return 1;
     }
 	cout << "Startup Parameters:" << endl; 
     cfg.printConfig();
     // starts logging
 	if ( getuid()==0 ) {
-       cfg.setPidFile(cfg.syspart_hub);
+       cfg.setPidFile();
     }
 
     signal(SIGTERM, sighandler);
@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
         // make sure that we have a logfile
         if ( ! cfg.logFileMode ) {
             cout << "Logfile is needed if runs as deamon ... exiting" << endl; 
-            cfg.removePidFile(cfg.syspart_hub);
+            cfg.removePidFile();
             exit(1);
         } else {
             // starts rf24hubd as a deamon
@@ -70,22 +70,22 @@ int main(int argc, char* argv[]) {
             } else {
                 // nagativ is an error
             cout << "Fork ERROR ... exiting" << endl; 
-            cfg.removePidFile(cfg.syspart_hub);
+            cfg.removePidFile();
             exit(1);
             }
         }
     }
         
-    if ( cfg.telnetPortSet ) {
-		openSocket(cfg.rf24HubTelnetPort.c_str(),&tcp_address,&tcp_sockfd,TCP);
+    if ( cfg.rf24HubTcpPortSet ) {
+		openSocket(NULL, cfg.rf24HubTcpPort.c_str(),&tcp_address,&tcp_sockfd,TCP);
 	}
-    if ( cfg.udpPortSet ) {
-		openSocket(cfg.rf24HubUdpPort.c_str(),&udp_address,&udp_sockfd,UDP);
+    if ( cfg.rf24HubUdpPortSet ) {
+		openSocket(NULL, cfg.rf24HubUdpPort.c_str(),&udp_address,&udp_sockfd,UDP);
 	}
 cout << "test1" << endl;        
     while(1) {
         /* Handling of incoming messages */
-		if ( cfg.telnetPortSet ) {
+		if ( cfg.rf24HubTcpPortSet ) {
             new_tn_in_socket = accept ( tcp_sockfd, (struct sockaddr *) &tcp_address, &tcp_addrlen );
             if (new_tn_in_socket > 0) {
                 //receive_tn_in(new_tn_in_socket, &address);
@@ -94,7 +94,7 @@ cout << "test1" << endl;
                 //close (new_tn_in_socket);
             }
         }
-        if ( cfg.udpPortSet ) {
+        if ( cfg.rf24HubUdpPortSet ) {
             numbytes = recvfrom(udp_sockfd, &udp_data, sizeof(udp_data), 0, (struct sockaddr *)&udp_address,  &udp_addrlen);
             if (numbytes >0) {
                 printf("listener: packet is %d bytes long\n", numbytes);

@@ -40,20 +40,22 @@ private:
 FILE * pidfile_ptr;
 
 string configFile;
+bool prgIsHub;
+bool prgIsGW;
 
 public:
-
+/*
 enum systempart_t { RF24HUB, RF24GATEWAY };
 systempart_t syspart_hub = RF24HUB;
 systempart_t syspart_GW = RF24GATEWAY;
-
+*/
 	
 // all the setings are stored in this variables
 
 string rf24HubHostName;
 string rf24HubLogFileName;
 string rf24HubPidFileName;
-string rf24HubTelnetPort;
+string rf24HubTcpPort;
 string rf24HubUdpPort;
 string rf24GWLogFileName;
 string rf24GWPidFileName;
@@ -67,6 +69,8 @@ string fhemHostName;
 string fhemPort;
 string rf24Speed;
 string rf24Channel;
+string pidFileName;
+string logFileName;
 
 // the programm name goes here
 string prgName;
@@ -77,9 +81,9 @@ bool fhemHostSet;
 // fhemPortSet is true when an outgoing fhem port is set by configuration
 bool fhemPortSet;
 // telnetPortSet is true when an incomine telnet port is set by configuration
-bool telnetPortSet;
+bool rf24HubTcpPortSet;
 // udpPortSet is true when an incomine telnet port is set by configuration
-bool udpPortSet;
+bool rf24HubUdpPortSet;
 // startDaemon is true when start as a deamon is configured
 bool startDaemon;
 // interactiveMode = true: prints logs to console
@@ -127,17 +131,17 @@ void printConfig (void);
 /*
  * If a pidfile is defined in the config file it will be set 
  */
-int setPidFile(systempart_t);
+int setPidFile(void);
 
 /*
  * If a pidfile is set it will be set 
  */
-void removePidFile(systempart_t);
+void removePidFile(void);
 
 /*
  * checks if a pid file is set (=true)
  */
-int checkPidFileSet(systempart_t);
+int checkPidFileSet(void);
 
 /*
  * sets and opens the logfile to the given file
