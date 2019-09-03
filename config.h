@@ -25,7 +25,7 @@ using namespace std;
 /* 
  * Grundsätzliches zum Ablauf einer Initialisierung:
  * * Übergebene Parameter überschreiben Einträge im Config File
- * * In der Struktur params werden die letztgültigen Werte abgelegt
+ * * In den Config-Variablen werden die letztgültigen Werte abgelegt
  *
  * Folgende Parameter des Config Files können durch 
  * übergebene Parameter überschrieben werden:
@@ -44,31 +44,69 @@ bool prgIsHub;
 bool prgIsGW;
 
 public:
-/*
-enum systempart_t { RF24HUB, RF24GATEWAY };
-systempart_t syspart_hub = RF24HUB;
-systempart_t syspart_GW = RF24GATEWAY;
-*/
 	
-// all the setings are stored in this variables
+// Hier die verwendeten Variablen:
 
-string rf24HubHostName;
+/**********************************************
+ * rf24Hub
+ **********************************************/
+// Logfilename for the hub
 string rf24HubLogFileName;
+// Pidfilename for the hub
 string rf24HubPidFileName;
+// telnet Port for incoming messages
 string rf24HubTcpPort;
+// rf24HubTelnetPortSet is true when an incomine telnet port is set by configuration
+bool rf24HubTcpPortSet;
+// Port for incoming datagrams on Hub
 string rf24HubUdpPort;
+// rf24HubUdpPortSet is true when an incomine udp port on Hub is set by configuration
+bool rf24HubUdpPortSet;
+/**********************************************
+ * rf24Gateway
+ **********************************************/
+// the hostname of the hub used by the gateway
+string rf24HubHostName;
+// Logfilename for the gateway
 string rf24GWLogFileName;
+// Pidfilename for the gateway
 string rf24GWPidFileName;
+// Udp Port for incoming messages from Hub
 string rf24GWUdpPort;
-string dbHostName;
-string dbPort;
-string dbSchema;
-string dbUserName;
-string dbPassWord;
-string fhemHostName;
-string fhemPort;
+// udpPortSet is true when an incomine udp port is set by configuration
+bool rf24GWUdpPortSet;
+// Speed for rf24 Network, can be one of: "RF24_2MBPS", "RF24_250KBPS", "RF24_1MBPS" 
 string rf24Speed;
+// Channel for rf24 Network
 string rf24Channel;
+/**********************************************
+ * Database
+ **********************************************/
+//hostname for database server
+string dbHostName;
+//port on database server
+string dbPort;
+//Schema inside database
+string dbSchema;
+//Username for database
+string dbUserName;
+//Password for database
+string dbPassWord;
+/**********************************************
+ * FHEM
+ **********************************************/
+//Hostname for FHEM server 
+string fhemHostName;
+//Port for FHEM
+string fhemPort;
+// fhemHostSet is true when an outgoing fhem hostname is set by configuration
+bool fhemHostSet;
+// fhemPortSet is true when an outgoing fhem port is set by configuration
+bool fhemPortSet;
+
+/**********************************************
+ * GENERIC
+ **********************************************/
 string pidFileName;
 string logFileName;
 
@@ -76,14 +114,6 @@ string logFileName;
 string prgName;
 // the programm version goes here
 string prgVersion;
-// fhemHostSet is true when an outgoing fhem hostname is set by configuration
-bool fhemHostSet;
-// fhemPortSet is true when an outgoing fhem port is set by configuration
-bool fhemPortSet;
-// telnetPortSet is true when an incomine telnet port is set by configuration
-bool rf24HubTcpPortSet;
-// udpPortSet is true when an incomine telnet port is set by configuration
-bool rf24HubUdpPortSet;
 // startDaemon is true when start as a deamon is configured
 bool startDaemon;
 // interactiveMode = true: prints logs to console

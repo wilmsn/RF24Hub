@@ -58,12 +58,12 @@ int main(int argc, char* argv[]) {
                 chdir ("/");
                 umask (0);
                 debug = "Starting up ....";
-                cfg.logmsg(2,debug);
+                cfg.logmsg(VERBOSESTARTUP,debug);
             } else if (pid > 0) {
                 // Parentprozess -> exit and return to shell
                 // write a message to the console
                 debug = "Starting rf24hubd as daemon...";
-                cfg.logmsg(2,debug);
+                cfg.logmsg(VERBOSESTARTUP,debug);
                 cout << debug << endl;
                 // and exit
                 exit (0);
@@ -95,7 +95,7 @@ cout << "test1" << endl;
             }
         }
         if ( cfg.rf24HubUdpPortSet ) {
-            numbytes = recvfrom(udp_sockfd, &udp_data, sizeof(udp_data), 0, (struct sockaddr *)&udp_address,  &udp_addrlen);
+            numbytes = recvfrom(udp_sockfd, &udp_data, sizeof(udp_data), 0, (struct sockaddr *)&clientaddress,  &clientaddress_len);
             if (numbytes >0) {
                 printf("listener: packet is %d bytes long\n", numbytes);
                 printf("listener: packet received \n");
@@ -103,6 +103,20 @@ cout << "test1" << endl;
                 printf("Msg_number: %u \n",udp_data.msg_id);
                 printf("Sensor_id: %u \n",udp_data.sensor_id);
                 printf("Sensor_value: %f \n",udp_data.value);
+                udp_data.sensor_id = 222;
+                udp_data.value = 99.99;
+				switch (clientaddress.ss_family) {
+					case AF_INET:
+						inet_ntop(clientaddress.ss_family,	&((struct sockaddr_in *)&clientaddress)->sin_addr, ipAddrStr, INET_ADDRSTRLEN);
+						debug = "Client IPV4: "; 
+					break;
+					case AF_INET6:
+						inet_ntop(clientaddress.ss_family,	&((struct sockaddr_in6 *)&clientaddress)->sin6_addr, ipAddrStr, INET_ADDRSTRLEN);
+						debug = "Client IPV6: "; 
+					break;
+				}
+				debug += ipAddrStr;  cfg.logmsg(VERBOSETELNET,debug);
+				sendUdpMessage( ipAddrStr, cfg.rf24GWUdpPort.c_str(), &udp_data); 
             }
         }
 	}

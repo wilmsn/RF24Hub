@@ -67,10 +67,11 @@ using namespace std;
 uint16_t orderno, init_orderno;
 
 // a test structure for values comming via UDP
-struct udp_data_t udp_data;
+struct udp_data_t udp_s_data, udp_r_data;
 struct sockaddr_in udp_address;
 socklen_t udp_addrlen;
 int udp_sockfd;
+int numbytes;
 
 //RF24NetworkHeader rxheader;
 //RF24NetworkHeader txheader;

@@ -70,8 +70,16 @@ int verboselevel = 2;
 struct sockaddr_in tcp_address, udp_address;
 struct sockaddr_storage tcp_client_addr, udp_client_addr; 
 socklen_t tcp_addrlen, udp_addrlen;
+char ipAddrStr[INET_ADDRSTRLEN];
+
 int tcp_sockfd, udp_sockfd;
 int numbytes;
+ 
+struct sockaddr_storage clientaddress;
+socklen_t clientaddress_len=sizeof(clientaddress);
+//   socklen_t clientaddress_len;
+//   struct sockaddr_in clientaddress;
+
 
 //int sockfd;
 bool order_waiting = false;

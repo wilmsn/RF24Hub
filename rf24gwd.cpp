@@ -23,6 +23,7 @@ void error_exit(int myerrno, char* error) {
 
 int main(int argc, char* argv[]) {
     pid_t pid;
+    int loopCount = 0;
     cfg.processParams(argc, argv);
 	// check if started as root
 	if ( getuid()!=0 ) {
@@ -75,32 +76,34 @@ int main(int argc, char* argv[]) {
             }
         }
     }
-/*        
-    if ( cfg.udpPortSet ) {
-		openSocket(cfg.udpPort.c_str(),&udp_address,&udp_sockfd,UDP);
-	}
-*/        
-/*            cout << "Test1" << endl; 
-            cout << cfg.rf24HubHostName << endl;
-    if ( cfg.rf24HubUdpPortSet ) {
-		openSocket(cfg.rf24HubHostName.c_str(), cfg.rf24HubUdpPort.c_str(),&udp_address,&udp_sockfd,UDP);
-	} */
-            cout << "Test2" << endl; 
-            udp_data.msg_id=100;
-            udp_data.network_id=2711;
-            udp_data.sensor_id=17;
-            udp_data.value=1.11;
+    if ( cfg.rf24GWUdpPortSet ) {
+		openSocket(NULL, cfg.rf24GWUdpPort.c_str(),&udp_address,&udp_sockfd,UDP);
+	} 
+            udp_s_data.msg_id=100;
+            udp_s_data.network_id=2711;
+            udp_s_data.sensor_id=17;
+            udp_s_data.value=1.11;
     while(1) {
-            cout << "Test3" << endl; 
-        sendUdpMessage(cfg.rf24HubHostName.c_str(), cfg.rf24HubUdpPort.c_str(), &udp_data); 
-            cout << "Test4" << endl; 
- 		udp_data.msg_id++;
-
-//	printf("talker: sent %d bytes to %s\n", numbytes, argv[1]);
-
-    sleep(1);
-
-
+        loopCount++;
+        if ( loopCount > 1000 ) {     
+			sendUdpMessage(cfg.rf24HubHostName.c_str(), cfg.rf24HubUdpPort.c_str(), &udp_s_data); 
+            cout << "Send data: " << udp_s_data.msg_id << endl; 
+			udp_s_data.msg_id++;
+			loopCount = 0;
+		}
+        if ( cfg.rf24GWUdpPortSet ) {
+            numbytes = recvfrom(udp_sockfd, &udp_r_data, sizeof(udp_r_data), 0, (struct sockaddr *)&udp_address,  &udp_addrlen);
+            if (numbytes >0) {
+                printf("listener: packet is %d bytes long\n", numbytes);
+                printf("listener: packet received \n");
+                printf("Sender: %s\n", inet_ntoa (udp_address.sin_addr));
+                printf("Network_number: %u \n",udp_r_data.network_id);
+                printf("Msg_number: %u \n",udp_r_data.msg_id);
+                printf("Sensor_id: %u \n",udp_r_data.sensor_id);
+                printf("Sensor_value: %f \n",udp_r_data.value);
+            }
+        }
+		usleep(1000);
 	}
     return 0;
 }

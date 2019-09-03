@@ -179,6 +179,10 @@ void CONFIG::processParams(int argc, char* argv[]) {
             rf24HubUdpPort = value;
             rf24HubUdpPortSet = true;
         }
+    else if (strcmp(name, "rf24gw_udp_port")==0) {
+            rf24GWUdpPort = value;
+            rf24GWUdpPortSet = true;
+        }
     else if (strcmp(name, "rf24hub_logfile")==0) {
             rf24HubLogFileName = value;
         }
@@ -280,10 +284,9 @@ int CONFIG::setPidFile(void) {
 }
 
 int CONFIG::checkPidFileSet(void) {
-    string pidFileName;
 	if( access( pidFileName.c_str(), F_OK ) != -1 ) {
 		cerr << "PIDFILE: "; cerr << pidFileName; cerr << " exists, terminating" << endl;
-		return 1;
+		return -1;
 	} else {
 		return 0;
 	}
