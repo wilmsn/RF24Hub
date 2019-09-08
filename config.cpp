@@ -119,19 +119,16 @@ void CONFIG::processParams(int argc, char* argv[]) {
     // Processing config file
     char *s, buff[256];
     // check if config file is readable
-    if ( strcmp(config_file,"x") == 0 ) strcpy(config_file,DEFAULT_CONFIG_FILE);
-    if (fopen (config_file, "r") == NULL) {
-        cout << "Config file: " << configFile << " not found, terminating" << endl;
-        exit(1);
-    }
+    if ( configFile == "x" ) configFile = DEFAULT_CONFIG_FILE;
     // Reading and processing and printing config file
-    cout << "Reading configuration from " << config_file << endl;
-//    printf ("Reading config file...\n");
-    FILE *fp = fopen (config_file, "r");
+    FILE *fp = fopen (configFile.c_str(), "r");
     if (fp == NULL) {
         cout << "Configfile " << configFile << " nicht gefunden!" << endl;
         exit(1);
+    } else {
+	cout << "Reading configuration from " << configFile << endl;
     }
+    // Reading and processing and printing config file
     /* Read lines */
     while ((s = fgets (buff, sizeof buff, fp)) != NULL) {
         /* Skip blank lines and comments */
