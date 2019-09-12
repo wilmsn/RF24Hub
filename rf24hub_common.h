@@ -22,13 +22,17 @@ struct payload_t {
 };
 extern payload_t payload;
 
-
+// Achtung: Float arbeitet nur wenn die vorherigen Felder ein vielfaches vor 32 bit regeben!!!!
 struct udp_data_t {
-	uint32_t 		network_id;
-	uint32_t		msg_id;
-	uint32_t		sensor_id;
-	float			value;
+  uint16_t    network_id;
+  uint16_t    node_id;
+  uint16_t    msg_id;
+  uint8_t     sensor1_id;
+  uint8_t     sensor2_id;
+  float       value1;
+  float       value2;
 };
+
 
 enum sockType_t { TCP, UDP};
 	

@@ -59,7 +59,7 @@ V1.0 Initial version after comming from sensorhub
 
 using namespace std;
 
-struct udp_data_t udp_data;
+struct udp_data_t udp_r_data, udp_s_data;
 
 enum logmode_t { systemlog, interactive, logfile };
 logmode_t logmode;
@@ -101,13 +101,6 @@ bool order_waiting = false;
 
 //uint16_t orderno, init_orderno;
 
-// a test structure for values comming via UDP
-struct udp_msg_t {
-	uint32_t 		network_id;
-	uint32_t		msg_id;
-	uint32_t		sensor_id;
-	float			value;
-};
 
 // structure to handle the sensors, filled from DB
 struct sensor_t {

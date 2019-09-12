@@ -20,6 +20,7 @@ ARCH := $(shell uname -m)
 
 ifeq "$(ARCH)" "armv7l"
 	CCFLAGS=-Ofast -mfpu=vfp -mfloat-abi=hard -march=armv7-a -mtune=arm1176jzf-s -std=c++0x -pthread
+	RF24FLAGS=-lrf24-bcm
 endif
 
 ifeq "$(ARCH)" "x86_64"
@@ -35,7 +36,10 @@ rf24hubd: config.o database.o fhem.o telnet.o rf24hubd.cpp
 
 # Make the rf24gateway deamon
 rf24gwd: config.o telnet.o rf24gwd.cpp
-	g++ ${CCFLAGS} -Wall $^ -o $@
+	g++ ${CCFLAGS} ${RF24FLAGS} -Wall $^ -o $@
+
+receiver: 
+	g++ ${CCFLAGS} -Wall -lrf24-bcm $@.cpp -o $@
 
 test_config: config.o test_config.o
 	$(CC) ${CCFLAGS} $^ -o $@

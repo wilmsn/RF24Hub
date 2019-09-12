@@ -32,8 +32,7 @@ CONFIG::~CONFIG() {
 }
 
 void CONFIG::processParams(int argc, char* argv[]) {
-    char config_file[PARAM_MAXLEN_CONFIGFILE];
-    strcpy(config_file,"x");
+    configFile = "x";
 	int c;
     int verboselevel = 0;
     bool forceInteractiveMode = false;
@@ -116,8 +115,6 @@ void CONFIG::processParams(int argc, char* argv[]) {
         while (optind < argc) cout << argv[optind++] << endl;
     }
     // END processing argc and argv[]
-    // Processing config file
-    char *s, buff[256];
     // check if config file is readable
     if ( configFile == "x" ) configFile = DEFAULT_CONFIG_FILE;
     // Reading and processing and printing config file
@@ -126,10 +123,10 @@ void CONFIG::processParams(int argc, char* argv[]) {
         cout << "Configfile " << configFile << " nicht gefunden!" << endl;
         exit(1);
     } else {
-	cout << "Reading configuration from " << configFile << endl;
+		cout << "Reading configuration from " << configFile << endl;
     }
-    // Reading and processing and printing config file
-    /* Read lines */
+    // Processing config file
+    char *s, buff[256];
     while ((s = fgets (buff, sizeof buff, fp)) != NULL) {
         /* Skip blank lines and comments */
          trim(buff);

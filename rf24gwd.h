@@ -23,8 +23,8 @@ V0.1 Initial version
 #include <iostream>
 #include <sstream>
 #include <string> 
-//#include <RF24/RF24.h>
-//#include <RF24/utility/RPi/bcm2835.h>
+#include <RF24/RF24.h>
+#include <RF24/utility/RPi/bcm2835.h>
 //#include <RF24Network/RF24Network.h>
 #include <time.h>
 #include <sys/time.h>
@@ -59,19 +59,29 @@ using namespace std;
 
 
 // Setup for GPIO 25 CE and CE0 CSN with SPI Speed @ 8Mhz
-//RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
+RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
 //RF24 radio(22,0,BCM2835_SPI_SPEED_1MHZ);
 
 //RF24Network network(radio);
+uint8_t addresses[][6] = {"aaaaa","bbbbb"};
+
 
 uint16_t orderno, init_orderno;
 
 // a test structure for values comming via UDP
-struct udp_data_t udp_s_data, udp_r_data;
+struct udp_data_t udp_s_data, udp_r_data, udp_node_data;
 struct sockaddr_in udp_address;
-socklen_t udp_addrlen;
+//socklen_t udp_addrlen;
 int udp_sockfd;
 int numbytes;
+//struct sockaddr_storage udp_client_addr; 
+//socklen_t tcp_addrlen, udp_addrlen;
+
+struct sockaddr_storage clientaddress;
+socklen_t clientaddress_len=sizeof(clientaddress);
+
+
+char ipAddrStr[INET_ADDRSTRLEN];
 
 //RF24NetworkHeader rxheader;
 //RF24NetworkHeader txheader;

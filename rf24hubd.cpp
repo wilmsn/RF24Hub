@@ -24,6 +24,7 @@ int main(int argc, char* argv[]) {
     pid_t pid;
     int new_tn_in_socket;
     cfg.processParams(argc, argv);
+    bool test = false;
 	// check if started as root
 	if ( getuid()!=0 ) {
 		cout << "rf24hubd has to be startet as user root" << endl; 
@@ -95,16 +96,28 @@ cout << "test1" << endl;
             }
         }
         if ( cfg.rf24HubUdpPortSet ) {
-            numbytes = recvfrom(udp_sockfd, &udp_data, sizeof(udp_data), 0, (struct sockaddr *)&clientaddress,  &clientaddress_len);
+            numbytes = recvfrom(udp_sockfd, &udp_r_data, sizeof(udp_r_data), 0, (struct sockaddr *)&clientaddress,  &clientaddress_len);
             if (numbytes >0) {
                 printf("listener: packet is %d bytes long\n", numbytes);
                 printf("listener: packet received \n");
-                printf("Network_number: %u \n",udp_data.network_id);
-                printf("Msg_number: %u \n",udp_data.msg_id);
-                printf("Sensor_id: %u \n",udp_data.sensor_id);
-                printf("Sensor_value: %f \n",udp_data.value);
-                udp_data.sensor_id = 222;
-                udp_data.value = 99.99;
+                printf("Network_number: %u \n",udp_r_data.network_id);
+                printf("Node_number: %u \n",udp_r_data.node_id);
+                printf("Msg_number: %u \n",udp_r_data.msg_id);
+                printf("Sensor1_id: %u \n",udp_r_data.sensor1_id);
+                printf("Sensor1_value: %f \n",udp_r_data.value1);
+                printf("Sensor2_id: %u \n",udp_r_data.sensor2_id);
+                printf("Sensor2_value: %f \n",udp_r_data.value2);
+                udp_s_data.network_id = udp_r_data.network_id;
+                udp_s_data.node_id = udp_r_data.node_id;
+                udp_s_data.msg_id = udp_r_data.msg_id;
+                udp_s_data.sensor1_id = 21;
+                if ( test ) {
+					udp_s_data.value1 = 0;
+					test = false;
+				} else {
+					udp_s_data.value1 = 1;
+					test = true;
+				} 
 				switch (clientaddress.ss_family) {
 					case AF_INET:
 						inet_ntop(clientaddress.ss_family,	&((struct sockaddr_in *)&clientaddress)->sin_addr, ipAddrStr, INET_ADDRSTRLEN);
@@ -116,7 +129,7 @@ cout << "test1" << endl;
 					break;
 				}
 				debug += ipAddrStr;  cfg.logmsg(VERBOSETELNET,debug);
-				sendUdpMessage( ipAddrStr, cfg.rf24GWUdpPort.c_str(), &udp_data); 
+				sendUdpMessage( ipAddrStr, cfg.rf24GWUdpPort.c_str(), &udp_s_data); 
             }
         }
 	}
