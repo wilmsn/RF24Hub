@@ -27,7 +27,10 @@ CONFIG::CONFIG(string _prgName, string _prgVersion) {
 
 CONFIG::~CONFIG() {
     if ( prgIsHub ) {
-		if ( logFileMode )  logmsg(VERBOSESTARTUP,"Rf24Hub: Logfile closed");
+		if ( logFileMode ) {
+			char msg[] = "Rf24Hub: Logfile closed";
+			logmsg(VERBOSESTARTUP, msg);
+		}
 	}
 }
 
@@ -179,15 +182,29 @@ void CONFIG::processParams(int argc, char* argv[]) {
         }
     else if (strcmp(name, "rf24hub_logfile")==0) {
             rf24HubLogFileName = value;
+            if ( prgIsHub ) {
+				logFileMode = true;
+                logFileName = value;
+			}
         }
     else if (strcmp(name, "rf24hub_pidfile")==0) {
             rf24HubPidFileName = value;
+            if ( prgIsHub ) {
+                pidFileName = value;
+			}
 		}
     else if (strcmp(name, "rf24gw_logfile")==0) {
             rf24GWLogFileName = value;
+            if ( prgIsGW ) {
+				logFileMode = true;
+                logFileName = value;
+			}
         }
     else if (strcmp(name, "rf24gw_pidfile")==0) {
             rf24GWPidFileName = value;
+            if ( prgIsGW ) {
+                pidFileName = value;
+			}
 		}
     else if (strcmp(name, "rf24_channel")==0) {
 		   rf24Channel = value;
@@ -213,15 +230,22 @@ void CONFIG::processParams(int argc, char* argv[]) {
 		interactiveMode = true;
 		logFileMode = false;
 	}
-	if ( logFileMode ) logmsg(VERBOSESTARTUP, "Logfile opened");
-	if ( prgIsGW ) {
+	if ( logFileMode ) {
+		char msg[] = "Logfile opened";
+		logmsg(VERBOSESTARTUP, msg);
+	}
+/*	if ( prgIsGW ) {
 		logFileName = rf24GWLogFileName;
 		pidFileName = rf24GWPidFileName;
 	}
 	if ( prgIsHub ) {
 		logFileName = rf24HubLogFileName;
 		pidFileName = rf24HubPidFileName;
-	}
+	} */
+	cout << logFileName << endl;
+    ofstream out(logFileName, ios_base::app);
+	out << "This is the Logfile: " << logFileName << endl;
+	out.close();
 }
 
 void CONFIG::printConfig (void) {
@@ -238,11 +262,12 @@ void CONFIG::printConfig (void) {
     cout << "udp Port:"        << rf24HubUdpPort << endl;
     if ( rf24HubUdpPortSet ) cout << "rf24HubUdpPortSet = true" << endl; else cout << "rf24HubUdpPortSet = false" << endl;
     cout << "Verboselevel:"    << verboseLevel << endl;
-    
+#ifdef DEBUG    
     cout << prgName << " -- " << RF24HUB_PRGNAME << endl;
     cout << prgName << " -- " << RF24GW_PRGNAME << endl;
      if ( prgIsGW ) cout << "Bin GW" << endl;
      if ( prgIsHub ) cout << "Bin Hub" << endl;
+#endif     
 }
 
 void CONFIG::usage(void) {
@@ -290,10 +315,19 @@ void CONFIG::removePidFile() {
     unlink(pidFileName.c_str());
 }
 
-void CONFIG::logmsg(int mesgloglevel, string mymsg){
+void CONFIG::logmsg(int mesgloglevel, char* mymsg){
+/*	string mymsg_str = mymsg;
+	CONFIG::logmsg(mesgloglevel, mymsg_str);
+}
+
+void CONFIG::logmsg(int mesgloglevel, string mymsg){ */
+#ifdef DEBUG	
+    if ( logFileMode ) { printf("Logmode: true \n");} else {printf("Logmode: false \n");}
+    if ( interactiveMode ) { printf("interactiveMode: true \n"); } else { printf("interactiveMode: false \n"); }     
+	printf("MSG: %s\n",mymsg.c_str());
+#endif
 	if (mesgloglevel <= verboseLevel) {
         if ( logFileMode ) {
-            string line;
             char timestr[20];
 			char m0[2], d0[2], mi0[2], s0[2];
             m0[1]='\0'; d0[1]='\0'; mi0[1]='\0'; s0[1]='\0';
@@ -303,17 +337,44 @@ void CONFIG::logmsg(int mesgloglevel, string mymsg){
             d0[0] = (ltm->tm_mday < 10) ? '0' : '\0';
             mi0[0] = (ltm->tm_min < 10) ? '0' : '\0';
             s0[0] = (ltm->tm_sec < 10) ? '0' : '\0';
-            sprintf(timestr, "%d.%s%d.%s%d %d:%s%d:%s%d",ltm->tm_year + 1900,m0,ltm->tm_mon+1,d0,ltm->tm_mday,ltm->tm_hour, mi0, ltm->tm_min, s0, ltm->tm_sec);
-            line = "[";
-            line += timestr;
-            line += "] ";
-            line += mymsg;
-            ofstream out(logFileName, ios_base::app);
-            out << line << endl;
-            out.close();
+            sprintf(timestr, "[%d.%s%d.%s%d %d:%s%d:%s%d]",ltm->tm_year + 1900,m0,ltm->tm_mon+1,d0,ltm->tm_mday,ltm->tm_hour, mi0, ltm->tm_min, s0, ltm->tm_sec);
+            logfile_ptr = fopen(logFileName.c_str(), "a");
+            if ( logfile_ptr ) {
+				fprintf(logfile_ptr,"%s %s \n",timestr, mymsg);
+				fclose(logfile_ptr);
+			} else {
+				printf("Error opening Logfile %s\n",logFileName.c_str());
+			}
         }	
         if ( interactiveMode ) {  // logmode == interactive 
-			cout << mymsg << endl; 
+			printf("%s\n",mymsg);
 		}
     }
 }
+
+float CONFIG::sensorValue(uint16_t val) {
+// highest bit: result is negative if set
+// second highest bit: divide by 100 if set
+	bool negative = val &  0b1000000000000000;
+	bool devide100 = val & 0b0100000000000000;
+	float result = val &   0b0011111111111111;
+	if ( devide100 ) result = result / 100.0;
+	if ( negative ) result = -1.0 * result;
+	return result;	
+}
+
+uint16_t CONFIG::uint16Value(float val) {
+    float _val = val; 
+    uint16_t result;
+	bool negative = val < 0;
+	bool devide100 = val > 999;
+	if ( negative ) _val = abs(val);
+	if ( devide100 ) _val = _val * 100;
+	result = (uint16_t) _val;
+	result &= 0b0011111111111111;
+	if ( negative ) result |= 0b1000000000000000;
+	if ( devide100 ) result |= 0b0100000000000000;
+	return (uint16_t) result; 
+}
+
+

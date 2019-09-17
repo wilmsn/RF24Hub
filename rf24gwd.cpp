@@ -1,11 +1,13 @@
 #include "rf24gwd.h"
+#include "zahlenformat.h"
 
 //#define DEBUG
 
 void sighandler(int signal) {
 //    exit_system(); 
 //	sprintf(debug, "SIGTERM: Shutting down ... ");
-	cfg.logmsg(VERBOSECRITICAL, "SIGTERM: Shutting down ... ");
+    sprintf(debug,"%s","SIGTERM: Shutting down ... ");
+	cfg.logmsg(VERBOSECRITICAL, debug);
     cfg.removePidFile();
 //    unlink(parms.pidfilename);
 //	msgctl(msqid, IPC_RMID, NULL);
@@ -47,7 +49,7 @@ int main(int argc, char* argv[]) {
     if (cfg.startDaemon) {
         // make sure that we have a logfile
         if ( ! cfg.logFileMode ) {
-            cout << "Logfile is needed if runs as deamon ... exiting" << endl; 
+            printf("%s\n","Logfile is needed if runs as deamon ... exiting"); 
             cfg.removePidFile();
             exit(1);
         } else {
@@ -58,19 +60,17 @@ int main(int argc, char* argv[]) {
                 // Child prozess
                 chdir ("/");
                 umask (0);
-                debug = "Starting up ....";
-                cfg.logmsg(2,debug);
+                sprintf(debug,"%s","Starting up ...."); cfg.logmsg(VERBOSESTARTUP,debug);
             } else if (pid > 0) {
                 // Parentprozess -> exit and return to shell
                 // write a message to the console
-                debug = "Starting rf24gateway as daemon...";
-                cfg.logmsg(2,debug);
+                sprintf(debug,"%s","Starting rf24gateway as daemon..."); cfg.logmsg(VERBOSESTARTUP,debug);
                 cout << debug << endl;
                 // and exit
                 exit (0);
             } else {
                 // nagativ is an error
-            cout << "Fork ERROR ... exiting" << endl; 
+            printf("%s","Fork ERROR ... exiting\n");; 
             cfg.removePidFile();
             exit(1);
             }
@@ -91,50 +91,55 @@ int main(int argc, char* argv[]) {
 	// Start the radio listening for data
 	radio.startListening();
     delay(5);
-    cfg.logmsg(VERBOSESTARTUP, "starting network ... ");
+    sprintf(debug,"%s","starting network ... "); cfg.logmsg(VERBOSESTARTUP, debug);
 //    radio.setDataRate(parms.rf24network_speed);
     if (cfg.verboseLevel >= VERBOSECONFIG) { radio.printDetails(); }
     while(1) {
 // Is there some data for us via rf24?
+		bool goodSignal = radio.testRPD();
         if ( radio.available() ){  
+            sprintf(debug,"%s",">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");		cfg.logmsg(VERBOSEOTHER, debug);
+			sprintf(debug,"Node %s", goodSignal ? "Strong signal > 64dBm" : "Weak signal < 64dBm" ); cfg.logmsg(VERBOSEOTHER, debug);
 			radio.read( &udp_node_data, sizeof(udp_node_data) );
-            printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
-			printf("Node Network_number: %u \n",udp_node_data.network_id);
-            printf("Node Node_number: %u \n",udp_node_data.node_id);
-            printf("Node Msg_number: %u \n",udp_node_data.msg_id);
-            printf("Node Sensor1_id: %u \n",udp_node_data.sensor1_id);
-            printf("Node Sensor1_value: %f \n",udp_node_data.value1);
-            printf("Node Sensor2_id: %u \n",udp_node_data.sensor2_id);
-            printf("Node Sensor2_value: %f \n",udp_node_data.value2);
-            printf("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
+    	    sprintf(debug,"Node Network_number: %u", udp_node_data.network_id); cfg.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"Node Node_number: %u", udp_node_data.node_id);		cfg.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"Node Msg_number: %u", udp_node_data.msg_id);			cfg.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"Node Flags: %04x", udp_node_data.flags);				cfg.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"Node Sensor1_id: %u", getSensor(udp_node_data.sensor1));		cfg.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"Node Sensor1_value: %f", getValue(udp_node_data.sensor1));		cfg.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"Node Sensor2_id: %u", getSensor(udp_node_data.sensor2));		cfg.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"Node Sensor2_value: %f", getValue(udp_node_data.sensor2));		cfg.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");			cfg.logmsg(VERBOSEOTHER, debug);
 			sendUdpMessage(cfg.rf24HubHostName.c_str(), cfg.rf24HubUdpPort.c_str(), &udp_node_data); 
 		}
 // Is there some data for us via UDP?
         if ( cfg.rf24GWUdpPortSet ) {
-            numbytes = recvfrom(udp_sockfd, &udp_r_data, sizeof(udp_r_data), 0, (struct sockaddr *)&clientaddress,  &clientaddress_len);
+            numbytes = recvfrom(udp_sockfd, &udp_hub_data, sizeof(udp_hub_data), 0, (struct sockaddr *)&clientaddress,  &clientaddress_len);
             if (numbytes >0) {
-                printf("listener: packet is %d bytes long\n", numbytes);
-                printf("listener: packet received \n");
-                printf("Hub: Network_number: %u \n",udp_r_data.network_id);
-                printf("Hub: Mode_number: %u \n",udp_r_data.node_id);
-                printf("Hub: Msg_number: %u \n",udp_r_data.msg_id);
-                printf("Hub: Sensor1_id: %u \n",udp_r_data.sensor1_id);
-                printf("Hub: Sensor1_value: %f \n",udp_r_data.value1);
-                printf("Hub: Sensor2_id: %u \n",udp_r_data.sensor2_id);
-                printf("Hub: Sensor2_value: %f \n",udp_r_data.value2);
+                sprintf(debug,"packet from Hub via UDP received, legth: %u",numbytes);	cfg.logmsg(VERBOSEOTHER, debug);
+                sprintf(debug,"Hub: Network_number: %u",udp_hub_data.network_id);		cfg.logmsg(VERBOSEOTHER, debug);
+                sprintf(debug,"Hub: Mode_number: %u",udp_hub_data.node_id);				cfg.logmsg(VERBOSEOTHER, debug);
+                sprintf(debug,"Hub: Msg_number: %u",udp_hub_data.msg_id);				cfg.logmsg(VERBOSEOTHER, debug);
+//                sprintf(debug,"Hub: Sensor1_id: %u",udp_hub_data.sensor1_id);			cfg.logmsg(VERBOSEOTHER, debug);
+//                sprintf(debug,"Hub: Sensor1_value: %f",cfg.sensorValue(udp_hub_data.value1));				cfg.logmsg(VERBOSEOTHER, debug);
+//                sprintf(debug,"Hub: Sensor2_id: %u",udp_hub_data.sensor2_id);			cfg.logmsg(VERBOSEOTHER, debug);
+//                sprintf(debug,"Hub: Sensor2_value: %f",cfg.sensorValue(udp_hub_data.value2));				cfg.logmsg(VERBOSEOTHER, debug);
 				switch (clientaddress.ss_family) {
 					case AF_INET:
 						inet_ntop(clientaddress.ss_family,	&((struct sockaddr_in *)&clientaddress)->sin_addr, ipAddrStr, INET_ADDRSTRLEN);
-						debug = "Hub IPV4: "; 
+						sprintf(debug,"Hub IPV4: %s",ipAddrStr);  cfg.logmsg(VERBOSETELNET,debug);; 
 					break;
 					case AF_INET6:
 						inet_ntop(clientaddress.ss_family,	&((struct sockaddr_in6 *)&clientaddress)->sin6_addr, ipAddrStr, INET_ADDRSTRLEN);
-						debug = "Hub IPV6: "; 
+						sprintf(debug,"Hub IPV6: %s",ipAddrStr);  cfg.logmsg(VERBOSETELNET,debug);; 
 					break;
 				}
-				debug += ipAddrStr;  cfg.logmsg(VERBOSETELNET,debug);
 				radio.stopListening();
-				radio.write( &udp_r_data, sizeof(udp_r_data) );
+				if ( radio.write( &udp_hub_data, sizeof(udp_hub_data) ) ) {
+					sprintf(debug,"%s","Writing to Node -> OK"); cfg.logmsg(VERBOSERF24, debug);
+				} else {
+					sprintf(debug,"%s","Writing to Node -> ERROR"); cfg.logmsg(VERBOSERF24, debug);
+				}					
 				radio.startListening();
             }
         }

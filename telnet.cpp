@@ -129,8 +129,7 @@ void receiveTelnetMessage(int new_tn_in_socket, struct sockaddr_in * address) {
 //	cout << "Client " <<  inet_ntoa (address->sin_addr) << "ist connected ..." << endl;
     memset(buffer,0,sizeof(buffer));
     MsgLen = recv(new_tn_in_socket, buffer, TELNETBUFFERSIZE, 0);
-    debug = "Telnet Data: ";
-    debug += cfg.trim(buffer);
+    sprintf(debug, "Telnet Data: %s", cfg.trim(buffer));
 	cfg.logmsg(VERBOSETELNET, debug);
 //    cout << "Msglen: " << MsgLen << " Buffer: " << buffer << endl;
 

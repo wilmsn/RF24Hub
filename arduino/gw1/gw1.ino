@@ -15,12 +15,14 @@ Testnode
 #define STATUSLED_OFF LOW
 #define ONE_WIRE_BUS 8
 
+
 // ------ End of configuration part ------------
 #include <EEPROM.h>
 #include <RF24.h>
 #include <SPI.h>
 #include <Vcc.h>
 #include "printf.h"
+#include "zahlenformat.h"
 //****
 // some includes for your sensor(s) here
 //****
@@ -45,21 +47,6 @@ DallasTemperature sensors(&oneWire);
 
 uint8_t addresses[][6] = {"aaaaa"};
 
-// Structure of our payload
-// Maximum is 32 byte !!
-struct payload_t {
-  uint16_t  nodeno;       // the nodenumber
-  uint16_t  msgid;        // an internal message ID
-  uint16_t  flags;        // Flags for internal use
-  uint8_t   sensor1;      // internal address of sensor1
-  uint8_t   sensor2;      // internal address of sensor2
-  uint8_t   sensor3;      // internal address of sensor3
-  uint8_t   sensor4;      // internal address of sensor4
-  float     value1;       // value of sensor1
-  float     value2;       // value of sensor2
-  float     value3;       // value of sensor3
-  float     value4;       // value of sensor4
-};
 
 int eeAddress = 0;
 struct ee_data_t {
@@ -74,10 +61,9 @@ struct udp_data_t {
   uint16_t    network_id;
   uint16_t    node_id;
   uint16_t    msg_id;
-  uint8_t     sensor1_id;
-  uint8_t     sensor2_id;
-  float       value1;
-  float       value2;
+  uint16_t    flags;
+  uint32_t    sensor1;
+  uint32_t    sensor2;
 };
 
 struct udp_data_t udp_s_data, udp_r_data;
@@ -88,16 +74,20 @@ RF24 radio(RADIO_CE_PIN,RADIO_CSN_PIN);
 
 int loopcount = 1;
 
-float action_loop(unsigned char channel, float value) {
-  float retval = value;
+
+
+uint32_t action_loop(uint32_t sensorValue) {
+  uint8_t channel = getSensor(sensorValue);
+  uint32_t retval;
     switch (channel) {
       case 1: {
         // Temperature
-        retval = get_temp();
+        retval = calcTransportValue(1,get_temp());
        break; }
       case 21: {
         // LED
-        if ( value > 0.5 ) {
+        uint16_t value=getValue_uint(sensorValue);
+        if ( value == 1 ) {
           digitalWrite(STATUSLED,STATUSLED_ON); 
         } else {
           digitalWrite(STATUSLED,STATUSLED_OFF); 
@@ -106,7 +96,7 @@ float action_loop(unsigned char channel, float value) {
       case 101:  
       // battery voltage
         cur_voltage = vcc.Read_Volts();
-        retval = cur_voltage;
+//        retval = uint16Value(cur_voltage);
         break;      
       case 111:
       // sleeptimer1
@@ -144,8 +134,6 @@ float get_temp(void) {
   float temp;
   sensors.requestTemperatures(); // Send the command to get temperatures
   temp=sensors.getTempCByIndex(0);
-  Serial.print("temp: ");
-  Serial.println(temp);
   return temp;
 }
 
@@ -168,7 +156,7 @@ void setup() {
   //####
   radio.setChannel(RADIOCHANNEL);
   //radio.setDataRate( RF24_250KBPS );
-  radio.setPALevel( RF24_PA_MIN ) ;
+  radio.setPALevel( RF24_PA_MAX ) ;
   radio.setRetries(15, 15);
   radio.openWritingPipe(addresses[0]);
   radio.openReadingPipe(1,addresses[0]);
@@ -177,20 +165,39 @@ void setup() {
   udp_s_data.msg_id=1;
   udp_s_data.network_id=ee_data.network_id;
   udp_s_data.node_id=ee_data.node_id;
-  udp_s_data.sensor1_id=0;
-  udp_s_data.value1=0;
-  udp_s_data.sensor2_id=0;
-  udp_s_data.value2=0;
+  udp_s_data.sensor1=0;
+  udp_s_data.sensor2=0;
   loopcount=0;
   radio.printDetails();
+/*  
+  Serial.print("Temperatur: "); 
+  Serial.println(get_temp());
+  uint32_t tv=calcTransportValue(1,get_temp());
+  Serial.print("Transport Value: "); 
+  Serial.println(tv, BIN);
+  
+  Serial.print("Sensor: "); 
+  Serial.print(getSensor(tv)); 
+  Serial.print(" Wert: "); 
+  Serial.println(getValue(tv)); 
+  Serial.println("----------------------------------"); 
+  Serial.println("Test Sensor 44 Value 123456");
+  tv=calcTransportValue(44,123456.0);
+  Serial.print("Transport Value: "); 
+  Serial.println(tv, BIN);
+  
+  Serial.print("Sensor: "); 
+  Serial.print(getSensor(tv)); 
+  Serial.print(" Wert: "); 
+  Serial.println(getValue(tv)); 
+  Serial.println("----------------------------------"); 
+*/  
 }
 
 void loop() {
     if (loopcount > 1000) {
-      udp_s_data.sensor1_id=1;
-      udp_s_data.value1=get_temp();
-      Serial.print("Temperatur = ");
-      Serial.println( udp_s_data.value1 );
+      udp_s_data.sensor1=calcTransportValue(1,get_temp());
+      udp_s_data.sensor2=calcTransportValue(101,vcc.Read_Volts());
       radio.stopListening();                                
       Serial.print(F("Data sent msg_nr:"));
       Serial.print(udp_s_data.msg_id);
@@ -209,13 +216,13 @@ void loop() {
       printf("Network_number: %u \n",udp_r_data.network_id);
       printf("Node_number: %u \n",udp_r_data.node_id);
       printf("Msg_number: %u \n",udp_r_data.msg_id);
-      printf("Sensor1_id: %u \n",udp_r_data.sensor1_id);
+/*      printf("Sensor1_id: %u \n",udp_r_data.sensor1);
       printf("Sensor1_value: %f \n",udp_r_data.value1);
       printf("Sensor2_id: %u \n",udp_r_data.sensor2_id);
-      printf("Sensor2_value: %f \n",udp_r_data.value2);
+      printf("Sensor2_value: %f \n",udp_r_data.value2); */
       printf("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
-      if ( udp_r_data.sensor1_id > 0 ) action_loop(udp_r_data.sensor1_id,udp_r_data.value1);
-      if ( udp_r_data.sensor2_id > 0 ) action_loop(udp_r_data.sensor2_id,udp_r_data.value2);
+      if ( udp_r_data.sensor1 > 0 ) action_loop(udp_r_data.sensor1);
+      if ( udp_r_data.sensor2 > 0 ) action_loop(udp_r_data.sensor2);
     }
     delay(10);
     loopcount++;

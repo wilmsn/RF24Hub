@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream> 
+#include <cstdio>
 #include <string> // for string class 
 #include <string.h>
 #include <ctype.h>
@@ -38,6 +39,7 @@ class CONFIG {
 private:
 
 FILE * pidfile_ptr;
+FILE * logfile_ptr;
 
 string configFile;
 bool prgIsHub;
@@ -174,15 +176,23 @@ void removePidFile(void);
 int checkPidFileSet(void);
 
 /*
- * sets and opens the logfile to the given file
- */
-void setLog2File(std::string);
-
-/*
  * prints out a logmessage
  * to console and/or to file
  */
-void logmsg(int, std::string);
+//void logmsg(int, std::string);
+void logmsg(int, char*);
+
+/*
+ * As we use our own result format
+ * convert it into float
+ */
+float sensorValue(uint16_t);
+
+/*
+ * As we use our own result format
+ * convert it into uint16
+ */
+uint16_t uint16Value(float);
 
 
 };

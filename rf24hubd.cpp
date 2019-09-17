@@ -2,8 +2,8 @@
 
 void sighandler(int signal) {
 //    exit_system(); 
-//	sprintf(debug, "SIGTERM: Shutting down ... ");
-	cfg.logmsg(VERBOSECRITICAL, "SIGTERM: Shutting down ... ");
+	sprintf(debug, "%s","SIGTERM: Shutting down ... ");
+	cfg.logmsg(VERBOSECRITICAL, debug);
     cfg.removePidFile();
 //    unlink(parms.pidfilename);
 //	msgctl(msqid, IPC_RMID, NULL);
@@ -58,21 +58,18 @@ int main(int argc, char* argv[]) {
                 // Child prozess
                 chdir ("/");
                 umask (0);
-                debug = "Starting up ....";
-                cfg.logmsg(VERBOSESTARTUP,debug);
+                sprintf(debug,"%s","Starting up ...."); cfg.logmsg(VERBOSESTARTUP,debug);
             } else if (pid > 0) {
                 // Parentprozess -> exit and return to shell
                 // write a message to the console
-                debug = "Starting rf24hubd as daemon...";
-                cfg.logmsg(VERBOSESTARTUP,debug);
-                cout << debug << endl;
+                sprintf(debug,"%s","Starting rf24hubd as daemon..."); cfg.logmsg(VERBOSESTARTUP,debug);
                 // and exit
                 exit (0);
             } else {
                 // nagativ is an error
-            cout << "Fork ERROR ... exiting" << endl; 
-            cfg.removePidFile();
-            exit(1);
+				fprintf(stderr,"%s\n","Fork ERROR ... exiting"); 
+				cfg.removePidFile();
+				exit(1);
             }
         }
     }
@@ -103,32 +100,30 @@ cout << "test1" << endl;
                 printf("Network_number: %u \n",udp_r_data.network_id);
                 printf("Node_number: %u \n",udp_r_data.node_id);
                 printf("Msg_number: %u \n",udp_r_data.msg_id);
-                printf("Sensor1_id: %u \n",udp_r_data.sensor1_id);
-                printf("Sensor1_value: %f \n",udp_r_data.value1);
-                printf("Sensor2_id: %u \n",udp_r_data.sensor2_id);
-                printf("Sensor2_value: %f \n",udp_r_data.value2);
+                printf("Sensor1_id: %u \n",getSensor(udp_r_data.sensor1));
+                printf("Sensor1_value: %f \n",getValue(udp_r_data.sensor1));
+                printf("Sensor2_id: %u \n",getSensor(udp_r_data.sensor2));
+                printf("Sensor2_value: %f \n",getValue(udp_r_data.sensor2));
                 udp_s_data.network_id = udp_r_data.network_id;
                 udp_s_data.node_id = udp_r_data.node_id;
                 udp_s_data.msg_id = udp_r_data.msg_id;
-                udp_s_data.sensor1_id = 21;
                 if ( test ) {
-					udp_s_data.value1 = 0;
+					udp_s_data.sensor1 = calcTransportValue_uint(21,0);
 					test = false;
 				} else {
-					udp_s_data.value1 = 1;
+					udp_s_data.sensor1 = calcTransportValue_uint(21,1);
 					test = true;
 				} 
 				switch (clientaddress.ss_family) {
 					case AF_INET:
 						inet_ntop(clientaddress.ss_family,	&((struct sockaddr_in *)&clientaddress)->sin_addr, ipAddrStr, INET_ADDRSTRLEN);
-						debug = "Client IPV4: "; 
+						sprintf(debug,"GW IPV4: %s",ipAddrStr);  cfg.logmsg(VERBOSETELNET,debug);; 
 					break;
 					case AF_INET6:
 						inet_ntop(clientaddress.ss_family,	&((struct sockaddr_in6 *)&clientaddress)->sin6_addr, ipAddrStr, INET_ADDRSTRLEN);
-						debug = "Client IPV6: "; 
+						sprintf(debug,"GW IPV6: %s",ipAddrStr);  cfg.logmsg(VERBOSETELNET,debug);; 
 					break;
 				}
-				debug += ipAddrStr;  cfg.logmsg(VERBOSETELNET,debug);
 				sendUdpMessage( ipAddrStr, cfg.rf24GWUdpPort.c_str(), &udp_s_data); 
             }
         }

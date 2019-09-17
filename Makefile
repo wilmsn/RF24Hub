@@ -31,11 +31,11 @@ endif
 all: rf24hubd rf24gwd
 
 # Make the rf24hub deamon
-rf24hubd: config.o database.o fhem.o telnet.o rf24hubd.cpp
+rf24hubd: config.o database.o fhem.o telnet.o zahlenformat.o rf24hubd.cpp
 	g++ ${CCFLAGS} -Wall -I ${MARIADB_INC} ${MARIADB_LIBS} $^ -o $@
 
 # Make the rf24gateway deamon
-rf24gwd: config.o telnet.o rf24gwd.cpp
+rf24gwd: config.o telnet.o zahlenformat.o rf24gwd.cpp
 	g++ ${CCFLAGS} ${RF24FLAGS} -Wall $^ -o $@
 
 receiver: 

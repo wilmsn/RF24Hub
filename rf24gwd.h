@@ -18,7 +18,7 @@ V0.1 Initial version
 #include "rf24hub_config.h"
 #include "config.h"
 #include "telnet.h"
-
+#include "zahlenformat.h"
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
@@ -69,7 +69,7 @@ uint8_t addresses[][6] = {"aaaaa","bbbbb"};
 uint16_t orderno, init_orderno;
 
 // a test structure for values comming via UDP
-struct udp_data_t udp_s_data, udp_r_data, udp_node_data;
+struct udp_data_t udp_hub_data, udp_r_data, udp_node_data;
 struct sockaddr_in udp_address;
 //socklen_t udp_addrlen;
 int udp_sockfd;
@@ -88,7 +88,7 @@ char ipAddrStr[INET_ADDRSTRLEN];
 
 
 
-string debug;
+char debug[DEBUGSTRINGSIZE];
 
 CONFIG cfg(RF24GW_PRGNAME, PRGVERSION);
 

@@ -21,7 +21,7 @@
  ************************************************/
  
 extern CONFIG cfg;
-extern string debug; 
+extern char debug[DEBUGSTRINGSIZE]; 
 extern sockType_t sockType;
 
 void openSocket(const char* host, const char* port, struct sockaddr_in *address, int* handle, sockType_t sockType );

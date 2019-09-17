@@ -21,7 +21,7 @@ V1.0 Initial version after comming from sensorhub
 #include "rf24hub_config.h"
 #include "config.h"
 #include "telnet.h"
-
+#include "zahlenformat.h"
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
@@ -159,7 +159,7 @@ bool rf24_rpd=false;
 //uint16_t getnodeadr(char *node);
 //char config_file[PARAM_MAXLEN_CONFIGFILE];
 
-string debug;
+char debug[DEBUGSTRINGSIZE];
 
 CONFIG cfg(PRGNAME, PRGVERSION);
 
