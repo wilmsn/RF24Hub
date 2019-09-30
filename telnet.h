@@ -28,4 +28,4 @@ void openSocket(const char* host, const char* port, struct sockaddr_in *address,
 
 void receiveTelnetMessage(int tn_socket, struct sockaddr_in * address);
 
-void sendUdpMessage(const char* host, const char* port, struct udp_data_t * udp_data );
+void sendUdpMessage(const char* host, const char* port, udp_data_t * udp_data );

@@ -59,7 +59,7 @@ V1.0 Initial version after comming from sensorhub
 
 using namespace std;
 
-struct udp_data_t udp_r_data, udp_s_data;
+udp_data_t udp_r_data, udp_s_data;
 
 enum logmode_t { systemlog, interactive, logfile };
 logmode_t logmode;

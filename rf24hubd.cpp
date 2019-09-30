@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
             pid = fork ();
             if (pid == 0) {
                 // Child prozess
-                chdir ("/");
+                //chdir ("/");
                 umask (0);
                 sprintf(debug,"%s","Starting up ...."); cfg.logmsg(VERBOSESTARTUP,debug);
             } else if (pid > 0) {
@@ -73,6 +73,7 @@ int main(int argc, char* argv[]) {
             }
         }
     }
+	printf("%s\n","Open Ports");        
         
     if ( cfg.rf24HubTcpPortSet ) {
 		openSocket(NULL, cfg.rf24HubTcpPort.c_str(),&tcp_address,&tcp_sockfd,TCP);
@@ -80,8 +81,9 @@ int main(int argc, char* argv[]) {
     if ( cfg.rf24HubUdpPortSet ) {
 		openSocket(NULL, cfg.rf24HubUdpPort.c_str(),&udp_address,&udp_sockfd,UDP);
 	}
-cout << "test1" << endl;        
+    if ( cfg.rf24HubUdpPortSet ) { printf("%s\n","UDP Port open"); }        
     while(1) {
+		usleep(10000);
         /* Handling of incoming messages */
 		if ( cfg.rf24HubTcpPortSet ) {
             new_tn_in_socket = accept ( tcp_sockfd, (struct sockaddr *) &tcp_address, &tcp_addrlen );
@@ -125,6 +127,7 @@ cout << "test1" << endl;
 					break;
 				}
 				sendUdpMessage( ipAddrStr, cfg.rf24GWUdpPort.c_str(), &udp_s_data); 
+				printf("%s\n",cfg.rf24GWUdpPort.c_str());
             }
         }
 	}

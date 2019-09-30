@@ -258,8 +258,9 @@ void CONFIG::printConfig (void) {
     cout << "DB-Password:"     << dbPassWord << endl;
     cout << "FHEM-Hostname:"   << fhemHostName << endl;
     cout << "FHEM-Port:"       << fhemPort << endl;
-    cout << "telnet Port:"     << rf24HubTcpPort << endl;
-    cout << "udp Port:"        << rf24HubUdpPort << endl;
+    cout << "Hub telnet Port:" << rf24HubTcpPort << endl;
+    cout << "Hub Udp Port:"    << rf24HubUdpPort << endl;
+    cout << "GW Udp Port:"     << rf24GWUdpPort << endl;
     if ( rf24HubUdpPortSet ) cout << "rf24HubUdpPortSet = true" << endl; else cout << "rf24HubUdpPortSet = false" << endl;
     cout << "Verboselevel:"    << verboseLevel << endl;
 #ifdef DEBUG    

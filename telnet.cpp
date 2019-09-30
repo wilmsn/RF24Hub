@@ -1,6 +1,6 @@
 #include "telnet.h"
 
-void sendUdpMessage(const char* host, const char* port, struct udp_data_t * udp_data ) {
+void sendUdpMessage(const char* host, const char* port, udp_data_t * udp_data ) {
 	int sockfd;
 	struct addrinfo hints, *servinfo, *p;
 	int rv;
@@ -32,6 +32,7 @@ void sendUdpMessage(const char* host, const char* port, struct udp_data_t * udp_
 		perror("talker: sendto error");
 		exit(1);
 	}
+	close(sockfd);
     freeaddrinfo(servinfo);
 }
 

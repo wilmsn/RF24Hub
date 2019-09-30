@@ -6,17 +6,8 @@
 
 #include <stdint.h>
 #include "rf24hub_config.h"
-
-
-// Achtung: Float arbeitet nur wenn die vorherigen Felder ein vielfaches vor 32 bit regeben!!!!
-struct udp_data_t {
-  uint16_t    network_id;
-  uint16_t    node_id;
-  uint16_t    msg_id;
-  uint16_t    flags;
-  uint32_t    sensor1;
-  uint32_t     sensor2;
-};
+#include "rf24hub_data_types.h"
+#include "rf24hub_payload_data.h"
 
 
 enum sockType_t { TCP, UDP};

@@ -13,7 +13,7 @@
 #include <unistd.h>
 #include <getopt.h>
 #include <fstream>
-#include <bits/stdint-uintn.h>
+#include <stdint.h>
 #include "rf24hub_common.h"
 #include "rf24hub_config.h"
 
