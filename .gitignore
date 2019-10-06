@@ -31,6 +31,9 @@
 *.out
 *.app
 
+# Logfiles
+*.log
+
 rf24hubd
 rf24gwd
 
