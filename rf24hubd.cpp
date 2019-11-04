@@ -1336,7 +1336,6 @@ int main(int argc, char* argv[]) {
             new_tn_in_socket = accept ( tn_in_socket, (struct sockaddr *) &address, &addrlen );
             if (new_tn_in_socket > 0) {
                 //receive_tn_in(new_tn_in_socket, &address);
-printf("######1");
                 thread t2(receive_tn_in, new_tn_in_socket, &address);
                 t2.detach();
                 //close (new_tn_in_socket);
