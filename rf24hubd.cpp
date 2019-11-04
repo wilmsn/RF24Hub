@@ -38,28 +38,20 @@ void parse_config (struct config_parameters * parms) {
     else if (strcmp(name, "db_schema")==0)   strcpy (parms->db_schema, value);
     else if (strcmp(name, "db_username")==0) strcpy (parms->db_username, value);
     else if (strcmp(name, "db_password")==0) strcpy (parms->db_password, value);
-    else if (strcmp(name, "fhem_hostname")==0) {
-                strcpy (parms->fhem_hostname, value);
-                fhem_host_set=true;
+    else if (strcmp(name, "telnet_hostname")==0) {
+                strcpy (parms->telnet_hostname, value);
+                tn_host_set=true;
         }
-    else if (strcmp(name, "fhem_port")==0) {
-                strcpy(parms->fhem_port, value);
-                fhem_port_set=true;
+    else if (strcmp(name, "telnet_port")==0) {
+                parms->telnet_port = atoi(value);
+                tn_port_set=true;
         }
-    else if (strcmp(name, "tcp_in_port")==0) {
-                strcpy(parms->tcp_in_port, value);
-                tcp_in_port_set=true;
-        }
-    else if (strcmp(name, "udp_in_port")==0) {
-                strcpy(parms->udp_in_port, value);
-                udp_in_port_set=true;
+    else if (strcmp(name, "incoming_port")==0) {
+                parms->incoming_port = atoi(value);
+                in_port_set=true;
         }
     else if (strcmp(name, "logfile")==0)     strcpy (parms->logfilename, value);
     else if (strcmp(name, "pidfile")==0)     strcpy (parms->pidfilename, value);
-    else if (strcmp(name, "verboselevel")==0) {
-                if ( verboselevel == -1 ) parms->verboselevel = atoi(value);
-                else parms->verboselevel = verboselevel;
-        }
     else if (strcmp(name, "rf24network_channel")==0) parms->rf24network_channel = atoi(value);
     else if (strcmp(name, "rf24network_speed")==0) {
                 if (strcmp(value, "RF24_2MBPS")==0) {
@@ -86,16 +78,13 @@ void parse_config (struct config_parameters * parms) {
 void print_config (struct config_parameters * parms) {
     printf ("Logfile: %s\n", parms->logfilename);
     printf ("PIDfile: %s\n", parms->pidfilename);
-    printf ("Verboselevel: %d\n", parms->verboselevel);
     printf ("DB-Hostname: %s\n", parms->db_hostname);
     printf ("DB-Port: %d\n", parms->db_port);
     printf ("DB-Schema: %s\n", parms->db_schema);
     printf ("DB-Username: %s\n", parms->db_username);
     printf ("DB-Password: %s\n", parms->db_password);
-    printf ("FHEM-Hostname: %s\n", parms->fhem_hostname);
-    printf ("FHEM-Port: %s\n", parms->fhem_port);
-    printf ("TCP-Port (incoming): %s\n", parms->tcp_in_port);
-    printf ("UDP-Port (incoming): %s\n", parms->udp_in_port);
+    printf ("Telnet-Hostname: %s\n", parms->telnet_hostname);
+    printf ("Telnet-Port: %d\n", parms->telnet_port);
 //    printf ("Ende print_config\n");
 }
 
@@ -149,86 +138,50 @@ char * trim (char * s) {
 * Used for communication with FHEM
 *
 ********************************************************************************************/
-// exec_fhem_cmd ==> send a telnet comand to the fhem-host
-// usage example: exec_fhem_cmd("set device1 on");
-void exec_fhem_cmd(const char *fhem_cmd) {
-/*    int sockfd, portno, n;
+// exec_tn_cmd ==> send a telnet comand to the fhem-host
+// usage example: exec_tn_cmd("set device1 on");
+void exec_tn_cmd(const char *tn_cmd) {
+    int sockfd, portno, n;
     struct sockaddr_in serv_addr;
-    struct hostent *server; */
+    struct hostent *server;
 	char debug[200];
     
-	sprintf(debug,"DEBUG: %s\n", fhem_cmd);
+	sprintf(debug,"DEBUG: %s\n", tn_cmd);
 	logmsg(VERBOSETELNET,debug);
-    
-    int sockfd;  
-    struct addrinfo hints, *servinfo, *p;
-    int rv, n;
-
-    memset(&hints, 0, sizeof hints);
-    hints.ai_family = AF_UNSPEC; // use AF_INET6 to force IPv6
-    hints.ai_socktype = SOCK_STREAM;
-
-    if ((rv = getaddrinfo(parms.fhem_hostname, parms.fhem_port, &hints, &servinfo)) != 0) {
-        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
-        exit(1);
-    }
-
-    // loop through all the results and connect to the first we can
-    for(p = servinfo; p != NULL; p = p->ai_next) {
-        if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
-            perror("socket");
-            continue;
-        }
-
-        if (connect(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
-            perror("connect");
-            close(sockfd);
-            continue;
-        }
-
-        break; // if we get here, we must have connected successfully
-    }
-
-    if (p == NULL) {
-        // looped off the end of the list with no connection
-        fprintf(stderr, "failed to connect\n");
-        exit(2);
-	} else {	
-		n = write(sockfd,fhem_cmd,strlen(fhem_cmd));
-		if (n < 0) {
-			sprintf(debug,"ERROR: writing to socket");
-			logmsg(VERBOSECRITICAL,debug);
-		} else {
-			sprintf(debug,"Telnet to %s Port %s CMD: %s successfull",parms.fhem_hostname, parms.fhem_port, fhem_cmd);
-			logmsg(VERBOSETELNET,debug);
-		}		
-	}		 
-    close(sockfd);
-
-    freeaddrinfo(servinfo); // all done with this structure
-/*    
-    if (sockfd < 1) {
+    portno = parms.telnet_port;
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (sockfd < 0) {
         sprintf(debug,"ERROR: opening socket");
 		logmsg(VERBOSECRITICAL,debug);
 	}	
+    server = gethostbyname(parms.telnet_hostname);
+    if (server == NULL) {
+        sprintf(debug,"ERROR: no such host\n");
+		logmsg(VERBOSECRITICAL,debug);
+    }
+    bzero((char *) &serv_addr, sizeof(serv_addr));
+    serv_addr.sin_family = AF_INET;
+    bcopy((char *)server->h_addr, 
+         (char *)&serv_addr.sin_addr.s_addr,
+         server->h_length);
+    serv_addr.sin_port = htons(portno);
     if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0) { 
         sprintf(debug,"ERROR: connecting");
 		logmsg(VERBOSECRITICAL,debug);
 	} else {	
-		n = write(sockfd,fhem_cmd,strlen(fhem_cmd));
+		n = write(sockfd,tn_cmd,strlen(tn_cmd));
 		if (n < 0) {
 			sprintf(debug,"ERROR: writing to socket");
 			logmsg(VERBOSECRITICAL,debug);
 		} else {
-			sprintf(debug,"Telnet to %s Port %d CMD: %s successfull",parms.fhem_hostname, portno, fhem_cmd);
+			sprintf(debug,"Telnet to %s Port %d CMD: %s successfull",parms.telnet_hostname, portno, tn_cmd);
 			logmsg(VERBOSETELNET,debug);
 		}		
 	}		 
     close(sockfd);
-*/    
 }
 
-void prepare_fhem_cmd(uint16_t node, uint8_t channel, float value) {
+void prepare_tn_cmd(uint16_t node, uint8_t channel, float value) {
 	char telnet_cmd[200];
 	for(int i=0; i<SENSORARRAYSIZE; i++) {
 		if ( sensor[i].node == node && sensor[i].channel == channel ) {
@@ -237,7 +190,7 @@ void prepare_fhem_cmd(uint16_t node, uint8_t channel, float value) {
 	}
 	sprintf(debug,"Telnet-CMD: %s\n", telnet_cmd);
 	logmsg(VERBOSETELNET,debug);				
-	exec_fhem_cmd(telnet_cmd);
+	exec_tn_cmd(telnet_cmd);
 }
 	
 void receive_tn_in(int new_tn_in_socket, struct sockaddr_in * address) {
@@ -338,7 +291,7 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
     }
 	// set/setlast sensor <sensor> <value>
 	// sets a sensor to a value, setlast starts the request over air
-	if ( (( strcmp(wort1,cmp_set) == 0 ) || ( strcmp(wort1,cmp_setlast) == 0 )) && (strcmp(wort2,cmp_sensor) == 0) && (strlen(wort3) > 1) && (strlen(wort4) > 0) ) {
+	if ( (( strcmp(wort1,cmp_set) == 0 ) || ( strcmp(wort1,cmp_setlast) == 0 )) && (strcmp(wort2,cmp_sensor) == 0) && (strlen(wort3) > 0) && (strlen(wort4) > 0) ) {
 		tn_input_ok = true;
 		// In word3 we may have a) the number of the sensor b) the name of the sensor c) the fhem_dev of a sensor
 		// for the processing we need the number of the sensor ==> find it!
@@ -374,7 +327,7 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 	}
     // set verbose <new verboselevel>
 	// sets the new verboselevel
-	if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (wort3 != NULL) && (wort4 == 0) ) {
+	if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (strlen(wort3) == 1) && (strlen(wort4) == 0) ) {
         if ( wort3[0] > '0' && wort3[0] < '9' + 1 ) {
 			tn_input_ok = true;
 			verboselevel = (wort3[0] - '0') * 1;
@@ -793,8 +746,6 @@ void print_sensor(void) {
 
 void exit_system(void) {
     // Save data from sensordata_im and sensor_im to persistant tables
-	sprintf(debug, "SIGTERM: Cleanup system ... saving *_im tables ...");
-	logmsg(VERBOSECRITICAL, debug);
 	sprintf (sql_stmt, "update sensor a set value = ( select value from sensor_im where sensor_id = a.sensor_id ), utime = ( select utime from sensor_im where sensor_id = a.sensor_id )");
 	logmsg(VERBOSESQL, sql_stmt);
 	mysql_query(db, sql_stmt);
@@ -856,8 +807,8 @@ void init_system(void) {
 }
 
 void store_sensor_value(uint16_t node, uint8_t channel, float value, bool d1, bool d2) {
-	if ( fhem_active ) { 
-		prepare_fhem_cmd(node, channel, value); 
+	if ( tn_active ) { 
+		prepare_tn_cmd(node, channel, value); 
 	}
 	sprintf(sql_stmt,"insert into sensordata_im (sensor_ID, utime, value) select sensor_id, UNIX_TIMESTAMP(), %f from sensor_im where node_id = '0%o' and channel = %u ", value, node, channel);
 	do_sql(sql_stmt);
@@ -936,6 +887,8 @@ void process_sensor(uint16_t node, uint8_t channel, float value, bool d1, bool d
 *
 ********************************************************************************************/
 void sighandler(int signal) {
+	sprintf(debug, "SIGTERM: Cleanup system ... saving *_im tables ...");
+	logmsg(VERBOSECRITICAL, debug);
     exit_system(); 
 	sprintf(debug, "SIGTERM: Shutting down ... ");
 	logmsg(VERBOSECRITICAL, debug);
@@ -943,14 +896,6 @@ void sighandler(int signal) {
 //	msgctl(msqid, IPC_RMID, NULL);
     exit (0);
 }
-
-void error_exit(int myerrno, char* error) {
-    exit_system(); 
-	sprintf(debug, "SIGTERM: Shutting down ... ");
-	logmsg(VERBOSECRITICAL, debug);
-    unlink(parms.pidfilename);
-    exit (myerrno);
-}    
 
 uint64_t mymillis(void) {
 	struct timeval tv;
@@ -963,7 +908,7 @@ uint64_t mymillis(void) {
 void logmsg(int mesgloglevel, char *mymsg){
 	if ( logmode == logfile ) {
 		if (mesgloglevel <= verboselevel) {
-			char buf[20];
+			char buf[15];
 			logfile_ptr = fopen (parms.logfilename,"a");
 			if ( logfile_ptr != NULL ) {
 				time_t now = time(0);
@@ -1123,7 +1068,7 @@ void scanner(char scanlevel) {
 
 int main(int argc, char* argv[]) {
     pid_t pid;
-	int c, rv, numbytes;
+	int c;
 	uint64_t akt_time, del_time, next_time;
 	start_time = 0;
 	start_time = mymillis();
@@ -1133,14 +1078,13 @@ int main(int argc, char* argv[]) {
 	orderno = 1;
 	logmode = interactive;
 	strcpy(config_file,"x");
-    struct addrinfo hints, *servinfo, *p;
-    
+
 	/* vars for telnet socket handling */
-	int new_tn_in_socket;
+	int tn_in_socket, new_tn_in_socket;
 	socklen_t addrlen;
 //	char *buffer =  (char*) malloc (BUF);
 	struct sockaddr_in address;
-	long tcp_save_fd, udp_save_fd;
+	long save_fd;
 	const int y = 1;
 //	bool wait4message = false;
 	
@@ -1340,86 +1284,33 @@ int main(int argc, char* argv[]) {
     fclose(pidfile_ptr);
     sprintf(debug, "%s running with PID: %d", PRGNAME, pid);
     logmsg(VERBOSESTARTUP, debug);
-    if ( fhem_port_set && fhem_host_set ) {
-        fhem_active = true;
-        sprintf(debug, "telnet session started: Host: %s Port: %s ", parms.fhem_hostname, parms.fhem_port);
+    if ( tn_port_set && tn_host_set ) {
+        tn_active = true;
+        sprintf(debug, "telnet session started: Host: %s Port: %d ", parms.telnet_hostname, parms.telnet_port);
         logmsg(VERBOSESTARTUP, debug);
     }
-	if ( tcp_in_port_set ) {
-        // open TCP Socket
-        memset(&hints, 0, sizeof hints);
-        hints.ai_family =  	AF_INET6; //AF_INET; //AF_INET6; //AF_UNSPEC;
-        hints.ai_socktype = SOCK_STREAM;
-        hints.ai_flags = AI_PASSIVE; // use my IP
-        if ((rv = getaddrinfo(NULL, parms.tcp_in_port, &hints, &servinfo)) != 0) {
-            sprintf(debug, "Abort ERROR: getaddrinfo: %s\n", gai_strerror(rv));
-            error_exit( 1, debug);
-        }
-        // loop through all the results and bind to the first we can
-        for(p = servinfo; p != NULL; p = p->ai_next) {
-            if ((tcp_sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
-                perror("server: socket");
-                continue;
-            }
-            if (setsockopt(tcp_sockfd, SOL_SOCKET, SO_REUSEADDR, &y, sizeof(int)) == -1) {
-                sprintf(debug,"setsockopt");
-                error_exit(1,debug);
-            }
-            if (bind(tcp_sockfd, p->ai_addr, p->ai_addrlen) == -1) {
-                close(tcp_sockfd);
-                perror("server: bind");
-                continue;
-            }
-            break;
-        }
-        if (p == NULL)  {
-            sprintf(debug, "server: failed to bind\n");
-            error_exit( 2,debug);;
-        }
-        freeaddrinfo(servinfo); // all done with this structure
-        if (listen(tcp_sockfd, 10) == -1) {
-            sprintf(debug,"listen");
-            error_exit(1,debug);
-        }
-        tcp_save_fd = fcntl( tcp_sockfd, F_GETFL );
-        tcp_save_fd |= O_NONBLOCK;
-        fcntl( tcp_sockfd, F_SETFL, tcp_save_fd );
-        printf("server: waiting for tcp connections on %s ...\n", parms.tcp_in_port);
-    }
+	tn_in_socket=0;
+	if ( in_port_set ) {
+    /* open incoming port for messages */
+		if ((tn_in_socket=socket( AF_INET, SOCK_STREAM, 0)) > 0) {
+			sprintf (debug,"Socket für eingehende Messages auf Port %i angelegt", parms.incoming_port);
+			logmsg(VERBOSESTARTUP, debug);
+		}
+		address.sin_family = AF_INET;
+		address.sin_addr.s_addr = INADDR_ANY;
+		address.sin_port = htons (parms.incoming_port);
+		setsockopt( tn_in_socket, SOL_SOCKET, SO_REUSEADDR, &y, sizeof(int) );
+		if (bind( tn_in_socket, (struct sockaddr *) &address, sizeof (address)) == 0 ) {
+			sprintf (debug,"Binding Socket OK");
+			logmsg(VERBOSESTARTUP, debug);
+		}
+		listen (tn_in_socket, 5);
+		addrlen = sizeof (struct sockaddr_in);
+		save_fd = fcntl( tn_in_socket, F_GETFL );
+		save_fd |= O_NONBLOCK;
+		fcntl( tn_in_socket, F_SETFL, save_fd );
+	}
     sleep(2);
-	if ( udp_in_port_set ) {
-        // open UDP Socket
-        memset(&hints, 0, sizeof hints);
-        hints.ai_family =  	AF_INET6; //AF_INET; //AF_INET6; //AF_UNSPEC;
-        hints.ai_socktype = SOCK_DGRAM;
-        hints.ai_flags = AI_PASSIVE; // use my IP
-        if ((rv = getaddrinfo(NULL, parms.udp_in_port, &hints, &servinfo)) != 0) {
-            sprintf(debug, "getaddrinfo: %s\n", gai_strerror(rv));
-            error_exit( 1,debug);
-        }
-        // loop through all the results and bind to the first we can
-        for(p = servinfo; p != NULL; p = p->ai_next) {
-            if ((udp_sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
-                perror("server: socket");
-                continue;
-            }
-            if (bind(udp_sockfd, p->ai_addr, p->ai_addrlen) == -1) {
-                close(udp_sockfd);
-                perror("server: bind");
-                continue;
-            }
-            break;
-        }
-        if (p == NULL)  {
-            sprintf(debug, "server: failed to bind\n");
-            error_exit( 2,debug);
-        }
-        freeaddrinfo(servinfo); // all done with this structure
-        udp_save_fd = fcntl( udp_sockfd, F_GETFL );
-        udp_save_fd |= O_NONBLOCK;
-        fcntl( udp_sockfd, F_SETFL, udp_save_fd );
-        printf("server: waiting for UDP connections on %s ...\n", parms.udp_in_port);
-    }    
     sprintf(debug, "starting radio on channel ... %d ", parms.rf24network_channel);
     logmsg(VERBOSESTARTUP, debug);
     radio.begin();
@@ -1440,26 +1331,44 @@ int main(int argc, char* argv[]) {
     while(1) {
 		if (orderno > 50000) orderno = 1;
         /* Handling of incoming messages */
-		if ( tcp_in_port_set ) {
-            new_tn_in_socket = accept ( tcp_sockfd, (struct sockaddr *) &address, &addrlen );
+		if ( in_port_set ) {
+//			char client_message[30];
+            new_tn_in_socket = accept ( tn_in_socket, (struct sockaddr *) &address, &addrlen );
             if (new_tn_in_socket > 0) {
                 //receive_tn_in(new_tn_in_socket, &address);
+printf("######1");
                 thread t2(receive_tn_in, new_tn_in_socket, &address);
                 t2.detach();
                 //close (new_tn_in_socket);
             }
-        }
-        if ( udp_in_port_set ) {
-            numbytes = recvfrom(udp_sockfd, &udp_data, sizeof(udp_data), 0, (struct sockaddr *)&client_addr,  &addr_len);
-            if (numbytes >0) {
-                printf("listener: packet is %d bytes long\n", numbytes);
-                printf("listener: packet received \n");
-                printf("Network_number: %u \n",udp_data.network_id);
-                printf("Msg_number: %u \n",udp_data.msg_id);
-                printf("Sensor_id: %u \n",udp_data.sensor_id);
-                printf("Sensor_value: %f \n",udp_data.value);
-            }
-        }
+            
+/*            
+			if ( ! wait4message ) {  
+				new_tn_in_socket = accept ( tn_in_socket, (struct sockaddr *) &address, &addrlen );
+				if (new_tn_in_socket > 0) {
+					wait4message = true;
+					// send something like a prompt. perl telnet is waiting for it otherwise we get error
+					// use this in perl: my $t = new Net::Telnet (Timeout => 2, Port => 7001, Prompt => '/rf24hub>/');
+					sprintf(client_message,"rf24hub> ");
+					write(new_tn_in_socket , client_message , strlen(client_message));
+					sprintf (debug,"Client %s ist connected ...", inet_ntoa (address.sin_addr));
+					logmsg(VERBOSECONFIG, debug);
+				}
+			} else {
+				save_fd = fcntl( new_tn_in_socket, F_GETFL );
+				save_fd |= O_NONBLOCK;
+				fcntl( new_tn_in_socket, F_SETFL, save_fd );
+				// Process data  //
+				sprintf(buffer,"                                                                               ");
+				MsgLen = recv(new_tn_in_socket, buffer, BUF, 0);
+				if (MsgLen>0) {
+					process_tn_in(new_tn_in_socket, buffer, client_message);
+					close (new_tn_in_socket);
+					wait4message = false;
+				}
+			}	 
+			*/
+		}
 		network.update();
 		if ( network.available() ) {
 //

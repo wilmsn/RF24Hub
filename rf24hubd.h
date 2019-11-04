@@ -3,17 +3,13 @@ rf24hub.cpp
 A unix-deamon to handle and store the information from/to all connected sensornodes. 
 All information is stored in a MariaDB database.
 rf24hub is the successor of sensorhub.
-
-Version history:
-V1.0 Initial version after comming from sensorhub
-
-
 */
+
 #ifndef _RF24HUBD_H_   /* Include guard */
 #define _RF24HUBD_H_
 
 #define PRGNAME "rf24hub"
-#define PRGVERSION "1.0"
+#define PRGVERSION "1.2 vom 04.11.2019"
 //--------- End of global define -----------------
 
 #include "rf24hub_common.h"
@@ -34,8 +30,9 @@ V1.0 Initial version after comming from sensorhub
 #include <sys/msg.h>
 #include <sys/socket.h>
 #include <stdio.h>
-//#include <mariadb/my_config.h>
-//#include <mariadb/my_global.h>
+//#include <mysql/my_config.h>
+//#include <mysql/my_global.h>
+//#include <mysql/mysql.h>
 #include <mariadb/mysql.h>
 #include <unistd.h>
 #include <getopt.h>
@@ -54,10 +51,9 @@ using namespace std;
 
 enum logmode_t { systemlog, interactive, logfile };
 logmode_t logmode;
-int verboseleveldefault = VERBOSELEVELDEFAULT;
-int verboselevel = -1;
-int tcp_sockfd, udp_sockfd;
-bool start_daemon=false, fhem_host_set = false, fhem_port_set = false, fhem_active = false, udp_in_port_set = false, tcp_in_port_set = false, order_waiting = false;
+int verboselevel = 2;
+int sockfd;
+bool start_daemon=false, tn_host_set = false, tn_port_set = false, tn_active = false, in_port_set = false, order_waiting = false;
 char logfilename[300];
 char tn_hostname[20], tn_portno[7];
 struct sockaddr_in serv_addr;
@@ -70,9 +66,7 @@ MYSQL_ROW row;
 char* pEnd;
 const char* prgversion=PRGVERSION;
 uint64_t start_time;
-struct sockaddr_storage client_addr; 
-socklen_t addr_len;
-char s[INET6_ADDRSTRLEN];
+
 
 // Setup for GPIO 25 CE and CE0 CSN with SPI Speed @ 8Mhz
 RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
@@ -81,15 +75,6 @@ RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);
 RF24Network network(radio);
 
 uint16_t orderno, init_orderno;
-
-struct udp_data_t {
-	uint32_t 		network_id;
-	uint32_t		msg_id;
-	uint32_t		sensor_id;
-	float			value;
-};
-struct udp_data_t udp_data;
-
 
 // structure to handle the sensors, filled from DB
 struct sensor_t {
@@ -135,16 +120,14 @@ struct order_buffer_t 		order_buffer[ORDERBUFFERLENGTH];
 struct config_parameters {
   char logfilename[PARAM_MAXLEN_LOGFILE];
   char pidfilename[PARAM_MAXLEN_PIDFILE];
-  int verboselevel;
   char db_hostname[PARAM_MAXLEN_HOSTNAME];
   int db_port;
   char db_schema[PARAM_MAXLEN_DB_SCHEMA];
   char db_username[PARAM_MAXLEN_DB_USERNAME];
   char db_password[PARAM_MAXLEN_DB_PASSWORD];
-  char fhem_hostname[PARAM_MAXLEN_HOSTNAME];
-  char fhem_port[6];
-  char tcp_in_port[6];
-  char udp_in_port[6];
+  char telnet_hostname[PARAM_MAXLEN_HOSTNAME];
+  int telnet_port;
+  int incoming_port;
   rf24_datarate_e rf24network_speed;
   uint8_t rf24network_channel;
 };
@@ -198,9 +181,9 @@ char * trim (char * s);
 *
 ********************************************************************************************/
 
-void exec_fhem_cmd(const char *tn_cmd);
+void exec_tn_cmd(const char *tn_cmd);
 
-void prepare_fhem_cmd(uint16_t node, uint8_t sensor, float value);
+void prepare_tn_cmd(uint16_t node, uint8_t sensor, float value);
 
 void process_tn_in(int new_socket, char* buffer, char* client_message);
 
@@ -266,8 +249,6 @@ void process_sensor(uint16_t node, uint8_t sensor, float value, bool d1, bool d2
 uint64_t mymillis(void);
 
 void sighandler(int signal);
-
-void error_exit(int myerrno, char* error);
 
 void logmsg(int mesgloglevel, char *mymsg);
 
