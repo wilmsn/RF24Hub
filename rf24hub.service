@@ -4,3 +4,6 @@ After=systemd-user-sessions.service mariadb.service
 [Service]
 Type=forking
 ExecStart=/usr/local/bin/rf24hubd -d
+[Install]
+WantedBy=multi-user.target
+
