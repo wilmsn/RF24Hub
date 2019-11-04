@@ -14,7 +14,7 @@
 PREFIX=/usr/local
 EXECDIR=${PREFIX}/bin
 INCLUDEDIR=${PREFIX}/include
-INCLUDEDIR1=/usr/include/mariadb
+INCLUDEDIR1=/usr/include/mariabd
 MYSQLLIBS := $(shell mariadb_config --libs) 
 
 ARCH=armv6zk

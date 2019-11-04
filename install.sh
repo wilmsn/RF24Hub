@@ -25,14 +25,6 @@ if [ $ID = 0 ]; then
     echo "Please edit config template: /etc/rf24hub/rf24hub.cfg"
     echo "and run \"sudo systemctl stop rf24hub; sudo systemctl start rf24hub\" after that"
   fi
-  if [ ! -e /etc/rf24hub/rf24hub.cfg ]; then
-    if [ ! -d /etc/rf24hub ]; then
-      mkdir /etc/rf24hub
-    fi
-    cp rf24hubd.cfg /etc/rf24hub/rf24hub.cfg
-    echo "Please edit config template: /etc/rf24hub/rf24hub.cfg"
-    echo "and run \"sudo service rf24hub restart\" after that"
-  fi
   echo "Install as User Root";
   echo "copy rf24hubd ==> /usr/local/bin/rf24hubd"
   cp rf24hubd /usr/local/bin/rf24hubd

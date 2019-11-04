@@ -20,7 +20,7 @@ void parse_config (struct config_parameters * parms) {
     if (buff[0] == '\n' || buff[0] == '#')
       continue;
     /* Parse name/value pair from line */
-    char name[PARAM_MAXLEN], value[PARAM_MAXLEN];
+    char name[PARAM_MAXLEN+1], value[PARAM_MAXLEN+1];
     s = strtok (buff, "=");
     if (s==NULL)
       continue;
@@ -291,7 +291,7 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
     }
 	// set/setlast sensor <sensor> <value>
 	// sets a sensor to a value, setlast starts the request over air
-	if ( (( strcmp(wort1,cmp_set) == 0 ) || ( strcmp(wort1,cmp_setlast) == 0 )) && (strcmp(wort2,cmp_sensor) == 0) && (strlen(wort3) > 1) && (strlen(wort4) > 0) ) {
+	if ( (( strcmp(wort1,cmp_set) == 0 ) || ( strcmp(wort1,cmp_setlast) == 0 )) && (strcmp(wort2,cmp_sensor) == 0) && (strlen(wort3) > 0) && (strlen(wort4) > 0) ) {
 		tn_input_ok = true;
 		// In word3 we may have a) the number of the sensor b) the name of the sensor c) the fhem_dev of a sensor
 		// for the processing we need the number of the sensor ==> find it!
@@ -327,7 +327,7 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 	}
     // set verbose <new verboselevel>
 	// sets the new verboselevel
-	if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (wort3 != NULL) && (wort4 == 0) ) {
+	if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (strlen(wort3) == 1) && (strlen(wort4) == 0) ) {
         if ( wort3[0] > '0' && wort3[0] < '9' + 1 ) {
 			tn_input_ok = true;
 			verboselevel = (wort3[0] - '0') * 1;
@@ -908,7 +908,7 @@ uint64_t mymillis(void) {
 void logmsg(int mesgloglevel, char *mymsg){
 	if ( logmode == logfile ) {
 		if (mesgloglevel <= verboselevel) {
-			char buf[3];
+			char buf[15];
 			logfile_ptr = fopen (parms.logfilename,"a");
 			if ( logfile_ptr != NULL ) {
 				time_t now = time(0);
@@ -1336,6 +1336,7 @@ int main(int argc, char* argv[]) {
             new_tn_in_socket = accept ( tn_in_socket, (struct sockaddr *) &address, &addrlen );
             if (new_tn_in_socket > 0) {
                 //receive_tn_in(new_tn_in_socket, &address);
+printf("######1");
                 thread t2(receive_tn_in, new_tn_in_socket, &address);
                 t2.detach();
                 //close (new_tn_in_socket);

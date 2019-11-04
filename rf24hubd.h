@@ -3,17 +3,13 @@ rf24hub.cpp
 A unix-deamon to handle and store the information from/to all connected sensornodes. 
 All information is stored in a MariaDB database.
 rf24hub is the successor of sensorhub.
-
-Version history:
-V1.0 Initial version after comming from sensorhub
-
-
 */
+
 #ifndef _RF24HUBD_H_   /* Include guard */
 #define _RF24HUBD_H_
 
 #define PRGNAME "rf24hub"
-#define PRGVERSION "1.0"
+#define PRGVERSION "1.2 vom 04.11.2019"
 //--------- End of global define -----------------
 
 #include "rf24hub_common.h"
@@ -34,6 +30,9 @@ V1.0 Initial version after comming from sensorhub
 #include <sys/msg.h>
 #include <sys/socket.h>
 #include <stdio.h>
+//#include <mysql/my_config.h>
+//#include <mysql/my_global.h>
+//#include <mysql/mysql.h>
 #include <mariadb/mysql.h>
 #include <unistd.h>
 #include <getopt.h>
