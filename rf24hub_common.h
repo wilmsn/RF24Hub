@@ -5,7 +5,7 @@
 #define _RF24HUBD_COMMON_H_
 
 #include <stdint.h>
-
+#include "rf24hub_config.h"
 
 // Structure of our payload
 struct payload_t {
@@ -20,7 +20,11 @@ struct payload_t {
   float 		value3;       // the value from or for sensor3
   float 		value4;       // the value from or for sensor4
 };
-payload_t payload;
+extern payload_t payload;
+
+
+//extern char config_file[PARAM_MAXLEN_CONFIGFILE];
+extern void init_system(void);
 
 #endif // _RF24HUBD_COMMON_H_
 

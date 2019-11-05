@@ -28,12 +28,20 @@ CCFLAGS=-Ofast -mfpu=vfp -mfloat-abi=hard -march=$(ARCH) -mtune=arm1176jzf-s -st
 all: rf24hubd 
 
 # Make the sensorhub deamon
-rf24hubd: rf24hubd.cpp
+rf24hubd: config.o rf24hubd.cpp
 	g++ ${CCFLAGS} -Wall -I ${MARIADB_INC} -lrf24-bcm -lrf24network ${MARIADB_LIBS} $^ -o $@
+
+test_config: config.o test_config.o
+	$(CC) ${CCFLAGS} $^ -o $@
+	#./$@ -c rf24hubd.cfg
+
+test_telnet: config.o telnet.o test_telnet.o
+	$(CC) ${CCFLAGS} $^ -o $@
+	#./$@ -c rf24hubd.cfg
 
 # clear build files
 clean:
-	rm rf24hubd
+	rm rf24hubd *.o
 
 # Install the sensorhub
 install: 
