@@ -30,4 +30,7 @@
 *.exe
 *.out
 *.app
+
 rf24hubd
+rf24gwd
+*.kate-swp

@@ -12,19 +12,23 @@ V1.0 Initial version after comming from sensorhub
 #ifndef _RF24HUBD_H_   /* Include guard */
 #define _RF24HUBD_H_
 
+#define PRGNAME "rf24hubd"
+#define PRGVERSION "1.2"
+
 //--------- End of global define -----------------
 
 #include "rf24hub_common.h"
 #include "rf24hub_config.h"
 #include "config.h"
-
+#include "telnet.h"
+#include "zahlenformat.h"
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
 #include <string> 
-#include <RF24/RF24.h>
-#include <RF24/utility/RPi/bcm2835.h>
-#include <RF24Network/RF24Network.h>
+//#include <RF24/RF24.h>
+//#include <RF24/utility/RPi/bcm2835.h>
+//#include <RF24Network/RF24Network.h>
 #include <time.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -55,36 +59,48 @@ V1.0 Initial version after comming from sensorhub
 
 using namespace std;
 
+struct udp_data_t udp_r_data, udp_s_data;
+
 enum logmode_t { systemlog, interactive, logfile };
 logmode_t logmode;
+sockType_t sockType;
+
 int verboselevel = 2;
-int sockfd;
+
+struct sockaddr_in tcp_address, udp_address;
+struct sockaddr_storage tcp_client_addr, udp_client_addr; 
+socklen_t tcp_addrlen, udp_addrlen;
+char ipAddrStr[INET_ADDRSTRLEN];
+
+int tcp_sockfd, udp_sockfd;
+int numbytes;
+ 
+struct sockaddr_storage clientaddress;
+socklen_t clientaddress_len=sizeof(clientaddress);
+//   socklen_t clientaddress_len;
+//   struct sockaddr_in clientaddress;
+
+
+//int sockfd;
 bool order_waiting = false;
-struct sockaddr_in serv_addr;
-struct hostent *server;
-MYSQL     *db;
-MYSQL_RES *res;
-MYSQL_ROW row;
-char* pEnd;
+//struct sockaddr_in serv_addr;
+//struct hostent *server;
+//MYSQL     *db;
+//MYSQL_RES *res;
+//MYSQL_ROW row;
+//char* pEnd;
 //const char* prgversion=PRGVERSION;
-uint64_t start_time;
+//uint64_t start_time;
 
 
 // Setup for GPIO 25 CE and CE0 CSN with SPI Speed @ 8Mhz
-RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
+//RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
 //RF24 radio(22,0,BCM2835_SPI_SPEED_1MHZ);
 
-RF24Network network(radio);
+//RF24Network network(radio);
 
-uint16_t orderno, init_orderno;
+//uint16_t orderno, init_orderno;
 
-// a test structure for values comming via UDP
-struct udp_msg_t {
-	uint32_t 		network_id;
-	uint32_t		msg_id;
-	uint32_t		sensor_id;
-	float			value;
-};
 
 // structure to handle the sensors, filled from DB
 struct sensor_t {
@@ -133,17 +149,17 @@ bool log2logfile=false;
 bool rf24_carrier=false;
 bool rf24_rpd=false;
 
-RF24NetworkHeader rxheader;
-RF24NetworkHeader txheader;
+//RF24NetworkHeader rxheader;
+//RF24NetworkHeader txheader;
 
-char buffer1[50];
-char buffer2[50];
-char sql_stmt[SQLSTRINGSIZE];
+//char buffer1[50];
+//char buffer2[50];
+//char sql_stmt[SQLSTRINGSIZE];
 
-uint16_t getnodeadr(char *node);
-char config_file[PARAM_MAXLEN_CONFIGFILE];
+//uint16_t getnodeadr(char *node);
+//char config_file[PARAM_MAXLEN_CONFIGFILE];
 
-string debug;
+char debug[DEBUGSTRINGSIZE];
 
 CONFIG cfg(PRGNAME, PRGVERSION);
 

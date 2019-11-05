@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream> 
+#include <cstdio>
 #include <string> // for string class 
 #include <string.h>
 #include <ctype.h>
@@ -25,7 +26,7 @@ using namespace std;
 /* 
  * Grundsätzliches zum Ablauf einer Initialisierung:
  * * Übergebene Parameter überschreiben Einträge im Config File
- * * In der Struktur params werden die letztgültigen Werte abgelegt
+ * * In den Config-Variablen werden die letztgültigen Werte abgelegt
  *
  * Folgende Parameter des Config Files können durch 
  * übergebene Parameter überschrieben werden:
@@ -37,49 +38,90 @@ class CONFIG {
     
 private:
 
-struct configParameters_s {
-  string logFilename;
-  string pidFilename;
-  string dbHostname;
-  int dbPort;
-  string dbSchema;
-  string dbUsername;
-  string dbPassword;
-  string fhemHostname;
-  int fhemPort;
-  string telnetPort;
-  string udpPort;
-  int verboseLevel;
-  string rf24NetworkSpeed;
-  uint8_t rf24NetworkChannel;
-};
-
 FILE * pidfile_ptr;
+FILE * logfile_ptr;
 
 string configFile;
+bool prgIsHub;
+bool prgIsGW;
 
 public:
+	
+// Hier die verwendeten Variablen:
 
-// all the setings are stored in this struct
-configParameters_s parms;
-// the programm name goes here
-string prgName;
-// the programm version goes here
-string prgVersion;
+/**********************************************
+ * rf24Hub
+ **********************************************/
+// Logfilename for the hub
+string rf24HubLogFileName;
+// Pidfilename for the hub
+string rf24HubPidFileName;
+// telnet Port for incoming messages
+string rf24HubTcpPort;
+// rf24HubTelnetPortSet is true when an incomine telnet port is set by configuration
+bool rf24HubTcpPortSet;
+// Port for incoming datagrams on Hub
+string rf24HubUdpPort;
+// rf24HubUdpPortSet is true when an incomine udp port on Hub is set by configuration
+bool rf24HubUdpPortSet;
+/**********************************************
+ * rf24Gateway
+ **********************************************/
+// the hostname of the hub used by the gateway
+string rf24HubHostName;
+// Logfilename for the gateway
+string rf24GWLogFileName;
+// Pidfilename for the gateway
+string rf24GWPidFileName;
+// Udp Port for incoming messages from Hub
+string rf24GWUdpPort;
+// udpPortSet is true when an incomine udp port is set by configuration
+bool rf24GWUdpPortSet;
+// Speed for rf24 Network, can be one of: "RF24_2MBPS", "RF24_250KBPS", "RF24_1MBPS" 
+string rf24Speed;
+// Channel for rf24 Network
+string rf24Channel;
+/**********************************************
+ * Database
+ **********************************************/
+//hostname for database server
+string dbHostName;
+//port on database server
+string dbPort;
+//Schema inside database
+string dbSchema;
+//Username for database
+string dbUserName;
+//Password for database
+string dbPassWord;
+/**********************************************
+ * FHEM
+ **********************************************/
+//Hostname for FHEM server 
+string fhemHostName;
+//Port for FHEM
+string fhemPort;
 // fhemHostSet is true when an outgoing fhem hostname is set by configuration
 bool fhemHostSet;
 // fhemPortSet is true when an outgoing fhem port is set by configuration
 bool fhemPortSet;
-// telnetPortSet is true when an incomine telnet port is set by configuration
-bool telnetPortSet;
-// udpPortSet is true when an incomine telnet port is set by configuration
-bool udpPortSet;
+
+/**********************************************
+ * GENERIC
+ **********************************************/
+string pidFileName;
+string logFileName;
+
+// the programm name goes here
+string prgName;
+// the programm version goes here
+string prgVersion;
 // startDaemon is true when start as a deamon is configured
 bool startDaemon;
 // interactiveMode = true: prints logs to console
 bool interactiveMode = false;
 // logfileMode = true: prints logs to file 
-bool logfileMode = false;
+bool logFileMode = false;
 // verboseLevel(1..9): higher number more detailed logs
 int verboseLevel = 2;
 // will start the scanner running over all channels
@@ -134,15 +176,23 @@ void removePidFile(void);
 int checkPidFileSet(void);
 
 /*
- * sets and opens the logfile to the given file
- */
-void setLog2File(std::string);
-
-/*
  * prints out a logmessage
  * to console and/or to file
  */
-void logmsg(int, std::string);
+//void logmsg(int, std::string);
+void logmsg(int, char*);
+
+/*
+ * As we use our own result format
+ * convert it into float
+ */
+float sensorValue(uint16_t);
+
+/*
+ * As we use our own result format
+ * convert it into uint16
+ */
+uint16_t uint16Value(float);
 
 
 };

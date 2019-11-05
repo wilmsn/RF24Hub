@@ -10,14 +10,13 @@ rf24hub_config.h ==> all global definitions go here
 
 
 //
-// default values: can be overwritten in config file
+// default values
 //
-#define LOGFILE "/var/log/rf24hubd.log"
-#define PIDFILE "/var/run/rf24hubd.pid"
 #define DEFAULT_CONFIG_FILE "/etc/rf24hub/rf24hub.cfg"
-
+#define RF24HUB_PRGNAME "rf24hubd"
+#define RF24GW_PRGNAME "rf24gwd"
 //
-// END default values: can be overwritten in config file
+// END default values
 //
 //-------------------------------------------------------
 //
@@ -60,8 +59,6 @@ rf24hub_config.h ==> all global definitions go here
 #define VERBOSESQL 8
 #define VERBOSEOTHER 9
 
-#define PRGNAME "rf24hub"
-#define PRGVERSION "1.2"
 
 
 #endif // RF24HUB_GLOBALCONFIG_H

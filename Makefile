@@ -1,35 +1,45 @@
 #############################################################################
 #
-# Makefile for rf24hub on Raspberry Pi
+# Makefile for rf24hub and gateway
 #
 # License: GPL (General Public License)
 # Author:  Norbert Wilms 
-# Date:    2013/12/10 
+# Date:    2019/08/22 
 # 
 # Description:
 # ------------
-# use make all and make install to install the sensorhub 
-# use make installDB to install a new and empty database (existing database will be deleted)
+# use "make" all and make install to install the sensorhub 
+# use "make installDB" to install a new and empty database (existing database will be deleted)
 #
 PREFIX=/usr/local
 EXECDIR=${PREFIX}/bin
 CC=g++
 MARIADB_LIBS := $(shell mariadb_config --libs) 
 MARIADB_INC := $(shell mariadb_config --cflags)
-ifeq "$(shell uname -m)" "armv7l"
-ARCH=armv7-a
+ARCH := $(shell uname -m)
+
+ifeq "$(ARCH)" "armv7l"
+	CCFLAGS=-Ofast -mfpu=vfp -mfloat-abi=hard -march=armv7-a -mtune=arm1176jzf-s -std=c++0x -pthread
+	RF24FLAGS=-lrf24-bcm
 endif
 
-# The recommended compiler flags for the Raspberry Pi
-#CCFLAGS=-Ofast -mfpu=vfp -mfloat-abi=hard -march=armv6zk -mtune=arm1176jzf-s
-CCFLAGS=-Ofast -mfpu=vfp -mfloat-abi=hard -march=$(ARCH) -mtune=arm1176jzf-s -std=c++0x -pthread
+ifeq "$(ARCH)" "x86_64"
+	CCFLAGS=-Ofast -std=c++0x -pthread
+endif
 
 # make all
-all: rf24hubd 
+all: rf24hubd rf24gwd
 
-# Make the sensorhub deamon
-rf24hubd: config.o rf24hubd.cpp
-	g++ ${CCFLAGS} -Wall -I ${MARIADB_INC} -lrf24-bcm -lrf24network ${MARIADB_LIBS} $^ -o $@
+# Make the rf24hub deamon
+rf24hubd: config.o database.o fhem.o telnet.o zahlenformat.o rf24hubd.cpp
+	g++ ${CCFLAGS} -Wall -I ${MARIADB_INC} ${MARIADB_LIBS} $^ -o $@
+
+# Make the rf24gateway deamon
+rf24gwd: config.o telnet.o zahlenformat.o rf24gwd.cpp
+	g++ ${CCFLAGS} ${RF24FLAGS} -Wall $^ -o $@
+
+receiver: 
+	g++ ${CCFLAGS} -Wall -lrf24-bcm $@.cpp -o $@
 
 test_config: config.o test_config.o
 	$(CC) ${CCFLAGS} $^ -o $@
@@ -41,7 +51,7 @@ test_telnet: config.o telnet.o test_telnet.o
 
 # clear build files
 clean:
-	rm rf24hubd *.o
+	rm rf24hubd rf24gwd *.o
 
 # Install the sensorhub
 install: 

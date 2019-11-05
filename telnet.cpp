@@ -1,47 +1,85 @@
 #include "telnet.h"
 
-void openTelnetSocket(const char* port, struct sockaddr_in *address, int * handle ) {
-    int tn_in_socket;
+void sendUdpMessage(const char* host, const char* port, struct udp_data_t * udp_data ) {
+	int sockfd;
+	struct addrinfo hints, *servinfo, *p;
+	int rv;
+	int numbytes;
+
+	memset(&hints, 0, sizeof hints);
+	hints.ai_family = AF_UNSPEC;
+	hints.ai_socktype = SOCK_DGRAM;
+
+	if ((rv = getaddrinfo(host, port, &hints, &servinfo)) != 0) {
+		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
+		exit(1);
+	}
+
+	// loop through all the results and make a socket
+	for(p = servinfo; p != NULL; p = p->ai_next) {
+		if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
+			perror("talker: socket");
+			continue;
+		}
+		break;
+	}
+
+	if (p == NULL) {
+		fprintf(stderr, "talker: failed to bind socket\n");
+		exit(1);
+	}
+	if ((numbytes = sendto(sockfd, udp_data, sizeof(udp_data_t), 0, p->ai_addr, p->ai_addrlen)) == -1) {
+		perror("talker: sendto error");
+		exit(1);
+	}
+    freeaddrinfo(servinfo);
+}
+
+
+void openSocket(const char* host, const char* port, struct sockaddr_in *address, int* handle, sockType_t sockType ) {
+    int in_socket;
     int rv;
     long save_fd;
 	const int y = 1;
-    //*handle = 99;
-    /* open incoming port for messages */
     struct addrinfo hints, *servinfo, *p;
     memset(&hints, 0, sizeof hints);
-    //	hints.ai_family = AF_UNSPEC; // set to AF_INET to force IPv4
-    hints.ai_family = AF_INET6; // set to AF_INET to force IPv4
-    hints.ai_socktype = SOCK_STREAM;
+    cout << host << ":" << port << endl;
+//   	hints.ai_family = AF_UNSPEC; // set to AF_INET to force IPv4
+//    hints.ai_family = AF_INET6; // set to AF_INET to force IPv4
+    hints.ai_family = AF_INET; // set to AF_INET to force IPv4
+    if ( sockType == TCP ) {
+		hints.ai_socktype = SOCK_STREAM;
+	} else {
+		hints.ai_socktype = SOCK_DGRAM;
+	}		
     hints.ai_flags = AI_PASSIVE; // use my IP
-    if ((rv = getaddrinfo(NULL, port, &hints, &servinfo)) != 0) {
+    if ((rv = getaddrinfo(host, port, &hints, &servinfo)) != 0) {
         //return (int)-1;
     }
 	// loop through all the results and bind to the first we can
     for(p = servinfo; p != NULL; p = p->ai_next) {
-        if ((tn_in_socket = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
+        if ((in_socket = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
                 continue;
         }
-        if (bind(tn_in_socket, p->ai_addr, p->ai_addrlen) == -1) {
-           close(tn_in_socket);
+        if (bind(in_socket, p->ai_addr, p->ai_addrlen) == -1) {
+           close(in_socket);
            continue;
         }
-        //cout << "#2 tn_in_socket: " << tn_in_socket << endl;
         break;
     }
-    //cout << "#1 tn_in_socket>" << tn_in_socket << endl;
     if (p == NULL) {
         //return (int)-1;
     }
     freeaddrinfo(servinfo);
-	setsockopt( tn_in_socket, SOL_SOCKET, SO_REUSEADDR, &y, sizeof(int) );
-	listen (tn_in_socket, 5);
-//	addrlen = sizeof (struct sockaddr_in);
-	save_fd = fcntl( tn_in_socket, F_GETFL );
+	setsockopt( in_socket, SOL_SOCKET, SO_REUSEADDR, &y, sizeof(int) );
+	listen (in_socket, 5);
+	save_fd = fcntl( in_socket, F_GETFL );
 	save_fd |= O_NONBLOCK;
-	fcntl( tn_in_socket, F_SETFL, save_fd );
-    *handle = tn_in_socket;
-//    cout << "ENDE xxxxx" << endl;
+	fcntl( in_socket, F_SETFL, save_fd );
+    *handle = in_socket;
 }
+
+
 /*    
 void receive_tn_in(int new_tn_in_socket, struct sockaddr_in * address) {
     char *buffer =  (char*) malloc (TELNETBUFFERSIZE);
@@ -88,11 +126,14 @@ void receiveTelnetMessage(int new_tn_in_socket, struct sockaddr_in * address) {
     // use this in perl: my $t = new Net::Telnet (Timeout => 2, Port => 7001, Prompt => '/rf24hub>/');
     sprintf(client_message,"rf24hub> ");
     write(new_tn_in_socket , client_message , strlen(client_message));
-	cout << "Client " <<  inet_ntoa (address->sin_addr) << "ist connected ..." << endl;
-//	cfg.logmsg(VERBOSETELNET, debug);
-    sprintf(buffer,"                                 ");
+//	cout << "Client " <<  inet_ntoa (address->sin_addr) << "ist connected ..." << endl;
+    memset(buffer,0,sizeof(buffer));
     MsgLen = recv(new_tn_in_socket, buffer, TELNETBUFFERSIZE, 0);
-//    sprintf(client_message,"%s",buffer);
+    sprintf(debug, "Telnet Data: %s", cfg.trim(buffer));
+	cfg.logmsg(VERBOSETELNET, debug);
+//    cout << "Msglen: " << MsgLen << " Buffer: " << buffer << endl;
+
+
 //    write(new_tn_in_socket , client_message , strlen(client_message));
 //    char msglen_str[10];
 //    sprintf(msglen_str,"%ld",MsgLen);
@@ -112,4 +153,9 @@ void receiveTelnetMessage(int new_tn_in_socket, struct sockaddr_in * address) {
     free(client_message);
     //                 exit(0);
 }
+
+//int sendUdpMessage( int sockfd, udp_data_t * udp_data) {
+ //    int numbytes = sendto(sockfd, &udp_data, sizeof(udp_data), 0, (struct sockaddr *)&udp_address,  &udp_addrlen);
+  //   return numbytes;
+//}
 
