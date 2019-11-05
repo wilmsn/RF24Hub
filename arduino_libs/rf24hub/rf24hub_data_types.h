@@ -34,7 +34,7 @@ typedef struct {
   uint8_t address2Node[5];          // This address will be used for messages from GW to Node 
   uint8_t address2GW[5];            // This address will be used for messages from Node to GW
   uint8_t rf24Channel;              // Channel for rf24
-  char rf24Speed[12];               // Valid values are: RF24_250KBPS; RF24_1MBPS, RF24_2MBPS
+  uint8_t rf24Speed;                // Valid values are: 0 = RF24_250KBPS; 1 = RF24_1MBPS, 2 = RF24_2MBPS
 } configDataRf24_t;
 
 typedef struct {
