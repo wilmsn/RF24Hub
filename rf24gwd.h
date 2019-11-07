@@ -68,6 +68,9 @@ uint8_t addresses[][6] = {"aaaaa","bbbbb"};
 
 uint16_t orderno, init_orderno;
 
+// a structure for the payload
+struct payload_t payload;
+
 // a test structure for values comming via UDP
 struct udp_data_t udp_hub_data, udp_r_data, udp_node_data;
 struct sockaddr_in udp_address;

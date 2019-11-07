@@ -40,6 +40,8 @@ typedef struct {
 typedef struct {
   uint16_t    network_id;			// The Network ID
   uint16_t    node_id;				// The Node ID
+  uint16_t    sleeptime;            // Sleeptime to the next heartbeat    
+  uint16_t    waketime;             // Time to stay awake after wakeup 
 } configNode_t;
 
 #endif

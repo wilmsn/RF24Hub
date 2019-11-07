@@ -78,9 +78,17 @@ string rf24GWUdpPort;
 // udpPortSet is true when an incomine udp port is set by configuration
 bool rf24GWUdpPortSet;
 // Speed for rf24 Network, can be one of: "RF24_2MBPS", "RF24_250KBPS", "RF24_1MBPS" 
-string rf24Speed;
+uint8_t rf24Speed;
 // Channel for rf24 Network
-string rf24Channel;
+uint8_t rf24Channel;
+// CRC 
+uint8_t rf24Crc;
+// Radio address for communication from gateway to node
+uint8_t rf24Adr2Node[5];
+// Radio address for communication from node to gateway
+uint8_t rf24Adr2GW[5];
+// The valid network_id, we only use packets for this network!!
+uint16_t network_id;
 /**********************************************
  * Database
  **********************************************/

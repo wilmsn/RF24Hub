@@ -15,7 +15,16 @@ struct udp_data_t {
   uint16_t    msg_id;
   uint16_t    flags;
   uint32_t    sensor1;
-  uint32_t     sensor2;
+  uint32_t    sensor2;
+};
+
+struct payload_t {
+  uint16_t    network_id;
+  uint16_t    node_id;
+  uint16_t    msg_id;
+  uint16_t    flags;
+  uint32_t    sensor1;
+  uint32_t    sensor2;
 };
 
 

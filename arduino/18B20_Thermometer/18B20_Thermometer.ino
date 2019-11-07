@@ -34,6 +34,7 @@ struct eeprom_data_t {
   configNode_t configNode;
 };
 eeprom_data_t eeprom_data;
+int write_count;
 
 enum radiomode_t { radio_sleep, radio_listen } radiomode = radio_sleep;
 enum sleepmode_t { sleep1, sleep2, sleep3, sleep4} sleepmode = sleep1, next_sleepmode = sleep2;
@@ -65,7 +66,7 @@ void setup(void) {
   radio.setChannel(eeprom_data.configDataRf24.rf24Channel);
   radio.setPALevel(RF24_PA_MAX);
 //  radio.setPALevel(RF24_PA_MIN);
-//  radio.setRetries(15,2);
+  radio.setRetries(15,15);
 switch ( eeprom_data.configDataRf24.rf24Speed ) {
   case 0:
     radio.setDataRate(RF24_250KBPS);
@@ -101,36 +102,49 @@ Serial.println(eeprom_data.configDataRf24.address2Node[4],HEX);
   Serial.println("18B20 Thermometer");
 }
 
-float get_temp(void) {
+float get_temp(uint16_t msg_id) {
   float retval;
   sensors.requestTemperatures(); // Send the command to get temperatures
   delay(500);
   retval=sensors.getTempCByIndex(0);
-  Serial.print("18B20 Messung: ");
+  Serial.print("18B20 Messung: Msg_id ");
+  Serial.print(msg_id);
+  Serial.print(" => ");
   Serial.print(retval);
   Serial.println(" °C");
   return retval;
 }
 
 void loop(void) {
-  sensor1=calcTransportValue_f(1,get_temp());
+  sensor1=calcTransportValue_f(1,get_temp(msg_id));
   payload.network_id = eeprom_data.configNode.network_id;
   payload.node_id = eeprom_data.configNode.node_id;
   payload.msg_id = msg_id++;
   payload.flags = flags;
   payload.sensor1 = sensor1;
   payload.sensor2 = 0;
-  radio.stopListening();   
-  if (!radio.write( &payload, sizeof(payload) )){
-       Serial.println(F("Transmition failed"));
+  radio.stopListening();
+  write_count=0;
+  while (write_count < 10) {  
+    if (radio.write( &payload, sizeof(payload) )){
+       write_count=write_count+11;
+    } else {
+      write_count++;
+    }
+  }
+  if (write_count > 10) {
+    Serial.print("OK Sendeversuche: ");
+    Serial.println(write_count - 10);
+  } else {
+    Serial.println("Senden fehlgeschlagen !!!");
   }
   radio.startListening();                  
-
+// TODO
   if ( radio.available() ) {
     radio.read(&payload,sizeof(payload));
   }
   radio.powerDown();
-  delay(1000);
+  sleep4ms( eeprom_data.configNode.sleeptime * 1000 );
   radio.powerUp();
   
 }

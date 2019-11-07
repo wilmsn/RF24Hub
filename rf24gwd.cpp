@@ -82,8 +82,9 @@ int main(int argc, char* argv[]) {
     radio.begin();
 //    radio.setPALevel(RF24_PA_MIN);
     radio.setPALevel( RF24_PA_MAX ) ;
-    radio.setDataRate(RF24_250KBPS);
-    radio.setChannel(10);
+    radio.setChannel( cfg.rf24Channel );
+    radio.setDataRate( (rf24_datarate_e) cfg.rf24Speed );
+    radio.setCRCLength ( (rf24_crclength_e)cfg.rf24Crc );
     radio.setAutoAck(true);
 //	radio.setRetries(15,15);
     radio.openWritingPipe(addresses[0]);
@@ -92,8 +93,7 @@ int main(int argc, char* argv[]) {
 	// Start the radio listening for data
 	radio.startListening();
     delay(5);
-    sprintf(debug,"%s","starting network ... "); cfg.logmsg(VERBOSESTARTUP, debug);
-//    radio.setDataRate(parms.rf24network_speed);
+    sprintf(debug,"%s","starting radio ... "); cfg.logmsg(VERBOSESTARTUP, debug);
     if (cfg.verboseLevel >= VERBOSECONFIG) { radio.printDetails(); }
     while(1) {
 // Is there some data for us via rf24?
@@ -101,18 +101,22 @@ int main(int argc, char* argv[]) {
         if ( radio.available() ){  
             sprintf(debug,"%s",">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");		cfg.logmsg(VERBOSEOTHER, debug);
 			sprintf(debug,"Node %s", goodSignal ? "Strong signal > 64dBm" : "Weak signal < 64dBm" ); cfg.logmsg(VERBOSEOTHER, debug);
-			radio.read( &udp_node_data, sizeof(udp_node_data) );
-    	    sprintf(debug,"Node Network_number: %u", udp_node_data.network_id); cfg.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Node_number: %u", udp_node_data.node_id);		cfg.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Msg_number: %u", udp_node_data.msg_id);			cfg.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Flags: %04x", udp_node_data.flags);				cfg.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Sensor1_id: %u", getSensor(udp_node_data.sensor1));		cfg.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Sensor1_value: %f", getValue(udp_node_data.sensor1));		cfg.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Sensor2_id: %u", getSensor(udp_node_data.sensor2));		cfg.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Sensor2_value: %f", getValue(udp_node_data.sensor2));		cfg.logmsg(VERBOSEOTHER, debug);
+			radio.read( &payload, sizeof(payload) );
+              if (cfg.network_id == payload.network_id) {
+    	    sprintf(debug,"Node Network_number: %u", payload.network_id); cfg.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"Node Node_number: %u", payload.node_id);		cfg.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"Node Msg_number: %u", payload.msg_id);			cfg.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"Node Flags: %04x", payload.flags);				cfg.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"Node Sensor1_id: %u", getSensor(payload.sensor1));		cfg.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"Node Sensor1_value: %f", getValue(payload.sensor1));		cfg.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"Node Sensor2_id: %u", getSensor(payload.sensor2));		cfg.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"Node Sensor2_value: %f", getValue(payload.sensor2));		cfg.logmsg(VERBOSEOTHER, debug);
             sprintf(debug,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");			cfg.logmsg(VERBOSEOTHER, debug);
 //            sprintf(debug,"######> %s %s",cfg.rf24HubHostName.c_str(), cfg.rf24HubUdpPort.c_str());  cfg.logmsg(VERBOSEOTHER, debug);
-			sendUdpMessage(cfg.rf24HubHostName.c_str(), cfg.rf24HubUdpPort.c_str(), &udp_node_data); 
+//			sendUdpMessage(cfg.rf24HubHostName.c_str(), cfg.rf24HubUdpPort.c_str(), &udp_node_data); 
+              } else {
+                sprintf(debug,"Got Message for Network_number: %u ==> dropped!", payload.network_id); cfg.logmsg(VERBOSEOTHER, debug);  
+              }
 		}
 // Is there some data for us via UDP?
         if ( cfg.rf24GWUdpPortSet ) {

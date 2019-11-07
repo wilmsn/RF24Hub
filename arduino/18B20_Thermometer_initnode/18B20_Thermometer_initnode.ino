@@ -10,8 +10,10 @@
 #define RF24ADDRESS2GW4 0x62
 #define RF24ADDRESS2GW5 0x62
 #define RF24SPEED 0
-#define NETWORKID 513
+#define NETWORKID 5813
 #define NODEID 100
+#define SLEEPTIME 2
+#define WAKETIME 2
 #include <EEPROM.h>
 #include <rf24hub.h>
 
@@ -37,6 +39,8 @@ void setup() {
   eeprom_data.configDataRf24.rf24Speed = RF24SPEED;
   eeprom_data.configNode.network_id=NETWORKID;
   eeprom_data.configNode.node_id=NODEID;
+  eeprom_data.configNode.waketime=WAKETIME;
+  eeprom_data.configNode.sleeptime=SLEEPTIME;
   int eeAddress = 0;  
   EEPROM.put(eeAddress, eeprom_data);
 }

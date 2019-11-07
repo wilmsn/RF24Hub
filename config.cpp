@@ -119,7 +119,10 @@ void CONFIG::processParams(int argc, char* argv[]) {
     }
     // END processing argc and argv[]
     // check if config file is readable
-    if ( configFile == "x" ) configFile = DEFAULT_CONFIG_FILE;
+    if ( configFile == "x" ) {
+      if (prgIsGW) configFile = DEFAULT_CONFIG_FILE_GW; 
+      if (prgIsHub) configFile = DEFAULT_CONFIG_FILE_HUB; 
+    }
     // Reading and processing and printing config file
     FILE *fp = fopen (configFile.c_str(), "r");
     if (fp == NULL) {
@@ -207,18 +210,51 @@ void CONFIG::processParams(int argc, char* argv[]) {
 			}
 		}
     else if (strcmp(name, "rf24_channel")==0) {
-		   rf24Channel = value;
+		   rf24Channel = atoi(value);
+	   }
+    else if (strcmp(name, "rf24_crc")==0) {
+		   rf24Crc = atoi(value);
 	   }
     else if (strcmp(name, "rf24_speed")==0) {
-            if (strcmp(value, "RF24_2MBPS")==0 || strcmp(value, "RF24_250KBPS")==0 || strcmp(value, "RF24_1MBPS")==0) {
-                rf24Speed = value;
-            } else {
-                cout << value << ": Unknown value for " << name << "! I use RF24_1MBPS " << endl;
-                rf24Speed = "RF24_1MBPS";
-            }
+            if (strcmp(value, "RF24_1MBPS")==0) rf24Speed=0;
+            if (strcmp(value, "RF24_2MBPS")==0) rf24Speed=1;
+            if (strcmp(value, "RF24_250KBPS")==0) rf24Speed=2;
         } 
+    else if (strcmp(name, "rf24_adr2node_1")==0) {
+		   rf24Adr2Node[0] = atoi(value);
+	   }
+    else if (strcmp(name, "rf24_adr2node_2")==0) {
+		   rf24Adr2Node[1] = atoi(value);
+	   }
+    else if (strcmp(name, "rf24_adr2node_3")==0) {
+		   rf24Adr2Node[2] = atoi(value);
+	   }
+    else if (strcmp(name, "rf24_adr2node_4")==0) {
+		   rf24Adr2Node[3] = atoi(value);
+	   }
+    else if (strcmp(name, "rf24_adr2node_5")==0) {
+		   rf24Adr2Node[4] = atoi(value);
+	   }
+    else if (strcmp(name, "rf24_adr2gw_1")==0) {
+		   rf24Adr2GW[0] = atoi(value);
+	   }
+    else if (strcmp(name, "rf24_adr2gw_2")==0) {
+		   rf24Adr2GW[1] = atoi(value);
+	   }
+    else if (strcmp(name, "rf24_adr2gw_3")==0) {
+		   rf24Adr2GW[2] = atoi(value);
+	   }
+    else if (strcmp(name, "rf24_adr2gw_4")==0) {
+		   rf24Adr2GW[3] = atoi(value);
+	   }
+    else if (strcmp(name, "rf24_adr2gw_5")==0) {
+		   rf24Adr2GW[4] = atoi(value);
+	   }
+    else if (strcmp(name, "network")==0) {
+		   network_id = atoi(value);
+	   }
     else
-      cout << "WARNING: " << name << "/" << value << ": Unknown name/value pair!" << endl;
+      cout << "WARNING: " << name << "=" << value << ": Unknown name=value pair!" << endl;
   }
   /* Close file */
 	fclose (fp);

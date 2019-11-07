@@ -12,7 +12,8 @@ rf24hub_config.h ==> all global definitions go here
 //
 // default values
 //
-#define DEFAULT_CONFIG_FILE "/etc/rf24hub/rf24hub.cfg"
+#define DEFAULT_CONFIG_FILE_HUB "/etc/rf24hub/rf24hub.cfg"
+#define DEFAULT_CONFIG_FILE_GW "/etc/rf24gw/rf24gw.cfg"
 #define RF24HUB_PRGNAME "rf24hubd"
 #define RF24GW_PRGNAME "rf24gwd"
 //
