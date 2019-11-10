@@ -103,14 +103,12 @@ int main(int argc, char* argv[]) {
 			sprintf(debug,"Node %s", goodSignal ? "Strong signal > 64dBm" : "Weak signal < 64dBm" ); cfg.logmsg(VERBOSEOTHER, debug);
 			radio.read( &payload, sizeof(payload) );
               if (cfg.network_id == payload.network_id) {
-    	    sprintf(debug,"Node Network_number: %u", payload.network_id); cfg.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Node_number: %u", payload.node_id);		cfg.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Msg_number: %u", payload.msg_id);			cfg.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Flags: %04x", payload.flags);				cfg.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Sensor1_id: %u", getSensor(payload.sensor1));		cfg.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Sensor1_value: %f", getValue(payload.sensor1));		cfg.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Sensor2_id: %u", getSensor(payload.sensor2));		cfg.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Sensor2_value: %f", getValue(payload.sensor2));		cfg.logmsg(VERBOSEOTHER, debug);
+    	    sprintf(debug,"Node Network: %u Node: %u Msg: %u Flags: %04x", payload.network_id,payload.node_id, payload.msg_id, payload.flags); 
+				cfg.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"Node Sensor: %u Wert: %f", getSensor(payload.sensor1),getValue_f(payload.sensor1)); cfg.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"Node Sensor: %u Wert: %f", getSensor(payload.sensor2),getValue_f(payload.sensor2)); cfg.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"Node Sensor: %u Wert: %f", getSensor(payload.sensor3),getValue_f(payload.sensor3)); cfg.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"Node Sensor: %u Wert: %f", getSensor(payload.sensor4),getValue_f(payload.sensor4)); cfg.logmsg(VERBOSEOTHER, debug);
             sprintf(debug,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");			cfg.logmsg(VERBOSEOTHER, debug);
 //            sprintf(debug,"######> %s %s",cfg.rf24HubHostName.c_str(), cfg.rf24HubUdpPort.c_str());  cfg.logmsg(VERBOSEOTHER, debug);
 //			sendUdpMessage(cfg.rf24HubHostName.c_str(), cfg.rf24HubUdpPort.c_str(), &udp_node_data); 

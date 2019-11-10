@@ -17,6 +17,8 @@ typedef struct {
   uint16_t    flags;
   uint32_t    sensor1;
   uint32_t    sensor2;
+  uint32_t    sensor3;
+  uint32_t    sensor4;
 } payload_t;
 
 typedef struct {

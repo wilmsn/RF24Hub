@@ -7,7 +7,7 @@ uint8_t getSensor(uint32_t val) {
 }
 
 float getValue_f(uint32_t val) {
-  uint32_t exponent = (val & ZF_EXPO_WERT) >> 20;
+  uint32_t exponent = (val & ZF_EXPO_WERT) >> 19;
   bool expo_negativ = val & ZF_EXPO_NEGATIV;
   bool zahl_negativ = val &  ZF_ZAHL_NEGATIV;
   float retval;
@@ -37,13 +37,13 @@ uint32_t calcTransportValue_f(uint8_t sensor, float value) {
   uint32_t result = 0;
   result = sensor;
   result <<= 25; 
-  if ( abs(value) > 0 ) {
-    bool negativ = value < 0;
+  if ( value > 0.00001 || value < -0.00001 ) {
+    bool negativ = value < 0.0;
     if ( negativ ) {
       result |= ZF_ZAHL_NEGATIV;
       _val=abs(_val);
     }
-    while ( _val < 10000.0 ) {
+    while ( _val < 50000.0 ) {
       expo_negativ = true;
       exponent++;
       _val*=10.0;
@@ -51,11 +51,11 @@ uint32_t calcTransportValue_f(uint8_t sensor, float value) {
     if ( expo_negativ ) {
       result |= ZF_EXPO_NEGATIV;
     }
-    while ( _val > 100000.0 ) {
+    while ( _val > 500000.0 ) {
       exponent++;
       _val/=10.0;
     }
-    exponent <<= 20;
+    exponent <<= 19;
     result |= exponent;
     result |= (uint32_t) _val;
   }

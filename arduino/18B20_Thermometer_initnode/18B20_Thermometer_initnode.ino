@@ -11,9 +11,10 @@
 #define RF24ADDRESS2GW5 0x62
 #define RF24SPEED 0
 #define NETWORKID 5813
-#define NODEID 100
+#define NODEID 199
 #define SLEEPTIME 2
 #define WAKETIME 2
+#define LED A1
 #include <EEPROM.h>
 #include <rf24hub.h>
 
@@ -41,8 +42,19 @@ void setup() {
   eeprom_data.configNode.node_id=NODEID;
   eeprom_data.configNode.waketime=WAKETIME;
   eeprom_data.configNode.sleeptime=SLEEPTIME;
-  int eeAddress = 0;  
-  EEPROM.put(eeAddress, eeprom_data);
+//  int eeAddress = 0;
+  delay(500);  
+  for (int i = 0 ; i < EEPROM.length() ; i++) {
+    EEPROM.write(i, 0);
+  }
+  delay(500);
+  EEPROM.put(0, eeprom_data);
+  pinMode(LED, OUTPUT);
 }
 
-void loop() {}
+void loop() {
+  digitalWrite(LED, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(1000);                       // wait for a second
+  digitalWrite(LED, LOW);    // turn the LED off by making the voltage LOW
+  delay(1000);                       // wait for a second
+  }
