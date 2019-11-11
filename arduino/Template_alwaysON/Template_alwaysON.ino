@@ -1,9 +1,5 @@
 // How long do we try to init this node 100000(in ms) = 100 sec. 
 #define MAXINIT 100000
-// Define a valid radiochannel here
-#define RADIOCHANNEL 90
-// This node: Use octal numbers starting with "0": "041" is child 4 of node 1
-#define NODE 05
 // The CE Pin of the Radio module
 #define RADIO_CE_PIN 10
 // The CS Pin of the Radio module
@@ -12,11 +8,6 @@
 #define STATUSLED 3
 #define STATUSLED_ON LOW
 #define STATUSLED_OFF HIGH
-// sleeptime 1...4 is NOT used for always on NODES
-#define SLEEPTIME1 5
-#define SLEEPTIME2 5
-#define SLEEPTIME3 2
-#define SLEEPTIME4 5
 
 // ------ End of configuration part ------------
 
@@ -25,7 +16,7 @@
 #include <SPI.h>
 #include <sleeplib.h>
 #include <Vcc.h>
-
+#include <EEPROM.h>
 
 const float VccCorrection = 1.0/1.0;  // Measured Vcc by multimeter divided by reported Vcc
 
@@ -48,8 +39,17 @@ struct payload_t {
   float     value3;       // value of sensor3
   float     value4;       // value of sensor4
 };
-
 payload_t payload;
+
+struct eeprom_t {
+   uint16_t node;
+   uint8_t  channel;
+   uint16_t sleeptime1;
+   uint16_t sleeptime2;
+   uint16_t sleeptime3;
+   uint16_t sleeptime4;
+};
+eeprom_t eeprom;
 
 RF24NetworkHeader rxheader;
 RF24NetworkHeader txheader(0);
@@ -109,6 +109,7 @@ void setup(void) {
   unsigned long init_start=millis();
   pinMode(STATUSLED, OUTPUT);
   digitalWrite(STATUSLED,STATUSLED_ON);
+  EEPROM.get(0, eeprom);
   SPI.begin();
   //****
   // put anything else to init here
@@ -119,7 +120,7 @@ void setup(void) {
   radio.begin();
   radio.setPALevel(RF24_PA_MAX);
 //  radio.setRetries(15,2);
-  network.begin(RADIOCHANNEL, NODE);
+  network.begin(eeprom.channel, eeprom.node);
   radio.setDataRate(RF24_250KBPS);
   delay(200);
   bool do_transmit = true;

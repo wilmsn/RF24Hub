@@ -1,9 +1,5 @@
 // How long do we try to init this node 100000(in ms) = 100 sec. 
 #define MAXINIT 100000
-// Define a valid radiochannel here
-#define RADIOCHANNEL 95
-// This node: Use octal numbers starting with "0": "041" is child 4 of node 1
-#define NODE 01
 // The CE Pin of the Radio module
 #define RADIO_CE_PIN 10
 // The CS Pin of the Radio module
@@ -12,10 +8,6 @@
 #define STATUSLED 3
 #define STATUSLED_ON HIGH
 #define STATUSLED_OFF LOW
-#define SLEEPTIME1 10
-#define SLEEPTIME2 10
-#define SLEEPTIME3 2
-#define SLEEPTIME4 5
 
 // ------ End of configuration part ------------
 
@@ -24,7 +16,7 @@
 #include <SPI.h>
 #include <sleeplib.h>
 #include <Vcc.h>
-
+#include <EEPROM.h>
 
 const float VccCorrection = 1.0/1.0;  // Measured Vcc by multimeter divided by reported Vcc
 
@@ -47,8 +39,17 @@ struct payload_t {
   float     value3;       // value of sensor3
   float     value4;       // value of sensor4
 };
-
 payload_t payload;
+
+struct eeprom_t {
+   uint16_t node;
+   uint8_t  channel;
+   uint16_t sleeptime1;
+   uint16_t sleeptime2;
+   uint16_t sleeptime3;
+   uint16_t sleeptime4;
+};
+eeprom_t eeprom;
 
 enum radiomode_t { radio_sleep, radio_listen } radiomode = radio_sleep;
 enum sleepmode_t { sleep1, sleep2, sleep3, sleep4} sleepmode = sleep1, next_sleepmode = sleep2;
@@ -57,13 +58,13 @@ RF24NetworkHeader rxheader;
 RF24NetworkHeader txheader(0);
 // all sleeptime* values in seconds 
 // Time for the fist sleep after an activity of this node
-float               sleeptime1 = SLEEPTIME1;
+unsigned long               sleeptime1;
 // Time for the 2. to N. sleeploop
-float               sleeptime2 = SLEEPTIME2;
+unsigned long               sleeptime2;
 // Time to sleep after wakeup with radio on
-float               sleeptime3 = SLEEPTIME3;
+unsigned long              sleeptime3;
 // Time to keep the network up if it was busy
-float               sleeptime4 = SLEEPTIME4;
+unsigned long              sleeptime4;
 boolean             init_finished = false;
 float               networkuptime = 0.0;
 //Some Var for restore after sleep of display
@@ -92,19 +93,19 @@ float action_loop(unsigned char channel, float value) {
         break;
         case 111:
           // sleeptimer1
-          sleeptime1=value;
+          sleeptime1=(unsigned long)value;
         break;
         case 112:
           // sleeptimer2
-          sleeptime2=value;
+          sleeptime2=(unsigned long)value;
         break;
         case 113:
           // sleeptimer3
-          sleeptime3=value;
+          sleeptime3=(unsigned long)value;
         break;
         case 114:
           // sleeptimer4
-          sleeptime4=value;
+          sleeptime4=(unsigned long)value;
           break;
         case 115:
           // radio on (=1) or off (=0) when sleep
@@ -129,6 +130,7 @@ void setup(void) {
   unsigned long init_start=millis();
   pinMode(STATUSLED, OUTPUT);
   digitalWrite(STATUSLED,STATUSLED_ON);
+  EEPROM.get(0, eeprom);
   SPI.begin();
   //****
   // put anything else to init here
@@ -136,10 +138,14 @@ void setup(void) {
   //####
   // end aditional init
   //####
+  sleeptime1=eeprom.sleeptime1;
+  sleeptime2=eeprom.sleeptime2;
+  sleeptime3=eeprom.sleeptime3;
+  sleeptime4=eeprom.sleeptime4;
   radio.begin();
   radio.setPALevel(RF24_PA_MAX);
 //  radio.setRetries(15,2);
-  network.begin(RADIOCHANNEL, NODE);
+  network.begin(eeprom.channel, eeprom.node);
   radio.setDataRate(RF24_250KBPS);
   delay(200);
   bool do_transmit = true;
@@ -174,12 +180,12 @@ void setup(void) {
   delay(100);
 }
 
-void sleep12(float sleeptime) {
+void sleep12(unsigned long sleeptime) {
   if ( radiomode == radio_sleep ) {
     radio.stopListening();
     radio.powerDown();
   }
-  sleep4s(sleeptime); 
+  sleep4ms(sleeptime); 
   if ( radiomode == radio_sleep ) {
     radio.powerUp();
     radio.startListening();
@@ -208,13 +214,13 @@ void loop(void) {
   networkuptime+=0.1;    
   switch (sleepmode) {
     case sleep1:
-      sleep12(sleeptime1); 
+      sleep12(sleeptime1*1000); 
       sleepmode = sleep3;
       next_sleepmode = sleep2;
       networkuptime = 0;    
     break;
     case sleep2:
-      sleep12(sleeptime2); 
+      sleep12(sleeptime2*1000); 
       sleepmode = sleep3;
       next_sleepmode = sleep2;
       networkuptime = 0;    

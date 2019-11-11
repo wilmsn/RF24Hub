@@ -1,30 +1,9 @@
 /*
 A thermometer for inside.
 V3: Upgrade to Lowpower Library; display of a battery symbol
-
+V4: Store config in EEPROM
 */
-// Define a valid radiochannel here
-#define RADIOCHANNEL 90
-// This node: Use octal numbers starting with "0": "041" is child 4 of node 1
-#define NODE 03
-// The CE Pin of the Radio module
-#define RADIO_CE_PIN 10
-// The CS Pin of the Radio module
-#define RADIO_CSN_PIN 9
-//define some sleeptime as default values
-#define SLEEPTIME1 10
-#define SLEEPTIME2 10
-#define SLEEPTIME3 2
-#define SLEEPTIME4 5
-// The pin of the statusled
-#define STATUSLED 3
-#define STATUSLED_ON LOW
-#define STATUSLED_OFF HIGH
-#define ONE_WIRE_BUS 8
 
-// The outputpin for batterycontrol for the voltagedivider
-#define VMESS_OUT A3
-#define VMESS_IN A0
 // 4 voltages for the battery (empty ... full)
 #define U0 3.6
 #define U1 3.7
@@ -43,6 +22,15 @@ V3: Upgrade to Lowpower Library; display of a battery symbol
 // set X0 and Y0 of waiting symbol ( is 6 * 6 pixel )
 #define WAIT_X0 78
 #define WAIT_Y0 17
+// The CE Pin of the Radio module
+#define RADIO_CE_PIN 10
+// The CS Pin of the Radio module
+#define RADIO_CSN_PIN 9
+// The pin of the statusled
+#define STATUSLED 3
+#define STATUSLED_ON LOW
+#define STATUSLED_OFF HIGH
+#define ONE_WIRE_BUS 8
 
 // ------ End of configuration part ------------
 
@@ -51,6 +39,7 @@ V3: Upgrade to Lowpower Library; display of a battery symbol
 #include <SPI.h>
 #include <sleeplib.h>
 #include <Vcc.h>
+#include <EEPROM.h>
 //****
 // some includes for your sensor(s) here
 //****
@@ -58,7 +47,7 @@ V3: Upgrade to Lowpower Library; display of a battery symbol
 #include <DallasTemperature.h>
 #include <LCD5110_Graph.h>
 
-boolean display_down = false;
+// ----- End of Includes ------------------------
 
 const float VccCorrection = 1.0/1.0;  // Measured Vcc by multimeter divided by reported Vcc
 Vcc vcc(VccCorrection);
@@ -76,10 +65,6 @@ LCD5110 myGLCD(7,6,5,2,4);
 extern uint8_t SmallFont[];
 extern uint8_t BigNumbers[];
 
-//####
-//end aditional includes
-//####
-
 // Structure of our payload
 struct payload_t {
   uint16_t  orderno;      // the orderno as primary key for our message for the nodes
@@ -95,8 +80,17 @@ struct payload_t {
   float     value3;       // value of sensor3
   float     value4;       // value of sensor4
 };
-
 payload_t payload;    
+
+struct eeprom_t {
+   uint16_t node;
+   uint8_t  channel;
+   uint16_t sleeptime1;
+   uint16_t sleeptime2;
+   uint16_t sleeptime3;
+   uint16_t sleeptime4;
+};
+eeprom_t eeprom;
 
 enum radiomode_t { radio_sleep, radio_listen } radiomode = radio_sleep;
 enum sleepmode_t { sleep1, sleep2, sleep3, sleep4} sleepmode = sleep1, next_sleepmode = sleep2;
@@ -105,17 +99,17 @@ RF24NetworkHeader   rxheader;
 RF24NetworkHeader   txheader(0);
 // all sleeptime* values in seconds 
 // Time for the fist sleep after an activity of this node
-float               sleeptime1 = SLEEPTIME1;
+unsigned long                 sleeptime1;
 // Time for the 2. to N. sleeploop
-float               sleeptime2 = SLEEPTIME2;
+unsigned long                 sleeptime2;
 // Time to sleep after wakeup with radio on
-float               sleeptime3 = SLEEPTIME3;
+unsigned long                sleeptime3;
 // Time to keep the network up if it was busy
-float               sleeptime4 = SLEEPTIME4;
+unsigned long                sleeptime4;
+boolean             display_down = false;
 boolean             init_finished = false;
-unsigned int        networkup = 0;
-uint16_t            orderno_p1, orderno_p2;
 boolean             low_voltage_flag = false;
+unsigned int        networkup = 0;
 float               temp;
 //Some Var for restore after sleep of display
 float               field1_val, field2_val, field3_val, field4_val;
@@ -132,10 +126,10 @@ RF24Network network(radio);
 
 void display_sleep(boolean dmode) {
   display_down = dmode;
-  if ( ! low_voltage_flag ) {
-    if ( dmode ) { // Display go to sleep
-      myGLCD.enableSleep(); 
-    } else {
+  if ( dmode ) { // Display go to sleep
+    myGLCD.enableSleep(); 
+  } else {
+    if ( ! low_voltage_flag ) {  
       myGLCD.disableSleep(); 
         get_temp();
         print_field(field1_val,1);
@@ -160,17 +154,17 @@ float action_loop(unsigned char channel, float value) {
        break;
       case 22:
         // Set field 2
-        field2_val=value;
+        field2_val= value;
         print_field(field2_val,2);
        break;
       case 23:
         // Set field 3
-        field3_val=value;
+        field3_val= value;
         print_field(field3_val,3);
        break;
       case 24:
         // Set field 4
-        field4_val=value;
+        field4_val= value;
         print_field(field4_val,4);
        break;
       case 31:
@@ -191,19 +185,19 @@ float action_loop(unsigned char channel, float value) {
         break;      
       case 111:
       // sleeptimer1
-        sleeptime1 = value;
+        sleeptime1 = (unsigned long)value;
         break;
       case 112:
       // sleeptimer2
-        sleeptime2 = value;
+        sleeptime2 = (unsigned long)value;
         break;
       case 113:
       // sleeptimer3
-        sleeptime3 = value;
+        sleeptime3 = (unsigned long)value;
         break;
       case 114:
       // sleeptimer4
-        sleeptime4 = value;
+        sleeptime4 = (unsigned long)value;
         break;
       case 115:
       // radio on (=1) or off (=0) when sleep
@@ -225,8 +219,13 @@ void setup(void) {
   unsigned long last_send=millis();
   pinMode(STATUSLED, OUTPUT);     
   digitalWrite(STATUSLED,STATUSLED_ON); 
+  EEPROM.get(0, eeprom);
   SPI.begin();
   radio.begin();
+  sleeptime1=eeprom.sleeptime1;
+  sleeptime2=eeprom.sleeptime2;
+  sleeptime3=eeprom.sleeptime3;
+  sleeptime4=eeprom.sleeptime4;
   //****
   // put anything else to init here
   //****
@@ -237,17 +236,20 @@ void setup(void) {
   get_temp();
   cur_voltage = vcc.Read_Volts();
   draw_battery(BATT_X0, BATT_Y0,cur_voltage);
-  draw_wait(WAIT_X0,WAIT_Y0,17);
   draw_antenna(ANT_X0, ANT_Y0);
   //####
   // end aditional init
   //####
-  network.begin(RADIOCHANNEL, NODE);
+  print_field(eeprom.node,1);
+  print_field(low_voltage_flag,2);
+  print_field(eeprom.channel,3);
+  network.begin(eeprom.channel, eeprom.node);
   radio.setDataRate( RF24_250KBPS );
   radio.setPALevel( RF24_PA_MAX ) ;
   //radio.setRetries(1,15);
   // initialisation beginns
   bool do_transmit = true;
+  int init_loopcount = 0;
   while ( ! init_finished ) {
     // send only one message every second
     if ( do_transmit &&  last_send + 1000 < millis() ) {
@@ -257,6 +259,7 @@ void setup(void) {
       payload.value1=0;
       network.write(txheader,&payload,sizeof(payload));
       last_send = millis();
+      init_loopcount++;
     }
     network.update();
     if ( last_send + 100000 < millis()) { do_transmit = true; }
@@ -271,6 +274,7 @@ void setup(void) {
       txheader.type=1;
       network.write(txheader,&payload,sizeof(payload));
     }
+    print_field(init_loopcount,4);
   }
   delay(100);
   digitalWrite(STATUSLED,STATUSLED_OFF); 
@@ -454,35 +458,9 @@ void wipe_antenna(int x, int y) {
   }
 }  
   
-void draw_wait(byte x, byte y, int waitcount ) {
-  if ( ! display_down ) {
-    for (byte i=x; i<x+6; i++) {
-      for(byte j=y; j<y+6; j++) {
-        myGLCD.clrPixel(i,j);
-      }
-    }
-    if (waitcount > 1) myGLCD.setPixel(x+3,y+2);
-    if (waitcount > 2) myGLCD.setPixel(x+3,y+3);
-    if (waitcount > 3) myGLCD.setPixel(x+2,y+3);
-    if (waitcount > 4) myGLCD.setPixel(x+2,y+2);
-    if (waitcount > 5) myGLCD.setPixel(x+3,y  );
-    if (waitcount > 6) myGLCD.setPixel(x+4,y+1);
-    if (waitcount > 7) myGLCD.setPixel(x+5,y+2);
-    if (waitcount > 8) myGLCD.setPixel(x+5,y+3);
-    if (waitcount > 9) myGLCD.setPixel(x+4,y+4);
-    if (waitcount > 10) myGLCD.setPixel(x+3,y+5);
-    if (waitcount > 11) myGLCD.setPixel(x+2,y+5);
-    if (waitcount > 12) myGLCD.setPixel(x+1,y+4);
-    if (waitcount > 13) myGLCD.setPixel(x  ,y+3);
-    if (waitcount > 14) myGLCD.setPixel(x  ,y+2);
-    if (waitcount > 15) myGLCD.setPixel(x+1,y+1);
-    if (waitcount > 16) myGLCD.setPixel(x+2,y  );
-  }
-}
-
-void sleep12(unsigned int sleeptime) {
-  draw_wait(WAIT_X0,WAIT_Y0,0);
-//  print_field(0,4);
+void sleep12(unsigned long sleeptime) {
+  cur_voltage = vcc.Read_Volts();
+  low_voltage_flag = (cur_voltage <= U0);
   if ( radiomode == radio_sleep ) {
     radio.stopListening();
     wipe_antenna(ANT_X0, ANT_Y0);
@@ -490,15 +468,16 @@ void sleep12(unsigned int sleeptime) {
   }
   sleep4ms(sleeptime); 
   if ( radiomode == radio_sleep ) {
-    radio.powerUp();
-    radio.startListening();
-    draw_antenna(ANT_X0, ANT_Y0);
+    if (! low_voltage_flag) {
+      radio.powerUp();
+      radio.startListening();
+      draw_antenna(ANT_X0, ANT_Y0);
+    }
   }
   //*****************
   // Put anything you want to run frequently here
   //*****************  
   get_temp();
-  cur_voltage = vcc.Read_Volts();
   draw_battery(BATT_X0,BATT_Y0,cur_voltage);
   //#################
   // END run frequently
@@ -507,39 +486,40 @@ void sleep12(unsigned int sleeptime) {
 
 void loop(void) {
   
-  n_update = network.update();
-  if ( network.available() ) {
-    sleepmode = sleep4;
-    networkup = 0;
-    if ((payload.flags & 0x01) == 0x01 ) {
-      next_sleepmode = sleep1;
-    } else {
-      next_sleepmode = sleep2;
+  if (! low_voltage_flag) {
+    n_update = network.update();
+    if ( network.available() ) {
+      sleepmode = sleep4;
+      networkup = 0;
+      if ((payload.flags & 0x01) == 0x01 ) {
+        next_sleepmode = sleep1;
+      } else {
+        next_sleepmode = sleep2;
+      }
+      network.read(rxheader,&payload,sizeof(payload));
+      payload.value1 = action_loop(payload.sensor1, payload.value1);
+      payload.value2 = action_loop(payload.sensor2, payload.value2);
+      payload.value3 = action_loop(payload.sensor3, payload.value3);
+      payload.value4 = action_loop(payload.sensor4, payload.value4);
+      txheader.type=rxheader.type;
+      network.write(txheader,&payload,sizeof(payload));    
+    } 
+    if ( n_update > 0 ) {
+      sleepmode = sleep4;
+      networkup = 0;
     }
-    network.read(rxheader,&payload,sizeof(payload));
-    payload.value1 = action_loop(payload.sensor1, payload.value1);
-    payload.value2 = action_loop(payload.sensor2, payload.value2);
-    payload.value3 = action_loop(payload.sensor3, payload.value3);
-    payload.value4 = action_loop(payload.sensor4, payload.value4);
-    txheader.type=rxheader.type;
-    network.write(txheader,&payload,sizeof(payload));    
-  } 
-  if ( n_update > 0 ) {
-    sleepmode = sleep4;
-    networkup = 0;
-    draw_wait(WAIT_X0,WAIT_Y0,17);
   }
   delay(80);
   networkup++;    
   switch (sleepmode) {
     case sleep1:
-      sleep12((unsigned int)(sleeptime1*1000)); 
+      sleep12(sleeptime1*1000); 
       sleepmode = sleep3;
       next_sleepmode = sleep2;
       networkup = 0;    
     break;
     case sleep2:
-      sleep12((unsigned int)(sleeptime2*1000)); 
+      sleep12(sleeptime2*1000); 
       sleepmode = sleep3;
       next_sleepmode = sleep2;
       networkup = 0;    
@@ -552,4 +532,3 @@ void loop(void) {
     break;
   } 
 }
-
