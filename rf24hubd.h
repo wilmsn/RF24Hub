@@ -84,6 +84,7 @@ struct sensor_t {
     char			s_type;
 	char			fhem_dev[FHEMDEVLENGTH];
     float			last_val;	
+    bool            is_HB_node;
 };
 struct sensor_t 	sensor[SENSORARRAYSIZE];
 
@@ -225,6 +226,8 @@ uint16_t set_sensor(uint32_t mysensor, float value);
 uint16_t get_sensor(uint32_t mysensor);
 
 bool node_is_next(uint16_t node);
+
+bool is_HB_node(uint16_t node);
 
 /*******************************************************************************************
 *

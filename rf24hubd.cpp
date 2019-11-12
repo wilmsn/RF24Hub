@@ -313,7 +313,7 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 			logmsg(VERBOSETELNET, debug);
 			init_system();
 		} else {
-			if ( strcmp(wort1,cmp_setlast) == 0 ) {
+			if ( strcmp(wort1,cmp_setlast) == 0 && ! is_HB_node(node) ) {
 				get_order(node);
 				print_order_buffer();
 			}
@@ -470,7 +470,7 @@ void init_node(uint16_t node ) {
 			fill_order_buffer( node, sensor[i].channel, sensor[i].last_val);
 		}
 	}
-	get_order(node);
+	if ( ! is_HB_node(node) ) get_order(node);
 }
 
 uint16_t getnodeadr(char *node) {
@@ -487,6 +487,15 @@ uint16_t getnodeadr(char *node) {
 	return mynodeadr;
 }
 
+bool is_HB_node(uint16_t node) {
+    bool retval=false;
+    for (int i=0; i < SENSORARRAYSIZE; i++) {
+		if (sensor[i].node == node && sensor[i].is_HB_node) {
+			retval=true;
+		}
+	}
+	return retval;
+}
 
 void init_order(unsigned int element) {
 	order[element].orderno = 0;
@@ -669,15 +678,20 @@ uint16_t set_sensor(uint32_t mysensor, float value) {
 	uint16_t node = 0;
 	while ( (sensor[i].sensor != mysensor) && (i < SENSORARRAYSIZE - 1) ) i++;
 	if ( i < SENSORARRAYSIZE - 1 ) {
-		fill_order_buffer( sensor[i].node, sensor[i].channel, value);
 		node = sensor[i].node;
+//        if (sensor[i].is_HB_node) {
+        
+        
+//        } else {
+            fill_order_buffer( sensor[i].node, sensor[i].channel, value);
+//        }
 	}
 	return node;
 }
 
-uint16_t get_sensor(uint32_t mysensor) {
-	return set_sensor(mysensor, 0);
-}
+//uint16_t get_sensor(uint32_t mysensor) {
+//	return set_sensor(mysensor, 0);
+//}
 
 bool node_is_next(const uint16_t node) {
   /*
@@ -732,8 +746,9 @@ void print_sensor(void) {
 	logmsg(VERBOSEOTHER, debug);
 	for (int i = 0; i < SENSORARRAYSIZE; i++) {
 		if (sensor[i].sensor > 0 ) {
-			sprintf(debug, "Sensor: %u Node: 0%o Channel: %u Type: %c Value: %f FHEM: %s",
-				sensor[i].sensor,
+			sprintf(debug, "%sSensor: %u Node: 0%o Channel: %u Type: %c Value: %f FHEM: %s",
+				sensor[i].is_HB_node ? "Heartbeat-" : "          ",
+                sensor[i].sensor,
 				sensor[i].node,
 				sensor[i].channel,
 				sensor[i].s_type,
@@ -758,7 +773,7 @@ void exit_system(void) {
 
 void init_system(void) {
 	int i = 0;
-	char cmp_s[]="s",cmp_a[]="a";
+	char cmp_s[]="s",cmp_a[]="a",cmp_y[]="y",cmp_j[]="j"; 
 	for (int i=0; i<SENSORARRAYSIZE; i++) {
 		sensor[i].sensor = 0;
 		sensor[i].node = 0;
@@ -783,7 +798,7 @@ void init_system(void) {
 	mysql_query(db, sql_stmt);
 	db_check_error();
 	// END sensordata to memorytable
-	sprintf (sql_stmt, "select sensor_id, node_id, channel, value, fhem_dev, s_type from sensor where sensor_id is not null and node_id is not null and channel is not null");
+	sprintf (sql_stmt, "select sensor_id, sensor.node_id, channel, value, fhem_dev, s_type, heartbeat from sensor, node where sensor.node_id = node.node_id and sensor_id is not null and sensor.node_id is not null and channel is not null");
 	logmsg(VERBOSESQL, sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
@@ -798,6 +813,7 @@ void init_system(void) {
 		if ( row[4] != NULL ) sprintf(sensor[i].fhem_dev,"%s",row[4]); else sprintf(sensor[i].fhem_dev,"not_set");
 		if (strcmp(row[5],cmp_s) == 0) sensor[i].s_type = 's';
 		if (strcmp(row[5],cmp_a) == 0) sensor[i].s_type = 'a';
+		if ((strcmp(row[6],cmp_y) == 0) || (strcmp(row[6],cmp_j) == 0)) sensor[i].is_HB_node = true; else sensor[i].is_HB_node = false;
 		i++;
 	}
 	mysql_free_result(result);	
@@ -881,6 +897,11 @@ void process_sensor(uint16_t node, uint8_t channel, float value, bool d1, bool d
 		}
 	}	
 }	
+
+void send_HB_orders(uint16_t node) {
+    get_order(node);
+}
+
 /*******************************************************************************************
 *
 * All the rest 
@@ -1336,6 +1357,7 @@ int main(int argc, char* argv[]) {
             new_tn_in_socket = accept ( tn_in_socket, (struct sockaddr *) &address, &addrlen );
             if (new_tn_in_socket > 0) {
                 //receive_tn_in(new_tn_in_socket, &address);
+//printf("######1");
                 thread t2(receive_tn_in, new_tn_in_socket, &address);
                 t2.detach();
                 //close (new_tn_in_socket);
@@ -1375,14 +1397,25 @@ int main(int argc, char* argv[]) {
 //
 //            rf24_carrier = radio.testCarrier();
 			rf24_rpd = radio.testRPD();
+//            network.peek(rxheader);
+//            
 			network.read(rxheader,&payload,sizeof(payload));
 			sprintf(debug, DEBUGSTR "Received: Type: %u from Node: %o to Node: %o Orderno %d (Channel/Value): (%u/%f) (%u/%f) (%u/%f) (%u/%f) "
 						, rxheader.type, rxheader.from_node, rxheader.to_node, payload.orderno
 						, payload.channel1, payload.value1, payload.channel2, payload.value2, payload.channel3, payload.value3, payload.channel4, payload.value4);
 			logmsg(VERBOSERF24, debug);
-			if ( rxheader.type == 119 ) {
+			switch ( rxheader.type ) {
+                case 51: // heartbeatnode!!
+					if ( payload.channel1 > 0 ) process_sensor(rxheader.from_node, payload.channel1, payload.value1, rf24_carrier, rf24_rpd);
+					if ( payload.channel2 > 0 ) process_sensor(rxheader.from_node, payload.channel2, payload.value2, rf24_carrier, rf24_rpd);
+					if ( payload.channel3 > 0 ) process_sensor(rxheader.from_node, payload.channel3, payload.value3, rf24_carrier, rf24_rpd);
+					if ( payload.channel4 > 0 ) process_sensor(rxheader.from_node, payload.channel4, payload.value4, rf24_carrier, rf24_rpd);
+                    send_HB_orders(rxheader.from_node);                    
+                break;    
+                case 119:
 					init_node(rxheader.from_node);
-			} else {	
+                break;
+                default:	
 				if (is_valid_orderno(payload.orderno)) {
 					if ( payload.channel1 > 0 ) process_sensor(rxheader.from_node, payload.channel1, payload.value1, rf24_carrier, rf24_rpd);
 					if ( payload.channel2 > 0 ) process_sensor(rxheader.from_node, payload.channel2, payload.value2, rf24_carrier, rf24_rpd);
