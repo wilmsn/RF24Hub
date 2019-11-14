@@ -44,6 +44,9 @@ rf24hub is the successor of sensorhub.
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <thread>
+#include "order.h"
+#include "sensor.h"
+#include "orderbuffer.h"
 
 #define BUF 1024
 
@@ -66,16 +69,20 @@ MYSQL_ROW row;
 char* pEnd;
 const char* prgversion=PRGVERSION;
 uint64_t start_time;
-
+struct Order::order_t singleorder;
 
 // Setup for GPIO 25 CE and CE0 CSN with SPI Speed @ 8Mhz
 RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
 //RF24 radio(22,0,BCM2835_SPI_SPEED_1MHZ);
 
-RF24Network network(radio);
+RF24Network     network(radio);
+Order           order;
+OrderBuffer     orderbuffer;
+Sensor          sensor;
 
 uint16_t orderno, init_orderno;
 
+/*
 // structure to handle the sensors, filled from DB
 struct sensor_t {
 	uint32_t     	sensor;
@@ -116,7 +123,7 @@ struct order_buffer_t {
 	float        	value;
 };
 struct order_buffer_t 		order_buffer[ORDERBUFFERLENGTH];
-
+*/
 
 struct config_parameters {
   char logfilename[PARAM_MAXLEN_LOGFILE];
@@ -211,13 +218,13 @@ void print_order(void);
 
 void init_order_buffer(unsigned int element);
 
-void print_order_buffer(void);
+void print_orderbuffer(void);
 
-void fill_order_buffer( uint16_t node, uint16_t channel, float value);
+void fill_orderbuffer( uint16_t node, uint16_t channel, float value);
 
 bool is_valid_orderno(uint16_t myorderno);
 
-bool delete_orderno(uint16_t myorderno);
+void delete_orderno(uint16_t myorderno);
 
 void get_order(uint16_t node);
 
