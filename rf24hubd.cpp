@@ -315,11 +315,11 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 				logmsg(VERBOSETELNET, debug);
 				akt_sensor = sensor_ptr->sensor;
 			}
-            sensor_ptr=sensor_ptr->next;
+			sensor_ptr=sensor_ptr->next;
 		}		
 		// just add the sensor to the buffer
 		node = set_sensor( akt_sensor, strtof(wort4, &pEnd));
-		if ( node == 0 ) {
+        if ( node == 0 ) {
 			sprintf(debug,"Sensor (%s) not in cache ==> running initialisation!",wort3);
 			logmsg(VERBOSETELNET, debug);
 			init_system();
@@ -514,38 +514,18 @@ uint16_t getnodeadr(char *node) {
 	return mynodeadr;
 }
 
-bool is_HB_node(uint16_t node) {
+bool is_HB_node(uint16_t mynode) {
     bool retval=false;
-    Sensor::sensor_t *sensor_ptr;
-    sensor_ptr=sensor.initial_ptr;
-    while (sensor_ptr) {
-		if (sensor_ptr->node == node && sensor_ptr->is_HB_node) {
+    Node::node_t *node_ptr;
+    node_ptr=node.initial_ptr;
+    while (node_ptr) {
+		if (node_ptr->node == mynode && node_ptr->is_HB_node) {
 			retval=true;
-            sensor_ptr=NULL;
 		}
-		sensor_ptr=sensor_ptr->next;
+		node_ptr=node_ptr->next;
 	}
 	return retval;
 }
-
-/*
-void init_order(unsigned int element) {
-	order[element].orderno = 0;
-	order[element].node = 0;
-	order[element].type = 0;
-	order[element].flags = 0;
-	order[element].channel1 = 0;
-	order[element].value1 = 0;
-	order[element].channel2 = 0;
-	order[element].value2 = 0;
-	order[element].channel3 = 0;
-	order[element].value3 = 0;
-	order[element].channel4 = 0;
-	order[element].value4 = 0;
-	order[element].entrytime = 0;
-	order[element].last_send = 0;
-}
-*/
 
 void print_order(void) {
 	if ( verboselevel > 8 ) {
@@ -577,15 +557,16 @@ void print_order(void) {
 	}	
 }
 
-void fill_orderbuffer( uint16_t node, uint16_t channel, float value) {
-	OrderBuffer::orderbuffer_t* buffer_ptr = new OrderBuffer::orderbuffer_t;
-	buffer_ptr->orderno = 0;
-	buffer_ptr->entrytime = mymillis();
-	buffer_ptr->node = node;
-	buffer_ptr->channel = channel;
-	buffer_ptr->value = value;
-	buffer_ptr->next = NULL;
-    orderbuffer.new_entry(buffer_ptr);
+void fill_orderbuffer( uint16_t node, unsigned char channel, float value) {
+	OrderBuffer::orderbuffer_t* neworderbuffer_ptr = new OrderBuffer::orderbuffer_t;
+    neworderbuffer_ptr->orderno = 0;
+	neworderbuffer_ptr->entrytime = mymillis();
+	neworderbuffer_ptr->node = node;
+	neworderbuffer_ptr->channel = channel;
+	neworderbuffer_ptr->value = value;
+	neworderbuffer_ptr->next = NULL;
+    orderbuffer.del_node_channel(node, channel);
+    orderbuffer.new_entry(neworderbuffer_ptr);
 }
 
 void print_orderbuffer(void) {
@@ -624,36 +605,21 @@ void delete_orderno(uint16_t myorderno) {
     orderbuffer.del_orderno(myorderno);
 }
 
-void get_order(uint16_t node) {
+bool get_order(uint16_t node) {
 	int j = 0;
+    bool retval = false;
 	orderno++;
 	order_waiting = true;
 //    Order::order_t* order_ptr;
     OrderBuffer::orderbuffer_t* orderbuffer_ptr;
-	sprintf(debug, "get_order: node: 0%o orderno: %u", node, orderno);
+    sprintf(debug, "get_order: node: 0%o orderno: %u", node, orderno);
+//if we have an old order for this node => delete it!
+    order.del_node(node);
 	logmsg(VERBOSEOTHER,debug);
-	// if we have old orders for this node ==> delete them! 
-//	for (int i=0; i < ORDERLENGTH -1; i++) {
-//		if ( order[i].node == node ) {
-//			order[i].node = 0;
-//			order[i].orderno = 0;
-//		}
-//	}
-	//look for the first free position in order[]
-//	sprintf(debug, "get_order: order_ptr is: %u; order[order_ptr].orderno is %u", order_ptr, order[order_ptr].orderno);
-//	logmsg(VERBOSEOTHER,debug);	
-//	while ( order_ptr < ORDERLENGTH -1 && order[order_ptr].orderno > 0) {
-//		order_ptr++; 
-//		sprintf(debug, "get_order: order_ptr is: %u; order[order_ptr].orderno is %u", order_ptr, order[order_ptr].orderno);
-//		logmsg(VERBOSEOTHER,debug);
-//	}		
-//	sprintf(debug, "get_order: order_ptr is: %u", order_ptr);
-//	logmsg(VERBOSEOTHER,debug);
-	//collect the data for this order
     orderbuffer_ptr = orderbuffer.initial_ptr;
     Order::order_t* neworder_ptr = new Order::order_t;
     while (orderbuffer_ptr) {
-		if (node == orderbuffer_ptr->node) {
+        if (node == orderbuffer_ptr->node) {
 			sprintf(debug, "get_order: j is: %d ", j);
 			logmsg(VERBOSEOTHER,debug);
 			if ( j < 4 ) orderbuffer_ptr->orderno = orderno;
@@ -683,8 +649,16 @@ void get_order(uint16_t node) {
 		orderbuffer_ptr=orderbuffer_ptr->next;
 	}
 	if (j < 5) neworder_ptr->flags = 0x01;
-    order.new_entry(neworder_ptr);
-	print_order();
+    neworder_ptr->next=NULL;
+    if (j > 0) {
+        order.new_entry(neworder_ptr);
+        print_order();
+        retval = true;
+    } else {
+        delete neworder_ptr;
+        retval = false;
+    }
+    return retval;
 }	
 
 uint16_t set_sensor(uint32_t mysensor, float value) {
@@ -755,8 +729,7 @@ void print_sensor(void) {
     Sensor::sensor_t *sensor_ptr;
     sensor_ptr=sensor.initial_ptr;
     while (sensor_ptr) {
-		sprintf(debug, "%sSensor: %u Node: 0%o Channel: %u Type: %c Value: %f FHEM: %s",
-			sensor_ptr->is_HB_node ? "Heartbeat-" : "          ",
+		sprintf(debug, "Sensor: %u Node: 0%o Channel: %u Type: %c Value: %f FHEM: %s",
             sensor_ptr->sensor,
 			sensor_ptr->node,
 			sensor_ptr->channel,
@@ -800,7 +773,7 @@ void init_system(void) {
 	mysql_query(db, sql_stmt);
 	db_check_error();
 	// END sensordata to memorytable
-	sprintf (sql_stmt, "select sensor_id, sensor.node_id, channel, value, fhem_dev, s_type, heartbeat from sensor, node where sensor.node_id = node.node_id and sensor_id is not null and sensor.node_id is not null and channel is not null");
+	sprintf (sql_stmt, "select sensor_id, node_id, channel, value, fhem_dev, s_type from sensor");
 	logmsg(VERBOSESQL, sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
@@ -809,20 +782,34 @@ void init_system(void) {
 	MYSQL_ROW row;
 	while ((row = mysql_fetch_row(result))) {
         Sensor::sensor_t* newsensor_ptr = new Sensor::sensor_t;
-		if ( row[0] != NULL ) newsensor_ptr->sensor = strtoul(row[0], &pEnd,10);
-		if ( row[1] != NULL ) newsensor_ptr->node = getnodeadr(row[1]);
-		if ( row[2] != NULL ) newsensor_ptr->channel = strtoul(row[2], &pEnd,10);
+		if ( row[0] != NULL ) newsensor_ptr->sensor = strtoul(row[0], &pEnd,10); else newsensor_ptr->sensor = 0;
+		if ( row[1] != NULL ) newsensor_ptr->node = getnodeadr(row[1]); else newsensor_ptr->node = 0; 
+		if ( row[2] != NULL ) newsensor_ptr->channel = strtoul(row[2], &pEnd,10); else newsensor_ptr->channel = 0;
 		if ( row[3] != NULL ) newsensor_ptr->last_val = strtof(row[3], &pEnd); else newsensor_ptr->last_val = 0;
 		if ( row[4] != NULL ) sprintf(newsensor_ptr->fhem_dev,"%s",row[4]); else sprintf(newsensor_ptr->fhem_dev,"not_set");
 		if (strcmp(row[5],cmp_s) == 0) newsensor_ptr->s_type = 's';
 		if (strcmp(row[5],cmp_a) == 0) newsensor_ptr->s_type = 'a';
-		if ((strcmp(row[6],cmp_y) == 0) || (strcmp(row[6],cmp_j) == 0)) newsensor_ptr->is_HB_node = true; else newsensor_ptr->is_HB_node = false;
-		sensor.new_entry(newsensor_ptr);
+        newsensor_ptr->next=NULL;
+        sensor.new_entry(newsensor_ptr);
 	}
-	mysql_free_result(result);	
+	mysql_free_result(result);
+	sprintf (sql_stmt, "select node_id, u_batt, heartbeat from node");
+	logmsg(VERBOSESQL, sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+	result = mysql_store_result(db);
+	db_check_error();
+	while ((row = mysql_fetch_row(result))) {
+        Node::node_t* newnode_ptr = new Node::node_t;
+		if ( row[0] != NULL ) newnode_ptr->node = getnodeadr(row[0]);
+		if ( row[1] != NULL ) newnode_ptr->u_batt = strtof(row[1], &pEnd); else newnode_ptr->u_batt = 0;
+		if ((strcmp(row[2],cmp_y) == 0) || (strcmp(row[2],cmp_j) == 0)) newnode_ptr->is_HB_node = true; else newnode_ptr->is_HB_node = false;
+        newnode_ptr->next=NULL;
+		node.new_entry(newnode_ptr);
+	}
+	mysql_free_result(result);
+    
 	print_sensor();
-//	for (unsigned int i=0; i<ORDERLENGTH -1; i++) init_order(i);
-//	for (unsigned int i=0; i<ORDERBUFFERLENGTH -1; i++) init_order_buffer(i);
 }
 
 void store_sensor_value(uint16_t node, uint8_t channel, float value, bool d1, bool d2) {
@@ -1417,7 +1404,25 @@ int main(int argc, char* argv[]) {
 					if ( payload.channel2 > 0 ) process_sensor(rxheader.from_node, payload.channel2, payload.value2, rf24_carrier, rf24_rpd);
 					if ( payload.channel3 > 0 ) process_sensor(rxheader.from_node, payload.channel3, payload.value3, rf24_carrier, rf24_rpd);
 					if ( payload.channel4 > 0 ) process_sensor(rxheader.from_node, payload.channel4, payload.value4, rf24_carrier, rf24_rpd);
-                    send_HB_orders(rxheader.from_node);                    
+                    if ( orderbuffer.node_has_entry(rxheader.from_node) ) {
+                        send_HB_orders(rxheader.from_node);                    
+                    } else {
+                        txheader.from_node = 0;
+                        txheader.to_node  = rxheader.from_node;
+                        txheader.type = 52;
+                        payload.orderno=0;
+                        payload.flags=0x01;
+                        payload.channel1=0;
+                        payload.value1=0;
+                        payload.channel2=0;
+                        payload.value2=0;
+                        payload.channel3=0;
+                        payload.value3=0;
+                        payload.channel4=0;
+                        payload.value4=0;
+                        network.write(txheader,&payload,sizeof(payload));
+                    }
+// TODO   was schicke ich dem HB Node zurück????                 
                 break;    
                 case 119:
 					init_node(rxheader.from_node);

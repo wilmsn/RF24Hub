@@ -19,23 +19,72 @@ void OrderBuffer::new_entry(OrderBuffer::orderbuffer_t* new_ptr) {
     }
 }
 
+bool OrderBuffer::del_entry(OrderBuffer::orderbuffer_t* my_ptr) {
+    bool retval = false;
+    OrderBuffer::orderbuffer_t *akt_ptr, *last_ptr;
+    akt_ptr = OrderBuffer::initial_ptr;
+    last_ptr = OrderBuffer::initial_ptr;
+    while (akt_ptr) {
+        if (akt_ptr == my_ptr ) {
+            if (akt_ptr == initial_ptr) {
+                if (initial_ptr->next) { 
+                    initial_ptr=akt_ptr->next;
+                } else {
+                    initial_ptr = NULL;
+                }
+            } else            {
+                last_ptr->next=akt_ptr->next;
+            }
+            delete akt_ptr;
+            akt_ptr = NULL;
+            retval = true;
+        } else {
+            last_ptr = akt_ptr;
+            akt_ptr=akt_ptr->next;
+        }
+    }
+    return retval;
+}
+
 bool OrderBuffer::del_orderno(uint16_t orderno) {
     int retval = false;
     OrderBuffer::orderbuffer_t *search_ptr, *last_ptr;
     search_ptr = initial_ptr;
     while (search_ptr) {
-        if (search_ptr->orderno != orderno ) {
-            last_ptr = search_ptr;
-            search_ptr=search_ptr->next;
+        if (search_ptr->orderno == orderno ) {
+            retval = OrderBuffer::del_entry(search_ptr);
         } else {
-            if (search_ptr == initial_ptr) {
-                initial_ptr=search_ptr->next;
-            } else {
-                last_ptr->next=search_ptr->next;
-            }
-            delete search_ptr;
+            last_ptr = search_ptr;
+        }
+        search_ptr=search_ptr->next;
+    }
+    return retval;
+}
+
+bool OrderBuffer::del_node_channel(uint16_t node, unsigned char channel) {
+    int retval = false;
+    OrderBuffer::orderbuffer_t *search_ptr, *last_ptr;
+    search_ptr = initial_ptr;
+    while (search_ptr) {
+        if (search_ptr->node == node && search_ptr->channel == channel) {
+            retval = OrderBuffer::del_entry(search_ptr);
+        } else {
+            last_ptr = search_ptr;
+        }
+        search_ptr=search_ptr->next;
+    }
+    return retval;
+}
+
+bool OrderBuffer::node_has_entry(uint16_t node) {
+    int retval = false;
+    OrderBuffer::orderbuffer_t *search_ptr, *last_ptr;
+    search_ptr = initial_ptr;
+    while (search_ptr) {
+        if (search_ptr->node == node) {
             retval = true;
         }
+        search_ptr=search_ptr->next;
     }
     return retval;
 }

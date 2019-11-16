@@ -20,7 +20,6 @@ struct sensor_t {
     char			s_type;
 	char			fhem_dev[FHEMDEVLENGTH];
     float			last_val;	
-    bool            is_HB_node;
 	sensor_t         *next;          // poiter to the next record
 };
 

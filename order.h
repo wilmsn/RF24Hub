@@ -35,6 +35,7 @@ struct order_t {
     void new_entry(order_t*);
     bool del_orderno(uint16_t orderno);
     bool del_entry(order_t* my_ptr);
+    bool del_node(uint16_t);
     Order(void);
 
 };

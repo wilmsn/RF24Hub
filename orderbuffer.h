@@ -19,12 +19,15 @@ struct orderbuffer_t {
 	uint16_t     	node;
 	uint16_t     	channel;
 	float        	value;
-	orderbuffer_t* next;          // poiter to the next record
+	orderbuffer_t*  next;          // poiter to the next record
 };
 
     orderbuffer_t* initial_ptr;
     void new_entry(orderbuffer_t*);
+    bool del_entry(orderbuffer_t*);
     bool del_orderno(uint16_t orderno);
+    bool del_node_channel(uint16_t node, unsigned char channel);
+    bool node_has_entry(uint16_t node);
     OrderBuffer(void);
 
 };
