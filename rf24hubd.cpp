@@ -255,10 +255,12 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
          cmp_push[]="push";
 	char *wort1a, *wort2a, *wort3a, *wort4a;
 	char *wort1, *wort2, *wort3, *wort4;
+    Node::node_t *node_ptr;
+    Sensor::sensor_t* sensor_ptr;
     Order::order_t* order_ptr;
     OrderBuffer::orderbuffer_t* orderbuffer_ptr;
 
-	uint16_t node = 0;
+	uint16_t mynode = 0;
 	uint32_t akt_sensor = 0;
 	bool tn_input_ok=false;
 	char delimiter[] = " ";
@@ -318,14 +320,14 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 			sensor_ptr=sensor_ptr->next;
 		}		
 		// just add the sensor to the buffer
-		node = set_sensor( akt_sensor, strtof(wort4, &pEnd));
-        if ( node == 0 ) {
+		mynode = set_sensor( akt_sensor, strtof(wort4, &pEnd));
+        if ( mynode == 0 ) {
 			sprintf(debug,"Sensor (%s) not in cache ==> running initialisation!",wort3);
 			logmsg(VERBOSETELNET, debug);
 			init_system();
 		} else {
-			if ( strcmp(wort1,cmp_setlast) == 0 && ! is_HB_node(node) ) {
-				get_order(node);
+			if ( strcmp(wort1,cmp_setlast) == 0 && ! is_HB_node(mynode) ) {
+				get_order(mynode);
 				print_orderbuffer();
 			}
 		}
@@ -358,31 +360,50 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 		write(new_tn_in_socket , client_message , strlen(client_message));
         orderbuffer_ptr=orderbuffer.initial_ptr;
         while (orderbuffer_ptr) {
-            if ( orderbuffer_ptr->node > 0 ) {
-				sprintf(client_message,"orderbuffer\t Onr:\t%u,\tentry:\t%llu (%d sec.),\tnode:\t0%o,\tchannel:\t%u\tval:\t%f\n", 
+			sprintf(client_message,"orderbuffer\t Onr:\t%u,\tentry:\t%llu (%d sec.),\tnode:\t0%o,\tchannel:\t%u\tval:\t%f\n", 
 					orderbuffer_ptr->orderno, orderbuffer_ptr->entrytime, (int)(orderbuffer_ptr->entrytime - mymillis())/1000, orderbuffer_ptr->node, orderbuffer_ptr->channel, orderbuffer_ptr->value );
-				write(new_tn_in_socket , client_message , strlen(client_message));
-			}				
+			write(new_tn_in_socket , client_message , strlen(client_message));
             orderbuffer_ptr=orderbuffer_ptr->next;
 		}
 		sprintf(client_message,"----- Order: ------\n"); 
 		write(new_tn_in_socket , client_message , strlen(client_message));
         order_ptr=order.initial_ptr;
         while (order_ptr) {
-			if ( order_ptr->node > 0 ) {
-				sprintf(client_message,"order\t Onr:\t%u,\tentry:\t%llu (%d sec.),\tnode:\t0%o,\ttype:\t%u\tflags:\t%u\t(channel/Value)\t(%u/%f)\t(%u/%f)\t(%u/%f)\t(%u/%f)\n", 
+			sprintf(client_message,"order\t Onr:\t%u,\tentry:\t%llu (%d sec.),\tnode:\t0%o,\ttype:\t%u\tflags:\t%u\t(channel/Value)\t(%u/%f)\t(%u/%f)\t(%u/%f)\t(%u/%f)\n", 
 					order_ptr->orderno, order_ptr->entrytime, (int)(order_ptr->entrytime - mymillis())/1000 
                     ,order_ptr->node, order_ptr->type, order_ptr->flags
 					,order_ptr->channel1, order_ptr->value1
 					,order_ptr->channel2, order_ptr->value2
 					,order_ptr->channel3, order_ptr->value3
 					,order_ptr->channel4, order_ptr->value4);
-				write(new_tn_in_socket , client_message , strlen(client_message));
-			}				
+			write(new_tn_in_socket , client_message , strlen(client_message));
             order_ptr=order_ptr->next;
 		}
 	}	
-    // html order
+    // list sensor
+	// lists the current node- and sensorbuffer
+	if (( strcmp(wort1,cmp_list) == 0 ) && (strcmp(wort2,cmp_sensor) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
+		tn_input_ok = true;
+		sprintf(client_message,"----- Nodes: ------\n"); 
+		write(new_tn_in_socket , client_message , strlen(client_message));
+        node_ptr = node.initial_ptr;
+        while (node_ptr) {
+			sprintf(client_message,"Node 0%o,\tU-Batt:\t%f V,\t%s\n",
+                    node_ptr->node, node_ptr->u_batt, node_ptr->is_HB_node? "HeartBeat":"Normal");    
+			write(new_tn_in_socket , client_message , strlen(client_message));
+            node_ptr=node_ptr->next;
+		}
+		sprintf(client_message,"----- Sensoren: ------\n"); 
+		write(new_tn_in_socket , client_message , strlen(client_message));
+        sensor_ptr=sensor.initial_ptr;
+        while (sensor_ptr) {
+			sprintf(client_message,"Sensor: %u\tNode: 0%o,\tChannel:%u,\ttype: %c\tVal: %f\tTS:%llu\n", 
+                 sensor_ptr->sensor, sensor_ptr->node, sensor_ptr->channel, sensor_ptr->s_type, sensor_ptr->last_val, sensor_ptr->last_ts);   
+            write(new_tn_in_socket , client_message , strlen(client_message));
+            sensor_ptr=sensor_ptr->next;
+		}
+	}	
+	// html order
 	// lists the current order/orderbuffer for html page
 	if (( strcmp(wort1,cmp_html) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
 		tn_input_ok = true;
@@ -390,24 +411,20 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 		write(new_tn_in_socket , client_message , strlen(client_message));
         orderbuffer_ptr=orderbuffer.initial_ptr;
         while (orderbuffer_ptr) {
-            if ( orderbuffer_ptr->node > 0 ) {
-				sprintf(client_message,"<tr><td>%u</td><td>%llu (%d sec.)</td><td>0%o</td><td>%u</td><td>%f</td></tr>\n", 
+			sprintf(client_message,"<tr><td>%u</td><td>%llu (%d sec.)</td><td>0%o</td><td>%u</td><td>%f</td></tr>\n", 
 					orderbuffer_ptr->orderno, orderbuffer_ptr->entrytime, (int)(orderbuffer_ptr->entrytime - mymillis())/1000, orderbuffer_ptr->node, orderbuffer_ptr->channel, orderbuffer_ptr->value );
-				write(new_tn_in_socket , client_message , strlen(client_message));
-			}				
+			write(new_tn_in_socket , client_message , strlen(client_message));
             orderbuffer_ptr=orderbuffer_ptr->next;
 		}
 		sprintf(client_message,"</table><br><big>Order</big><br><table><tr><th>OrderNo</th><th>EntryTime</th><th>Node</th><th>Type</th><th>Flags</th><th>Channel</th><th>Value</th></tr>\n"); 
 		write(new_tn_in_socket , client_message , strlen(client_message));
         order_ptr=order.initial_ptr;
 		while (order_ptr) {
-			if ( order_ptr->node > 0 ) {
-				sprintf(client_message,"<tr><td>%u</td><td>%llu (%d sec.)</td><td>0%o</td><td>%u</td><td>%u</td><td>%u<br>%u<br>%u<br>%u</td><td>%f<br>%f<br>%f<br>%f</td></tr>\n", 
+			sprintf(client_message,"<tr><td>%u</td><td>%llu (%d sec.)</td><td>0%o</td><td>%u</td><td>%u</td><td>%u<br>%u<br>%u<br>%u</td><td>%f<br>%f<br>%f<br>%f</td></tr>\n", 
 					order_ptr->orderno, order_ptr->entrytime, (int)(order_ptr->entrytime - mymillis())/1000, order_ptr->node, order_ptr->type, order_ptr->flags
 					,order_ptr->channel1, order_ptr->channel2, order_ptr->channel3, order_ptr->channel4
 					,order_ptr->value1, order_ptr->value2, order_ptr->value3, order_ptr->value4);
-				write(new_tn_in_socket , client_message , strlen(client_message));
-			}				
+			write(new_tn_in_socket , client_message , strlen(client_message));
             order_ptr=order_ptr->next;
 		}
 		sprintf(client_message,"</table></center>\n"); 
@@ -428,6 +445,9 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"   'set' stores only; 'setlast' executes all settings for this node\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
+		sprintf(client_message,"push <node> <channel> <sensorvalue>\n");
+		write(new_tn_in_socket , client_message , strlen(client_message));
+		sprintf(client_message,"   Pushes a value direct to a channel inside a node\n");
 		sprintf(client_message,"set node <nodenumber> init\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"   Inits the Node <nodenumber>. Use <nodenumber> like '041'\n");
@@ -439,6 +459,9 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 		sprintf(client_message,"list order\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"   lists the content of the order queue\n");
+		sprintf(client_message,"list sensor\n");
+		write(new_tn_in_socket , client_message , strlen(client_message));
+		sprintf(client_message,"   lists the nodes and sensors in system\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"set verbose <verboselevel>\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
@@ -590,17 +613,9 @@ void print_orderbuffer(void) {
 	}	
 }
 
-bool is_valid_orderno(uint16_t myorderno) {
-	bool retval = false;
-    OrderBuffer::orderbuffer_t* buffer_ptr;
-    buffer_ptr=orderbuffer.initial_ptr;
-    while ( buffer_ptr ) {
-		if ( buffer_ptr->orderno == myorderno ) retval = true;
-	}
-	return retval;
-}
-
 void delete_orderno(uint16_t myorderno) {
+	sprintf(debug,"Deleting orderno %u", myorderno);
+	logmsg(VERBOSEORDER,debug);
     order.del_orderno(myorderno);
     orderbuffer.del_orderno(myorderno);
 }
@@ -610,18 +625,17 @@ bool get_order(uint16_t node) {
     bool retval = false;
 	orderno++;
 	order_waiting = true;
-//    Order::order_t* order_ptr;
     OrderBuffer::orderbuffer_t* orderbuffer_ptr;
     sprintf(debug, "get_order: node: 0%o orderno: %u", node, orderno);
+	logmsg(VERBOSEORDER,debug);
 //if we have an old order for this node => delete it!
     order.del_node(node);
-	logmsg(VERBOSEOTHER,debug);
     orderbuffer_ptr = orderbuffer.initial_ptr;
     Order::order_t* neworder_ptr = new Order::order_t;
     while (orderbuffer_ptr) {
         if (node == orderbuffer_ptr->node) {
 			sprintf(debug, "get_order: j is: %d ", j);
-			logmsg(VERBOSEOTHER,debug);
+			logmsg(VERBOSEORDER,debug);
 			if ( j < 4 ) orderbuffer_ptr->orderno = orderno;
 			if (j == 0) {
 				neworder_ptr->orderno = orderno;
@@ -787,8 +801,10 @@ void init_system(void) {
 		if ( row[2] != NULL ) newsensor_ptr->channel = strtoul(row[2], &pEnd,10); else newsensor_ptr->channel = 0;
 		if ( row[3] != NULL ) newsensor_ptr->last_val = strtof(row[3], &pEnd); else newsensor_ptr->last_val = 0;
 		if ( row[4] != NULL ) sprintf(newsensor_ptr->fhem_dev,"%s",row[4]); else sprintf(newsensor_ptr->fhem_dev,"not_set");
-		if (strcmp(row[5],cmp_s) == 0) newsensor_ptr->s_type = 's';
-		if (strcmp(row[5],cmp_a) == 0) newsensor_ptr->s_type = 'a';
+        if ( row[5] != NULL ) {
+            if (strcmp(row[5],cmp_s) == 0) newsensor_ptr->s_type = 's';
+            if (strcmp(row[5],cmp_a) == 0) newsensor_ptr->s_type = 'a';
+        }
         newsensor_ptr->next=NULL;
         sensor.new_entry(newsensor_ptr);
 	}
@@ -803,49 +819,46 @@ void init_system(void) {
         Node::node_t* newnode_ptr = new Node::node_t;
 		if ( row[0] != NULL ) newnode_ptr->node = getnodeadr(row[0]);
 		if ( row[1] != NULL ) newnode_ptr->u_batt = strtof(row[1], &pEnd); else newnode_ptr->u_batt = 0;
-		if ((strcmp(row[2],cmp_y) == 0) || (strcmp(row[2],cmp_j) == 0)) newnode_ptr->is_HB_node = true; else newnode_ptr->is_HB_node = false;
+        if ( row[5] != NULL ) {
+            if ((strcmp(row[2],cmp_y) == 0) || (strcmp(row[2],cmp_j) == 0)) newnode_ptr->is_HB_node = true; 
+            else newnode_ptr->is_HB_node = false;
+        } else newnode_ptr->is_HB_node = false;
         newnode_ptr->next=NULL;
 		node.new_entry(newnode_ptr);
 	}
-	mysql_free_result(result);
-    
+	mysql_free_result(result);    
 	print_sensor();
 }
 
 void store_sensor_value(uint16_t node, uint8_t channel, float value, bool d1, bool d2) {
-	if ( tn_active ) { 
-		prepare_tn_cmd(node, channel, value); 
-	}
-	sprintf(sql_stmt,"insert into sensordata_im (sensor_ID, utime, value) select sensor_id, UNIX_TIMESTAMP(), %f from sensor_im where node_id = '0%o' and channel = %u ", value, node, channel);
-	do_sql(sql_stmt);
-	sprintf(sql_stmt,"update sensor_im set value= %f, utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where node_id = '0%o' and channel = %u ", value, d1, d2, node, channel);
-	do_sql(sql_stmt);
-    Sensor::sensor_t *sensor_ptr;
-    sensor_ptr=sensor.initial_ptr;
-    while (sensor_ptr) {
-		if ( sensor_ptr->node == node && sensor_ptr->channel == channel ) {
-			sensor_ptr->last_val = value;
-		}
-		sensor_ptr=sensor_ptr->next;
-	}
+    if ( sensor.update_last_val(node, channel, value, mymillis() )) {    
+        if ( tn_active ) { 
+            prepare_tn_cmd(node, channel, value); 
+        }
+        sprintf(sql_stmt,"insert into sensordata_im (sensor_ID, utime, value) select sensor_id, UNIX_TIMESTAMP(), %f from sensor_im where node_id = '0%o' and channel = %u ", value, node, channel);
+        do_sql(sql_stmt);
+        sprintf(sql_stmt,"update sensor_im set value= %f, utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where node_id = '0%o' and channel = %u ", value, d1, d2, node, channel);
+        do_sql(sql_stmt);
+    }
 }
 
 void process_sensor(uint16_t node, uint8_t channel, float value, bool d1, bool d2) {
 	switch (channel) {
 		case 1 ... 99: {
 		// Sensor or Actor
-			store_sensor_value(node, channel, value, d1, d2);
 			sprintf(debug, DEBUGSTR "Value of  %u on Node: %o is %f ", channel, node, value);
 			logmsg(VERBOSECONFIG, debug);       
+			store_sensor_value(node, channel, value, d1, d2);
 		}
 		break; 
 		case 101: {
 		// battery voltage
-			store_sensor_value(node, channel, value, d1, d2);
 			sprintf(debug, DEBUGSTR "Voltage of Node: %o is %f ", node, value);
 			logmsg(VERBOSECONFIG, debug);        
 			sprintf(sql_stmt,"update node set u_batt = %f, signal_quality = '%d%d', last_contact = unix_timestamp() where node_id = '0%o'", value, d1, d2, node);
-			do_sql(sql_stmt);
+// TODO
+//			do_sql(sql_stmt);
+			store_sensor_value(node, channel, value, d1, d2);
 		}
 		break; 
 		case 111: { // Init Sleeptime 1
@@ -890,10 +903,6 @@ void process_sensor(uint16_t node, uint8_t channel, float value, bool d1, bool d
 		}
 	}	
 }	
-
-void send_HB_orders(uint16_t node) {
-    get_order(node);
-}
 
 /*******************************************************************************************
 *
@@ -1404,9 +1413,14 @@ int main(int argc, char* argv[]) {
 					if ( payload.channel2 > 0 ) process_sensor(rxheader.from_node, payload.channel2, payload.value2, rf24_carrier, rf24_rpd);
 					if ( payload.channel3 > 0 ) process_sensor(rxheader.from_node, payload.channel3, payload.value3, rf24_carrier, rf24_rpd);
 					if ( payload.channel4 > 0 ) process_sensor(rxheader.from_node, payload.channel4, payload.value4, rf24_carrier, rf24_rpd);
+                    if (payload.orderno > 0) delete_orderno(payload.orderno);
                     if ( orderbuffer.node_has_entry(rxheader.from_node) ) {
-                        send_HB_orders(rxheader.from_node);                    
+                        sprintf(debug, DEBUGSTR "Entries for Heartbeat Node found, sending them");
+                        logmsg(VERBOSERF24, debug);
+                        get_order(rxheader.from_node);                    
                     } else {
+                        sprintf(debug, DEBUGSTR "No Entries for Heartbeat Node found, sending Endmessage");
+                        logmsg(VERBOSERF24, debug);
                         txheader.from_node = 0;
                         txheader.to_node  = rxheader.from_node;
                         txheader.type = 52;
@@ -1422,18 +1436,20 @@ int main(int argc, char* argv[]) {
                         payload.value4=0;
                         network.write(txheader,&payload,sizeof(payload));
                     }
-// TODO   was schicke ich dem HB Node zurück????                 
                 break;    
                 case 119:
 					init_node(rxheader.from_node);
                 break;
                 default:	
-				if (is_valid_orderno(payload.orderno)) {
+				if (orderbuffer.find_orderno(payload.orderno)) {
 					if ( payload.channel1 > 0 ) process_sensor(rxheader.from_node, payload.channel1, payload.value1, rf24_carrier, rf24_rpd);
 					if ( payload.channel2 > 0 ) process_sensor(rxheader.from_node, payload.channel2, payload.value2, rf24_carrier, rf24_rpd);
 					if ( payload.channel3 > 0 ) process_sensor(rxheader.from_node, payload.channel3, payload.value3, rf24_carrier, rf24_rpd);
 					if ( payload.channel4 > 0 ) process_sensor(rxheader.from_node, payload.channel4, payload.value4, rf24_carrier, rf24_rpd);
+                    // Order compleate => delete it!
 					delete_orderno(payload.orderno);
+                    // Check if we still have orders for this node
+                    get_order(rxheader.from_node);
 				}
 			}
 			
@@ -1449,7 +1465,7 @@ int main(int argc, char* argv[]) {
 				if ((order_ptr->orderno > 0) && (order_ptr->entrytime + KEEPINBUFFERTIME < akt_time) ) {
 					if ( verboselevel > 4 ) {
 						sprintf(debug, "Deleted from order OrderNo: %u for Node: 0%o ", order_ptr->orderno, order_ptr->node);
-						logmsg(VERBOSEOTHER, debug);
+						logmsg(VERBOSEORDER, debug);
 					}
 					order.del_entry(order_ptr);		
 				}					
@@ -1500,7 +1516,7 @@ int main(int argc, char* argv[]) {
 						} else {
 							if ( verboselevel > 4 ) {
 								sprintf(debug,"Node 0%o blocked!!!!!",order_ptr->node);
-								logmsg(VERBOSEOTHER, debug);
+								logmsg(VERBOSEORDER, debug);
 							}
 						}
 					} else {

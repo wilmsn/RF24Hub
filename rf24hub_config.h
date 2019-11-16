@@ -42,10 +42,11 @@ rf24hub_config.h ==> all global definitions go here
 // Verboselevel
 #define VERBOSECRITICAL 1
 #define VERBOSESTARTUP 2
-#define VERBOSECONFIG 5
-#define VERBOSERF24 6
-#define VERBOSETELNET 7
-#define VERBOSESQL 8
+#define VERBOSECONFIG 3
+#define VERBOSEORDER 5
+#define VERBOSETELNET 6
+#define VERBOSESQL 7
+#define VERBOSERF24 8
 #define VERBOSEOTHER 9
 #define TELNETBUFFERSIZE 800
 
