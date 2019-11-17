@@ -29,6 +29,7 @@ struct orderbuffer_t {
     bool del_orderno(uint16_t);
     bool del_node_channel(uint16_t, uint8_t);
     bool node_has_entry(uint16_t);
+    void debug_print_buffer(void);
     OrderBuffer(void);
 
 };

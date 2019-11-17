@@ -5,6 +5,8 @@
 #ifndef _ORDER_H_   
 #define _ORDER_H_
 #include <stdint.h>
+#include "rf24hub_config.h"
+
 
 class Order {
 
@@ -36,6 +38,8 @@ struct order_t {
     bool del_orderno(uint16_t);
     bool del_entry(order_t*);
     bool del_node(uint16_t);
+    bool find_orderno(uint16_t orderno);
+    void debug_print_buffer(void);
     Order(void);
 
 };

@@ -6,8 +6,8 @@ Order::Order(void) {
     initial_ptr = NULL;
 }
 
-void Order::new_entry(Order::order_t* new_ptr) {
-    Order::order_t *search_ptr;
+void Order::new_entry(order_t* new_ptr) {
+    order_t *search_ptr;
     if (initial_ptr) {
         search_ptr = initial_ptr;
         while (search_ptr->next) {
@@ -19,66 +19,79 @@ void Order::new_entry(Order::order_t* new_ptr) {
     }
 }
 
-bool Order::del_orderno(uint16_t orderno) {
+bool Order::del_entry(order_t* my_ptr) {
     bool retval = false;
-    Order::order_t *akt_ptr, *last_ptr;
-    akt_ptr = Order::initial_ptr;
-    while (akt_ptr) {
-        if (akt_ptr->orderno != orderno ) {
-            last_ptr = akt_ptr;
-            akt_ptr=akt_ptr->next;
-        } else {
-            if (akt_ptr == initial_ptr) {
-                initial_ptr=akt_ptr->next;
+    order_t *search_ptr, *tmp1_ptr;
+    search_ptr = initial_ptr;
+    tmp1_ptr = initial_ptr;
+    while (search_ptr) {
+        if (search_ptr == my_ptr ) {
+            if (search_ptr == initial_ptr) {
+                if (initial_ptr->next) { 
+                    tmp1_ptr=initial_ptr->next;
+                    delete initial_ptr;
+                    initial_ptr=tmp1_ptr;
+                } else {
+                    delete initial_ptr;
+                    initial_ptr = NULL;
+                }
             } else            {
-                last_ptr->next=akt_ptr->next;
+                tmp1_ptr->next=search_ptr->next;
+                delete search_ptr;
             }
-            delete akt_ptr;
+            search_ptr = NULL;
             retval = true;
+        } else {
+            tmp1_ptr = search_ptr;
+            search_ptr=search_ptr->next;
         }
     }
     return retval;
 }
 
-bool Order::del_entry(Order::order_t* my_ptr) {
-    bool retval = false;
-    Order::order_t *akt_ptr, *last_ptr;
-    akt_ptr = Order::initial_ptr;
-    while (akt_ptr) {
-        if (akt_ptr == my_ptr ) {
-            if (akt_ptr == initial_ptr) {
-                if (initial_ptr->next) { 
-                    initial_ptr=akt_ptr->next;
-                } else {
-                    initial_ptr = NULL;
-                }
-            } else            {
-                last_ptr->next=akt_ptr->next;
-            }
-            delete akt_ptr;
-            akt_ptr = NULL;
-            retval = true;
-        } else {
-            last_ptr = akt_ptr;
-            akt_ptr=akt_ptr->next;
+bool Order::del_orderno(uint16_t orderno) {
+     int retval = false;
+    order_t *search_ptr;
+    search_ptr = initial_ptr;
+    while (search_ptr) {
+        if (search_ptr->orderno == orderno ) {
+            if (del_entry(search_ptr)) retval = true;
         }
+        search_ptr=search_ptr->next;
     }
     return retval;
 }
 
 bool Order::del_node(uint16_t node) {
     bool retval = false;
-    Order::order_t *akt_ptr, *last_ptr;
-    akt_ptr = Order::initial_ptr;
-    while (akt_ptr) {
-        if (akt_ptr->node == node ) {
-            retval = Order::del_entry(akt_ptr);
-        } else {
-            last_ptr = akt_ptr;
+    order_t *search_ptr;
+    search_ptr = Order::initial_ptr;
+    while (search_ptr) {
+        if (search_ptr->node == node ) {
+            retval = Order::del_entry(search_ptr);
         }
-        akt_ptr=akt_ptr->next;
+        search_ptr=search_ptr->next;
     }
     return retval;
 }
     
+bool Order::find_orderno(uint16_t orderno) {
+    int retval = false;
+    order_t *search_ptr;
+    search_ptr = initial_ptr;
+    while (search_ptr) {
+        if (search_ptr->orderno == orderno ) {
+            retval = true;
+        }
+        search_ptr=search_ptr->next;
+    }
+    return retval;
+}
     
+void Order::debug_print_buffer(void) {
+    order_t *search_ptr;
+    search_ptr = initial_ptr;
+    while (search_ptr) {
+        search_ptr=search_ptr->next;
+    }
+}

@@ -183,8 +183,6 @@ void fill_orderbuffer( uint16_t node, unsigned char channel, float value);
 
 bool is_valid_orderno(uint16_t myorderno);
 
-void delete_orderno(uint16_t myorderno);
-
 bool get_order(uint16_t node);
 
 uint16_t set_sensor(uint32_t mysensor, float value);

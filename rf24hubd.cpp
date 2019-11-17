@@ -613,11 +613,11 @@ void print_orderbuffer(void) {
 	}	
 }
 
-void delete_orderno(uint16_t myorderno) {
-	sprintf(debug,"Deleting orderno %u", myorderno);
-	logmsg(VERBOSEORDER,debug);
-    order.del_orderno(myorderno);
-    orderbuffer.del_orderno(myorderno);
+bool is_valid_orderno(uint16_t myorderno) {
+    bool retval = false;
+    if (orderbuffer.find_orderno(myorderno)) retval = true;
+    if (order.find_orderno(myorderno)) retval = true;
+    return retval;
 }
 
 bool get_order(uint16_t node) {
@@ -902,6 +902,7 @@ void process_sensor(uint16_t node, uint8_t channel, float value, bool d1, bool d
 		// nothing right now
 		}
 	}	
+	orderbuffer.del_node_channel(node, channel);
 }	
 
 /*******************************************************************************************
@@ -1413,14 +1414,14 @@ int main(int argc, char* argv[]) {
 					if ( payload.channel2 > 0 ) process_sensor(rxheader.from_node, payload.channel2, payload.value2, rf24_carrier, rf24_rpd);
 					if ( payload.channel3 > 0 ) process_sensor(rxheader.from_node, payload.channel3, payload.value3, rf24_carrier, rf24_rpd);
 					if ( payload.channel4 > 0 ) process_sensor(rxheader.from_node, payload.channel4, payload.value4, rf24_carrier, rf24_rpd);
-                    if (payload.orderno > 0) delete_orderno(payload.orderno);
+                    order.del_orderno(payload.orderno);
                     if ( orderbuffer.node_has_entry(rxheader.from_node) ) {
                         sprintf(debug, DEBUGSTR "Entries for Heartbeat Node found, sending them");
-                        logmsg(VERBOSERF24, debug);
+                        logmsg(VERBOSEORDER, debug);
                         get_order(rxheader.from_node);                    
                     } else {
                         sprintf(debug, DEBUGSTR "No Entries for Heartbeat Node found, sending Endmessage");
-                        logmsg(VERBOSERF24, debug);
+                        logmsg(VERBOSEORDER, debug);
                         txheader.from_node = 0;
                         txheader.to_node  = rxheader.from_node;
                         txheader.type = 52;
@@ -1441,13 +1442,13 @@ int main(int argc, char* argv[]) {
 					init_node(rxheader.from_node);
                 break;
                 default:	
-				if (orderbuffer.find_orderno(payload.orderno)) {
+				if (is_valid_orderno(payload.orderno)) {
 					if ( payload.channel1 > 0 ) process_sensor(rxheader.from_node, payload.channel1, payload.value1, rf24_carrier, rf24_rpd);
 					if ( payload.channel2 > 0 ) process_sensor(rxheader.from_node, payload.channel2, payload.value2, rf24_carrier, rf24_rpd);
 					if ( payload.channel3 > 0 ) process_sensor(rxheader.from_node, payload.channel3, payload.value3, rf24_carrier, rf24_rpd);
 					if ( payload.channel4 > 0 ) process_sensor(rxheader.from_node, payload.channel4, payload.value4, rf24_carrier, rf24_rpd);
                     // Order compleate => delete it!
-					delete_orderno(payload.orderno);
+					order.del_orderno(payload.orderno);
                     // Check if we still have orders for this node
                     get_order(rxheader.from_node);
 				}
