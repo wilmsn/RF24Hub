@@ -3,6 +3,42 @@ rf24hub.cpp
 A unix-deamon to handle and store the information from/to all connected sensornodes. 
 All information is stored in a MariaDB database.
 rf24hub is the successor of sensorhub.
+
+
+Ablaufbeschreibungen:
+
+Grundsetzliches:
+Da Sensoren und Aktoren gleich behandelt werden wird ein Sensor oder Aktor immer gesetzt und immer als Sensor bezeichnet.
+Der zurückgelieferte Wert ist beim Aktor der gesetzte Wert, 
+beim Sensor kann ein beliebiger Wert gesetzt werden, zurückgeliefert wird der Messwert des Sensors.
+
+1) Aetzen eines Aktors
+Quelle: Telnet request in der Form: "set<last> sensor <sensor> <wert>"
+Verarbeitung:
+UP: process_tn_in       => Wertet die telnet Eingabe aus.
+        Übersetzt den übergebenen "sensor" in die ID des Sensors. 
+        Übergibt die Sensor-ID und den Wert an die UP: "set_sensor" Rückgabewert: Node-ID
+        Node-ID <> 0:
+            nein:  Initialisierung des Systems mittels UP "init_system"
+            ja:    
+                Wenn "setlast" aufgerufen wurde:
+                    UP: get_order
+                    UP: print_order_buffer
+UP: get_order           =>  Überträgt Elemente aus dem ARRAY "order_buffer" in das ARRAY "order"
+        Arbeitsschritte:
+        1) Alte Orders für den aktuellen Node löschen
+        2) Die ersten 4 Orders für den aktuellen Node in das ARRAY "order" als 1 DS einfügen.
+
+
+UP: set_sensor          =>  Zur Sensor-ID werden Node und Channel ermittelt
+                            und an die UP "fill_order_buffer" übergeben.
+                        
+UP: fill_order_buffer   =>  Füllt das ARRAY "order_buffer" mit dem übergebenen Sensor.
+                            Dabei wird die "entytime" auf den aktuellen Unix-Zeitstempel und die "orderno" auf "0" gesetzt.
+
+
+
+
 */
 
 #ifndef _RF24HUBD_H_   /* Include guard */
@@ -44,6 +80,7 @@ rf24hub is the successor of sensorhub.
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <thread>
+#include "log.h"
 #include "node.h"
 #include "sensor.h"
 #include "order.h"
@@ -53,10 +90,8 @@ rf24hub is the successor of sensorhub.
 
 using namespace std;
 
-enum logmode_t { systemlog, interactive, logfile };
-logmode_t logmode;
-int verboselevel = 2;
 int sockfd;
+int verboselevel = 2;
 bool start_daemon=false, tn_host_set = false, tn_port_set = false, tn_active = false, in_port_set = false, order_waiting = false;
 char logfilename[300];
 char tn_hostname[20], tn_portno[7];
@@ -81,6 +116,7 @@ Order           order;
 OrderBuffer     orderbuffer;
 Sensor          sensor;
 Node            node;
+Logger          logger;
 
 uint16_t orderno, init_orderno;
 
@@ -148,9 +184,7 @@ char * trim (char * s);
 *
 ********************************************************************************************/
 
-void exec_tn_cmd(const char *tn_cmd);
-
-void prepare_tn_cmd(uint16_t node, uint8_t sensor, float value);
+void do_tn_cmd(uint16_t node, uint8_t sensor, float value);
 
 void process_tn_in(int new_socket, char* buffer, char* client_message);
 
@@ -216,10 +250,6 @@ void process_sensor(uint16_t node, uint8_t sensor, float value, bool d1, bool d2
 uint64_t mymillis(void);
 
 void sighandler(int signal);
-
-void logmsg(int mesgloglevel, char *mymsg);
-
-
 
 int main(int argc, char* argv[]);
 

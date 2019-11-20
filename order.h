@@ -5,13 +5,18 @@
 #ifndef _ORDER_H_   
 #define _ORDER_H_
 #include <stdint.h>
+#include <cstring>
+#include <unistd.h>
+#include "log.h"
 #include "rf24hub_config.h"
 
 
 class Order {
 
     
-//private:
+private:
+    Logger* logger;
+    
 public:
     
 // Structure to handle the orderqueue
@@ -34,12 +39,25 @@ struct order_t {
 };
 
     order_t *initial_ptr;
+    bool has_order;
     void new_entry(order_t*);
     bool del_orderno(uint16_t);
     bool del_entry(order_t*);
     bool del_node(uint16_t);
     bool find_orderno(uint16_t orderno);
+    uint16_t del_old_entry(uint64_t entrytime);
     void debug_print_buffer(void);
+    void begin(Logger* _logger);
+    void add_order(uint16_t orderno, uint16_t node, uint8_t type, unsigned int flags,
+                   uint8_t channel1, float value1, uint8_t channel2, float value2, 
+                   uint8_t channel3, float value3, uint8_t channel4, float value4, 
+                   uint64_t entrytime);
+    bool get_order_for_transmission(uint16_t* orderno, uint16_t* node, unsigned char* type, uint16_t* flags,
+                                    uint8_t* channel1, float* value1, uint8_t* channel2, float* value2, 
+                                    uint8_t* channel3, float* value3, uint8_t* channel4, float* value4, 
+                                    uint64_t systime); 
+    void print_buffer(int new_tn_in_socket);
+    void html_buffer(int new_tn_in_socket);
     Order(void);
 
 };
