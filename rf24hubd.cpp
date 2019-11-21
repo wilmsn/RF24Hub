@@ -363,6 +363,7 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 		sprintf(client_message,"push <node> <channel> <sensorvalue>\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"   Pushes a value direct to a channel inside a node\n");
+		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"set node <nodenumber> init\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"   Inits the Node <nodenumber>. Use <nodenumber> like '041'\n");
@@ -610,7 +611,7 @@ void init_system(void) {
 }
 
 void store_sensor_value(uint16_t node, uint8_t channel, float value, bool d1, bool d2) {
-//    if ( sensor.update_last_val(node, channel, value, mymillis() )) {    
+    if ( sensor.update_last_val(node, channel, value, mymillis() )) {    
         if ( tn_active ) { 
             do_tn_cmd(node, channel, value); 
         }
@@ -618,7 +619,7 @@ void store_sensor_value(uint16_t node, uint8_t channel, float value, bool d1, bo
         do_sql(sql_stmt);
         sprintf(sql_stmt,"update sensor_im set value= %f, utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where node_id = '0%o' and channel = %u ", value, d1, d2, node, channel);
         do_sql(sql_stmt);
-//    }
+    }
 }
 
 void process_sensor(uint16_t node, uint8_t channel, float value, bool d1, bool d2) {
