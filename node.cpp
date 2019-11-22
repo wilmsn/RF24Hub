@@ -60,7 +60,7 @@ bool Node::is_HB_node(uint16_t mynode) {
 	return retval;
 }
 
-void Node::print_buffer(int new_tn_in_socket) {
+void Node::print_buffer2tn(int new_tn_in_socket) {
     char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
     node_t *search_ptr;
     search_ptr = initial_ptr;
@@ -73,6 +73,19 @@ void Node::print_buffer(int new_tn_in_socket) {
         search_ptr=search_ptr->next;
 	}
     free(client_message);
+}
+
+void Node::print_buffer2log(void) {
+    node_t *search_ptr;
+    search_ptr = initial_ptr;
+    sprintf(logger->debug," ------ Nodes: ------"); 
+    logger->logmsg(VERBOSECONFIG, logger->debug);
+    while (search_ptr) {
+        sprintf(logger->debug,"Node 0%o,\tU-Batt:\t%f V,\t%s",
+                  search_ptr->node, search_ptr->u_batt, search_ptr->is_HB_node? "HeartBeat":"Normal");    
+        logger->logmsg(VERBOSECONFIG, logger->debug);
+        search_ptr=search_ptr->next;
+	}
 }
 
 void Node::begin(Logger* _logger) {

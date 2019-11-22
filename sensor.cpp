@@ -5,7 +5,8 @@ Sensor::Sensor(void) {
 }
 
 void Sensor::new_entry(Sensor::sensor_t* new_ptr) {
-    Sensor::sensor_t *search_ptr;
+    sensor_t *search_ptr;
+    new_ptr->next = NULL;
     if (initial_ptr) {
         search_ptr = initial_ptr;
         while (search_ptr->next) {
@@ -17,6 +18,19 @@ void Sensor::new_entry(Sensor::sensor_t* new_ptr) {
     }
 }
 
+void Sensor::add_sensor(uint32_t sensor, uint16_t node, uint8_t	channel, char s_type, char* fhem_dev, 
+                        uint64_t last_ts, float last_val) {
+    sensor_t* new_ptr = new Sensor::sensor_t;
+    new_ptr->sensor = sensor;
+    new_ptr->node = node;
+    new_ptr->channel = channel;
+    new_ptr->s_type = s_type;
+    new_ptr->last_ts = last_ts;
+    new_ptr->last_val = last_val;
+    sprintf(new_ptr->fhem_dev,"%s", fhem_dev);
+    new_entry(new_ptr);
+}
+   
 bool Sensor::update_last_val(uint16_t node, uint8_t channel, float value, uint64_t mymillis) {
     bool retval = false;
     Sensor::sensor_t *search_ptr;
@@ -55,19 +69,45 @@ void Sensor::find_node_chanel(uint16_t* node_ptr, uint8_t* channel_ptr,char* fhe
     }
 }
 
-void Sensor::print_buffer(int new_tn_in_socket) {
+void Sensor::find_fhem_dev(uint16_t* node_ptr, uint8_t* channel_ptr,char* fhem_dev) {
+    Sensor::sensor_t *search_ptr;
+    search_ptr=initial_ptr;
+    while (search_ptr) {
+        if ( search_ptr->node == *node_ptr && search_ptr->channel == *channel_ptr ) {
+            sprintf(logger->debug,"sensor.find_fhem_dev: %s", search_ptr->fhem_dev); 
+            logger->logmsg(VERBOSEORDER, logger->debug);
+            sprintf(fhem_dev,"%s",search_ptr->fhem_dev);
+        }
+        search_ptr=search_ptr->next;
+    }
+}
+
+void Sensor::print_buffer2tn(int new_tn_in_socket) {
     char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
     sensor_t *search_ptr;
     search_ptr = initial_ptr;
     sprintf(client_message," ------ Sensor: ------\n"); 
     write(new_tn_in_socket , client_message , strlen(client_message));
     while (search_ptr) {
-		sprintf(client_message,"Sensor: %u\tNode: 0%o,\tChannel:%u,\ttype: %c\tVal: %f\tTS:%llu\n", 
-                 search_ptr->sensor, search_ptr->node, search_ptr->channel, search_ptr->s_type, search_ptr->last_val, search_ptr->last_ts);   
+		sprintf(client_message,"Sensor: %u\tNode: 0%o,\tChannel:%u,\tFHEM: %s,\ttype: %c\tVal: %f\tTS:%llu\n", 
+                 search_ptr->sensor, search_ptr->node, search_ptr->channel, search_ptr->fhem_dev, search_ptr->s_type, search_ptr->last_val, search_ptr->last_ts);   
 		write(new_tn_in_socket , client_message , strlen(client_message));
         search_ptr=search_ptr->next;
 	}
     free(client_message);
+}
+
+void Sensor::print_buffer2log(void) {
+    sensor_t *search_ptr;
+    search_ptr = initial_ptr;
+    sprintf(logger->debug," ------ Sensor: ------"); 
+    logger->logmsg(VERBOSECONFIG, logger->debug);
+    while (search_ptr) {
+		sprintf(logger->debug,"Sensor: %u\tNode: 0%o,\tChannel:%u,\tFHEM: %s,\ttype: %c\tVal: %f\tTS:%llu", 
+                 search_ptr->sensor, search_ptr->node, search_ptr->channel, search_ptr->fhem_dev, search_ptr->s_type, search_ptr->last_val, search_ptr->last_ts);   
+        logger->logmsg(VERBOSECONFIG, logger->debug);
+        search_ptr=search_ptr->next;
+	}
 }
 
 void Sensor::begin(Logger* _logger) {

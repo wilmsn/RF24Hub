@@ -1,6 +1,4 @@
 #include "orderbuffer.h"
-#include <stdio.h> 
-#include <iostream>
 
 OrderBuffer::OrderBuffer(void) {
     initial_ptr = NULL;
@@ -62,7 +60,7 @@ bool OrderBuffer::del_entry(OrderBuffer::orderbuffer_t* my_ptr) {
     return retval;
 }
 
-bool OrderBuffer::find_orderno(uint16_t orderno) {
+bool OrderBuffer::is_orderno(uint16_t orderno) {
     int retval = false;
     orderbuffer_t *search_ptr;
     search_ptr = initial_ptr;
@@ -172,6 +170,28 @@ void OrderBuffer::add_orderbuffer(uint32_t orderno, uint64_t millis, uint16_t no
     new_ptr->channel = channel;
     new_ptr->value = value;
     new_entry(new_ptr);
+}
+
+void *OrderBuffer::find_order4node(uint16_t node, void* last_ptr, uint8_t* channel, float* value) {
+    orderbuffer_t *search_ptr;
+    void* retval = NULL;
+    bool rec_found = false;
+    if (last_ptr) {
+        search_ptr = (orderbuffer_t*)last_ptr;
+        search_ptr = search_ptr->next;
+    } else {
+        search_ptr = initial_ptr;
+    }
+    while ( ! rec_found && search_ptr ) {
+        if ( search_ptr->node == node ) {
+            *channel = search_ptr->channel;
+            *value = search_ptr->value;
+            retval = (void*)search_ptr;
+            rec_found = true;
+        }
+        search_ptr=search_ptr->next;
+    }
+    return retval;
 }
 
 void OrderBuffer::debug_print_buffer(void) {

@@ -1,6 +1,4 @@
 #include "order.h"
-#include <stdio.h> 
-#include <iostream>
 
 Order::Order(void) {
     initial_ptr = NULL;
@@ -61,8 +59,8 @@ bool Order::del_entry(order_t* my_ptr) {
             search_ptr=search_ptr->next;
         }
     }
+    if ( ! initial_ptr) has_order = false;
     return retval;
-    has_order = (initial_ptr);
 }
 
 bool Order::del_orderno(uint16_t orderno) {
@@ -115,7 +113,7 @@ bool Order::del_node(uint16_t node) {
     return retval;
 }
     
-bool Order::find_orderno(uint16_t orderno) {
+bool Order::is_orderno(uint16_t orderno) {
     int retval = false;
     order_t *search_ptr;
     search_ptr = initial_ptr;
@@ -128,6 +126,19 @@ bool Order::find_orderno(uint16_t orderno) {
     return retval;
 }
     
+Order::order_t* Order::find_orderno(uint16_t orderno) {
+    order_t* retval = NULL;
+    order_t *search_ptr;
+    search_ptr = initial_ptr;
+    while (search_ptr) {
+        if (search_ptr->orderno == orderno ) {
+            retval = search_ptr;
+        }
+        search_ptr=search_ptr->next;
+    }
+    return retval;
+}
+
 uint16_t Order::del_old_entry(uint64_t deltime) {
     uint16_t retval = 0;
     order_t *search_ptr, *del_ptr;
@@ -145,36 +156,62 @@ uint16_t Order::del_old_entry(uint64_t deltime) {
     return retval;
 }
 
-void Order::add_order(uint16_t orderno, uint16_t node, uint8_t type, unsigned int flags,
-                      uint8_t channel1, float value1, uint8_t channel2, float value2, 
-                      uint8_t channel3, float value3, uint8_t channel4, float value4, 
-                      uint64_t entrytime) {
+void Order::add_order(uint16_t orderno, uint16_t node, uint8_t type, uint8_t channel1, float value1, uint64_t entrytime) {
     order_t *new_ptr = new order_t;
     new_ptr->orderno = orderno;
     new_ptr->node = node;
     new_ptr->type = type;
-    new_ptr->flags = flags;
+    new_ptr->flags = 0x00;
     new_ptr->channel1 = channel1;
     new_ptr->value1 = value1;
-    new_ptr->channel2 = channel2;
-    new_ptr->value2 = value2;
-    new_ptr->channel3 = channel3;
-    new_ptr->value3 = value3;
-    new_ptr->channel4 = channel4;
-    new_ptr->value4 = value4;
+    new_ptr->channel2 = 0;
+    new_ptr->value2 = 0;
+    new_ptr->channel3 = 0;
+    new_ptr->value3 = 0;
+    new_ptr->channel4 = 0;
+    new_ptr->value4 = 0;
     new_ptr->entrytime = entrytime;
     new_entry(new_ptr);
+}
+
+void Order::modify_order(uint16_t orderno, uint8_t pos, uint8_t channel, float value) {
+    order_t* my_ptr=NULL;
+    my_ptr=find_orderno(orderno);
+    if (my_ptr) {
+        if ( 2 == pos ) {
+            my_ptr->channel2 = channel;
+            my_ptr->value2 = value;
+        }
+        if ( 3 == pos ) {
+            my_ptr->channel3 = channel;
+            my_ptr->value3 = value;
+        }
+        if ( 4 == pos ) {
+            my_ptr->channel4 = channel;
+            my_ptr->value4 = value;
+        }
+    }
+}
+
+void Order::modify_orderflags(uint16_t orderno, uint16_t flags) {
+    order_t* my_ptr=NULL;
+    my_ptr=find_orderno(orderno);
+    if (my_ptr) {
+        my_ptr->flags = flags;
+    }
 }
 
 bool Order::get_order_for_transmission(uint16_t* orderno, uint16_t* node, unsigned char* type, uint16_t* flags,
                                         uint8_t* channel1, float* value1, uint8_t* channel2, float* value2, 
                                         uint8_t* channel3, float* value3, uint8_t* channel4, float* value4, 
-                                        uint64_t systime) {
+                                        uint64_t mytime) {
     bool retval = false;
+    order_t *delme_ptr = NULL;
     order_t *search_ptr;
     search_ptr = initial_ptr;
     while (search_ptr) {
-        if (search_ptr->entrytime < systime - SENDINTERVAL ) {
+        if ( ((!search_ptr->HB_order) && search_ptr->last_send + (uint64_t)SENDINTERVAL < mytime) ||
+             ((!search_ptr->HB_order) && search_ptr->last_send + (uint64_t)SENDINTERVAL < mytime) ) {
             *orderno = search_ptr->orderno;
             *node = search_ptr->node;
             *type = search_ptr->type;
@@ -187,10 +224,20 @@ bool Order::get_order_for_transmission(uint16_t* orderno, uint16_t* node, unsign
             *value3 = search_ptr->value3;
             *channel4 = search_ptr->channel4;
             *value4 = search_ptr->value4;
-            search_ptr->entrytime = systime;
+            search_ptr->last_send = mytime;
+            if ( search_ptr->HB_order ) {
+                if ( search_ptr->entrytime + (uint64_t)HB_DELETEINTERVAL < search_ptr->last_send ) delme_ptr = search_ptr;
+            } else {
+                if ( search_ptr->entrytime + (uint64_t)DELETEINTERVAL < search_ptr->last_send ) delme_ptr = search_ptr;
+            }                
             retval = true;
         }
         search_ptr = search_ptr->next;
+    }
+    if (delme_ptr) {
+        sprintf(logger->debug,"Order: Timeout - lösche <%p> OrderNo: %u (Node:0%o %s), %llu < %llu - %llu / (HB: %llu) (SI: %llu) ", delme_ptr, delme_ptr->orderno, delme_ptr->node, delme_ptr->HB_order? "(HB)": "normal", delme_ptr->entrytime, delme_ptr->last_send, (uint64_t)DELETEINTERVAL, (uint64_t)HB_DELETEINTERVAL, (uint64_t)SENDINTERVAL ); 
+        logger->logmsg(VERBOSEORDER, logger->debug);
+        del_entry(delme_ptr);
     }
     return retval;
 }

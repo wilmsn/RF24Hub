@@ -90,7 +90,7 @@ using namespace std;
 
 int sockfd;
 int verboselevel = 2;
-bool start_daemon=false, tn_host_set = false, tn_port_set = false, tn_active = false, in_port_set = false, order_waiting = false;
+bool start_daemon=false, tn_host_set = false, tn_port_set = false, tn_active = false, in_port_set = false;
 char logfilename[300];
 char tn_hostname[20], tn_portno[7];
 struct sockaddr_in serv_addr;
@@ -103,7 +103,6 @@ MYSQL_ROW row;
 char* pEnd;
 const char* prgversion=PRGVERSION;
 uint64_t start_time;
-struct Order::order_t singleorder;
 
 // Setup for GPIO 25 CE and CE0 CSN with SPI Speed @ 8Mhz
 RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
@@ -215,7 +214,7 @@ void fill_orderbuffer( uint16_t node, unsigned char channel, float value);
 
 bool is_valid_orderno(uint16_t myorderno);
 
-bool get_order(uint16_t node);
+void make_order(uint16_t node, uint8_t mytype);
 
 uint16_t set_sensor(uint32_t mysensor, float value);
 

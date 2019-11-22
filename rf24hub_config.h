@@ -6,7 +6,7 @@ rf24hub_config.h ==> all global definitions go here
 #define _RF24HUB_CONFIG_H_
 
 #define PRGNAME "rf24hub"
-#define PRGVERSION "1.3 beta vom 21.11.2019"
+#define PRGVERSION "1.3 beta 2 vom 22.11.2019"
 
 //
 // default values: can be overwritten in config file
@@ -23,10 +23,16 @@ rf24hub_config.h ==> all global definitions go here
 // How long do we try to deliver (in msec) => 20 Min.
 #define KEEPINBUFFERTIME 1200000    
 #define FHEMDEVLENGTH 50
-// Interval to send a request to the node in millisec.
+// Interval to send a request to the regular node in millisec.
 #define SENDINTERVAL 500
-// Interval for deleting unsend order requests in millisec.
-#define DELETEINTERVAL 900000
+// Interval to send a request to the regular node in millisec.
+#define HB_SENDINTERVAL 100
+// Interval for deleting unsend requests for order for regular nodes in millisec.
+// 600 Sec = 10 Min.
+#define DELETEINTERVAL 600000
+// Interval for deleting unsend requests for order for Heartbeat nodes in millisec.
+// 10 Sec.
+#define HB_DELETEINTERVAL 10000
 #define PARAM_MAXLEN 80
 #define PARAM_MAXLEN_CONFIGFILE 40
 #define PARAM_MAXLEN_LOGFILE 40
