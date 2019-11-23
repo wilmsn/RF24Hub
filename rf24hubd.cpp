@@ -284,17 +284,16 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
         uint16_t mynode = 0;
         uint8_t mychannel = 0;
         sensor.find_node_chanel(&mynode, &mychannel, wort3, strtoul(wort3, &pEnd, 10));
-        orderbuffer.add_orderbuffer(0,mymillis(),mynode,mychannel,strtof(wort4, &pEnd));
+        orderbuffer.add_orderbuffer(mymillis(),mynode,mychannel,strtof(wort4, &pEnd));
 		if ( strcmp(wort1,cmp_setlast) == 0 && ! node.is_HB_node(mynode) ) {
 			make_order(mynode, 61);
-			//print_orderbuffer();
 		}
     }
 	// push <node> <channel> <value>
 	// Pushes a value direct to a channel into a node
 	if (( strcmp(wort1,cmp_push) == 0 ) && (strlen(wort2) > 1) && (strlen(wort3) > 0) && (strlen(wort4) > 0) ) {
 		tn_input_ok = true;
-        orderbuffer.add_orderbuffer(0,mymillis(),getnodeadr(wort2), strtol(wort3, &pEnd, 10), strtof(wort4, &pEnd));
+        orderbuffer.add_orderbuffer(mymillis(),getnodeadr(wort2), strtol(wort3, &pEnd, 10), strtof(wort4, &pEnd));
     }
     // set node <node> init
 	// sends the init sequence to a node
@@ -406,13 +405,13 @@ void init_node(uint16_t mynode ) {
 	db_check_error();
 	MYSQL_ROW row;
 	if ((row = mysql_fetch_row(result))) {
-		orderbuffer.add_orderbuffer(0, mymillis(), mynode, 111, strtof(row[0], &pEnd));
-		orderbuffer.add_orderbuffer(0, mymillis(), mynode, 112, strtof(row[1], &pEnd));
-		orderbuffer.add_orderbuffer(0, mymillis(), mynode, 113, strtof(row[2], &pEnd));
-		orderbuffer.add_orderbuffer(0, mymillis(), mynode, 114, strtof(row[3], &pEnd));
-		orderbuffer.add_orderbuffer(0, mymillis(), mynode, 115, strtof(row[4], &pEnd));
-		orderbuffer.add_orderbuffer(0, mymillis(), mynode, 116, strtof(row[5], &pEnd));
-		orderbuffer.add_orderbuffer(0, mymillis(), mynode, 118, 1.0);
+		orderbuffer.add_orderbuffer(mymillis(), mynode, 111, strtof(row[0], &pEnd));
+		orderbuffer.add_orderbuffer(mymillis(), mynode, 112, strtof(row[1], &pEnd));
+		orderbuffer.add_orderbuffer(mymillis(), mynode, 113, strtof(row[2], &pEnd));
+		orderbuffer.add_orderbuffer(mymillis(), mynode, 114, strtof(row[3], &pEnd));
+		orderbuffer.add_orderbuffer(mymillis(), mynode, 115, strtof(row[4], &pEnd));
+		orderbuffer.add_orderbuffer(mymillis(), mynode, 116, strtof(row[5], &pEnd));
+		orderbuffer.add_orderbuffer(mymillis(), mynode, 118, 1.0);
 	}
 	mysql_free_result(result);
 	if ( ! node.is_HB_node(mynode) ) make_order(mynode, 61);
@@ -439,7 +438,7 @@ void make_order(uint16_t mynode, uint8_t mytype) {
 	orderno++;
     ret_ptr = orderbuffer.find_order4node(mynode, NULL, &channel, &value);
     if (ret_ptr) {
-        order.add_order(orderno, mynode, mytype, channel, value, mymillis());
+        order.add_order(orderno, mynode, mytype, node.is_HB_node(mynode), channel, value, mymillis());
         ret_ptr = orderbuffer.find_order4node(mynode, ret_ptr, &channel, &value);
         if (ret_ptr) {
             order.modify_order(orderno, 2, channel, value);
@@ -576,6 +575,8 @@ void init_system(void) {
 }
 
 void store_sensor_value(uint16_t node, uint8_t channel, float value, bool d1, bool d2) {
+	sprintf(debug, "store_sensor_value: Node: 0%o Channel: %u Value: %f ", node, channel, value);
+	logger.logmsg(VERBOSEORDER, debug);        
     if ( sensor.update_last_val(node, channel, value, mymillis() )) {    
         if ( tn_active ) { 
             do_tn_cmd(node, channel, value); 
@@ -671,8 +672,8 @@ uint64_t mymillis(void) {
 	struct timeval tv;
 	uint64_t timebuf;
 	gettimeofday(&tv, NULL);
-	timebuf = ((tv.tv_sec & 0x000FFFFF) * 1000 + (tv.tv_usec / 1000)) - start_time;
-	sprintf(debug, "Mymillis: -----> %llu", timebuf );
+	timebuf = (((tv.tv_sec & 0x000FFFFF) * 1000) + (tv.tv_usec / 1000));
+	sprintf(debug, "+++++++++++ Mymillis: -----> %llu", timebuf );
 	logger.logmsg(VERBOSEOTHER, debug);
 	return timebuf;
 }
@@ -807,7 +808,6 @@ void scanner(char scanlevel) {
 int main(int argc, char* argv[]) {
     pid_t pid;
 	int c;
-	start_time = mymillis();
 	orderno = 1;
 	logger.set_logmode('i');
 	strcpy(config_file,"x");
@@ -1090,7 +1090,7 @@ int main(int argc, char* argv[]) {
 						, payload.channel1, payload.value1, payload.channel2, payload.value2, payload.channel3, payload.value3, payload.channel4, payload.value4);
 			logger.logmsg(VERBOSERF24, debug);
 			switch ( rxheader.type ) {
-                case 51: // heartbeatnode!!
+                case 51: { // heartbeatnode!!
                     if (node.is_new_HB(rxheader.from_node, mymillis())) {
                         if ( payload.channel1 > 0 ) 
                             process_sensor(rxheader.from_node, payload.channel1, payload.value1, rf24_carrier, rf24_rpd);
@@ -1137,21 +1137,26 @@ int main(int argc, char* argv[]) {
 							}
                         }
                     }
+                }
                 break;    
                 case 119:
 					init_node(rxheader.from_node);
                 break;
-                default:	
-				if ( orderbuffer.is_orderno(payload.orderno) || order.is_orderno(payload.orderno) ) {
-					if ( payload.channel1 > 0 ) process_sensor(rxheader.from_node, payload.channel1, payload.value1, rf24_carrier, rf24_rpd);
-					if ( payload.channel2 > 0 ) process_sensor(rxheader.from_node, payload.channel2, payload.value2, rf24_carrier, rf24_rpd);
-					if ( payload.channel3 > 0 ) process_sensor(rxheader.from_node, payload.channel3, payload.value3, rf24_carrier, rf24_rpd);
-					if ( payload.channel4 > 0 ) process_sensor(rxheader.from_node, payload.channel4, payload.value4, rf24_carrier, rf24_rpd);
-                    // Order compleate => delete it!
-					order.del_orderno(payload.orderno);
-                    // Check if we still have orders for this node
-                    make_order(rxheader.from_node, 61);
-				}
+                default: {	
+					sprintf(debug, "Processing Node: 0%o Type: %u Orderno %d"
+                                    , txheader.from_node, txheader.type, payload.orderno);
+									logger.logmsg(VERBOSEORDER, debug);
+                    if ( order.is_orderno(payload.orderno) ) {
+                        if ( payload.channel1 > 0 ) process_sensor(rxheader.from_node, payload.channel1, payload.value1, rf24_carrier, rf24_rpd);
+                        if ( payload.channel2 > 0 ) process_sensor(rxheader.from_node, payload.channel2, payload.value2, rf24_carrier, rf24_rpd);
+                        if ( payload.channel3 > 0 ) process_sensor(rxheader.from_node, payload.channel3, payload.value3, rf24_carrier, rf24_rpd);
+                        if ( payload.channel4 > 0 ) process_sensor(rxheader.from_node, payload.channel4, payload.value4, rf24_carrier, rf24_rpd);
+                        // Order compleate => delete it!
+                        order.del_orderno(payload.orderno);
+                        // Check if we still have orders for this node
+                        make_order(rxheader.from_node, 61);
+                    }
+                }
 			}
 			
 		} // network.available
@@ -1180,7 +1185,7 @@ int main(int argc, char* argv[]) {
                         }
                     }
 				}
-				usleep(2000);
+				usleep(50000);
         } else {
             usleep(200000);
         }

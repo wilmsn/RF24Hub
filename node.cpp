@@ -73,6 +73,7 @@ void Node::print_buffer2tn(int new_tn_in_socket) {
         search_ptr=search_ptr->next;
 	}
     free(client_message);
+    print_buffer2log();
 }
 
 void Node::print_buffer2log(void) {

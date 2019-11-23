@@ -20,7 +20,6 @@ class OrderBuffer {
 private:
 
     struct orderbuffer_t {
-        uint16_t 	    orderno;   	// the orderno as primary key for our message for the nodes
         uint64_t		entrytime;
         uint16_t     	node;
         uint8_t     	channel;
@@ -37,10 +36,8 @@ private:
 public:
     
 
-    void add_orderbuffer(uint32_t orderno, uint64_t millis, uint16_t node, uint8_t channel, float value);
-    bool is_orderno(uint16_t);
+    void add_orderbuffer(uint64_t millis, uint16_t node, uint8_t channel, float value);
     void *find_order4node(uint16_t node, void* last_ptr, uint8_t* channel, float* value);
-    bool del_orderno(uint16_t);
     bool del_node_channel(uint16_t, uint8_t);
     bool del_node(uint16_t);
     bool node_has_entry(uint16_t);

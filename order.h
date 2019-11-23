@@ -25,7 +25,7 @@ public:
     uint16_t del_old_entry(uint64_t entrytime);
     void debug_print_buffer(void);
     void begin(Logger* _logger);
-    void add_order(uint16_t orderno, uint16_t node, uint8_t type, uint8_t channel1, float value1, uint64_t entrytime);
+    void add_order(uint16_t orderno, uint16_t node, uint8_t type, bool HB_order, uint8_t channel1, float value1, uint64_t entrytime);
     void modify_order(uint16_t orderno, uint8_t pos, uint8_t channel, float value);
     void modify_orderflags(uint16_t orderno, uint16_t flags);
     bool get_order_for_transmission(uint16_t* orderno, uint16_t* node, unsigned char* type, uint16_t* flags,
