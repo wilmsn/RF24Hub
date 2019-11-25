@@ -1,9 +1,16 @@
-// How long do we try to init this node 100000(in ms) = 100 sec. 
-#define MAXINIT 100000
-// Define a valid radiochannel here
-#define RADIOCHANNEL 90
-// This node: Use octal numbers starting with "0": "041" is child 4 of node 1
-#define NODE 05
+
+
+//****************************************************
+//          Define node general settings
+#define RF24NODE        05
+#define RF24CHANNEL     90
+// Voltage Faktor will be divided by 100 (Integer !!)!!!!
+#define VOLTAGEFACTOR 119
+// Change the versionnumber to store new values in EEPROM
+// Set versionnumber to "0" to disable 
+#define EEPROM_VERSION 1
+//             END node general settings 
+//*****************************************************
 // The CE Pin of the Radio module
 #define RADIO_CE_PIN 10
 // The CS Pin of the Radio module
@@ -28,6 +35,7 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <Adafruit_NeoPixel.h>
+#include <EEPROM.h>
 
 
 const float VccCorrection = 1.0/1.0;  // Measured Vcc by multimeter divided by reported Vcc
@@ -67,12 +75,16 @@ struct payload_t {
 
 payload_t payload;
 
-enum radiomode_t { radio_sleep, radio_listen } radiomode = radio_sleep;
-enum sleepmode_t { sleep1, sleep2, sleep3, sleep4} sleepmode = sleep1, next_sleepmode = sleep2;
+struct eeprom_t {
+   uint16_t voltagefactor;
+   uint16_t node;
+   uint8_t  channel;
+   uint8_t  versionnumber;
+};
+eeprom_t eeprom;
 
 RF24NetworkHeader rxheader;
 RF24NetworkHeader txheader(0);
-boolean             init_finished = false;
 float               temp;
 //Some Var for restore after sleep of display
 float               cur_voltage;
@@ -116,34 +128,10 @@ float action_loop(unsigned char channel, float value) {
           // battery voltage => vcc.Read_Volts();
           retval=vcc.Read_Volts();
         break;
-        case 111:
-          // sleeptimer1
-          //sleeptime1=value;
-        break;
-        case 112:
-          // sleeptimer2
-          //sleeptime2=value;
-        break;
-        case 113:
-          // sleeptimer3
-          //sleeptime3=value;
-        break;
-        case 114:
-          // sleeptimer4
-          //sleeptime4=value;
-          break;
-        case 115:
-          // radio on (=1) or off (=0) when sleep
-          if ( value > 0.5) radiomode=radio_listen; else radiomode=radio_sleep;
-        break;
         case 116:
           // Voltage factor
           vcc.m_correction = value;
         break; 
-        case 118:
-          // init_finished (value=1)
-          if ( value > 0.5 ) init_finished = true; 
-        break;
 //        default:
         // Default: just send the paket back - no action here  
       }
@@ -153,6 +141,14 @@ float action_loop(unsigned char channel, float value) {
 void setup(void) {
   unsigned long last_send=millis();
   unsigned long init_start=millis();
+  EEPROM.get(0, eeprom);
+  if (eeprom.versionnumber != EEPROM_VERSION && EEPROM_VERSION > 0) {
+    eeprom.versionnumber = EEPROM_VERSION;
+    eeprom.voltagefactor = VOLTAGEFACTOR;
+    eeprom.node = RF24NODE;
+    eeprom.channel = RF24CHANNEL; 
+    EEPROM.put(0, eeprom);
+  }
   SPI.begin();
   //****
   // put anything else to init here
@@ -168,37 +164,9 @@ void setup(void) {
   // end aditional init
   //####
   radio.begin();
-  radio.setPALevel(RF24_PA_MAX);
-//  radio.setRetries(15,2);
-  network.begin(RADIOCHANNEL, NODE);
-  radio.setDataRate(RF24_250KBPS);
-  delay(200);
-  bool do_transmit = true;
-  while ( ! init_finished ) {
-    // send only one message every second
-    if ( do_transmit &&  last_send + 1000 < millis() ) {
-      txheader.type=119;
-      payload.orderno=0;
-      payload.sensor1=119;
-      payload.value1=0;
-      network.write(txheader,&payload,sizeof(payload));
-      last_send = millis();
-    }
-    network.update();
-    if ( last_send + 100000 < millis()) { do_transmit = true; }
-    if ( network.available() ) {
-      do_transmit = false;
-      network.read(rxheader,&payload,sizeof(payload));
-      if ( payload.sensor1 > 0 ) payload.value1 = action_loop(payload.sensor1, payload.value1);
-      if ( payload.sensor2 > 0 ) payload.value2 = action_loop(payload.sensor2, payload.value2);
-      if ( payload.sensor3 > 0 ) payload.value3 = action_loop(payload.sensor3, payload.value3);
-      if ( payload.sensor4 > 0 ) payload.value4 = action_loop(payload.sensor4, payload.value4);
-      last_send = millis();
-      txheader.type=1;
-      network.write(txheader,&payload,sizeof(payload));
-    }
-    if ( millis() - init_start > MAXINIT ) init_finished = true;
-  }
+  network.begin(eeprom.channel, eeprom.node);
+  radio.setDataRate( RF24_250KBPS );
+  radio.setPALevel( RF24_PA_MAX ) ;
   delay(100);
 }
 
@@ -218,5 +186,5 @@ void loop(void) {
     txheader.type=rxheader.type;
     network.write(txheader,&payload,sizeof(payload));    
   }
-  delay(100);
+  //delay(10);
 }

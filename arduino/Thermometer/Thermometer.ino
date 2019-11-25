@@ -4,19 +4,25 @@ Can be used with a display or only as a sensor without display
 */
 //****************************************************
 //          Define node general settings
-#define RF24NODE        045
-#define RF24CHANNEL     10
+#define RF24NODE        025
+#define RF24CHANNEL     90
+// Delay between 2 transmission in ms
+#define RF24SENDDELAY 50
+// Delay between 2 transmission in ms
+#define RF24RECEIVEDELAY 50
 // Sleeptime in ms !!
-#define RF24SLEEPTIME   113118
-// Time during the radio is on in ms !!
-#define RF24RECEIVETIME 1500
+#define RF24SLEEPTIME   112300
+// Max Number of Heartbeart Messages to send !!
+#define RF24SENDLOOPCOUNT 10
+// Max Number of  !!
+#define RF24RECEIVELOOPCOUNT 10
 // number of empty loop after sending data
-#define RF24EMPTYLOOP  9
+#define RF24EMPTYLOOPCOUNT  9
 // Voltage Faktor will be divided by 100 (Integer !!)!!!!
 #define VOLTAGEFACTOR 119
 // Change the versionnumber to store new values in EEPROM
 // Set versionnumber to "0" to disable 
-#define EEPROM_VERSION 1
+#define EEPROM_VERSION 5
 //             END node general settings 
 //*****************************************************
 //       Define used temerature sensor here
@@ -26,7 +32,8 @@ Can be used with a display or only as a sensor without display
 //*****************************************************
 //       Define if we have a Display and which
 //       disable all for temeraturesensor only
-#define DISPLAY_5110
+//#define HAS_DISPLAY
+//#define DISPLAY_5110
 //             END Display
 //*****************************************************
 // 4 voltages for the battery (empty ... full)
@@ -56,7 +63,7 @@ Can be used with a display or only as a sensor without display
 #define STATUSLED_ON LOW
 #define STATUSLED_OFF HIGH
 #define ONE_WIRE_BUS 8
-#define RECEIVEDELAY 50
+#define RECEIVEDELAY 100
 
 // ------ End of configuration part ------------
 
@@ -124,13 +131,14 @@ struct payload_t {
 payload_t payload;    
 
 struct eeprom_t {
-   uint32_t versionnumber;
    uint32_t sleeptime;
-   uint32_t receivetime;
-   uint16_t emptyloops;
+   uint16_t sendloopcount;
+   uint16_t receiveloopcount;
+   uint16_t emptyloopcount;
    uint16_t voltagefactor;
    uint16_t node;
    uint8_t  channel;
+   uint8_t  versionnumber;
 };
 eeprom_t eeprom;
 
@@ -139,11 +147,14 @@ RF24NetworkHeader   txheader(0);
 boolean             display_down = false;
 boolean             low_voltage_flag = false;
 //Some Var for restore after sleep of display
+#if defined(HAS_DISPLAY)
 float               field1_val, field2_val, field3_val, field4_val;
+#endif
 float               cur_voltage;
-uint16_t            cyclecount;
-uint32_t            receivetime;
-bool                msg_ack;
+uint16_t            loopcount;
+uint16_t            receiveloopcount;
+uint16_t            sendloopcount;
+long int            sleep_kor_time;
 
 
 // nRF24L01(+) radio attached using Getting Started board 
@@ -173,6 +184,7 @@ void get_sensordata(void) {
 float action_loop(unsigned char channel, float value) {
   float retval = value;
     switch (channel) {
+#if defined(HAS_DISPLAY)
       case 21:
         // Set field 1
         field1_val = value;
@@ -205,29 +217,63 @@ float action_loop(unsigned char channel, float value) {
         // Display Sleepmode ON <-> OFF
         display_sleep(value < 0.5);
        break;
+#endif
       case 101:  
       // battery voltage
         retval = cur_voltage;
         break;      
       case 111:
-      // sleeptimer1
-        eeprom.sleeptime=(uint32_t)value;
-        EEPROM.put(0, eeprom);
+      // sleeptime in ms!
+        if (value > 0.5 || value < -0.5) {
+          eeprom.sleeptime=(uint32_t)value;
+          EEPROM.put(0, eeprom);
+        } else {
+          retval = (float)eeprom.sleeptime;
+        }
         break;
       case 112:
-      // sleeptimer2
-        eeprom.receivetime=(uint32_t)value;
-        EEPROM.put(0, eeprom);
+      // sendloopcount - number sendloop befor giving up 
+        if (value > 0.5 || value < -0.5) {
+          eeprom.sendloopcount=(uint16_t)value;
+          EEPROM.put(0, eeprom);
+        } else {
+          retval = (float)eeprom.sendloopcount;
+        }
         break;
       case 113:
-      // sleeptimer3
-        eeprom.emptyloops=(uint32_t)value;
-        EEPROM.put(0, eeprom);
+      // receiveloopcount - number of receivloops befor giving up.
+        if (value > 0.5 || value < -0.5) {
+          eeprom.receiveloopcount=(uint16_t)value;
+          EEPROM.put(0, eeprom);
+        } else {
+          retval = (float)eeprom.receiveloopcount;
+        }
+        break;
+      case 114:
+      // emptyloopcount - only loop 0 will transmit all other loops will only read and display
+        if (value > 0.5 || value < -0.5) {
+          eeprom.emptyloopcount=(uint16_t)value;
+          EEPROM.put(0, eeprom);
+        } else {
+          retval = (float)eeprom.emptyloopcount;
+        }
+        break;
+      case 115:
+      // sleep korrektion faktor in ms - will only be used once!
+        if (value > 0.5 || value < -0.5) {
+          sleep_kor_time = (long int)value;
+        } else {
+          retval = sleep_kor_time;
+        }
         break;
       case 116:
-      // Voltage devider
-        eeprom.voltagefactor=(uint16_t)value;
-        EEPROM.put(0, eeprom);
+      // Voltage devider - will be divided by 100
+        if (value > 0.5 || value < -0.5) {
+          eeprom.voltagefactor=(uint16_t)value;
+          EEPROM.put(0, eeprom);
+        } else {
+          retval = (float)eeprom.voltagefactor;
+        }
         break;
     }  
     return retval;
@@ -241,8 +287,9 @@ void setup(void) {
   if (eeprom.versionnumber != EEPROM_VERSION && EEPROM_VERSION > 0) {
     eeprom.versionnumber = EEPROM_VERSION;
     eeprom.sleeptime = RF24SLEEPTIME;
-    eeprom.receivetime = RF24RECEIVETIME;
-    eeprom.emptyloops = RF24EMPTYLOOP;
+    eeprom.sendloopcount = RF24SENDLOOPCOUNT;
+    eeprom.receiveloopcount = RF24RECEIVELOOPCOUNT;
+    eeprom.emptyloopcount = RF24EMPTYLOOPCOUNT;
     eeprom.voltagefactor = VOLTAGEFACTOR;
     eeprom.node = RF24NODE;
     eeprom.channel = RF24CHANNEL; 
@@ -256,15 +303,19 @@ void setup(void) {
   myGLCD.setContrast(65);
   myGLCD.clrScr();
 #endif
+#if defined(HAS_DISPLAY)
   draw_antenna(ANT_X0, ANT_Y0);
+#endif
   network.begin(eeprom.channel, eeprom.node);
   radio.setDataRate( RF24_250KBPS );
   radio.setPALevel( RF24_PA_MAX ) ;
   delay(100);
   digitalWrite(STATUSLED,STATUSLED_OFF); 
   delay(1000);
+  loopcount = 0;
 }
 
+#if defined(HAS_DISPLAY)
 void display_sleep(boolean dmode) {
   display_down = dmode;
   if ( dmode ) { // Display go to sleep
@@ -468,21 +519,36 @@ void wipe_antenna(int x, int y) {
 #endif
   }
 }  
+#endif
   
 void loop(void) {
   delay(10);  
   cur_voltage = vcc.Read_Volts()*((float)eeprom.voltagefactor)/100.0;
   low_voltage_flag = (cur_voltage <= U0);
   if (! low_voltage_flag) {
+#if defined(HAS_DISPLAY)
     draw_battery(BATT_X0,BATT_Y0,cur_voltage);
     draw_therm(THERM_X0, THERM_Y0);
+#endif
     get_sensordata();
+#if defined(HAS_DISPLAY)
     draw_temp(temp);
     wipe_therm(THERM_X0, THERM_Y0);
-    if ( cyclecount == 0) {
+#endif
+    if ( loopcount == 0) {
+      // Clear the RX buffer !!!
+      while ( network.update() ) {}
+      while ( network.available() ) {
+        network.read(rxheader,&payload,sizeof(payload));
+        network.update();
+      }
+      radio.flush_rx();      
+#if defined(HAS_DISPLAY)
       draw_antenna(ANT_X0, ANT_Y0);
+#endif
       radio.powerUp();
       radio.startListening();
+      delay(10);
       payload.orderno = 0;
       payload.sensor1 = 1;
       payload.value1 = temp;
@@ -490,50 +556,69 @@ void loop(void) {
       payload.value2 = cur_voltage;
 #if defined(DALLAS_18B20)
       payload.sensor3 = 0;
+      payload.value3 = 0;
       payload.sensor4 = 0;
+      payload.value4 = 0;
 #endif
 #if defined(BME280)
       payload.sensor3 = 2;
-      payload.value1 = pres;
+      payload.value3 = pres;
       payload.sensor4 = 3;
-      payload.value1 = humi;
+      payload.value4 = humi;
 #endif
       txheader.type = 51;
-      receivetime = 0;
-      msg_ack = false;
-      while ( receivetime < eeprom.receivetime ) {
-        network.write(txheader,&payload,sizeof(payload));    
-        delay(RECEIVEDELAY);
-        receivetime += RECEIVEDELAY;
+      receiveloopcount = 0;
+      sendloopcount = 0;
+      while ( sendloopcount < eeprom.sendloopcount ) {
         network.update();
         if ( network.available() ) {
-          network.read(rxheader,&payload,sizeof(payload));
-          if ( rxheader.type == 52 ) {
-            msg_ack = true;
+          sendloopcount = eeprom.sendloopcount;
+          while ( receiveloopcount < eeprom.receiveloopcount ) {
+            if ( network.available() ) {
+              network.read(rxheader,&payload,sizeof(payload));
+              if ( rxheader.type == 52 ) {
+                receiveloopcount = eeprom.receiveloopcount;
+              } else {
+                payload.value1 = action_loop(payload.sensor1, payload.value1);
+                payload.value2 = action_loop(payload.sensor2, payload.value2);
+                payload.value3 = action_loop(payload.sensor3, payload.value3);
+                payload.value4 = action_loop(payload.sensor4, payload.value4);
+              }
+              if ((payload.flags & 0x01) == 0x01 ) {
+                receiveloopcount = eeprom.receiveloopcount;
+              }
+              txheader.type = rxheader.type;
+              network.write(txheader,&payload,sizeof(payload));
+              network.update();
+              delay(RF24RECEIVEDELAY);
+              network.update();
+            }
+            receiveloopcount++;
           }
-          if ((payload.flags & 0x01) == 0x01 ) {
-            receivetime = eeprom.receivetime;
-          } else {
-            receivetime = 0;
-          }
-          if ( rxheader.type != 52 ) {
-            payload.value1 = action_loop(payload.sensor1, payload.value1);
-            payload.value2 = action_loop(payload.sensor2, payload.value2);
-            payload.value3 = action_loop(payload.sensor3, payload.value3);
-            payload.value4 = action_loop(payload.sensor4, payload.value4);
-           // txheader.type=rxheader.type;
-          }
-          if ( ! msg_ack ) network.write(txheader,&payload,sizeof(payload));  
-        }        
-      }     
+        } else {
+            network.write(txheader,&payload,sizeof(payload));    
+            delay(RF24SENDDELAY);
+        }
+        sendloopcount++;
+      }
     }
     radio.stopListening();
+#if defined(HAS_DISPLAY)
     wipe_antenna(ANT_X0, ANT_Y0);
+#endif
     radio.powerDown();
   } else {
+#if defined(HAS_DISPLAY)
     display_sleep(true);
+#endif
   }
-  sleep4ms(eeprom.sleeptime); 
-  cyclecount++;
-  if (cyclecount > eeprom.emptyloops) cyclecount=0;
+  if ( sleep_kor_time != 0 ) {
+    long int tempsleeptime = eeprom.sleeptime + sleep_kor_time;
+    sleep4ms(tempsleeptime);
+    sleep_kor_time=0;
+  } else {
+    sleep4ms(eeprom.sleeptime);
+  } 
+  loopcount++;
+  if (loopcount > eeprom.emptyloopcount) loopcount=0;
 }

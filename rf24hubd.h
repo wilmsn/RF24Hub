@@ -114,8 +114,6 @@ Sensor          sensor;
 Node            node;
 Logger          logger;
 
-uint16_t orderno, init_orderno;
-
 struct config_parameters {
   char logfilename[PARAM_MAXLEN_LOGFILE];
   char pidfilename[PARAM_MAXLEN_PIDFILE];
@@ -237,6 +235,8 @@ void do_sql(char *sqlstmt);
 void store_sensor_value(uint16_t node, uint8_t sensor, float value, bool d1, bool d2);
 
 void process_sensor(uint16_t node, uint8_t sensor, float value, bool d1, bool d2);
+
+void store_node_config(uint16_t node, uint8_t channel, float value);
 
 /*******************************************************************************************
 *

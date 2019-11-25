@@ -126,12 +126,12 @@ bool Order::is_orderno(uint16_t orderno) {
     return retval;
 }
     
-Order::order_t* Order::find_orderno(uint16_t orderno) {
+Order::order_t* Order::find_node(uint16_t node) {
     order_t* retval = NULL;
     order_t *search_ptr;
     search_ptr = initial_ptr;
     while (search_ptr) {
-        if (search_ptr->orderno == orderno ) {
+        if (search_ptr->node == node ) {
             retval = search_ptr;
         }
         search_ptr=search_ptr->next;
@@ -156,8 +156,10 @@ uint16_t Order::del_old_entry(uint64_t deltime) {
     return retval;
 }
 
-void Order::add_order(uint16_t orderno, uint16_t node, uint8_t type, bool HB_order, uint8_t channel1, float value1, uint64_t entrytime) {
+void Order::add_order(uint16_t node, uint8_t type, bool HB_order, uint8_t channel1, float value1, uint64_t entrytime) {
     order_t *new_ptr = new order_t;
+    orderno++;
+    if ( orderno > 50000 ) orderno = 1;
     new_ptr->orderno = orderno;
     new_ptr->node = node;
     new_ptr->type = type;
@@ -176,9 +178,14 @@ void Order::add_order(uint16_t orderno, uint16_t node, uint8_t type, bool HB_ord
     new_entry(new_ptr);
 }
 
-void Order::modify_order(uint16_t orderno, uint8_t pos, uint8_t channel, float value) {
+void Order::add_endorder(uint16_t node, uint64_t entrytime) {
+    add_order(node, 52, true, 0, 0, entrytime);    
+    modify_orderflags(node, 0x01);
+}
+
+void Order::modify_order(uint16_t node, uint8_t pos, uint8_t channel, float value) {
     order_t* my_ptr=NULL;
-    my_ptr=find_orderno(orderno);
+    my_ptr=find_node(node);
     if (my_ptr) {
         if ( 2 == pos ) {
             my_ptr->channel2 = channel;
@@ -196,9 +203,9 @@ void Order::modify_order(uint16_t orderno, uint8_t pos, uint8_t channel, float v
     debug_print_buffer();
 }
 
-void Order::modify_orderflags(uint16_t orderno, uint16_t flags) {
+void Order::modify_orderflags(uint16_t node, uint16_t flags) {
     order_t* my_ptr=NULL;
-    my_ptr=find_orderno(orderno);
+    my_ptr=find_node(node);
     if (my_ptr) {
         my_ptr->flags = flags;
     }
@@ -265,7 +272,7 @@ void Order::debug_print_buffer(void) {
     sprintf(logger->debug,"Order: ---- Buffercontent ----"); 
     logger->logmsg(VERBOSEORDER, logger->debug);
     while (search_ptr) {
-        sprintf(logger->debug,"Order: %p O:%u N:0%o F:%02x (%u:%f) (%u:%f) (%u:%f) (%u:%f)", 
+        sprintf(logger->debug,"Order: <%p> O:%u N:0%o F:%02x (%u:%f) (%u:%f) (%u:%f) (%u:%f)", 
                 search_ptr, search_ptr->orderno, search_ptr->node, search_ptr->flags, 
                 search_ptr->channel1, search_ptr->value1, search_ptr->channel2, search_ptr->value2,
                 search_ptr->channel3, search_ptr->value3, search_ptr->channel4, search_ptr->value4 );
@@ -314,4 +321,5 @@ void Order::html_buffer(int new_tn_in_socket) {
 
 void Order::begin(Logger* _logger) {
     logger = _logger;
+    orderno = 1;
 }

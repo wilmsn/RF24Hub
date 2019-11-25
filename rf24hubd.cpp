@@ -435,33 +435,32 @@ void make_order(uint16_t mynode, uint8_t mytype) {
     uint8_t channel; 
     float value;
     void* ret_ptr;
-	orderno++;
     ret_ptr = orderbuffer.find_order4node(mynode, NULL, &channel, &value);
     if (ret_ptr) {
-        order.add_order(orderno, mynode, mytype, node.is_HB_node(mynode), channel, value, mymillis());
+        order.add_order(mynode, mytype, node.is_HB_node(mynode), channel, value, mymillis());
         ret_ptr = orderbuffer.find_order4node(mynode, ret_ptr, &channel, &value);
         if (ret_ptr) {
-            order.modify_order(orderno, 2, channel, value);
+            order.modify_order(mynode, 2, channel, value);
             ret_ptr = orderbuffer.find_order4node(mynode, ret_ptr, &channel, &value);
             if (ret_ptr) {
-                order.modify_order(orderno, 3, channel, value);
+                order.modify_order(mynode, 3, channel, value);
                 ret_ptr = orderbuffer.find_order4node(mynode, ret_ptr, &channel, &value);
                 if (ret_ptr) {
-                    order.modify_order(orderno, 4, channel, value);
+                    order.modify_order(mynode, 4, channel, value);
                     ret_ptr = orderbuffer.find_order4node(mynode, ret_ptr, &channel, &value);
                     if (ret_ptr) {
-                        order.modify_orderflags(orderno,0x00);
+                        order.modify_orderflags(mynode,0x00);
                     } else {
-                        order.modify_orderflags(orderno,0x01);
+                        order.modify_orderflags(mynode,0x01);
                     }                        
                 } else {
-                    order.modify_orderflags(orderno,0x01);
+                    order.modify_orderflags(mynode,0x01);
                 }                        
             } else {
-                order.modify_orderflags(orderno,0x01);
+                order.modify_orderflags(mynode,0x01);
             }                        
         } else {
-            order.modify_orderflags(orderno,0x01);
+            order.modify_orderflags(mynode,0x01);
         }                        
     }
 }
@@ -486,12 +485,12 @@ void db_check_error(void) {
 }
 
 void do_sql(char *sqlstmt) {
+    sprintf(debug, "%s", sqlstmt);
+	logger.logmsg(VERBOSESQL, debug);
 	if (mysql_query(db, sqlstmt)) {
 		sprintf(debug, "%s", mysql_error(db));
 		logger.logmsg(VERBOSECRITICAL, debug);
 	}
-    sprintf(debug, "%s", sqlstmt);
-	logger.logmsg(VERBOSESQL, debug);
 }
 
 void exit_system(void) {
@@ -588,11 +587,19 @@ void store_sensor_value(uint16_t node, uint8_t channel, float value, bool d1, bo
     }
 }
 
+void store_node_config(uint16_t node, uint8_t channel, float value) {
+	sprintf(debug, "store_node_config: Node: 0%o Channel: %u Value: %f ", node, channel, value);
+	logger.logmsg(VERBOSEORDER, debug);        
+    sprintf(sql_stmt,"insert into node_configdata (node_id, channel, value, utime) values ( '0%o', %u, %f, UNIX_TIMESTAMP() )", 
+            node, channel, value);
+    do_sql(sql_stmt);    
+}
+
 void process_sensor(uint16_t node, uint8_t channel, float value, bool d1, bool d2) {
 	switch (channel) {
 		case 1 ... 99: {
 		// Sensor or Actor
-			sprintf(debug, "Value of Sensor: %u on Node: 0%o is %f ", channel, node, value);
+			sprintf(debug, "Value of Channel: %u on Node: 0%o is %f ", channel, node, value);
 			logger.logmsg(VERBOSECONFIG, debug);       
 			store_sensor_value(node, channel, value, d1, d2);
 		}
@@ -607,42 +614,11 @@ void process_sensor(uint16_t node, uint8_t channel, float value, bool d1, bool d
 			store_sensor_value(node, channel, value, d1, d2);
 		}
 		break; 
-		case 111: { // Init Sleeptime 1
-			sprintf(debug, "Node: 0%o: Sleeptime1 set to %f ", node, value);
-			logger.logmsg(VERBOSECONFIG, debug);        
+		case 102 ... 127: { // System settings
+			sprintf(debug, "Node: 0%o Channel: %u is set to %f ", node, channel, value);
+			logger.logmsg(VERBOSECONFIG, debug);  
+            store_node_config(node, channel, value);
 		}	
-		break; 
-		case 112: { // Init Sleeptime 2
-			sprintf(debug, "Node: 0%o: Sleeptime2 set to %f ", node, value);
-			logger.logmsg(VERBOSECONFIG, debug);        
-		}
-		break; 
-		case 113: { // Init Sleeptime 3
-			sprintf(debug, "Node: 0%o: Sleeptime3 set to %f ", node, value);
-			logger.logmsg(VERBOSECONFIG, debug);        
-		}
-		break; 				
-		case 114: { // Init Sleeptime 4
-			sprintf(debug, "Node: 0%o: Sleeptime4 set to %f ", node, value);
-			logger.logmsg(VERBOSECONFIG, debug);        
-		}
-		break; 
-		case 115: { // Init Radiobuffer
-			bool radio_always_on = value > 0.5;
-			if ( radio_always_on ) sprintf(debug, "Node: %o: Radio allways on", node);
-			else sprintf(debug, "Node: 0%o: Radio sleeps", node);
-			logger.logmsg(VERBOSECONFIG, debug);        
-		}					
-		break;  
-		case 116: { // Init Voltagefactor
-			sprintf(debug, "Node: 0%o: Set Voltagefactor to: %f.", node, value);
-			logger.logmsg(VERBOSECONFIG, debug);        
-		}
-		break;  
-		case 118: {
-			sprintf(debug, "Node: 0%o Init finished.", node);
-			logger.logmsg(VERBOSECONFIG, debug);        
-		}
 		break; 
 		default: { 
 			sprintf(debug, "Message dropped!!!! Node: 0%o Channel: %u Value: %f ", node, channel, value);
@@ -672,7 +648,7 @@ uint64_t mymillis(void) {
 	struct timeval tv;
 	uint64_t timebuf;
 	gettimeofday(&tv, NULL);
-	timebuf = (((tv.tv_sec & 0x000FFFFF) * 1000) + (tv.tv_usec / 1000));
+	timebuf = (((tv.tv_sec & 0x000FFFFFFFFFFFFF) * 1000) + (tv.tv_usec / 1000));
 	sprintf(debug, "+++++++++++ Mymillis: -----> %llu", timebuf );
 	logger.logmsg(VERBOSEOTHER, debug);
 	return timebuf;
@@ -808,7 +784,6 @@ void scanner(char scanlevel) {
 int main(int argc, char* argv[]) {
     pid_t pid;
 	int c;
-	orderno = 1;
 	logger.set_logmode('i');
 	strcpy(config_file,"x");
 
@@ -915,6 +890,7 @@ int main(int argc, char* argv[]) {
     print_config (&parms);
     // check for PID file, if exists terminate else create it
     if( access( parms.pidfilename, F_OK ) != -1 ) {
+        fprintf(stdout, "PIDFILE: %s exists, terminating\n\n", parms.pidfilename);
         fprintf(stderr, "PIDFILE: %s exists, terminating\n\n", parms.pidfilename);
         exit(1);
     }
@@ -1014,6 +990,7 @@ int main(int argc, char* argv[]) {
     pidfile_ptr = fopen (parms.pidfilename,"w");
     if (pidfile_ptr==NULL) {
         sprintf(debug,"Can't write PIDFILE: %s! Exit programm ....\n", parms.pidfilename);
+        fprintf(stdout, debug);
         fprintf(stderr, debug);
         exit (1);
     }
@@ -1066,7 +1043,6 @@ int main(int argc, char* argv[]) {
     
 	// Main Loop
     while(1) {
-		if (orderno > 50000) orderno = 1;
         /* Handling of incoming messages */
 		if ( in_port_set ) {
             new_tn_in_socket = accept ( tn_in_socket, (struct sockaddr *) &address, &addrlen );
@@ -1085,7 +1061,7 @@ int main(int argc, char* argv[]) {
 //            network.peek(rxheader);
 //            
 			network.read(rxheader,&payload,sizeof(payload));
-			sprintf(debug, "Received: Type: %u from Node: %o to Node: %o Orderno %d (Channel/Value): (%u/%.2f) (%u/%.2f) (%u/%.2f) (%u/%.2f)"
+			sprintf(debug, "Received: Type: %u from Node: 0%o to Node: 0%o Orderno %u (Channel/Value): (%u/%.2f) (%u/%.2f) (%u/%.2f) (%u/%.2f)"
 						, rxheader.type, rxheader.from_node, rxheader.to_node, payload.orderno
 						, payload.channel1, payload.value1, payload.channel2, payload.value2, payload.channel3, payload.value3, payload.channel4, payload.value4);
 			logger.logmsg(VERBOSERF24, debug);
@@ -1107,6 +1083,8 @@ int main(int argc, char* argv[]) {
                         } else {
                             sprintf(debug, "No Entries for Heartbeat Node found, sending Endmessage");
                             logger.logmsg(VERBOSEORDER, debug);
+                            order.add_endorder(rxheader.from_node, mymillis());
+/*                            
                             txheader.from_node = 0;
                             txheader.to_node  = rxheader.from_node;
                             txheader.type = 52;
@@ -1122,19 +1100,19 @@ int main(int argc, char* argv[]) {
                             payload.value4=0;
 							if (network.write(txheader,&payload,sizeof(payload))) {
 								if ( verboselevel >= VERBOSERF24  ) {
-									sprintf(debug, "Send: Type: %u from Node: 0%o to Node: 0%o orderno %d (Channel/Value) (%u/%.2f) (%u/%.2f) (%u/%.2f) (%u/%.2f)"
+									sprintf(debug, "Send: Type: %u from Node: 0%o to Node: 0%o orderno %u (Channel/Value) (%u/%.2f) (%u/%.2f) (%u/%.2f) (%u/%.2f)"
 											, txheader.type, txheader.from_node, txheader.to_node, payload.orderno
 											, payload.channel1, payload.value1, payload.channel2, payload.value2, payload.channel3, payload.value3, payload.channel4, payload.value4);
 									logger.logmsg(VERBOSERF24, debug);
 								}
 							} else {
 								if ( verboselevel >= VERBOSERF24 ) {
-									sprintf(debug, "Failed: Type: %u from Node: 0%o to Node: 0%o orderno %d (Channel/Value) (%u/%.2f) (%u/%.2f) (%u/%.2f) (%u/%.2f)"
+									sprintf(debug, "Failed: Type: %u from Node: 0%o to Node: 0%o orderno %u (Channel/Value) (%u/%.2f) (%u/%.2f) (%u/%.2f) (%u/%.2f)"
 												, txheader.type, txheader.from_node, txheader.to_node, payload.orderno
 												, payload.channel1, payload.value1, payload.channel2, payload.value2, payload.channel3, payload.value3, payload.channel4, payload.value4);
 									logger.logmsg(VERBOSERF24, debug);
 								}
-							}
+							}  */
                         }
                     }
                 }
@@ -1143,8 +1121,8 @@ int main(int argc, char* argv[]) {
 					init_node(rxheader.from_node);
                 break;
                 default: {	
-					sprintf(debug, "Processing Node: 0%o Type: %u Orderno %d"
-                                    , txheader.from_node, txheader.type, payload.orderno);
+					sprintf(debug, "Processing Node: 0%o Type: %u Orderno %u"
+                                    , rxheader.from_node, rxheader.type, payload.orderno);
 									logger.logmsg(VERBOSEORDER, debug);
                     if ( order.is_orderno(payload.orderno) ) {
                         if ( payload.channel1 > 0 ) process_sensor(rxheader.from_node, payload.channel1, payload.value1, rf24_carrier, rf24_rpd);
@@ -1171,14 +1149,14 @@ int main(int argc, char* argv[]) {
 					txheader.from_node = 0;
 					if (network.write(txheader,&payload,sizeof(payload))) {
 						if ( verboselevel >= VERBOSERF24  ) {
-							sprintf(debug, "Send: Type: %u from Node: 0%o to Node: 0%o orderno %d (Channel/Value) (%u/%.2f) (%u/%.2f) (%u/%.2f) (%u/%.2f)"
+							sprintf(debug, "Send: Type: %u from Node: 0%o to Node: 0%o orderno %u (Channel/Value) (%u/%.2f) (%u/%.2f) (%u/%.2f) (%u/%.2f)"
 									, txheader.type, txheader.from_node, txheader.to_node, payload.orderno
 									, payload.channel1, payload.value1, payload.channel2, payload.value2, payload.channel3, payload.value3, payload.channel4, payload.value4);
 							logger.logmsg(VERBOSERF24, debug);
 						}
 					} else {
 						if ( verboselevel >= VERBOSERF24 ) {
-							sprintf(debug, "Failed: Type: %u from Node: 0%o to Node: 0%o orderno %d (Channel/Value) (%u/%.2f) (%u/%.2f) (%u/%.2f) (%u/%.2f)"
+							sprintf(debug, "Failed: Type: %u from Node: 0%o to Node: 0%o orderno %u (Channel/Value) (%u/%.2f) (%u/%.2f) (%u/%.2f) (%u/%.2f)"
 									, txheader.type, txheader.from_node, txheader.to_node, payload.orderno
 									, payload.channel1, payload.value1, payload.channel2, payload.value2, payload.channel3, payload.value3, payload.channel4, payload.value4);
 							logger.logmsg(VERBOSERF24, debug);
