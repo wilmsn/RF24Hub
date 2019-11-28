@@ -143,7 +143,7 @@ RF24NetworkHeader txheader;
 
 char buffer1[50];
 char buffer2[50];
-char debug[DEBUGSTRINGSIZE];
+//char debug[DEBUGSTRINGSIZE];
 char sql_stmt[SQLSTRINGSIZE];
 
 uint16_t getnodeadr(char *node);

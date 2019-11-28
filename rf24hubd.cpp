@@ -141,14 +141,12 @@ char * trim (char * s) {
 // do_tn_cmd ==> send a telnet comand to the fhem-host
 // usage example: do_tn_cmd("set device1 on");
 void do_tn_cmd(uint16_t node, uint8_t channel, float value) {
+    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
     char *tn_cmd =  (char*) malloc (TELNETBUFFERSIZE);
-//	char tn_cmd[200];
     int sockfd, portno, n;
     struct sockaddr_in serv_addr;
     struct hostent *server;
-//    char* fhem_dev = NULL;
     char fhem_dev[] = {'\0'};
-//    sprintf(fhem_dev,"Fehler");
     sprintf(debug,"do_tn_cmd: Node: 0%o Channel: %u Value %f", node, channel, value);
     logger.logmsg(VERBOSEORDER,debug);
     sensor.find_fhem_dev(&node, &channel, fhem_dev); 
@@ -187,10 +185,12 @@ void do_tn_cmd(uint16_t node, uint8_t channel, float value) {
 	}		 
     close(sockfd);
     free(tn_cmd);
+    free(debug);
 }
 
 void receive_tn_in(int new_tn_in_socket, struct sockaddr_in * address) {
     char *buffer =  (char*) malloc (TELNETBUFFERSIZE);
+    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
     char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
     ssize_t MsgLen;
     // send something like a prompt. perl telnet is waiting for it otherwise we get error
@@ -210,6 +210,7 @@ void receive_tn_in(int new_tn_in_socket, struct sockaddr_in * address) {
     close (new_tn_in_socket);
     free(buffer);
     free(client_message);
+    free(debug);
 }
 	
 void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
@@ -238,6 +239,7 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
          cmp_push[]="push";
 	char *wort1a, *wort2a, *wort3a, *wort4a;
 	char *wort1, *wort2, *wort3, *wort4;
+    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
 	bool tn_input_ok=false;
 	char delimiter[] = " ";
 	trim(buffer);
@@ -381,6 +383,7 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
     free(wort2);
     free(wort3);
     free(wort4);
+    free(debug);
 }
 	
 /*******************************************************************************************
@@ -396,6 +399,7 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 ********************************************************************************************/
 void init_node(uint16_t mynode ) {
 	// delete old entries for this node
+    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
 	sprintf(debug,"Init of Node: 0%o", mynode);
 	logger.logmsg(VERBOSEOTHER,debug);
 	sprintf (sql_stmt, "select sleeptime1, sleeptime2, sleeptime3, sleeptime4, radiomode, voltagefactor from node where node_id = '0%o' LIMIT 1 ",mynode);
@@ -415,6 +419,7 @@ void init_node(uint16_t mynode ) {
 	}
 	mysql_free_result(result);
 	if ( ! node.is_HB_node(mynode) ) make_order(mynode, 61);
+    free(debug);
 }
 
 uint16_t getnodeadr(char *node) {
@@ -479,18 +484,22 @@ void make_order(uint16_t mynode, uint8_t mytype) {
 
 void db_check_error(void) {
 	if (mysql_errno(db) != 0) {
+        char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
 		sprintf(debug, "DB-Fehler: %s\n", mysql_error(db));
         logger.logmsg(VERBOSECRITICAL, debug);
+        free(debug);
     }
 }
 
 void do_sql(char *sqlstmt) {
+    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
     sprintf(debug, "%s", sqlstmt);
 	logger.logmsg(VERBOSESQL, debug);
 	if (mysql_query(db, sqlstmt)) {
 		sprintf(debug, "%s", mysql_error(db));
 		logger.logmsg(VERBOSECRITICAL, debug);
 	}
+	free(debug);
 }
 
 void exit_system(void) {
@@ -574,6 +583,7 @@ void init_system(void) {
 }
 
 void store_sensor_value(uint16_t node, uint8_t channel, float value, bool d1, bool d2) {
+    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
 	sprintf(debug, "store_sensor_value: Node: 0%o Channel: %u Value: %f ", node, channel, value);
 	logger.logmsg(VERBOSEORDER, debug);        
     if ( sensor.update_last_val(node, channel, value, mymillis() )) {    
@@ -585,17 +595,21 @@ void store_sensor_value(uint16_t node, uint8_t channel, float value, bool d1, bo
         sprintf(sql_stmt,"update sensor_im set value= %f, utime = UNIX_TIMESTAMP(), signal_quality = '%d%d' where node_id = '0%o' and channel = %u ", value, d1, d2, node, channel);
         do_sql(sql_stmt);
     }
+    free(debug);
 }
 
 void store_node_config(uint16_t node, uint8_t channel, float value) {
+    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
 	sprintf(debug, "store_node_config: Node: 0%o Channel: %u Value: %f ", node, channel, value);
 	logger.logmsg(VERBOSEORDER, debug);        
     sprintf(sql_stmt,"insert into node_configdata (node_id, channel, value, utime) values ( '0%o', %u, %f, UNIX_TIMESTAMP() )", 
             node, channel, value);
-    do_sql(sql_stmt);    
+    do_sql(sql_stmt);
+    free(debug);
 }
 
 void process_sensor(uint16_t node, uint8_t channel, float value, bool d1, bool d2) {
+    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
 	switch (channel) {
 		case 1 ... 99: {
 		// Sensor or Actor
@@ -626,6 +640,7 @@ void process_sensor(uint16_t node, uint8_t channel, float value, bool d1, bool d
 		}
 	}	
 	orderbuffer.del_node_channel(node, channel);
+    free(debug);
 }	
 
 /*******************************************************************************************
@@ -634,6 +649,7 @@ void process_sensor(uint16_t node, uint8_t channel, float value, bool d1, bool d
 *
 ********************************************************************************************/
 void sighandler(int signal) {
+    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
 	sprintf(debug, "SIGTERM: Cleanup system ... saving *_im tables ...");
 	logger.logmsg(VERBOSECRITICAL, debug);
     exit_system(); 
@@ -641,6 +657,7 @@ void sighandler(int signal) {
 	logger.logmsg(VERBOSECRITICAL, debug);
     unlink(parms.pidfilename);
 //	msgctl(msqid, IPC_RMID, NULL);
+    free(debug);
     exit (0);
 }
 
@@ -649,8 +666,8 @@ uint64_t mymillis(void) {
 	uint64_t timebuf;
 	gettimeofday(&tv, NULL);
 	timebuf = (((tv.tv_sec & 0x000FFFFFFFFFFFFF) * 1000) + (tv.tv_usec / 1000));
-	sprintf(debug, "+++++++++++ Mymillis: -----> %llu", timebuf );
-	logger.logmsg(VERBOSEOTHER, debug);
+//	sprintf(debug, "+++++++++++ Mymillis: -----> %llu", timebuf );
+//	logger.logmsg(VERBOSEOTHER, debug);
 	return timebuf;
 }
 
@@ -786,6 +803,7 @@ int main(int argc, char* argv[]) {
 	int c;
 	logger.set_logmode('i');
 	strcpy(config_file,"x");
+    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
 
 	/* vars for telnet socket handling */
 	int tn_in_socket, new_tn_in_socket;
@@ -1172,5 +1190,6 @@ int main(int argc, char* argv[]) {
 //
 	} // while(1)
 	return 0;
+    free(debug);
 }
 

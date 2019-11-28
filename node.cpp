@@ -23,6 +23,7 @@ void Node::add_node(uint16_t node, float u_batt, bool is_HB_node ) {
     new_ptr->node = node;
     new_ptr->u_batt = u_batt;
     new_ptr->is_HB_node = is_HB_node;
+    new_ptr->HB_ts = 0;
     new_entry(new_ptr);
 }
 
@@ -30,20 +31,24 @@ bool Node::is_new_HB(uint16_t node, uint64_t mymillis) {
     node_t *search_ptr;
     bool retval = false;
     search_ptr = initial_ptr;
+    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
     while (search_ptr) {
         if (search_ptr->node == node) {
+            sprintf(debug,"Node.is_new_HB: Node 0%o last HB: %llu this HB: %llu", node, search_ptr->HB_ts, mymillis); 
+            logger->logmsg(VERBOSEORDER, debug);
             if (search_ptr->HB_ts < mymillis - 1000) retval = true;
             search_ptr->HB_ts = mymillis;
         }
         search_ptr = search_ptr->next;
     }    
     if (retval) {
-        sprintf(logger->debug,"Node: New HeartBeat from Node 0%o", node); 
-        logger->logmsg(VERBOSEORDER, logger->debug);
+        sprintf(debug,"Node: New HeartBeat from Node 0%o", node); 
+        logger->logmsg(VERBOSEORDER, debug);
     } else {
-        sprintf(logger->debug,"Node: Old HeartBeat from Node 0%o", node); 
-        logger->logmsg(VERBOSEORDER, logger->debug);
+        sprintf(debug,"Node: Old HeartBeat from Node 0%o", node); 
+        logger->logmsg(VERBOSEORDER, debug);
     }        
+    free(debug);
     return retval;
 }
 
@@ -79,14 +84,16 @@ void Node::print_buffer2tn(int new_tn_in_socket) {
 void Node::print_buffer2log(void) {
     node_t *search_ptr;
     search_ptr = initial_ptr;
-    sprintf(logger->debug," ------ Nodes: ------"); 
-    logger->logmsg(VERBOSECONFIG, logger->debug);
+    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
+    sprintf(debug," ------ Nodes: ------"); 
+    logger->logmsg(VERBOSECONFIG, debug);
     while (search_ptr) {
-        sprintf(logger->debug,"Node 0%o,\tU-Batt:\t%f V,\t%s",
+        sprintf(debug,"Node 0%o,\tU-Batt:\t%f V,\t%s",
                   search_ptr->node, search_ptr->u_batt, search_ptr->is_HB_node? "HeartBeat":"Normal");    
-        logger->logmsg(VERBOSECONFIG, logger->debug);
+        logger->logmsg(VERBOSECONFIG, debug);
         search_ptr=search_ptr->next;
 	}
+	free(debug);
 }
 
 void Node::begin(Logger* _logger) {
