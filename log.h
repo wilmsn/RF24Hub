@@ -8,6 +8,7 @@
 #include <sys/time.h>
 #include <cstdio>
 #include <cstddef>
+#include <cstdlib>
 #include "rf24hub_config.h"
 
 class Logger {
@@ -15,8 +16,6 @@ class Logger {
 private:
 
 FILE * logfile_ptr;
-char buf[50];
-
     
 public:
     

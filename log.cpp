@@ -2,6 +2,7 @@
 
 void Logger::logmsg(int mesgloglevel, char *mymsg){
     if (mesgloglevel <= verboselevel) {
+        char *buf =  (char*) malloc (100);
 		time_t now = time(0);
 		tm *ltm = localtime(&now);
 		sprintf (buf, "%d", ltm->tm_year + 1900 );
@@ -31,6 +32,7 @@ void Logger::logmsg(int mesgloglevel, char *mymsg){
 //			syslog( LOG_NOTICE, "%s\n", mymsg);
 //			closelog();
 //		}
+        free(buf);
 	}
 }
 

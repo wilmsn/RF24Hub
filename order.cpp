@@ -8,11 +8,12 @@ Order::Order(void) {
 void Order::new_entry(order_t* new_ptr) {
     order_t *search_ptr;
     new_ptr->next = NULL;
+    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
     if (logger->verboselevel >= VERBOSEORDER) {
-        sprintf(logger->debug,"Order: new_entry %p", new_ptr); 
-        logger->logmsg(VERBOSEORDER, logger->debug);    
-        sprintf(logger->debug,"Bestand vorher"); 
-        logger->logmsg(VERBOSEORDER, logger->debug);
+        sprintf(debug,"Order: new_entry %p", new_ptr); 
+        logger->logmsg(VERBOSEORDER, debug);    
+        sprintf(debug,"Bestand vorher"); 
+        logger->logmsg(VERBOSEORDER, debug);
         debug_print_buffer();
     }
     if (initial_ptr) {
@@ -25,11 +26,12 @@ void Order::new_entry(order_t* new_ptr) {
         initial_ptr = new_ptr;
     }
     if (logger->verboselevel >= VERBOSEORDER) {
-        sprintf(logger->debug,"Bestand nachher"); 
-        logger->logmsg(VERBOSEORDER, logger->debug);
+        sprintf(debug,"Bestand nachher"); 
+        logger->logmsg(VERBOSEORDER, debug);
         debug_print_buffer();
     }
     has_order = true;
+    free(debug);
 }
 
 bool Order::del_entry(order_t* my_ptr) {
@@ -66,11 +68,12 @@ bool Order::del_entry(order_t* my_ptr) {
 bool Order::del_orderno(uint16_t orderno) {
     bool retval = false;
     order_t *search_ptr;
+    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
     if (logger->verboselevel >= VERBOSEORDER) {
-        sprintf(logger->debug,"Order: del_orderno %u", orderno); 
-        logger->logmsg(VERBOSEORDER, logger->debug);    
-        sprintf(logger->debug,"Bestand vorher"); 
-        logger->logmsg(VERBOSEORDER, logger->debug);
+        sprintf(debug,"Order: del_orderno %u", orderno); 
+        logger->logmsg(VERBOSEORDER, debug);    
+        sprintf(debug,"Bestand vorher"); 
+        logger->logmsg(VERBOSEORDER, debug);
         debug_print_buffer();
     }
     search_ptr = initial_ptr;
@@ -81,21 +84,23 @@ bool Order::del_orderno(uint16_t orderno) {
         search_ptr=search_ptr->next;
     }
     if (logger->verboselevel >= VERBOSEORDER) {
-        sprintf(logger->debug,"Bestand nachher"); 
-        logger->logmsg(VERBOSEORDER, logger->debug);
+        sprintf(debug,"Bestand nachher"); 
+        logger->logmsg(VERBOSEORDER, debug);
         debug_print_buffer();
     }
+    free(debug);
     return retval;
 }
 
 bool Order::del_node(uint16_t node) {
     bool retval = false;
     order_t *search_ptr;
+    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
     if (logger->verboselevel >= VERBOSEORDER) {
-        sprintf(logger->debug,"Order: del_node 0%o", node); 
-        logger->logmsg(VERBOSEORDER, logger->debug);    
-        sprintf(logger->debug,"Bestand vorher"); 
-        logger->logmsg(VERBOSEORDER, logger->debug);
+        sprintf(debug,"Order: del_node 0%o", node); 
+        logger->logmsg(VERBOSEORDER, debug);    
+        sprintf(debug,"Bestand vorher"); 
+        logger->logmsg(VERBOSEORDER, debug);
         debug_print_buffer();
     }
     search_ptr = Order::initial_ptr;
@@ -106,10 +111,11 @@ bool Order::del_node(uint16_t node) {
         search_ptr=search_ptr->next;
     }
     if (logger->verboselevel >= VERBOSEORDER) {
-        sprintf(logger->debug,"Bestand nachher"); 
-        logger->logmsg(VERBOSEORDER, logger->debug);
+        sprintf(debug,"Bestand nachher"); 
+        logger->logmsg(VERBOSEORDER, debug);
         debug_print_buffer();
     }
+    free(debug);
     return retval;
 }
     
@@ -220,9 +226,10 @@ bool Order::get_order_for_transmission(uint16_t* orderno, uint16_t* node, unsign
     order_t *delme_ptr = NULL;
     order_t *search_ptr;
     search_ptr = initial_ptr;
+    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
     while (search_ptr) {
-        sprintf(logger->debug,"### Order::get_order_for_transmission Node: 0%o Onr: %u Last send: %llu Now: %llu Entry: %llu",search_ptr->node, search_ptr->orderno, search_ptr->last_send, mytime, search_ptr->entrytime);        
-        logger->logmsg(VERBOSEOTHER, logger->debug);
+        sprintf(debug,"### Order::get_order_for_transmission Node: 0%o Onr: %u Last send: %llu Now: %llu Entry: %llu",search_ptr->node, search_ptr->orderno, search_ptr->last_send, mytime, search_ptr->entrytime);        
+        logger->logmsg(VERBOSEOTHER, debug);
         if (search_ptr->last_send > mytime) search_ptr->last_send = mytime;
         if ( ((!search_ptr->HB_order) && search_ptr->last_send + (uint64_t)SENDINTERVAL < mytime) ||
              ((search_ptr->HB_order) && search_ptr->last_send + (uint64_t)HB_SENDINTERVAL < mytime) ) {
@@ -240,20 +247,20 @@ bool Order::get_order_for_transmission(uint16_t* orderno, uint16_t* node, unsign
             *value4 = search_ptr->value4;
             search_ptr->last_send = mytime;
             if ( search_ptr->HB_order ) {
-                sprintf(logger->debug,"Order: <%p> OrderNo: %u (Node:0%o HB), TTL: %llu", search_ptr, search_ptr->orderno, search_ptr->node, search_ptr->entrytime + (uint64_t)HB_DELETEINTERVAL - mytime ); 
-                logger->logmsg(VERBOSEORDER, logger->debug);
+                sprintf(debug,"Order: <%p> OrderNo: %u (Node:0%o HB), TTL: %llu", search_ptr, search_ptr->orderno, search_ptr->node, search_ptr->entrytime + (uint64_t)HB_DELETEINTERVAL - mytime ); 
+                logger->logmsg(VERBOSEORDER, debug);
                 if ( search_ptr->entrytime + (uint64_t)HB_DELETEINTERVAL < mytime ) {
                     delme_ptr = search_ptr;
-                    sprintf(logger->debug,"Order: Timeout - lösche <%p> OrderNo: %u (Node:0%o HB), entry:%llu last send: %llu Delinterv: %llu Sendinterv: %llu", delme_ptr, delme_ptr->orderno, delme_ptr->node, delme_ptr->entrytime, delme_ptr->last_send, (uint64_t)HB_DELETEINTERVAL, (uint64_t)HB_SENDINTERVAL ); 
-                    logger->logmsg(VERBOSEORDER, logger->debug);
+                    sprintf(debug,"Order: Timeout - lösche <%p> OrderNo: %u (Node:0%o HB), entry:%llu last send: %llu Delinterv: %llu Sendinterv: %llu", delme_ptr, delme_ptr->orderno, delme_ptr->node, delme_ptr->entrytime, delme_ptr->last_send, (uint64_t)HB_DELETEINTERVAL, (uint64_t)HB_SENDINTERVAL ); 
+                    logger->logmsg(VERBOSEORDER, debug);
                 }
             } else {
-                sprintf(logger->debug,"Order: <%p> OrderNo: %u (Node:0%o), TTL: %llu", search_ptr, search_ptr->orderno, search_ptr->node, search_ptr->entrytime + (uint64_t)DELETEINTERVAL - mytime ); 
-                logger->logmsg(VERBOSEORDER, logger->debug);
+                sprintf(debug,"Order: <%p> OrderNo: %u (Node:0%o), TTL: %llu", search_ptr, search_ptr->orderno, search_ptr->node, search_ptr->entrytime + (uint64_t)DELETEINTERVAL - mytime ); 
+                logger->logmsg(VERBOSEORDER, debug);
                 if ( search_ptr->entrytime + (uint64_t)DELETEINTERVAL < mytime ) {
                     delme_ptr = search_ptr;
-                    sprintf(logger->debug,"Order: Timeout - lösche <%p> OrderNo: %u (Node:0%o ), entry:%llu last send: %llu Delinterv: %llu Sendinterv: %llu", delme_ptr, delme_ptr->orderno, delme_ptr->node, delme_ptr->entrytime, delme_ptr->last_send, (uint64_t)DELETEINTERVAL, (uint64_t)SENDINTERVAL ); 
-                    logger->logmsg(VERBOSEORDER, logger->debug);
+                    sprintf(debug,"Order: Timeout - lösche <%p> OrderNo: %u (Node:0%o ), entry:%llu last send: %llu Delinterv: %llu Sendinterv: %llu", delme_ptr, delme_ptr->orderno, delme_ptr->node, delme_ptr->entrytime, delme_ptr->last_send, (uint64_t)DELETEINTERVAL, (uint64_t)SENDINTERVAL ); 
+                    logger->logmsg(VERBOSEORDER, debug);
                 }
             }                
             retval = true;
@@ -263,24 +270,26 @@ bool Order::get_order_for_transmission(uint16_t* orderno, uint16_t* node, unsign
     if (delme_ptr) {
         del_entry(delme_ptr);
     }
+    free(debug);
     return retval;
 }
 
 void Order::debug_print_buffer(void) {
     order_t *search_ptr;
     search_ptr = initial_ptr;
-    sprintf(logger->debug,"Order: ---- Buffercontent ----"); 
-    logger->logmsg(VERBOSEORDER, logger->debug);
+    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
+    sprintf(debug,"Order: ---- Buffercontent ----"); 
+    logger->logmsg(VERBOSEORDER, debug);
     while (search_ptr) {
-        sprintf(logger->debug,"Order: <%p> O:%u N:0%o F:%02x (%u:%f) (%u:%f) (%u:%f) (%u:%f)", 
+        sprintf(debug,"Order: <%p> O:%u N:0%o F:%02x (%u:%f) (%u:%f) (%u:%f) (%u:%f)", 
                 search_ptr, search_ptr->orderno, search_ptr->node, search_ptr->flags, 
                 search_ptr->channel1, search_ptr->value1, search_ptr->channel2, search_ptr->value2,
                 search_ptr->channel3, search_ptr->value3, search_ptr->channel4, search_ptr->value4 );
-        logger->logmsg(VERBOSEORDER, logger->debug);
+        logger->logmsg(VERBOSEORDER, debug);
         search_ptr=search_ptr->next;
     }
-    sprintf(logger->debug,"Order: -- END Buffercontent --"); 
-    logger->logmsg(VERBOSEORDER, logger->debug);
+    sprintf(debug,"Order: -- END Buffercontent --"); 
+    logger->logmsg(VERBOSEORDER, debug);
 }
 
 void Order::print_buffer(int new_tn_in_socket) {

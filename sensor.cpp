@@ -35,17 +35,18 @@ bool Sensor::update_last_val(uint16_t node, uint8_t channel, float value, uint64
     bool retval = false;
     Sensor::sensor_t *search_ptr;
     search_ptr=initial_ptr;
+    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
     while (search_ptr) {
         if ( search_ptr->node == node && search_ptr->channel == channel ) {
             search_ptr->last_val = value;
             if ( mymillis - search_ptr->last_ts > 1000 ) {
-                sprintf(logger->debug,"sensor.update_last_val: N: 0%o C:%u V:%f ", node, channel, value); 
-                logger->logmsg(VERBOSEORDER, logger->debug);
+                sprintf(debug,"sensor.update_last_val: N: 0%o C:%u V:%f ", node, channel, value); 
+                logger->logmsg(VERBOSEORDER, debug);
                 search_ptr->last_ts = mymillis;
                 retval = true;
             } else {
-                sprintf(logger->debug,"sensor.update_last_val: Old value - dropped!"); 
-                logger->logmsg(VERBOSEORDER, logger->debug);
+                sprintf(debug,"sensor.update_last_val: Old value - dropped!"); 
+                logger->logmsg(VERBOSEORDER, debug);
                 search_ptr->last_ts = mymillis;
                 retval = false;
             }
@@ -53,33 +54,38 @@ bool Sensor::update_last_val(uint16_t node, uint8_t channel, float value, uint64
         search_ptr=search_ptr->next;
     }
     return retval;
+    free(debug);
 }
 
 void Sensor::find_node_chanel(uint16_t* node_ptr, uint8_t* channel_ptr,char* fhem_dev, uint32_t mysensor) {
     Sensor::sensor_t *search_ptr;
     search_ptr=initial_ptr;
+    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
     while (search_ptr) {
         if ( strcmp(search_ptr->fhem_dev,fhem_dev) == 0 || search_ptr->sensor == mysensor ) {
-            sprintf(logger->debug,"sensor.find_node_chanel: N: 0%o C:%u", search_ptr->node, search_ptr->channel); 
-            logger->logmsg(VERBOSEORDER, logger->debug);
+            sprintf(debug,"sensor.find_node_chanel: N: 0%o C:%u", search_ptr->node, search_ptr->channel); 
+            logger->logmsg(VERBOSEORDER, debug);
             *node_ptr = search_ptr->node;
             *channel_ptr = search_ptr->channel;
         }
         search_ptr=search_ptr->next;
     }
+    free(debug);
 }
 
 void Sensor::find_fhem_dev(uint16_t* node_ptr, uint8_t* channel_ptr,char* fhem_dev) {
     Sensor::sensor_t *search_ptr;
     search_ptr=initial_ptr;
+    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
     while (search_ptr) {
         if ( search_ptr->node == *node_ptr && search_ptr->channel == *channel_ptr ) {
-            sprintf(logger->debug,"sensor.find_fhem_dev: %s", search_ptr->fhem_dev); 
-            logger->logmsg(VERBOSEORDER, logger->debug);
+            sprintf(debug,"sensor.find_fhem_dev: %s", search_ptr->fhem_dev); 
+            logger->logmsg(VERBOSEORDER, debug);
             sprintf(fhem_dev,"%s",search_ptr->fhem_dev);
         }
         search_ptr=search_ptr->next;
     }
+    free(debug);
 }
 
 void Sensor::print_buffer2tn(int new_tn_in_socket) {
@@ -101,14 +107,16 @@ void Sensor::print_buffer2tn(int new_tn_in_socket) {
 void Sensor::print_buffer2log(void) {
     sensor_t *search_ptr;
     search_ptr = initial_ptr;
-    sprintf(logger->debug," ------ Sensor: ------"); 
-    logger->logmsg(VERBOSECONFIG, logger->debug);
+    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
+    sprintf(debug," ------ Sensor: ------"); 
+    logger->logmsg(VERBOSECONFIG, debug);
     while (search_ptr) {
-		sprintf(logger->debug,"Sensor: %u\tNode: 0%o,\tChannel:%u,\tFHEM: %s,\ttype: %c\tVal: %f\tTS:%llu", 
+		sprintf(debug,"Sensor: %u\tNode: 0%o,\tChannel:%u,\tFHEM: %s,\ttype: %c\tVal: %f\tTS:%llu", 
                  search_ptr->sensor, search_ptr->node, search_ptr->channel, search_ptr->fhem_dev, search_ptr->s_type, search_ptr->last_val, search_ptr->last_ts);   
-        logger->logmsg(VERBOSECONFIG, logger->debug);
+        logger->logmsg(VERBOSECONFIG, debug);
         search_ptr=search_ptr->next;
 	}
+	free(debug);
 }
 
 void Sensor::begin(Logger* _logger) {

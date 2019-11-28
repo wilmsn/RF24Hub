@@ -10,19 +10,29 @@ Can be used with a display or only as a sensor without display
 #define RF24SENDDELAY 50
 // Delay between 2 transmission in ms
 #define RF24RECEIVEDELAY 50
-// Sleeptime in ms !!
-#define RF24SLEEPTIME   112300
+// Sleeptime in ms !! 
+// (valid: 10.000 ... 3.600.000)
+#define RF24SLEEPTIME   10000
 // Max Number of Heartbeart Messages to send !!
 #define RF24SENDLOOPCOUNT 10
-// Max Number of  !!
+// Max Number of Receiveloops !!
 #define RF24RECEIVELOOPCOUNT 10
 // number of empty loop after sending data
-#define RF24EMPTYLOOPCOUNT  9
+// valid: 0...9
+#define RF24EMPTYLOOPCOUNT  2
 // Voltage Faktor will be divided by 100 (Integer !!)!!!!
-#define VOLTAGEFACTOR 119
+#define VOLTAGEFACTOR 100
+// Add a constant number her (will be divided by 100)!!!
+#define VOLTAGEADDED 60
+// Kontrast of the display
+#define DISPLAY_KONTRAST 65;
+// Define low voltage level on processor
+// below that level the thermometer will be switched off 
+// until the battery will be reloaded
+#define LOWVOLTAGELEVEL 3
 // Change the versionnumber to store new values in EEPROM
 // Set versionnumber to "0" to disable 
-#define EEPROM_VERSION 5
+#define EEPROM_VERSION 11
 //             END node general settings 
 //*****************************************************
 //       Define used temerature sensor here
@@ -32,8 +42,8 @@ Can be used with a display or only as a sensor without display
 //*****************************************************
 //       Define if we have a Display and which
 //       disable all for temeraturesensor only
-//#define HAS_DISPLAY
-//#define DISPLAY_5110
+#define HAS_DISPLAY
+#define DISPLAY_5110
 //             END Display
 //*****************************************************
 // 4 voltages for the battery (empty ... full)
@@ -62,6 +72,9 @@ Can be used with a display or only as a sensor without display
 #define STATUSLED 3
 #define STATUSLED_ON LOW
 #define STATUSLED_OFF HIGH
+//#define STATUSLED 7 
+//#define STATUSLED_ON HIGH
+//#define STATUSLED_OFF LOW
 #define ONE_WIRE_BUS 8
 #define RECEIVEDELAY 100
 
@@ -136,8 +149,10 @@ struct eeprom_t {
    uint16_t receiveloopcount;
    uint16_t emptyloopcount;
    uint16_t voltagefactor;
+   int      voltageadded;
    uint16_t node;
    uint8_t  channel;
+   int      display_contrast;
    uint8_t  versionnumber;
 };
 eeprom_t eeprom;
@@ -155,6 +170,8 @@ uint16_t            loopcount;
 uint16_t            receiveloopcount;
 uint16_t            sendloopcount;
 long int            sleep_kor_time;
+uint32_t            last_send;
+
 
 
 // nRF24L01(+) radio attached using Getting Started board 
@@ -222,65 +239,76 @@ float action_loop(unsigned char channel, float value) {
       // battery voltage
         retval = cur_voltage;
         break;      
+      case 110:
+#if defined(DISPLAY_5110)
+        if (value > 0.5 || value < -0.5) {
+          eeprom.display_contrast=(uint8_t)value;
+          myGLCD.setContrast(eeprom.display_contrast);
+          EEPROM.put(0, eeprom);
+        }
+        retval = (float)eeprom.sleeptime;
+#endif
+      break;
       case 111:
       // sleeptime in ms!
-        if (value > 0.5 || value < -0.5) {
+        if (value > 9999 && value < 3600000) {
           eeprom.sleeptime=(uint32_t)value;
           EEPROM.put(0, eeprom);
-        } else {
-          retval = (float)eeprom.sleeptime;
         }
+        retval = (float)eeprom.sleeptime;
         break;
       case 112:
       // sendloopcount - number sendloop befor giving up 
         if (value > 0.5 || value < -0.5) {
           eeprom.sendloopcount=(uint16_t)value;
           EEPROM.put(0, eeprom);
-        } else {
-          retval = (float)eeprom.sendloopcount;
         }
+        retval = (float)eeprom.sendloopcount;
         break;
       case 113:
       // receiveloopcount - number of receivloops befor giving up.
         if (value > 0.5 || value < -0.5) {
           eeprom.receiveloopcount=(uint16_t)value;
           EEPROM.put(0, eeprom);
-        } else {
-          retval = (float)eeprom.receiveloopcount;
         }
+        retval = (float)eeprom.receiveloopcount;
         break;
       case 114:
       // emptyloopcount - only loop 0 will transmit all other loops will only read and display
-        if (value > 0.5 || value < -0.5) {
+        if (value >= 0 && value < 10) {
           eeprom.emptyloopcount=(uint16_t)value;
           EEPROM.put(0, eeprom);
-        } else {
-          retval = (float)eeprom.emptyloopcount;
-        }
+        } 
+        retval = (float)eeprom.emptyloopcount;
         break;
       case 115:
       // sleep korrektion faktor in ms - will only be used once!
         if (value > 0.5 || value < -0.5) {
           sleep_kor_time = (long int)value;
-        } else {
-          retval = sleep_kor_time;
         }
+        retval = sleep_kor_time;
         break;
       case 116:
-      // Voltage devider - will be divided by 100
-        if (value > 0.5 || value < -0.5) {
+      // Voltagefactor - will be divided by 100
+        if (value > 10 || value < 1000) {
           eeprom.voltagefactor=(uint16_t)value;
           EEPROM.put(0, eeprom);
-        } else {
-          retval = (float)eeprom.voltagefactor;
         }
+        retval = (float)eeprom.voltagefactor;
+        break;
+      case 117:
+      // Voltageadded - will be divided by 100
+        if (value >= 0 || value < 1000) {
+          eeprom.voltageadded=(int)value;
+          EEPROM.put(0, eeprom);
+        }
+        retval = (float)eeprom.voltageadded;
         break;
     }  
     return retval;
 }  
 
 void setup(void) {
-  unsigned long last_send=millis();
   pinMode(STATUSLED, OUTPUT);     
   digitalWrite(STATUSLED,STATUSLED_ON); 
   EEPROM.get(0, eeprom);
@@ -291,8 +319,10 @@ void setup(void) {
     eeprom.receiveloopcount = RF24RECEIVELOOPCOUNT;
     eeprom.emptyloopcount = RF24EMPTYLOOPCOUNT;
     eeprom.voltagefactor = VOLTAGEFACTOR;
+    eeprom.voltageadded = VOLTAGEADDED;
     eeprom.node = RF24NODE;
     eeprom.channel = RF24CHANNEL; 
+    eeprom.display_contrast = DISPLAY_KONTRAST;
     EEPROM.put(0, eeprom);
   }
   SPI.begin();
@@ -300,19 +330,20 @@ void setup(void) {
   sensor.begin(); 
 #if defined(DISPLAY_5110)
   myGLCD.InitLCD();
-  myGLCD.setContrast(65);
+  myGLCD.setContrast(eeprom.display_contrast);
   myGLCD.clrScr();
 #endif
 #if defined(HAS_DISPLAY)
   draw_antenna(ANT_X0, ANT_Y0);
+  draw_therm(THERM_X0, THERM_Y0);
 #endif
   network.begin(eeprom.channel, eeprom.node);
   radio.setDataRate( RF24_250KBPS );
   radio.setPALevel( RF24_PA_MAX ) ;
-  delay(100);
-  digitalWrite(STATUSLED,STATUSLED_OFF); 
   delay(1000);
+  digitalWrite(STATUSLED,STATUSLED_OFF); 
   loopcount = 0;
+  last_send = 0;
 }
 
 #if defined(HAS_DISPLAY)
@@ -523,9 +554,9 @@ void wipe_antenna(int x, int y) {
   
 void loop(void) {
   delay(10);  
-  cur_voltage = vcc.Read_Volts()*((float)eeprom.voltagefactor)/100.0;
-  low_voltage_flag = (cur_voltage <= U0);
-  if (! low_voltage_flag) {
+  cur_voltage = (vcc.Read_Volts()+((float)eeprom.voltageadded/100.0))*((float)eeprom.voltagefactor)/100.0;
+  low_voltage_flag = (vcc.Read_Volts() <= LOWVOLTAGELEVEL);
+  if ((! low_voltage_flag) || (last_send > 3600000)) {
 #if defined(HAS_DISPLAY)
     draw_battery(BATT_X0,BATT_Y0,cur_voltage);
     draw_therm(THERM_X0, THERM_Y0);
@@ -598,6 +629,7 @@ void loop(void) {
         } else {
             network.write(txheader,&payload,sizeof(payload));    
             delay(RF24SENDDELAY);
+            last_send = 0;
         }
         sendloopcount++;
       }
@@ -619,6 +651,7 @@ void loop(void) {
   } else {
     sleep4ms(eeprom.sleeptime);
   } 
+  last_send += eeprom.sleeptime;
   loopcount++;
   if (loopcount > eeprom.emptyloopcount) loopcount=0;
 }
