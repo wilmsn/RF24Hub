@@ -5,29 +5,34 @@ rf24hub_config.h ==> all global definitions go here
 #ifndef _RF24HUB_CONFIG_H_   
 #define _RF24HUB_CONFIG_H_
 
+#define PRGNAME "rf24hub"
+#define PRGVERSION "1.3 beta 4 vom 24.11.2019"
 
 //
 // default values: can be overwritten in config file
 //
 #define LOGFILE "/var/log/rf24hubd.log"
 #define PIDFILE "/var/run/rf24hubd.pid"
-#define DEFAULT_CONFIG_FILE "/etc/rf24hub/rf24hub.cfg"
+#define DEFAULT_CONFIG_FILE "/etc/rf24hub/rf24hubd.cfg"
 
 //
 // END default values: can be overwritten in config file
 //
 //-------------------------------------------------------
 //
-#define ORDERLENGTH 80
-#define ORDERBUFFERLENGTH 80
 // How long do we try to deliver (in msec) => 20 Min.
 #define KEEPINBUFFERTIME 1200000    
-#define SENSORARRAYSIZE 80
 #define FHEMDEVLENGTH 50
-// Interval to send a request to the node in millisec.
+// Interval to send a request to the regular node in millisec.
 #define SENDINTERVAL 500
-// Interval for deleting unsend order requests in millisec.
-#define DELETEINTERVAL 900000
+// Interval to send a request to the regular node in millisec.
+#define HB_SENDINTERVAL 100
+// Interval for deleting unsend requests for order for regular nodes in millisec.
+// 600 Sec = 10 Min.
+#define DELETEINTERVAL 600000
+// Interval for deleting unsend requests for order for Heartbeat nodes in millisec.
+// 10 Sec.
+#define HB_DELETEINTERVAL 10000
 #define PARAM_MAXLEN 80
 #define PARAM_MAXLEN_CONFIGFILE 40
 #define PARAM_MAXLEN_LOGFILE 40
@@ -45,10 +50,11 @@ rf24hub_config.h ==> all global definitions go here
 // Verboselevel
 #define VERBOSECRITICAL 1
 #define VERBOSESTARTUP 2
-#define VERBOSECONFIG 5
-#define VERBOSERF24 6
-#define VERBOSETELNET 7
-#define VERBOSESQL 8
+#define VERBOSECONFIG 3
+#define VERBOSEORDER 5
+#define VERBOSETELNET 6
+#define VERBOSESQL 7
+#define VERBOSERF24 8
 #define VERBOSEOTHER 9
 #define TELNETBUFFERSIZE 800
 

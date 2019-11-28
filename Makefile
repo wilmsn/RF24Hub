@@ -30,12 +30,20 @@ CCFLAGS=-Ofast -mfpu=vfp -mfloat-abi=hard -march=$(ARCH) -mtune=arm1176jzf-s -st
 all: rf24hubd 
 
 # Make the sensorhub deamon
-rf24hubd: rf24hubd.cpp
+rf24hubd: log.o node.o sensor.o orderbuffer.o order.o rf24hubd.cpp
+	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24network ${MYSQLLIBS} $^ -o $@
+
+# Test of order object
+ordertest: order.o order_test.cpp
+	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24network ${MYSQLLIBS} $^ -o $@
+
+# Test of orderbuffer object
+orderbuffertest: orderbuffer.o orderbuffer_test.cpp
 	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24network ${MYSQLLIBS} $^ -o $@
 
 # clear build files
 clean:
-	rm rf24hubd
+	rm *.o rf24hubd
 
 # Install the sensorhub
 install: 
