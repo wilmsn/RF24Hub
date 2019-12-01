@@ -29,7 +29,7 @@ Can be used with a display or only as a sensor without display
 // Define low voltage level on processor
 // below that level the thermometer will be switched off 
 // until the battery will be reloaded
-#define LOWVOLTAGELEVEL 3
+#define LOWVOLTAGELEVEL 3.6
 // Change the versionnumber to store new values in EEPROM
 // Set versionnumber to "0" to disable 
 #define EEPROM_VERSION 11
@@ -80,6 +80,7 @@ Can be used with a display or only as a sensor without display
 
 // ------ End of configuration part ------------
 
+#include <avr/pgmspace.h>
 #include <RF24Network.h>
 #include <RF24.h>
 #include <SPI.h>
@@ -259,7 +260,7 @@ float action_loop(unsigned char channel, float value) {
         break;
       case 112:
       // sendloopcount - number sendloop befor giving up 
-        if (value > 0.5 || value < -0.5) {
+        if (value > 0 && value < 21) {
           eeprom.sendloopcount=(uint16_t)value;
           EEPROM.put(0, eeprom);
         }
@@ -267,7 +268,7 @@ float action_loop(unsigned char channel, float value) {
         break;
       case 113:
       // receiveloopcount - number of receivloops befor giving up.
-        if (value > 0.5 || value < -0.5) {
+        if (value > 0 && value < 21) {
           eeprom.receiveloopcount=(uint16_t)value;
           EEPROM.put(0, eeprom);
         }
@@ -275,7 +276,7 @@ float action_loop(unsigned char channel, float value) {
         break;
       case 114:
       // emptyloopcount - only loop 0 will transmit all other loops will only read and display
-        if (value >= 0 && value < 10) {
+        if (value >= 0 && value < 21) {
           eeprom.emptyloopcount=(uint16_t)value;
           EEPROM.put(0, eeprom);
         } 
@@ -283,7 +284,7 @@ float action_loop(unsigned char channel, float value) {
         break;
       case 115:
       // sleep korrektion faktor in ms - will only be used once!
-        if (value > 0.5 || value < -0.5) {
+        if ((value > 0.5 && value < 600001) || (value < -0.5 && value > -600001)) {
           sleep_kor_time = (long int)value;
         }
         retval = sleep_kor_time;
@@ -298,11 +299,14 @@ float action_loop(unsigned char channel, float value) {
         break;
       case 117:
       // Voltageadded - will be divided by 100
-        if (value >= 0 || value < 1000) {
+        if ((value > 0.5 && value < 6000) || (value < -0.5 && value > -6000)) {
           eeprom.voltageadded=(int)value;
           EEPROM.put(0, eeprom);
         }
         retval = (float)eeprom.voltageadded;
+        break;
+      case 118:
+          monitor((uint32_t)value); 
         break;
     }  
     return retval;
@@ -333,20 +337,66 @@ void setup(void) {
   myGLCD.setContrast(eeprom.display_contrast);
   myGLCD.clrScr();
 #endif
-#if defined(HAS_DISPLAY)
-  draw_antenna(ANT_X0, ANT_Y0);
-  draw_therm(THERM_X0, THERM_Y0);
-#endif
   network.begin(eeprom.channel, eeprom.node);
   radio.setDataRate( RF24_250KBPS );
   radio.setPALevel( RF24_PA_MAX ) ;
   delay(1000);
   digitalWrite(STATUSLED,STATUSLED_OFF); 
+  monitor(15000);
+#if defined(HAS_DISPLAY)
+  draw_antenna(ANT_X0, ANT_Y0);
+  draw_therm(THERM_X0, THERM_Y0);
+#endif
   loopcount = 0;
   last_send = 0;
 }
 
 #if defined(HAS_DISPLAY)
+
+void monitor(uint32_t delaytime) {
+  const char string_1[] PROGMEM = "Temp: ";
+  const char string_2[] PROGMEM = "Ubatt: ";
+  const char string_3[] PROGMEM = "Sleep: ";
+  const char string_4[] PROGMEM = "send/rec/empty: ";
+  const char string_5[] PROGMEM = "RF24 Network: ";
+  const char string_6[] PROGMEM = "Node: ";
+  const char string_7[] PROGMEM = "Channel: ";
+#if defined(DISPLAY_5110)
+  myGLCD.setFont(SmallFont);
+  get_sensordata();
+  myGLCD.print(string_1, 0, 0);
+  myGLCD.printNumF(temp,1, 30, 0);
+  cur_voltage = (vcc.Read_Volts()+((float)eeprom.voltageadded/100.0))*((float)eeprom.voltagefactor)/100.0;
+  float mes_voltage = vcc.Read_Volts();
+  myGLCD.print(string_2, 0, 10);
+  myGLCD.printNumF(cur_voltage,1, 40, 10);
+  myGLCD.printNumF(mes_voltage,1, 65, 10);
+  myGLCD.print(string_3, 0, 20);
+  myGLCD.printNumI(eeprom.sleeptime, 45, 20);
+  myGLCD.print(string_4, 0, 30);
+  myGLCD.printNumI(eeprom.sendloopcount, 0, 40);
+  myGLCD.print("/", 20, 40);
+  myGLCD.printNumI(eeprom.receiveloopcount, 30, 40);
+  myGLCD.print("/", 60, 40);
+  myGLCD.printNumI(eeprom.emptyloopcount, 70, 40);
+  myGLCD.update();
+  sleep4ms(delaytime);
+  delay(10);
+  myGLCD.clrScr();
+  myGLCD.print(string_5, 0, 0);
+  myGLCD.print(string_6, 0, 10);
+  myGLCD.printNumI(0, 55, 10);
+  myGLCD.printNumI(eeprom.node/8, 62, 10);
+  myGLCD.printNumI(eeprom.node%8, 70, 10);
+  myGLCD.print(string_7, 0, 20);
+  myGLCD.printNumI(eeprom.channel, 60, 20);
+  myGLCD.update();
+  sleep4ms(delaytime);
+  delay(10);
+  myGLCD.clrScr();
+#endif  
+}
+
 void display_sleep(boolean dmode) {
   display_down = dmode;
   if ( dmode ) { // Display go to sleep
@@ -389,25 +439,29 @@ void wipe_therm(byte x, byte y) {
 }
 
 void draw_temp(float t) {
-  int mytemp, temp_i, temp_dez_i; 
+  int temp_abs, temp_i, temp_dez_i; 
   if ( ! display_down ) {
 #if defined(DISPLAY_5110)
-    if (t < 0) {
-      mytemp=t*-1;
+    if (t < 0.0) {
+      temp_abs=t*-1;
       myGLCD.drawRect(0,10,9,12);
     } else {
-      mytemp=t;
+      temp_abs=t;
     }      
-    temp_i=(int)temp;
+    temp_i=(int)temp_abs;
     temp_dez_i=t*10-temp_i*10;
     for(byte i=0; i<74; i++) {
       for (byte j=0; j<25; j++) {
         myGLCD.clrPixel(i,j);
       }
     }
-    if (temp<99) {
+    if (temp_i < 100) {
       myGLCD.setFont(BigNumbers);
-      myGLCD.printNumI(temp_i, 10, 0);
+      if ( temp_i < 10 ) {
+        myGLCD.printNumI(temp_i, 20, 0);        
+      } else {
+        myGLCD.printNumI(temp_i, 10, 0);
+      }
       myGLCD.drawRect(40,20,43,23);
       myGLCD.printNumI(temp_dez_i, 45, 0);
       myGLCD.drawRect(61,2,64,5);
