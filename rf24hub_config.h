@@ -43,14 +43,13 @@ rf24hub_config.h ==> all global definitions go here
 #define PARAM_MAXLEN_DB_SCHEMA 20
 #define PARAM_MAXLEN_DB_USERNAME 20
 #define PARAM_MAXLEN_DB_PASSWORD 20
-#define ERRSTR "ERROR: "
-#define DEBUGSTR "DEBUG: "
 #define DEBUGSTRINGSIZE 500
 #define SQLSTRINGSIZE 500
 // Verboselevel
 #define VERBOSECRITICAL 1
 #define VERBOSESTARTUP 2
 #define VERBOSECONFIG 3
+#define VERBOSEORDERMIN 4
 #define VERBOSEORDER 5
 #define VERBOSETELNET 6
 #define VERBOSESQL 7
