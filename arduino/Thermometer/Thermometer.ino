@@ -6,8 +6,12 @@ Can be used with a display or only as a sensor without display
 // My definitions for my nodes based on this sketch
 // Select only one at one time !!!!
 //#define AUSSENTHERMOMETER
-#define SCHLAFZIMMERTHERMOMETER
-//#define BASTELZIMMERTHERMOMETER
+//#define SCHLAFZIMMERTHERMOMETER
+#define BASTELZIMMERTHERMOMETER
+//#define KUECHETHERMOMETER
+//#define WOHNZIMMERTHERMOMETER
+//#define ANKLEIDEZIMMERTHERMOMETER
+//#define GAESTEZIMMERTHERMOMETER
 //****************************************************
 //          Define node general settings
 //  Can be overwritten in individual settings later
@@ -36,7 +40,7 @@ Can be used with a display or only as a sensor without display
 // Define low voltage level on processor
 // below that level the thermometer will be switched off 
 // until the battery will be reloaded
-#define LOWVOLTAGELEVEL 3.6
+#define LOWVOLTAGELEVEL 2.8
 // Change the versionnumber to store new values in EEPROM
 // Set versionnumber to "0" to disable 
 // #define EEPROM_VERSION 2
@@ -96,6 +100,33 @@ Can be used with a display or only as a sensor without display
 #define DALLAS_18B20
 #define DISPLAY_5110
 #define RF24NODE        045
+#define EEPROM_VERSION  3
+#define VOLTAGEADDED    55
+ 
+#endif
+//-----------------------------------------------------
+#if defined(KUECHETHERMOMETER)
+#define DALLAS_18B20
+#define DISPLAY_5110
+#define RF24NODE        03
+#define EEPROM_VERSION  3
+#define VOLTAGEADDED    55
+ 
+#endif
+//-----------------------------------------------------
+#if defined(ANKLEIDEZIMMERTHERMOMETER)
+#define DALLAS_18B20
+#define DISPLAY_5110
+#define RF24NODE        025
+#define EEPROM_VERSION  3
+#define VOLTAGEADDED    55
+ 
+#endif
+//-----------------------------------------------------
+#if defined(GAESTEZIMMERTHERMOMETER)
+#define DALLAS_18B20
+//#define DISPLAY_5110
+#define RF24NODE        055
 #define EEPROM_VERSION  3
 #define VOLTAGEADDED    55
  
