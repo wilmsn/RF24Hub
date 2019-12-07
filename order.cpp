@@ -281,8 +281,8 @@ void Order::debug_print_buffer(void) {
     sprintf(debug,"Order: ---- Buffercontent ----"); 
     logger->logmsg(VERBOSEORDER, debug);
     while (search_ptr) {
-        sprintf(debug,"Order: <%p> O:%u N:0%o F:%02x (%u:%f) (%u:%f) (%u:%f) (%u:%f)", 
-                search_ptr, search_ptr->orderno, search_ptr->node, search_ptr->flags, 
+        sprintf(debug,"Order: <%p> O:%u N:0%o T:%u F:%02x (%u:%f) (%u:%f) (%u:%f) (%u:%f)", 
+                search_ptr, search_ptr->orderno, search_ptr->node, search_ptr->type, search_ptr->flags, 
                 search_ptr->channel1, search_ptr->value1, search_ptr->channel2, search_ptr->value2,
                 search_ptr->channel3, search_ptr->value3, search_ptr->channel4, search_ptr->value4 );
         logger->logmsg(VERBOSEORDER, debug);
