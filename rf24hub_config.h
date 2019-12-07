@@ -6,7 +6,7 @@ rf24hub_config.h ==> all global definitions go here
 #define _RF24HUB_CONFIG_H_
 
 #define PRGNAME "rf24hub"
-#define PRGVERSION "1.3 vom 30.11.2019"
+#define PRGVERSION "1.3.1 vom 07.12.2019"
 
 //
 // default values: can be overwritten in config file

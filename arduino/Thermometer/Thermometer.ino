@@ -290,11 +290,7 @@ float action_loop(unsigned char channel, float value) {
         break;
       case 112:
       // sendloopcount - number sendloop befor giving up 
-<<<<<<< HEAD
         if (value > 0.5 || value < 21) {
-=======
-        if (value > 0 && value < 21) {
->>>>>>> e0cd7390e6423090f8b079cac2f94dcbfb2f0b01
           eeprom.sendloopcount=(uint16_t)value;
           EEPROM.put(0, eeprom);
         }
@@ -302,11 +298,7 @@ float action_loop(unsigned char channel, float value) {
         break;
       case 113:
       // receiveloopcount - number of receivloops befor giving up.
-<<<<<<< HEAD
         if (value > 0.5 || value < 21) {
-=======
-        if (value > 0 && value < 21) {
->>>>>>> e0cd7390e6423090f8b079cac2f94dcbfb2f0b01
           eeprom.receiveloopcount=(uint16_t)value;
           EEPROM.put(0, eeprom);
         }
@@ -314,11 +306,7 @@ float action_loop(unsigned char channel, float value) {
         break;
       case 114:
       // emptyloopcount - only loop 0 will transmit all other loops will only read and display
-<<<<<<< HEAD
         if (value >= 0.5 && value < 21) {
-=======
-        if (value >= 0 && value < 21) {
->>>>>>> e0cd7390e6423090f8b079cac2f94dcbfb2f0b01
           eeprom.emptyloopcount=(uint16_t)value;
           EEPROM.put(0, eeprom);
         } 
@@ -348,16 +336,12 @@ float action_loop(unsigned char channel, float value) {
         retval = (float)eeprom.voltageadded;
         break;
       case 118:
-<<<<<<< HEAD
           if ( value > 0.5 && value < 1.5 ) {
             monitor(eeprom.sleeptime/2); 
             monitormode = true;
           } else {
             monitormode = false;
           }
-=======
-          monitor((uint32_t)value); 
->>>>>>> e0cd7390e6423090f8b079cac2f94dcbfb2f0b01
         break;
     }  
     return retval;
@@ -395,9 +379,7 @@ void setup(void) {
   myGLCD.setContrast(eeprom.display_contrast);
   myGLCD.clrScr();
 #endif
-<<<<<<< HEAD
-  monitor(15000);
-=======
+#endif
   network.begin(eeprom.channel, eeprom.node);
   radio.setDataRate( RF24_250KBPS );
   radio.setPALevel( RF24_PA_MAX ) ;
@@ -405,7 +387,6 @@ void setup(void) {
   digitalWrite(STATUSLED,STATUSLED_OFF); 
   monitor(15000);
 #if defined(HAS_DISPLAY)
->>>>>>> e0cd7390e6423090f8b079cac2f94dcbfb2f0b01
   draw_antenna(ANT_X0, ANT_Y0);
   draw_therm(THERM_X0, THERM_Y0);
 #endif
@@ -414,10 +395,6 @@ void setup(void) {
 }
 
 #if defined(HAS_DISPLAY)
-<<<<<<< HEAD
-=======
-
->>>>>>> e0cd7390e6423090f8b079cac2f94dcbfb2f0b01
 void monitor(uint32_t delaytime) {
   const char string_1[] PROGMEM = "Temp: ";
   const char string_2[] PROGMEM = "Ubatt: ";
