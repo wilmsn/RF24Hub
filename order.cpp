@@ -14,7 +14,7 @@ void Order::new_entry(order_t* new_ptr) {
         logger->logmsg(VERBOSEORDER, debug);    
         sprintf(debug,"Bestand vorher"); 
         logger->logmsg(VERBOSEORDER, debug);
-        debug_print_buffer();
+        debug_print_buffer(VERBOSEORDER);
     }
     if (initial_ptr) {
         search_ptr = initial_ptr;
@@ -28,7 +28,7 @@ void Order::new_entry(order_t* new_ptr) {
     if (logger->verboselevel >= VERBOSEORDER) {
         sprintf(debug,"Bestand nachher"); 
         logger->logmsg(VERBOSEORDER, debug);
-        debug_print_buffer();
+        debug_print_buffer(VERBOSEORDER);
     }
     has_order = true;
     free(debug);
@@ -74,7 +74,7 @@ bool Order::del_orderno(uint16_t orderno) {
         logger->logmsg(VERBOSEORDER, debug);    
         sprintf(debug,"Bestand vorher"); 
         logger->logmsg(VERBOSEORDER, debug);
-        debug_print_buffer();
+        debug_print_buffer(VERBOSEORDER);
     }
     search_ptr = initial_ptr;
     while (search_ptr) {
@@ -86,7 +86,7 @@ bool Order::del_orderno(uint16_t orderno) {
     if (logger->verboselevel >= VERBOSEORDER) {
         sprintf(debug,"Bestand nachher"); 
         logger->logmsg(VERBOSEORDER, debug);
-        debug_print_buffer();
+        debug_print_buffer(VERBOSEORDER);
     }
     free(debug);
     return retval;
@@ -101,7 +101,7 @@ bool Order::del_node(uint16_t node) {
         logger->logmsg(VERBOSEORDER, debug);    
         sprintf(debug,"Bestand vorher"); 
         logger->logmsg(VERBOSEORDER, debug);
-        debug_print_buffer();
+        debug_print_buffer(VERBOSEORDER);
     }
     search_ptr = Order::initial_ptr;
     while (search_ptr) {
@@ -113,7 +113,7 @@ bool Order::del_node(uint16_t node) {
     if (logger->verboselevel >= VERBOSEORDER) {
         sprintf(debug,"Bestand nachher"); 
         logger->logmsg(VERBOSEORDER, debug);
-        debug_print_buffer();
+        debug_print_buffer(VERBOSEORDER);
     }
     free(debug);
     return retval;
@@ -206,7 +206,7 @@ void Order::modify_order(uint16_t node, uint8_t pos, uint8_t channel, float valu
             my_ptr->value4 = value;
         }
     }
-    debug_print_buffer();
+    debug_print_buffer(VERBOSEORDER);
 }
 
 void Order::modify_orderflags(uint16_t node, uint16_t flags) {
@@ -215,7 +215,7 @@ void Order::modify_orderflags(uint16_t node, uint16_t flags) {
     if (my_ptr) {
         my_ptr->flags = flags;
     }
-    debug_print_buffer();
+    debug_print_buffer(VERBOSEORDERMIN);
 }
 
 bool Order::get_order_for_transmission(uint16_t* orderno, uint16_t* node, unsigned char* type, uint16_t* flags,
@@ -274,22 +274,22 @@ bool Order::get_order_for_transmission(uint16_t* orderno, uint16_t* node, unsign
     return retval;
 }
 
-void Order::debug_print_buffer(void) {
+void Order::debug_print_buffer(int debuglevel) {
     order_t *search_ptr;
     search_ptr = initial_ptr;
     char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
     sprintf(debug,"Order: ---- Buffercontent ----"); 
-    logger->logmsg(VERBOSEORDER, debug);
+    logger->logmsg(debuglevel, debug);
     while (search_ptr) {
         sprintf(debug,"Order: <%p> O:%u N:0%o T:%u F:%02x (%u:%f) (%u:%f) (%u:%f) (%u:%f)", 
                 search_ptr, search_ptr->orderno, search_ptr->node, search_ptr->type, search_ptr->flags, 
                 search_ptr->channel1, search_ptr->value1, search_ptr->channel2, search_ptr->value2,
                 search_ptr->channel3, search_ptr->value3, search_ptr->channel4, search_ptr->value4 );
-        logger->logmsg(VERBOSEORDER, debug);
+        logger->logmsg(debuglevel, debug);
         search_ptr=search_ptr->next;
     }
     sprintf(debug,"Order: -- END Buffercontent --"); 
-    logger->logmsg(VERBOSEORDER, debug);
+    logger->logmsg(debuglevel, debug);
 }
 
 void Order::print_buffer(int new_tn_in_socket) {
@@ -306,7 +306,7 @@ void Order::print_buffer(int new_tn_in_socket) {
         search_ptr=search_ptr->next;
     }
     free(client_message);
-    debug_print_buffer();
+    debug_print_buffer(VERBOSEORDER);
 }
 
 void Order::html_buffer(int new_tn_in_socket) {
@@ -318,8 +318,8 @@ void Order::html_buffer(int new_tn_in_socket) {
     while (search_ptr) {
         sprintf(client_message,"<tr><td>%u</td><td>0%o</td><td>%u</td><td>%u</td><td>%u<br>%u<br>%u<br>%u</td><td>%f<br>%f<br>%f<br>%f</td></tr>\n", 
         search_ptr->orderno, search_ptr->node, 
-        search_ptr->channel1, search_ptr->value1, search_ptr->channel2, search_ptr->value2,
-        search_ptr->channel3, search_ptr->value3, search_ptr->channel4, search_ptr->value4 );
+        search_ptr->channel1, search_ptr->channel2, search_ptr->channel3, search_ptr->channel4, 
+        search_ptr->value1, search_ptr->value2, search_ptr->value3, search_ptr->value4 );
         write(new_tn_in_socket , client_message , strlen(client_message));
         search_ptr=search_ptr->next;
     }
