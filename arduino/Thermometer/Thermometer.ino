@@ -3,8 +3,15 @@ A thermometer.
 Can be used with a display or only as a sensor without display
 */
 //****************************************************
+// My definitions for my nodes based on this sketch
+// Select only one at one time !!!!
+//#define AUSSENTHERMOMETER
+#define SCHLAFZIMMERTHERMOMETER
+//#define BASTELZIMMERTHERMOMETER
+//****************************************************
 //          Define node general settings
-#define RF24NODE        025
+//  Can be overwritten in individual settings later
+//****************************************************
 #define RF24CHANNEL     90
 // Delay between 2 transmission in ms
 #define RF24SENDDELAY 50
@@ -12,18 +19,18 @@ Can be used with a display or only as a sensor without display
 #define RF24RECEIVEDELAY 50
 // Sleeptime in ms !! 
 // (valid: 10.000 ... 3.600.000)
-#define RF24SLEEPTIME   10000
+#define RF24SLEEPTIME   60000
 // Max Number of Heartbeart Messages to send !!
 #define RF24SENDLOOPCOUNT 10
 // Max Number of Receiveloops !!
 #define RF24RECEIVELOOPCOUNT 10
 // number of empty loop after sending data
 // valid: 0...9
-#define RF24EMPTYLOOPCOUNT  2
+#define RF24EMPTYLOOPCOUNT  0
 // Voltage Faktor will be divided by 100 (Integer !!)!!!!
 #define VOLTAGEFACTOR 100
 // Add a constant number her (will be divided by 100)!!!
-#define VOLTAGEADDED 60
+#define VOLTAGEADDED 0
 // Kontrast of the display
 #define DISPLAY_KONTRAST 65;
 // Define low voltage level on processor
@@ -32,20 +39,7 @@ Can be used with a display or only as a sensor without display
 #define LOWVOLTAGELEVEL 3
 // Change the versionnumber to store new values in EEPROM
 // Set versionnumber to "0" to disable 
-#define EEPROM_VERSION 11
-//             END node general settings 
-//*****************************************************
-//       Define used temerature sensor here
-#define DALLAS_18B20
-//#define BME280
-//             END temerature sensor
-//*****************************************************
-//       Define if we have a Display and which
-//       disable all for temeraturesensor only
-#define HAS_DISPLAY
-#define DISPLAY_5110
-//             END Display
-//*****************************************************
+// #define EEPROM_VERSION 2
 // 4 voltages for the battery (empty ... full)
 #define U0 3.6
 #define U1 3.7
@@ -72,14 +66,45 @@ Can be used with a display or only as a sensor without display
 #define STATUSLED 3
 #define STATUSLED_ON LOW
 #define STATUSLED_OFF HIGH
-//#define STATUSLED 7 
-//#define STATUSLED_ON HIGH
-//#define STATUSLED_OFF LOW
 #define ONE_WIRE_BUS 8
 #define RECEIVEDELAY 100
 
+//*****************************************************
+//    Individual settings
+//-----------------------------------------------------
+#if defined(AUSSENTHERMOMETER)
+#define BME280
+#define RF24NODE        02
+#define STATUSLED       7
+#define STATUSLED_ON    HIGH
+#define STATUSLED_OFF   LOW
+#define LOWVOLTAGELEVEL 1
+#define EEPROM_VERSION  3
+
+#endif
+//-----------------------------------------------------
+#if defined(SCHLAFZIMMERTHERMOMETER)
+#define DALLAS_18B20
+#define DISPLAY_5110
+#define RF24NODE        015
+#define EEPROM_VERSION  3
+#define VOLTAGEADDED    55
+ 
+#endif
+//-----------------------------------------------------
+#if defined(BASTELZIMMERTHERMOMETER)
+#define DALLAS_18B20
+#define DISPLAY_5110
+#define RF24NODE        045
+#define EEPROM_VERSION  3
+#define VOLTAGEADDED    55
+ 
+#endif
+//-----------------------------------------------------
+//*****************************************************
 // ------ End of configuration part ------------
 
+#include <avr/pgmspace.h>
 #include <RF24Network.h>
 #include <RF24.h>
 #include <SPI.h>
@@ -88,6 +113,7 @@ Can be used with a display or only as a sensor without display
 #include <EEPROM.h>
 
 #if defined(DISPLAY_5110)
+#define HAS_DISPLAY
 #include <LCD5110_Graph.h>
 #endif
 
@@ -108,10 +134,12 @@ Vcc vcc(1.0);
 
 ISR(WDT_vect) { watchdogEvent(); }
 
+#if defined(HAS_DISPLAY)
 #if defined(DISPLAY_5110)
 LCD5110 myGLCD(7,6,5,2,4);
 extern uint8_t SmallFont[];
 extern uint8_t BigNumbers[];
+#endif
 #endif
 #if defined(DALLAS_18B20)
 // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
@@ -163,6 +191,7 @@ boolean             display_down = false;
 boolean             low_voltage_flag = false;
 //Some Var for restore after sleep of display
 #if defined(HAS_DISPLAY)
+boolean             monitormode = false;
 float               field1_val, field2_val, field3_val, field4_val;
 #endif
 float               cur_voltage;
@@ -240,13 +269,15 @@ float action_loop(unsigned char channel, float value) {
         retval = cur_voltage;
         break;      
       case 110:
+#if defined(HAS_DISPLAY)
 #if defined(DISPLAY_5110)
-        if (value > 0.5 || value < -0.5) {
+        if (value > 0.5 || value < 101) {
           eeprom.display_contrast=(uint8_t)value;
           myGLCD.setContrast(eeprom.display_contrast);
           EEPROM.put(0, eeprom);
         }
         retval = (float)eeprom.sleeptime;
+#endif
 #endif
       break;
       case 111:
@@ -259,7 +290,7 @@ float action_loop(unsigned char channel, float value) {
         break;
       case 112:
       // sendloopcount - number sendloop befor giving up 
-        if (value > 0.5 || value < -0.5) {
+        if (value > 0.5 || value < 21) {
           eeprom.sendloopcount=(uint16_t)value;
           EEPROM.put(0, eeprom);
         }
@@ -267,7 +298,7 @@ float action_loop(unsigned char channel, float value) {
         break;
       case 113:
       // receiveloopcount - number of receivloops befor giving up.
-        if (value > 0.5 || value < -0.5) {
+        if (value > 0.5 || value < 21) {
           eeprom.receiveloopcount=(uint16_t)value;
           EEPROM.put(0, eeprom);
         }
@@ -275,7 +306,7 @@ float action_loop(unsigned char channel, float value) {
         break;
       case 114:
       // emptyloopcount - only loop 0 will transmit all other loops will only read and display
-        if (value >= 0 && value < 10) {
+        if (value >= 0.5 && value < 21) {
           eeprom.emptyloopcount=(uint16_t)value;
           EEPROM.put(0, eeprom);
         } 
@@ -283,7 +314,7 @@ float action_loop(unsigned char channel, float value) {
         break;
       case 115:
       // sleep korrektion faktor in ms - will only be used once!
-        if (value > 0.5 || value < -0.5) {
+        if ((value > 0.5 && value < 600001) || (value < -0.5 && value > -600001)) {
           sleep_kor_time = (long int)value;
         }
         retval = sleep_kor_time;
@@ -298,17 +329,26 @@ float action_loop(unsigned char channel, float value) {
         break;
       case 117:
       // Voltageadded - will be divided by 100
-        if (value >= 0 || value < 1000) {
+        if ((value > 0.5 && value < 6000) || (value < -0.5 && value > -6000)) {
           eeprom.voltageadded=(int)value;
           EEPROM.put(0, eeprom);
         }
         retval = (float)eeprom.voltageadded;
+        break;
+      case 118:
+          if ( value > 0.5 && value < 1.5 ) {
+            monitor(eeprom.sleeptime/2); 
+            monitormode = true;
+          } else {
+            monitormode = false;
+          }
         break;
     }  
     return retval;
 }  
 
 void setup(void) {
+  delay(500);
   pinMode(STATUSLED, OUTPUT);     
   digitalWrite(STATUSLED,STATUSLED_ON); 
   EEPROM.get(0, eeprom);
@@ -328,25 +368,70 @@ void setup(void) {
   SPI.begin();
   radio.begin();
   sensor.begin(); 
-#if defined(DISPLAY_5110)
-  myGLCD.InitLCD();
-  myGLCD.setContrast(eeprom.display_contrast);
-  myGLCD.clrScr();
-#endif
-#if defined(HAS_DISPLAY)
-  draw_antenna(ANT_X0, ANT_Y0);
-  draw_therm(THERM_X0, THERM_Y0);
-#endif
   network.begin(eeprom.channel, eeprom.node);
   radio.setDataRate( RF24_250KBPS );
   radio.setPALevel( RF24_PA_MAX ) ;
   delay(1000);
   digitalWrite(STATUSLED,STATUSLED_OFF); 
+#if defined(HAS_DISPLAY)
+#if defined(DISPLAY_5110)
+  myGLCD.InitLCD();
+  myGLCD.setContrast(eeprom.display_contrast);
+  myGLCD.clrScr();
+#endif
+  monitor(15000);
+  draw_antenna(ANT_X0, ANT_Y0);
+  draw_therm(THERM_X0, THERM_Y0);
+#endif
   loopcount = 0;
   last_send = 0;
 }
 
 #if defined(HAS_DISPLAY)
+void monitor(uint32_t delaytime) {
+  const char string_1[] PROGMEM = "Temp: ";
+  const char string_2[] PROGMEM = "Ubatt: ";
+  const char string_3[] PROGMEM = "Sleep: ";
+  const char string_4[] PROGMEM = "send/rec/empty: ";
+  const char string_5[] PROGMEM = "RF24 Network: ";
+  const char string_6[] PROGMEM = "Node: ";
+  const char string_7[] PROGMEM = "Channel: ";
+#if defined(DISPLAY_5110)
+  myGLCD.setFont(SmallFont);
+  get_sensordata();
+  myGLCD.print(string_1, 0, 0);
+  myGLCD.printNumF(temp,1, 30, 0);
+  cur_voltage = (vcc.Read_Volts()+((float)eeprom.voltageadded/100.0))*((float)eeprom.voltagefactor)/100.0;
+  float mes_voltage = vcc.Read_Volts();
+  myGLCD.print(string_2, 0, 10);
+  myGLCD.printNumF(cur_voltage,1, 40, 10);
+  myGLCD.printNumF(mes_voltage,1, 65, 10);
+  myGLCD.print(string_3, 0, 20);
+  myGLCD.printNumI(eeprom.sleeptime, 45, 20);
+  myGLCD.print(string_4, 0, 30);
+  myGLCD.printNumI(eeprom.sendloopcount, 0, 40);
+  myGLCD.print("/", 20, 40);
+  myGLCD.printNumI(eeprom.receiveloopcount, 30, 40);
+  myGLCD.print("/", 60, 40);
+  myGLCD.printNumI(eeprom.emptyloopcount, 70, 40);
+  myGLCD.update();
+  sleep4ms(delaytime);
+  delay(10);
+  myGLCD.clrScr();
+  myGLCD.print(string_5, 0, 0);
+  myGLCD.print(string_6, 0, 10);
+  myGLCD.printNumI(0, 55, 10);
+  myGLCD.printNumI(eeprom.node/8, 62, 10);
+  myGLCD.printNumI(eeprom.node%8, 70, 10);
+  myGLCD.print(string_7, 0, 20);
+  myGLCD.printNumI(eeprom.channel, 60, 20);
+  myGLCD.update();
+  sleep4ms(delaytime);
+  delay(10);
+  myGLCD.clrScr();
+#endif  
+}
+
 void display_sleep(boolean dmode) {
   display_down = dmode;
   if ( dmode ) { // Display go to sleep
@@ -389,25 +474,29 @@ void wipe_therm(byte x, byte y) {
 }
 
 void draw_temp(float t) {
-  int mytemp, temp_i, temp_dez_i; 
+  int temp_abs, temp_i, temp_dez_i; 
   if ( ! display_down ) {
 #if defined(DISPLAY_5110)
-    if (t < 0) {
-      mytemp=t*-1;
+    if (t < 0.0) {
+      temp_abs=t*-1;
       myGLCD.drawRect(0,10,9,12);
     } else {
-      mytemp=t;
+      temp_abs=t;
     }      
-    temp_i=(int)temp;
+    temp_i=(int)temp_abs;
     temp_dez_i=t*10-temp_i*10;
     for(byte i=0; i<74; i++) {
       for (byte j=0; j<25; j++) {
         myGLCD.clrPixel(i,j);
       }
     }
-    if (temp<99) {
+    if (temp_i < 100) {
       myGLCD.setFont(BigNumbers);
-      myGLCD.printNumI(temp_i, 10, 0);
+      if ( temp_i < 10 ) {
+        myGLCD.printNumI(temp_i, 20, 0);        
+      } else {
+        myGLCD.printNumI(temp_i, 10, 0);
+      }
       myGLCD.drawRect(40,20,43,23);
       myGLCD.printNumI(temp_dez_i, 45, 0);
       myGLCD.drawRect(61,2,64,5);
@@ -420,6 +509,7 @@ void draw_temp(float t) {
 #endif
   }
 }
+
 
 void print_field(float val, int field) {
   int x0, y0;
@@ -558,8 +648,10 @@ void loop(void) {
   low_voltage_flag = (vcc.Read_Volts() <= LOWVOLTAGELEVEL);
   if ((! low_voltage_flag) || (last_send > 3600000)) {
 #if defined(HAS_DISPLAY)
-    draw_battery(BATT_X0,BATT_Y0,cur_voltage);
-    draw_therm(THERM_X0, THERM_Y0);
+    if ( ! monitormode ) {
+      draw_battery(BATT_X0,BATT_Y0,cur_voltage);
+      draw_therm(THERM_X0, THERM_Y0);
+    }
 #endif
     get_sensordata();
 #if defined(HAS_DISPLAY)
@@ -646,10 +738,18 @@ void loop(void) {
   }
   if ( sleep_kor_time != 0 ) {
     long int tempsleeptime = eeprom.sleeptime + sleep_kor_time;
-    sleep4ms(tempsleeptime);
+    if ( monitormode ) {
+      monitor(tempsleeptime/2);
+    } else {
+      sleep4ms(tempsleeptime);
+    }
     sleep_kor_time=0;
   } else {
-    sleep4ms(eeprom.sleeptime);
+    if ( monitormode ) {
+      monitor(eeprom.sleeptime/2);
+    } else {
+      sleep4ms(eeprom.sleeptime);
+    }
   } 
   last_send += eeprom.sleeptime;
   loopcount++;

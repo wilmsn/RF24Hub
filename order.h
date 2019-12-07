@@ -24,7 +24,7 @@ public:
     bool del_node(uint16_t);
     bool is_orderno(uint16_t orderno);
     uint16_t del_old_entry(uint64_t entrytime);
-    void debug_print_buffer(void);
+    void debug_print_buffer(int);
     void begin(Logger* _logger);
     void add_order(uint16_t node, uint8_t type, bool HB_order, uint8_t channel1, float value1, uint64_t entrytime);
     void modify_order(uint16_t node, uint8_t pos, uint8_t channel, float value);
