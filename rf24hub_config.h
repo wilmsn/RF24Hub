@@ -5,15 +5,21 @@ rf24hub_config.h ==> all global definitions go here
 #ifndef _RF24HUB_CONFIG_H_   
 #define _RF24HUB_CONFIG_H_
 
-#define PRGNAME "rf24hub"
-#define PRGVERSION "1.3 vom 30.11.2019"
-
 //
 // default values: can be overwritten in config file
 //
-#define LOGFILE "/var/log/rf24hubd.log"
-#define PIDFILE "/var/run/rf24hubd.pid"
-#define DEFAULT_CONFIG_FILE "/etc/rf24hub/rf24hubd.cfg"
+
+#define RF24HUB_PRGNAME "rf24hub"
+#define RF24HUB_PRGVERSION "1.3 vom 30.11.2019"
+#define RF24HUB_CONFIGFILE "/etc/rf24hub/rf24hub.cfg"
+#define RF24HUB_LOGFILE "/var/log/rf24hubd.log"
+#define RF24HUB_PIDFILE "/var/run/rf24hubd.pid"
+
+#define RF24GW_PRGNAME "rf24gw"
+#define RF24GW_PRGVERSION "0.1"
+#define RF24GW_CONFIGFILE "/etc/rf24gw/rf24gw.cfg"
+#define RF24GW_LOGFILE "/var/log/rf24gwd.log"
+#define RF24GW_PIDFILE "/var/run/rf24gwd.pid"
 
 //
 // END default values: can be overwritten in config file
@@ -43,14 +49,13 @@ rf24hub_config.h ==> all global definitions go here
 #define PARAM_MAXLEN_DB_SCHEMA 20
 #define PARAM_MAXLEN_DB_USERNAME 20
 #define PARAM_MAXLEN_DB_PASSWORD 20
-#define ERRSTR "ERROR: "
-#define DEBUGSTR "DEBUG: "
 #define DEBUGSTRINGSIZE 500
 #define SQLSTRINGSIZE 500
 // Verboselevel
 #define VERBOSECRITICAL 1
 #define VERBOSESTARTUP 2
 #define VERBOSECONFIG 3
+#define VERBOSEORDERMIN 4
 #define VERBOSEORDER 5
 #define VERBOSETELNET 6
 #define VERBOSESQL 7

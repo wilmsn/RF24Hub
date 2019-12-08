@@ -24,8 +24,6 @@ logmode_t logmode;
 
 char* logfilename;
 int verboselevel;
-char debug[DEBUGSTRINGSIZE];
-
 void logmsg(int mesgloglevel, char *mymsg);
 void set_logfile(char*);
 void set_logmode(char);
