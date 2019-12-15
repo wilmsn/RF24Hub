@@ -6,23 +6,40 @@
 
 #include <stdint.h>
 
-typedef struct {
-  uint16_t    network_id;
-  uint16_t    node_id;
-  uint16_t    msg_id;
-  uint16_t    flags;
-  uint32_t    sensor1;
-  uint32_t    sensor2;
-} udp_data_t;
+typedef struct {   // 
+  uint8_t     node_id;         
+  uint8_t     msg_id;          
+  uint8_t     msg_type;        
+  uint8_t     msg_flags;       
+  uint8_t     orderno;         
+  uint8_t     network_id;      
+  uint8_t     reserved1;      
+  uint8_t     reserved2;      
+  uint32_t    data1;         
+  uint32_t    data2;         
+  uint32_t    data3;         
+  uint32_t    data4;         
+  uint32_t    data5;         
+  uint32_t    data6;         
+} payload_t;
 
 typedef struct {
-  uint16_t    network_id;
-  uint16_t    node_id;
-  uint16_t    msg_id;
-  uint16_t    flags;
-  uint32_t    sensor1;
-  uint32_t    sensor2;
-} payload_t;
+  uint8_t     node_id;         
+  uint8_t     msg_id;          
+  uint8_t     msg_type;        
+  uint8_t     msg_flags;       
+  uint8_t     orderno;         
+  uint8_t     network_id;      
+  uint8_t     reserved1;      
+  uint8_t     reserved2;      
+  uint32_t    data1;         
+  uint32_t    data2;         
+  uint32_t    data3;         
+  uint32_t    data4;         
+  uint32_t    data5;         
+  uint32_t    data6;         
+} udp_data_t;
+
 
 typedef struct {
   char SSID[31];                    // SSID of WiFi

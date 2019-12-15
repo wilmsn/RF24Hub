@@ -53,9 +53,9 @@ UP: fill_order_buffer   =>  Füllt das ARRAY "order_buffer" mit dem übergebenen
 #include <iostream>
 #include <sstream>
 #include <string> 
-#include <RF24/RF24.h>
-#include <RF24/utility/RPi/bcm2835.h>
-#include <RF24Network/RF24Network.h>
+//#include <RF24/RF24.h>
+//#include <RF24/utility/RPi/bcm2835.h>
+//#include <RF24Network/RF24Network.h>
 #include <time.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -82,9 +82,12 @@ UP: fill_order_buffer   =>  Füllt das ARRAY "order_buffer" mit dem übergebenen
 #include "node.h"
 #include "sensor.h"
 #include "order.h"
-#include "telnet.h"
 #include "orderbuffer.h"
 #include "config.h"
+#include "database.h"
+#include "zahlenformat.h"
+#include "gen_func.h"
+#include "telnet.h"
 
 #define BUF 1024
 
@@ -103,8 +106,8 @@ MYSQL     *db;
 MYSQL_RES *res;
 MYSQL_ROW row;
 char* pEnd;
-struct sockaddr_in tcp_address, udp_address;
-int tcp_sockfd, udp_sockfd;
+struct sockaddr_in tcp_address, udp_address, fhem_address;
+int tcp_sockfd, udp_sockfd, fhem_sockfd;
 int new_tn_in_socket;
 socklen_t tcp_addrlen, udp_addrlen;
 struct sockaddr_storage clientaddress;
@@ -115,7 +118,7 @@ char ipAddrStr[INET_ADDRSTRLEN];
 
 
 // Setup for GPIO 25 CE and CE0 CSN with SPI Speed @ 8Mhz
-RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
+//RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
 //RF24 radio(22,0,BCM2835_SPI_SPEED_1MHZ);
 
 Order           order;
@@ -124,22 +127,22 @@ Sensor          sensor;
 Node            node;
 Logger          logger;
 Config          cfg(RF24HUB_PRGNAME,RF24HUB_PRGVERSION);
-
+Database        database;
 
 int orderloopcount=0;
 int ordersqlexeccount=0;
 bool ordersqlrefresh=true;
 bool log2logfile=false;
-bool rf24_carrier=false;
-bool rf24_rpd=false;
+//bool rf24_carrier=false;
+//bool rf24_rpd=false;
 
 char buffer1[50];
 char buffer2[50];
 //char debug[DEBUGSTRINGSIZE];
-char sql_stmt[SQLSTRINGSIZE];
+//char sql_stmt[SQLSTRINGSIZE];
 
-uint16_t getnodeadr(char *node);
-char config_file[PARAM_MAXLEN_CONFIGFILE];
+//uint16_t getnodeadr(char *node);
+//char config_file[PARAM_MAXLEN_CONFIGFILE];
 
 
 /*******************************************************************************************
@@ -148,6 +151,11 @@ char config_file[PARAM_MAXLEN_CONFIGFILE];
 * Used for communication with FHEM
 *
 ********************************************************************************************/
+void receiveTelnetMessage(int tn_socket, struct sockaddr_in * address);
+
+void send_fhem_cmd(const char* fhem_server, int fhem_port, char* fhem_dev, float value);
+
+void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message);
 
 void do_tn_cmd(uint16_t node, uint8_t sensor, float value);
 
@@ -160,15 +168,13 @@ void process_tn_in(int new_socket, char* buffer, char* client_message);
 *
 ********************************************************************************************/
 
-void init_node(uint16_t initnode );
+// void init_node(uint16_t initnode );
 
 void print_sensor(void);
 
 void init_system(void);
 
 void exit_system(void);
-
-uint16_t getnodeadr(char *node);
 
 void init_order(unsigned int element);
 

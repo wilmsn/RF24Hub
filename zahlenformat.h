@@ -11,14 +11,14 @@
 #define ZF_ZAHL_NEGATIV     0b00000001000000000000000000000000
 #define ZF_EXPO_NEGATIV     0b00000000100000000000000000000000
 #define ZF_EXPO_WERT        0b00000000011110000000000000000000
-#define ZF_ZAHL_WERT        0b00000000000000011111111111111111
+#define ZF_ZAHL_WERT        0b00000000000001111111111111111111
 
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
 /************************************
- * Das Ergebnis wird mit einer Genauigkeit von 16 Bit 
- * (131072 max, genutzt 100000 = 5 Stellen = 0,01 Promille) gespeichert.
+ * Das Ergebnis wird mit einer Genauigkeit von 19 Bit 
+ * (524288 max, genutzt 500000 = 0,02 Promille) gespeichert.
  * Zahlenformat X * 10^Y
  * Format des Sensorwertes
  * Bitreihenfolge: Bit 1 (MSB) ... Bit 32 (LSB)
@@ -26,27 +26,26 @@
  * Bit 8:       Vorzeichen (0=positiv; 1=negativ)
  * Bit 9:       Vorzeichen Exponent (0=10^X; 1=10^-X)
  * Bit 10..13   Exponent (0..15)
- * Bit 14..15   Reserviert / ungenutzt
- * Bit 16..32   Mantisse (0..10000)
+ * Bit 14..32   Mantisse (0..10000)
  ***********************************/
 
 
 /***************************************************
  * Extrahiert die Sensornummer aus dem Transportwert
  ***************************************************/
-uint8_t getSensor(uint32_t val);
+uint8_t getChannel(uint32_t val);
 
 /***************************************************
  * Extrahiert den Sensorwert aus dem Transportwert
  * Hier: Float
  ***************************************************/
-float getValue(uint32_t val);
+float getValue_f(uint32_t val);
 
 /***************************************************
  * Extrahiert den Sensorwert aus dem Transportwert
- * Hier: Float
+ * Hier: Integer
  ***************************************************/
-uint16_t getValue_uint(uint32_t val);
+uint16_t getValue_i(uint32_t val);
 
 /******************************************************
  * Verpackt die Sensornummer und den Messwert zu einem 
@@ -54,7 +53,7 @@ uint16_t getValue_uint(uint32_t val);
  * Sensor: gültige Werte zwischen 1..127
  * Value: gültige Werte: -1*10^19 .. 1*10^19
  ******************************************************/
-uint32_t calcTransportValue(uint8_t sensor, float value);
+uint32_t calcTransportValue_f(uint8_t sensor, float value);
 
 /******************************************************
  * Verpackt die Sensornummer und den Messwert zu einem 
@@ -62,5 +61,4 @@ uint32_t calcTransportValue(uint8_t sensor, float value);
  * Sensor: gültige Werte zwischen 1..127
  * Value: gültige Werte: 0 .. 65535
  ******************************************************/
-uint32_t calcTransportValue_uint(uint8_t sensor, uint16_t value);
-
+uint32_t calcTransportValue_i(uint8_t sensor, uint16_t value);

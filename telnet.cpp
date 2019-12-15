@@ -1,5 +1,8 @@
 #include "telnet.h"
 
+
+
+
 void sendUdpMessage(const char* host, const char* port, udp_data_t * udp_data ) {
 	int sockfd;
 	struct addrinfo hints, *servinfo, *p;
@@ -79,86 +82,4 @@ void openSocket(const char* host, const char* port, struct sockaddr_in *address,
 	fcntl( in_socket, F_SETFL, save_fd );
     *handle = in_socket;
 }
-
-
-/*    
-void receive_tn_in(int new_tn_in_socket, struct sockaddr_in * address) {
-    char *buffer =  (char*) malloc (TELNETBUFFERSIZE);
-    char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
-    ssize_t MsgLen;
- cout << "Anfang receiveTelnetMessage" << endl;
-    // send something like a prompt. perl telnet is waiting for it otherwise we get error
-    // use this in perl: my $t = new Net::Telnet (Timeout => 2, Port => 7001, Prompt => '/rf24hub>/');
-    sprintf(client_message,"rf24hub> ");
-    write(tn_socket , client_message , strlen(client_message));
- cout << "Client %s ist connected ..." << inet_ntoa (address->sin_addr) << endl;
-//	log.logmsg(VERBOSETELNET, debug);
-    sprintf(buffer,"                                 ");
-    MsgLen = recv(tn_socket, buffer, TELNETBUFFERSIZE, 0);
-//    sprintf(client_message,"%s",buffer);
-//    write(tn_socket , client_message , strlen(client_message));
-//    char msglen_str[10];
-//    sprintf(msglen_str,"%ld",MsgLen);
-//	sprintf (debug,"Buffer: %s MsgLen: %d ", cfg.trim(buffer), MsgLen);
-//	cfg.logmsg(VERBOSETELNET, debug);
-
-//    debug = "Buffer: \"";
-//    debug += trim(buffer);
-//    debug += "\" Msglen: ";
-//    debug += msglen_str;
-//    cfg.logmsg(VERBOSETELNET, debug);
-    if (MsgLen>0) {
-        //process_tn_in(tn_socket, buffer, client_message);
-//        cout << "TN Message" << client_message << endl;
-    }
- cout << "vor close receiveTelnetMessage" << endl;
-    close (tn_socket);
-    free(buffer);
-    free(client_message);
- cout << "ende receiveTelnetMessage" << endl;
-    //                 exit(0);
-}
-*/
-void receiveTelnetMessage(int new_tn_in_socket, struct sockaddr_in * address) {
-    char *buffer =  (char*) malloc (TELNETBUFFERSIZE);
-    char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
-    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    ssize_t MsgLen;
-    // send something like a prompt. perl telnet is waiting for it otherwise we get error
-    // use this in perl: my $t = new Net::Telnet (Timeout => 2, Port => 7001, Prompt => '/rf24hub>/');
-    sprintf(client_message,"rf24hub> ");
-    write(new_tn_in_socket , client_message , strlen(client_message));
-//	cout << "Client " <<  inet_ntoa (address->sin_addr) << "ist connected ..." << endl;
-    memset(buffer,0,sizeof(buffer));
-    MsgLen = recv(new_tn_in_socket, buffer, TELNETBUFFERSIZE, 0);
-    sprintf(debug, "Telnet Data: %s", cfg.trim(buffer));
-	logger.logmsg(VERBOSETELNET, debug);
-//    cout << "Msglen: " << MsgLen << " Buffer: " << buffer << endl;
-
-
-//    write(new_tn_in_socket , client_message , strlen(client_message));
-//    char msglen_str[10];
-//    sprintf(msglen_str,"%ld",MsgLen);
-//	sprintf (debug,"Buffer: %s MsgLen: %d ", cfg.trim(buffer), MsgLen);
-//	cfg.logmsg(VERBOSETELNET, debug);
-
-//    debug = "Buffer: \"";
-//    debug += trim(buffer);
-//    debug += "\" Msglen: ";
-//    debug += msglen_str;
-//    cfg.logmsg(VERBOSETELNET, debug);
-    if (MsgLen>0) {
-//        process_tn_in(new_tn_in_socket, buffer, client_message);
-    }
-    close (new_tn_in_socket);
-    free(buffer);
-    free(client_message);
-    free(debug);
-    //                 exit(0);
-}
-
-//int sendUdpMessage( int sockfd, udp_data_t * udp_data) {
- //    int numbytes = sendto(sockfd, &udp_data, sizeof(udp_data), 0, (struct sockaddr *)&udp_address,  &udp_addrlen);
-  //   return numbytes;
-//}
 

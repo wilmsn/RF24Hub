@@ -67,6 +67,7 @@ uint16_t orderno, init_orderno;
 
 // a test structure for values comming via UDP
 udp_data_t udp_hub_data, udp_r_data, udp_node_data;
+payload_t payload;
 struct sockaddr_in udp_address;
 //socklen_t udp_addrlen;
 int udp_sockfd;

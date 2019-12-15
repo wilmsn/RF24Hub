@@ -11,7 +11,7 @@ Testnode
 // The CS Pin of the Radio module
 #define RADIO_CSN_PIN 9
 // The pin of the statusled
-#define STATUSLED 3
+#define STATUSLED LED_BUILTIN
 #define STATUSLED_ON HIGH
 #define STATUSLED_OFF LOW
 
@@ -31,19 +31,33 @@ Vcc vcc(VccCorrection);
 
 
 
-uint8_t rx_address1[] = { 0x34, 0x12, 0xcc, 0xcc, 0xcc};
-uint8_t  tx_address[] = { 0x76, 0x98, 0xcc, 0xcc, 0xcc};
+//uint8_t rx_address1[] = { 0xcc, 0xcc, 0xcc, 0xcc, 0xcc};
+//uint8_t  tx_address[] = { 0xcc, 0xcc, 0xcc, 0xcc, 0xcc};
+uint8_t rx_address1[] = { 0x33, 0xcc, 0xcc, 0xcc, 0xcc};
+uint8_t  tx_address[] = { 0xf0, 0xcc, 0xcc, 0xcc, 0xcc};
+bool test=false;
 
 struct payload_t {
-  uint16_t    network_id;
-  uint16_t    node_id;
-  uint16_t    msg_id;
-  uint16_t    flags;
-  uint32_t    sensor1;
-  uint32_t    sensor2;
+  uint8_t     node_id;         
+  uint8_t     msg_id;          
+  uint8_t     msg_type;        
+  uint8_t     msg_flags;       
+  uint8_t     orderno;         
+  uint8_t     network_id;      
+  uint8_t     reserved1;      
+  uint8_t     reserved2;      
+  uint32_t    data1;         
+  uint32_t    data2;         
+  uint32_t    data3;         
+  uint32_t    data4;         
+  uint32_t    data5;         
+//  uint32_t    data6;         
 };
 
-struct payload_t payload;
+struct payload_t payload, payload1;
+
+uint8_t channel;
+float value = 0;
 
 // nRF24L01(+) radio attached using Getting Started board 
 // Usage: radio(CE_pin, CS_pin)
@@ -53,8 +67,10 @@ void setup() {
 
   Serial.begin(9600);
   printf_begin();
-  pinMode(STATUSLED, OUTPUT);     
-  digitalWrite(STATUSLED,STATUSLED_ON); 
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, HIGH); 
+//  pinMode(STATUSLED, OUTPUT);     
+//  digitalWrite(STATUSLED,STATUSLED_ON); 
   SPI.begin();
   radio.begin();
   //****
@@ -71,17 +87,23 @@ void setup() {
   radio.openWritingPipe(tx_address);
   radio.openReadingPipe(1,rx_address1);
   delay(1000);
-  digitalWrite(STATUSLED,STATUSLED_OFF); 
+digitalWrite(LED_BUILTIN, LOW); 
+//  digitalWrite(STATUSLED,STATUSLED_OFF); 
   radio.printDetails();
   payload.network_id = NETWORK;
   payload.node_id = NODE;
   payload.msg_id = 1;
-  payload.flags = 0;
-  payload.sensor1 = 0;
-  payload.sensor2 = 0;
+  payload.msg_type = 51;
+  payload.msg_flags = 0;
+  payload.orderno = 0;
+  payload.data1 = 0;
+  payload.data2 = 0;
 }
 
 void loop() {
+      channel=1;
+      value += 0.0123;
+      payload.data1=calcTransportValue_f(channel, value);
       radio.stopListening();                                
       Serial.print(F("Data sent msg_nr:"));
       Serial.print(payload.msg_id);
@@ -93,4 +115,14 @@ void loop() {
       radio.startListening();   
       payload.msg_id++;                        
     delay(1000);
+    if ( radio.available() ){  
+       radio.read( &payload1, sizeof(payload1) );
+        Serial.println(">>Msg received"); 
+    } 
+/*    if (test) {
+       digitalWrite(LED_BUILTIN, HIGH); 
+    } else {
+       digitalWrite(LED_BUILTIN, LOW); 
+    }      
+    test = !test; */
 }

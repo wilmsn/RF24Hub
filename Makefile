@@ -14,7 +14,6 @@
 PREFIX=/usr/local
 EXECDIR=${PREFIX}/bin
 INCLUDEDIR=${PREFIX}/include
-INCLUDEDIR1=/usr/include/mariabd
 MARIADB_LIBS := $(shell mariadb_config --libs) 
 MARIADB_INC := $(shell mariadb_config --cflags)
 ARCH := $(shell uname -m)
@@ -32,19 +31,19 @@ endif
 all: rf24hubd rf24gwd
 
 # Make the rf24hub deamon
-rf24hubd: log.o node.o sensor.o orderbuffer.o order.o config.o telnet.o rf24hubd.cpp
-	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm ${MYSQLLIBS} $^ -o $@
+rf24hubd: log.o node.o sensor.o orderbuffer.o order.o config.o gen_func.o telnet.o database.o zahlenformat.o rf24hubd.cpp
+	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} ${MARIADB_INC} ${MARIADB_LIBS} $^ -o $@
 
 rf24gwd: log.o config.o telnet.o zahlenformat.o rf24gwd.cpp
 	g++ ${CCFLAGS} ${RF24FLAGS} -Wall $^ -o $@
 
 # Test of order object
 ordertest: order.o order_test.cpp
-	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24network ${MYSQLLIBS} $^ -o $@
+	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24network ${MARIADB_LIBS} $^ -o $@
 
 # Test of orderbuffer object
 orderbuffertest: orderbuffer.o orderbuffer_test.cpp
-	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24network ${MYSQLLIBS} $^ -o $@
+	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24network ${MARIADB_LIBS} $^ -o $@
 
 # clear build files
 clean:

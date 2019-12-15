@@ -21,20 +21,8 @@
 /*************************************************
  * 
  * This module covers all 
- * the communication comeing in via socket
+ * the generic functions
  * 
  ************************************************/
  
-extern Config cfg; 
-extern sockType_t sockType;
-extern Logger logger;
-extern Node node;
-extern Sensor sensor;
-extern Order order;
-extern OrderBuffer orderbuffer;
-
-void openSocket(const char* host, const char* port, struct sockaddr_in *address, int* handle, sockType_t sockType );
-
-void sendUdpMessage(const char* host, const char* port, udp_data_t * udp_data );
-
-
+char * trim (char * s);
