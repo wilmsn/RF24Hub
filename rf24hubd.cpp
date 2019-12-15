@@ -287,6 +287,9 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
         uint8_t mychannel = 0;
         sensor.find_node_chanel(&mynode, &mychannel, wort3, strtoul(wort3, &pEnd, 10));
         orderbuffer.add_orderbuffer(mymillis(),mynode,mychannel,strtof(wort4, &pEnd));
+//        if ( order.has_order(mynode) ) {
+// TODO             order.
+//        }
 		if ( strcmp(wort1,cmp_setlast) == 0 && ! node.is_HB_node(mynode) ) {
 			make_order(mynode, 61);
 		}
@@ -337,6 +340,7 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 	// initialisation of rf24hubd: reloads data from database
 	if ( (strcmp(wort1,cmp_init) == 0) && (strlen(wort2) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
 		tn_input_ok = true;
+        exit_system();
 		init_system();
 	}
 	if ( ! tn_input_ok) {
@@ -440,6 +444,7 @@ void make_order(uint16_t mynode, uint8_t mytype) {
     uint8_t channel; 
     float value;
     void* ret_ptr;
+    order.del_node(mynode);
     ret_ptr = orderbuffer.find_order4node(mynode, NULL, &channel, &value);
     if (ret_ptr) {
         order.add_order(mynode, mytype, node.is_HB_node(mynode), channel, value, mymillis());
