@@ -72,6 +72,7 @@ void setup() {
   radio.begin();
   cur_voltage = vcc.Read_Volts();
   radio.setChannel(10);
+//  radio.setDataRate( RF24_250KBPS );
   radio.setDataRate( RF24_1MBPS );
   radio.setPALevel( RF24_PA_MAX ) ;
   radio.setRetries(15, 15);
@@ -97,11 +98,7 @@ void setup() {
 }
 
 void loop() {
-      
-    while ( radio.available() ){
-        radio.read( &payload1, sizeof(payload1) );
-          Serial.println(">>Msg received"); 
-    }
+    payload.data1=micros();  
     if ( loopcount == 100 ) {
       radio.stopListening();                                
       Serial.print(F("Data sent msg_nr:"));
@@ -114,6 +111,15 @@ void loop() {
       radio.startListening();   
       payload.msg_id++;
       loopcount=0;
+    }
+    while ( radio.available() ){
+        radio.read( &payload1, sizeof(payload1) );
+          Serial.println(">>Msg received");
+          Serial.print(payload.msg_id); 
+          Serial.print("  Triptime: ");
+//          Serial.println(millis());  
+//          Serial.println(payload.data1);  
+          Serial.println(micros()-payload.data1);  
     }
     delay(50);            
     loopcount++;            
