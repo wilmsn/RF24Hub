@@ -1,25 +1,25 @@
 #############################################################################
 #
-# Makefile for rf24hub and gateway
+# Makefile for rf24hub and rf24gw 
 #
 # License: GPL (General Public License)
 # Author:  Norbert Wilms 
-# Date:    2019/08/22 
+# Date:    08.12.2019
 # 
 # Description:
 # ------------
-# use "make" all and make install to install the sensorhub 
-# use "make installDB" to install a new and empty database (existing database will be deleted)
+# use make all and make install to install the rf24hub and rf24gw 
+# use make installDB to install a new and empty database (existing database will be deleted)
 #
 PREFIX=/usr/local
 EXECDIR=${PREFIX}/bin
-CC=g++
+INCLUDEDIR=${PREFIX}/include
 MARIADB_LIBS := $(shell mariadb_config --libs) 
 MARIADB_INC := $(shell mariadb_config --cflags)
 ARCH := $(shell uname -m)
 
 ifeq "$(ARCH)" "armv7l"
-	CCFLAGS=-Ofast -mfpu=vfp -mfloat-abi=hard -march=armv7-a -mtune=arm1176jzf-s -std=c++0x -pthread
+	CCFLAGS=-Ofast -mfpu=vfp -mfloat-abi=hard -march=armv7 -mtune=arm1176jzf-s -std=c++0x -pthread
 	RF24FLAGS=-lrf24-bcm
 endif
 
@@ -28,30 +28,26 @@ ifeq "$(ARCH)" "x86_64"
 endif
 
 # make all
-all: rf24hubd rf24gwd
+all: rf24gwd
 
 # Make the rf24hub deamon
-rf24hubd: config.o database.o fhem.o telnet.o rf24hubd.cpp
-	g++ ${CCFLAGS} -Wall -I ${MARIADB_INC} ${MARIADB_LIBS} $^ -o $@
+rf24hubd: log.o node.o sensor.o orderbuffer.o order.o config.o gen_func.o telnet.o database.o zahlenformat.o rf24hubd.cpp
+	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} ${MARIADB_INC} ${MARIADB_LIBS} $^ -o $@
 
-# Make the rf24gateway deamon
-rf24gwd: config.o telnet.o rf24gwd.cpp
+rf24gwd: log.o zahlenformat.o rf24gwd.cpp
 	g++ ${CCFLAGS} ${RF24FLAGS} -Wall $^ -o $@
 
-receiver: 
-	g++ ${CCFLAGS} -Wall -lrf24-bcm $@.cpp -o $@
+# Test of order object
+ordertest: order.o order_test.cpp
+	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24network ${MARIADB_LIBS} $^ -o $@
 
-test_config: config.o test_config.o
-	$(CC) ${CCFLAGS} $^ -o $@
-	#./$@ -c rf24hubd.cfg
-
-test_telnet: config.o telnet.o test_telnet.o
-	$(CC) ${CCFLAGS} $^ -o $@
-	#./$@ -c rf24hubd.cfg
+# Test of orderbuffer object
+orderbuffertest: orderbuffer.o orderbuffer_test.cpp
+	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24network ${MARIADB_LIBS} $^ -o $@
 
 # clear build files
 clean:
-	rm rf24hubd rf24gwd *.o
+	rm *.o rf24hubd rf24gwd
 
 # Install the sensorhub
 install: 

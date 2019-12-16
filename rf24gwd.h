@@ -10,15 +10,12 @@ V0.1 Initial version
 #ifndef _RF24GATEWAY_H_   /* Include guard */
 #define _RF24GATEWAY_H_
 
-#define PRGVERSION "0.1"
-
 //--------- End of global define -----------------
 
 #include "rf24hub_common.h"
 #include "rf24hub_config.h"
-#include "config.h"
-#include "telnet.h"
-
+#include "zahlenformat.h"
+#include "log.h"
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
@@ -63,13 +60,12 @@ RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);
 //RF24 radio(22,0,BCM2835_SPI_SPEED_1MHZ);
 
 //RF24Network network(radio);
-uint8_t addresses[][6] = {"aaaaa","bbbbb"};
-
 
 uint16_t orderno, init_orderno;
 
 // a test structure for values comming via UDP
-struct udp_data_t udp_s_data, udp_r_data, udp_node_data;
+udp_data_t udp_hub_data, udp_r_data, udp_node_data;
+payload_t payload;
 struct sockaddr_in udp_address;
 //socklen_t udp_addrlen;
 int udp_sockfd;
@@ -88,10 +84,9 @@ char ipAddrStr[INET_ADDRSTRLEN];
 
 
 
-string debug;
+char debug[DEBUGSTRINGSIZE];
 
-CONFIG cfg(RF24GW_PRGNAME, PRGVERSION);
-
+Logger logger;
 
 int main(int argc, char* argv[]);
 
