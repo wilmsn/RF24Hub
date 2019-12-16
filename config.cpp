@@ -20,11 +20,11 @@ char * Config::trim (char * s) {
 
 uint8_t Config::mk_addr_byte(char byte1, char byte2) {
     uint8_t hb, lb, rv;
-    if (byte1 >= '0' && byte1 <= '9') hb = (byte1 - 48)<<4;
+    if (byte1 >= '0' && byte1 <= '9') hb = (byte1 - '0')<<4;
     if (byte1 >= 'a' && byte1 <= 'f') hb = (byte1 - 87)<<4;
-    if (byte2 >= '0' && byte2 <= '9') lb = (byte2 - 48);
-    if (byte2 >= 'a' && byte2 <= 'f') lb = (byte2 - 87);
-    //rv = 0;
+    if (byte1 >= '0' && byte1 <= '9') lb = (byte2 - '0');
+    if (byte1 >= 'a' && byte1 <= 'f') lb = (byte2 - 87);
+    rv = 0;
     rv = hb | lb;
     printf("%u %u = %02x\n",byte1, byte2, rv);
     return rv;
@@ -166,23 +166,15 @@ void Config::processParams(int argc, char* argv[]) {
          trim (value);
     /* Copy into correct entry in parameters struct */
     if      (strcmp(name, "db_hostname")==0) dbHostName = value;
-    else if (strcmp(name, "db_port")==0)     dbPort = stoi(value);
+    else if (strcmp(name, "db_port")==0)     dbPort = value;
     else if (strcmp(name, "db_schema")==0)   dbSchema = value;
     else if (strcmp(name, "db_username")==0) dbUserName = value;
     else if (strcmp(name, "db_password")==0) dbPassWord = value;
-    else if (strcmp(name, "hub_verboselevel")==0) {
+    else if (strcmp(name, "rf24hub_verboselevel")==0) {
             if (! verboseLevel) verboseLevel = atoi(value);
 		}
-    else if (strcmp(name, "hub_hostname")==0) {
-            hubHostName = value;
-        }
-    else if (strcmp(name, "hub_udp_port")==0) {
-            hubUdpPort = value;
-            hubUdpPortSet = true;
-        }
-    else if (strcmp(name, "hub_tn_port")==0) {
-            hubTcpPort = value;
-            hubTcpPortSet = true;
+    else if (strcmp(name, "rf24hub_hostname")==0) {
+            rf24HubHostName = value;
         }
     else if (strcmp(name, "fhem_hostname")==0) {
             fhemHostName = value;
@@ -192,9 +184,17 @@ void Config::processParams(int argc, char* argv[]) {
             fhemPort = value;
             fhemPortSet = true;
         }
-    else if (strcmp(name, "gw_udp_port")==0) {
-            gwUdpPort = value;
-            gwUdpPortSet = true;
+    else if (strcmp(name, "rf24hub_tcp_port")==0) {
+            rf24HubTcpPort = value;
+            rf24HubTcpPortSet = true;
+        }
+    else if (strcmp(name, "rf24hub_udp_port")==0) {
+            rf24HubUdpPort = value;
+            rf24HubUdpPortSet = true;
+        }
+    else if (strcmp(name, "rf24gw_udp_port")==0) {
+            rf24GWUdpPort = value;
+            rf24GWUdpPortSet = true;
         }
     else if (strcmp(name, "logfile")==0) {
             logFileName = value;
@@ -205,12 +205,6 @@ void Config::processParams(int argc, char* argv[]) {
 		}
     else if (strcmp(name, "rf24_channel")==0) {
 		   rf24Channel = stoi(value);
-	   }
-    else if (strcmp(name, "rf24_crc")==0) {
-		   rf24CRC = stoi(value);
-	   }
-    else if (strcmp(name, "rf24_network")==0) {
-		   rf24Network = stoi(value);
 	   }
     else if (strcmp(name, "rf24_tx_address")==0) {
            tx_address[4] = mk_addr_byte(value[0],value[1]);
@@ -274,10 +268,10 @@ void Config::printConfig (void) {
     cout << "DB-Password:"     << dbPassWord << endl;
     cout << "FHEM-Hostname:"   << fhemHostName << endl;
     cout << "FHEM-Port:"       << fhemPort << endl;
-    cout << "Hub telnet Port:" << hubTcpPort << endl;
-    cout << "Hub Udp Port:"    << hubUdpPort << endl;
-    cout << "GW Udp Port:"     << gwUdpPort << endl;
-    cout << "hubUdpPortSet = " << (hubUdpPortSet? "true" : "false") << endl;
+    cout << "Hub telnet Port:" << rf24HubTcpPort << endl;
+    cout << "Hub Udp Port:"    << rf24HubUdpPort << endl;
+    cout << "GW Udp Port:"     << rf24GWUdpPort << endl;
+    if ( rf24HubUdpPortSet ) cout << "rf24HubUdpPortSet = true" << endl; else cout << "rf24HubUdpPortSet = false" << endl;
     cout << "Verboselevel:"    << verboseLevel << endl;
 #ifdef DEBUG    
     cout << prgName << " -- " << RF24HUB_PRGNAME << endl;

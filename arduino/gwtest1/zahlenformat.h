@@ -11,7 +11,7 @@
 #define ZF_ZAHL_NEGATIV     0b00000001000000000000000000000000
 #define ZF_EXPO_NEGATIV     0b00000000100000000000000000000000
 #define ZF_EXPO_WERT        0b00000000011110000000000000000000
-#define ZF_ZAHL_WERT        0b00000000000001111111111111111111
+#define ZF_ZAHL_WERT        0b00000000000000011111111111111111
 
 /************************************
  * Das Ergebnis wird mit einer Genauigkeit von 16 Bit 
@@ -41,8 +41,8 @@ uint8_t getSensor(uint32_t val) {
  * Extrahiert den Sensorwert aus dem Transportwert
  * Hier: Float
  ***************************************************/
-float getValue_f(uint32_t val) {
-  uint32_t exponent = (val & ZF_EXPO_WERT) >> 19;
+float getValue(uint32_t val) {
+  uint32_t exponent = (val & ZF_EXPO_WERT) >> 20;
   bool expo_negativ = val & ZF_EXPO_NEGATIV;
   bool zahl_negativ = val &  ZF_ZAHL_NEGATIV;
   float retval;
@@ -59,12 +59,11 @@ float getValue_f(uint32_t val) {
   return retval;
 }
 
-
 /***************************************************
  * Extrahiert den Sensorwert aus dem Transportwert
  * Hier: Float
  ***************************************************/
-uint16_t getValue_i(uint32_t val) {
+uint16_t getValue_uint(uint32_t val) {
   uint16_t retval;
   retval = val & ZF_ZAHL_WERT;
   return retval;
@@ -76,20 +75,20 @@ uint16_t getValue_i(uint32_t val) {
  * Sensor: gültige Werte zwischen 1..127
  * Value: gültige Werte: -1*10^19 .. 1*10^19
  ******************************************************/
-uint32_t calcTransportValue_f(uint8_t sensor, float value) {  
+uint32_t calcTransportValue(uint8_t sensor, float value) {  
   float _val = value;
   uint32_t exponent=0;
   bool expo_negativ = false;
   uint32_t result = 0;
   result = sensor;
   result <<= 25; 
-  if ( value > 0.00001 || value < -0.00001 ) {
-    bool negativ = value < 0.0;
+  if ( abs(value) > 0 ) {
+    bool negativ = value < 0;
     if ( negativ ) {
       result |= ZF_ZAHL_NEGATIV;
       _val=abs(_val);
     }
-    while ( _val < 50000.0 ) {
+    while ( _val < 10000.0 ) {
       expo_negativ = true;
       exponent++;
       _val*=10.0;
@@ -97,11 +96,11 @@ uint32_t calcTransportValue_f(uint8_t sensor, float value) {
     if ( expo_negativ ) {
       result |= ZF_EXPO_NEGATIV;
     }
-    while ( _val > 500000.0 ) {
+    while ( _val > 100000.0 ) {
       exponent++;
       _val/=10.0;
     }
-    exponent <<= 19;
+    exponent <<= 20;
     result |= exponent;
     result |= (uint32_t) _val;
   }
@@ -114,7 +113,7 @@ uint32_t calcTransportValue_f(uint8_t sensor, float value) {
  * Sensor: gültige Werte zwischen 1..127
  * Value: gültige Werte: 0 .. 65535
  ******************************************************/
-uint32_t calcTransportValue_i(uint8_t sensor, uint16_t value) {  
+uint32_t calcTransportValue_uint(uint8_t sensor, uint16_t value) {  
   uint32_t result = 0;
   result = sensor;
   result <<= 25; 

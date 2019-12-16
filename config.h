@@ -49,20 +49,16 @@ public:
 // Hier die verwendeten Variablen:
 
 /**********************************************
- * 
+ * rf24Hub
  **********************************************/
 // telnet Port for incoming messages
-string hubTcpPort;
+string rf24HubTcpPort;
 // rf24HubTelnetPortSet is true when an incomine telnet port is set by configuration
-bool hubTcpPortSet;
+bool rf24HubTcpPortSet;
 // Port for incoming datagrams on Hub
-string hubUdpPort;
+string rf24HubUdpPort;
 // rf24HubUdpPortSet is true when an incomine udp port on Hub is set by configuration
-bool hubUdpPortSet;
-// Port for incoming datagrams on GW
-string gwUdpPort;
-// gwUdpPortSet is true when an incomine udp port on GW is set by configuration
-bool gwUdpPortSet;
+bool rf24HubUdpPortSet;
 /**********************************************
  * rf24Gateway
  **********************************************/
@@ -73,22 +69,22 @@ uint8_t rx_address1[6];
 // RX Address 1 
 uint8_t rx_address2[6];
 // the hostname of the hub used by the gateway
-string hubHostName;
+string rf24HubHostName;
+// Udp Port for incoming messages from Hub
+string rf24GWUdpPort;
+// udpPortSet is true when an incomine udp port is set by configuration
+bool rf24GWUdpPortSet;
 // Speed for rf24 Network, can be one of: "RF24_2MBPS", "RF24_250KBPS", "RF24_1MBPS" 
 string rf24Speed;
 // Channel for rf24 Network
 uint8_t rf24Channel;
-// CRC
-uint8_t rf24CRC;
-//
-uint16_t rf24Network;
 /**********************************************
  * Database
  **********************************************/
 //hostname for database server
 string dbHostName;
 //port on database server
-int dbPort;
+string dbPort;
 //Schema inside database
 string dbSchema;
 //Username for database

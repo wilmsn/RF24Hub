@@ -28,7 +28,6 @@ rf24hub_config.h ==> all global definitions go here
 //
 // How long do we try to deliver (in msec) => 20 Min.
 #define KEEPINBUFFERTIME 1200000    
-// length in char of your FHEM devices
 #define FHEMDEVLENGTH 50
 // Interval to send a request to the regular node in millisec.
 #define SENDINTERVAL 500
@@ -52,8 +51,6 @@ rf24hub_config.h ==> all global definitions go here
 #define PARAM_MAXLEN_DB_PASSWORD 20
 #define DEBUGSTRINGSIZE 500
 #define SQLSTRINGSIZE 500
-// length of the command string send to FHEM (MUST be higher than FHEMDEVLENGTH)
-#define FHEMCMDSTRINGSIZE 80
 // Verboselevel
 #define VERBOSECRITICAL 1
 #define VERBOSESTARTUP 2

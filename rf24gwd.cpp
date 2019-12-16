@@ -77,12 +77,12 @@ int main(int argc, char* argv[]) {
         }
     }
     logger.verboselevel = cfg.verboseLevel;
-    if ( cfg.gwUdpPortSet ) {
-		openSocket(NULL, cfg.gwUdpPort.c_str(),&udp_address,&udp_sockfd,UDP);
+    if ( cfg.rf24GWUdpPortSet ) {
+		openSocket(NULL, cfg.rf24GWUdpPort.c_str(),&udp_address,&udp_sockfd,UDP);
 	}
     radio.begin();
-//    radio.setPALevel(RF24_PA_MIN);
-    radio.setPALevel( RF24_PA_MAX ) ;
+    radio.setPALevel(RF24_PA_MIN);
+//    radio.setPALevel( RF24_PA_MAX ) ;
     radio.setChannel(cfg.rf24Channel);
     radio.setAutoAck(true);
     if (cfg.rf24Speed == "RF24_2MBPS") radio.setDataRate(RF24_2MBPS);
@@ -90,18 +90,12 @@ int main(int argc, char* argv[]) {
     if (cfg.rf24Speed == "RF24_250KBPS") radio.setDataRate(RF24_250KBPS);
 
 //	radio.setRetries(15,15);
-uint8_t rx_address1[] = { 0x33, 0xcc, 0xcc, 0xcc, 0xcc};
-//uint8_t rx_address2[] = { 0xcc, 0xcc, 0xcc, 0xcc, 0xcc};
-uint8_t  tx_address[] = { 0xf0, 0xcc, 0xcc, 0xcc, 0xcc};
-    radio.openWritingPipe(tx_address);
-    radio.openReadingPipe(1,rx_address1);
-//    radio.openReadingPipe(2,rx_address2);
-//    radio.openWritingPipe(cfg.tx_address);
-//    radio.openReadingPipe(1,cfg.rx_address1);
-//    radio.openReadingPipe(2,cfg.rx_address2);
+    radio.openWritingPipe(cfg.tx_address);
+    radio.openReadingPipe(0,cfg.rx_address1);
+    radio.openReadingPipe(1,cfg.rx_address2);
 	// Start the radio listening for data
 	radio.startListening();
-    usleep(500);
+    delay(5);
     sprintf(debug,"%s","starting network ... "); logger.logmsg(VERBOSESTARTUP, debug);
 //    radio.setDataRate(parms.rf24network_speed);
     if (cfg.verboseLevel >= VERBOSECONFIG) { radio.printDetails(); }
@@ -111,42 +105,20 @@ uint8_t  tx_address[] = { 0xf0, 0xcc, 0xcc, 0xcc, 0xcc};
         if ( radio.available() ){  
             sprintf(debug,"%s",">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");		logger.logmsg(VERBOSEOTHER, debug);
 			sprintf(debug,"Node %s", goodSignal ? "Strong signal > 64dBm" : "Weak signal < 64dBm" ); logger.logmsg(VERBOSEOTHER, debug);
-			radio.read( &payload, sizeof(payload) );
-    	    sprintf(debug,"Node Network_number: %u", payload.network_id); logger.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Node_number: %u", payload.node_id);		logger.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Msg_number: %u", payload.msg_id);			logger.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Msg_type: %u", payload.msg_type);			logger.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Msg_flags: %04x", payload.msg_flags);		logger.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node OrderNo: %u", payload.orderno);	      	logger.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Data1: %u:%f", getChannel(payload.data1), getValue_f(payload.data1));
-                logger.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Data2: %u:%f", getChannel(payload.data2), getValue_f(payload.data2));
-                logger.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Data3: %u:%f", getChannel(payload.data3), getValue_f(payload.data3));
-                logger.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Data4: %u:%f", getChannel(payload.data4), getValue_f(payload.data4));
-                logger.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Data5: %u:%f", getChannel(payload.data5), getValue_f(payload.data5));
-                logger.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Data6: %u:%f", getChannel(payload.data6), getValue_f(payload.data6));
-                logger.logmsg(VERBOSEOTHER, debug);
+			radio.read( &udp_node_data, sizeof(udp_node_data) );
+    	    sprintf(debug,"Node Network_number: %u", udp_node_data.network_id); logger.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"Node Node_number: %u", udp_node_data.node_id);		logger.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"Node Msg_number: %u", udp_node_data.msg_id);			logger.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"Node Flags: %04x", udp_node_data.flags);				logger.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"Node Sensor1_id: %u", getSensor(udp_node_data.sensor1));		logger.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"Node Sensor1_value: %f", getValue(udp_node_data.sensor1));		logger.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"Node Sensor2_id: %u", getSensor(udp_node_data.sensor2));		logger.logmsg(VERBOSEOTHER, debug);
+            sprintf(debug,"Node Sensor2_value: %f", getValue(udp_node_data.sensor2));		logger.logmsg(VERBOSEOTHER, debug);
             sprintf(debug,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");			logger.logmsg(VERBOSEOTHER, debug);
-            udp_node_data.network_id = payload.network_id;
-            udp_node_data.node_id = payload.node_id;
-            udp_node_data.msg_id = payload.msg_id;
-            udp_node_data.msg_flags = payload.msg_flags;
-            udp_node_data.msg_type = payload.msg_type;
-            udp_node_data.orderno = payload.orderno;
-            udp_node_data.data1 = payload.data1;
-            udp_node_data.data2 = payload.data2;
-            udp_node_data.data3 = payload.data3;
-            udp_node_data.data4 = payload.data4;
-            udp_node_data.data5 = payload.data5;
-            udp_node_data.data6 = payload.data6;
-			sendUdpMessage(cfg.hubHostName.c_str(), cfg.hubUdpPort.c_str(), &udp_node_data); 
+			sendUdpMessage(cfg.rf24HubHostName.c_str(), cfg.rf24HubUdpPort.c_str(), &udp_node_data); 
 		}
 // Is there some data for us via UDP?
-        if ( cfg.gwUdpPortSet ) {
+        if ( cfg.rf24GWUdpPortSet ) {
             numbytes = recvfrom(udp_sockfd, &udp_hub_data, sizeof(udp_hub_data), 0, (struct sockaddr *)&clientaddress,  &clientaddress_len);
             if (numbytes >0) {
                 sprintf(debug,"packet from Hub via UDP received, legth: %u",numbytes);	logger.logmsg(VERBOSEOTHER, debug);

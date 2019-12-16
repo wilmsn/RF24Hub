@@ -67,7 +67,7 @@ bool OrderBuffer::del_node_channel(uint16_t node, uint8_t channel) {
     orderbuffer_t *search_ptr;
     char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
     if (logger->verboselevel >= VERBOSEORDER) {
-        sprintf(debug,"OrderBuffer: del_node_channel N:%u C:%u", node, channel); 
+        sprintf(debug,"OrderBuffer: del_node_channel N:0%o C:%u", node, channel); 
         logger->logmsg(VERBOSEORDER, debug);    
         sprintf(debug,"Bestand vorher"); 
         logger->logmsg(VERBOSEORDER, debug);
@@ -94,7 +94,7 @@ bool OrderBuffer::del_node(uint16_t node) {
     orderbuffer_t *search_ptr;
     char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
     if (logger->verboselevel >= VERBOSEORDER) {
-        sprintf(debug,"OrderBuffer: del_node N:%u", node); 
+        sprintf(debug,"OrderBuffer: del_node N:0%o", node); 
         logger->logmsg(VERBOSEORDER, debug);    
         sprintf(debug,"Bestand vorher"); 
         logger->logmsg(VERBOSEORDER, debug);
@@ -168,7 +168,7 @@ void OrderBuffer::debug_print_buffer(void) {
     sprintf(debug,"OrderBuffer: ---- Buffercontent ----"); 
     logger->logmsg(VERBOSEORDER, debug);
     while (search_ptr) {
-        sprintf(debug,"OrderBuffer: %p N:%u C:%u V:%f", 
+        sprintf(debug,"OrderBuffer: %p N:0%o C:%u V:%f", 
                 search_ptr, search_ptr->node, 
                 search_ptr->channel, search_ptr->value );
         logger->logmsg(VERBOSEORDER, debug);
@@ -186,7 +186,7 @@ void OrderBuffer::print_buffer(int new_tn_in_socket) {
     sprintf(client_message," ---- OrderBuffer ----\n"); 
     write(new_tn_in_socket , client_message , strlen(client_message));
     while (search_ptr) {
-        sprintf(client_message,"<%p> Node:%u Channel:%u Value:%f\n", 
+        sprintf(client_message,"<%p> Node:0%o Channel:%u Value:%f\n", 
                 search_ptr, search_ptr->node, 
                 search_ptr->channel, search_ptr->value );
         write(new_tn_in_socket , client_message , strlen(client_message));
@@ -203,7 +203,7 @@ void OrderBuffer::html_buffer(int new_tn_in_socket) {
 	sprintf(client_message,"\n<center><big>Orderbuffer</big><table><tr><th>EntryTime</th><th>Node</th><th>Channel</th><th>Value</th></tr>\n"); 
     write(new_tn_in_socket , client_message , strlen(client_message));
     while (search_ptr) {
-		sprintf(client_message,"<tr><td>%llu</td><td>%u</td><td>%u</td><td>%f</td></tr>\n", 
+		sprintf(client_message,"<tr><td>%llu</td><td>0%o</td><td>%u</td><td>%f</td></tr>\n", 
                 search_ptr->entrytime, search_ptr->node, 
                 search_ptr->channel, search_ptr->value );
         write(new_tn_in_socket , client_message , strlen(client_message));
