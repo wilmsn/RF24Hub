@@ -535,7 +535,11 @@ void init_system(void) {
         bool new_HB_node = false;
 		if ( row[0] != NULL ) new_node = strtol(row[0], &pEnd, 10);
 //		if ( row[1] != NULL ) new_u_batt = strtof(row[1], &pEnd); else new_u_batt = 0;
-        if ( row[1] != NULL ) if ((strcmp(row[2],cmp_y) == 0) || (strcmp(row[2],cmp_j) == 0)) new_HB_node = true; 
+        if ( row[1] != NULL ) {if ((strcmp(row[1],cmp_y) == 0) || (strcmp(row[1],cmp_j) == 0)) { 
+            new_HB_node = true; 
+        } else { 
+            new_HB_node = false; 
+        }} 
         if (new_node > 0) node.add_node(new_node, new_u_batt, new_HB_node); 
 	}
 	mysql_free_result(result);    
@@ -1042,6 +1046,7 @@ int main(int argc, char* argv[]) {
 //			logger.logmsg(VERBOSERF24, debug);
 			switch ( payload.msg_type ) {
                 case 51: { // heartbeatnode!!
+printf("##>> %u %llu\n", payload.node_id, mymillis());                   
                     if (node.is_new_HB(payload.node_id, mymillis())) {
                         if ( payload.data1 > 0 ) 
                             process_sensor(payload.node_id, payload.data1);

@@ -6,8 +6,9 @@ Can be used with a display or only as a sensor without display
 // My definitions for my nodes based on this sketch
 // Select only one at one time !!!!
 //#define AUSSENTHERMOMETER
+#define AUSSENTHERMOMETER2
 //#define SCHLAFZIMMERTHERMOMETER
-#define BASTELZIMMERTHERMOMETER
+//#define BASTELZIMMERTHERMOMETER
 //#define KUECHETHERMOMETER
 //#define WOHNZIMMERTHERMOMETER
 //#define ANKLEIDEZIMMERTHERMOMETER
@@ -15,6 +16,10 @@ Can be used with a display or only as a sensor without display
 //****************************************************
 //          Define node general settings
 //  Can be overwritten in individual settings later
+//****************************************************
+// Dummy values, be sure to overwrite later!!
+#define EEPROM_VERSION 0
+#define RF24NODE 00
 //****************************************************
 #define RF24CHANNEL     90
 // Delay between 2 transmission in ms
@@ -87,6 +92,17 @@ Can be used with a display or only as a sensor without display
 
 #endif
 //-----------------------------------------------------
+#if defined(AUSSENTHERMOMETER2)
+//#define BMP_280
+#define RF24NODE        431
+#define STATUSLED       3
+#define STATUSLED_ON    HIGH
+#define STATUSLED_OFF   LOW
+#define LOWVOLTAGELEVEL 1
+#define EEPROM_VERSION  2
+
+#endif
+//-----------------------------------------------------
 #if defined(SCHLAFZIMMERTHERMOMETER)
 #define DALLAS_18B20
 #define DISPLAY_5110
@@ -136,12 +152,12 @@ Can be used with a display or only as a sensor without display
 // ------ End of configuration part ------------
 
 #include <avr/pgmspace.h>
-#include <RF24Network.h>
 #include <RF24.h>
 #include <SPI.h>
 #include <sleeplib.h>
 #include <Vcc.h>
 #include <EEPROM.h>
+#include "zahlenformat.h"
 
 #if defined(DISPLAY_5110)
 #define HAS_DISPLAY
@@ -158,6 +174,9 @@ Can be used with a display or only as a sensor without display
 #include <Adafruit_BME280.h>
 #endif
 
+#if defined(BMP_280)
+#include <BMP280.h>
+#endif
 
 // ----- End of Includes ------------------------
 
@@ -172,33 +191,38 @@ extern uint8_t SmallFont[];
 extern uint8_t BigNumbers[];
 #endif
 #endif
+
 #if defined(DALLAS_18B20)
-// Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
 OneWire oneWire(ONE_WIRE_BUS); 
-// Pass our oneWire reference to Dallas Temperature.
 DallasTemperature sensor(&oneWire);
 float temp;
 #endif
+
 #if defined(BME280)
 Adafruit_BME280 sensor;
 float temp, pres, humi;
 #endif
 
+#if defined(BMP_280)
+BMP280 bmp(0x76);
+float temp, pres;
+#endif
 
 // Structure of our payload
 struct payload_t {
-  uint16_t  orderno;      // the orderno as primary key for our message for the nodes
-  uint16_t  flags;        // a field for varies flags
-                          // flags are defined as:
-                          // 0x01: if set: last message, node goes into sleeptime1 else: goes into sleeptime2
-  uint8_t   sensor1;      // internal address of sensor1
-  uint8_t   sensor2;      // internal address of sensor2
-  uint8_t   sensor3;      // internal address of sensor3
-  uint8_t   sensor4;      // internal address of sensor4
-  float     value1;       // value of sensor1
-  float     value2;       // value of sensor2
-  float     value3;       // value of sensor3
-  float     value4;       // value of sensor4
+  uint16_t    node_id;         
+  uint8_t     msg_id;          
+  uint8_t     msg_type;        
+  uint8_t     msg_flags;       
+  uint8_t     orderno;         
+  uint8_t     reserved1;      
+  uint8_t     reserved2;      
+  uint32_t    data1;         
+  uint32_t    data2;         
+  uint32_t    data3;         
+  uint32_t    data4;         
+  uint32_t    data5;         
+  uint32_t    data6;     
 };
 payload_t payload;    
 
@@ -216,8 +240,6 @@ struct eeprom_t {
 };
 eeprom_t eeprom;
 
-RF24NetworkHeader   rxheader;
-RF24NetworkHeader   txheader(0);
 boolean             display_down = false;
 boolean             low_voltage_flag = false;
 //Some Var for restore after sleep of display
@@ -231,15 +253,14 @@ uint16_t            receiveloopcount;
 uint16_t            sendloopcount;
 long int            sleep_kor_time;
 uint32_t            last_send;
+uint8_t  address1[] = { 0xf0, 0xcc, 0xcc, 0xcc, 0xcc};
+uint8_t  address2[] = { 0x33, 0xcc, 0xcc, 0xcc, 0xcc};
 
 
 
 // nRF24L01(+) radio attached using Getting Started board 
 // Usage: radio(CE_pin, CS_pin)
 RF24 radio(RADIO_CE_PIN,RADIO_CSN_PIN);
-
-// Network uses that radio
-RF24Network network(radio);
 
 void get_sensordata(void) {
 #if defined(DALLAS_18B20)
@@ -255,6 +276,13 @@ void get_sensordata(void) {
   temp=sensor.readTemperature();
   pres=pow(((95*0.0065)/(sensor.readTemperature()+273.15)+1),5.257)*sensor.readPressure()/100.0;
   humi=sensor.readHumidity();
+#endif
+#if defined(BMP_280)
+  bmp.startSingleMeasure();
+  sleep4ms(800);
+  delay(10);
+  temp = bmp.readTemperature();
+  pres = bmp.readPressureAtSealevel(91);
 #endif
 }
 
@@ -352,7 +380,7 @@ float action_loop(unsigned char channel, float value) {
         break;
       case 116:
       // Voltagefactor - will be divided by 100
-        if (value > 10 || value < 1000) {
+        if (value > 10 && value < 1000) {
           eeprom.voltagefactor=(uint16_t)value;
           EEPROM.put(0, eeprom);
         }
@@ -360,12 +388,13 @@ float action_loop(unsigned char channel, float value) {
         break;
       case 117:
       // Voltageadded - will be divided by 100
-        if ((value > 0.5 && value < 6000) || (value < -0.5 && value > -6000)) {
+        if (value > -300 && value < 300) {
           eeprom.voltageadded=(int)value;
           EEPROM.put(0, eeprom);
         }
         retval = (float)eeprom.voltageadded;
         break;
+#if defined(HAS_DISPLAY)
       case 118:
           if ( value > 0.5 && value < 1.5 ) {
             monitor(eeprom.sleeptime/2); 
@@ -374,6 +403,7 @@ float action_loop(unsigned char channel, float value) {
             monitormode = false;
           }
         break;
+#endif
     }  
     return retval;
 }  
@@ -397,11 +427,25 @@ void setup(void) {
     EEPROM.put(0, eeprom);
   }
   SPI.begin();
-  radio.begin();
+#if defined(DALLAS_18B20)
   sensor.begin(); 
-  network.begin(eeprom.channel, eeprom.node);
-  radio.setDataRate( RF24_250KBPS );
+#endif
+#if defined(BME280)
+  sensor.begin(); 
+#endif
+#if defined(BMP_280)
+  bmp.begin(); 
+#endif
+  radio.begin();
+  radio.setChannel(10);
+//  radio.setDataRate( RF24_250KBPS );
+  radio.setDataRate( RF24_1MBPS );
   radio.setPALevel( RF24_PA_MAX ) ;
+  radio.setRetries(15, 15);
+  radio.setAutoAck(true);
+  radio.enableDynamicPayloads();
+  radio.openWritingPipe(address1);
+  radio.openReadingPipe(1,address2);
   delay(1000);
   digitalWrite(STATUSLED,STATUSLED_OFF); 
 #if defined(HAS_DISPLAY)
@@ -411,13 +455,8 @@ void setup(void) {
   myGLCD.clrScr();
 #endif
 #endif
-  network.begin(eeprom.channel, eeprom.node);
-  radio.setDataRate( RF24_250KBPS );
-  radio.setPALevel( RF24_PA_MAX ) ;
-  delay(1000);
-  digitalWrite(STATUSLED,STATUSLED_OFF); 
-  monitor(15000);
 #if defined(HAS_DISPLAY)
+  monitor(15000);
   draw_antenna(ANT_X0, ANT_Y0);
   draw_therm(THERM_X0, THERM_Y0);
 #endif
@@ -698,66 +737,68 @@ void loop(void) {
 #endif
     if ( loopcount == 0) {
       // Clear the RX buffer !!!
-      while ( network.update() ) {}
-      while ( network.available() ) {
-        network.read(rxheader,&payload,sizeof(payload));
-        network.update();
-      }
-      radio.flush_rx();      
+//      radio.flush_rx();      
 #if defined(HAS_DISPLAY)
       draw_antenna(ANT_X0, ANT_Y0);
 #endif
       radio.powerUp();
       radio.startListening();
       delay(10);
+      payload.node_id = RF24NODE;
       payload.orderno = 0;
-      payload.sensor1 = 1;
-      payload.value1 = temp;
-      payload.sensor2 = 101;
-      payload.value2 = cur_voltage;
+      payload.data1 = calcTransportValue_f(101, cur_voltage);
 #if defined(DALLAS_18B20)
-      payload.sensor3 = 0;
-      payload.value3 = 0;
-      payload.sensor4 = 0;
-      payload.value4 = 0;
+      payload.data2 = calcTransportValue_f(1, temp);
+      payload.data3 = 0;
+      payload.data4 = 0;
+      payload.data5 = 0;
+      payload.data6 = 0;
 #endif
 #if defined(BME280)
-      payload.sensor3 = 2;
-      payload.value3 = pres;
-      payload.sensor4 = 3;
-      payload.value4 = humi;
+      payload.data2 = calcTransportValue_f(1, temp);
+      payload.data3 = calcTransportValue_f(2, pres);
+      payload.data4 = calcTransportValue_f(3, humi);
+      payload.data5 = 0;
+      payload.data6 = 0;      
 #endif
-      txheader.type = 51;
+#if defined(BMP_280)
+      payload.data2 = calcTransportValue_f(1, temp);
+      payload.data3 = calcTransportValue_f(2, pres);
+      payload.data4 = 0;
+      payload.data5 = 0;
+      payload.data6 = 0;      
+#endif
+      payload.msg_type = 51;
       receiveloopcount = 0;
       sendloopcount = 0;
       while ( sendloopcount < eeprom.sendloopcount ) {
-        network.update();
-        if ( network.available() ) {
+        if ( radio.available() ) {
           sendloopcount = eeprom.sendloopcount;
           while ( receiveloopcount < eeprom.receiveloopcount ) {
-            if ( network.available() ) {
-              network.read(rxheader,&payload,sizeof(payload));
-              if ( rxheader.type == 52 ) {
+            if ( radio.available() ) {
+              radio.read(&payload,sizeof(payload));
+              if ( payload.msg_type == 52 ) {
                 receiveloopcount = eeprom.receiveloopcount;
               } else {
-                payload.value1 = action_loop(payload.sensor1, payload.value1);
-                payload.value2 = action_loop(payload.sensor2, payload.value2);
-                payload.value3 = action_loop(payload.sensor3, payload.value3);
-                payload.value4 = action_loop(payload.sensor4, payload.value4);
+              //  payload.value1 = action_loop(payload.sensor1, payload.value1);
+              //  payload.value2 = action_loop(payload.sensor2, payload.value2);
+              //  payload.value3 = action_loop(payload.sensor3, payload.value3);
+              //  payload.value4 = action_loop(payload.sensor4, payload.value4);
               }
-              if ((payload.flags & 0x01) == 0x01 ) {
+              if ((payload.msg_flags & 0x01) == 0x01 ) {
                 receiveloopcount = eeprom.receiveloopcount;
               }
-              txheader.type = rxheader.type;
-              network.write(txheader,&payload,sizeof(payload));
-              network.update();
+              radio.stopListening();
+              radio.write(&payload,sizeof(payload));
+              radio.startListening();
               delay(RF24RECEIVEDELAY);
-              network.update();
             }
             receiveloopcount++;
           }
         } else {
-            network.write(txheader,&payload,sizeof(payload));    
+            radio.stopListening();
+            radio.write(&payload,sizeof(payload));    
+            radio.startListening();
             delay(RF24SENDDELAY);
             last_send = 0;
         }
@@ -776,18 +817,26 @@ void loop(void) {
   }
   if ( sleep_kor_time != 0 ) {
     long int tempsleeptime = eeprom.sleeptime + sleep_kor_time;
+#if defined(HAS_DISPLAY)
     if ( monitormode ) {
       monitor(tempsleeptime/2);
     } else {
+#endif
       sleep4ms(tempsleeptime);
+#if defined(HAS_DISPLAY)
     }
+#endif
     sleep_kor_time=0;
   } else {
+#if defined(HAS_DISPLAY)
     if ( monitormode ) {
       monitor(eeprom.sleeptime/2);
     } else {
+#endif
       sleep4ms(eeprom.sleeptime);
+#if defined(HAS_DISPLAY)
     }
+#endif
   } 
   last_send += eeprom.sleeptime;
   loopcount++;

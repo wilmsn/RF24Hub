@@ -33,10 +33,12 @@ bool Node::is_new_HB(uint16_t node_id, uint64_t mymillis) {
     search_ptr = initial_ptr;
     char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
     while (search_ptr) {
+printf("##>>(node): (%p)  %u %u \n",  search_ptr, search_ptr->node_id, node_id);      
         if (search_ptr->node_id == node_id) {
             sprintf(debug,"Node.is_new_HB: Node %u last HB: %llu this HB: %llu", node_id, search_ptr->HB_ts, mymillis); 
             logger->logmsg(VERBOSEORDER, debug);
-            if (search_ptr->HB_ts < mymillis - 1000) retval = true;
+            if (search_ptr->HB_ts < mymillis - 100) retval = true;
+printf("##>>(node): %llu\n",  search_ptr->HB_ts);          
             search_ptr->HB_ts = mymillis;
         }
         search_ptr = search_ptr->next;
