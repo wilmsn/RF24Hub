@@ -17,7 +17,7 @@ class Node {
 private:
     Logger* logger;
     struct node_t {
-        uint16_t       	node;
+        uint16_t       	node_id;
         float			u_batt;	
         bool            is_HB_node;
         uint64_t        HB_ts;
@@ -28,9 +28,9 @@ private:
 
 public:
 
-    void add_node(uint16_t node, float u_batt, bool is_HB_node );
-    bool is_new_HB(uint16_t node, uint64_t mymillis);
-    bool is_HB_node(uint16_t mynode);
+    void add_node(uint16_t node_id, float u_batt, bool is_HB_node );
+    bool is_new_HB(uint16_t node_id, uint64_t mymillis);
+    bool is_HB_node(uint16_t node_id);
     void print_buffer2tn(int new_tn_in_socket);
     void print_buffer2log(void);
     void begin(Logger* _logger);

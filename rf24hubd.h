@@ -46,7 +46,7 @@ UP: fill_order_buffer   =>  Füllt das ARRAY "order_buffer" mit dem übergebenen
 
 //--------- End of global define -----------------
 
-#include "rf24hub_common.h"
+//#include "rf24hub_common.h"
 #include "rf24hub_config.h"
 
 #include <cstdlib>
@@ -83,6 +83,7 @@ UP: fill_order_buffer   =>  Füllt das ARRAY "order_buffer" mit dem übergebenen
 #include "sensor.h"
 #include "order.h"
 #include "orderbuffer.h"
+#include "common.h"
 
 #define BUF 1024
 
@@ -107,7 +108,7 @@ const char* prgversion=PRGVERSION;
 RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
 //RF24 radio(22,0,BCM2835_SPI_SPEED_1MHZ);
 
-RF24Network     network(radio);
+//RF24Network     network(radio);
 Order           order;
 OrderBuffer     orderbuffer;
 Sensor          sensor;
@@ -131,6 +132,7 @@ struct config_parameters {
 
 struct config_parameters parms;
 
+payload_t payload;
 int orderloopcount=0;
 int ordersqlexeccount=0;
 bool ordersqlrefresh=true;
@@ -138,15 +140,17 @@ bool log2logfile=false;
 bool rf24_carrier=false;
 bool rf24_rpd=false;
 
-RF24NetworkHeader rxheader;
-RF24NetworkHeader txheader;
+//RF24NetworkHeader rxheader;
+//RF24NetworkHeader txheader;
+
+uint8_t address2Node[5]={ 0x33,0xcc,0xcc,0xcc,0xcc };
+uint8_t address2Hub[5]={ 0xf0,0xcc,0xcc,0xcc,0xcc };
 
 char buffer1[50];
 char buffer2[50];
 //char debug[DEBUGSTRINGSIZE];
 char sql_stmt[SQLSTRINGSIZE];
 
-uint16_t getnodeadr(char *node);
 char config_file[PARAM_MAXLEN_CONFIGFILE];
 
 
@@ -189,15 +193,11 @@ void process_tn_in(int new_socket, char* buffer, char* client_message);
 *
 ********************************************************************************************/
 
-void init_node(uint16_t initnode );
-
 void print_sensor(void);
 
 void init_system(void);
 
 void exit_system(void);
-
-uint16_t getnodeadr(char *node);
 
 void init_order(unsigned int element);
 
@@ -207,9 +207,9 @@ void init_order_buffer(unsigned int element);
 
 void print_orderbuffer(void);
 
-void fill_orderbuffer( uint16_t node, unsigned char channel, float value);
+void fill_orderbuffer( uint16_t node_id, unsigned char channel, float value);
 
-bool is_valid_orderno(uint16_t myorderno);
+bool is_valid_orderno(uint8_t myorderno);
 
 void make_order(uint16_t node, uint8_t mytype);
 
@@ -232,9 +232,9 @@ void db_check_error(void);
 
 void do_sql(char *sqlstmt);
 
-void store_sensor_value(uint16_t node, uint8_t sensor, float value, bool d1, bool d2);
+void store_sensor_value(uint16_t node, uint32_t data);
 
-void process_sensor(uint16_t node, uint8_t sensor, float value, bool d1, bool d2);
+void process_sensor(uint16_t node, uint32_t data);
 
 void store_node_config(uint16_t node, uint8_t channel, float value);
 
@@ -243,8 +243,6 @@ void store_node_config(uint16_t node, uint8_t channel, float value);
 * All the rest 
 *
 ********************************************************************************************/
-uint64_t mymillis(void);
-
 void sighandler(int signal);
 
 int main(int argc, char* argv[]);
