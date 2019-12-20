@@ -280,8 +280,15 @@ void Order::debug_print_buffer(int debuglevel) {
     sprintf(debug,"Order: ---- Buffercontent ----"); 
     logger->logmsg(debuglevel, debug);
     while (search_ptr) {
-        sprintf(debug,"Order: <%p> O:%u N:%u T:%u F:%02x", 
-                search_ptr, search_ptr->orderno, search_ptr->node, search_ptr->type, search_ptr->flags );
+        sprintf(debug,"Order: <%p> O:%u N:%u T:%u F:%02x (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g)", 
+                search_ptr, search_ptr->orderno, search_ptr->node, search_ptr->type, search_ptr->flags 
+                ,getChannel(search_ptr->data1), getValue_f(search_ptr->data1)
+                ,getChannel(search_ptr->data2), getValue_f(search_ptr->data2)
+                ,getChannel(search_ptr->data3), getValue_f(search_ptr->data3)
+                ,getChannel(search_ptr->data4), getValue_f(search_ptr->data4)
+                ,getChannel(search_ptr->data5), getValue_f(search_ptr->data5)
+                ,getChannel(search_ptr->data6), getValue_f(search_ptr->data6)
+               );
         logger->logmsg(debuglevel, debug);
         search_ptr=search_ptr->next;
     }
@@ -296,8 +303,15 @@ void Order::print_buffer(int new_tn_in_socket) {
     sprintf(client_message,"------ Order: --------\n"); 
     write(new_tn_in_socket , client_message , strlen(client_message));
     while (search_ptr) {
-        sprintf(client_message,"<%p> OrderNo:%u Node:%u \n", search_ptr, search_ptr->orderno, search_ptr->node );
-        write(new_tn_in_socket , client_message , strlen(client_message));
+        sprintf(client_message,"Order: <%p> O:%u N:%u T:%u F:%02x (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g)", 
+                search_ptr, search_ptr->orderno, search_ptr->node, search_ptr->type, search_ptr->flags 
+                ,getChannel(search_ptr->data1), getValue_f(search_ptr->data1)
+                ,getChannel(search_ptr->data2), getValue_f(search_ptr->data2)
+                ,getChannel(search_ptr->data3), getValue_f(search_ptr->data3)
+                ,getChannel(search_ptr->data4), getValue_f(search_ptr->data4)
+                ,getChannel(search_ptr->data5), getValue_f(search_ptr->data5)
+                ,getChannel(search_ptr->data6), getValue_f(search_ptr->data6)
+               );
         search_ptr=search_ptr->next;
     }
     free(client_message);
@@ -311,7 +325,7 @@ void Order::html_buffer(int new_tn_in_socket) {
 	sprintf(client_message,"</table><br><big>Order</big><br><table><tr><th>OrderNo</th><th>Node</th><th>Type</th><th>Flags</th><th>Channel</th><th>Value</th></tr>\n"); 
     write(new_tn_in_socket , client_message , strlen(client_message));
     while (search_ptr) {
-        sprintf(client_message,"<tr><td>%u</td><td>%u</td><td>%u</td><td>%u</td><td>%u<br>%u<br>%u<br>%u<br>%u<br>%u</td><td>%f<br>%f<br>%f<br>%f<br>%f<br>%f</td></tr>\n", 
+        sprintf(client_message,"<tr><td>%u</td><td>%u</td><td>%u</td><td>%u</td><td>%u<br>%u<br>%u<br>%u<br>%u<br>%u</td><td>%g<br>%g<br>%g<br>%g<br>%g<br>%g</td></tr>\n", 
         search_ptr->orderno, search_ptr->node, 
         getChannel(search_ptr->data1), 
         getChannel(search_ptr->data2), 

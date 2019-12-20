@@ -1001,7 +1001,7 @@ int main(int argc, char* argv[]) {
     logger.logmsg(VERBOSESTARTUP, debug);
     radio.begin();
     radio.setPALevel( RF24_PA_MAX ) ;
-    radio.setChannel( 10 );
+    radio.setChannel( parms.rf24network_channel );
     radio.setAutoAck( true );
     radio.enableDynamicPayloads();
     radio.setDataRate(RF24_1MBPS);

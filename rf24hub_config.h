@@ -32,7 +32,7 @@ rf24hub_config.h ==> all global definitions go here
 #define DELETEINTERVAL 600000
 // Interval for deleting unsend requests for order for Heartbeat nodes in millisec.
 // 10 Sec.
-#define HB_DELETEINTERVAL 10000
+#define HB_DELETEINTERVAL 1000
 #define PARAM_MAXLEN 80
 #define PARAM_MAXLEN_CONFIGFILE 40
 #define PARAM_MAXLEN_LOGFILE 40

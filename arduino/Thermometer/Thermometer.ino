@@ -1,6 +1,9 @@
 /*
 A thermometer.
 Can be used with a display or only as a sensor without display
+
+On Branch: no_network @ rpi1  !!!!!
+
 */
 //****************************************************
 // My definitions for my nodes based on this sketch
@@ -13,6 +16,7 @@ Can be used with a display or only as a sensor without display
 //#define WOHNZIMMERTHERMOMETER
 //#define ANKLEIDEZIMMERTHERMOMETER
 //#define GAESTEZIMMERTHERMOMETER
+//#define TESTNODE
 //****************************************************
 //          Define node general settings
 //  Can be overwritten in individual settings later
@@ -21,9 +25,9 @@ Can be used with a display or only as a sensor without display
 #define EEPROM_VERSION 0
 #define RF24NODE 00
 //****************************************************
-#define RF24CHANNEL     90
+#define RF24CHANNEL     91
 // Delay between 2 transmission in ms
-#define RF24SENDDELAY 50
+#define RF24SENDDELAY   50
 // Delay between 2 transmission in ms
 #define RF24RECEIVEDELAY 50
 // Sleeptime in ms !! 
@@ -73,8 +77,8 @@ Can be used with a display or only as a sensor without display
 #define RADIO_CSN_PIN 9
 // The pin of the statusled
 #define STATUSLED 3
-#define STATUSLED_ON LOW
-#define STATUSLED_OFF HIGH
+#define STATUSLED_ON HIGH
+#define STATUSLED_OFF LOW
 #define ONE_WIRE_BUS 8
 #define RECEIVEDELAY 100
 
@@ -83,30 +87,30 @@ Can be used with a display or only as a sensor without display
 //-----------------------------------------------------
 #if defined(AUSSENTHERMOMETER)
 #define BME280
-#define RF24NODE        02
+#define RF24NODE        0
 #define STATUSLED       7
-#define STATUSLED_ON    HIGH
-#define STATUSLED_OFF   LOW
+#define STATUSLED_ON    LOW
+#define STATUSLED_OFF   HIGH
 #define LOWVOLTAGELEVEL 1
-#define EEPROM_VERSION  3
+#define EEPROM_VERSION  1
 
 #endif
 //-----------------------------------------------------
 #if defined(AUSSENTHERMOMETER2)
-//#define BMP_280
-#define RF24NODE        431
+#define BMP_280
+#define RF24NODE        200
 #define STATUSLED       3
 #define STATUSLED_ON    HIGH
 #define STATUSLED_OFF   LOW
 #define LOWVOLTAGELEVEL 1
-#define EEPROM_VERSION  2
+#define EEPROM_VERSION  1
 
 #endif
 //-----------------------------------------------------
 #if defined(SCHLAFZIMMERTHERMOMETER)
 #define DALLAS_18B20
 #define DISPLAY_5110
-#define RF24NODE        015
+#define RF24NODE        0
 #define EEPROM_VERSION  3
 #define VOLTAGEADDED    55
  
@@ -115,7 +119,7 @@ Can be used with a display or only as a sensor without display
 #if defined(BASTELZIMMERTHERMOMETER)
 #define DALLAS_18B20
 #define DISPLAY_5110
-#define RF24NODE        045
+#define RF24NODE        100
 #define EEPROM_VERSION  3
 #define VOLTAGEADDED    55
  
@@ -124,7 +128,7 @@ Can be used with a display or only as a sensor without display
 #if defined(KUECHETHERMOMETER)
 #define DALLAS_18B20
 #define DISPLAY_5110
-#define RF24NODE        03
+#define RF24NODE        0
 #define EEPROM_VERSION  3
 #define VOLTAGEADDED    55
  
@@ -133,7 +137,7 @@ Can be used with a display or only as a sensor without display
 #if defined(ANKLEIDEZIMMERTHERMOMETER)
 #define DALLAS_18B20
 #define DISPLAY_5110
-#define RF24NODE        025
+#define RF24NODE        0
 #define EEPROM_VERSION  3
 #define VOLTAGEADDED    55
  
@@ -142,11 +146,19 @@ Can be used with a display or only as a sensor without display
 #if defined(GAESTEZIMMERTHERMOMETER)
 #define DALLAS_18B20
 //#define DISPLAY_5110
-#define RF24NODE        055
+#define RF24NODE        0
 #define EEPROM_VERSION  3
 #define VOLTAGEADDED    55
  
 #endif
+//-----------------------------------------------------
+#if defined(TESTNODE)
+#define RF24NODE        431
+#define EEPROM_VERSION  2
+#define STATUSLED       13 
+#define TEST_LED
+#endif
+
 //-----------------------------------------------------
 //*****************************************************
 // ------ End of configuration part ------------
@@ -179,6 +191,11 @@ Can be used with a display or only as a sensor without display
 #endif
 
 // ----- End of Includes ------------------------
+
+const char string_1[] PROGMEM = "Rec ";
+const char string_2[] PROGMEM = "Send";
+const char string_3[] PROGMEM = "    ";
+
 
 Vcc vcc(1.0);
 
@@ -286,8 +303,10 @@ void get_sensordata(void) {
 #endif
 }
 
-float action_loop(unsigned char channel, float value) {
-  float retval = value;
+uint32_t action_loop(uint32_t data) {
+  uint32_t retval = 0;
+  uint8_t channel = getChannel(data);
+  float value = getValue_f(data);
     switch (channel) {
 #if defined(HAS_DISPLAY)
       case 21:
@@ -325,7 +344,7 @@ float action_loop(unsigned char channel, float value) {
 #endif
       case 101:  
       // battery voltage
-        retval = cur_voltage;
+        value = cur_voltage;
         break;      
       case 110:
 #if defined(HAS_DISPLAY)
@@ -335,7 +354,7 @@ float action_loop(unsigned char channel, float value) {
           myGLCD.setContrast(eeprom.display_contrast);
           EEPROM.put(0, eeprom);
         }
-        retval = (float)eeprom.sleeptime;
+        value = (float)eeprom.sleeptime;
 #endif
 #endif
       break;
@@ -345,7 +364,7 @@ float action_loop(unsigned char channel, float value) {
           eeprom.sleeptime=(uint32_t)value;
           EEPROM.put(0, eeprom);
         }
-        retval = (float)eeprom.sleeptime;
+        value = (float)eeprom.sleeptime;
         break;
       case 112:
       // sendloopcount - number sendloop befor giving up 
@@ -353,7 +372,7 @@ float action_loop(unsigned char channel, float value) {
           eeprom.sendloopcount=(uint16_t)value;
           EEPROM.put(0, eeprom);
         }
-        retval = (float)eeprom.sendloopcount;
+        value = (float)eeprom.sendloopcount;
         break;
       case 113:
       // receiveloopcount - number of receivloops befor giving up.
@@ -361,7 +380,7 @@ float action_loop(unsigned char channel, float value) {
           eeprom.receiveloopcount=(uint16_t)value;
           EEPROM.put(0, eeprom);
         }
-        retval = (float)eeprom.receiveloopcount;
+        value = (float)eeprom.receiveloopcount;
         break;
       case 114:
       // emptyloopcount - only loop 0 will transmit all other loops will only read and display
@@ -369,14 +388,14 @@ float action_loop(unsigned char channel, float value) {
           eeprom.emptyloopcount=(uint16_t)value;
           EEPROM.put(0, eeprom);
         } 
-        retval = (float)eeprom.emptyloopcount;
+        value = (float)eeprom.emptyloopcount;
         break;
       case 115:
       // sleep korrektion faktor in ms - will only be used once!
         if ((value > 0.5 && value < 600001) || (value < -0.5 && value > -600001)) {
           sleep_kor_time = (long int)value;
         }
-        retval = sleep_kor_time;
+        value = sleep_kor_time;
         break;
       case 116:
       // Voltagefactor - will be divided by 100
@@ -384,7 +403,7 @@ float action_loop(unsigned char channel, float value) {
           eeprom.voltagefactor=(uint16_t)value;
           EEPROM.put(0, eeprom);
         }
-        retval = (float)eeprom.voltagefactor;
+        value = (float)eeprom.voltagefactor;
         break;
       case 117:
       // Voltageadded - will be divided by 100
@@ -392,7 +411,7 @@ float action_loop(unsigned char channel, float value) {
           eeprom.voltageadded=(int)value;
           EEPROM.put(0, eeprom);
         }
-        retval = (float)eeprom.voltageadded;
+        value = (float)eeprom.voltageadded;
         break;
 #if defined(HAS_DISPLAY)
       case 118:
@@ -405,7 +424,7 @@ float action_loop(unsigned char channel, float value) {
         break;
 #endif
     }  
-    return retval;
+    return calcTransportValue_f(channel, value);
 }  
 
 void setup(void) {
@@ -426,6 +445,12 @@ void setup(void) {
     eeprom.display_contrast = DISPLAY_KONTRAST;
     EEPROM.put(0, eeprom);
   }
+#if defined(TEST_LED)
+  pinMode(A0, OUTPUT);
+  pinMode(A1, OUTPUT); 
+  pinMode(A2, OUTPUT); 
+  pinMode(A3, OUTPUT); 
+#endif  
   SPI.begin();
 #if defined(DALLAS_18B20)
   sensor.begin(); 
@@ -437,7 +462,7 @@ void setup(void) {
   bmp.begin(); 
 #endif
   radio.begin();
-  radio.setChannel(10);
+  radio.setChannel(RF24CHANNEL);
 //  radio.setDataRate( RF24_250KBPS );
   radio.setDataRate( RF24_1MBPS );
   radio.setPALevel( RF24_PA_MAX ) ;
@@ -456,7 +481,7 @@ void setup(void) {
 #endif
 #endif
 #if defined(HAS_DISPLAY)
-  monitor(15000);
+  monitor(5000);
   draw_antenna(ANT_X0, ANT_Y0);
   draw_therm(THERM_X0, THERM_Y0);
 #endif
@@ -497,9 +522,7 @@ void monitor(uint32_t delaytime) {
   myGLCD.clrScr();
   myGLCD.print(string_5, 0, 0);
   myGLCD.print(string_6, 0, 10);
-  myGLCD.printNumI(0, 55, 10);
-  myGLCD.printNumI(eeprom.node/8, 62, 10);
-  myGLCD.printNumI(eeprom.node%8, 70, 10);
+  myGLCD.printNumI(eeprom.node, 55, 10);
   myGLCD.print(string_7, 0, 20);
   myGLCD.printNumI(eeprom.channel, 60, 20);
   myGLCD.update();
@@ -736,8 +759,6 @@ void loop(void) {
     wipe_therm(THERM_X0, THERM_Y0);
 #endif
     if ( loopcount == 0) {
-      // Clear the RX buffer !!!
-//      radio.flush_rx();      
 #if defined(HAS_DISPLAY)
       draw_antenna(ANT_X0, ANT_Y0);
 #endif
@@ -771,40 +792,76 @@ void loop(void) {
       payload.msg_type = 51;
       receiveloopcount = 0;
       sendloopcount = 0;
+#if defined(TEST_LED)
+digitalWrite(A0,STATUSLED_OFF); 
+digitalWrite(A1,STATUSLED_ON); 
+digitalWrite(A2,STATUSLED_ON); 
+digitalWrite(A3,STATUSLED_OFF); 
+#endif
+// SendLoop
       while ( sendloopcount < eeprom.sendloopcount ) {
+// Solange keine Nachricht für uns vorliegt UND die Sendezeit nicht abgelaufen ist ==> senden
+        radio.stopListening();
+        radio.write(&payload,sizeof(payload));    
+        radio.startListening();
+        delay(RF24SENDDELAY);
         if ( radio.available() ) {
+// Wenn wir die erste Nachricht empfangen, wird das Senden eingestellt
           sendloopcount = eeprom.sendloopcount;
-          while ( receiveloopcount < eeprom.receiveloopcount ) {
-            if ( radio.available() ) {
-              radio.read(&payload,sizeof(payload));
-              if ( payload.msg_type == 52 ) {
-                receiveloopcount = eeprom.receiveloopcount;
-              } else {
-              //  payload.value1 = action_loop(payload.sensor1, payload.value1);
-              //  payload.value2 = action_loop(payload.sensor2, payload.value2);
-              //  payload.value3 = action_loop(payload.sensor3, payload.value3);
-              //  payload.value4 = action_loop(payload.sensor4, payload.value4);
-              }
-              if ((payload.msg_flags & 0x01) == 0x01 ) {
-                receiveloopcount = eeprom.receiveloopcount;
-              }
-              radio.stopListening();
-              radio.write(&payload,sizeof(payload));
-              radio.startListening();
-              delay(RF24RECEIVEDELAY);
-            }
-            receiveloopcount++;
-          }
-        } else {
-            radio.stopListening();
-            radio.write(&payload,sizeof(payload));    
-            radio.startListening();
-            delay(RF24SENDDELAY);
-            last_send = 0;
         }
         sendloopcount++;
       }
+#if defined(TEST_LED)
+digitalWrite(A0,STATUSLED_OFF); 
+digitalWrite(A1,STATUSLED_OFF); 
+digitalWrite(A2,STATUSLED_OFF); 
+digitalWrite(A3,STATUSLED_OFF); 
+#endif      
+// ReceiveLoop        
+      while ( receiveloopcount < eeprom.receiveloopcount ) {          
+        if ( radio.available() ) {
+#if defined(TEST_LED)
+digitalWrite(A0,STATUSLED_ON); 
+digitalWrite(A1,STATUSLED_OFF); 
+digitalWrite(A2,STATUSLED_OFF); 
+digitalWrite(A3,STATUSLED_ON); 
+#endif
+          radio.read(&payload,sizeof(payload));
+// Eine Nachricht vom Typ 52 ist eine ENDE Nachricht            
+          if ( payload.msg_type == 52 ) {
+            receiveloopcount = eeprom.receiveloopcount;
+          } else {
+// Andere Nachrichten werden durch den "action_loop" geschickt              
+            if (payload.data1 > 0) { payload.data1 = action_loop(payload.data1); } else { payload.data1 = 0; }
+            if (payload.data2 > 0) { payload.data2 = action_loop(payload.data2); } else { payload.data2 = 0; }
+            if (payload.data3 > 0) { payload.data3 = action_loop(payload.data3); } else { payload.data3 = 0; }
+            if (payload.data4 > 0) { payload.data4 = action_loop(payload.data4); } else { payload.data4 = 0; }
+            if (payload.data5 > 0) { payload.data5 = action_loop(payload.data5); } else { payload.data5 = 0; }
+            if (payload.data6 > 0) { payload.data6 = action_loop(payload.data6); } else { payload.data6 = 0; }
+          }
+// Wenn Flag 0x01 gesetzt ist dann wird keine nachfolgende Nachricht erwartet
+          if ((payload.msg_flags & 0x01) == 0x01 ) {
+            receiveloopcount = eeprom.receiveloopcount;
+          }
+// Quittung senden            
+          radio.stopListening();
+          radio.write(&payload,sizeof(payload));
+          radio.startListening();
+          receiveloopcount = 0;
+        }
+        if (receiveloopcount < eeprom.receiveloopcount) delay(RF24RECEIVEDELAY);
+        receiveloopcount++;
+      }
+#if defined(TEST_LED)
+digitalWrite(A0,STATUSLED_OFF); 
+digitalWrite(A1,STATUSLED_OFF); 
+digitalWrite(A2,STATUSLED_OFF); 
+digitalWrite(A3,STATUSLED_OFF); 
+#endif
+      
     }
+//myGLCD.print(string_3,40,40);
+//myGLCD.update();    
     radio.stopListening();
 #if defined(HAS_DISPLAY)
     wipe_antenna(ANT_X0, ANT_Y0);

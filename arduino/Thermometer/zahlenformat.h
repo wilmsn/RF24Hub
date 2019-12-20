@@ -31,7 +31,7 @@
 /***************************************************
  * Extrahiert die Sensornummer aus dem Transportwert
  ***************************************************/
-uint8_t getSensor(uint32_t val) {
+uint8_t getChannel(uint32_t val) {
   val &= ZF_SENSOR_NO;
   val >>= 25;
   return val;
