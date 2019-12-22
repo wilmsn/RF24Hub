@@ -67,7 +67,7 @@ UP: fill_order_buffer   =>  Füllt das ARRAY "order_buffer" mit dem übergebenen
 //#include <mysql/my_config.h>
 //#include <mysql/my_global.h>
 //#include <mysql/mysql.h>
-#include <mariadb/mysql.h>
+//#include <mariadb/mysql.h>
 #include <unistd.h>
 #include <getopt.h>
 #include <syslog.h>
@@ -84,13 +84,14 @@ UP: fill_order_buffer   =>  Füllt das ARRAY "order_buffer" mit dem übergebenen
 #include "order.h"
 #include "orderbuffer.h"
 #include "common.h"
+#include "database.h"
 
 #define BUF 1024
 
 using namespace std;
 
 int sockfd;
-int verboselevel = 2;
+uint16_t verboselevel = 2;
 bool start_daemon=false, tn_host_set = false, tn_port_set = false, tn_active = false, in_port_set = false;
 char logfilename[300];
 char tn_hostname[20], tn_portno[7];
@@ -114,6 +115,7 @@ OrderBuffer     orderbuffer;
 Sensor          sensor;
 Node            node;
 Logger          logger;
+Database        database;
 
 struct config_parameters {
   char logfilename[PARAM_MAXLEN_LOGFILE];
@@ -149,7 +151,7 @@ uint8_t address2Hub[5]={ 0xf0,0xcc,0xcc,0xcc,0xcc };
 char buffer1[50];
 char buffer2[50];
 //char debug[DEBUGSTRINGSIZE];
-char sql_stmt[SQLSTRINGSIZE];
+//char sql_stmt[SQLSTRINGSIZE];
 
 char config_file[PARAM_MAXLEN_CONFIGFILE];
 
@@ -236,7 +238,7 @@ void store_sensor_value(uint16_t node, uint32_t data);
 
 void process_sensor(uint16_t node, uint32_t data);
 
-void store_node_config(uint16_t node, uint8_t channel, float value);
+//void store_node_config(uint16_t node, uint8_t channel, float value);
 
 /*******************************************************************************************
 *

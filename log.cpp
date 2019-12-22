@@ -1,7 +1,7 @@
 #include "log.h"
 
 void Logger::logmsg(int mesgloglevel, char *mymsg){
-    if (mesgloglevel <= verboselevel) {
+    if (mesgloglevel & verboselevel) {
         char *buf =  (char*) malloc (100);
 		time_t now = time(0);
 		tm *ltm = localtime(&now);

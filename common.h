@@ -8,6 +8,7 @@
 #include <ctype.h> 
 #include <time.h>
 #include <sys/time.h>
+#include "rf24hub_config.h"
 
 // Structure of our payload
 typedef struct {   // Our payload can be 32 byte max.
@@ -100,7 +101,7 @@ char * trim (char * s);
 
 uint64_t mymillis(void);
 
-
+uint16_t decodeVerbose(uint16_t oldLevel, char* verboselevel);
 
 #endif // _RF24HUBD_COMMON_H_
 

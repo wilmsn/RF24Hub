@@ -33,22 +33,26 @@ bool Node::is_new_HB(uint16_t node_id, uint64_t mymillis) {
     search_ptr = initial_ptr;
     char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
     while (search_ptr) {
-printf("##>>(node): (%p)  %u %u \n",  search_ptr, search_ptr->node_id, node_id);      
         if (search_ptr->node_id == node_id) {
-            sprintf(debug,"Node.is_new_HB: Node %u last HB: %llu this HB: %llu", node_id, search_ptr->HB_ts, mymillis); 
-            logger->logmsg(VERBOSEORDER, debug);
-            if (search_ptr->HB_ts < mymillis - 100) retval = true;
-printf("##>>(node): %llu\n",  search_ptr->HB_ts);          
+            if (logger->verboselevel & VERBOSEORDER) {
+                sprintf(debug,"Node.is_new_HB: Node %u last HB: %llu this HB: %llu", node_id, search_ptr->HB_ts, mymillis); 
+                logger->logmsg(VERBOSEORDER, debug);
+            }
+            if (search_ptr->HB_ts < mymillis - 500) retval = true;
             search_ptr->HB_ts = mymillis;
         }
         search_ptr = search_ptr->next;
     }    
     if (retval) {
-        sprintf(debug,"Node: New HeartBeat from Node %u", node_id); 
-        logger->logmsg(VERBOSEORDER, debug);
+        if (logger->verboselevel & VERBOSEORDER) {
+            sprintf(debug,"Node: New HeartBeat from Node %u", node_id); 
+            logger->logmsg(VERBOSEORDER, debug);
+        }
     } else {
-        sprintf(debug,"Node: Old HeartBeat from Node %u", node_id); 
-        logger->logmsg(VERBOSEORDER, debug);
+        if (logger->verboselevel & VERBOSEORDER) {
+            sprintf(debug,"Node: Old HeartBeat from Node %u", node_id); 
+            logger->logmsg(VERBOSEORDER, debug);
+        }
     }        
     free(debug);
     return retval;
@@ -80,19 +84,19 @@ void Node::print_buffer2tn(int new_tn_in_socket) {
         search_ptr=search_ptr->next;
 	}
     free(client_message);
-    print_buffer2log();
+    debug_print_buffer(VERBOSETELNET);
 }
 
-void Node::print_buffer2log(void) {
+void Node::debug_print_buffer(uint16_t debuglevel) {
     node_t *search_ptr;
     search_ptr = initial_ptr;
     char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
     sprintf(debug," ------ Nodes: ------"); 
-    logger->logmsg(VERBOSECONFIG, debug);
+    logger->logmsg(debuglevel, debug);
     while (search_ptr) {
         sprintf(debug,"Node %u,\tU-Batt:\t%f V,\t%s",
                   search_ptr->node_id, search_ptr->u_batt, search_ptr->is_HB_node? "HeartBeat":"Normal");    
-        logger->logmsg(VERBOSECONFIG, debug);
+        logger->logmsg(debuglevel, debug);
         search_ptr=search_ptr->next;
 	}
 	free(debug);

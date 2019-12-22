@@ -31,11 +31,12 @@ private:
 public:
     
     void add_sensor(uint32_t sensor, uint16_t node_id, uint8_t	channel, char* fhem_dev, uint64_t last_ts, float last_val);
-    bool update_last_val(uint16_t node_id, uint8_t channel, float value, uint64_t mymillis);
+    bool update_last_val(uint32_t sensor_id, float value, uint64_t mymillis);
     void find_node_chanel(uint16_t* node_ptr, uint8_t* channel_ptr,char* fhem_dev, uint32_t sensor_id);
     void find_fhem_dev(uint16_t* node_ptr, uint8_t* channel_ptr,char* fhem_dev);
     void print_buffer2tn(int new_tn_in_socket);
-    void print_buffer2log(void);
+    uint32_t getSensor(uint16_t node_id, uint8_t channel);
+    void debug_print_buffer(uint16_t debuglevel);
     void begin(Logger* _logger);
     Sensor(void);
 

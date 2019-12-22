@@ -9,6 +9,7 @@
 #include <cstdio>
 #include <cstddef>
 #include <cstdlib>
+#include <stdint.h>
 #include "rf24hub_config.h"
 
 class Logger {
@@ -23,7 +24,7 @@ enum logmode_t { systemlog, interactive, logfile };
 logmode_t logmode;
 
 char* logfilename;
-int verboselevel;
+uint16_t verboselevel;
 void logmsg(int mesgloglevel, char *mymsg);
 void set_logfile(char*);
 void set_logmode(char);

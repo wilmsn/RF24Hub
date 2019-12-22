@@ -25,7 +25,6 @@ public:
     bool del_node(uint16_t);
     bool is_orderno(uint8_t orderno);
     uint16_t del_old_entry(uint64_t entrytime);
-    void debug_print_buffer(int);
     void begin(Logger* _logger);
     void add_order(uint16_t node, uint8_t type, bool HB_order, uint32_t data, uint64_t entrytime);
     void modify_order(uint16_t node, uint8_t pos, uint32_t data);
@@ -63,7 +62,7 @@ private:
     void      new_entry(order_t*);
     bool      del_entry(order_t*);
     order_t  *find_node(uint16_t node);
-    
+    void debug_print_buffer(uint16_t);    
 };
 
 #endif // _ORDER_H_

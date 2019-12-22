@@ -30,16 +30,16 @@ void Sensor::add_sensor(uint32_t sensor_id, uint16_t node_id, uint8_t	channel, c
     new_entry(new_ptr);
 }
    
-bool Sensor::update_last_val(uint16_t node_id, uint8_t channel, float value, uint64_t mymillis) {
+bool Sensor::update_last_val(uint32_t sensor_id, float value, uint64_t mymillis) {
     bool retval = false;
     Sensor::sensor_t *search_ptr;
     search_ptr=initial_ptr;
     char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
     while (search_ptr) {
-        if ( search_ptr->node_id == node_id && search_ptr->channel == channel ) {
+        if ( search_ptr->sensor_id == sensor_id ) {
             search_ptr->last_val = value;
             if ( mymillis - search_ptr->last_ts > 1000 ) {
-                sprintf(debug,"sensor.update_last_val: N: %u C:%u V:%f ", node_id, channel, value); 
+                sprintf(debug,"sensor.update_last_val: S: %u V:%f ", sensor_id, value); 
                 logger->logmsg(VERBOSEORDER, debug);
                 search_ptr->last_ts = mymillis;
                 retval = true;
@@ -54,6 +54,19 @@ bool Sensor::update_last_val(uint16_t node_id, uint8_t channel, float value, uin
     }
     return retval;
     free(debug);
+}
+
+uint32_t Sensor::getSensor(uint16_t node_id, uint8_t channel) {
+    uint32_t retval = 0;
+    Sensor::sensor_t *search_ptr;
+    search_ptr=initial_ptr;
+    while (search_ptr) {
+        if ( search_ptr->node_id == node_id && search_ptr->channel == channel ) {
+            retval = search_ptr->sensor_id;
+        }
+        search_ptr=search_ptr->next;
+    }
+    return retval;
 }
 
 void Sensor::find_node_chanel(uint16_t* node_ptr, uint8_t* channel_ptr, char* fhem_dev, uint32_t mysensor) {
@@ -100,19 +113,19 @@ void Sensor::print_buffer2tn(int new_tn_in_socket) {
         search_ptr=search_ptr->next;
 	}
     free(client_message);
-    print_buffer2log();
+    debug_print_buffer(VERBOSETELNET);
 }
 
-void Sensor::print_buffer2log(void) {
+void Sensor::debug_print_buffer(uint16_t debuglevel) {
     sensor_t *search_ptr;
     search_ptr = initial_ptr;
     char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
     sprintf(debug," ------ Sensor: ------"); 
-    logger->logmsg(VERBOSECONFIG, debug);
+    logger->logmsg(debuglevel, debug);
     while (search_ptr) {
 		sprintf(debug,"Sensor: %u\tNode: %u,\tChannel:%u,\tFHEM: %s,\tVal: %f,\tTS:%llu", 
                  search_ptr->sensor_id, search_ptr->node_id, search_ptr->channel, search_ptr->fhem_dev, search_ptr->last_val, search_ptr->last_ts);   
-        logger->logmsg(VERBOSECONFIG, debug);
+        logger->logmsg(debuglevel, debug);
         search_ptr=search_ptr->next;
 	}
 	free(debug);

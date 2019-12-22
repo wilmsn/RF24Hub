@@ -128,12 +128,16 @@ void do_tn_cmd(uint16_t node, uint8_t channel, float value) {
     struct sockaddr_in serv_addr;
     struct hostent *server;
     char fhem_dev[] = {'\0'};
-    sprintf(debug,"do_tn_cmd: Node: %u Channel: %u Value %f", node, channel, value);
-    logger.logmsg(VERBOSEORDER,debug);
+    if ( verboselevel & VERBOSETELNET) {    
+        sprintf(debug,"do_tn_cmd: Node: %u Channel: %u Value %f", node, channel, value);
+        logger.logmsg(VERBOSEORDER,debug);
+    }
     sensor.find_fhem_dev(&node, &channel, fhem_dev); 
 	sprintf(tn_cmd,"set %s %f\n", fhem_dev, value);
-	sprintf(debug,"do_tn_cmd: %s", tn_cmd);
-	logger.logmsg(VERBOSETELNET,debug);
+    if ( verboselevel & VERBOSETELNET) {    
+        sprintf(debug,"do_tn_cmd: %s", tn_cmd);
+        logger.logmsg(VERBOSETELNET,debug);
+    }
     portno = parms.telnet_port;
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
@@ -160,8 +164,10 @@ void do_tn_cmd(uint16_t node, uint8_t channel, float value) {
 			sprintf(debug,"do_tn_cmd: error writing to socket");
 			logger.logmsg(VERBOSECRITICAL,debug);
 		} else {
-			sprintf(debug,"do_tn_cmd: Telnet to %s Port %d CMD: %s successfull",parms.telnet_hostname, portno, tn_cmd);
-			logger.logmsg(VERBOSETELNET,debug);
+            if ( verboselevel & VERBOSETELNET) {    
+                sprintf(debug,"do_tn_cmd: Telnet to %s Port %d CMD: %s successfull",parms.telnet_hostname, portno, tn_cmd);
+                logger.logmsg(VERBOSETELNET,debug);
+            }
 		}		
 	}		 
     close(sockfd);
@@ -178,15 +184,19 @@ void receive_tn_in(int new_tn_in_socket, struct sockaddr_in * address) {
     // use this in perl: my $t = new Net::Telnet (Timeout => 2, Port => 7001, Prompt => '/rf24hub>/');
     sprintf(client_message,"rf24hub> ");
     write(new_tn_in_socket , client_message , strlen(client_message));
-	sprintf (debug,"Client %s ist connected ...", inet_ntoa (address->sin_addr));
-	logger.logmsg(VERBOSETELNET, debug);
+    if ( verboselevel & VERBOSETELNET) {    
+        sprintf (debug,"Client %s ist connected ...", inet_ntoa (address->sin_addr));
+        logger.logmsg(VERBOSETELNET, debug);
+    }
     sprintf(buffer,"                                 ");
     MsgLen = recv(new_tn_in_socket, buffer, TELNETBUFFERSIZE, 0);
     if (MsgLen>0) {
         process_tn_in(new_tn_in_socket, buffer, client_message);
     } else {
-        sprintf (debug,"Nicht verarbeitete telnet message: %s MsgLen: %d ", trim(buffer), MsgLen);
-        logger.logmsg(VERBOSETELNET, debug);
+        if ( verboselevel & VERBOSETELNET) {    
+            sprintf (debug,"Nicht verarbeitete telnet message: %s MsgLen: %d ", trim(buffer), MsgLen);
+            logger.logmsg(VERBOSETELNET, debug);
+        }
     }
     close (new_tn_in_socket);
     free(buffer);
@@ -223,8 +233,10 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 	bool tn_input_ok=false;
 	char delimiter[] = " ";
 	trim(buffer);
-	sprintf(debug,"Incoming telnet data: %s ",buffer);
-	logger.logmsg(VERBOSETELNET, debug);
+    if ( verboselevel & VERBOSETELNET) {    
+        sprintf(debug,"Incoming telnet data: %s ",buffer);
+        logger.logmsg(VERBOSETELNET, debug);
+    }
 	wort1a = strtok(buffer, delimiter);
 	wort2a = strtok(NULL, delimiter);
 	wort3a = strtok(NULL, delimiter);
@@ -288,12 +300,12 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 //	}
     // set verbose <new verboselevel>
 	// sets the new verboselevel
-	if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (strlen(wort3) == 1) && (strlen(wort4) == 0) ) {
-        if ( wort3[0] > '0' && wort3[0] < '9' + 1 ) {
+	if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (strlen(wort3) > 0) && (strlen(wort4) == 0) ) {
+//        if ( wort3[0] > '0' && wort3[0] < '9' + 1 ) {
 			tn_input_ok = true;
-			verboselevel = (wort3[0] - '0') * 1;
+			verboselevel = decodeVerbose(verboselevel, wort3);
             logger.verboselevel = verboselevel;
-		}	
+//		}	
 	}
     // list order
 	// lists the current orderbuffer
@@ -441,166 +453,68 @@ void make_order(uint16_t mynode, uint8_t mytype) {
 * END Nodehandling 
 *
 ********************************************************************************************/
-/*******************************************************************************************
-*
-* Databasehandling 
-* Used for communication with MariaDB
-*
-********************************************************************************************/
-
-void db_check_error(void) {
-	if (mysql_errno(db) != 0) {
-        char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-		sprintf(debug, "DB-Fehler: %s\n", mysql_error(db));
-        logger.logmsg(VERBOSECRITICAL, debug);
-        free(debug);
-    }
-}
-
-void do_sql(char *sqlstmt) {
-    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    sprintf(debug, "%s", sqlstmt);
-	logger.logmsg(VERBOSESQL, debug);
-	if (mysql_query(db, sqlstmt)) {
-		sprintf(debug, "%s", mysql_error(db));
-		logger.logmsg(VERBOSECRITICAL, debug);
-	}
-	free(debug);
-}
 
 void exit_system(void) {
     // Save data from sensordata_im and sensor_im to persistant tables
-	sprintf (sql_stmt, "update sensor a set value = ( select value from sensor_im where sensor_id = a.sensor_id ), utime = ( select utime from sensor_im where sensor_id = a.sensor_id )");
-	logger.logmsg(VERBOSESQL, sql_stmt);
-	mysql_query(db, sql_stmt);
-	db_check_error();
-	sprintf (sql_stmt, "insert into sensordata(sensor_id, utime, value) select sensor_id, utime, value from sensordata_im where (sensor_id,utime) not in (select sensor_id, utime from sensordata)");
-	logger.logmsg(VERBOSESQL, sql_stmt);
-	mysql_query(db, sql_stmt);
-	db_check_error();
+    database.exitSystem();
 }
 
 void init_system(void) {
-	char cmp_y[]="y",cmp_j[]="j"; 
-    // Copy sensordata and sensor to memorytable since yesterday
-	sprintf (sql_stmt, "truncate table sensor_im");
-	logger.logmsg(VERBOSESQL, sql_stmt);
-	mysql_query(db, sql_stmt);
-	db_check_error();
-	sprintf (sql_stmt, "insert into sensor_im(sensor_id, sensor_name, add_info, node_id, channel, store_days, fhem_dev, html_show) select sensor_id, sensor_name, add_info, node_id, channel, store_days, fhem_dev, html_show from sensor");
-	logger.logmsg(VERBOSESQL, sql_stmt);
-	mysql_query(db, sql_stmt);
-	db_check_error();
-	sprintf (sql_stmt, "truncate table sensordata_im");
-	logger.logmsg(VERBOSESQL, sql_stmt);
-	mysql_query(db, sql_stmt);
-	db_check_error();
-	sprintf (sql_stmt, "insert into sensordata_im(sensor_id, utime, value) select sensor_id, utime, value from sensordata where utime > UNIX_TIMESTAMP(subdate(current_date, 2))");
-	logger.logmsg(VERBOSESQL, sql_stmt);
-	mysql_query(db, sql_stmt);
-	db_check_error();
-	// END sensordata to memorytable
-	sprintf (sql_stmt, "select sensor_id, node_id, channel, fhem_dev from sensor");
-	logger.logmsg(VERBOSESQL, sql_stmt);
-	mysql_query(db, sql_stmt);
-	db_check_error();
-	MYSQL_RES *result = mysql_store_result(db);
-	db_check_error();
-	MYSQL_ROW row;
-	while ((row = mysql_fetch_row(result))) {
-        uint32_t     	mysensor;
-        uint16_t       	mynode;
-        uint8_t     	mychannel;
-        char			fhem_dev[FHEMDEVLENGTH];
-        float			last_val;	
-		if ( row[0] != NULL ) mysensor = strtoul(row[0], &pEnd,10); else mysensor = 0;
-		if ( row[1] != NULL ) mynode = strtoul(row[1], &pEnd,10); else mynode = 0; 
-		if ( row[2] != NULL ) mychannel = strtoul(row[2], &pEnd,10); else mychannel = 0;
-//		if ( row[3] != NULL ) last_val = strtof(row[3], &pEnd); else last_val = 0;
-		if ( row[3] != NULL ) sprintf(fhem_dev,"%s",row[3]); else sprintf(fhem_dev,"not_set");
-        if (mysensor > 0 && mynode > 0 && mychannel > 0) {
-            sensor.add_sensor(mysensor, mynode, mychannel, fhem_dev, 0, 0);
-        }
-	}
-	mysql_free_result(result);
-	sprintf (sql_stmt, "select node_id, heartbeat from node");
-	logger.logmsg(VERBOSESQL, sql_stmt);
-	mysql_query(db, sql_stmt);
-	db_check_error();
-	result = mysql_store_result(db);
-	db_check_error();
-	while ((row = mysql_fetch_row(result))) {
-        uint16_t new_node = 0;
-        float new_u_batt = 0;
-        bool new_HB_node = false;
-		if ( row[0] != NULL ) new_node = strtol(row[0], &pEnd, 10);
-//		if ( row[1] != NULL ) new_u_batt = strtof(row[1], &pEnd); else new_u_batt = 0;
-        if ( row[1] != NULL ) {if ((strcmp(row[1],cmp_y) == 0) || (strcmp(row[1],cmp_j) == 0)) { 
-            new_HB_node = true; 
-        } else { 
-            new_HB_node = false; 
-        }} 
-        if (new_node > 0) node.add_node(new_node, new_u_batt, new_HB_node); 
-	}
-	mysql_free_result(result);    
-    node.print_buffer2log();
-    sensor.print_buffer2log();
+    database.initSystem();
+    database.initSensor(&sensor);
+    database.initNode(&node);
+    node.debug_print_buffer(VERBOSECONFIG);
+    sensor.debug_print_buffer(VERBOSECONFIG);
 }
 
-void store_sensor_value(uint16_t node, uint8_t channel, float value) {
-    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-	sprintf(debug, "store_sensor_value: Node: %u Channel: %u Value: %f ", node, channel, value);
-	logger.logmsg(VERBOSEORDER, debug);        
-    if ( sensor.update_last_val(node, channel, value, mymillis() )) {    
+void store_sensor_value(uint16_t mynode, uint8_t mychannel, float myvalue) {
+    uint32_t mysensor = sensor.getSensor(mynode, mychannel);
+    if ( sensor.update_last_val(mysensor, myvalue, mymillis() )) {    
+        database.storeSensorValue(mysensor, myvalue);
         if ( tn_active ) { 
-            do_tn_cmd(node, channel, value); 
+            do_tn_cmd(mynode, mychannel, myvalue); 
         }
-        sprintf(sql_stmt,"insert into sensordata_im (sensor_ID, utime, value) select sensor_id, UNIX_TIMESTAMP(), %f from sensor_im where node_id = '%u' and channel = %u ", value, node, channel);
-        do_sql(sql_stmt);
     }
-    free(debug);
 }
 
-void store_node_config(uint16_t node, uint8_t channel, float value) {
+void process_sensor(uint16_t node, uint32_t mydata) {
     char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-	sprintf(debug, "store_node_config: Node: %u Channel: %u Value: %f ", node, channel, value);
-	logger.logmsg(VERBOSEORDER, debug);        
-    sprintf(sql_stmt,"insert into node_configdata (node_id, channel, value, utime) values ( '%u', %u, %f, UNIX_TIMESTAMP() )", 
-            node, channel, value);
-    do_sql(sql_stmt);
-    free(debug);
-}
-
-void process_sensor(uint16_t node, uint32_t data) {
-    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    uint8_t channel = getChannel(data);
-    float value = getValue_f(data);
+    uint8_t channel = getChannel(mydata);
+    float value = getValue_f(mydata);
 	switch (channel) {
 		case 1 ... 99: {
 		// Sensor or Actor
-			sprintf(debug, "Value of Channel: %u on Node: %u is %f ", channel, node, value);
-			logger.logmsg(VERBOSECONFIG, debug);       
+            if ( verboselevel & VERBOSECONFIG) {    
+                sprintf(debug, "Value of Channel: %u on Node: %u is %f ", channel, node, value);
+                logger.logmsg(VERBOSECONFIG, debug);
+            }
 			store_sensor_value(node, channel, value);
 		}
 		break; 
 		case 101: {
 		// battery voltage
-			sprintf(debug, "Voltage of Node: %u is %f ", node, value);
-			logger.logmsg(VERBOSECONFIG, debug);        
+            if ( verboselevel & VERBOSECONFIG) {    
+                sprintf(debug, "Voltage of Node: %u is %f ", node, value);
+                logger.logmsg(VERBOSECONFIG, debug); 
+            }
 // TODO
 //			do_sql(sql_stmt);
 			store_sensor_value(node, channel, value);
 		}
 		break; 
 		case 102 ... 127: { // System settings
-			sprintf(debug, "Node: %u Channel: %u is set to %f ", node, channel, value);
-			logger.logmsg(VERBOSECONFIG, debug);  
-            store_node_config(node, channel, value);
+            if ( verboselevel & VERBOSECONFIG) {    
+                sprintf(debug, "Node: %u Channel: %u is set to %f ", node, channel, value);
+                logger.logmsg(VERBOSECONFIG, debug);
+            }
+            database.storeNodeConfig(node, channel, value);
 		}	
 		break; 
 		default: { 
-			sprintf(debug, "Message dropped!!!! Node: %u Channel: %u Value: %f ", node, channel, value);
-			logger.logmsg(VERBOSECONFIG, debug);        
+            if ( verboselevel & VERBOSECONFIG) {    
+                sprintf(debug, "Message dropped!!!! Node: %u Channel: %u Value: %f ", node, channel, value);
+                logger.logmsg(VERBOSECONFIG, debug);   
+            }
 		}
 	}	
 	orderbuffer.del_node_channel(node, channel);
@@ -882,8 +796,10 @@ int main(int argc, char* argv[]) {
     sensor.begin(&logger);
     order.begin(&logger);
     orderbuffer.begin(&logger);
+    database.begin(&logger);
     // open database
-    sprintf(debug,"Maria-DB:");
+    database.connect(parms.db_hostname, parms.db_username, parms.db_password, parms.db_schema, parms.db_port);
+/*    sprintf(debug,"Maria-DB:");
     logger.logmsg(VERBOSESTARTUP, debug);
     sprintf(debug,"MySQL client version: %s", mysql_get_client_info());
     logger.logmsg(VERBOSESTARTUP, debug);
@@ -919,7 +835,7 @@ int main(int argc, char* argv[]) {
     }
     sprintf(debug, "Connected to host %s with DB %s on port %d", parms.db_hostname, mysql_get_server_info(db), parms.db_port);
     logger.logmsg(VERBOSESTARTUP, debug);
-
+*/
     // init SIGTERM and SIGINT handling
     signal(SIGTERM, sighandler);
     signal(SIGINT, sighandler);
@@ -940,12 +856,12 @@ int main(int argc, char* argv[]) {
                 chdir ("/");
                 umask (0);
                 sprintf(debug, "Starting up ....");
-                logger.logmsg(2,debug);
+                logger.logmsg(VERBOSESTARTUP,debug);
             } else if (pid > 0) {
                 // Parentprozess -> exit and return to shell
                 // write a message to the console
                 sprintf(debug, "Starting rf24hubd as daemon...");
-                logger.logmsg(2,debug);
+                logger.logmsg(VERBOSESTARTUP,debug);
                 fprintf(stdout, debug);
                 fprintf(stdout, "\n");
                 // and exit
@@ -1013,7 +929,7 @@ int main(int argc, char* argv[]) {
     radio.openReadingPipe(1,address1);
     radio.startListening();
     
-    if (verboselevel >= VERBOSECONFIG) { radio.printDetails(); }
+    if (verboselevel & VERBOSECONFIG) { radio.printDetails(); }
     sprintf(debug,"\%s up and running .... ",PRGNAME);
     logger.logmsg(VERBOSESTARTUP, debug);
 	
@@ -1040,13 +956,20 @@ int main(int argc, char* argv[]) {
 //            network.peek(rxheader);
 //            
 			radio.read(&payload,sizeof(payload));
-//			sprintf(debug, "Received: from Node: %u Orderno %u (Channel/Value): (%u/%.2f) (%u/%.2f) (%u/%.2f) (%u/%.2f)"
-//						, payload.msg_type, rxheader.from_node, rxheader.to_node, payload.orderno
-//						, payload.channel1, payload.value1, payload.channel2, payload.value2, payload.channel3, payload.value3, payload.channel4, payload.value4);
-//			logger.logmsg(VERBOSERF24, debug);
+			if ( verboselevel & VERBOSERF24  ) {
+                sprintf(debug, "Rec: N: %u T %u F: %u O: %u (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g)"
+						,payload.node_id, payload.msg_type, payload.msg_flags, payload.orderno
+                        ,getChannel(payload.data1), getValue_f(payload.data1)
+                        ,getChannel(payload.data2), getValue_f(payload.data2)
+                        ,getChannel(payload.data3), getValue_f(payload.data3)
+                        ,getChannel(payload.data4), getValue_f(payload.data4)
+                        ,getChannel(payload.data5), getValue_f(payload.data5)
+                        ,getChannel(payload.data6), getValue_f(payload.data6)  );
+                logger.logmsg(VERBOSERF24, debug);
+            }
 			switch ( payload.msg_type ) {
                 case 51: { // heartbeatnode!!
-printf("##>> %u %llu\n", payload.node_id, mymillis());                   
+//printf("##>> %u %llu\n", payload.node_id, mymillis());                   
                     if (node.is_new_HB(payload.node_id, mymillis())) {
                         if ( payload.data1 > 0 ) 
                             process_sensor(payload.node_id, payload.data1);
@@ -1061,21 +984,27 @@ printf("##>> %u %llu\n", payload.node_id, mymillis());
                         if ( payload.data6 > 0 ) 
                             process_sensor(payload.node_id, payload.data6);
                         if ( orderbuffer.node_has_entry(payload.node_id) ) {
-                            sprintf(debug, "Entries for Heartbeat Node found, sending them");
-                            logger.logmsg(VERBOSEORDER, debug);
+                            if ( verboselevel & VERBOSEORDER) {
+                                sprintf(debug, "Entries for Heartbeat Node found, sending them");
+                                logger.logmsg(VERBOSEORDER, debug);
+                            }
                             make_order(payload.node_id, 61);                    
                         } else {
-                            sprintf(debug, "No Entries for Heartbeat Node found, sending Endmessage");
-                            logger.logmsg(VERBOSEORDER, debug);
+                            if ( verboselevel & VERBOSEORDER) {
+                                sprintf(debug, "No Entries for Heartbeat Node found, sending Endmessage");
+                                logger.logmsg(VERBOSEORDER, debug);
+                            }
                             order.add_endorder(payload.node_id, mymillis());
                         }
                     }
                 }
                 break;    
                 default: {	
-					sprintf(debug, "Processing Node: %u Type: %u Orderno %u"
+                    if ( verboselevel & VERBOSEORDER) {
+                        sprintf(debug, "Processing Node: %u Type: %u Orderno %u"
                                     , payload.node_id, payload.msg_type, payload.orderno);
 									logger.logmsg(VERBOSEORDER, debug);
+                    }
                     if ( order.is_orderno(payload.orderno) ) {
                         if ( payload.data1 > 0 ) 
                             process_sensor(payload.node_id, payload.data1);
@@ -1102,22 +1031,21 @@ printf("##>> %u %llu\n", payload.node_id, mymillis());
 // Orderloop: Tell the nodes what they have to do
 //
 		if ( order.has_order ) {  // go transmitting if its time to do ..
-printf("has Order\n");            
 			// Look if we have something to send
 			while ( order.get_order_for_transmission(&payload.orderno, &payload.node_id, &payload.msg_type, &payload.msg_flags,
                 &payload.data1, &payload.data2, &payload.data3, &payload.data4, 
                 &payload.data5, &payload.data6, mymillis() )) {
                     radio.stopListening();
 					if (radio.write(&payload,sizeof(payload))) {
-						if ( verboselevel >= VERBOSERF24  ) {
-							sprintf(debug, "Send: Node: %u Type %u orderno %u "
-									, payload.node_id, payload.msg_type, payload.orderno);
+						if ( verboselevel & VERBOSERF24  ) {
+							sprintf(debug, "Snd: N: %u T: %u F: %u O: %u "
+									, payload.node_id, payload.msg_type, payload.msg_flags, payload.orderno);
 							logger.logmsg(VERBOSERF24, debug);
 						}
 					} else {
-						if ( verboselevel >= VERBOSERF24 ) {
-							sprintf(debug, "Send: Node: %u Type %u orderno %u "
-									, payload.node_id, payload.msg_type, payload.orderno);
+						if ( verboselevel & VERBOSERF24 ) {
+							sprintf(debug, "Snd: N: %u T: %u F: %u O: %u "
+									, payload.node_id, payload.msg_type, payload.msg_flags, payload.orderno);
 							logger.logmsg(VERBOSERF24, debug);
                         }
                     }

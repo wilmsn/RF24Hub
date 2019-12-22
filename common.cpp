@@ -96,8 +96,50 @@ uint64_t mymillis(void) {
 	uint64_t timebuf;
 	gettimeofday(&tv, NULL);
 	timebuf = (((tv.tv_sec & 0x000FFFFFFFFFFFFF) * 1000) + (tv.tv_usec / 1000));
-//	sprintf(debug, "+++++++++++ Mymillis: -----> %llu", timebuf );
-//	logger.logmsg(VERBOSEOTHER, debug);
 	return timebuf;
 }
 
+uint16_t decodeVerbose(uint16_t oldLevel, char* verboseSet) {
+    uint16_t retval = 0;
+    char cmp_addVBtn[]="+telnet",
+         cmp_rmVBtn[]="-telnet",
+         cmp_addVBrf24[]="+rf24",
+         cmp_rmVBrf24[]="-rf24",
+         cmp_addVBob[]="+obuffer",
+         cmp_rmVBob[]="-obuffer",
+         cmp_addVBorder[]="+order",
+         cmp_rmVBorder[]="-order",
+         cmp_addVBsql[]="+sql",
+         cmp_rmVBsql[]="-sql";
+    if (strcmp(verboseSet,cmp_addVBtn) == 0) {
+        retval = oldLevel | VERBOSETELNET;
+    }
+    if (strcmp(verboseSet,cmp_rmVBtn) == 0) {
+        retval = oldLevel ^ VERBOSETELNET;
+    }
+    if (strcmp(verboseSet,cmp_addVBrf24) == 0) {
+        retval = oldLevel | VERBOSERF24;
+    }
+    if (strcmp(verboseSet,cmp_rmVBrf24) == 0) {
+        retval = oldLevel ^ VERBOSERF24;
+    }    
+    if (strcmp(verboseSet,cmp_addVBsql) == 0) {
+        retval = oldLevel | VERBOSESQL;
+    }
+    if (strcmp(verboseSet,cmp_rmVBsql) == 0) {
+        retval = oldLevel ^ VERBOSESQL;
+    }    
+    if (strcmp(verboseSet,cmp_addVBob) == 0) {
+        retval = oldLevel | VERBOSEORDERBUFFER;
+    }
+    if (strcmp(verboseSet,cmp_rmVBob) == 0) {
+        retval = oldLevel ^ VERBOSEORDERBUFFER;
+    }    
+    if (strcmp(verboseSet,cmp_addVBorder) == 0) {
+        retval = oldLevel | VERBOSEORDER;
+    }
+    if (strcmp(verboseSet,cmp_rmVBorder) == 0) {
+        retval = oldLevel ^ VERBOSEORDER;
+    }    
+    return retval;
+}
