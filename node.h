@@ -28,6 +28,7 @@ private:
 
 public:
 
+    void cleanup(void);
     void debug_print_buffer(uint16_t debuglevel);
     void add_node(uint16_t node_id, float u_batt, bool is_HB_node );
     bool is_new_HB(uint16_t node_id, uint64_t mymillis);

@@ -4,6 +4,16 @@ Node::Node(void) {
     initial_ptr = NULL;
 }
 
+void Node::cleanup(void) {
+    node_t *search_ptr;
+    search_ptr = initial_ptr;
+    while ( search_ptr ) {
+        initial_ptr = search_ptr->next;
+        free(search_ptr);
+        search_ptr = initial_ptr;
+    }
+}
+
 void Node::new_entry(Node::node_t* new_ptr) {
     node_t *search_ptr;
     new_ptr->next = NULL;

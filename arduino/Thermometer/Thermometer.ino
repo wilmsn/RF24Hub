@@ -11,12 +11,12 @@ On Branch: no_network @ rpi1  !!!!!
 //#define AUSSENTHERMOMETER
 //#define AUSSENTHERMOMETER2
 //#define SCHLAFZIMMERTHERMOMETER
-//#define BASTELZIMMERTHERMOMETER
+#define BASTELZIMMERTHERMOMETER
 //#define KUECHETHERMOMETER
 //#define WOHNZIMMERTHERMOMETER
 //#define ANKLEIDEZIMMERTHERMOMETER
 //#define GAESTEZIMMERTHERMOMETER
-#define TESTNODE
+//#define TESTNODE
 //****************************************************
 //          Define node general settings
 //  Can be overwritten in individual settings later
@@ -119,11 +119,13 @@ On Branch: no_network @ rpi1  !!!!!
 #if defined(BASTELZIMMERTHERMOMETER)
 #define DALLAS_18B20
 #define DISPLAY_5110
+#define DELAY
 #define RF24NODE         100
-#define EEPROM_VERSION   2
+#define EEPROM_VERSION   1
 #define VOLTAGEADDED     55
-#define DISPLAY_KONTRAST 65;
- 
+#define DISPLAY_KONTRAST 10;
+#define RF24SLEEPTIME   300000
+#define RF24EMPTYLOOPCOUNT  3 
 #endif
 //-----------------------------------------------------
 #if defined(KUECHETHERMOMETER)
@@ -155,12 +157,13 @@ On Branch: no_network @ rpi1  !!!!!
 //-----------------------------------------------------
 #if defined(TESTNODE)
 #define RF24NODE        431
-#define EEPROM_VERSION  3
+#define EEPROM_VERSION  4
 #define STATUSLED       13 
 #define ACTOR           A5
-#define RF24SLEEPTIME   30000
+#define RF24SLEEPTIME   60000
 #define TEST_LED
 #define SERIAL_DEBUG
+#define sleep4ms        delay
 #endif
 
 //-----------------------------------------------------
@@ -195,11 +198,6 @@ On Branch: no_network @ rpi1  !!!!!
 #endif
 
 // ----- End of Includes ------------------------
-
-const char string_1[] PROGMEM = "Rec ";
-const char string_2[] PROGMEM = "Send";
-const char string_3[] PROGMEM = "    ";
-
 
 Vcc vcc(1.0);
 
@@ -274,6 +272,7 @@ uint16_t            receiveloopcount;
 uint16_t            sendloopcount;
 long int            sleep_kor_time;
 uint32_t            last_send;
+uint8_t             last_orderno = 0;
 uint8_t  address1[] = { 0xf0, 0xcc, 0xcc, 0xcc, 0xcc};
 uint8_t  address2[] = { 0x33, 0xcc, 0xcc, 0xcc, 0xcc};
 
@@ -501,8 +500,10 @@ void setup(void) {
 #if defined(HAS_DISPLAY)
 #if defined(DISPLAY_5110)
   myGLCD.InitLCD();
+//  myGLCD.setContrast(5);
   myGLCD.setContrast(eeprom.display_contrast);
   myGLCD.clrScr();
+  myGLCD.update();
 #endif
 #endif
 #if defined(HAS_DISPLAY)
@@ -523,6 +524,9 @@ void monitor(uint32_t delaytime) {
   const char string_5[] PROGMEM = "RF24 Network: ";
   const char string_6[] PROGMEM = "Node: ";
   const char string_7[] PROGMEM = "Channel: ";
+  const char string_8[] PROGMEM = "Kontrast: ";
+//  const char string_9[] PROGMEM = "Channel: ";
+//  const char string_10[] PROGMEM = "Channel: ";
 #if defined(DISPLAY_5110)
   myGLCD.setFont(SmallFont);
   get_sensordata();
@@ -552,6 +556,18 @@ void monitor(uint32_t delaytime) {
   myGLCD.printNumI(eeprom.channel, 60, 20);
   myGLCD.update();
   sleep4ms(delaytime);
+  myGLCD.clrScr();
+  myGLCD.print(string_8, 0, 0);
+  myGLCD.printNumI(eeprom.display_contrast, 55, 0);
+  myGLCD.setFont(BigNumbers);
+  for (int i=0; i<100; i++) {
+    myGLCD.printNumI(i, 20, 20);        
+    myGLCD.setContrast(i);
+    myGLCD.update();
+    delay(500);
+  }
+  sleep4ms(1000);
+  myGLCD.setContrast(eeprom.display_contrast);
   delay(10);
   myGLCD.clrScr();
 #endif  
@@ -833,9 +849,14 @@ digitalWrite(A3,STATUSLED_OFF);
         radio.write(&payload,sizeof(payload));    
         radio.startListening();
 #if defined(SERIAL_DEBUG)
-  Serial.println("Sendet jatzt");
+  Serial.print("Sendet jatzt: O:");
+  Serial.println(payload.orderno);
 #endif
-        delay(RF24SENDDELAY);
+#if defined(DELAY)
+        sleep4ms(100);
+#endif        
+        sleep4ms(RF24SENDDELAY);
+        delay(5);
         if ( radio.available() ) {
 // Wenn wir die erste Nachricht empfangen, wird das Senden eingestellt
 #if defined(SERIAL_DEBUG)
@@ -856,7 +877,7 @@ digitalWrite(A3,STATUSLED_OFF);
   Serial.println("Start Receiveloop");
 #endif
       while ( receiveloopcount < eeprom.receiveloopcount ) {          
-        if ( radio.available() ) {
+        while ( radio.available() ) {
 #if defined(TEST_LED)
 digitalWrite(A0,STATUSLED_ON); 
 digitalWrite(A1,STATUSLED_OFF); 
@@ -864,57 +885,73 @@ digitalWrite(A2,STATUSLED_OFF);
 digitalWrite(A3,STATUSLED_ON); 
 #endif
           radio.read(&payload,sizeof(payload));
+#if defined(DELAY)
+        sleep4ms(100);
+#endif        
 #if defined(SERIAL_DEBUG)
-  Serial.println("Nachricht empfangen");
+  Serial.print("Nachricht empfangen O:");
+  Serial.println(payload.orderno);
 #endif          
-// Eine Nachricht vom Typ 52 ist eine ENDE Nachricht            
-          if ( payload.msg_type == 52 ) {
-            receiveloopcount = eeprom.receiveloopcount;
+// Wenn die Nachricht neu ist (eine neue orderno hat) wird sie verarbeitet
+          if ( last_orderno != payload.orderno ) {   
+            last_orderno = payload.orderno;
+// Eine Nachricht vom Typ 52 ist eine ENDE Nachricht         
+            if ( payload.msg_type == 52 ) {
+              receiveloopcount = eeprom.receiveloopcount;
 #if defined(SERIAL_DEBUG)
-  Serial.println("Nachricht vom Typ 52 - Endenachricht");
+              Serial.println("Nachricht vom Typ 52 - Endenachricht");
 #endif
-          } else {
+            } else {
 // Andere Nachrichten werden durch den "action_loop" geschickt              
-            if (payload.data1 > 0) { payload.data1 = action_loop(payload.data1); } else { payload.data1 = 0; }
-            if (payload.data2 > 0) { payload.data2 = action_loop(payload.data2); } else { payload.data2 = 0; }
-            if (payload.data3 > 0) { payload.data3 = action_loop(payload.data3); } else { payload.data3 = 0; }
-            if (payload.data4 > 0) { payload.data4 = action_loop(payload.data4); } else { payload.data4 = 0; }
-            if (payload.data5 > 0) { payload.data5 = action_loop(payload.data5); } else { payload.data5 = 0; }
-            if (payload.data6 > 0) { payload.data6 = action_loop(payload.data6); } else { payload.data6 = 0; }
+              if (payload.data1 > 0) { payload.data1 = action_loop(payload.data1); } else { payload.data1 = 0; }
+              if (payload.data2 > 0) { payload.data2 = action_loop(payload.data2); } else { payload.data2 = 0; }
+              if (payload.data3 > 0) { payload.data3 = action_loop(payload.data3); } else { payload.data3 = 0; }
+              if (payload.data4 > 0) { payload.data4 = action_loop(payload.data4); } else { payload.data4 = 0; }
+              if (payload.data5 > 0) { payload.data5 = action_loop(payload.data5); } else { payload.data5 = 0; }
+              if (payload.data6 > 0) { payload.data6 = action_loop(payload.data6); } else { payload.data6 = 0; }
+              receiveloopcount = 0;
 #if defined(SERIAL_DEBUG)
-  Serial.println("Payload verarbeitet");
+              Serial.print("Payload verarbeitet O:");
+              Serial.println(payload.orderno);
 #endif
-          }
+            }
 // Wenn Flag 0x01 gesetzt ist dann wird keine nachfolgende Nachricht erwartet
-          if ((payload.msg_flags & 0x01) == 0x01 ) {
-            receiveloopcount = eeprom.receiveloopcount;
+            if ((payload.msg_flags & 0x01) == 0x01 ) {
+              receiveloopcount = eeprom.receiveloopcount;
 #if defined(SERIAL_DEBUG)
-  Serial.println("Endeflag");
+              Serial.println("Endeflag");
+#endif
+            }
+// Quittung senden            
+            for (byte i=0; i<10; i++){
+              radio.stopListening();
+              if (radio.write(&payload,sizeof(payload))) i=100;
+              radio.startListening();
+              delay(10);
+            }
+#if defined(SERIAL_DEBUG)
+            Serial.print("Quittung gesendet O:");
+            Serial.println(payload.orderno);
+          } else {
+            Serial.print("Duplikat O:");
+            Serial.println(payload.orderno);
 #endif
           }
-// Quittung senden            
-          radio.stopListening();
-          radio.write(&payload,sizeof(payload));
-          radio.startListening();
-#if defined(SERIAL_DEBUG)
-  Serial.println("Quittung gesendet");
-#endif
-          receiveloopcount = 0;
+          if (receiveloopcount < eeprom.receiveloopcount) sleep4ms(RF24RECEIVEDELAY);
+          delay(5);
         }
-        if (receiveloopcount < eeprom.receiveloopcount) delay(RF24RECEIVEDELAY);
         receiveloopcount++;
       }
 #if defined(SERIAL_DEBUG)
-  Serial.println("Ende Receiveloop");
-  delay(100);
+      Serial.println("Ende Receiveloop");
+//      delay(100);
 #endif            
 #if defined(TEST_LED)
-digitalWrite(A0,STATUSLED_OFF); 
-digitalWrite(A1,STATUSLED_OFF); 
-digitalWrite(A2,STATUSLED_OFF); 
-digitalWrite(A3,STATUSLED_OFF); 
+      digitalWrite(A0,STATUSLED_OFF); 
+      digitalWrite(A1,STATUSLED_OFF); 
+      digitalWrite(A2,STATUSLED_OFF); 
+      digitalWrite(A3,STATUSLED_OFF); 
 #endif
-      
     }
 //myGLCD.print(string_3,40,40);
 //myGLCD.update();    

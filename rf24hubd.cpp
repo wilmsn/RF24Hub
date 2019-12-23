@@ -333,7 +333,11 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 	if ( (strcmp(wort1,cmp_init) == 0) && (strlen(wort2) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
 		tn_input_ok = true;
         exit_system();
+        node.cleanup();
+        sensor.cleanup();
 		init_system();
+        node.print_buffer2tn(new_tn_in_socket);
+        sensor.print_buffer2tn(new_tn_in_socket);
 	}
 	if ( ! tn_input_ok) {
 		sprintf(client_message,"Usage:\n");
@@ -799,43 +803,6 @@ int main(int argc, char* argv[]) {
     database.begin(&logger);
     // open database
     database.connect(parms.db_hostname, parms.db_username, parms.db_password, parms.db_schema, parms.db_port);
-/*    sprintf(debug,"Maria-DB:");
-    logger.logmsg(VERBOSESTARTUP, debug);
-    sprintf(debug,"MySQL client version: %s", mysql_get_client_info());
-    logger.logmsg(VERBOSESTARTUP, debug);
-    db = mysql_init(NULL);
-    int mysql_wait_count = 0;
-    while (db == NULL) {
-		sprintf(debug,"Waiting for Database: %d Sec.", 20-mysql_wait_count);
-		logger.logmsg(VERBOSESTARTUP, debug);		
-		if ( mysql_wait_count < 20 ) {
-			mysql_wait_count++;
-			delay(1000);
-			db = mysql_init(NULL);
-		} else {
-			fprintf(stderr, "%s\n", mysql_error(db));
-            mysql_close(db);
-			unlink(parms.pidfilename);
-            exit(1);
-		}
-    }
-    mysql_wait_count = 0;
-    while (mysql_real_connect(db, parms.db_hostname, parms.db_username, parms.db_password, parms.db_schema, parms.db_port, NULL, 0) == NULL) {
-		sprintf(debug,"Waiting for Database: %d Sec.", 20-mysql_wait_count);
-		logger.logmsg(VERBOSESTARTUP, debug);		
-		if ( mysql_wait_count < 20 ) {
-			mysql_wait_count++;
-			delay(1000);
-		} else {
-			fprintf(stderr, "%s\n", mysql_error(db));
-			mysql_close(db);
-			unlink(parms.pidfilename);
-			exit(1);
-		}
-    }
-    sprintf(debug, "Connected to host %s with DB %s on port %d", parms.db_hostname, mysql_get_server_info(db), parms.db_port);
-    logger.logmsg(VERBOSESTARTUP, debug);
-*/
     // init SIGTERM and SIGINT handling
     signal(SIGTERM, sighandler);
     signal(SIGINT, sighandler);
@@ -957,7 +924,7 @@ int main(int argc, char* argv[]) {
 //            
 			radio.read(&payload,sizeof(payload));
 			if ( verboselevel & VERBOSERF24  ) {
-                sprintf(debug, "Rec: N: %u T %u F: %u O: %u (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g)"
+                sprintf(debug, "Rec: N: %u T: %u F: %02x O: %u (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g)"
 						,payload.node_id, payload.msg_type, payload.msg_flags, payload.orderno
                         ,getChannel(payload.data1), getValue_f(payload.data1)
                         ,getChannel(payload.data2), getValue_f(payload.data2)
@@ -969,7 +936,6 @@ int main(int argc, char* argv[]) {
             }
 			switch ( payload.msg_type ) {
                 case 51: { // heartbeatnode!!
-//printf("##>> %u %llu\n", payload.node_id, mymillis());                   
                     if (node.is_new_HB(payload.node_id, mymillis())) {
                         if ( payload.data1 > 0 ) 
                             process_sensor(payload.node_id, payload.data1);
@@ -1038,14 +1004,26 @@ int main(int argc, char* argv[]) {
                     radio.stopListening();
 					if (radio.write(&payload,sizeof(payload))) {
 						if ( verboselevel & VERBOSERF24  ) {
-							sprintf(debug, "Snd: N: %u T: %u F: %u O: %u "
-									, payload.node_id, payload.msg_type, payload.msg_flags, payload.orderno);
+							sprintf(debug, "Snd: N: %u T: %u F: %02x O: %u (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g)"
+									, payload.node_id, payload.msg_type, payload.msg_flags, payload.orderno
+                        ,getChannel(payload.data1), getValue_f(payload.data1)
+                        ,getChannel(payload.data2), getValue_f(payload.data2)
+                        ,getChannel(payload.data3), getValue_f(payload.data3)
+                        ,getChannel(payload.data4), getValue_f(payload.data4)
+                        ,getChannel(payload.data5), getValue_f(payload.data5)
+                        ,getChannel(payload.data6), getValue_f(payload.data6)  );
 							logger.logmsg(VERBOSERF24, debug);
 						}
 					} else {
 						if ( verboselevel & VERBOSERF24 ) {
-							sprintf(debug, "Snd: N: %u T: %u F: %u O: %u "
-									, payload.node_id, payload.msg_type, payload.msg_flags, payload.orderno);
+							sprintf(debug, "Snd: N: %u T: %u F: %02x O: %u (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g)"
+									, payload.node_id, payload.msg_type, payload.msg_flags, payload.orderno
+                        ,getChannel(payload.data1), getValue_f(payload.data1)
+                        ,getChannel(payload.data2), getValue_f(payload.data2)
+                        ,getChannel(payload.data3), getValue_f(payload.data3)
+                        ,getChannel(payload.data4), getValue_f(payload.data4)
+                        ,getChannel(payload.data5), getValue_f(payload.data5)
+                        ,getChannel(payload.data6), getValue_f(payload.data6)  );
 							logger.logmsg(VERBOSERF24, debug);
                         }
                     }

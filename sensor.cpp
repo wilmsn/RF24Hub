@@ -4,6 +4,16 @@ Sensor::Sensor(void) {
     initial_ptr = NULL;
 }
 
+void Sensor::cleanup(void) {
+    sensor_t *search_ptr;
+    search_ptr = initial_ptr;
+    while ( search_ptr ) {
+        initial_ptr = search_ptr->next;
+        free(search_ptr);
+        search_ptr = initial_ptr;
+    }
+}
+
 void Sensor::new_entry(Sensor::sensor_t* new_ptr) {
     sensor_t *search_ptr;
     new_ptr->next = NULL;
