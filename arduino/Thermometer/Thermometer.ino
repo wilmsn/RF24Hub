@@ -17,6 +17,7 @@ On Branch: no_network @ rpi1  !!!!!
 //#define ANKLEIDEZIMMERTHERMOMETER
 //#define GAESTEZIMMERTHERMOMETER
 //#define TESTNODE
+//#define UNOTESTNODE
 //****************************************************
 //          Define node general settings
 //  Can be overwritten in individual settings later
@@ -27,9 +28,9 @@ On Branch: no_network @ rpi1  !!!!!
 //****************************************************
 #define RF24CHANNEL     91
 // Delay between 2 transmission in ms
-#define RF24SENDDELAY   50
+#define RF24SENDDELAY   500
 // Delay between 2 transmission in ms
-#define RF24RECEIVEDELAY 50
+#define RF24RECEIVEDELAY 500
 // Sleeptime in ms !! 
 // (valid: 10.000 ... 3.600.000)
 #define RF24SLEEPTIME   60000
@@ -59,6 +60,56 @@ On Branch: no_network @ rpi1  !!!!!
 #define U2 3.8
 #define U3 3.9
 #define U4 4.0
+// DISPLAY is 84 * 48 Pixel
+//  012345678901234567890123456789012345678901234567890123456789012345678901234567890123
+// 0                                                                          BBBBBBBBBB     B = Batterie
+// 1                                                                          BBBBBBBBBB
+// 2                                                                          BBBBBBBBBB
+// 3                                                                          BBBBBBBBBB
+// 4                                                                          BBBBBBBBBB
+// 5
+// 6                                                                          AAAAAAAAAA     A = Antenna
+// 7                                                                          AAAAAAAAAA
+// 8                                                                          AAAAAAAAAA
+// 9                                                                          AAAAAAAAAA
+// 0                                                                          AAAAAAAAAA
+// 1                                                                          AAAAAAAAAA
+// 2                                                                          AAAAAAAAAA
+// 3                                                                          AAAAAAAAAA
+// 4                                                                          AAAAAAAAAA
+// 5                                                                          AAAAAAAAAA
+// 6
+// 7                                                                          TTT   HHHH      T = Thermometer
+// 8                                                                          TTT   HHHH 
+// 9                                                                          TTT   HHHH      H = Heatbeat countdown
+// 0                                                                          TTT   HHHH      
+// 1                                                                          TTT   HHHH
+// 2                                                                          TTT   HHHH
+// 3                                                                                HHHH
+// 4                                                                                HHHH
+// 5------------------------------------------------------------------------------------
+// 6|                                        |                                         |
+// 7|                                        |                                         |
+// 8|                                        |                                         |
+// 9|                                        |                                         |
+// 0|        Field 1                         |            Field 2                      |
+// 1|                                        |                                         |
+// 2|                                        |                                         |
+// 3|                                        |                                         |
+// 4|                                        |                                         |
+// 5|                                        |                                         |
+// 6------------------------------------------------------------------------------------
+// 7|                                        |                                         |
+// 8|                                        |                                         |
+// 9|                                        |                                         |
+// 0|                                        |                                         |
+// 1|        Field 3                         |            Field 4                      |
+// 2|                                        |                                         |
+// 3|                                        |                                         |
+// 4|                                        |                                         |
+// 5|                                        |                                         |
+// 6|                                        |                                         |
+// 7------------------------------------------------------------------------------------
 // set X0 and Y0 of battery symbol ( is 10 * 5 pixel )
 #define BATT_X0 74
 #define BATT_Y0 0
@@ -68,9 +119,9 @@ On Branch: no_network @ rpi1  !!!!!
 // set X0 and Y0 of thermometer symbol ( is 3 * 6 pixel )
 #define THERM_X0 74
 #define THERM_Y0 17
-// set X0 and Y0 of waiting symbol ( is 6 * 6 pixel )
-#define WAIT_X0 78
-#define WAIT_Y0 17
+// set X0 and Y0 of HB countdown symbol ( is 4 * 10 pixel )
+#define HB_X0 80
+#define HB_Y0 17
 // The CE Pin of the Radio module
 #define RADIO_CE_PIN 10
 // The CS Pin of the Radio module
@@ -119,12 +170,11 @@ On Branch: no_network @ rpi1  !!!!!
 #if defined(BASTELZIMMERTHERMOMETER)
 #define DALLAS_18B20
 #define DISPLAY_5110
-#define DELAY
-#define RF24NODE         100
-#define EEPROM_VERSION   1
-#define VOLTAGEADDED     55
-#define DISPLAY_KONTRAST 10;
-#define RF24SLEEPTIME   300000
+#define RF24NODE            100
+#define EEPROM_VERSION      10
+#define VOLTAGEADDED        55
+#define DISPLAY_KONTRAST    10
+#define RF24SLEEPTIME       300000
 #define RF24EMPTYLOOPCOUNT  3 
 #endif
 //-----------------------------------------------------
@@ -166,6 +216,17 @@ On Branch: no_network @ rpi1  !!!!!
 #define sleep4ms        delay
 #endif
 
+//-----------------------------------------------------
+#if defined(UNOTESTNODE)
+#define RF24NODE         431
+#define EEPROM_VERSION   1
+#define STATUSLED        13 
+#define ACTOR            A5
+#define RF24SLEEPTIME    60000
+#define RF24SENDDELAY    200
+#define RF24RECEIVEDELAY 200
+#define TEST_LED
+#endif
 //-----------------------------------------------------
 //*****************************************************
 // ------ End of configuration part ------------
@@ -500,19 +561,47 @@ void setup(void) {
 #if defined(HAS_DISPLAY)
 #if defined(DISPLAY_5110)
   myGLCD.InitLCD();
-//  myGLCD.setContrast(5);
   myGLCD.setContrast(eeprom.display_contrast);
   myGLCD.clrScr();
   myGLCD.update();
 #endif
 #endif
 #if defined(HAS_DISPLAY)
-  monitor(5000);
+  monitor(3000);
   draw_antenna(ANT_X0, ANT_Y0);
   draw_therm(THERM_X0, THERM_Y0);
 #endif
   loopcount = 0;
   last_send = 0;
+// on init send config to hub
+  payload.node_id = RF24NODE;
+  payload.msg_type = 51;
+  payload.orderno = 0;
+  payload.data1 = calcTransportValue_f(111, (float)eeprom.sleeptime);
+  payload.data2 = calcTransportValue_f(112, (float)eeprom.sendloopcount);
+  payload.data3 = calcTransportValue_f(113, (float)eeprom.receiveloopcount);
+  payload.data4 = calcTransportValue_f(114, (float)eeprom.emptyloopcount);
+  payload.data5 = calcTransportValue_f(116, (float)eeprom.voltagefactor);
+  payload.data6 = calcTransportValue_f(117, (float)eeprom.voltageadded);  
+  radio.stopListening();
+  int ii = 0;
+  while ( ! radio.write(&payload,sizeof(payload))) {
+    ii++;
+    if (ii > 30) break;    
+    delay(100);
+  }
+  radio.startListening();
+  delay(100);
+  while ( radio.available() ) {
+    radio.read(&payload,sizeof(payload));
+    delay(50);
+    if (payload.data1 > 0) { payload.data1 = action_loop(payload.data1); } else { payload.data1 = 0; }
+    if (payload.data2 > 0) { payload.data2 = action_loop(payload.data2); } else { payload.data2 = 0; }
+    if (payload.data3 > 0) { payload.data3 = action_loop(payload.data3); } else { payload.data3 = 0; }
+    if (payload.data4 > 0) { payload.data4 = action_loop(payload.data4); } else { payload.data4 = 0; }
+    if (payload.data5 > 0) { payload.data5 = action_loop(payload.data5); } else { payload.data5 = 0; }
+    if (payload.data6 > 0) { payload.data6 = action_loop(payload.data6); } else { payload.data6 = 0; }
+  } 
 }
 
 #if defined(HAS_DISPLAY)
@@ -560,7 +649,7 @@ void monitor(uint32_t delaytime) {
   myGLCD.print(string_8, 0, 0);
   myGLCD.printNumI(eeprom.display_contrast, 55, 0);
   myGLCD.setFont(BigNumbers);
-  for (int i=0; i<100; i++) {
+  for (int i=0; i<100; i+=5) {
     myGLCD.printNumI(i, 20, 20);        
     myGLCD.setContrast(i);
     myGLCD.update();
@@ -598,6 +687,28 @@ void draw_therm(byte x, byte y) {
 #if defined(DISPLAY_5110)
     myGLCD.drawRect(x+1,y,x+1,y+3);
     myGLCD.drawRect(x,y+4,x+2,y+5);
+    myGLCD.update();
+#endif
+  }
+}
+
+void draw_hb_countdown(uint8_t watermark) {
+  uint8_t i = HB_X0;
+  uint8_t j = HB_Y0;
+  if ( ! display_down ) {
+    if ( watermark > 7 ) watermark = 7;
+#if defined(DISPLAY_5110)
+    for (uint8_t y=j+7; y>j; y--) {
+      for (byte x=i; x<i+4; x++) { 
+        myGLCD.clrPixel(x,y);
+      }
+    }
+    for (uint8_t y=j+7; y>j+watermark; y--) {
+      for (byte x=i; x<i+4; x++) { 
+        myGLCD.setPixel(x,y);
+      }
+    }
+    myGLCD.update();
 #endif
   }
 }
@@ -608,6 +719,7 @@ void wipe_therm(byte x, byte y) {
       for (byte j=y; j<y+6; j++) {
 #if defined(DISPLAY_5110)
         myGLCD.clrPixel(i,j);
+        myGLCD.update();
 #endif
       }
     }
@@ -650,7 +762,6 @@ void draw_temp(float t) {
 #endif
   }
 }
-
 
 void print_field(float val, int field) {
   int x0, y0;
@@ -792,6 +903,7 @@ void loop(void) {
     if ( ! monitormode ) {
       draw_battery(BATT_X0,BATT_Y0,cur_voltage);
       draw_therm(THERM_X0, THERM_Y0);
+      draw_hb_countdown((uint8_t) 8 * ( eeprom.emptyloopcount + 1) / (loopcount + 1) );
     }
 #endif
     get_sensordata();
@@ -807,6 +919,7 @@ void loop(void) {
       radio.startListening();
       delay(10);
       payload.node_id = RF24NODE;
+      payload.msg_type = 51;
       payload.orderno = 0;
       payload.data1 = calcTransportValue_f(101, cur_voltage);
 #if defined(DALLAS_18B20)
@@ -830,7 +943,6 @@ void loop(void) {
       payload.data5 = 0;
       payload.data6 = 0;      
 #endif
-      payload.msg_type = 51;
       receiveloopcount = 0;
       sendloopcount = 0;
 #if defined(TEST_LED)
@@ -852,11 +964,7 @@ digitalWrite(A3,STATUSLED_OFF);
   Serial.print("Sendet jatzt: O:");
   Serial.println(payload.orderno);
 #endif
-#if defined(DELAY)
-        sleep4ms(100);
-#endif        
         sleep4ms(RF24SENDDELAY);
-        delay(5);
         if ( radio.available() ) {
 // Wenn wir die erste Nachricht empfangen, wird das Senden eingestellt
 #if defined(SERIAL_DEBUG)
@@ -885,9 +993,6 @@ digitalWrite(A2,STATUSLED_OFF);
 digitalWrite(A3,STATUSLED_ON); 
 #endif
           radio.read(&payload,sizeof(payload));
-#if defined(DELAY)
-        sleep4ms(100);
-#endif        
 #if defined(SERIAL_DEBUG)
   Serial.print("Nachricht empfangen O:");
   Serial.println(payload.orderno);
@@ -927,7 +1032,7 @@ digitalWrite(A3,STATUSLED_ON);
               radio.stopListening();
               if (radio.write(&payload,sizeof(payload))) i=100;
               radio.startListening();
-              delay(10);
+              sleep4ms(100);
             }
 #if defined(SERIAL_DEBUG)
             Serial.print("Quittung gesendet O:");
@@ -940,11 +1045,11 @@ digitalWrite(A3,STATUSLED_ON);
           if (receiveloopcount < eeprom.receiveloopcount) sleep4ms(RF24RECEIVEDELAY);
           delay(5);
         }
+        sleep4ms(RF24RECEIVEDELAY);
         receiveloopcount++;
       }
 #if defined(SERIAL_DEBUG)
       Serial.println("Ende Receiveloop");
-//      delay(100);
 #endif            
 #if defined(TEST_LED)
       digitalWrite(A0,STATUSLED_OFF); 
@@ -953,8 +1058,6 @@ digitalWrite(A3,STATUSLED_ON);
       digitalWrite(A3,STATUSLED_OFF); 
 #endif
     }
-//myGLCD.print(string_3,40,40);
-//myGLCD.update();    
     radio.stopListening();
 #if defined(HAS_DISPLAY)
     wipe_antenna(ANT_X0, ANT_Y0);

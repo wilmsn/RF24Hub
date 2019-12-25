@@ -795,6 +795,8 @@ int main(int argc, char* argv[]) {
         logger.set_logfile(parms.logfilename);
 		sprintf(debug, "Start logging to %s", parms.logfilename);
         logger.logmsg(VERBOSESTARTUP, debug);
+        freopen( "parms.logfilename", "a", stdout );
+        freopen( "parms.logfilename", "a", stderr );
     }
     node.begin(&logger);
     sensor.begin(&logger);
