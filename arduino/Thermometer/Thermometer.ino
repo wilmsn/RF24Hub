@@ -28,9 +28,9 @@ On Branch: no_network @ rpi1  !!!!!
 //****************************************************
 #define RF24CHANNEL     91
 // Delay between 2 transmission in ms
-#define RF24SENDDELAY   500
+#define RF24SENDDELAY   50
 // Delay between 2 transmission in ms
-#define RF24RECEIVEDELAY 500
+#define RF24RECEIVEDELAY 50
 // Sleeptime in ms !! 
 // (valid: 10.000 ... 3.600.000)
 #define RF24SLEEPTIME   60000
@@ -181,19 +181,23 @@ On Branch: no_network @ rpi1  !!!!!
 #if defined(KUECHETHERMOMETER)
 #define DALLAS_18B20
 #define DISPLAY_5110
-#define RF24NODE        0
-#define EEPROM_VERSION  3
-#define VOLTAGEADDED    55
+#define RF24NODE            0
+#define EEPROM_VERSION      3
+#define VOLTAGEADDED        55
+#define RF24SLEEPTIME       1200000
+#define RF24EMPTYLOOPCOUNT  0 
  
 #endif
 //-----------------------------------------------------
 #if defined(ANKLEIDEZIMMERTHERMOMETER)
 #define DALLAS_18B20
 #define DISPLAY_5110
-#define RF24NODE        0
-#define EEPROM_VERSION  3
-#define VOLTAGEADDED    55
- 
+#define DISPLAY_KONTRAST     65
+#define RF24NODE             110
+#define EEPROM_VERSION       8
+#define VOLTAGEADDED         55
+#define STATUSLED_ON         LOW
+#define STATUSLED_OFF        HIGH 
 #endif
 //-----------------------------------------------------
 #if defined(GAESTEZIMMERTHERMOMETER)
@@ -232,6 +236,7 @@ On Branch: no_network @ rpi1  !!!!!
 // ------ End of configuration part ------------
 
 #include <avr/pgmspace.h>
+#include <nRF24L01.h>
 #include <RF24.h>
 #include <SPI.h>
 #include <sleeplib.h>
@@ -334,9 +339,10 @@ uint16_t            sendloopcount;
 long int            sleep_kor_time;
 uint32_t            last_send;
 uint8_t             last_orderno = 0;
-uint8_t  address1[] = { 0xf0, 0xcc, 0xcc, 0xcc, 0xcc};
-uint8_t  address2[] = { 0x33, 0xcc, 0xcc, 0xcc, 0xcc};
-
+uint8_t             msg_id = 0;
+uint8_t             address1[] = { 0xf0, 0xcc, 0xcc, 0xcc, 0xcc};
+uint8_t             address2[] = { 0x33, 0xcc, 0xcc, 0xcc, 0xcc};
+uint8_t             pipe_num;
 
 
 // nRF24L01(+) radio attached using Getting Started board 
@@ -386,24 +392,24 @@ uint32_t action_loop(uint32_t data) {
   Serial.println("LED aus");
 #endif
         }
-       break;
+      break;
 #endif
 #if defined(HAS_DISPLAY)
       case 21:
         // Set field 1
         field1_val = value;
         print_field(field1_val,1);
-       break;
+      break;
       case 22:
         // Set field 2
         field2_val= value;
         print_field(field2_val,2);
-       break;
+      break;
       case 23:
         // Set field 3
         field3_val= value;
         print_field(field3_val,3);
-       break;
+      break;
       case 24:
         // Set field 4
         field4_val= value;
@@ -411,16 +417,16 @@ uint32_t action_loop(uint32_t data) {
        break;
       case 31:
         // Displaylight ON <-> OFF
-        if (value < 0.5) {
-          digitalWrite(STATUSLED,STATUSLED_OFF); 
+        if (value > 0.5 && value < 1.5) {
+          digitalWrite(STATUSLED,STATUSLED_ON); 
         } else  {
-          digitalWrite(STATUSLED,STATUSLED_ON);
+          digitalWrite(STATUSLED,STATUSLED_OFF);
         }
-       break;
+      break;
       case 41:
         // Display Sleepmode ON <-> OFF
         display_sleep(value < 0.5);
-       break;
+      break;
 #endif
       case 101:  
       // battery voltage
@@ -528,14 +534,6 @@ void setup(void) {
 #if defined(SERIAL_DEBUG)
   Serial.begin(9600);
 #endif
-#if defined(TEST_LED)
-  pinMode(A0, OUTPUT);
-  pinMode(A1, OUTPUT); 
-  pinMode(A2, OUTPUT); 
-  pinMode(A3, OUTPUT); 
-  pinMode(A4, OUTPUT); 
-  pinMode(A5, OUTPUT); 
-#endif  
   SPI.begin();
 #if defined(DALLAS_18B20)
   sensor.begin(); 
@@ -552,7 +550,7 @@ void setup(void) {
   radio.setDataRate( RF24_1MBPS );
   radio.setPALevel( RF24_PA_MAX ) ;
   radio.setRetries(15, 15);
-  radio.setAutoAck(true);
+//  radio.setAutoAck(0,0);
   radio.enableDynamicPayloads();
   radio.openWritingPipe(address1);
   radio.openReadingPipe(1,address2);
@@ -584,15 +582,17 @@ void setup(void) {
   payload.data5 = calcTransportValue_f(116, (float)eeprom.voltagefactor);
   payload.data6 = calcTransportValue_f(117, (float)eeprom.voltageadded);  
   radio.stopListening();
+  radio.openWritingPipe(address1);
   int ii = 0;
-  while ( ! radio.write(&payload,sizeof(payload))) {
+  while ( ! radio.write(&payload, sizeof(payload))) {
     ii++;
     if (ii > 30) break;    
     delay(100);
   }
   radio.startListening();
-  delay(100);
-  while ( radio.available() ) {
+  radio.openReadingPipe(1,address2);
+  delay(500);
+  while ( radio.isValid() && radio.available(&pipe_num) ) {
     radio.read(&payload,sizeof(payload));
     delay(50);
     if (payload.data1 > 0) { payload.data1 = action_loop(payload.data1); } else { payload.data1 = 0; }
@@ -893,6 +893,47 @@ void wipe_antenna(int x, int y) {
   }
 }  
 #endif
+
+void payload_init(uint16_t node, uint8_t msg_type, uint8_t msg_flags) {
+  payload.node_id = node;
+  payload.msg_type = msg_type;
+  payload.msg_flags = msg_flags;
+  payload.msg_id = ++msg_id;
+  payload.orderno = 0;
+  payload.data1 = 0;
+  payload.data2 = 0;
+  payload.data3 = 0;
+  payload.data4 = 0;
+  payload.data5 = 0;
+  payload.data6 = 0;
+}
+
+void payload_send(void) {
+  
+}
+
+void payload_data(uint8_t pos, uint8_t channel, float value) {
+  switch (pos) {
+    case 1:
+      payload.data1 = calcTransportValue_f(channel, value);
+    break;
+    case 2:
+      payload.data2 = calcTransportValue_f(channel, value);
+    break;
+    case 3:
+      payload.data3 = calcTransportValue_f(channel, value);
+    break;
+    case 4:
+      payload.data4 = calcTransportValue_f(channel, value);
+    break;
+    case 5:
+      payload.data5 = calcTransportValue_f(channel, value);
+    break;
+    case 6:
+      payload.data6 = calcTransportValue_f(channel, value);
+    break;    
+  }
+}
   
 void loop(void) {
   delay(10);  
@@ -917,6 +958,7 @@ void loop(void) {
 #endif
       radio.powerUp();
       radio.startListening();
+      radio.openReadingPipe(1,address2);
       delay(10);
       payload.node_id = RF24NODE;
       payload.msg_type = 51;
@@ -945,119 +987,56 @@ void loop(void) {
 #endif
       receiveloopcount = 0;
       sendloopcount = 0;
-#if defined(TEST_LED)
-digitalWrite(A0,STATUSLED_OFF); 
-digitalWrite(A1,STATUSLED_ON); 
-digitalWrite(A2,STATUSLED_ON); 
-digitalWrite(A3,STATUSLED_OFF); 
-#endif
 // SendLoop
-#if defined(SERIAL_DEBUG)
-  Serial.println("Start Sendloop");
-#endif
       while ( sendloopcount < eeprom.sendloopcount ) {
 // Solange keine Nachricht für uns vorliegt UND die Sendezeit nicht abgelaufen ist ==> senden
         radio.stopListening();
+        radio.openWritingPipe(address1);
+        delay(10);
         radio.write(&payload,sizeof(payload));    
+        delay(10);
         radio.startListening();
-#if defined(SERIAL_DEBUG)
-  Serial.print("Sendet jatzt: O:");
-  Serial.println(payload.orderno);
-#endif
-        sleep4ms(RF24SENDDELAY);
+        delay(RF24SENDDELAY);
         if ( radio.available() ) {
 // Wenn wir die erste Nachricht empfangen, wird das Senden eingestellt
-#if defined(SERIAL_DEBUG)
-  Serial.println("Antwort empfangen, Sendung unterbrochen");
-#endif
           sendloopcount = eeprom.sendloopcount;
         }
         sendloopcount++;
       }
-#if defined(TEST_LED)
-digitalWrite(A0,STATUSLED_OFF); 
-digitalWrite(A1,STATUSLED_OFF); 
-digitalWrite(A2,STATUSLED_OFF); 
-digitalWrite(A3,STATUSLED_OFF); 
-#endif      
 // ReceiveLoop        
-#if defined(SERIAL_DEBUG)
-  Serial.println("Start Receiveloop");
-#endif
       while ( receiveloopcount < eeprom.receiveloopcount ) {          
-        while ( radio.available() ) {
-#if defined(TEST_LED)
-digitalWrite(A0,STATUSLED_ON); 
-digitalWrite(A1,STATUSLED_OFF); 
-digitalWrite(A2,STATUSLED_OFF); 
-digitalWrite(A3,STATUSLED_ON); 
-#endif
+        if ( radio.available() ) {
           radio.read(&payload,sizeof(payload));
-#if defined(SERIAL_DEBUG)
-  Serial.print("Nachricht empfangen O:");
-  Serial.println(payload.orderno);
-#endif          
-// Wenn die Nachricht neu ist (eine neue orderno hat) wird sie verarbeitet
-          if ( last_orderno != payload.orderno ) {   
-            last_orderno = payload.orderno;
-// Eine Nachricht vom Typ 52 ist eine ENDE Nachricht         
-            if ( payload.msg_type == 52 ) {
-              receiveloopcount = eeprom.receiveloopcount;
-#if defined(SERIAL_DEBUG)
-              Serial.println("Nachricht vom Typ 52 - Endenachricht");
-#endif
-            } else {
-// Andere Nachrichten werden durch den "action_loop" geschickt              
-              if (payload.data1 > 0) { payload.data1 = action_loop(payload.data1); } else { payload.data1 = 0; }
-              if (payload.data2 > 0) { payload.data2 = action_loop(payload.data2); } else { payload.data2 = 0; }
-              if (payload.data3 > 0) { payload.data3 = action_loop(payload.data3); } else { payload.data3 = 0; }
-              if (payload.data4 > 0) { payload.data4 = action_loop(payload.data4); } else { payload.data4 = 0; }
-              if (payload.data5 > 0) { payload.data5 = action_loop(payload.data5); } else { payload.data5 = 0; }
-              if (payload.data6 > 0) { payload.data6 = action_loop(payload.data6); } else { payload.data6 = 0; }
-              receiveloopcount = 0;
-#if defined(SERIAL_DEBUG)
-              Serial.print("Payload verarbeitet O:");
-              Serial.println(payload.orderno);
-#endif
-            }
-// Wenn Flag 0x01 gesetzt ist dann wird keine nachfolgende Nachricht erwartet
-            if ((payload.msg_flags & 0x01) == 0x01 ) {
-              receiveloopcount = eeprom.receiveloopcount;
-#if defined(SERIAL_DEBUG)
-              Serial.println("Endeflag");
-#endif
-            }
-// Quittung senden            
-            for (byte i=0; i<10; i++){
-              radio.stopListening();
-              if (radio.write(&payload,sizeof(payload))) i=100;
-              radio.startListening();
-              sleep4ms(100);
-            }
-#if defined(SERIAL_DEBUG)
-            Serial.print("Quittung gesendet O:");
-            Serial.println(payload.orderno);
+// Eine Nachricht vom Typ 52 ist eine ENDE Nachricht            
+          if ( payload.msg_type == 52 ) {
+            receiveloopcount = eeprom.receiveloopcount;
           } else {
-            Serial.print("Duplikat O:");
-            Serial.println(payload.orderno);
-#endif
+// Andere Nachrichten werden durch den "action_loop" geschickt              
+            if (payload.data1 > 0) { payload.data1 = action_loop(payload.data1); } else { payload.data1 = 0; }
+            if (payload.data2 > 0) { payload.data2 = action_loop(payload.data2); } else { payload.data2 = 0; }
+            if (payload.data3 > 0) { payload.data3 = action_loop(payload.data3); } else { payload.data3 = 0; }
+            if (payload.data4 > 0) { payload.data4 = action_loop(payload.data4); } else { payload.data4 = 0; }
+            if (payload.data5 > 0) { payload.data5 = action_loop(payload.data5); } else { payload.data5 = 0; }
+            if (payload.data6 > 0) { payload.data6 = action_loop(payload.data6); } else { payload.data6 = 0; }
           }
-          if (receiveloopcount < eeprom.receiveloopcount) sleep4ms(RF24RECEIVEDELAY);
-          delay(5);
+// Wenn Flag 0x01 gesetzt ist dann wird keine nachfolgende Nachricht erwartet
+          if ((payload.msg_flags & 0x01) == 0x01 ) {
+            receiveloopcount = eeprom.receiveloopcount;
+          }
+// Quittung senden            
+          radio.stopListening();
+          delay(10);
+          radio.write(&payload,sizeof(payload));
+          delay(10);
+          radio.startListening();
+          receiveloopcount = 0;
         }
-        sleep4ms(RF24RECEIVEDELAY);
+        if (receiveloopcount < eeprom.receiveloopcount) delay(RF24RECEIVEDELAY);
         receiveloopcount++;
       }
-#if defined(SERIAL_DEBUG)
-      Serial.println("Ende Receiveloop");
-#endif            
-#if defined(TEST_LED)
-      digitalWrite(A0,STATUSLED_OFF); 
-      digitalWrite(A1,STATUSLED_OFF); 
-      digitalWrite(A2,STATUSLED_OFF); 
-      digitalWrite(A3,STATUSLED_OFF); 
-#endif
     }
+//myGLCD.print(string_3,40,40);
+//myGLCD.update();    
     radio.stopListening();
 #if defined(HAS_DISPLAY)
     wipe_antenna(ANT_X0, ANT_Y0);
@@ -1067,8 +1046,7 @@ digitalWrite(A3,STATUSLED_ON);
 #if defined(HAS_DISPLAY)
     display_sleep(true);
 #endif
-  }
-  if ( sleep_kor_time != 0 ) {
+  }  if ( sleep_kor_time != 0 ) {
     long int tempsleeptime = eeprom.sleeptime + sleep_kor_time;
 #if defined(HAS_DISPLAY)
     if ( monitormode ) {

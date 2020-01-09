@@ -28,6 +28,7 @@ uint16_t verboselevel;
 void logmsg(int mesgloglevel, char *mymsg);
 void set_logfile(char*);
 void set_logmode(char);
+char get_logmode(void);
 
 Logger(void);
 

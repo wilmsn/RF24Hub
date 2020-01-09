@@ -182,8 +182,8 @@ void Order::add_order(uint16_t node, uint8_t type, bool HB_order, uint32_t data,
     new_entry(new_ptr);
 }
 
-void Order::add_endorder(uint16_t node, uint64_t entrytime) {
-    add_order(node, 52, true, 0, entrytime);    
+void Order::add_endorder(uint16_t node, uint8_t msg_type, uint64_t entrytime) {
+    add_order(node, msg_type, true, 0, entrytime);    
     modify_orderflags(node, 0x01);
 }
 

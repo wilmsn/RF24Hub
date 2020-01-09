@@ -48,7 +48,7 @@ bool Node::is_new_HB(uint16_t node_id, uint64_t mymillis) {
                 sprintf(debug,"Node.is_new_HB: Node %u last HB: %llu this HB: %llu", node_id, search_ptr->HB_ts, mymillis); 
                 logger->logmsg(VERBOSEORDER, debug);
             }
-            if (search_ptr->HB_ts < mymillis - 500) retval = true;
+            if (search_ptr->HB_ts < mymillis - 5000) retval = true;
             search_ptr->HB_ts = mymillis;
         }
         search_ptr = search_ptr->next;
