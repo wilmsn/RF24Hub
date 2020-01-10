@@ -883,8 +883,8 @@ int main(int argc, char* argv[]) {
     sprintf(debug, "starting radio on channel ... %d ", parms.rf24network_channel);
     logger.logmsg(VERBOSESTARTUP, debug);
     radio.begin();
-    radio.setPALevel( RF24_PA_MAX ) ;
-    radio.setChannel( parms.rf24network_channel );
+    radio.setPALevel( RF24_PA_MIN ) ;
+    radio.setChannel( 91 );
     radio.setAutoAck( true );
     radio.enableDynamicPayloads();
     radio.setDataRate(RF24_1MBPS);
@@ -896,7 +896,7 @@ int main(int argc, char* argv[]) {
     radio.openReadingPipe(1,address1);
     radio.startListening();
     
-    if (verboselevel & VERBOSECONFIG) { radio.printDetails(); }
+    radio.printDetails();
     sprintf(debug,"\%s up and running .... ",PRGNAME);
     logger.logmsg(VERBOSESTARTUP, debug);
 	
