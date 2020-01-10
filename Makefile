@@ -18,8 +18,13 @@ MARIADB_LIBS := $(shell mariadb_config --libs)
 MARIADB_INC := $(shell mariadb_config --cflags)
 ARCH := $(shell uname -m)
 
+ifeq "$(ARCH)" "armv6l"
+        CCFLAGS=-Ofast -mfpu=vfp -mfloat-abi=hard -march=armv6zk -mtune=arm1176jzf-s -std=c++0x -pthread
+        RF24FLAGS=-lrf24-bcm
+endif
+
 ifeq "$(ARCH)" "armv7l"
-	CCFLAGS=-Ofast -mfpu=vfp -mfloat-abi=hard -march=armv7 -mtune=arm1176jzf-s -std=c++0x -pthread
+	CCFLAGS=-Ofast -mfpu=vfp -mfloat-abi=hard -march=armv7-a -mtune=arm1176jzf-s -std=c++0x -pthread
 	RF24FLAGS=-lrf24-bcm
 endif
 
@@ -28,13 +33,13 @@ ifeq "$(ARCH)" "x86_64"
 endif
 
 # make all
-all: rf24gwd
+all: rf24test
 
 # Make the rf24hub deamon
 rf24hubd: log.o node.o sensor.o orderbuffer.o order.o config.o gen_func.o telnet.o database.o zahlenformat.o rf24hubd.cpp
 	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} ${MARIADB_INC} ${MARIADB_LIBS} $^ -o $@
 
-rf24gwd: log.o zahlenformat.o rf24gwd.cpp
+rf24test: log.o zahlenformat.o rf24test.cpp
 	g++ ${CCFLAGS} ${RF24FLAGS} -Wall $^ -o $@
 
 # Test of order object
@@ -47,7 +52,7 @@ orderbuffertest: orderbuffer.o orderbuffer_test.cpp
 
 # clear build files
 clean:
-	rm *.o rf24hubd rf24gwd
+	rm *.o rf24hubd rf24gwd rf24test
 
 # Install the sensorhub
 install: 
