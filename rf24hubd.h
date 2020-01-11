@@ -134,7 +134,6 @@ struct config_parameters {
 
 struct config_parameters parms;
 
-payload_t payload;
 int orderloopcount=0;
 int ordersqlexeccount=0;
 bool ordersqlrefresh=true;
@@ -223,17 +222,6 @@ bool node_is_next(uint16_t node);
 
 bool is_HB_node(uint16_t node);
 
-/*******************************************************************************************
-*
-* Databasehandling 
-* Used for communication with MariaDB
-*
-********************************************************************************************/
-
-void db_check_error(void);
-
-void do_sql(char *sqlstmt);
-
 void store_sensor_value(uint16_t node, uint32_t data);
 
 void process_sensor(uint16_t node, uint32_t data);
@@ -246,6 +234,10 @@ void process_sensor(uint16_t node, uint32_t data);
 *
 ********************************************************************************************/
 void sighandler(int signal);
+
+void debug_print_payload(uint16_t loglevel, const char* msg_header, const char* result, payload_t * mypayload);
+
+void process_payload(payload_t* mypayload);
 
 int main(int argc, char* argv[]);
 

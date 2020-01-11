@@ -283,7 +283,7 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 // TODO             order.
 //        }
 		if ( strcmp(wort1,cmp_setlast) == 0 && ! node.is_HB_node(mynode) ) {
-			make_order(mynode, 61);
+			make_order(mynode, PAYLOAD_TYPE_NORMAL);
 		}
     }
 	// push <node> <channel> <value>
@@ -430,24 +430,24 @@ void make_order(uint16_t mynode, uint8_t mytype) {
                             order.modify_order(mynode, 4, data);
                             ret_ptr = orderbuffer.find_order4node(mynode, ret_ptr, &channel, &value);
                             if (ret_ptr) {
-                                order.modify_orderflags(mynode,0x00);
+                                order.modify_orderflags(mynode, PAYLOAD_FLAG_EMPTY );
                             } else {
-                                order.modify_orderflags(mynode,0x01);
+                                order.modify_orderflags(mynode, PAYLOAD_FLAG_LASTMESSAGE );
                             }                        
                         } else {
-                            order.modify_orderflags(mynode,0x01);
+                            order.modify_orderflags(mynode, PAYLOAD_FLAG_LASTMESSAGE );
                         }                        
                     } else {
-                        order.modify_orderflags(mynode,0x01);
+                        order.modify_orderflags(mynode, PAYLOAD_FLAG_LASTMESSAGE );
                     }                        
                 } else {
-                    order.modify_orderflags(mynode,0x01);
+                    order.modify_orderflags(mynode, PAYLOAD_FLAG_LASTMESSAGE );
                 }                        
             } else {
-                order.modify_orderflags(mynode,0x01);
+                order.modify_orderflags(mynode, PAYLOAD_FLAG_LASTMESSAGE );
             }                        
         } else {
-            order.modify_orderflags(mynode,0x01);
+            order.modify_orderflags(mynode, PAYLOAD_FLAG_LASTMESSAGE );
         }                        
     }
 }
@@ -670,9 +670,38 @@ void scanner(char scanlevel) {
   printf("\n"); 
 }
 
+void debug_print_payload(uint16_t loglevel, const char* msg_header, const char* result, payload_t* mypayload) {
+	if ( verboselevel & loglevel  ) {
+        char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
+        sprintf(debug, "%s: N:%u T:%u M:%u F:%02x O:%u (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g) %s"
+            ,msg_header
+			,mypayload->node_id, mypayload->msg_type, mypayload->msg_id, mypayload->msg_flags, mypayload->orderno
+            ,getChannel(mypayload->data1), getValue_f(mypayload->data1)
+            ,getChannel(mypayload->data2), getValue_f(mypayload->data2)
+            ,getChannel(mypayload->data3), getValue_f(mypayload->data3)
+            ,getChannel(mypayload->data4), getValue_f(mypayload->data4)
+            ,getChannel(mypayload->data5), getValue_f(mypayload->data5)
+            ,getChannel(mypayload->data6), getValue_f(mypayload->data6)  
+            ,result );
+        logger.logmsg(loglevel, debug);
+        free(debug);
+    }
+}
+
+void process_payload(payload_t* mypayload) {
+    if ( mypayload->data1 > 0 ) process_sensor(mypayload->node_id, mypayload->data1);
+    if ( mypayload->data2 > 0 ) process_sensor(mypayload->node_id, mypayload->data2);
+    if ( mypayload->data3 > 0 ) process_sensor(mypayload->node_id, mypayload->data3);
+    if ( mypayload->data4 > 0 ) process_sensor(mypayload->node_id, mypayload->data4);
+    if ( mypayload->data5 > 0 ) process_sensor(mypayload->node_id, mypayload->data5);
+    if ( mypayload->data6 > 0 ) process_sensor(mypayload->node_id, mypayload->data6);
+}
+
 int main(int argc, char* argv[]) {
     pid_t pid;
 	int c;
+    payload_t payload;
+    uint8_t pipe_num;
 	logger.set_logmode('i');
 	strcpy(config_file,"x");
     char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
@@ -786,15 +815,19 @@ int main(int argc, char* argv[]) {
     }
     // starts logging
     logger.verboselevel = verboselevel;
-    logfile_ptr = fopen (parms.logfilename,"a");
-    if ( logfile_ptr == NULL ) {
-        fprintf(stdout,"Could not open %s for writing\n Printig logs to console\n", parms.logfilename );
-    } else {
-		log2logfile = true;
-        fclose(logfile_ptr);
-        logger.set_logfile(parms.logfilename);
-		sprintf(debug, "Start logging to %s", parms.logfilename);
-        logger.logmsg(VERBOSESTARTUP, debug);
+    if (logger.get_logmode() == 'l') {
+        logfile_ptr = fopen (parms.logfilename,"a");
+        if ( logfile_ptr == NULL ) {
+            fprintf(stdout,"Could not open %s for writing\n Printig logs to console\n", parms.logfilename );
+        } else {
+            log2logfile = true;
+            fclose(logfile_ptr);
+            logger.set_logfile(parms.logfilename);
+            sprintf(debug, "Start logging to %s", parms.logfilename);
+            logger.logmsg(VERBOSESTARTUP, debug);
+            freopen( "parms.logfilename", "a", stdout );
+            freopen( "parms.logfilename", "a", stderr );
+        }
     }
     node.begin(&logger);
     sensor.begin(&logger);
@@ -883,13 +916,13 @@ int main(int argc, char* argv[]) {
     sprintf(debug, "starting radio on channel ... %d ", parms.rf24network_channel);
     logger.logmsg(VERBOSESTARTUP, debug);
     radio.begin();
-    radio.setPALevel( RF24_PA_MIN ) ;
     radio.setChannel( 91 );
     radio.setAutoAck( true );
+    radio.setPALevel( RF24_PA_MAX ) ;
     radio.enableDynamicPayloads();
     radio.setDataRate(RF24_1MBPS);
 //    radio.setDataRate(RF24_250KBPS);
-	radio.setRetries(15,15);
+	radio.setRetries(15,5);
     uint8_t  address1[] = { 0xf0, 0xcc, 0xcc, 0xcc, 0xcc};
     uint8_t  address2[] = { 0x33, 0xcc, 0xcc, 0xcc, 0xcc};
     radio.openWritingPipe(address2);
@@ -914,7 +947,7 @@ int main(int argc, char* argv[]) {
             }
 		}
 //		network.update();
-		if ( radio.available() ) {
+		if ( radio.isValid() && radio.available(&pipe_num) ) {
 //
 // Receive loop: react on the message from the nodes
 //
@@ -923,44 +956,23 @@ int main(int argc, char* argv[]) {
 //            network.peek(rxheader);
 //            
 			radio.read(&payload,sizeof(payload));
-			if ( verboselevel & VERBOSERF24  ) {
-                sprintf(debug, "Rec: N: %u T: %u F: %02x O: %u (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g)"
-						,payload.node_id, payload.msg_type, payload.msg_flags, payload.orderno
-                        ,getChannel(payload.data1), getValue_f(payload.data1)
-                        ,getChannel(payload.data2), getValue_f(payload.data2)
-                        ,getChannel(payload.data3), getValue_f(payload.data3)
-                        ,getChannel(payload.data4), getValue_f(payload.data4)
-                        ,getChannel(payload.data5), getValue_f(payload.data5)
-                        ,getChannel(payload.data6), getValue_f(payload.data6)  );
-                logger.logmsg(VERBOSERF24, debug);
-            }
+            debug_print_payload(VERBOSERF24, "Rec", " ", &payload);
 			switch ( payload.msg_type ) {
-                case 51: { // heartbeatnode!!
-                    if (node.is_new_HB(payload.node_id, mymillis())) {
-                        if ( payload.data1 > 0 ) 
-                            process_sensor(payload.node_id, payload.data1);
-                        if ( payload.data2 > 0 ) 
-                            process_sensor(payload.node_id, payload.data2);
-                        if ( payload.data3 > 0 ) 
-                            process_sensor(payload.node_id, payload.data3);
-                        if ( payload.data4 > 0 ) 
-                            process_sensor(payload.node_id, payload.data4);
-                        if ( payload.data5 > 0 ) 
-                            process_sensor(payload.node_id, payload.data5);
-                        if ( payload.data6 > 0 ) 
-                            process_sensor(payload.node_id, payload.data6);
-                        if ( orderbuffer.node_has_entry(payload.node_id) ) {
-                            if ( verboselevel & VERBOSEORDER) {
+                case PAYLOAD_TYPE_HB: { // heartbeatnode!!
+                    if (node.is_new_HB(payload.node_id, mymillis())) {  // Got a new Heaqrtbeat -> process it!
+                        process_payload(&payload);
+                        make_order(payload.node_id, PAYLOAD_TYPE_NORMAL);                    
+                        if ( orderbuffer.node_has_entry(payload.node_id) ) {  // WE have orders for this node
+                            if ( verboselevel & VERBOSEORDER ) {
                                 sprintf(debug, "Entries for Heartbeat Node found, sending them");
                                 logger.logmsg(VERBOSEORDER, debug);
                             }
-                            make_order(payload.node_id, 61);                    
                         } else {
                             if ( verboselevel & VERBOSEORDER) {
                                 sprintf(debug, "No Entries for Heartbeat Node found, sending Endmessage");
                                 logger.logmsg(VERBOSEORDER, debug);
                             }
-                            order.add_endorder(payload.node_id, mymillis());
+                            order.add_endorder(payload.node_id, PAYLOAD_TYPE_HBSESP ,mymillis());
                         }
                     }
                 }
@@ -972,22 +984,11 @@ int main(int argc, char* argv[]) {
 									logger.logmsg(VERBOSEORDER, debug);
                     }
                     if ( order.is_orderno(payload.orderno) ) {
-                        if ( payload.data1 > 0 ) 
-                            process_sensor(payload.node_id, payload.data1);
-                        if ( payload.data2 > 0 ) 
-                            process_sensor(payload.node_id, payload.data2);
-                        if ( payload.data3 > 0 ) 
-                            process_sensor(payload.node_id, payload.data3);
-                        if ( payload.data4 > 0 ) 
-                            process_sensor(payload.node_id, payload.data4);
-                        if ( payload.data5 > 0 ) 
-                            process_sensor(payload.node_id, payload.data5);
-                        if ( payload.data6 > 0 ) 
-                            process_sensor(payload.node_id, payload.data6);
+                        process_payload(&payload);
                         // Order compleate => delete it!
                         order.del_orderno(payload.orderno);
                         // Check if we still have orders for this node
-                        make_order(payload.node_id, 61);
+                        make_order(payload.node_id, PAYLOAD_TYPE_NORMAL);
                     }
                 }
 			}
@@ -1002,32 +1003,14 @@ int main(int argc, char* argv[]) {
                 &payload.data1, &payload.data2, &payload.data3, &payload.data4, 
                 &payload.data5, &payload.data6, mymillis() )) {
                     radio.stopListening();
+                    radio.openWritingPipe(address2);
 					if (radio.write(&payload,sizeof(payload))) {
-						if ( verboselevel & VERBOSERF24  ) {
-							sprintf(debug, "Snd: N: %u T: %u F: %02x O: %u (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g)"
-									, payload.node_id, payload.msg_type, payload.msg_flags, payload.orderno
-                        ,getChannel(payload.data1), getValue_f(payload.data1)
-                        ,getChannel(payload.data2), getValue_f(payload.data2)
-                        ,getChannel(payload.data3), getValue_f(payload.data3)
-                        ,getChannel(payload.data4), getValue_f(payload.data4)
-                        ,getChannel(payload.data5), getValue_f(payload.data5)
-                        ,getChannel(payload.data6), getValue_f(payload.data6)  );
-							logger.logmsg(VERBOSERF24, debug);
-						}
+                        radio.startListening();
+                        debug_print_payload(VERBOSERF24, "Snd", "OK", &payload);
 					} else {
-						if ( verboselevel & VERBOSERF24 ) {
-							sprintf(debug, "Snd: N: %u T: %u F: %02x O: %u (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g)"
-									, payload.node_id, payload.msg_type, payload.msg_flags, payload.orderno
-                        ,getChannel(payload.data1), getValue_f(payload.data1)
-                        ,getChannel(payload.data2), getValue_f(payload.data2)
-                        ,getChannel(payload.data3), getValue_f(payload.data3)
-                        ,getChannel(payload.data4), getValue_f(payload.data4)
-                        ,getChannel(payload.data5), getValue_f(payload.data5)
-                        ,getChannel(payload.data6), getValue_f(payload.data6)  );
-							logger.logmsg(VERBOSERF24, debug);
-                        }
+                        radio.startListening();
+                        debug_print_payload(VERBOSERF24, "Snd", "Fail", &payload);
                     }
-                    radio.startListening();
                 }
 				usleep(50000);
         } else {

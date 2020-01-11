@@ -134,7 +134,11 @@ void Database::storeNodeConfig(uint16_t node, uint8_t channel, float value) {
     char *sql_stmt =  (char*) malloc (SQLSTRINGSIZE);
 	sprintf(debug, "database.storeNodeConfig: Node: %u Channel: %u Value: %f ", node, channel, value);
 	logger->logmsg(VERBOSEORDER, debug);        
-    sprintf(sql_stmt,"insert into node.confidata (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %f ) ", node, channel, value);
+    sprintf(sql_stmt,"insert into node_configdata_history (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %f ) ", node, channel, value);
+    do_sql(sql_stmt);
+    sprintf(sql_stmt,"delete from node_configdata where node_id = %u and channel = %u ", node, channel);
+    do_sql(sql_stmt);
+    sprintf(sql_stmt,"insert into node_configdata (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %f ) ", node, channel, value);
     do_sql(sql_stmt);
     free(debug);    
     free(sql_stmt);
