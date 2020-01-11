@@ -6,21 +6,22 @@
 
 #include <stdint.h>
 
-typedef struct {   // 
-  uint8_t     node_id;         
-  uint8_t     msg_id;          
-  uint8_t     msg_type;        
-  uint8_t     msg_flags;       
-  uint8_t     orderno;         
-  uint8_t     network_id;      
-  uint8_t     reserved1;      
-  uint8_t     reserved2;      
-  uint32_t    data1;         
-  uint32_t    data2;         
-  uint32_t    data3;         
-  uint32_t    data4;         
-  uint32_t    data5;         
-  uint32_t    data6;         
+//Payload V3
+typedef struct {   
+ uint8_t     node_id;         
+ uint8_t     type;        
+ uint8_t     flags;       
+ uint8_t     orderno;         
+ uint8_t     reserved1;      
+ uint8_t     reserved2;      
+ uint8_t     reserved3;      
+ uint8_t     reserved4;      
+ uint32_t    data1;         
+ uint32_t    data2;         
+ uint32_t    data3;         
+ uint32_t    data4;         
+ uint32_t    data5;         
+ uint32_t    data6;         
 } payload_t;
 
 typedef struct {

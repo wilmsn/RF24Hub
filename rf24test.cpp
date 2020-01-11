@@ -49,38 +49,48 @@ uint8_t  address2[] = { 0x33, 0xcc, 0xcc, 0xcc, 0xcc};
     while(1) {
         if ( radio.available() ){  
 			radio.read( &payload, sizeof(payload) );
-            sprintf(debug,"%s",">>>>>>>>>>>>>>>>in>>>>>>>>>>>>>>>>>>>>>");		logger.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Msg_number: %u", payload.msg_id);			logger.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Data: (C/V): (%u/%g)(%u/%g)(%u/%g)(%u/%g)(%u/%g)(%u/%g)"
-            , getChannel(payload.data1), getValue_f(payload.data1)
-            , getChannel(payload.data2), getValue_f(payload.data2)
-            , getChannel(payload.data3), getValue_f(payload.data3)
-            , getChannel(payload.data4), getValue_f(payload.data4)
-            , getChannel(payload.data5), getValue_f(payload.data5)
-            , getChannel(payload.data6), getValue_f(payload.data6) );
-            logger.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"<<<<<<<<<<<<<<<<out<<<<<<<<<<<<<<<<<<<");			logger.logmsg(VERBOSEOTHER, debug);
-            payload.data3=calcTransportValue_f(21,val1);
-            payload.data4=calcTransportValue_f(21,val2);
-            payload.data5=calcTransportValue_f(21,val3);
-            payload.data6=calcTransportValue_f(21,val4);
-            sprintf(debug,"Data: (C/V): (%u/%g)(%u/%g)(%u/%g)(%u/%g)(%u/%g)(%u/%g)"
-            , getChannel(payload.data1), getValue_f(payload.data1)
-            , getChannel(payload.data2), getValue_f(payload.data2)
-            , getChannel(payload.data3), getValue_f(payload.data3)
-            , getChannel(payload.data4), getValue_f(payload.data4)
-            , getChannel(payload.data5), getValue_f(payload.data5)
-            , getChannel(payload.data6), getValue_f(payload.data6) );
-            logger.logmsg(VERBOSEOTHER, debug);
-            radio.stopListening();
-            if ( radio.write( &payload, sizeof(payload) ) ) {
-                sprintf(debug,"%s","Writing to Node -> OK"); logger.logmsg(VERBOSERF24, debug);
-            } else {
-                sprintf(debug,"%s","Writing to Node -> ERROR"); logger.logmsg(VERBOSERF24, debug);
-            }					
-            radio.startListening();
-            val1++; val2+=0.021; val3+=2; val4+=0.44;
-            if (val1 > 1000) { val1=1; val2=1; val3=1; val4=1; }
+            switch ( payload.type) {
+                case 51: {
+                    sprintf(debug,"%s",">>>>>>>>>>>>>>>>in>>>>>>>>>>>>>>>>>>>>>");		logger.logmsg(VERBOSEOTHER, debug);
+                    sprintf(debug,"Node: %u", payload.node_id);			logger.logmsg(VERBOSEOTHER, debug);
+                    sprintf(debug,"Data: (C/V): (%u/%g)(%u/%g)(%u/%g)(%u/%g)(%u/%g)(%u/%g)"
+                            , getChannel(payload.data1), getValue_f(payload.data1)
+                            , getChannel(payload.data2), getValue_f(payload.data2)
+                            , getChannel(payload.data3), getValue_f(payload.data3)
+                            , getChannel(payload.data4), getValue_f(payload.data4)
+                            , getChannel(payload.data5), getValue_f(payload.data5)
+                            , getChannel(payload.data6), getValue_f(payload.data6) );
+                    logger.logmsg(VERBOSEOTHER, debug);
+                    sprintf(debug,"<<<<<<<<<<<<<<<<out<<<<<<<<<<<<<<<<<<<");			logger.logmsg(VERBOSEOTHER, debug);
+                    payload.type = 71;
+                    payload.data3=calcTransportValue_f(21,val1);
+                    payload.data4=calcTransportValue_f(21,val2);
+                    payload.data5=calcTransportValue_f(21,val3);
+                    payload.data6=calcTransportValue_f(21,val4);
+                    sprintf(debug,"Data: (C/V): (%u/%g)(%u/%g)(%u/%g)(%u/%g)(%u/%g)(%u/%g)"
+                            , getChannel(payload.data1), getValue_f(payload.data1)
+                            , getChannel(payload.data2), getValue_f(payload.data2)
+                            , getChannel(payload.data3), getValue_f(payload.data3)
+                            , getChannel(payload.data4), getValue_f(payload.data4)
+                            , getChannel(payload.data5), getValue_f(payload.data5)
+                            , getChannel(payload.data6), getValue_f(payload.data6) );
+                    logger.logmsg(VERBOSEOTHER, debug);
+                    radio.stopListening();
+                    if ( radio.write( &payload, sizeof(payload) ) ) {
+                        sprintf(debug,"%s","Writing to Node -> OK"); logger.logmsg(VERBOSERF24, debug);
+                    } else {
+                        sprintf(debug,"%s","Writing to Node -> ERROR"); logger.logmsg(VERBOSERF24, debug);
+                    }					
+                    radio.startListening();
+                    val1++; val2+=0.021; val3+=2; val4+=0.44;
+                    if (val1 > 1000) { val1=1; val2=1; val3=1; val4=1; }
+                }
+                break;
+                case 81:
+                    sprintf(debug,"+++++Quittung erhalten++++++");
+                    logger.logmsg(VERBOSEOTHER, debug);
+                    break;
+            }
         }
         usleep(100);
     }

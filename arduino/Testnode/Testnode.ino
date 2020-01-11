@@ -55,20 +55,20 @@ float temp;
 
 // Structure of our payload
 struct payload_t {
-  uint8_t     node_id;         
-  uint8_t     msg_id;          
-  uint8_t     msg_type;        
-  uint8_t     msg_flags;       
-  uint8_t     orderno;         
-  uint8_t     network_id;      
-  uint8_t     reserved1;      
-  uint8_t     reserved2;      
-  uint32_t    data1;         
-  uint32_t    data2;         
-  uint32_t    data3;         
-  uint32_t    data4;         
-  uint32_t    data5;         
-  uint32_t    data6;         
+ uint8_t     node_id;         
+ uint8_t     type;        
+ uint8_t     flags;       
+ uint8_t     orderno;         
+ uint8_t     reserved1;      
+ uint8_t     reserved2;      
+ uint8_t     reserved3;      
+ uint8_t     reserved4;      
+ uint32_t    data1;         
+ uint32_t    data2;         
+ uint32_t    data3;         
+ uint32_t    data4;         
+ uint32_t    data5;         
+ uint32_t    data6;         
 };
 payload_t payload;    
 
@@ -132,16 +132,16 @@ void loop(void) {
   get_sensordata();
 //  Clear the RX buffer !!!
 //  radio.flush_rx();
-  if ( loopcount > 100 ) {      
+  if ( loopcount > 100 ) {   
+    payload.node_id= RF24NODE;  
     payload.orderno = 0;
-    payload.msg_id = ++msg_id;
     payload.data1 = calcTransportValue_f(101, cur_voltage);
     payload.data2 = calcTransportValue_f(1,temp);
     payload.data3 = 0;
     payload.data4 = 0;
     payload.data5 = 0;
     payload.data6 = 0;
-    payload.msg_type = 51;
+    payload.type = 51;
     radio.stopListening();
     Serial.print(F("Now transmitting "));
     if (radio.write(&payload,sizeof(payload))) {
@@ -154,9 +154,7 @@ void loop(void) {
   }
   while ( radio.available() ){
     radio.read( &payload, sizeof(payload) );
-    Serial.print(">>Msg received Msg-ID: ");
-    Serial.print(payload.msg_id); 
-    Serial.print(" Data (C/V): ("); 
+    Serial.print("Msg received  Data (C/V): ("); 
     Serial.print(getChannel(payload.data1)); 
     Serial.print("/"); 
     Serial.print(getValue_f(payload.data1)); 
@@ -181,6 +179,17 @@ void loop(void) {
     Serial.print("/"); 
     Serial.print(getValue_f(payload.data6));
     Serial.println(")"); 
+    payload.type=81;
+    payload.data1=0;
+    payload.data2=0;
+    radio.stopListening();
+    Serial.print(F("Sending back "));
+    if (radio.write(&payload,sizeof(payload))) {
+      Serial.println(F("OK "));
+    } else {
+      Serial.println(F("failed "));
+    }
+    radio.startListening();
   }
   delay(50);            
   loopcount++;              
