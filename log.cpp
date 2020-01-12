@@ -1,7 +1,7 @@
 #include "log.h"
 
 void Logger::logmsg(int mesgloglevel, char *mymsg){
-    if (mesgloglevel <= verboselevel) {
+    if (mesgloglevel & verboselevel) {
         char *buf =  (char*) malloc (100);
 		time_t now = time(0);
 		tm *ltm = localtime(&now);
@@ -40,15 +40,32 @@ void Logger::set_logfile(char* _logfilename) {
     logfilename = _logfilename;
 }
 
+char Logger::get_logmode(void) {
+    char retval;
+    switch ( logmode ) {
+        case interactive:
+            retval = 'i';
+        break;
+        case logfile:
+            retval = 'l';
+        break;
+        case systemlog:
+            retval = 's';
+        break;        
+    }
+    return retval;
+}
+
 void Logger::set_logmode(char _logmode) {
-    if (_logmode == 'i' ) {
-        logmode=interactive;
-    }
-    if (_logmode == 'l' ) {
-        logmode=logfile;
-    }
-    if (_logmode == 's' ) {
-        logmode=systemlog;
+    switch ( _logmode ) {
+        case 'i':
+            logmode=interactive;
+        break;
+        case 'l':
+            logmode=logfile;
+        break;
+        case 's':
+            logmode=systemlog;
     }
 }
 

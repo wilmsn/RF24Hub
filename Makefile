@@ -33,11 +33,11 @@ ifeq "$(ARCH)" "x86_64"
 endif
 
 # make all
-all: rf24test
+all: rf24hubd
 
 # Make the rf24hub deamon
-rf24hubd: log.o node.o sensor.o orderbuffer.o order.o config.o gen_func.o telnet.o database.o zahlenformat.o rf24hubd.cpp
-	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} ${MARIADB_INC} ${MARIADB_LIBS} $^ -o $@
+rf24hubd: log.o node.o sensor.o orderbuffer.o order.o config.o common.o database.o rf24hubd.cpp
+	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} ${MARIADB_INC} ${MARIADB_LIBS} ${RF24FLAGS} $^ -o $@
 
 rf24test: log.o zahlenformat.o rf24test.cpp
 	g++ ${CCFLAGS} ${RF24FLAGS} -Wall $^ -o $@
