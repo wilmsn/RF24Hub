@@ -673,7 +673,7 @@ void scanner(char scanlevel) {
 void debug_print_payload(uint16_t loglevel, const char* msg_header, const char* result, payload_t* mypayload) {
 	if ( verboselevel & loglevel  ) {
         char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-        sprintf(debug, "%s: N:%u T:%u F:%02x O:%u (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g) %s"
+        sprintf(debug, "%s: N:%hhu T:%hhu F:%02x O:%hhu (%hhu/%g) (%hhu/%g) (%hhu/%g) (%hhu/%g) (%hhu/%g) (%hhu/%g) %s"
             ,msg_header
             ,mypayload->node_id, mypayload->type, mypayload->flags, mypayload->orderno
             ,getChannel(mypayload->data1), getValue_f(mypayload->data1)

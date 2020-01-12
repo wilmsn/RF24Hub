@@ -30,7 +30,7 @@ public:
     void modify_order(uint16_t node, uint8_t pos, uint32_t data);
     void modify_orderflags(uint16_t node, uint8_t flags);
     void add_endorder(uint16_t node, uint8_t msg_type, uint64_t entrytime);
-    bool get_order_for_transmission(uint8_t* orderno, uint16_t* node, uint8_t* type, uint8_t* flags,
+    bool get_order_for_transmission(uint8_t* orderno, uint8_t* node, uint8_t* type, uint8_t* flags,
                                     uint32_t* data1, uint32_t* data2, uint32_t* data3, uint32_t* data4, uint32_t* data5, uint32_t* data6,  
                                     uint64_t systime); 
     void print_buffer(int new_tn_in_socket);

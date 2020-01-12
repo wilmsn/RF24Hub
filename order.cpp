@@ -223,7 +223,7 @@ void Order::modify_orderflags(uint16_t node, uint8_t flags) {
     }
 }
 
-bool Order::get_order_for_transmission(uint8_t* orderno, uint16_t* node, uint8_t* type, uint8_t* flags,
+bool Order::get_order_for_transmission(uint8_t* orderno, uint8_t* node, uint8_t* type, uint8_t* flags,
                 uint32_t* data1, uint32_t* data2, uint32_t* data3, uint32_t* data4, uint32_t* data5, uint32_t* data6, uint64_t mytime){
     bool retval = false;
     order_t *delme_ptr = NULL;

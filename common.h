@@ -12,7 +12,7 @@
 
 // Structure of our payload
 typedef struct {   // Our payload can be 32 byte max.
-  uint16_t    node_id;
+  uint8_t    node_id;
   uint8_t     type;
   uint8_t     flags;
   uint8_t     orderno;
