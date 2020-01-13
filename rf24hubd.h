@@ -91,7 +91,6 @@ UP: fill_order_buffer   =>  Füllt das ARRAY "order_buffer" mit dem übergebenen
 using namespace std;
 
 int sockfd;
-uint16_t verboselevel = 2;
 bool start_daemon=false, tn_host_set = false, tn_port_set = false, tn_active = false, in_port_set = false;
 char logfilename[300];
 char tn_hostname[20], tn_portno[7];
@@ -238,6 +237,8 @@ void sighandler(int signal);
 void debug_print_payload(uint16_t loglevel, const char* msg_header, const char* result, payload_t * mypayload);
 
 void process_payload(payload_t* mypayload);
+
+void do_transmit(uint8_t address[5], payload_t* payload);
 
 int main(int argc, char* argv[]);
 

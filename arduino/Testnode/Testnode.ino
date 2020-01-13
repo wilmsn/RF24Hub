@@ -115,8 +115,11 @@ void setup(void) {
   Serial.println(F("Thermometer"));
   radio.begin();
   radio.setChannel( 91 );
-  radio.setDataRate( RF24_1MBPS );
-  radio.setPALevel( RF24_PA_MAX ) ;
+  radio.setDataRate( RF24_250KBPS );
+//  radio.setPALevel( RF24_PA_MAX ) ;
+//  radio.setPALevel( RF24_PA_HIGH ) ;
+  radio.setPALevel( RF24_PA_LOW ) ;
+//  radio.setPALevel( RF24_PA_MIN ) ;
   radio.setRetries(15, 15);
   radio.openWritingPipe(tx_address);
   radio.openReadingPipe(1,rx_address1);
@@ -148,7 +151,7 @@ void loop(void) {
     payload.data5 = 0;
     payload.data6 = 0;
     radio.stopListening();
-    Serial.print(F("Now transmitting "));
+    Serial.print(F("Now transmitting Heartbeat "));
     if (radio.write(&payload,sizeof(payload))) {
       Serial.println(F("OK "));
     } else {
@@ -159,7 +162,15 @@ void loop(void) {
   }
   while ( radio.available() ){
     radio.read( &payload, sizeof(payload) );
-    Serial.print("Msg received  Data (C/V): ("); 
+    Serial.print("Msg received N:");
+    Serial.print(payload.node_id);
+    Serial.print(" T:");
+    Serial.print(payload.type);
+    Serial.print(" F:");
+    Serial.print(payload.flags);
+    Serial.print(" O:");
+    Serial.print(payload.orderno);
+    Serial.print(" Data (C/V): ("); 
     Serial.print(getChannel(payload.data1)); 
     Serial.print("/"); 
     Serial.print(getValue_f(payload.data1)); 
@@ -184,27 +195,18 @@ void loop(void) {
     Serial.print("/"); 
     Serial.print(getValue_f(payload.data6));
     Serial.println(")");
-    if ( payload.type == MSGTYPORQ1 ) { 
-      payload.type = MSGTYPORP1;
-      radio.stopListening();
-      Serial.print(F("Sending back "));
-      if (radio.write(&payload,sizeof(payload))) {
-        Serial.println(F("OK "));
-      } else {
-        Serial.println(F("failed "));
+    if (payload.orderno > 0 ) {
+      if ( payload.type == MSGTYPORQ1 ) { 
+        payload.type = MSGTYPORP1;
+        radio.stopListening();
+        Serial.print(F("Sending back "));
+        if (radio.write(&payload,sizeof(payload))) {
+          Serial.println(F("OK "));
+        } else {
+          Serial.println(F("failed "));
+        }
+        radio.startListening();
       }
-      radio.startListening();
-    }
-    if ( payload.type == MSGTYPEND ) { 
-      payload.type = MSGTYPEND;
-      radio.stopListening();
-      Serial.print(F("Sending back "));
-      if (radio.write(&payload,sizeof(payload))) {
-        Serial.println(F("OK "));
-      } else {
-        Serial.println(F("failed "));
-      }
-      radio.startListening();
     }
   }
   delay(50);            

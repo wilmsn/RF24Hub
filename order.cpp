@@ -165,7 +165,7 @@ uint16_t Order::del_old_entry(uint64_t deltime) {
 void Order::add_order(uint8_t node, uint8_t type, bool HB_order, uint32_t data, uint64_t entrytime) {
     order_t *new_ptr = new order_t;
     orderno++;
-//    if ( orderno > 50000 ) orderno = 1;
+    if ( orderno > 250 ) orderno = 1;
     new_ptr->orderno = orderno;
     new_ptr->node = node;
     new_ptr->type = type;

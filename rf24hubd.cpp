@@ -98,8 +98,6 @@ void usage(const char *prgname) {
     fprintf(stdout, "         Start as daemon\n");
     fprintf(stdout, "   -c or --configfilename <filename>\n");
     fprintf(stdout, "         Set configfilename\n");
-    fprintf(stdout, "   -v or --verbose <verboselevel>\n");
-    fprintf(stdout, "         Set verboselevel (1...9)\n");
     fprintf(stdout, "   -s or --scanner <scanlevel>\n");
     fprintf(stdout, "         Set scannlevel (0...9) and scan all channels\n");
     fprintf(stdout, "   -t or --scannchannel <channel>\n");
@@ -128,13 +126,13 @@ void do_tn_cmd(uint16_t node, uint8_t channel, float value) {
     struct sockaddr_in serv_addr;
     struct hostent *server;
     char fhem_dev[] = {'\0'};
-    if ( verboselevel & VERBOSETELNET) {    
+    if ( logger.verboselevel & VERBOSETELNET) {    
         sprintf(debug,"do_tn_cmd: Node: %u Channel: %u Value %f", node, channel, value);
         logger.logmsg(VERBOSEORDER,debug);
     }
     sensor.find_fhem_dev(&node, &channel, fhem_dev); 
 	sprintf(tn_cmd,"set %s %f\n", fhem_dev, value);
-    if ( verboselevel & VERBOSETELNET) {    
+    if ( logger.verboselevel & VERBOSETELNET) {    
         sprintf(debug,"do_tn_cmd: %s", tn_cmd);
         logger.logmsg(VERBOSETELNET,debug);
     }
@@ -164,7 +162,7 @@ void do_tn_cmd(uint16_t node, uint8_t channel, float value) {
 			sprintf(debug,"do_tn_cmd: error writing to socket");
 			logger.logmsg(VERBOSECRITICAL,debug);
 		} else {
-            if ( verboselevel & VERBOSETELNET) {    
+            if ( logger.verboselevel & VERBOSETELNET) {    
                 sprintf(debug,"do_tn_cmd: Telnet to %s Port %d CMD: %s successfull",parms.telnet_hostname, portno, tn_cmd);
                 logger.logmsg(VERBOSETELNET,debug);
             }
@@ -184,7 +182,7 @@ void receive_tn_in(int new_tn_in_socket, struct sockaddr_in * address) {
     // use this in perl: my $t = new Net::Telnet (Timeout => 2, Port => 7001, Prompt => '/rf24hub>/');
     sprintf(client_message,"rf24hub> ");
     write(new_tn_in_socket , client_message , strlen(client_message));
-    if ( verboselevel & VERBOSETELNET) {    
+    if ( logger.verboselevel & VERBOSETELNET) {    
         sprintf (debug,"Client %s ist connected ...", inet_ntoa (address->sin_addr));
         logger.logmsg(VERBOSETELNET, debug);
     }
@@ -193,7 +191,7 @@ void receive_tn_in(int new_tn_in_socket, struct sockaddr_in * address) {
     if (MsgLen>0) {
         process_tn_in(new_tn_in_socket, buffer, client_message);
     } else {
-        if ( verboselevel & VERBOSETELNET) {    
+        if ( logger.verboselevel & VERBOSETELNET) {    
             sprintf (debug,"Nicht verarbeitete telnet message: %s MsgLen: %d ", trim(buffer), MsgLen);
             logger.logmsg(VERBOSETELNET, debug);
         }
@@ -233,7 +231,7 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 	bool tn_input_ok=false;
 	char delimiter[] = " ";
 	trim(buffer);
-    if ( verboselevel & VERBOSETELNET) {    
+    if ( logger.verboselevel & VERBOSETELNET) {    
         sprintf(debug,"Incoming telnet data: %s ",buffer);
         logger.logmsg(VERBOSETELNET, debug);
     }
@@ -335,16 +333,16 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 		tn_input_ok = true;
 		sprintf(client_message,"Verbose level is now:\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
-		if (logger.verboselevel & VERBOSERF24) {
-			sprintf(client_message,"rf24 ");
+		if (logger.verboselevel & VERBOSECRITICAL) {
+			sprintf(client_message,"CRITICAL ");
 			write(new_tn_in_socket , client_message , strlen(client_message));
 		}
-		if (logger.verboselevel & VERBOSETELNET) {
-			sprintf(client_message,"telnet ");
+		if (logger.verboselevel & VERBOSESTARTUP) {
+			sprintf(client_message,"STARTUP ");
 			write(new_tn_in_socket , client_message , strlen(client_message));
 		}
-		if (logger.verboselevel & VERBOSESQL) {
-			sprintf(client_message,"sql ");
+		if (logger.verboselevel & VERBOSECONFIG) {
+			sprintf(client_message,"CONFIG ");
 			write(new_tn_in_socket , client_message , strlen(client_message));
 		}
 		if (logger.verboselevel & VERBOSEORDER) {
@@ -355,6 +353,22 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 			sprintf(client_message,"obuffer ");
 			write(new_tn_in_socket , client_message , strlen(client_message));
 		}
+		if (logger.verboselevel & VERBOSETELNET) {
+			sprintf(client_message,"telnet ");
+			write(new_tn_in_socket , client_message , strlen(client_message));
+		}
+		if (logger.verboselevel & VERBOSESQL) {
+			sprintf(client_message,"sql ");
+			write(new_tn_in_socket , client_message , strlen(client_message));
+		}
+		if (logger.verboselevel & VERBOSERF24) {
+			sprintf(client_message,"rf24 ");
+			write(new_tn_in_socket , client_message , strlen(client_message));
+		}
+		if (logger.verboselevel & VERBOSEOTHER) {
+			sprintf(client_message,"other ");
+			write(new_tn_in_socket , client_message , strlen(client_message));
+		}
 		if (logger.verboselevel & VERBOSECONTENTORDER) {
 			sprintf(client_message,"ocont ");
 			write(new_tn_in_socket , client_message , strlen(client_message));
@@ -363,7 +377,17 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 			sprintf(client_message,"obcont ");
 			write(new_tn_in_socket , client_message , strlen(client_message));
 		}
-        sprintf(client_message,"\n");
+        uint16_t tmpverb=0b1000000000000000;
+		sprintf(client_message,"Value: 0b");
+		while (tmpverb > 0) {
+			if (tmpverb & logger.verboselevel) {
+				strncat(client_message,"1",2);
+			} else {
+				strncat(client_message,"0",2);
+			}
+			tmpverb >>= 1;
+		}
+        strncat(client_message,"\n",2);
 		write(new_tn_in_socket , client_message , strlen(client_message));
 	}
     // list order
@@ -551,7 +575,7 @@ void process_sensor(uint16_t node, uint32_t mydata) {
 	switch (channel) {
 		case 1 ... 99: {
 		// Sensor or Actor
-            if ( verboselevel & VERBOSECONFIG) {    
+            if ( logger.verboselevel & VERBOSECONFIG) {    
                 sprintf(debug, "Value of Channel: %u on Node: %u is %f ", channel, node, value);
                 logger.logmsg(VERBOSECONFIG, debug);
             }
@@ -560,7 +584,7 @@ void process_sensor(uint16_t node, uint32_t mydata) {
 		break; 
 		case 101: {
 		// battery voltage
-            if ( verboselevel & VERBOSECONFIG) {    
+            if ( logger.verboselevel & VERBOSECONFIG) {    
                 sprintf(debug, "Voltage of Node: %u is %f ", node, value);
                 logger.logmsg(VERBOSECONFIG, debug); 
             }
@@ -570,7 +594,7 @@ void process_sensor(uint16_t node, uint32_t mydata) {
 		}
 		break; 
 		case 102 ... 127: { // System settings
-            if ( verboselevel & VERBOSECONFIG) {    
+            if ( logger.verboselevel & VERBOSECONFIG) {    
                 sprintf(debug, "Node: %u Channel: %u is set to %f ", node, channel, value);
                 logger.logmsg(VERBOSECONFIG, debug);
             }
@@ -578,7 +602,7 @@ void process_sensor(uint16_t node, uint32_t mydata) {
 		}	
 		break; 
 		default: { 
-            if ( verboselevel & VERBOSECONFIG) {    
+            if ( logger.verboselevel & VERBOSECONFIG) {    
                 sprintf(debug, "Message dropped!!!! Node: %u Channel: %u Value: %f ", node, channel, value);
                 logger.logmsg(VERBOSECONFIG, debug);   
             }
@@ -734,7 +758,7 @@ void scanner(char scanlevel) {
 }
 
 void debug_print_payload(uint16_t loglevel, const char* msg_header, const char* result, payload_t* mypayload) {
-	if ( verboselevel & loglevel  ) {
+	if ( logger.verboselevel & loglevel  ) {
         char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
         sprintf(debug, "%s: N:%hhu T:%hhu F:%02x O:%hhu (%hhu/%g) (%hhu/%g) (%hhu/%g) (%hhu/%g) (%hhu/%g) (%hhu/%g) %s"
             ,msg_header
@@ -752,13 +776,24 @@ void debug_print_payload(uint16_t loglevel, const char* msg_header, const char* 
 }
 
 void process_payload(payload_t* mypayload) {
-printf("###3\n");                        
-    if ( mypayload->data1 > 0 ) process_sensor(mypayload->node_id, mypayload->data1);
-    if ( mypayload->data2 > 0 ) process_sensor(mypayload->node_id, mypayload->data2);
-    if ( mypayload->data3 > 0 ) process_sensor(mypayload->node_id, mypayload->data3);
-    if ( mypayload->data4 > 0 ) process_sensor(mypayload->node_id, mypayload->data4);
-    if ( mypayload->data5 > 0 ) process_sensor(mypayload->node_id, mypayload->data5);
-    if ( mypayload->data6 > 0 ) process_sensor(mypayload->node_id, mypayload->data6);
+	if ( mypayload->data1 > 0 ) process_sensor(mypayload->node_id, mypayload->data1);
+	if ( mypayload->data2 > 0 ) process_sensor(mypayload->node_id, mypayload->data2);
+	if ( mypayload->data3 > 0 ) process_sensor(mypayload->node_id, mypayload->data3);
+	if ( mypayload->data4 > 0 ) process_sensor(mypayload->node_id, mypayload->data4);
+	if ( mypayload->data5 > 0 ) process_sensor(mypayload->node_id, mypayload->data5);
+	if ( mypayload->data6 > 0 ) process_sensor(mypayload->node_id, mypayload->data6);
+}
+
+void do_transmit(uint8_t address[5], payload_t* payload) {
+	radio.stopListening();
+	radio.openWritingPipe(address);
+	if (radio.write(payload,sizeof(payload_t))) {
+		radio.startListening();
+		debug_print_payload(VERBOSERF24, "Snd", "OK", payload);
+	} else {
+		radio.startListening();
+		debug_print_payload(VERBOSERF24, "Snd", "Fail", payload);
+	}
 }
 
 int main(int argc, char* argv[]) {
@@ -792,7 +827,7 @@ int main(int argc, char* argv[]) {
 		};
         /* getopt_long stores the option index here. */
         int option_index = 0;
-        c = getopt_long (argc, argv, "?dht:s:v:c:",long_options, &option_index);
+        c = getopt_long (argc, argv, "?dht:s:c:",long_options, &option_index);
         /* Detect the end of the options. */
         if (c == -1) break;
         switch (c) {
@@ -829,8 +864,8 @@ int main(int argc, char* argv[]) {
 				start_daemon = true;
 				logger.set_logmode('l');
             break;
-			case 'v':
-                verboselevel = (optarg[0] - '0') * 1;
+//			case 'v':
+//                verboselevel = (optarg[0] - '0') * 1;
             break;
             case 'c':
                 strcpy(config_file, optarg);
@@ -878,7 +913,7 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
     // starts logging
-    logger.verboselevel = verboselevel;
+    logger.verboselevel = VERBOSECRITICAL | VERBOSESTARTUP | VERBOSECONFIG;
     if (logger.get_logmode() == 'l') {
         logfile_ptr = fopen (parms.logfilename,"a");
         if ( logfile_ptr == NULL ) {
@@ -982,9 +1017,10 @@ int main(int argc, char* argv[]) {
     radio.begin();
     radio.setChannel( 91 );
     radio.setAutoAck( true );
-    radio.setPALevel( RF24_PA_MAX ) ;
+//    radio.setPALevel( RF24_PA_HIGH ) ;
+    radio.setPALevel( RF24_PA_LOW ) ;
     radio.enableDynamicPayloads();
-    radio.setDataRate(RF24_1MBPS);
+    radio.setDataRate(RF24_250KBPS);
 //    radio.setDataRate(RF24_250KBPS);
 	radio.setRetries(15,5);
     uint8_t  address1[] = { 0xf0, 0xcc, 0xcc, 0xcc, 0xcc};
@@ -1020,29 +1056,31 @@ int main(int argc, char* argv[]) {
 //            network.peek(rxheader);
 //            
 			radio.read(&payload,sizeof(payload));
-            debug_print_payload(VERBOSERF24, "Rec", " ", &payload);
+			debug_print_payload(VERBOSERF24, "Rec", " ", &payload);
 			switch ( payload.type ) {
-                case MSGTYPHB1: { // heartbeat typ 1!!
-                    if (node.is_new_HB(payload.node_id, mymillis())) {  // Got a new Heaqrtbeat -> process it!
-                        process_payload(&payload);
-                        make_order(payload.node_id, MSGTYPORQ1);                    
-                        if ( orderbuffer.node_has_entry(payload.node_id) ) {  // WE have orders for this node
-                            if ( verboselevel & VERBOSEORDER ) {
-                                sprintf(debug, "Entries for Heartbeat Node found, sending them");
-                                logger.logmsg(VERBOSEORDER, debug);
-                            }
-                        } else {
-                            if ( verboselevel & VERBOSEORDER) {
-                                sprintf(debug, "No Entries for Heartbeat Node found, sending Endmessage");
-                                logger.logmsg(VERBOSEORDER, debug);
-                            }
-                            order.add_endorder(payload.node_id, MSGTYPEND ,mymillis());
-                        }
-                    }
-                }
-                break;    
+				case MSGTYPHB1: { // heartbeat typ 1!!
+					if (node.is_new_HB(payload.node_id, mymillis())) {  // Got a new Heaqrtbeat -> process it!
+						process_payload(&payload);
+						if ( orderbuffer.node_has_entry(payload.node_id) ) {  // WE have orders for this node
+							make_order(payload.node_id, MSGTYPORQ1);                    
+							if ( logger.verboselevel & VERBOSEORDER ) {
+								sprintf(debug, "Entries for Heartbeat Node found, sending them");
+								logger.logmsg(VERBOSEORDER, debug);
+							}
+						} else {
+							if ( logger.verboselevel & VERBOSEORDER) {
+								sprintf(debug, "No Entries for Heartbeat Node found, sending Endmessage");
+								logger.logmsg(VERBOSEORDER, debug);
+							}
+							payload.data1=0;payload.data2=0;payload.data3=0;payload.data4=0;payload.data5=0;payload.data6=0;
+							payload.type=MSGTYPEND; payload.orderno=0; payload.flags=FLAG_LASTMESSAGE;
+							do_transmit(address2, &payload);
+						}
+					}
+				}
+				break;    
                 case MSGTYPORP1: { // Response auf einen "normalen" Orderrequest ==> Nur Verarbeitung, keine Antwort
-                    if ( verboselevel & VERBOSEORDER) {
+                    if ( logger.verboselevel & VERBOSEORDER) {
                         sprintf(debug, "Processing N: %hhu T: %hhu F: %hhu O: %hhu"
                                     , payload.node_id, payload.type, payload.flags, payload.orderno);
 									logger.logmsg(VERBOSEORDER, debug);
@@ -1058,18 +1096,19 @@ int main(int argc, char* argv[]) {
                 }
                 break;
                 default: {	
-                    if ( verboselevel & VERBOSEORDER) {
+                    if ( logger.verboselevel & VERBOSEORDER) {
                         sprintf(debug, "<per Default> Processing N: %hhu T: %hhu F: %hhu O: %hhu"
                                     , payload.node_id, payload.type, payload.flags, payload.orderno);
 									logger.logmsg(VERBOSEORDER, debug);
                     }
-/*                    if ( order.is_orderno(payload.orderno) ) {
-                        process_payload(&payload);
+                    if ( order.is_orderno(payload.orderno) ) {
+//                        process_payload(&payload);
                         // Order compleate => delete it!
                         order.del_orderno(payload.orderno);
+//						do_transmit(address2, &payload);
                         // Check if we still have orders for this node
-                        make_order(payload.node_id, MSGTYPORQ1);
-                    } */
+//                        make_order(payload.node_id, MSGTYPORQ1);
+                    } 
                 }
 			}
 			
@@ -1082,15 +1121,7 @@ int main(int argc, char* argv[]) {
 			while ( order.get_order_for_transmission(&payload.orderno, &payload.node_id, &payload.type, &payload.flags,
                 &payload.data1, &payload.data2, &payload.data3, &payload.data4, 
                 &payload.data5, &payload.data6, mymillis() )) {
-                    radio.stopListening();
-                    radio.openWritingPipe(address2);
-					if (radio.write(&payload,sizeof(payload))) {
-                        radio.startListening();
-                        debug_print_payload(VERBOSERF24, "Snd", "OK", &payload);
-					} else {
-                        radio.startListening();
-                        debug_print_payload(VERBOSERF24, "Snd", "Fail", &payload);
-                    }
+                    do_transmit(address2, &payload);
                 }
 				usleep(50000);
         } else {

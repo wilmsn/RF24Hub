@@ -109,25 +109,27 @@ bool decodeVerbose(uint16_t* oldLevel, char* verboseSet) {
          cmp_rmVBob[]="-obuffer",
          cmp_addVBorder[]="+order",
          cmp_rmVBorder[]="-order",
-         cmp_addVOBcont[]="+obcont",
-         cmp_rmVOBcont[]="-obcont",
-         cmp_addVOcont[]="+ocont",
-         cmp_rmVOcont[]="-ocont",
+         cmp_addVBOBcont[]="+obcont",
+         cmp_rmVBOBcont[]="-obcont",
+         cmp_addVBOcont[]="+ocont",
+         cmp_rmVBOcont[]="-ocont",
          cmp_addVBsql[]="+sql",
-         cmp_rmVBsql[]="-sql";
-    if (strcmp(verboseSet,cmp_addVOBcont) == 0) {
+         cmp_rmVBsql[]="-sql",
+         cmp_addVBother[]="+other",
+         cmp_rmVBother[]="-other";
+    if (strcmp(verboseSet,cmp_addVBOBcont) == 0) {
         *oldLevel |= VERBOSECONTENTOBUFFER;
         retval = true;
     }
-    if (strcmp(verboseSet,cmp_rmVOBcont) == 0) {
+    if (strcmp(verboseSet,cmp_rmVBOBcont) == 0) {
         *oldLevel ^= VERBOSECONTENTOBUFFER;
         retval = true;
     }
-    if (strcmp(verboseSet,cmp_addVOcont) == 0) {
+    if (strcmp(verboseSet,cmp_addVBOcont) == 0) {
         *oldLevel |= VERBOSECONTENTORDER;
         retval = true;
     }
-    if (strcmp(verboseSet,cmp_rmVOcont) == 0) {
+    if (strcmp(verboseSet,cmp_rmVBOcont) == 0) {
         *oldLevel ^= VERBOSECONTENTORDER;
         retval = true;
     }
@@ -169,6 +171,14 @@ bool decodeVerbose(uint16_t* oldLevel, char* verboseSet) {
     }
     if (strcmp(verboseSet,cmp_rmVBorder) == 0) {
         *oldLevel ^= VERBOSEORDER;
+        retval = true;
+    }    
+    if (strcmp(verboseSet,cmp_addVBother) == 0) {
+        *oldLevel |= VERBOSEOTHER;
+        retval = true;
+    }
+    if (strcmp(verboseSet,cmp_rmVBother) == 0) {
+        *oldLevel ^= VERBOSEOTHER;
         retval = true;
     }    
     return retval;
