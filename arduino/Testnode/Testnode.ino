@@ -1,7 +1,7 @@
 /*
 A very minimalistic Node for Testing only.
 
-!!!!! On Branch rf24test !!!!!!!
+!!!!! On Branch payload_v3 !!!!!!!
 
 */
 // The CE Pin of the Radio module
@@ -27,10 +27,14 @@ A very minimalistic Node for Testing only.
 // valid: 0...9
 #define RF24EMPTYLOOPCOUNT  0
 // Voltage Faktor will be divided by 100 (Integer !!)!!!!
-#define STATUSLED 3
-#define STATUSLED_ON HIGH
-#define STATUSLED_OFF LOW
-#define RECEIVEDELAY 100
+#define STATUSLED               3
+#define STATUSLED_ON            HIGH
+#define STATUSLED_OFF           LOW
+#define RECEIVEDELAY            100
+#define MSGTYPEND               0
+#define MSGTYPHB1               51
+#define MSGTYPORQ1              71
+#define MSGTYPORP1              81
 
 //-----------------------------------------------------
 //*****************************************************
@@ -134,6 +138,8 @@ void loop(void) {
 //  radio.flush_rx();
   if ( loopcount > 100 ) {   
     payload.node_id= RF24NODE;  
+    payload.type = MSGTYPHB1;
+    payload.flags = 0;
     payload.orderno = 0;
     payload.data1 = calcTransportValue_f(101, cur_voltage);
     payload.data2 = calcTransportValue_f(1,temp);
@@ -141,7 +147,6 @@ void loop(void) {
     payload.data4 = 0;
     payload.data5 = 0;
     payload.data6 = 0;
-    payload.type = 51;
     radio.stopListening();
     Serial.print(F("Now transmitting "));
     if (radio.write(&payload,sizeof(payload))) {
@@ -178,18 +183,29 @@ void loop(void) {
     Serial.print(getChannel(payload.data6)); 
     Serial.print("/"); 
     Serial.print(getValue_f(payload.data6));
-    Serial.println(")"); 
-    payload.type=81;
-    payload.data1=0;
-    payload.data2=0;
-    radio.stopListening();
-    Serial.print(F("Sending back "));
-    if (radio.write(&payload,sizeof(payload))) {
-      Serial.println(F("OK "));
-    } else {
-      Serial.println(F("failed "));
+    Serial.println(")");
+    if ( payload.type == MSGTYPORQ1 ) { 
+      payload.type = MSGTYPORP1;
+      radio.stopListening();
+      Serial.print(F("Sending back "));
+      if (radio.write(&payload,sizeof(payload))) {
+        Serial.println(F("OK "));
+      } else {
+        Serial.println(F("failed "));
+      }
+      radio.startListening();
     }
-    radio.startListening();
+    if ( payload.type == MSGTYPEND ) { 
+      payload.type = MSGTYPEND;
+      radio.stopListening();
+      Serial.print(F("Sending back "));
+      if (radio.write(&payload,sizeof(payload))) {
+        Serial.println(F("OK "));
+      } else {
+        Serial.println(F("failed "));
+      }
+      radio.startListening();
+    }
   }
   delay(50);            
   loopcount++;              

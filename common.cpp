@@ -130,10 +130,10 @@ uint16_t decodeVerbose(uint16_t oldLevel, char* verboseSet) {
         retval = oldLevel ^ VERBOSESQL;
     }    
     if (strcmp(verboseSet,cmp_addVBob) == 0) {
-        retval = oldLevel | VERBOSEORDERBUFFER;
+        retval = oldLevel | VERBOSEOBUFFER;
     }
     if (strcmp(verboseSet,cmp_rmVBob) == 0) {
-        retval = oldLevel ^ VERBOSEORDERBUFFER;
+        retval = oldLevel ^ VERBOSEOBUFFER;
     }    
     if (strcmp(verboseSet,cmp_addVBorder) == 0) {
         retval = oldLevel | VERBOSEORDER;

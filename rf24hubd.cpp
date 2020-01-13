@@ -283,7 +283,7 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 // TODO             order.
 //        }
 		if ( strcmp(wort1,cmp_setlast) == 0 && ! node.is_HB_node(mynode) ) {
-			make_order(mynode, PAYLOAD_TYPE_NORMAL);
+			make_order(mynode, MSGTYPORQ1);
 		}
     }
 	// push <node> <channel> <value>
@@ -430,24 +430,24 @@ void make_order(uint16_t mynode, uint8_t mytype) {
                             order.modify_order(mynode, 4, data);
                             ret_ptr = orderbuffer.find_order4node(mynode, ret_ptr, &channel, &value);
                             if (ret_ptr) {
-                                order.modify_orderflags(mynode, PAYLOAD_FLAG_EMPTY );
+                                order.modify_orderflags(mynode, FLAG_EMPTY );
                             } else {
-                                order.modify_orderflags(mynode, PAYLOAD_FLAG_LASTMESSAGE );
+                                order.modify_orderflags(mynode, FLAG_LASTMESSAGE );
                             }                        
                         } else {
-                            order.modify_orderflags(mynode, PAYLOAD_FLAG_LASTMESSAGE );
+                            order.modify_orderflags(mynode, FLAG_LASTMESSAGE );
                         }                        
                     } else {
-                        order.modify_orderflags(mynode, PAYLOAD_FLAG_LASTMESSAGE );
+                        order.modify_orderflags(mynode, FLAG_LASTMESSAGE );
                     }                        
                 } else {
-                    order.modify_orderflags(mynode, PAYLOAD_FLAG_LASTMESSAGE );
+                    order.modify_orderflags(mynode, FLAG_LASTMESSAGE );
                 }                        
             } else {
-                order.modify_orderflags(mynode, PAYLOAD_FLAG_LASTMESSAGE );
+                order.modify_orderflags(mynode, FLAG_LASTMESSAGE );
             }                        
         } else {
-            order.modify_orderflags(mynode, PAYLOAD_FLAG_LASTMESSAGE );
+            order.modify_orderflags(mynode, FLAG_LASTMESSAGE );
         }                        
     }
 }
@@ -482,7 +482,7 @@ void store_sensor_value(uint16_t mynode, uint8_t mychannel, float myvalue) {
 }
 
 void process_sensor(uint16_t node, uint32_t mydata) {
-    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
+    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);                  
     uint8_t channel = getChannel(mydata);
     float value = getValue_f(mydata);
 	switch (channel) {
@@ -689,6 +689,7 @@ void debug_print_payload(uint16_t loglevel, const char* msg_header, const char* 
 }
 
 void process_payload(payload_t* mypayload) {
+printf("###3\n");                        
     if ( mypayload->data1 > 0 ) process_sensor(mypayload->node_id, mypayload->data1);
     if ( mypayload->data2 > 0 ) process_sensor(mypayload->node_id, mypayload->data2);
     if ( mypayload->data3 > 0 ) process_sensor(mypayload->node_id, mypayload->data3);
@@ -958,10 +959,10 @@ int main(int argc, char* argv[]) {
 			radio.read(&payload,sizeof(payload));
             debug_print_payload(VERBOSERF24, "Rec", " ", &payload);
 			switch ( payload.type ) {
-                case PAYLOAD_TYPE_HB: { // heartbeatnode!!
+                case MSGTYPHB1: { // heartbeat typ 1!!
                     if (node.is_new_HB(payload.node_id, mymillis())) {  // Got a new Heaqrtbeat -> process it!
                         process_payload(&payload);
-                        make_order(payload.node_id, PAYLOAD_TYPE_NORMAL);                    
+                        make_order(payload.node_id, MSGTYPORQ1);                    
                         if ( orderbuffer.node_has_entry(payload.node_id) ) {  // WE have orders for this node
                             if ( verboselevel & VERBOSEORDER ) {
                                 sprintf(debug, "Entries for Heartbeat Node found, sending them");
@@ -972,24 +973,40 @@ int main(int argc, char* argv[]) {
                                 sprintf(debug, "No Entries for Heartbeat Node found, sending Endmessage");
                                 logger.logmsg(VERBOSEORDER, debug);
                             }
-                            order.add_endorder(payload.node_id, PAYLOAD_TYPE_HBSESP ,mymillis());
+                            order.add_endorder(payload.node_id, MSGTYPEND ,mymillis());
                         }
                     }
                 }
                 break;    
-                default: {	
+                case MSGTYPORP1: { // Response auf einen "normalen" Orderrequest ==> Nur Verarbeitung, keine Antwort
                     if ( verboselevel & VERBOSEORDER) {
-                        sprintf(debug, "Processing Node: %u Type: %u Orderno %u"
-                                    , payload.node_id, payload.type, payload.orderno);
+                        sprintf(debug, "Processing N: %hhu T: %hhu F: %hhu O: %hhu"
+                                    , payload.node_id, payload.type, payload.flags, payload.orderno);
 									logger.logmsg(VERBOSEORDER, debug);
                     }
                     if ( order.is_orderno(payload.orderno) ) {
                         process_payload(&payload);
                         // Order compleate => delete it!
+                        order.del_orderno(payload.orderno);                        
+                        // Check if we still have orders for this node
+                        make_order(payload.node_id, MSGTYPORQ1);
+                    }
+                    
+                }
+                break;
+                default: {	
+                    if ( verboselevel & VERBOSEORDER) {
+                        sprintf(debug, "<per Default> Processing N: %hhu T: %hhu F: %hhu O: %hhu"
+                                    , payload.node_id, payload.type, payload.flags, payload.orderno);
+									logger.logmsg(VERBOSEORDER, debug);
+                    }
+/*                    if ( order.is_orderno(payload.orderno) ) {
+                        process_payload(&payload);
+                        // Order compleate => delete it!
                         order.del_orderno(payload.orderno);
                         // Check if we still have orders for this node
-                        make_order(payload.node_id, PAYLOAD_TYPE_NORMAL);
-                    }
+                        make_order(payload.node_id, MSGTYPORQ1);
+                    } */
                 }
 			}
 			

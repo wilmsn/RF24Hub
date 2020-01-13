@@ -21,7 +21,7 @@ private:
 
     struct orderbuffer_t {
         uint64_t		entrytime;
-        uint16_t     	node;
+        uint8_t     	node;
         uint8_t     	channel;
         float        	value;
         orderbuffer_t*  next;          // poiter to the next record
@@ -36,11 +36,11 @@ private:
 public:
     
 
-    void add_orderbuffer(uint64_t millis, uint16_t node, uint8_t channel, float value);
-    void *find_order4node(uint16_t node, void* last_ptr, uint8_t* channel, float* value);
-    bool del_node_channel(uint16_t, uint8_t);
-    bool del_node(uint16_t);
-    bool node_has_entry(uint16_t);
+    void add_orderbuffer(uint64_t millis, uint8_t node, uint8_t channel, float value);
+    void *find_order4node(uint8_t node, void* last_ptr, uint8_t* channel, float* value);
+    bool del_node_channel(uint8_t, uint8_t);
+    bool del_node(uint8_t);
+    bool node_has_entry(uint8_t);
     void begin(Logger* _logger);
     void print_buffer(int new_tn_in_socket);
     void html_buffer(int new_tn_in_socket);

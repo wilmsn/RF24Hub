@@ -22,14 +22,14 @@ public:
     uint8_t orderno;
     bool has_order;
     bool del_orderno(uint8_t);
-    bool del_node(uint16_t);
+    bool del_node(uint8_t);
     bool is_orderno(uint8_t orderno);
     uint16_t del_old_entry(uint64_t entrytime);
     void begin(Logger* _logger);
-    void add_order(uint16_t node, uint8_t type, bool HB_order, uint32_t data, uint64_t entrytime);
-    void modify_order(uint16_t node, uint8_t pos, uint32_t data);
-    void modify_orderflags(uint16_t node, uint8_t flags);
-    void add_endorder(uint16_t node, uint8_t msg_type, uint64_t entrytime);
+    void add_order(uint8_t node, uint8_t type, bool HB_order, uint32_t data, uint64_t entrytime);
+    void modify_order(uint8_t node, uint8_t pos, uint32_t data);
+    void modify_orderflags(uint8_t node, uint8_t flags);
+    void add_endorder(uint8_t node, uint8_t msg_type, uint64_t entrytime);
     bool get_order_for_transmission(uint8_t* orderno, uint8_t* node, uint8_t* type, uint8_t* flags,
                                     uint32_t* data1, uint32_t* data2, uint32_t* data3, uint32_t* data4, uint32_t* data5, uint32_t* data6,  
                                     uint64_t systime); 
@@ -42,7 +42,7 @@ private:
     // Structure to handle the orderqueue
     struct order_t {
         uint8_t 	    orderno;   		// the orderno as primary key for our message for the nodes
-        uint16_t       	node;   		// the destination node
+        uint8_t       	node;   		// the destination node
         bool            HB_order;       // true if this node is a Heartbeat Node
         uint8_t      	type;      		// Becomes networkheader.type
         uint8_t   	    flags;     		// Some flags as part of payload
@@ -61,7 +61,7 @@ private:
     order_t  *initial_ptr;
     void      new_entry(order_t*);
     bool      del_entry(order_t*);
-    order_t  *find_node(uint16_t node);
+    order_t  *find_node(uint8_t node);
     void debug_print_buffer(uint16_t);    
 };
 

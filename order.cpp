@@ -92,7 +92,7 @@ bool Order::del_orderno(uint8_t orderno) {
     return retval;
 }
 
-bool Order::del_node(uint16_t node) {
+bool Order::del_node(uint8_t node) {
     bool retval = false;
     order_t *search_ptr;
     char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
@@ -132,7 +132,7 @@ bool Order::is_orderno(uint8_t orderno) {
     return retval;
 }
     
-Order::order_t* Order::find_node(uint16_t node) {
+Order::order_t* Order::find_node(uint8_t node) {
     order_t* retval = NULL;
     order_t *search_ptr;
     search_ptr = initial_ptr;
@@ -162,7 +162,7 @@ uint16_t Order::del_old_entry(uint64_t deltime) {
     return retval;
 }
 
-void Order::add_order(uint16_t node, uint8_t type, bool HB_order, uint32_t data, uint64_t entrytime) {
+void Order::add_order(uint8_t node, uint8_t type, bool HB_order, uint32_t data, uint64_t entrytime) {
     order_t *new_ptr = new order_t;
     orderno++;
 //    if ( orderno > 50000 ) orderno = 1;
@@ -182,12 +182,12 @@ void Order::add_order(uint16_t node, uint8_t type, bool HB_order, uint32_t data,
     new_entry(new_ptr);
 }
 
-void Order::add_endorder(uint16_t node, uint8_t msg_type, uint64_t entrytime) {
+void Order::add_endorder(uint8_t node, uint8_t msg_type, uint64_t entrytime) {
     add_order(node, msg_type, true, 0, entrytime);    
     modify_orderflags(node, 0x01);
 }
 
-void Order::modify_order(uint16_t node, uint8_t pos, uint32_t data) {
+void Order::modify_order(uint8_t node, uint8_t pos, uint32_t data) {
     order_t* my_ptr=NULL;
     my_ptr=find_node(node);
     if (my_ptr) {
@@ -212,7 +212,7 @@ void Order::modify_order(uint16_t node, uint8_t pos, uint32_t data) {
     debug_print_buffer(VERBOSEORDER);
 }
 
-void Order::modify_orderflags(uint16_t node, uint8_t flags) {
+void Order::modify_orderflags(uint8_t node, uint8_t flags) {
     order_t* my_ptr=NULL;
     my_ptr=find_node(node);
     if (my_ptr) {
