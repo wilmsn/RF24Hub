@@ -102,7 +102,7 @@ char * trim (char * s);
 
 uint64_t mymillis(void);
 
-uint16_t decodeVerbose(uint16_t oldLevel, char* verboselevel);
+bool decodeVerbose(uint16_t* oldLevel, char* verboseSet);
 
 #endif // _RF24HUBD_COMMON_H_
 

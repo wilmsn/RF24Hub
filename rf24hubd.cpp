@@ -302,10 +302,69 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 	// sets the new verboselevel
 	if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (strlen(wort3) > 0) && (strlen(wort4) == 0) ) {
 //        if ( wort3[0] > '0' && wort3[0] < '9' + 1 ) {
-			tn_input_ok = true;
-			verboselevel = decodeVerbose(verboselevel, wort3);
-            logger.verboselevel = verboselevel;
+		tn_input_ok = true;
+        if ( ! decodeVerbose(&logger.verboselevel, wort3) ) {
+    		sprintf(client_message,"Verbose usage:\n");
+            write(new_tn_in_socket , client_message , strlen(client_message));
+    		sprintf(client_message,"<+/-><item>: Puts <on/off> <item> related Messages\n");
+            write(new_tn_in_socket , client_message , strlen(client_message));
+    		sprintf(client_message,"Example \"+rf24\": Puts on rf24 related Messages\n");
+            write(new_tn_in_socket , client_message , strlen(client_message));
+    		sprintf(client_message,"Posible settings:\n");
+            write(new_tn_in_socket , client_message , strlen(client_message));
+    		sprintf(client_message,"rf24: RF24 related Messages\n");
+            write(new_tn_in_socket , client_message , strlen(client_message));
+    		sprintf(client_message,"telnet: Telnet related Messages\n");
+            write(new_tn_in_socket , client_message , strlen(client_message));
+    		sprintf(client_message,"order: Order related Messages\n");
+            write(new_tn_in_socket , client_message , strlen(client_message));
+    		sprintf(client_message,"obuffer: OrderBuffer related Messages\n");
+            write(new_tn_in_socket , client_message , strlen(client_message));
+    		sprintf(client_message,"ocont: Prints the content of the present stack of ORDER\n");
+            write(new_tn_in_socket , client_message , strlen(client_message));
+    		sprintf(client_message,"obcont: Prints the content of the present stack of ORDERBUFFER\n");
+            write(new_tn_in_socket , client_message , strlen(client_message));
+    		sprintf(client_message,"sql: Prints executed SQL statements\n");
+            write(new_tn_in_socket , client_message , strlen(client_message));
+        }
+//            logger.verboselevel = verboselevel;
 //		}	
+	}
+    // list verbose level currently set
+	if (( strcmp(wort1,cmp_list) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
+		tn_input_ok = true;
+		sprintf(client_message,"Verbose level is now:\n");
+		write(new_tn_in_socket , client_message , strlen(client_message));
+		if (logger.verboselevel & VERBOSERF24) {
+			sprintf(client_message,"rf24 ");
+			write(new_tn_in_socket , client_message , strlen(client_message));
+		}
+		if (logger.verboselevel & VERBOSETELNET) {
+			sprintf(client_message,"telnet ");
+			write(new_tn_in_socket , client_message , strlen(client_message));
+		}
+		if (logger.verboselevel & VERBOSESQL) {
+			sprintf(client_message,"sql ");
+			write(new_tn_in_socket , client_message , strlen(client_message));
+		}
+		if (logger.verboselevel & VERBOSEORDER) {
+			sprintf(client_message,"order ");
+			write(new_tn_in_socket , client_message , strlen(client_message));
+		}
+		if (logger.verboselevel & VERBOSEOBUFFER) {
+			sprintf(client_message,"obuffer ");
+			write(new_tn_in_socket , client_message , strlen(client_message));
+		}
+		if (logger.verboselevel & VERBOSECONTENTORDER) {
+			sprintf(client_message,"ocont ");
+			write(new_tn_in_socket , client_message , strlen(client_message));
+		}
+		if (logger.verboselevel & VERBOSECONTENTOBUFFER) {
+			sprintf(client_message,"obcont ");
+			write(new_tn_in_socket , client_message , strlen(client_message));
+		}
+        sprintf(client_message,"\n");
+		write(new_tn_in_socket , client_message , strlen(client_message));
 	}
     // list order
 	// lists the current orderbuffer
@@ -370,6 +429,10 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 		sprintf(client_message,"set verbose <verboselevel>\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"   sets a new verboselevel <1..9> are valid levels\n");
+		write(new_tn_in_socket , client_message , strlen(client_message));
+		sprintf(client_message,"list verbose\n");
+		write(new_tn_in_socket , client_message , strlen(client_message));
+		sprintf(client_message,"   lists the present settings of verboselevel\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));

@@ -55,6 +55,8 @@ rf24hub_config.h ==> all global definitions go here
 #define VERBOSESQL               0b0000000001000000
 #define VERBOSERF24              0b0000000010000000
 #define VERBOSEOTHER             0b0000000100000000
+#define VERBOSECONTENTORDER      0b0000001000000000
+#define VERBOSECONTENTOBUFFER    0b0000010000000000
 // Payload Message Flags
 #define FLAG_EMPTY               0b00000000
 #define FLAG_LASTMESSAGE         0b00000001

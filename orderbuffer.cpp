@@ -8,11 +8,11 @@ void OrderBuffer::new_entry(OrderBuffer::orderbuffer_t* new_ptr) {
     orderbuffer_t *search_ptr;
     new_ptr->next = NULL;
     char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    if (logger->verboselevel & VERBOSEOBUFFER) {
+    if (logger->verboselevel & VERBOSECONTENTOBUFFER) {
         sprintf(debug,"OrderBuffer: new_entry %p", new_ptr); 
-        logger->logmsg(VERBOSEOBUFFER, debug);    
+        logger->logmsg(VERBOSECONTENTOBUFFER, debug);    
         sprintf(debug,"Bestand vorher"); 
-        logger->logmsg(VERBOSEOBUFFER, debug);
+        logger->logmsg(VERBOSECONTENTOBUFFER, debug);
         debug_print_buffer();
     }
     if (initial_ptr) {
@@ -24,9 +24,9 @@ void OrderBuffer::new_entry(OrderBuffer::orderbuffer_t* new_ptr) {
     } else {
         initial_ptr = new_ptr;
     }
-    if (logger->verboselevel & VERBOSEOBUFFER) {
+    if (logger->verboselevel & VERBOSECONTENTOBUFFER) {
         sprintf(debug,"Bestand nachher"); 
-        logger->logmsg(VERBOSEOBUFFER, debug);
+        logger->logmsg(VERBOSECONTENTOBUFFER, debug);
         debug_print_buffer();
     }
     free(debug);
@@ -66,11 +66,11 @@ bool OrderBuffer::del_node_channel(uint8_t node, uint8_t channel) {
     int retval = false;
     orderbuffer_t *search_ptr;
     char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    if (logger->verboselevel & VERBOSEOBUFFER) {
+    if (logger->verboselevel & VERBOSECONTENTOBUFFER) {
         sprintf(debug,"OrderBuffer: del_node_channel N:%u C:%u", node, channel); 
-        logger->logmsg(VERBOSEOBUFFER, debug);    
+        logger->logmsg(VERBOSECONTENTOBUFFER, debug);    
         sprintf(debug,"Bestand vorher"); 
-        logger->logmsg(VERBOSEOBUFFER, debug);
+        logger->logmsg(VERBOSECONTENTOBUFFER, debug);
         debug_print_buffer();
     }
     search_ptr = initial_ptr;
@@ -80,9 +80,9 @@ bool OrderBuffer::del_node_channel(uint8_t node, uint8_t channel) {
         }
         search_ptr=search_ptr->next;
     }
-    if (logger->verboselevel & VERBOSEOBUFFER) {
+    if (logger->verboselevel & VERBOSECONTENTOBUFFER) {
         sprintf(debug,"Bestand nachher"); 
-        logger->logmsg(VERBOSEOBUFFER, debug);
+        logger->logmsg(VERBOSECONTENTOBUFFER, debug);
         debug_print_buffer();
     }
     free(debug);
@@ -93,11 +93,11 @@ bool OrderBuffer::del_node(uint8_t node) {
     int retval = false;
     orderbuffer_t *search_ptr;
     char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    if (logger->verboselevel & VERBOSEOBUFFER) {
+    if (logger->verboselevel & VERBOSECONTENTOBUFFER) {
         sprintf(debug,"OrderBuffer: del_node N:%u", node); 
-        logger->logmsg(VERBOSEOBUFFER, debug);    
+        logger->logmsg(VERBOSECONTENTOBUFFER, debug);    
         sprintf(debug,"Bestand vorher"); 
-        logger->logmsg(VERBOSEOBUFFER, debug);
+        logger->logmsg(VERBOSECONTENTOBUFFER, debug);
         debug_print_buffer();
     }
     search_ptr = initial_ptr;
@@ -107,9 +107,9 @@ bool OrderBuffer::del_node(uint8_t node) {
         }
         search_ptr=search_ptr->next;
     }
-    if (logger->verboselevel & VERBOSEOBUFFER) {
+    if (logger->verboselevel & VERBOSECONTENTOBUFFER) {
         sprintf(debug,"Bestand nachher"); 
-        logger->logmsg(VERBOSEOBUFFER, debug);
+        logger->logmsg(VERBOSECONTENTOBUFFER, debug);
         debug_print_buffer();
     }
     free(debug);
@@ -166,16 +166,16 @@ void OrderBuffer::debug_print_buffer(void) {
     search_ptr = initial_ptr;
     char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
     sprintf(debug,"OrderBuffer: ---- Buffercontent ----"); 
-    logger->logmsg(VERBOSEOBUFFER, debug);
+    logger->logmsg(VERBOSECONTENTOBUFFER, debug);
     while (search_ptr) {
         sprintf(debug,"OrderBuffer: %p N:%u C:%u V:%g", 
                 search_ptr, search_ptr->node, 
                 search_ptr->channel, search_ptr->value );
-        logger->logmsg(VERBOSEOBUFFER, debug);
+        logger->logmsg(VERBOSECONTENTOBUFFER, debug);
         search_ptr=search_ptr->next;
     }
     sprintf(debug,"OrderBuffer: -- END Buffercontent --"); 
-    logger->logmsg(VERBOSEOBUFFER, debug);
+    logger->logmsg(VERBOSECONTENTOBUFFER, debug);
     free(debug);
 }
 
@@ -193,7 +193,7 @@ void OrderBuffer::print_buffer(int new_tn_in_socket) {
         search_ptr=search_ptr->next;
     }
     free(client_message);
-    if (logger->verboselevel & VERBOSEOBUFFER) {
+    if (logger->verboselevel & VERBOSECONTENTOBUFFER) {
         debug_print_buffer();
     }
 }

@@ -9,12 +9,12 @@ void Order::new_entry(order_t* new_ptr) {
     order_t *search_ptr;
     new_ptr->next = NULL;
     char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    if (logger->verboselevel & VERBOSEORDER) {
+    if (logger->verboselevel & VERBOSECONTENTORDER) {
         sprintf(debug,"Order: new_entry %p", new_ptr); 
-        logger->logmsg(VERBOSEORDER, debug);    
+        logger->logmsg(VERBOSECONTENTORDER, debug);    
         sprintf(debug,"Bestand vorher"); 
-        logger->logmsg(VERBOSEORDER, debug);
-        debug_print_buffer(VERBOSEORDER);
+        logger->logmsg(VERBOSECONTENTORDER, debug);
+        debug_print_buffer(VERBOSECONTENTORDER);
     }
     if (initial_ptr) {
         search_ptr = initial_ptr;
@@ -25,10 +25,10 @@ void Order::new_entry(order_t* new_ptr) {
     } else {
         initial_ptr = new_ptr;
     }
-    if (logger->verboselevel & VERBOSEORDER) {
+    if (logger->verboselevel & VERBOSECONTENTORDER) {
         sprintf(debug,"Bestand nachher"); 
-        logger->logmsg(VERBOSEORDER, debug);
-        debug_print_buffer(VERBOSEORDER);
+        logger->logmsg(VERBOSECONTENTORDER, debug);
+        debug_print_buffer(VERBOSECONTENTORDER);
     }
     has_order = true;
     free(debug);
@@ -69,12 +69,12 @@ bool Order::del_orderno(uint8_t orderno) {
     bool retval = false;
     order_t *search_ptr;
     char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    if (logger->verboselevel & VERBOSEORDER) {
+    if (logger->verboselevel & VERBOSECONTENTORDER) {
         sprintf(debug,"Order: del_orderno %u", orderno); 
-        logger->logmsg(VERBOSEORDER, debug);    
+        logger->logmsg(VERBOSECONTENTORDER, debug);    
         sprintf(debug,"Bestand vorher"); 
-        logger->logmsg(VERBOSEORDER, debug);
-        debug_print_buffer(VERBOSEORDER);
+        logger->logmsg(VERBOSECONTENTORDER, debug);
+        debug_print_buffer(VERBOSECONTENTORDER);
     }
     search_ptr = initial_ptr;
     while (search_ptr) {
@@ -83,10 +83,10 @@ bool Order::del_orderno(uint8_t orderno) {
         }
         search_ptr=search_ptr->next;
     }
-    if (logger->verboselevel & VERBOSEORDER) {
+    if (logger->verboselevel & VERBOSECONTENTORDER) {
         sprintf(debug,"Bestand nachher"); 
-        logger->logmsg(VERBOSEORDER, debug);
-        debug_print_buffer(VERBOSEORDER);
+        logger->logmsg(VERBOSECONTENTORDER, debug);
+        debug_print_buffer(VERBOSECONTENTORDER);
     }
     free(debug);
     return retval;
@@ -96,12 +96,12 @@ bool Order::del_node(uint8_t node) {
     bool retval = false;
     order_t *search_ptr;
     char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    if (logger->verboselevel & VERBOSEORDER) {
+    if (logger->verboselevel & VERBOSECONTENTORDER) {
         sprintf(debug,"Order: del_node %u", node); 
-        logger->logmsg(VERBOSEORDER, debug);    
+        logger->logmsg(VERBOSECONTENTORDER, debug);    
         sprintf(debug,"Bestand vorher"); 
-        logger->logmsg(VERBOSEORDER, debug);
-        debug_print_buffer(VERBOSEORDER);
+        logger->logmsg(VERBOSECONTENTORDER, debug);
+        debug_print_buffer(VERBOSECONTENTORDER);
     }
     search_ptr = Order::initial_ptr;
     while (search_ptr) {
@@ -110,10 +110,10 @@ bool Order::del_node(uint8_t node) {
         }
         search_ptr=search_ptr->next;
     }
-    if (logger->verboselevel & VERBOSEORDER) {
+    if (logger->verboselevel & VERBOSECONTENTORDER) {
         sprintf(debug,"Bestand nachher"); 
-        logger->logmsg(VERBOSEORDER, debug);
-        debug_print_buffer(VERBOSEORDER);
+        logger->logmsg(VERBOSECONTENTORDER, debug);
+        debug_print_buffer(VERBOSECONTENTORDER);
     }
     free(debug);
     return retval;
@@ -209,7 +209,9 @@ void Order::modify_order(uint8_t node, uint8_t pos, uint32_t data) {
             break;
         }
     }
-    debug_print_buffer(VERBOSEORDER);
+    if (logger->verboselevel & VERBOSECONTENTORDER) {
+        debug_print_buffer(VERBOSECONTENTORDER);
+    }
 }
 
 void Order::modify_orderflags(uint8_t node, uint8_t flags) {
@@ -218,8 +220,8 @@ void Order::modify_orderflags(uint8_t node, uint8_t flags) {
     if (my_ptr) {
         my_ptr->flags = flags;
     }
-    if (logger->verboselevel & VERBOSEORDER) {
-        debug_print_buffer(VERBOSEORDER);
+    if (logger->verboselevel & VERBOSECONTENTORDER) {
+        debug_print_buffer(VERBOSECONTENTORDER);
     }
 }
 
@@ -327,7 +329,9 @@ void Order::print_buffer(int new_tn_in_socket) {
         search_ptr=search_ptr->next;
     }
     free(client_message);
-    debug_print_buffer(VERBOSEORDER);
+    if (logger->verboselevel & VERBOSECONTENTORDER) {
+        debug_print_buffer(VERBOSECONTENTORDER);
+    }
 }
 
 void Order::html_buffer(int new_tn_in_socket) {
