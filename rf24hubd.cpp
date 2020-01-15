@@ -2,117 +2,6 @@
 
 /*******************************************************************************************
 *
-* Configfilehandling
-* default place to look at is: DEFAULT_CONFIG_FILE (see rf24hubd.h)
-*
-********************************************************************************************/
-
-void parse_config (struct config_parameters * parms) {
-  char *s, buff[256];
-  FILE *fp = fopen (config_file, "r");
-  if (fp == NULL) {
-    printf( "Configfile %s nicht gefunden!\n", config_file );
-    return;
-  }
-  /* Read next line */
-  while ((s = fgets (buff, sizeof buff, fp)) != NULL) {
-    /* Skip blank lines and comments */
-    if (buff[0] == '\n' || buff[0] == '#')
-      continue;
-    /* Parse name/value pair from line */
-    char name[PARAM_MAXLEN+1], value[PARAM_MAXLEN+1];
-    s = strtok (buff, "=");
-    if (s==NULL)
-      continue;
-    else
-      strncpy (name, s, PARAM_MAXLEN);
-    s = strtok (NULL, "=");
-    if (s==NULL)
-      continue;
-    else
-      strncpy (value, s, PARAM_MAXLEN);
-    trim (value);
-    /* Copy into correct entry in parameters struct */
-    if      (strcmp(name, "db_hostname")==0) strcpy (parms->db_hostname, value);
-    else if (strcmp(name, "db_port")==0)              parms->db_port = atoi(value);
-    else if (strcmp(name, "db_schema")==0)   strcpy (parms->db_schema, value);
-    else if (strcmp(name, "db_username")==0) strcpy (parms->db_username, value);
-    else if (strcmp(name, "db_password")==0) strcpy (parms->db_password, value);
-    else if (strcmp(name, "telnet_hostname")==0) {
-                strcpy (parms->telnet_hostname, value);
-                tn_host_set=true;
-        }
-    else if (strcmp(name, "telnet_port")==0) {
-                parms->telnet_port = atoi(value);
-                tn_port_set=true;
-        }
-    else if (strcmp(name, "incoming_port")==0) {
-                parms->incoming_port = atoi(value);
-                in_port_set=true;
-        }
-    else if (strcmp(name, "logfile")==0)     strcpy (parms->logfilename, value);
-    else if (strcmp(name, "pidfile")==0)     strcpy (parms->pidfilename, value);
-    else if (strcmp(name, "rf24network_channel")==0) parms->rf24network_channel = atoi(value);
-    else if (strcmp(name, "rf24network_speed")==0) {
-                if (strcmp(value, "RF24_2MBPS")==0) {
-                        parms->rf24network_speed = RF24_2MBPS;
-                }
-                else if (strcmp(value, "RF24_250KBPS")==0) {
-                        parms->rf24network_speed = RF24_250KBPS;
-                }
-                else if (strcmp(value, "RF24_1MBPS")==0) {
-                        parms->rf24network_speed = RF24_1MBPS;
-                }
-                else {
-                        printf ("%s: Unknown value for %s ! Use RF24_1MBPS \n", value, name);
-                        parms->rf24network_speed = RF24_1MBPS;
-                }
-    }
-        else
-      printf ("WARNING: %s/%s: Unknown name/value pair!\n", name, value);
-  }
-  /* Close file */
-  fclose (fp);
-}
-
-void print_config (struct config_parameters * parms) {
-    printf ("Logfile: %s\n", parms->logfilename);
-    printf ("PIDfile: %s\n", parms->pidfilename);
-    printf ("DB-Hostname: %s\n", parms->db_hostname);
-    printf ("DB-Port: %d\n", parms->db_port);
-    printf ("DB-Schema: %s\n", parms->db_schema);
-    printf ("DB-Username: %s\n", parms->db_username);
-    printf ("DB-Password: %s\n", parms->db_password);
-    printf ("Telnet-Hostname: %s\n", parms->telnet_hostname);
-    printf ("Telnet-Port: %d\n", parms->telnet_port);
-//    printf ("Ende print_config\n");
-}
-
-void usage(const char *prgname) {
-    fprintf(stdout, "%s version %s\n", prgname, prgversion);
-    fprintf(stdout, "Usage: %s <option>\n", prgname);
-    fprintf(stdout, "with options: \n");
-    fprintf(stdout, "   -h or -? or --help \n");
-    fprintf(stdout, "           Print help\n");
-    fprintf(stdout, "   -d or --daemon\n");
-    fprintf(stdout, "         Start as daemon\n");
-    fprintf(stdout, "   -c or --configfilename <filename>\n");
-    fprintf(stdout, "         Set configfilename\n");
-    fprintf(stdout, "   -s or --scanner <scanlevel>\n");
-    fprintf(stdout, "         Set scannlevel (0...9) and scan all channels\n");
-    fprintf(stdout, "   -t or --scannchannel <channel>\n");
-    fprintf(stdout, "         Scanns the single channel <channel>\n");
-    fprintf(stdout, "For clean exit use \"CTRL-C\" or \"kill -15 <pid>\"\n\n");
-}
-
-/*******************************************************************************************
-*
-* END Configfilehandling
-*
-********************************************************************************************/
-
-/*******************************************************************************************
-*
 * Telnethandling
 * Used for communication with FHEM
 *
@@ -136,13 +25,13 @@ void do_tn_cmd(uint16_t node, uint8_t channel, float value) {
         sprintf(debug,"do_tn_cmd: %s", tn_cmd);
         logger.logmsg(VERBOSETELNET,debug);
     }
-    portno = parms.telnet_port;
+    portno = std::stoi(cfg.rf24HubTcpPort);
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
         sprintf(debug,"do_tn_cmd: error opening socket");
 		logger.logmsg(VERBOSECRITICAL,debug);
 	}	
-    server = gethostbyname(parms.telnet_hostname);
+    server = gethostbyname(cfg.fhemHostName.c_str());
     if (server == NULL) {
         sprintf(debug,"do_tn_cmd: no such host");
 		logger.logmsg(VERBOSECRITICAL,debug);
@@ -163,7 +52,7 @@ void do_tn_cmd(uint16_t node, uint8_t channel, float value) {
 			logger.logmsg(VERBOSECRITICAL,debug);
 		} else {
             if ( logger.verboselevel & VERBOSETELNET) {    
-                sprintf(debug,"do_tn_cmd: Telnet to %s Port %d CMD: %s successfull",parms.telnet_hostname, portno, tn_cmd);
+                sprintf(debug,"do_tn_cmd: Telnet to %s Port %d CMD: %s successfull",cfg.fhemHostName.c_str(), portno, tn_cmd);
                 logger.logmsg(VERBOSETELNET,debug);
             }
 		}		
@@ -460,7 +349,7 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 		write(new_tn_in_socket , client_message , strlen(client_message));
 		sprintf(client_message,"\n");
 		write(new_tn_in_socket , client_message , strlen(client_message));
-		sprintf(client_message,"%s version %s\n", PRGNAME, PRGVERSION);
+		sprintf(client_message,"%s version %s\n", cfg.prgName.c_str(), cfg.prgVersion.c_str());
 		write(new_tn_in_socket , client_message , strlen(client_message));
 	} else {
 		sprintf(client_message,"Command received => OK\n");
@@ -624,7 +513,7 @@ void sighandler(int signal) {
     exit_system(); 
 	sprintf(debug, "SIGTERM: Shutting down ... ");
 	logger.logmsg(VERBOSECRITICAL, debug);
-    unlink(parms.pidfilename);
+    cfg.removePidFile();
 //	msgctl(msqid, IPC_RMID, NULL);
     free(debug);
     exit (0);
@@ -798,221 +687,95 @@ void do_transmit(uint8_t address[5], payload_t* payload) {
 
 int main(int argc, char* argv[]) {
     pid_t pid;
-	int c;
     payload_t payload;
     uint8_t pipe_num;
 	logger.set_logmode('i');
-	strcpy(config_file,"x");
     char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
 
 	/* vars for telnet socket handling */
-	int tn_in_socket, new_tn_in_socket;
+	int tn_in_socket=0;
+	int new_tn_in_socket=0;
 	socklen_t addrlen;
 //	char *buffer =  (char*) malloc (BUF);
 	struct sockaddr_in address;
-	long save_fd;
-	const int y = 1;
 //	bool wait4message = false;
 	
     // processing argc and argv[]
-	while (1) {
-		static struct option long_options[] = {	
-			{"daemon",  no_argument, 0, 'd'},
-			{"verbose",  required_argument, 0, 'v'},
-            		{"configfile",    required_argument, 0, 'c'},
-			{"scanner", required_argument, 0, 's'},
-                        {"scannchannel", required_argument, 0, 't'},
-            		{"help", no_argument, 0, 'h'},
-            		{0, 0, 0, 0} 
-		};
-        /* getopt_long stores the option index here. */
-        int option_index = 0;
-        c = getopt_long (argc, argv, "?dht:s:c:",long_options, &option_index);
-        /* Detect the end of the options. */
-        if (c == -1) break;
-        switch (c) {
-            case 't':
-                      uint8_t channel;
-                      if ( optarg[0] ) {
-                        channel=optarg[0]-'0';
-                        if ( optarg[1] ) {
-                          channel=channel*10+optarg[1]-'0';
-                          if ( optarg[2] ) {
-                            channel=channel*10+optarg[2]-'0';
-                          }
-                        }
-                        if (channel < 126) {
-                          channelscanner(channel); 
-                        } else {
-                          printf("Error Channel must be in 0 ... 125\n");
-                        }
-                      } else {
-                        printf("Error Channel required\n");
-                      }
-                      exit(0);
-                      break;
-
-            case 's':
-                      if (optarg[0] && ! optarg[1]) {
-                         scanner(optarg[0]);
-                      } else {
-                         usage(argv[0]);
-                      }
-                      exit(0);
-                      break;
-            case 'd':
-				start_daemon = true;
-				logger.set_logmode('l');
-            break;
-//			case 'v':
-//                verboselevel = (optarg[0] - '0') * 1;
-            break;
-            case 'c':
-                strcpy(config_file, optarg);
-            break;
-            case 'h':
-            case '?':
-                usage(argv[0]);
-                exit (0);
-            break;
-            default:
-                usage (argv[0]);
-                exit (0);
-        }
-    }
-    /* Print any remaining command line arguments (not options). */
-    if (optind < argc) {
-        printf ("non-option ARGV-elements: ");
-        while (optind < argc) printf ("%s ", argv[optind++]);
-        putchar ('\n');
-    }
-    // END processing argc and argv[]
-
+    cfg.processParams(argc, argv);
+	logger.set_logmode('i');
+	if ( ! logger.set_logfile(cfg.logFileName) ) {
+		cout << "Error opening Logfile: " << cfg.logFileName << endl;
+		exit(1);
+	}
 	// check if started as root
 	if ( getuid()!=0 ) {
-           fprintf(stdout, "rf24hubd has to be startet as user root\n");
-          exit(1);
-        }
-
-    // check if config file is readable
-    if ( strcmp(config_file,"x") == 0 ) strcpy(config_file,RF24HUB_CONFIGFILE);
-    if (fopen (config_file, "r") == NULL) {
-        fprintf(stdout, "Config file: \"%s\" not found, terminating\n\n", config_file);
+		cout << "rf24gateway has to be startet as user root" << endl; 
         exit(1);
     }
-    // Reading and processing and printing config file
-    printf ("Reading configuration from %s\n",config_file);
-    printf ("Reading config file...\n");
-    parse_config (&parms);
-    printf ("Startup Parameters:\n");
-    print_config (&parms);
     // check for PID file, if exists terminate else create it
-    if( access( parms.pidfilename, F_OK ) != -1 ) {
-        fprintf(stdout, "PIDFILE: %s exists, terminating\n\n", parms.pidfilename);
-        fprintf(stderr, "PIDFILE: %s exists, terminating\n\n", parms.pidfilename);
-        exit(1);
+    if ( cfg.checkPidFileSet() ) {
+        return 1;
     }
+	cout << "Startup Parameters:" << endl; 
+    cfg.printConfig();
+    // starts logging
+	if ( getuid()==0 ) {
+       cfg.setPidFile();
+    }
+
+    signal(SIGTERM, sighandler);
+    signal(SIGINT, sighandler);
+
+
     // starts logging
     logger.verboselevel = VERBOSECRITICAL | VERBOSESTARTUP | VERBOSECONFIG;
-    if (logger.get_logmode() == 'l') {
-        logfile_ptr = fopen (parms.logfilename,"a");
-        if ( logfile_ptr == NULL ) {
-            fprintf(stdout,"Could not open %s for writing\n Printig logs to console\n", parms.logfilename );
-        } else {
-            log2logfile = true;
-            fclose(logfile_ptr);
-            logger.set_logfile(parms.logfilename);
-            sprintf(debug, "Start logging to %s", parms.logfilename);
-            logger.logmsg(VERBOSESTARTUP, debug);
-            freopen( "parms.logfilename", "a", stdout );
-            freopen( "parms.logfilename", "a", stderr );
-        }
-    }
     node.begin(&logger);
     sensor.begin(&logger);
     order.begin(&logger);
     orderbuffer.begin(&logger);
     database.begin(&logger);
     // open database
-    database.connect(parms.db_hostname, parms.db_username, parms.db_password, parms.db_schema, parms.db_port);
+    database.connect(cfg.dbHostName, cfg.dbUserName, cfg.dbPassWord, cfg.dbSchema, cfg.dbPort);
     // init SIGTERM and SIGINT handling
     signal(SIGTERM, sighandler);
     signal(SIGINT, sighandler);
 
-    // run as daemon if started with -d
-    if (start_daemon) {
+    if (cfg.startDaemon) {
         // make sure that we have a logfile
-        if ( ! log2logfile ) {
-            fprintf(stdout,"Logfile is needed if runs as deamon ... exiting\n");
-            unlink(parms.pidfilename);
+        if ( ! cfg.logFileMode ) {
+            printf("%s\n","Logfile is needed if runs as deamon ... exiting"); 
+            cfg.removePidFile();
             exit(1);
         } else {
-            // starts rf24hubd as a deamon
+            // starts rf24gateway as a deamon
             // no messages to console!
             pid = fork ();
             if (pid == 0) {
                 // Child prozess
                 chdir ("/");
                 umask (0);
-                sprintf(debug, "Starting up ....");
-                logger.logmsg(VERBOSESTARTUP,debug);
+                sprintf(debug,"%s","Starting up ...."); logger.logmsg(VERBOSESTARTUP,debug);
             } else if (pid > 0) {
                 // Parentprozess -> exit and return to shell
                 // write a message to the console
-                sprintf(debug, "Starting rf24hubd as daemon...");
-                logger.logmsg(VERBOSESTARTUP,debug);
-                fprintf(stdout, debug);
-                fprintf(stdout, "\n");
+                sprintf(debug,"%s","Starting rf24gateway as daemon..."); logger.logmsg(VERBOSESTARTUP,debug);
+                cout << debug << endl;
                 // and exit
                 exit (0);
             } else {
                 // nagativ is an error
-                unlink(parms.pidfilename);
-                exit (1);
+            printf("%s","Fork ERROR ... exiting\n");; 
+            cfg.removePidFile();
+            exit(1);
             }
         }
     }
-    // get pid and write it to pidfile
-    pid=getpid();
-    pidfile_ptr = fopen (parms.pidfilename,"w");
-    if (pidfile_ptr==NULL) {
-        sprintf(debug,"Can't write PIDFILE: %s! Exit programm ....\n", parms.pidfilename);
-        fprintf(stdout, debug);
-        fprintf(stderr, debug);
-        exit (1);
-    }
-    fprintf (pidfile_ptr, "%d", pid );
-    fclose(pidfile_ptr);
-    sprintf(debug, "%s running with PID: %d", PRGNAME, pid);
-    logger.logmsg(VERBOSESTARTUP, debug);
-    if ( tn_port_set && tn_host_set ) {
-        tn_active = true;
-        sprintf(debug, "telnet session started: Host: %s Port: %d ", parms.telnet_hostname, parms.telnet_port);
-        logger.logmsg(VERBOSESTARTUP, debug);
-    }
-	tn_in_socket=0;
-	if ( in_port_set ) {
-    /* open incoming port for messages */
-		if ((tn_in_socket=socket( AF_INET, SOCK_STREAM, 0)) > 0) {
-			sprintf (debug,"Socket für eingehende Messages auf Port %i angelegt", parms.incoming_port);
-			logger.logmsg(VERBOSESTARTUP, debug);
-		}
-		address.sin_family = AF_INET;
-		address.sin_addr.s_addr = INADDR_ANY;
-		address.sin_port = htons (parms.incoming_port);
-		setsockopt( tn_in_socket, SOL_SOCKET, SO_REUSEADDR, &y, sizeof(int) );
-		if (bind( tn_in_socket, (struct sockaddr *) &address, sizeof (address)) == 0 ) {
-			sprintf (debug,"Binding Socket OK");
-			logger.logmsg(VERBOSESTARTUP, debug);
-		}
-		listen (tn_in_socket, 5);
-		addrlen = sizeof (struct sockaddr_in);
-		save_fd = fcntl( tn_in_socket, F_GETFL );
-		save_fd |= O_NONBLOCK;
-		fcntl( tn_in_socket, F_SETFL, save_fd );
-	}
-    sleep(2);
-    sprintf(debug, "starting radio on channel ... %d ", parms.rf24network_channel);
+//    if ( cfg.rf24GWUdpPortSet ) {
+//		openSocket(NULL, cfg.rf24GWUdpPort.c_str(),&udp_address,&udp_sockfd,UDP);
+//	}
+    delay(5);
+
+    sprintf(debug, "starting radio on channel ... %d ", cfg.rf24Channel);
     logger.logmsg(VERBOSESTARTUP, debug);
     radio.begin();
     radio.setChannel( 91 );
@@ -1030,7 +793,7 @@ int main(int argc, char* argv[]) {
     radio.startListening();
     
     radio.printDetails();
-    sprintf(debug,"\%s up and running .... ",PRGNAME);
+    sprintf(debug,"\%s up and running .... ", cfg.prgName.c_str());
     logger.logmsg(VERBOSESTARTUP, debug);
 	
 	// Init Arrays

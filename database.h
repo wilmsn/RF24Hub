@@ -39,7 +39,7 @@ private:
 public:
 
     void begin(Logger* _logger);
-    bool connect(string db_hostname, string db_username, string db_password, string db_schema, int db_port);
+    bool connect(string db_hostname, string db_username, string db_password, string db_schema, string db_port);
     void storeSensorValue(uint32_t mysensor, float value);
     void storeNodeConfig(uint16_t node, uint8_t channel, float value);
     void initSensor(Sensor* sensor);

@@ -18,7 +18,7 @@ void Logger::logmsg(int mesgloglevel, char *mymsg){
         else if (msec < 100) sprintf(buf,"%s.0%u",buf,msec);
         else sprintf(buf,"%s.%u",buf,msec); 
         if ( logmode == logfile ) {
-			logfile_ptr = fopen (logfilename,"a");
+			logfile_ptr = fopen (logfilename.c_str(),"a");
 			if ( logfile_ptr != NULL ) {
 				fprintf (logfile_ptr, "[%s] %s \n", buf, mymsg );
 				fclose (logfile_ptr);
@@ -36,8 +36,15 @@ void Logger::logmsg(int mesgloglevel, char *mymsg){
 	}
 }
 
-void Logger::set_logfile(char* _logfilename) {
-    logfilename = _logfilename;
+bool Logger::set_logfile(string _logfilename) {
+	logfilename = _logfilename;
+	bool retval = false;
+	logfile_ptr = fopen (logfilename.c_str(),"a");
+	if ( logfile_ptr != NULL ) {
+		fclose (logfile_ptr);
+		retval = true;
+	}    
+	return retval;
 }
 
 char Logger::get_logmode(void) {

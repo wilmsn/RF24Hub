@@ -144,7 +144,7 @@ void Database::storeNodeConfig(uint16_t node, uint8_t channel, float value) {
     free(sql_stmt);
 }
 
-bool Database::connect(string db_hostname, string db_username, string db_password, string db_schema, int db_port) {
+bool Database::connect(string db_hostname, string db_username, string db_password, string db_schema, string db_port) {
     int mysql_wait_count = 0;
     bool retval = true;
     char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
@@ -168,7 +168,7 @@ bool Database::connect(string db_hostname, string db_username, string db_passwor
     }
     if ( retval ) {
         mysql_wait_count = 0;
-        while (mysql_real_connect(db, db_hostname.c_str(), db_username.c_str(), db_password.c_str(), db_schema.c_str(), db_port, NULL, 0) == NULL) {
+        while (mysql_real_connect(db, db_hostname.c_str(), db_username.c_str(), db_password.c_str(), db_schema.c_str(), stoi(db_port), NULL, 0) == NULL) {
             sprintf(debug,"Waiting for Database: %d Sec.", 20-mysql_wait_count);
             logger->logmsg(VERBOSESTARTUP, debug);		
             if ( mysql_wait_count < 20 ) {
