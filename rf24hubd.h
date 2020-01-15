@@ -91,18 +91,24 @@ UP: fill_order_buffer   =>  Füllt das ARRAY "order_buffer" mit dem übergebenen
 
 using namespace std;
 
-int sockfd;
+//int sockfd;
 bool start_daemon=false, tn_host_set = false, tn_port_set = false, tn_active = false, in_port_set = false;
-char logfilename[300];
-char tn_hostname[20], tn_portno[7];
-struct sockaddr_in serv_addr;
+//char logfilename[300];
+//char tn_hostname[20], tn_portno[7];
+//struct sockaddr_in serv_addr;
 struct hostent *server;
-FILE * pidfile_ptr;
-FILE * logfile_ptr;
-MYSQL     *db;
-MYSQL_RES *res;
-MYSQL_ROW row;
+//FILE * pidfile_ptr;
+//FILE * logfile_ptr;
+//MYSQL     *db;
+//MYSQL_RES *res;
+//MYSQL_ROW row;
 char* pEnd;
+struct sockaddr_in tcp_address;
+int tcp_sockfd;
+int new_tn_in_socket;
+socklen_t tcp_addrlen;
+
+enum sockType_t { TCP, UDP};
 
 // Setup for GPIO 25 CE and CE0 CSN with SPI Speed @ 8Mhz
 RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
@@ -136,6 +142,12 @@ char buffer2[50];
 void do_tn_cmd(uint16_t node, uint8_t sensor, float value);
 
 void process_tn_in(int new_socket, char* buffer, char* client_message);
+
+void openSocket(const char* host, const char* port, struct sockaddr_in *address, int* handle, sockType_t sockType );
+
+void receiveTelnetMessage(int tn_socket, struct sockaddr_in * address);
+
+void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message);
 
 /*******************************************************************************************
 *

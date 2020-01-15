@@ -40,8 +40,8 @@ FILE * pidfile_ptr;
 FILE * logfile_ptr;
 
 string configFile;
-bool prgIsHub;
-bool prgIsGW;
+//bool prgIsHub;
+//bool prgIsGW;
 uint8_t mk_addr_byte(char byte1, char byte2);
 
 /*

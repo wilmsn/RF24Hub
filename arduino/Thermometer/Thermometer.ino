@@ -29,7 +29,7 @@ Can be used with a display or only as a sensor without display
 // Delay between 2 transmission in ms
 #define RF24SENDDELAY           50
 // Delay between 2 transmission in ms
-#define RF24RECEIVEDELAY        50
+#define RF24RECEIVEDELAY        100
 // Sleeptime in ms !! 
 // (valid: 10.000 ... 3.600.000)
 #define RF24SLEEPTIME           60000
@@ -80,6 +80,7 @@ Can be used with a display or only as a sensor without display
 #define STATUSLED_ON            HIGH
 #define STATUSLED_OFF           LOW
 #define ONE_WIRE_BUS            8
+#define MONITORTIME             1000
 #define RECEIVEDELAY            100
 #define MSGTYPEND               0
 #define MSGTYPHB1               51
@@ -312,7 +313,8 @@ void get_sensordata(void) {
   sleep4ms(800);
   delay(10);
   temp = bmp.readTemperature();
-  pres = bmp.readPressureAtSealevel(91);
+//  pres = bmp.readPressureAtSealevel(91);
+  pres = bmp.readPressureAtSealevel(310);
 #endif
 }
 
@@ -493,7 +495,7 @@ void setup(void) {
   radio.printDetails();
 #endif
 #if defined(HAS_DISPLAY)
-  monitor(5000);
+  monitor(MONITORTIME);
   draw_antenna(ANT_X0, ANT_Y0);
   draw_therm(THERM_X0, THERM_Y0);
 #endif
@@ -847,6 +849,7 @@ void loop(void) {
 #if defined(SER_DEBUG)
         Serial.println(F("Enter ReceiveLoop"));
 #endif
+        delay(RF24RECEIVEDELAY);
         if ( radio.available() & radio.isValid() ) {
           radio.read(&payload,sizeof(payload));
           if ( payload.node_id == RF24NODE ) {
@@ -919,7 +922,6 @@ void loop(void) {
 #endif                
           }
         }
-        delay(RF24RECEIVEDELAY);
         receiveloopcount++;
       }
     }
