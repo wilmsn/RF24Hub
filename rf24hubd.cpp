@@ -62,87 +62,6 @@ void do_tn_cmd(uint16_t node, uint8_t channel, float value) {
     free(debug);
 }
 
-void openSocket(const char* host, const char* port, struct sockaddr_in *address, int* handle, sockType_t sockType ) {
-    int in_socket;
-    int rv;
-    long save_fd;
-	const int y = 1;
-    struct addrinfo hints, *servinfo, *p;
-    memset(&hints, 0, sizeof hints);
-    cout << host << ":" << port << endl;
-//   	hints.ai_family = AF_UNSPEC; // set to AF_INET to force IPv4
-//    hints.ai_family = AF_INET6; // set to AF_INET to force IPv4
-    hints.ai_family = AF_INET; // set to AF_INET to force IPv4
-    if ( sockType == TCP ) {
-		hints.ai_socktype = SOCK_STREAM;
-	} else {
-		hints.ai_socktype = SOCK_DGRAM;
-	}		
-    hints.ai_flags = AI_PASSIVE; // use my IP
-    if ((rv = getaddrinfo(host, port, &hints, &servinfo)) != 0) {
-        //return (int)-1;
-    }
-	// loop through all the results and bind to the first we can
-    for(p = servinfo; p != NULL; p = p->ai_next) {
-        if ((in_socket = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
-                continue;
-        }
-        if (bind(in_socket, p->ai_addr, p->ai_addrlen) == -1) {
-           close(in_socket);
-           continue;
-        }
-        break;
-    }
-    if (p == NULL) {
-        //return (int)-1;
-    }
-    freeaddrinfo(servinfo);
-	setsockopt( in_socket, SOL_SOCKET, SO_REUSEADDR, &y, sizeof(int) );
-	listen (in_socket, 5);
-	save_fd = fcntl( in_socket, F_GETFL );
-	save_fd |= O_NONBLOCK;
-	fcntl( in_socket, F_SETFL, save_fd );
-    *handle = in_socket;
-}
-
-void receiveTelnetMessage(int new_tn_in_socket, struct sockaddr_in * address) {
-    char *buffer =  (char*) malloc (TELNETBUFFERSIZE);
-    char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
-    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    ssize_t MsgLen;
-    // send something like a prompt. perl telnet is waiting for it otherwise we get error
-    // use this in perl: my $t = new Net::Telnet (Timeout => 2, Port => 7001, Prompt => '/rf24hub>/');
-    sprintf(client_message,"rf24hub> ");
-    write(new_tn_in_socket , client_message , strlen(client_message));
-//	cout << "Client " <<  inet_ntoa (address->sin_addr) << "ist connected ..." << endl;
-    memset(buffer,0,sizeof(buffer));
-    MsgLen = recv(new_tn_in_socket, buffer, TELNETBUFFERSIZE, 0);
-    sprintf(debug, "Telnet Data: %s", trim(buffer));
-	logger.logmsg(VERBOSETELNET, debug);
-//    cout << "Msglen: " << MsgLen << " Buffer: " << buffer << endl;
-
-
-//    write(new_tn_in_socket , client_message , strlen(client_message));
-//    char msglen_str[10];
-//    sprintf(msglen_str,"%ld",MsgLen);
-//	sprintf (debug,"Buffer: %s MsgLen: %d ", cfg.trim(buffer), MsgLen);
-//	cfg.logmsg(VERBOSETELNET, debug);
-
-//    debug = "Buffer: \"";
-//    debug += trim(buffer);
-//    debug += "\" Msglen: ";
-//    debug += msglen_str;
-//    cfg.logmsg(VERBOSETELNET, debug);
-    if (MsgLen>0) {
-        process_tn_in(new_tn_in_socket, buffer, client_message);
-    }
-    close (new_tn_in_socket);
-    free(buffer);
-    free(client_message);
-    free(debug);
-    //                 exit(0);
-}
-
 void receive_tn_in(int new_tn_in_socket, struct sockaddr_in * address) {
     char *buffer =  (char*) malloc (TELNETBUFFERSIZE);
     char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
@@ -172,73 +91,6 @@ void receive_tn_in(int new_tn_in_socket, struct sockaddr_in * address) {
     free(debug);
 }
 	
-	
-/*******************************************************************************************
-*
-* END Telnethandling
-*
-********************************************************************************************/
-/*******************************************************************************************
-*
-* Nodehandling 
-* Used for communication with the nodes
-*
-********************************************************************************************/
-
-void make_order(uint16_t mynode, uint8_t mytype) {
-    uint8_t channel; 
-    float value;
-    void* ret_ptr;
-    uint32_t data;
-    order.del_node(mynode);
-    ret_ptr = orderbuffer.find_order4node(mynode, NULL, &channel, &value);
-    data = calcTransportValue_f(channel, value);
-    if (ret_ptr) {
-        order.add_order(mynode, mytype, node.is_HB_node(mynode), data, mymillis());
-        ret_ptr = orderbuffer.find_order4node(mynode, ret_ptr, &channel, &value);
-        data = calcTransportValue_f(channel, value);
-        if (ret_ptr) {
-            order.modify_order(mynode, 2, data);
-            ret_ptr = orderbuffer.find_order4node(mynode, ret_ptr, &channel, &value);
-            data = calcTransportValue_f(channel, value);
-            if (ret_ptr) {
-                order.modify_order(mynode, 3, data);
-                ret_ptr = orderbuffer.find_order4node(mynode, ret_ptr, &channel, &value);
-                data = calcTransportValue_f(channel, value);
-                if (ret_ptr) {
-                    order.modify_order(mynode, 4, data);
-                    ret_ptr = orderbuffer.find_order4node(mynode, ret_ptr, &channel, &value);
-                    data = calcTransportValue_f(channel, value);
-                    if (ret_ptr) {
-                        order.modify_order(mynode, 5, data);
-                        ret_ptr = orderbuffer.find_order4node(mynode, ret_ptr, &channel, &value);
-                        data = calcTransportValue_f(channel, value);
-                        if (ret_ptr) {
-                            order.modify_order(mynode, 4, data);
-                            ret_ptr = orderbuffer.find_order4node(mynode, ret_ptr, &channel, &value);
-                            if (ret_ptr) {
-                                order.modify_orderflags(mynode, FLAG_EMPTY );
-                            } else {
-                                order.modify_orderflags(mynode, FLAG_LASTMESSAGE );
-                            }                        
-                        } else {
-                            order.modify_orderflags(mynode, FLAG_LASTMESSAGE );
-                        }                        
-                    } else {
-                        order.modify_orderflags(mynode, FLAG_LASTMESSAGE );
-                    }                        
-                } else {
-                    order.modify_orderflags(mynode, FLAG_LASTMESSAGE );
-                }                        
-            } else {
-                order.modify_orderflags(mynode, FLAG_LASTMESSAGE );
-            }                        
-        } else {
-            order.modify_orderflags(mynode, FLAG_LASTMESSAGE );
-        }                        
-    }
-}
-
 void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
 /* Messages can llook like this:
        <word1		word2		word3		word4 				function>
@@ -509,6 +361,72 @@ void process_tn_in(int new_tn_in_socket, char* buffer, char* client_message) {
     free(wort4);
     free(debug);
 }
+	
+/*******************************************************************************************
+*
+* END Telnethandling
+*
+********************************************************************************************/
+/*******************************************************************************************
+*
+* Nodehandling 
+* Used for communication with the nodes
+*
+********************************************************************************************/
+
+void make_order(uint16_t mynode, uint8_t mytype) {
+    uint8_t channel; 
+    float value;
+    void* ret_ptr;
+    uint32_t data;
+    order.del_node(mynode);
+    ret_ptr = orderbuffer.find_order4node(mynode, NULL, &channel, &value);
+    data = calcTransportValue_f(channel, value);
+    if (ret_ptr) {
+        order.add_order(mynode, mytype, node.is_HB_node(mynode), data, mymillis());
+        ret_ptr = orderbuffer.find_order4node(mynode, ret_ptr, &channel, &value);
+        data = calcTransportValue_f(channel, value);
+        if (ret_ptr) {
+            order.modify_order(mynode, 2, data);
+            ret_ptr = orderbuffer.find_order4node(mynode, ret_ptr, &channel, &value);
+            data = calcTransportValue_f(channel, value);
+            if (ret_ptr) {
+                order.modify_order(mynode, 3, data);
+                ret_ptr = orderbuffer.find_order4node(mynode, ret_ptr, &channel, &value);
+                data = calcTransportValue_f(channel, value);
+                if (ret_ptr) {
+                    order.modify_order(mynode, 4, data);
+                    ret_ptr = orderbuffer.find_order4node(mynode, ret_ptr, &channel, &value);
+                    data = calcTransportValue_f(channel, value);
+                    if (ret_ptr) {
+                        order.modify_order(mynode, 5, data);
+                        ret_ptr = orderbuffer.find_order4node(mynode, ret_ptr, &channel, &value);
+                        data = calcTransportValue_f(channel, value);
+                        if (ret_ptr) {
+                            order.modify_order(mynode, 4, data);
+                            ret_ptr = orderbuffer.find_order4node(mynode, ret_ptr, &channel, &value);
+                            if (ret_ptr) {
+                                order.modify_orderflags(mynode, FLAG_EMPTY );
+                            } else {
+                                order.modify_orderflags(mynode, FLAG_LASTMESSAGE );
+                            }                        
+                        } else {
+                            order.modify_orderflags(mynode, FLAG_LASTMESSAGE );
+                        }                        
+                    } else {
+                        order.modify_orderflags(mynode, FLAG_LASTMESSAGE );
+                    }                        
+                } else {
+                    order.modify_orderflags(mynode, FLAG_LASTMESSAGE );
+                }                        
+            } else {
+                order.modify_orderflags(mynode, FLAG_LASTMESSAGE );
+            }                        
+        } else {
+            order.modify_orderflags(mynode, FLAG_LASTMESSAGE );
+        }                        
+    }
+}
 
 /*******************************************************************************************
 *
@@ -773,7 +691,8 @@ int main(int argc, char* argv[]) {
     uint8_t pipe_num;
 	logger.set_logmode('i');
     char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-
+    const int y = 1;
+	long save_fd;
 	/* vars for telnet socket handling */
 	int tn_in_socket=0;
 	int new_tn_in_socket=0;
@@ -810,7 +729,7 @@ int main(int argc, char* argv[]) {
 
 
     // starts logging
-    logger.verboselevel = VERBOSECRITICAL | VERBOSESTARTUP | VERBOSECONFIG;
+    logger.verboselevel = VERBOSECRITICAL | VERBOSESTARTUP | VERBOSECONFIG | VERBOSERF24;
     node.begin(&logger);
     sensor.begin(&logger);
     order.begin(&logger);
@@ -853,10 +772,26 @@ int main(int argc, char* argv[]) {
         }
     }
 	if ( cfg.rf24HubTcpPortSet ) {
-		openSocket(NULL, cfg.rf24HubTcpPort.c_str(),&tcp_address,&tcp_sockfd,TCP);
+    /* open incoming port for messages */
+		if ((tn_in_socket=socket( AF_INET, SOCK_STREAM, 0)) > 0) {
+			sprintf (debug,"Socket für eingehende Messages auf Port %i angelegt", stoi(cfg.rf24HubTcpPort) );
+			logger.logmsg(VERBOSESTARTUP, debug);
+		}
+		address.sin_family = AF_INET;
+		address.sin_addr.s_addr = INADDR_ANY;
+		address.sin_port = htons (stoi(cfg.rf24HubTcpPort));
+		setsockopt( tn_in_socket, SOL_SOCKET, SO_REUSEADDR, &y, sizeof(int) );
+		if (bind( tn_in_socket, (struct sockaddr *) &address, sizeof (address)) == 0 ) {
+			sprintf (debug,"Binding Socket OK");
+			logger.logmsg(VERBOSESTARTUP, debug);
+		}
+		listen (tn_in_socket, 5);
+		addrlen = sizeof (struct sockaddr_in);
+		save_fd = fcntl( tn_in_socket, F_GETFL );
+		save_fd |= O_NONBLOCK;
+		fcntl( tn_in_socket, F_SETFL, save_fd );
 	}
-    delay(5);
-
+    sleep(2);
     sprintf(debug, "starting radio on channel ... %d ", cfg.rf24Channel);
     logger.logmsg(VERBOSESTARTUP, debug);
     radio.begin();
@@ -885,14 +820,12 @@ int main(int argc, char* argv[]) {
     while(1) {
         /* Handling of incoming messages */
 		if ( cfg.rf24HubTcpPortSet ) {
-            new_tn_in_socket = accept ( tcp_sockfd, (struct sockaddr *) &tcp_address, &tcp_addrlen );
+            new_tn_in_socket = accept ( tn_in_socket, (struct sockaddr *) &address, &addrlen );
             if (new_tn_in_socket > 0) {
-                //receive_tn_in(new_tn_in_socket, &address);
-                thread t2(receiveTelnetMessage, new_tn_in_socket, &tcp_address);
+                thread t2(receive_tn_in, new_tn_in_socket, &address);
                 t2.detach();
-                //close (new_tn_in_socket);
             }
-        }
+		}
 //		network.update();
 		if ( radio.isValid() && radio.available(&pipe_num) ) {
 //
