@@ -44,6 +44,13 @@ bool prgIsHub;
 bool prgIsGW;
 uint8_t mk_addr_byte(char byte1, char byte2);
 
+/*
+ * trim: get rid of trailing and leading whitespace...
+ *       ...including the annoying "\n" from fgets()
+ */
+char * trim (char * s);
+
+
 public:
 	
 // Hier die verwendeten Variablen:
@@ -56,9 +63,9 @@ string rf24HubTcpPort;
 // rf24HubTelnetPortSet is true when an incomine telnet port is set by configuration
 bool rf24HubTcpPortSet;
 // Port for incoming datagrams on Hub
-string rf24HubUdpPort;
+//string rf24HubUdpPort;
 // rf24HubUdpPortSet is true when an incomine udp port on Hub is set by configuration
-bool rf24HubUdpPortSet;
+//bool rf24HubUdpPortSet;
 /**********************************************
  * rf24Gateway
  **********************************************/
@@ -70,10 +77,6 @@ uint8_t rx_address1[6];
 uint8_t rx_address2[6];
 // the hostname of the hub used by the gateway
 string rf24HubHostName;
-// Udp Port for incoming messages from Hub
-string rf24GWUdpPort;
-// udpPortSet is true when an incomine udp port is set by configuration
-bool rf24GWUdpPortSet;
 // Speed for rf24 Network, can be one of: "RF24_2MBPS", "RF24_250KBPS", "RF24_1MBPS" 
 string rf24Speed;
 // Channel for rf24 Network
@@ -119,8 +122,8 @@ bool startDaemon;
 bool interactiveMode = false;
 // logfileMode = true: prints logs to file 
 bool logFileMode = false;
-// verboseLevel(1..9): higher number more detailed logs
-int verboseLevel = 2;
+// verboseLevel: Use combination of symbols as default here
+int verboseLevel = VERBOSECRITICAL | VERBOSESTARTUP;
 // will start the scanner running over all channels
 bool startScanner = false;
 // set the level for the scanner
@@ -133,12 +136,6 @@ int startChannelScanner = 0;
 Config();
 Config(string _prgName, string _prgVersion);
 ~Config();
-
-/*
- * trim: get rid of trailing and leading whitespace...
- *       ...including the annoying "\n" from fgets()
- */
-char * trim (char * s);
 
 /*
  * prints a usage message for the programm
