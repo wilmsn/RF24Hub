@@ -15,7 +15,7 @@ void Database::db_check_error(void) {
 
 void Database::exitSystem(void) {
     char *sql_stmt =  (char*) malloc (SQLSTRINGSIZE);
-	sprintf (sql_stmt, "update sensor a set value = ( select value from sensor_im where sensor_id = a.sensor_id ), utime = ( select utime from sensor_im where sensor_id = a.sensor_id )");
+	sprintf (sql_stmt, "update sensor a set value = ( select value from sensor_im where sensor_id = a.sensor_id )");
     if ( logger->verboselevel & VERBOSESQL) {    
         logger->logmsg(VERBOSESQL, sql_stmt);
     }

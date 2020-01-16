@@ -86,6 +86,7 @@ UP: fill_order_buffer   =>  Füllt das ARRAY "order_buffer" mit dem übergebenen
 #include "common.h"
 #include "database.h"
 #include "config.h"
+#include "payload.h"
 
 #define BUF 1024
 
