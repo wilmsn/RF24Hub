@@ -2,7 +2,7 @@
 A thermometer.
 Can be used with a display or only as a sensor without display
 
-!!!!! On Branch gateway !!!!!!!
+!!!!! On Branch payload_v3 !!!!!!!
 
 */
 //****************************************************

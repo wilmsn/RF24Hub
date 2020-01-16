@@ -792,21 +792,47 @@ int main(int argc, char* argv[]) {
 		fcntl( tn_in_socket, F_SETFL, save_fd );
 	}
     sleep(2);
+    uint8_t myPALevel=RF24_PA_MIN;
+    rf24_datarate_e myDataRate=RF24_250KBPS;
     sprintf(debug, "starting radio on channel ... %d ", cfg.rf24Channel);
     logger.logmsg(VERBOSESTARTUP, debug);
     radio.begin();
-    radio.setChannel( 91 );
+    radio.setChannel( cfg.rf24Channel );
     radio.setAutoAck( true );
-//    radio.setPALevel( RF24_PA_HIGH ) ;
-    radio.setPALevel( RF24_PA_LOW ) ;
+//    radio.setPALevel( RF24_PA_LOW ) ;
     radio.enableDynamicPayloads();
-    radio.setDataRate(RF24_250KBPS);
-//    radio.setDataRate(RF24_250KBPS);
-	radio.setRetries(15,5);
-    uint8_t  address1[] = { 0xf0, 0xcc, 0xcc, 0xcc, 0xcc};
-    uint8_t  address2[] = { 0x33, 0xcc, 0xcc, 0xcc, 0xcc};
-    radio.openWritingPipe(address2);
-    radio.openReadingPipe(1,address1);
+    if ( strcmp(cfg.rf24Speed.c_str(), "RF24_250KBPS") == 0 ) {
+        myDataRate = RF24_250KBPS;
+    }
+    if ( strcmp(cfg.rf24Speed.c_str(), "RF24_1MBPS") == 0 ) {
+        myDataRate = RF24_1MBPS;
+    }
+    if ( strcmp(cfg.rf24Speed.c_str(), "RF24_2MBPS") == 0 ) {
+        myDataRate = RF24_2MBPS;
+    }
+    sprintf(debug, "setting radio speed to %s ", cfg.rf24Speed.c_str() );
+    logger.logmsg(VERBOSESTARTUP, debug);
+    radio.setDataRate(myDataRate);
+    
+    if ( strcmp(cfg.rf24PALevel.c_str(), "RF24_PA_MIN") == 0 ) {
+        myPALevel = RF24_PA_MIN;
+    }
+    if ( strcmp(cfg.rf24PALevel.c_str(), "RF24_PA_LOW") == 0 ) {
+        myPALevel = RF24_PA_LOW;
+    }
+    if ( strcmp(cfg.rf24PALevel.c_str(), "RF24_PA_HIGH") == 0 ) {
+        myPALevel = RF24_PA_HIGH;
+    }
+    if ( strcmp(cfg.rf24PALevel.c_str(), "RF24_PA_MAX") == 0 ) {
+        myPALevel = RF24_PA_MAX;
+    }
+    sprintf(debug, "setting radio PA level to %s ", cfg.rf24PALevel.c_str() );
+    logger.logmsg(VERBOSESTARTUP, debug);
+    radio.setPALevel( myPALevel ) ;
+    
+	radio.setRetries(15,15);
+    radio.openWritingPipe(cfg.rf24TXAddress);
+    radio.openReadingPipe(1,cfg.rf24RXAddress1);
     radio.startListening();
     
     radio.printDetails();
@@ -854,7 +880,7 @@ int main(int argc, char* argv[]) {
 							}
 							payload.data1=0;payload.data2=0;payload.data3=0;payload.data4=0;payload.data5=0;payload.data6=0;
 							payload.type=MSGTYPEND; payload.orderno=0; payload.flags=FLAG_LASTMESSAGE;
-							do_transmit(address2, &payload);
+							do_transmit(cfg.rf24TXAddress, &payload);
 						}
 					}
 				}
@@ -901,7 +927,7 @@ int main(int argc, char* argv[]) {
 			while ( order.get_order_for_transmission(&payload.orderno, &payload.node_id, &payload.type, &payload.flags,
                 &payload.data1, &payload.data2, &payload.data3, &payload.data4, 
                 &payload.data5, &payload.data6, mymillis() )) {
-                    do_transmit(address2, &payload);
+                    do_transmit(cfg.rf24TXAddress, &payload);
                 }
 				usleep(50000);
         } else {

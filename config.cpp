@@ -192,25 +192,25 @@ void Config::processParams(int argc, char* argv[]) {
 			rf24Channel = stoi(value);
 		}
 		else if (strcmp(name, "rf24_tx_address")==0) {
-			tx_address[4] = mk_addr_byte(value[0],value[1]);
-			tx_address[3] = mk_addr_byte(value[2],value[3]);
-			tx_address[2] = mk_addr_byte(value[4],value[5]);
-			tx_address[1] = mk_addr_byte(value[6],value[7]);
-			tx_address[0] = mk_addr_byte(value[8],value[9]);
+			rf24TXAddress[4] = mk_addr_byte(value[0],value[1]);
+			rf24TXAddress[3] = mk_addr_byte(value[2],value[3]);
+			rf24TXAddress[2] = mk_addr_byte(value[4],value[5]);
+			rf24TXAddress[1] = mk_addr_byte(value[6],value[7]);
+			rf24TXAddress[0] = mk_addr_byte(value[8],value[9]);
 		}
 		else if (strcmp(name, "rf24_rx_address1")==0) {
-			rx_address1[4] = mk_addr_byte(value[0],value[1]);
-			rx_address1[3] = mk_addr_byte(value[2],value[3]);
-			rx_address1[2] = mk_addr_byte(value[4],value[5]);
-			rx_address1[1] = mk_addr_byte(value[6],value[7]);
-			rx_address1[0] = mk_addr_byte(value[8],value[9]);
+			rf24RXAddress1[4] = mk_addr_byte(value[0],value[1]);
+			rf24RXAddress1[3] = mk_addr_byte(value[2],value[3]);
+			rf24RXAddress1[2] = mk_addr_byte(value[4],value[5]);
+			rf24RXAddress1[1] = mk_addr_byte(value[6],value[7]);
+			rf24RXAddress1[0] = mk_addr_byte(value[8],value[9]);
 		}
 		else if (strcmp(name, "rf24_rx_address2")==0) {
-			rx_address2[4] = mk_addr_byte(value[0],value[1]);
-			rx_address2[3] = mk_addr_byte(value[2],value[3]);
-			rx_address2[2] = mk_addr_byte(value[4],value[5]);
-			rx_address2[1] = mk_addr_byte(value[6],value[7]);
-			rx_address2[0] = mk_addr_byte(value[8],value[9]);
+			rf24RXAddress2[4] = mk_addr_byte(value[0],value[1]);
+			rf24RXAddress2[3] = mk_addr_byte(value[2],value[3]);
+			rf24RXAddress2[2] = mk_addr_byte(value[4],value[5]);
+			rf24RXAddress2[1] = mk_addr_byte(value[6],value[7]);
+			rf24RXAddress2[0] = mk_addr_byte(value[8],value[9]);
 		}
 		else if (strcmp(name, "rf24_speed")==0) {
 			if ( strcmp(value, "RF24_2MBPS")==0 || strcmp(value, "RF24_250KBPS")==0 || strcmp(value, "RF24_1MBPS")==0) {
@@ -218,6 +218,14 @@ void Config::processParams(int argc, char* argv[]) {
 			} else {
 				cout << value << ": Unknown value for " << name << "! I use RF24_1MBPS " << endl;
 				rf24Speed = "RF24_1MBPS";
+			}
+		} 
+		else if (strcmp(name, "rf24_pa_level")==0) {
+			if ( strcmp(value, "RF24_PA_MIN")==0 || strcmp(value, "RF24_PA_LOW")==0 || strcmp(value, "RF24_PA_HIGH")==0 || strcmp(value, "RF24_PA_MAX")==0) {
+				rf24PALevel = value;
+			} else {
+				cout << value << ": Unknown value for " << name << "! I use RF24_1MBPS " << endl;
+				rf24PALevel = "RF24_PA_MAX";
 			}
 		} 
 		else

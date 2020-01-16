@@ -70,15 +70,17 @@ bool rf24HubTcpPortSet;
  * rf24Gateway
  **********************************************/
 // TX Address for the gateway
-uint8_t tx_address[6];
+uint8_t rf24TXAddress[6];
 // RX Address 1 
-uint8_t rx_address1[6];
+uint8_t rf24RXAddress1[6];
 // RX Address 1 
-uint8_t rx_address2[6];
+uint8_t rf24RXAddress2[6];
 // the hostname of the hub used by the gateway
 string rf24HubHostName;
 // Speed for rf24 Network, can be one of: "RF24_2MBPS", "RF24_250KBPS", "RF24_1MBPS" 
 string rf24Speed;
+// PA level
+string rf24PALevel;
 // Channel for rf24 Network
 uint8_t rf24Channel;
 /**********************************************

@@ -180,7 +180,7 @@ bool Database::connect(string db_hostname, string db_username, string db_passwor
                 retval = false;
             }
         }
-        sprintf(debug, "Connected to host %s with DB %s on port %d", db_hostname.c_str(), mysql_get_server_info(db), db_port);
+        sprintf(debug, "Connected to host %s with DB %s on port %s", db_hostname.c_str(), mysql_get_server_info(db), db_port.c_str());
         logger->logmsg(VERBOSESTARTUP, debug);
     }
     sprintf(debug,"insert into sensordata(sensor_id, utime, value) values (1, UNIX_TIMESTAMP(), 22)");
