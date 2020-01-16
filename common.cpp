@@ -21,6 +21,7 @@ float getValue_f(uint32_t val) {
       retval*=10.0;
     }    
   }
+  if ( zahl_negativ ) retval *= -1.0;
   return retval;
 }
 
@@ -37,11 +38,11 @@ uint32_t calcTransportValue_f(uint8_t sensor, float value) {
   uint32_t result = 0;
   result = sensor;
   result <<= 25; 
-  if ( value > 0.00001 || value < -0.00001 ) {
+  if ( value > 0.00000000001 || value < -0.00000000001 ) {
     bool negativ = value < 0.0;
     if ( negativ ) {
       result |= ZF_ZAHL_NEGATIV;
-      _val=abs(_val);
+      if (_val < 0.0) _val=_val * -1.0;
     }
     while ( _val < 50000.0 ) {
       expo_negativ = true;
