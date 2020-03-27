@@ -33,6 +33,7 @@ public:
     bool get_order_for_transmission(uint8_t* orderno, uint8_t* node, uint8_t* type, uint8_t* flags,
                                     uint32_t* data1, uint32_t* data2, uint32_t* data3, uint32_t* data4, uint32_t* data5, uint32_t* data6,  
                                     uint64_t systime); 
+    void store_send_result(uint8_t orderno, bool result);
     void print_buffer(int new_tn_in_socket);
     void html_buffer(int new_tn_in_socket);
     Order(void);
@@ -54,6 +55,7 @@ private:
         uint32_t      	data6;		    // The transportvalue for the Sensor 6 and Value 6
         uint64_t		entrytime;      // Timestamp for creating of this record
         uint64_t	  	last_send;		// Timestamp for last sending of this record
+        bool            result;         // Result of the last transmission (true = OK, false = failed)
         order_t         *next;          // poiter to the next record
     };
 

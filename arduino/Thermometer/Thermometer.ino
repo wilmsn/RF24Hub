@@ -321,7 +321,6 @@ void get_sensordata(void) {
 float action_loop(uint32_t data) {
   uint8_t channel = getChannel(data);
   float value = getValue_f(data);
-  float retval = value;
     switch (channel) {
 #if defined(HAS_DISPLAY)
       case 21:
@@ -365,7 +364,7 @@ float action_loop(uint32_t data) {
           myGLCD.setContrast(eeprom.display_contrast);
           EEPROM.put(0, eeprom);
         }
-        retval = (float)eeprom.sleeptime;
+        value = (float)eeprom.sleeptime;
 #endif
 #endif
       break;
@@ -375,7 +374,7 @@ float action_loop(uint32_t data) {
           eeprom.sleeptime=(uint32_t)value;
           EEPROM.put(0, eeprom);
         }
-        retval = (float)eeprom.sleeptime;
+        value = (float)eeprom.sleeptime;
         break;
       case 112:
       // sendloopcount - number sendloop befor giving up 
@@ -383,7 +382,7 @@ float action_loop(uint32_t data) {
           eeprom.sendloopcount=(uint16_t)value;
           EEPROM.put(0, eeprom);
         }
-        retval = (float)eeprom.sendloopcount;
+        value = (float)eeprom.sendloopcount;
         break;
       case 113:
       // receiveloopcount - number of receivloops befor giving up.
@@ -391,7 +390,7 @@ float action_loop(uint32_t data) {
           eeprom.receiveloopcount=(uint16_t)value;
           EEPROM.put(0, eeprom);
         }
-        retval = (float)eeprom.receiveloopcount;
+        value = (float)eeprom.receiveloopcount;
         break;
       case 114:
       // emptyloopcount - only loop 0 will transmit all other loops will only read and display
@@ -399,14 +398,14 @@ float action_loop(uint32_t data) {
           eeprom.emptyloopcount=(uint16_t)value;
           EEPROM.put(0, eeprom);
         } 
-        retval = (float)eeprom.emptyloopcount;
+        value = (float)eeprom.emptyloopcount;
         break;
       case 115:
       // sleep korrektion faktor in ms - will only be used once!
         if ((value > 0.5 && value < 600001) || (value < -0.5 && value > -600001)) {
           sleep_kor_time = (long int)value;
         }
-        retval = sleep_kor_time;
+        value = sleep_kor_time;
         break;
       case 116:
       // Voltagefactor - will be divided by 100
@@ -414,7 +413,7 @@ float action_loop(uint32_t data) {
           eeprom.voltagefactor=(uint16_t)value;
           EEPROM.put(0, eeprom);
         }
-        retval = (float)eeprom.voltagefactor;
+        value = (float)eeprom.voltagefactor;
         break;
       case 117:
       // Voltageadded - will be divided by 100
@@ -422,20 +421,22 @@ float action_loop(uint32_t data) {
           eeprom.voltageadded=(int)value;
           EEPROM.put(0, eeprom);
         }
-        retval = (float)eeprom.voltageadded;
+        value = (float)eeprom.voltageadded;
         break;
 #if defined(HAS_DISPLAY)
       case 118:
           if ( value > 0.5 && value < 1.5 ) {
             monitor(eeprom.sleeptime/2); 
             monitormode = true;
+            value = 1;
           } else {
             monitormode = false;
+            value = 0;
           }
         break;
 #endif
     }  
-    return calcTransportValue_f(channel,retval);
+    return calcTransportValue_f(channel,value);
 }  
 
 void setup(void) {

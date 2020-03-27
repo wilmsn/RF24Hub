@@ -673,16 +673,20 @@ void process_payload(payload_t* mypayload) {
 	if ( mypayload->data6 > 0 ) process_sensor(mypayload->node_id, mypayload->data6);
 }
 
-void do_transmit(uint8_t address[5], payload_t* payload) {
+bool do_transmit(uint8_t address[5], payload_t* payload) {
+    bool retval = false;
 	radio.stopListening();
 	radio.openWritingPipe(address);
 	if (radio.write(payload,sizeof(payload_t))) {
+        retval = true;
 		radio.startListening();
 		debug_print_payload(VERBOSERF24, "Snd", "OK", payload);
 	} else {
+        retval = true;
 		radio.startListening();
 		debug_print_payload(VERBOSERF24, "Snd", "Fail", payload);
 	}
+    return retval;
 }
 
 int main(int argc, char* argv[]) {
@@ -927,7 +931,7 @@ int main(int argc, char* argv[]) {
 			while ( order.get_order_for_transmission(&payload.orderno, &payload.node_id, &payload.type, &payload.flags,
                 &payload.data1, &payload.data2, &payload.data3, &payload.data4, 
                 &payload.data5, &payload.data6, mymillis() )) {
-                    do_transmit(cfg.rf24TXAddress, &payload);
+                    order.store_send_result(payload.orderno, do_transmit(cfg.rf24TXAddress, &payload));
                 }
 				usleep(50000);
         } else {

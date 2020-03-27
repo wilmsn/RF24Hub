@@ -50,6 +50,9 @@ ordertest: order.o order_test.cpp
 orderbuffertest: orderbuffer.o orderbuffer_test.cpp
 	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24network ${MARIADB_LIBS} $^ -o $@
 
+zahlentest: common.o zahlentest.cpp
+	g++ ${CCFLAGS} -Wall $^ -o $@
+
 # clear build files
 clean:
 	rm *.o rf24hubd rf24gwd rf24test

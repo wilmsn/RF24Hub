@@ -225,6 +225,17 @@ void Order::modify_orderflags(uint8_t node, uint8_t flags) {
     }
 }
 
+void Order::store_send_result(uint8_t orderno, bool result) {
+    order_t *search_ptr;
+    search_ptr = initial_ptr;
+    while (search_ptr) {
+        if (search_ptr->orderno == orderno ) {
+            search_ptr->result = result;
+        }
+        search_ptr = search_ptr->next;
+    }
+}
+
 bool Order::get_order_for_transmission(uint8_t* orderno, uint8_t* node, uint8_t* type, uint8_t* flags,
                 uint32_t* data1, uint32_t* data2, uint32_t* data3, uint32_t* data4, uint32_t* data5, uint32_t* data6, uint64_t mytime){
     bool retval = false;
@@ -234,12 +245,13 @@ bool Order::get_order_for_transmission(uint8_t* orderno, uint8_t* node, uint8_t*
     char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
     while (search_ptr) {
         if (logger->verboselevel & VERBOSEOTHER) {
-            sprintf(debug,"### Order::get_order_for_transmission Node: %u Onr: %u Last send: %llu Now: %llu Entry: %llu",search_ptr->node, search_ptr->orderno, search_ptr->last_send, mytime, search_ptr->entrytime);        
+            sprintf(debug,"Order::get_order_for_transmission Node: %u Onr: %u Last send: %llu Now: %llu Entry: %llu",search_ptr->node, search_ptr->orderno, search_ptr->last_send, mytime, search_ptr->entrytime);        
             logger->logmsg(VERBOSEOTHER, debug);
         }
         if (search_ptr->last_send > mytime) search_ptr->last_send = mytime;
         if ( ((!search_ptr->HB_order) && search_ptr->last_send + (uint64_t)SENDINTERVAL < mytime) ||
-             ((search_ptr->HB_order) && search_ptr->last_send + (uint64_t)HB_SENDINTERVAL < mytime) ) {
+             ((search_ptr->HB_order) && search_ptr->result && search_ptr->last_send + (uint64_t)SENDINTERVAL < mytime) ||
+             ((search_ptr->HB_order) && ! search_ptr->result && search_ptr->last_send + (uint64_t)HB_SENDINTERVAL < mytime) ) {
             *orderno = search_ptr->orderno;
             *node = search_ptr->node;
             *type = search_ptr->type;

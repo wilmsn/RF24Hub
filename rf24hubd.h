@@ -190,7 +190,7 @@ void debug_print_payload(uint16_t loglevel, const char* msg_header, const char* 
 
 void process_payload(payload_t* mypayload);
 
-void do_transmit(uint8_t address[5], payload_t* payload);
+bool do_transmit(uint8_t address[5], payload_t* payload);
 
 int main(int argc, char* argv[]);
 
