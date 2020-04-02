@@ -534,11 +534,23 @@ void init_system(void) {
 	logger.logmsg(VERBOSESQL, sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
-	sprintf (sql_stmt, "insert into sensordata_im(sensor_id, utime, value) select sensor_id, utime, value from sensordata where utime > UNIX_TIMESTAMP(subdate(current_date, 2))");
+	sprintf (sql_stmt, "insert into sensordata_im(sensor_id, utime, value) select sensor_id, utime, value from sensordata");
 	logger.logmsg(VERBOSESQL, sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
 	// END sensordata to memorytable
+	sprintf (sql_stmt, "truncate table sensordata_d");
+	logger.logmsg(VERBOSESQL, sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+	sprintf (sql_stmt, "%s","insert into sensordata_d(sensor_id, value, utime) select sensor_id, min(value) as min_val, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))+21600 from sensordata group by sensor_id, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))");
+	logger.logmsg(VERBOSESQL, sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+	sprintf (sql_stmt, "%s","insert into sensordata_d(sensor_id, value, utime) select sensor_id, max(value) as min_val,  UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))+64800 from sensordata group by sensor_id, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))");
+	logger.logmsg(VERBOSESQL, sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
 	sprintf (sql_stmt, "select sensor_id, node_id, channel, value, fhem_dev, s_type from sensor");
 	logger.logmsg(VERBOSESQL, sql_stmt);
 	mysql_query(db, sql_stmt);
