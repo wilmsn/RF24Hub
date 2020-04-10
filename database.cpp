@@ -13,19 +13,24 @@ void Database::db_check_error(void) {
     }
 }
 
-void Database::exitSystem(void) {
+void Database::sync_sensordata(void) {
+    char *sql_stmt =  (char*) malloc (SQLSTRINGSIZE);
+	sprintf (sql_stmt, "insert into sensordata(sensor_id, utime, value) select sensor_id, utime, value from sensordata_im where (sensor_id,utime) not in (select sensor_id, utime from sensordata)");
+    if ( logger->verboselevel & VERBOSESQL) {    
+        logger->logmsg(VERBOSESQL, sql_stmt);
+    }
+    mysql_query(db, sql_stmt);
+	db_check_error();
+    free(sql_stmt);
+}
+
+void Database::sync_sensor(void) {
     char *sql_stmt =  (char*) malloc (SQLSTRINGSIZE);
 	sprintf (sql_stmt, "update sensor a set value = ( select value from sensor_im where sensor_id = a.sensor_id ), utime = ( select utime from sensor_im where sensor_id = a.sensor_id )");
     if ( logger->verboselevel & VERBOSESQL) {    
         logger->logmsg(VERBOSESQL, sql_stmt);
     }
 	mysql_query(db, sql_stmt);
-	db_check_error();
-	sprintf (sql_stmt, "insert into sensordata(sensor_id, utime, value) select sensor_id, utime, value from sensordata_im where (sensor_id,utime) not in (select sensor_id, utime from sensordata)");
-    if ( logger->verboselevel & VERBOSESQL) {    
-        logger->logmsg(VERBOSESQL, sql_stmt);
-    }
-    mysql_query(db, sql_stmt);
 	db_check_error();
     free(sql_stmt);
 }
@@ -51,7 +56,7 @@ void Database::initSystem(void) {
     }
 	mysql_query(db, sql_stmt);
 	db_check_error();
-	sprintf (sql_stmt, "insert into sensordata_im(sensor_id, utime, value) select sensor_id, utime, value from sensordata where utime > UNIX_TIMESTAMP(subdate(current_date, 2))");
+	sprintf (sql_stmt, "insert into sensordata_im(sensor_id, utime, value) select sensor_id, utime, value from sensordata");
     if ( logger->verboselevel & VERBOSESQL) {    
         logger->logmsg(VERBOSESQL, sql_stmt);
     }
