@@ -507,16 +507,25 @@ void do_sql(char *sqlstmt) {
 	free(debug);
 }
 
-void exit_system(void) {
-    // Save data from sensordata_im and sensor_im to persistant tables
-	sprintf (sql_stmt, "update sensor a set value = ( select value from sensor_im where sensor_id = a.sensor_id ), utime = ( select utime from sensor_im where sensor_id = a.sensor_id )");
+void sync_sensor(void) {
+    // Save data from sensor_im to persistant tables
+	sprintf (sql_stmt, "update sensor a set value = ( select value from sensor_im where sensor_id = a.sensor_id ), utime = ( select max(utime) from sensor_im where sensor_id = a.sensor_id )");
 	logger.logmsg(VERBOSESQL, sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
+}
+
+void sync_sensordata(void) {
+    // Save data from sensordata_im to persistant tables
 	sprintf (sql_stmt, "insert into sensordata(sensor_id, utime, value) select sensor_id, utime, value from sensordata_im where (sensor_id,utime) not in (select sensor_id, utime from sensordata)");
 	logger.logmsg(VERBOSESQL, sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
+}
+
+void exit_system(void) {
+    sync_sensordata();
+    sync_sensor();
 }
 
 void init_system(void) {
@@ -548,6 +557,14 @@ void init_system(void) {
 	mysql_query(db, sql_stmt);
 	db_check_error();
 	sprintf (sql_stmt, "%s","insert into sensordata_d(sensor_id, value, utime) select sensor_id, max(value) as min_val,  UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))+64800 from sensordata group by sensor_id, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))");
+	logger.logmsg(VERBOSESQL, sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+	sprintf (sql_stmt, "%s","truncate table sensor_im");
+	logger.logmsg(VERBOSESQL, sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+	sprintf (sql_stmt, "%s","insert into sensor_im( sensor_id, sensor_name, add_info, node_id, channel, value, utime, store_days, fhem_dev, signal_quality, s_type, html_show, html_sort) select sensor_id, sensor_name, add_info, node_id, channel, value, utime, store_days, fhem_dev, signal_quality, s_type, html_show, html_sort from sensor");
 	logger.logmsg(VERBOSESQL, sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
@@ -1078,6 +1095,9 @@ int main(int argc, char* argv[]) {
     
 	// Main Loop
     while(1) {
+        if ( (unsigned)time(NULL) == ((unsigned)time(NULL) & 0b11111111111111111111000000000000 ) ) {
+           sync_sensordata();   
+        }
         /* Handling of incoming messages */
 		if ( in_port_set ) {
             new_tn_in_socket = accept ( tn_in_socket, (struct sockaddr *) &address, &addrlen );
