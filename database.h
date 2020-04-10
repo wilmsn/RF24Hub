@@ -45,7 +45,8 @@ public:
     void initSensor(Sensor* sensor);
     void initNode(Node* node);
     void initSystem(void);
-    void exitSystem(void);
+    void sync_sensor(void);
+    void sync_sensordata(void);
 };
 
 #endif // _DATABASE_H_

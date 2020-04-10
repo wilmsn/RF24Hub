@@ -460,7 +460,8 @@ void make_order(uint16_t mynode, uint8_t mytype) {
 
 void exit_system(void) {
     // Save data from sensordata_im and sensor_im to persistant tables
-    database.exitSystem();
+    database.sync_sensordata();
+    database.sync_sensor();
 }
 
 void init_system(void) {
@@ -939,6 +940,10 @@ int main(int argc, char* argv[]) {
     
 	// Main Loop
     while(1) {
+        // sync sensordata_im to sensordata
+        if ( (unsigned)time(NULL) == ((unsigned)time(NULL) & 0b11111111111111111111000000000000 ) ) {
+           database.sync_sensordata();   
+        }
         /* Handling of incoming messages */
 		if ( in_port_set ) {
             new_tn_in_socket = accept ( tn_in_socket, (struct sockaddr *) &address, &addrlen );

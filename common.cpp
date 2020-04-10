@@ -9,7 +9,7 @@ uint8_t getChannel(uint32_t val) {
 float getValue_f(uint32_t val) {
   uint32_t exponent = (val & ZF_EXPO_WERT) >> 19;
   bool expo_negativ = val & ZF_EXPO_NEGATIV;
-  bool zahl_negativ = val &  ZF_ZAHL_NEGATIV;
+  bool zahl_negativ = val & ZF_ZAHL_NEGATIV;
   float retval;
   retval = val & ZF_ZAHL_WERT;
   if ( expo_negativ ) {
@@ -21,6 +21,7 @@ float getValue_f(uint32_t val) {
       retval*=10.0;
     }    
   }
+  if ( zahl_negativ ) retval *= -1;
   return retval;
 }
 
