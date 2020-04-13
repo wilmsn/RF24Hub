@@ -5,9 +5,9 @@ Can be used with a display or only as a sensor without display
 //****************************************************
 // My definitions for my nodes based on this sketch
 // Select only one at one time !!!!
-//#define AUSSENTHERMOMETER
+#define AUSSENTHERMOMETER
 //#define SCHLAFZIMMERTHERMOMETER
-#define BASTELZIMMERTHERMOMETER
+//#define BASTELZIMMERTHERMOMETER
 //#define KUECHETHERMOMETER
 //#define WOHNZIMMERTHERMOMETER
 //#define ANKLEIDEZIMMERTHERMOMETER
@@ -366,6 +366,7 @@ float action_loop(unsigned char channel, float value) {
         }
         retval = (float)eeprom.voltageadded;
         break;
+#if defined(HAS_DISPLAY)
       case 118:
           if ( value > 0.5 && value < 1.5 ) {
             monitor(eeprom.sleeptime/2); 
@@ -374,6 +375,7 @@ float action_loop(unsigned char channel, float value) {
             monitormode = false;
           }
         break;
+#endif
     }  
     return retval;
 }  
@@ -425,8 +427,8 @@ void setup(void) {
   last_send = 0;
 }
 
-#if defined(HAS_DISPLAY)
 void monitor(uint32_t delaytime) {
+#if defined(HAS_DISPLAY)
   const char string_1[] PROGMEM = "Temp: ";
   const char string_2[] PROGMEM = "Ubatt: ";
   const char string_3[] PROGMEM = "Sleep: ";
@@ -468,9 +470,11 @@ void monitor(uint32_t delaytime) {
   delay(10);
   myGLCD.clrScr();
 #endif  
+#endif
 }
 
 void display_sleep(boolean dmode) {
+#if defined(HAS_DISPLAY)
   display_down = dmode;
   if ( dmode ) { // Display go to sleep
 #if defined(DISPLAY_5110)
@@ -487,7 +491,8 @@ void display_sleep(boolean dmode) {
         print_field(field3_val,3);
         print_field(field4_val,4);
     }
-  }  
+  }
+#endif    
 }
 
 void draw_therm(byte x, byte y) {
@@ -678,7 +683,6 @@ void wipe_antenna(int x, int y) {
 #endif
   }
 }  
-#endif
   
 void loop(void) {
   delay(10);  
@@ -776,18 +780,26 @@ void loop(void) {
   }
   if ( sleep_kor_time != 0 ) {
     long int tempsleeptime = eeprom.sleeptime + sleep_kor_time;
+#if defined(HAS_DISPLAY)
     if ( monitormode ) {
       monitor(tempsleeptime/2);
     } else {
+#endif
       sleep4ms(tempsleeptime);
+#if defined(HAS_DISPLAY)
     }
+#endif
     sleep_kor_time=0;
   } else {
+#if defined(HAS_DISPLAY)
     if ( monitormode ) {
       monitor(eeprom.sleeptime/2);
     } else {
+#endif
       sleep4ms(eeprom.sleeptime);
+#if defined(HAS_DISPLAY)
     }
+#endif
   } 
   last_send += eeprom.sleeptime;
   loopcount++;
