@@ -1,365 +1,347 @@
 #include "order.h"
 
 Order::Order(void) {
-    initial_ptr = NULL;
-    has_order = false;
+    hasOrder = false;
 }
 
-void Order::new_entry(order_t* new_ptr) {
-    order_t *search_ptr;
-    new_ptr->next = NULL;
-    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    if (logger->verboselevel & VERBOSEORDER) {
-        sprintf(debug,"Order: new_entry %p", new_ptr); 
-        logger->logmsg(VERBOSEORDER, debug);    
-        sprintf(debug,"Bestand vorher"); 
-        logger->logmsg(VERBOSEORDER, debug);
-        debug_print_buffer(VERBOSEORDER);
-    }
-    if (initial_ptr) {
-        search_ptr = initial_ptr;
-        while (search_ptr->next) {
-            search_ptr = search_ptr->next;
-        }
-        search_ptr->next = new_ptr;
-    } else {
-        initial_ptr = new_ptr;
-    }
-    if (logger->verboselevel & VERBOSEORDER) {
-        sprintf(debug,"Bestand nachher"); 
-        logger->logmsg(VERBOSEORDER, debug);
-        debug_print_buffer(VERBOSEORDER);
-    }
-    has_order = true;
-    free(debug);
-}
-
-bool Order::del_entry(order_t* my_ptr) {
-    bool retval = false;
-    order_t *search_ptr, *tmp1_ptr;
-    search_ptr = initial_ptr;
-    tmp1_ptr = initial_ptr;
-    while (search_ptr) {
-        if (search_ptr == my_ptr ) {
-            if (search_ptr == initial_ptr) {
-                if (initial_ptr->next) { 
-                    tmp1_ptr=initial_ptr->next;
-                    delete initial_ptr;
-                    initial_ptr=tmp1_ptr;
-                } else {
-                    delete initial_ptr;
-                    initial_ptr = NULL;
-                }
-            } else            {
-                tmp1_ptr->next=search_ptr->next;
-                delete search_ptr;
-            }
-            search_ptr = NULL;
-            retval = true;
-        } else {
-            tmp1_ptr = search_ptr;
-            search_ptr=search_ptr->next;
-        }
-    }
-    if ( ! initial_ptr) has_order = false;
-    return retval;
-}
-
-bool Order::del_orderno(uint8_t orderno) {
-    bool retval = false;
-    order_t *search_ptr;
-    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    if (logger->verboselevel & VERBOSEORDER) {
-        sprintf(debug,"Order: del_orderno %u", orderno); 
-        logger->logmsg(VERBOSEORDER, debug);    
-        sprintf(debug,"Bestand vorher"); 
-        logger->logmsg(VERBOSEORDER, debug);
-        debug_print_buffer(VERBOSEORDER);
-    }
-    search_ptr = initial_ptr;
-    while (search_ptr) {
-        if (search_ptr->orderno == orderno ) {
-            if (del_entry(search_ptr)) retval = true;
-        }
-        search_ptr=search_ptr->next;
-    }
-    if (logger->verboselevel & VERBOSEORDER) {
-        sprintf(debug,"Bestand nachher"); 
-        logger->logmsg(VERBOSEORDER, debug);
-        debug_print_buffer(VERBOSEORDER);
-    }
-    free(debug);
-    return retval;
-}
-
-bool Order::del_node(uint16_t node) {
-    bool retval = false;
-    order_t *search_ptr;
-    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    if (logger->verboselevel & VERBOSEORDER) {
-        sprintf(debug,"Order: del_node %u", node); 
-        logger->logmsg(VERBOSEORDER, debug);    
-        sprintf(debug,"Bestand vorher"); 
-        logger->logmsg(VERBOSEORDER, debug);
-        debug_print_buffer(VERBOSEORDER);
-    }
-    search_ptr = Order::initial_ptr;
-    while (search_ptr) {
-        if (search_ptr->node == node ) {
-            retval = Order::del_entry(search_ptr);
-        }
-        search_ptr=search_ptr->next;
-    }
-    if (logger->verboselevel & VERBOSEORDER) {
-        sprintf(debug,"Bestand nachher"); 
-        logger->logmsg(VERBOSEORDER, debug);
-        debug_print_buffer(VERBOSEORDER);
-    }
-    free(debug);
-    return retval;
-}
-    
-bool Order::is_orderno(uint8_t orderno) {
-    int retval = false;
-    order_t *search_ptr;
-    search_ptr = initial_ptr;
-    while (search_ptr) {
-        if (search_ptr->orderno == orderno ) {
-            retval = true;
-        }
-        search_ptr=search_ptr->next;
-    }
-    return retval;
-}
-    
-Order::order_t* Order::find_node(uint16_t node) {
-    order_t* retval = NULL;
-    order_t *search_ptr;
-    search_ptr = initial_ptr;
-    while (search_ptr) {
-        if (search_ptr->node == node ) {
-            retval = search_ptr;
-        }
-        search_ptr=search_ptr->next;
-    }
-    return retval;
-}
-
-uint16_t Order::del_old_entry(uint64_t deltime) {
-    uint16_t retval = 0;
-    order_t *search_ptr, *del_ptr;
-    search_ptr = initial_ptr;
-    while (search_ptr) {
-        if (search_ptr->entrytime < deltime ) {
-            retval = search_ptr->node;
-            del_ptr = search_ptr;
-            search_ptr=search_ptr->next;
-            del_entry(del_ptr);
-        } else {
-            search_ptr=search_ptr->next;
-        }
-    }
-    return retval;
-}
-
-void Order::add_order(uint16_t node, uint8_t type, bool HB_order, uint32_t data, uint64_t entrytime) {
-    order_t *new_ptr = new order_t;
-    orderno++;
-//    if ( orderno > 50000 ) orderno = 1;
-    new_ptr->orderno = orderno;
-    new_ptr->node = node;
-    new_ptr->type = type;
-    new_ptr->flags = 0x00;
-    new_ptr->HB_order = HB_order;
-    new_ptr->data1 = data;
-    new_ptr->data2 = 0;
-    new_ptr->data3 = 0;
-    new_ptr->data4 = 0;
-    new_ptr->data5 = 0;
-    new_ptr->data6 = 0;
-    new_ptr->entrytime = entrytime;
-    new_ptr->last_send = 0;
-    new_entry(new_ptr);
-}
-
-void Order::add_endorder(uint16_t node, uint8_t msg_type, uint64_t entrytime) {
-    add_order(node, msg_type, true, 0, entrytime);    
-    modify_orderflags(node, 0x01);
-}
-
-void Order::modify_order(uint16_t node, uint8_t pos, uint32_t data) {
-    order_t* my_ptr=NULL;
-    my_ptr=find_node(node);
-    if (my_ptr) {
-        switch (pos) {
-            case 2:
-                my_ptr->data2 = data;
-            break;
-            case 3:
-                my_ptr->data3 = data;
-            break;
-            case 4:
-                my_ptr->data4 = data;
-            break;
-            case 5:
-                my_ptr->data5 = data;
-            break;
-            case 6:
-                my_ptr->data6 = data;
-            break;
-        }
-    }
-    debug_print_buffer(VERBOSEORDER);
-}
-
-void Order::modify_orderflags(uint16_t node, uint8_t flags) {
-    order_t* my_ptr=NULL;
-    my_ptr=find_node(node);
-    if (my_ptr) {
-        my_ptr->flags = flags;
-    }
-    if (logger->verboselevel & VERBOSEORDER) {
-        debug_print_buffer(VERBOSEORDER);
-    }
-}
-
-bool Order::get_order_for_transmission(uint8_t* orderno, uint16_t* node, uint8_t* type, uint8_t* flags,
-                uint32_t* data1, uint32_t* data2, uint32_t* data3, uint32_t* data4, uint32_t* data5, uint32_t* data6, uint64_t mytime){
-    bool retval = false;
-    order_t *delme_ptr = NULL;
-    order_t *search_ptr;
-    search_ptr = initial_ptr;
-    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    while (search_ptr) {
-        if (logger->verboselevel & VERBOSEOTHER) {
-            sprintf(debug,"### Order::get_order_for_transmission Node: %u Onr: %u Last send: %llu Now: %llu Entry: %llu",search_ptr->node, search_ptr->orderno, search_ptr->last_send, mytime, search_ptr->entrytime);        
-            logger->logmsg(VERBOSEOTHER, debug);
-        }
-        if (search_ptr->last_send > mytime) search_ptr->last_send = mytime;
-        if ( ((!search_ptr->HB_order) && search_ptr->last_send + (uint64_t)SENDINTERVAL < mytime) ||
-             ((search_ptr->HB_order) && search_ptr->last_send + (uint64_t)HB_SENDINTERVAL < mytime) ) {
-            *orderno = search_ptr->orderno;
-            *node = search_ptr->node;
-            *type = search_ptr->type;
-            *flags = search_ptr->flags;
-            *data1 = search_ptr->data1;
-            *data2 = search_ptr->data2;
-            *data3 = search_ptr->data3;
-            *data4 = search_ptr->data4;
-            *data5 = search_ptr->data5;
-            *data6 = search_ptr->data6;
-            search_ptr->last_send = mytime;
-            if ( search_ptr->HB_order ) {
-                if (logger->verboselevel & VERBOSEORDER) {
-                    sprintf(debug,"Order: <%p> OrderNo: %u (Node:%u HB), TTL: %llu", search_ptr, search_ptr->orderno, search_ptr->node, search_ptr->entrytime + (uint64_t)HB_DELETEINTERVAL - mytime ); 
-                    logger->logmsg(VERBOSEORDER, debug);
-                }
-                if ( search_ptr->entrytime + (uint64_t)HB_DELETEINTERVAL < mytime ) {
-                    delme_ptr = search_ptr;
-                    if (logger->verboselevel & VERBOSEORDER) {
-                        sprintf(debug,"Order: Timeout - lösche <%p> OrderNo: %u (Node:%u HB), entry:%llu last send: %llu Delinterv: %llu Sendinterv: %llu", delme_ptr, delme_ptr->orderno, delme_ptr->node, delme_ptr->entrytime, delme_ptr->last_send, (uint64_t)HB_DELETEINTERVAL, (uint64_t)HB_SENDINTERVAL ); 
-                        logger->logmsg(VERBOSEORDER, debug);
-                    }
-                }
+void* Order::findOrderNo(uint8_t orderno) {
+    void* p_buffer = nextEntry(NULL);
+    order_t* p_data;
+    void* retval = NULL;
+    while ( p_buffer ) {
+        p_data = (order_t *)getDataPtr(p_buffer);
+        if (p_data) {
+            if ( p_data->orderno == orderno ) {
+                retval = p_buffer;
+                p_buffer = NULL;
             } else {
-                if (logger->verboselevel & VERBOSEORDER) {
-                    sprintf(debug,"Order: <%p> OrderNo: %u (Node:%u), TTL: %llu", search_ptr, search_ptr->orderno, search_ptr->node, search_ptr->entrytime + (uint64_t)DELETEINTERVAL - mytime ); 
-                    logger->logmsg(VERBOSEORDER, debug);
-                }
-                if ( search_ptr->entrytime + (uint64_t)DELETEINTERVAL < mytime ) {
-                    delme_ptr = search_ptr;
-                    if (logger->verboselevel & VERBOSEORDER) {
-                        sprintf(debug,"Order: Timeout - lösche <%p> OrderNo: %u (Node:%u ), entry:%llu last send: %llu Delinterv: %llu Sendinterv: %llu", delme_ptr, delme_ptr->orderno, delme_ptr->node, delme_ptr->entrytime, delme_ptr->last_send, (uint64_t)DELETEINTERVAL, (uint64_t)SENDINTERVAL ); 
-                        logger->logmsg(VERBOSEORDER, debug);
-                    }
-                }
-            }                
-            retval = true;
+                p_buffer = nextEntry(p_buffer);
+            }
+        } else {
+            printf("Order::findOrderNo => p_data <%p>\n", p_data);
         }
-        search_ptr = search_ptr->next;
     }
-    if (delme_ptr) {
-        del_entry(delme_ptr);
-    }
-    free(debug);
     return retval;
 }
 
-void Order::debug_print_buffer(uint16_t debuglevel) {
-    order_t *search_ptr;
-    search_ptr = initial_ptr;
-    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    sprintf(debug,"Order: ---- Buffercontent ----"); 
-    logger->logmsg(debuglevel, debug);
-    while (search_ptr) {
-        sprintf(debug,"Order: <%p> O:%u N:%u T:%u F:%02x (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g)", 
-                search_ptr, search_ptr->orderno, search_ptr->node, search_ptr->type, search_ptr->flags 
-                ,getChannel(search_ptr->data1), getValue_f(search_ptr->data1)
-                ,getChannel(search_ptr->data2), getValue_f(search_ptr->data2)
-                ,getChannel(search_ptr->data3), getValue_f(search_ptr->data3)
-                ,getChannel(search_ptr->data4), getValue_f(search_ptr->data4)
-                ,getChannel(search_ptr->data5), getValue_f(search_ptr->data5)
-                ,getChannel(search_ptr->data6), getValue_f(search_ptr->data6)
-               );
-        logger->logmsg(debuglevel, debug);
-        search_ptr=search_ptr->next;
+void* Order::findNode(uint8_t node_id) {
+    void* p_buffer = nextEntry(NULL);
+    order_t* p_data;
+    void* retval = NULL;
+    while ( p_buffer ) {
+        p_data = (order_t *)getDataPtr(p_buffer);
+        if (p_data) {
+            if ( p_data->node_id == node_id ) {
+                retval = p_buffer;
+                p_buffer = NULL;
+            } else {
+                p_buffer = nextEntry(p_buffer);
+            }
+        } else {
+            printf("Order::findNode => p_data <%p>\n", p_data);
+        }
     }
-    sprintf(debug,"Order: -- END Buffercontent --"); 
-    logger->logmsg(debuglevel, debug);
+    return retval;
 }
 
-void Order::print_buffer(int new_tn_in_socket) {
-    order_t *search_ptr;
+bool Order::delByOrderNo(uint8_t orderno) {
+    bool retval = false;
+    void* p_data;
+    void* p_buffer = findOrderNo(orderno);
+    if (p_buffer) {
+        if (verboselevel & VERBOSEOTHER) {
+            char buf[] = TSBUFFERSTRING;
+            printf("%sOrder::delByOrderNo p_buffer:<%p> p_data:<%p>\n", log_ts(buf), p_buffer, getDataPtr(p_buffer));
+        }
+        p_data = getDataPtr(p_buffer);
+        if (p_data) {
+            free(p_data);
+        } else {
+            printf("Order::delByOrderNo => p_data <%p>\n", p_data);
+        }
+        delEntry(p_buffer);
+        retval = true;
+    }
+    return retval;
+}
+
+bool Order::delByNode(uint8_t node_id) {
+    bool retval = false;
+    void* p_data;
+    void* p_buffer = findNode(node_id);
+    if (p_buffer) {
+        if (verboselevel & VERBOSEOTHER) {
+            char buf[] = TSBUFFERSTRING;
+            printf("%sOrder::delByNode p_buffer:<%p> p_data:<%p>\n", log_ts(buf), p_buffer, getDataPtr(p_buffer));
+        }
+        p_data = getDataPtr(p_buffer);
+        if (p_data) {
+            free(p_data);
+        } else {
+            printf("Order::delByNode => p_data <%p>\n", p_data);
+        }
+        delEntry(p_buffer);
+        retval = true;
+    }
+    return retval;
+}
+    
+bool Order::isOrderNo(uint8_t orderno) {
+    bool retval = false;
+    void* p_buffer = findOrderNo(orderno);
+    if (p_buffer) {
+        retval = true;
+    }
+    return retval;
+}
+
+void Order::addOrder(uint8_t node_id, uint8_t msg_type, bool HB_order, uint32_t data, uint64_t entrytime) {
+    order_t *p_data = new order_t;
+    if (p_data) {
+        orderno++;
+        if (orderno == 0) orderno = 1;
+        p_data->orderno = orderno;
+        p_data->node_id = node_id;
+        p_data->msg_id = 1;
+        p_data->msg_type = msg_type;
+        p_data->msg_flags = PAYLOAD_FLAG_EMPTY;
+        p_data->HB_order = HB_order;
+        p_data->data1 = data;
+        p_data->data2 = 0;
+        p_data->data3 = 0;
+        p_data->data4 = 0;
+        p_data->data5 = 0;
+        p_data->data6 = 0;
+        p_data->entrytime = entrytime;
+        p_data->last_send = 0;
+        newEntry(p_data);
+        hasOrder = true;
+    } else {
+            printf("Order::addOrder => p_data <%p>\n", p_data);
+        }
+}
+
+void Order::addEndOrder(uint8_t node_id, uint8_t msg_type, uint64_t entrytime) {
+    addOrder(node_id, msg_type, true, 0, entrytime);    
+    modifyOrderFlags(node_id, PAYLOAD_FLAG_LASTMESSAGE);
+}
+
+void Order::modifyOrder(uint8_t node_id, uint8_t pos, uint32_t data) {
+    void* p_buffer = findNode(node_id);
+    if (p_buffer) {
+        order_t* p_data = (order_t*)getDataPtr(p_buffer);
+        if (p_data) {
+            switch (pos) {
+                case 2:
+                    p_data->data2 = data;
+                break;
+                case 3:
+                    p_data->data3 = data;
+                break;
+                case 4:
+                    p_data->data4 = data;
+                break;
+                case 5:
+                    p_data->data5 = data;
+                break;
+                case 6:
+                    p_data->data6 = data;
+                break;
+            }
+        } else {
+            printf("Order::modifyOrder => p_data <%p>\n", p_data);
+        }
+    }
+    printBuffer(VERBOSEORDER);
+}
+
+void Order::modifyOrderFlags(uint8_t node_id, uint8_t msg_flags) {
+    void* p_buffer = findNode(node_id);
+    if (p_buffer) {
+        order_t* p_data = (order_t*)getDataPtr(p_buffer);
+        if (p_data) {
+            p_data->msg_flags = msg_flags;
+        } else {
+            printf("Order::modifyOrderFlags => p_data <%p>\n", p_data);
+        }
+    }
+    printBuffer(VERBOSEORDER);
+}
+
+bool Order::getOrderForTransmission(payload_t* payload, uint64_t mytime){
+    char buf[] = TSBUFFERSTRING;
+    bool retval = false;
+//    bool isHbNode = false;
+    uint64_t sendInterval;
+    uint64_t deleteInterval;
+    void* p_buffer = nextEntry(NULL);
+    order_t* p_data;
+    while (p_buffer) {
+        p_data = (order_t *)getDataPtr(p_buffer);
+        if ( p_data ) {
+            p_data->HB_order? sendInterval=SENDINTERVAL_HB : sendInterval=SENDINTERVAL;
+            p_data->HB_order? deleteInterval=DELETEINTERVAL_HB : deleteInterval=DELETEINTERVAL;
+            if (verboselevel & VERBOSEOTHER) {
+                printf("%sOrder::getOrderForTransmission Node: %u Onr: %u Last send: %llu Now: %llu Entry: %llu \n",log_ts(buf),p_data->node_id, p_data->orderno, p_data->last_send, mytime, p_data->entrytime);        
+            } 
+            if (p_data->last_send > mytime) p_data->last_send = mytime;
+            if ( (p_data->last_send + sendInterval) < mytime) {
+                payload->node_id = p_data->node_id;
+                payload->msg_id = p_data->msg_id;
+                payload->msg_type = p_data->msg_type;
+                payload->msg_flags = p_data->msg_flags;
+                payload->orderno = p_data->orderno;
+                payload->data1 = p_data->data1;
+                payload->data2 = p_data->data2;
+                payload->data3 = p_data->data3;
+                payload->data4 = p_data->data4;
+                payload->data5 = p_data->data5;
+                payload->data6 = p_data->data6;
+                p_data->last_send = mytime;
+                retval = true;
+                if (verboselevel & VERBOSEORDER) {
+                    printf("%sOrder: OrderNo: %u (Node:%u HB), TTL: %llu \n",log_ts(buf), p_data->orderno, p_data->node_id, p_data->entrytime + deleteInterval - mytime );
+                } 
+                switch (p_data->msg_type) {
+                    case PAYLOAD_TYPE_HB_RESP:
+                    {
+                        if ( (p_data->entrytime + deleteInterval) < mytime ) {
+                            if (verboselevel & VERBOSEORDER) {
+                                printf("%sOrder: Timeout - lösche OrderNo: %u (Node:%u HB), entry:%llu last send: %llu Delinterv: %llu Sendinterv: %llu \n", log_ts(buf), p_data->orderno, p_data->node_id, p_data->entrytime, p_data->last_send, deleteInterval, sendInterval ); 
+                            } 
+                            delByOrderNo(p_data->orderno);
+                            p_buffer = NULL;
+                        }
+                    }
+                    break;
+                    case PAYLOAD_TYPE_DAT:
+                    {
+                        if ( (p_data->entrytime + deleteInterval) < mytime ) {
+                            if (verboselevel & VERBOSEORDER) {
+                                printf("%sp_buffer: %p p_data: %p Order: Timeout - lösche OrderNo: %u (Node:%u ), entry:%llu last send: %llu Delinterv: %llu Sendinterv: %llu \n", log_ts(buf), p_buffer, p_data, p_data->orderno, p_data->node_id, p_data->entrytime, p_data->last_send, deleteInterval, sendInterval ); 
+                            } 
+                            delByOrderNo(p_data->orderno);
+                            p_buffer = NULL;
+                        }
+                        
+                    }
+                    break;
+                    case PAYLOAD_TYPE_DATSTOP:
+                    {
+                        if ( p_data->msg_id > SENDSTOPCOUNT ) {
+                            if (verboselevel & VERBOSEORDER) {
+                                printf("%sp_buffer: %p p_data: %p Order: Timeout - lösche OrderNo: %u (Node:%u ), entry:%llu last send: %llu Delinterv: %llu Sendinterv: %llu \n", log_ts(buf), p_buffer, p_data, p_data->orderno, p_data->node_id, p_data->entrytime, p_data->last_send, deleteInterval, sendInterval ); 
+                            } 
+                            delByOrderNo(p_data->orderno);
+                            p_buffer = NULL;
+                        }
+                        
+                    }
+                    break;
+                    case PAYLOAD_TYPE_PING_POW_MIN:
+                    case PAYLOAD_TYPE_PING_POW_LOW:
+                    case PAYLOAD_TYPE_PING_POW_HIGH:
+                    case PAYLOAD_TYPE_PING_POW_MAX:
+                    {
+                    // ToDo Ping response
+                    }
+                    break;
+                }
+                p_data->msg_id++;
+                p_buffer = NULL;
+            }
+        } else {
+            printf("Order::getOrderForTransmission => p_data <%p>\n", p_data);
+        }
+        if (p_buffer) p_buffer = nextEntry(p_buffer);
+    }
+    return retval; 
+}
+
+void Order::printBuffer(uint16_t debuglevel) {
+    char buf[] = TSBUFFERSTRING;
+    order_t* p_data;
+    void* p_buffer = nextEntry(NULL);
+    if (verboselevel & debuglevel) {
+        printf("%sOrder: ---- Buffercontent ----\n", log_ts(buf)); 
+        printf("%sOrder: -- hasOrder = %s --\n", log_ts(buf), hasOrder? "true":"false"); 
+        while ( p_buffer ) {
+            p_data = (order_t *)getDataPtr(p_buffer);
+            if (p_data) {
+                printf("%sOrder: O:%u N:%u T:%u F:%02x (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g) E:%llu LS:%llu\n", log_ts(buf),
+                    p_data->orderno, p_data->node_id, p_data->msg_type, p_data->msg_flags 
+                    ,getChannel(p_data->data1), getValue_f(p_data->data1)
+                    ,getChannel(p_data->data2), getValue_f(p_data->data2)
+                    ,getChannel(p_data->data3), getValue_f(p_data->data3)
+                    ,getChannel(p_data->data4), getValue_f(p_data->data4)
+                    ,getChannel(p_data->data5), getValue_f(p_data->data5)
+                    ,getChannel(p_data->data6), getValue_f(p_data->data6)
+                    ,p_data->entrytime, p_data->last_send
+                    );
+            } else {
+                printf("Order::printBuffer => p_data <%p>\n", p_data);
+            }
+            p_buffer = nextEntry(p_buffer);
+        }
+        printf("%sOrder: -- END Buffercontent --\n", log_ts(buf)); 
+    }
+}
+
+void Order::printBuffer2tn(int new_tn_in_socket) {
+    void* p_buffer = nextEntry(NULL);
+    order_t* p_data;
     char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
-    search_ptr = initial_ptr;
-    sprintf(client_message,"------ Order: --------\n"); 
+    sprintf(client_message,"Order: ---- Buffercontent ----\n"); 
     write(new_tn_in_socket , client_message , strlen(client_message));
-    while (search_ptr) {
-        sprintf(client_message,"Order: <%p> O:%u N:%u T:%u F:%02x (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g)", 
-                search_ptr, search_ptr->orderno, search_ptr->node, search_ptr->type, search_ptr->flags 
-                ,getChannel(search_ptr->data1), getValue_f(search_ptr->data1)
-                ,getChannel(search_ptr->data2), getValue_f(search_ptr->data2)
-                ,getChannel(search_ptr->data3), getValue_f(search_ptr->data3)
-                ,getChannel(search_ptr->data4), getValue_f(search_ptr->data4)
-                ,getChannel(search_ptr->data5), getValue_f(search_ptr->data5)
-                ,getChannel(search_ptr->data6), getValue_f(search_ptr->data6)
+    while ( p_buffer ) {
+        p_data = (order_t *)getDataPtr(p_buffer);
+        if (p_data) {
+            sprintf(client_message,"Order: O:%u N:%u T:%u F:%02x (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g)\n", 
+               p_data->orderno, p_data->node_id, p_data->msg_type, p_data->msg_flags 
+                ,getChannel(p_data->data1), getValue_f(p_data->data1)
+                ,getChannel(p_data->data2), getValue_f(p_data->data2)
+                ,getChannel(p_data->data3), getValue_f(p_data->data3)
+                ,getChannel(p_data->data4), getValue_f(p_data->data4)
+                ,getChannel(p_data->data5), getValue_f(p_data->data5)
+                ,getChannel(p_data->data6), getValue_f(p_data->data6)
                );
-        search_ptr=search_ptr->next;
+            write(new_tn_in_socket , client_message , strlen(client_message));
+        } else {
+            printf("Order::printBuffer2tn => p_data <%p>\n", p_data);
+        }
+        p_buffer = nextEntry(p_buffer);
     }
+    sprintf(client_message,"Order: -- END Buffercontent --\n"); 
+    write(new_tn_in_socket , client_message , strlen(client_message));
     free(client_message);
-    debug_print_buffer(VERBOSEORDER);
 }
 
-void Order::html_buffer(int new_tn_in_socket) {
-    order_t *search_ptr;
+void Order::htmlBuffer2tn(int new_tn_in_socket) {
+    void* p_buffer = nextEntry(NULL);
+    order_t* p_data;
     char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
-    search_ptr = initial_ptr;
 	sprintf(client_message,"</table><br><big>Order</big><br><table><tr><th>OrderNo</th><th>Node</th><th>Type</th><th>Flags</th><th>Channel</th><th>Value</th></tr>\n"); 
     write(new_tn_in_socket , client_message , strlen(client_message));
-    while (search_ptr) {
-        sprintf(client_message,"<tr><td>%u</td><td>%u</td><td>%u</td><td>%u</td><td>%u<br>%u<br>%u<br>%u<br>%u<br>%u</td><td>%g<br>%g<br>%g<br>%g<br>%g<br>%g</td></tr>\n", 
-        search_ptr->orderno, search_ptr->node, 
-        getChannel(search_ptr->data1), 
-        getChannel(search_ptr->data2), 
-        getChannel(search_ptr->data3), 
-        getChannel(search_ptr->data4), 
-        getChannel(search_ptr->data5), 
-        getChannel(search_ptr->data6),  
-        getValue_f(search_ptr->data1), 
-        getValue_f(search_ptr->data2),
-        getValue_f(search_ptr->data3),
-        getValue_f(search_ptr->data4),
-        getValue_f(search_ptr->data5),
-        getValue_f(search_ptr->data6)  );
-        write(new_tn_in_socket , client_message , strlen(client_message));
-        search_ptr=search_ptr->next;
+    while ( p_buffer ) {
+        p_data = (order_t *)getDataPtr(p_buffer);
+        if (p_data) {
+            sprintf(client_message,"<tr><td>%u</td><td>%u</td><td>%u</td><td>%u</td><td>%u<br>%u<br>%u<br>%u<br>%u<br>%u</td><td>%g<br>%g<br>%g<br>%g<br>%g<br>%g</td></tr>\n", 
+               p_data->orderno, p_data->node_id, p_data->msg_type, p_data->msg_flags 
+                ,getChannel(p_data->data1), getValue_f(p_data->data1)
+                ,getChannel(p_data->data2), getValue_f(p_data->data2)
+                ,getChannel(p_data->data3), getValue_f(p_data->data3)
+                ,getChannel(p_data->data4), getValue_f(p_data->data4)
+                ,getChannel(p_data->data5), getValue_f(p_data->data5)
+                ,getChannel(p_data->data6), getValue_f(p_data->data6)
+               );
+            write(new_tn_in_socket , client_message , strlen(client_message));
+            } else {
+                printf("Order::htmlBuffer2tn => p_data <%p>\n", p_data);
+            }
+        p_buffer = nextEntry(p_buffer);
     }
-	sprintf(client_message,"</table></center>\n"); 
-	write(new_tn_in_socket , client_message , strlen(client_message));
+    sprintf(client_message,"</table></center>\n"); 
+    write(new_tn_in_socket , client_message , strlen(client_message));
     free(client_message);
 }
 
-void Order::begin(Logger* _logger) {
-    logger = _logger;
-    orderno = 1;
-}

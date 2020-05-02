@@ -8,33 +8,67 @@
 #include <cstring>
 #include <unistd.h>
 #include <cstdlib>
-#include "log.h"
 #include "rf24hub_config.h"
+#include "buffer.h"
+#include "common.h"
 
-class Node {
+extern uint16_t verboselevel;   
+
+class Node  : public Buffer {
 
     
 private:
-    Logger* logger;
-    struct node_t {
-        uint16_t       	node_id;
+
+struct node_t {
+        uint8_t       	node_id;
+        uint8_t         pa_level;
+        char            pa_level_datestr[20];
         float			u_batt;	
         bool            is_HB_node;
         uint64_t        HB_ts;
-        node_t*         next;
     };
-    node_t *initial_ptr;
-    void new_entry(node_t*);
+node_t *initial_ptr;
+
+/*********************************************
+ * Gibt einen Zeiger auf die grundlegende
+ * Bufferstruktur zurück.
+ * Um an die Daten des lokalen struct zu kommen
+ * muss eine Umwandlung mit 
+ *    (node_t *)getDataPtr(p_result);
+ * durchgeführt werden!
+ ********************************************/
+node_t* findNode(uint8_t);
 
 public:
 
-    void cleanup(void);
-    void debug_print_buffer(uint16_t debuglevel);
-    void add_node(uint16_t node_id, float u_batt, bool is_HB_node );
-    bool is_new_HB(uint16_t node_id, uint64_t mymillis);
-    bool is_HB_node(uint16_t node_id);
-    void print_buffer2tn(int new_tn_in_socket);
-    void begin(Logger* _logger);
+/**************************************************************
+ *  Löscht den kompletten Inhalt und leert den Buffer
+ *************************************************************/    
+void cleanup(void);
+/**************************************************************
+ *  Druckt den Inhalt des Buffers auf StdIO
+ *************************************************************/
+void printBuffer(uint16_t debuglevel);
+/**************************************************************
+ *  Fügt einen neuen Node hinzu
+ *************************************************************/    
+void addNode(uint8_t node_id, float u_batt, bool is_HB_node, uint8_t pa_level );
+/*************************************************************
+ *  Prüft ob ein Heartbeat neu (>5000ms zum letzten Heartbeat) 
+ *  oder alt ist.
+ ************************************************************/
+bool isNewHB(uint8_t node_id, uint64_t mymillis);
+/*************************************************************
+ *  Prüft ob ein Node ein Heartbeat Node ist oder nicht 
+ ************************************************************/
+bool isHBNode(uint8_t node_id);
+
+void setPaLevel(uint8_t node_id, uint8_t pa_level);
+
+void setVoltage(uint8_t node_id, float u_batt);
+
+void printBuffer2tn(int new_tn_in_socket);
+
     Node(void);
 
 };

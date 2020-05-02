@@ -46,16 +46,13 @@ UP: fill_order_buffer   =>  Füllt das ARRAY "order_buffer" mit dem übergebenen
 
 //--------- End of global define -----------------
 
-//#include "rf24hub_common.h"
-#include "rf24hub_config.h"
-
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
 #include <string> 
+#include <iomanip>
 #include <RF24/RF24.h>
 #include <RF24/utility/RPi/bcm2835.h>
-#include <RF24Network/RF24Network.h>
 #include <time.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -64,10 +61,6 @@ UP: fill_order_buffer   =>  Füllt das ARRAY "order_buffer" mit dem übergebenen
 #include <sys/msg.h>
 #include <sys/socket.h>
 #include <stdio.h>
-//#include <mysql/my_config.h>
-//#include <mysql/my_global.h>
-//#include <mysql/mysql.h>
-//#include <mariadb/mysql.h>
 #include <unistd.h>
 #include <getopt.h>
 #include <syslog.h>
@@ -78,103 +71,50 @@ UP: fill_order_buffer   =>  Füllt das ARRAY "order_buffer" mit dem übergebenen
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <thread>
-#include "log.h"
+
 #include "node.h"
 #include "sensor.h"
 #include "order.h"
 #include "orderbuffer.h"
 #include "common.h"
+#include "config.h"
 #include "database.h"
+#include "rf24_config.h"
+#include "dataformat.h"
+#include "textbuffer.h"
+#include "rf24hub_config.h"
+#include "rf24hub_text.h"
 
 #define BUF 1024
 
 using namespace std;
 
 int sockfd;
-uint16_t verboselevel = 2;
-bool start_daemon=false, tn_host_set = false, tn_port_set = false, tn_active = false, in_port_set = false;
-char logfilename[300];
-char tn_hostname[20], tn_portno[7];
 struct sockaddr_in serv_addr;
 struct hostent *server;
 FILE * pidfile_ptr;
 FILE * logfile_ptr;
-MYSQL     *db;
-MYSQL_RES *res;
-MYSQL_ROW row;
 char* pEnd;
-const char* prgversion=PRGVERSION;
+
+uint16_t verboselevel = STARTUPVERBOSELEVEL;
 
 // Setup for GPIO 25 CE and CE0 CSN with SPI Speed @ 8Mhz
 RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
 //RF24 radio(22,0,BCM2835_SPI_SPEED_1MHZ);
 
-//RF24Network     network(radio);
 Order           order;
 OrderBuffer     orderbuffer;
 Sensor          sensor;
 Node            node;
-Logger          logger;
 Database        database;
-
-struct config_parameters {
-  char logfilename[PARAM_MAXLEN_LOGFILE];
-  char pidfilename[PARAM_MAXLEN_PIDFILE];
-  char db_hostname[PARAM_MAXLEN_HOSTNAME];
-  int db_port;
-  char db_schema[PARAM_MAXLEN_DB_SCHEMA];
-  char db_username[PARAM_MAXLEN_DB_USERNAME];
-  char db_password[PARAM_MAXLEN_DB_PASSWORD];
-  char telnet_hostname[PARAM_MAXLEN_HOSTNAME];
-  int telnet_port;
-  int incoming_port;
-  rf24_datarate_e rf24network_speed;
-  uint8_t rf24network_channel;
-};
-
-struct config_parameters parms;
-
-int orderloopcount=0;
-int ordersqlexeccount=0;
-bool ordersqlrefresh=true;
-bool log2logfile=false;
-bool rf24_carrier=false;
-bool rf24_rpd=false;
-
-//RF24NetworkHeader rxheader;
-//RF24NetworkHeader txheader;
-
-uint8_t address2Node[5]={ 0x33,0xcc,0xcc,0xcc,0xcc };
-uint8_t address2Hub[5]={ 0xf0,0xcc,0xcc,0xcc,0xcc };
-
-char buffer1[50];
-char buffer2[50];
-//char debug[DEBUGSTRINGSIZE];
-//char sql_stmt[SQLSTRINGSIZE];
-
-char config_file[PARAM_MAXLEN_CONFIGFILE];
-
-
-/*******************************************************************************************
-*
-* Configfilehandling
-* default place to look at is: DEFAULT_CONFIG_FILE (see sensorhub.h)
-*
-********************************************************************************************/
-
-void init_parameters (struct config_parameters * parms);
-
-void parse_config (struct config_parameters * parms);
-
-void print_config (struct config_parameters * parms);
-
-void usage(const char *prgname);
+Config          cfg;
+Textbuffer      textbuffer;
 
 /*
  * trim: get rid of trailing and leading whitespace...
  *       ...including the annoying "\n" from fgets()
  */
-char * trim (char * s);
+/// char * trim (char * s);
 
 /*******************************************************************************************
 *
@@ -183,7 +123,7 @@ char * trim (char * s);
 *
 ********************************************************************************************/
 
-void do_tn_cmd(uint16_t node, uint8_t sensor, float value);
+void do_tn_cmd(uint8_t node, uint8_t sensor, float value);
 
 void process_tn_in(int new_socket, char* buffer, char* client_message);
 
@@ -208,23 +148,23 @@ void init_order_buffer(unsigned int element);
 
 void print_orderbuffer(void);
 
-void fill_orderbuffer( uint16_t node_id, unsigned char channel, float value);
+void fill_orderbuffer( uint8_t node_id, unsigned char channel, float value);
 
 bool is_valid_orderno(uint8_t myorderno);
 
-void make_order(uint16_t node, uint8_t mytype);
+void make_order(uint8_t node, uint8_t mytype);
 
-uint16_t set_sensor(uint32_t mysensor, float value);
+//uint16_t set_sensor(uint32_t mysensor, float value);
 
-uint16_t get_sensor(uint32_t mysensor);
+//uint16_t get_sensor(uint32_t mysensor);
 
-bool node_is_next(uint16_t node);
+bool node_is_next(uint8_t node);
 
-bool is_HB_node(uint16_t node);
+bool is_HB_node(uint8_t node);
 
-void store_sensor_value(uint16_t node, uint32_t data);
+void store_sensor_value(uint8_t node, uint32_t data);
 
-void process_sensor(uint16_t node, uint32_t data);
+void process_sensor(uint8_t node, uint32_t data);
 
 //void store_node_config(uint16_t node, uint8_t channel, float value);
 

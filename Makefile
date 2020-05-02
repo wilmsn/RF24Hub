@@ -25,12 +25,18 @@ endif
 # The recommended compiler flags for the Raspberry Pi
 #CCFLAGS=-Ofast -mfpu=vfp -mfloat-abi=hard -march=armv6zk -mtune=arm1176jzf-s
 CCFLAGS=-Ofast -mfpu=vfp -mfloat-abi=hard -march=$(ARCH) -mtune=arm1176jzf-s -std=c++0x -pthread
+DEBUGFLAGS=-ggdb3 -O0
 
 # make all
 all: rf24hubd 
+debug: rf24hubd_debug
 
 # Make the sensorhub deamon
-rf24hubd: database.o log.o node.o sensor.o orderbuffer.o order.o common.o rf24hubd.cpp
+rf24hubd_debug: textbuffer.o buffer.o config.o dataformat.o database.o node.o sensor.o orderbuffer.o order.o common.o rf24hubd.cpp
+	g++ ${CCFLAGS} ${DEBUGFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24network ${MYSQLLIBS} $^ -o $@
+
+# Make the sensorhub deamon
+rf24hubd: textbuffer.o buffer.o config.o dataformat.o database.o node.o sensor.o orderbuffer.o order.o common.o rf24hubd.cpp
 	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24network ${MYSQLLIBS} $^ -o $@
 
 # Test of order object

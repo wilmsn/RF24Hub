@@ -1,82 +1,5 @@
 #include "common.h"
 
-uint8_t getChannel(uint32_t val) {
-  val &= ZF_SENSOR_NO;
-  val >>= 25;
-  return val;
-}
-
-float getValue_f(uint32_t val) {
-  uint32_t exponent = (val & ZF_EXPO_WERT) >> 19;
-  bool expo_negativ = val & ZF_EXPO_NEGATIV;
-  bool zahl_negativ = val & ZF_ZAHL_NEGATIV;
-  float retval;
-  retval = val & ZF_ZAHL_WERT;
-  if ( expo_negativ ) {
-    for (uint8_t i=exponent;i>0;i--) {
-      retval/=10.0;
-    }
-  } else {
-    for (uint8_t i=exponent;i>0;i--) {
-      retval*=10.0;
-    }    
-  }
-  if ( zahl_negativ ) retval *= -1;
-  return retval;
-}
-
-uint16_t getValue_i(uint32_t val) {
-  uint16_t retval;
-  retval = val & ZF_ZAHL_WERT;
-  return retval;
-}
-
-uint32_t calcTransportValue_f(uint8_t sensor, float value) {  
-  float _val = value;
-  uint32_t exponent=0;
-  bool expo_negativ = false;
-  uint32_t result = 0;
-  result = sensor;
-  result <<= 25; 
-  if ( value > 0.00001 || value < -0.00001 ) {
-    bool negativ = value < 0.0;
-    if ( negativ ) {
-      result |= ZF_ZAHL_NEGATIV;
-      _val=abs(_val);
-    }
-    while ( _val < 50000.0 ) {
-      expo_negativ = true;
-      exponent++;
-      _val*=10.0;
-    }
-    if ( expo_negativ ) {
-      result |= ZF_EXPO_NEGATIV;
-    }
-    while ( _val > 500000.0 ) {
-      exponent++;
-      _val/=10.0;
-    }
-    exponent <<= 19;
-    result |= exponent;
-    result |= (uint32_t) _val;
-  }
-  return result; 
-}
-
-uint32_t calcTransportValue_i(uint8_t sensor, uint16_t value) {  
-  uint32_t result = 0;
-  result = sensor;
-  result <<= 25; 
-  result |= (uint32_t) value;
-  return result; 
-}
-
-//-------------------------------------------------------------
-
-/*
- * trim: get rid of trailing and leading whitespace...
- *       ...including the annoying "\n" from fgets()
- */
 char * trim (char * s) {
   /* Initialize start, end pointers */
   char *s1 = s, *s2 = &s[strlen (s) - 1];
@@ -90,6 +13,39 @@ char * trim (char * s) {
   /* Copy finished string */
   strcpy (s, s1);
   return s;
+}
+
+char * log_ts(char * buf) {
+    char temp[20];
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    unsigned int msec=tv.tv_usec / 1000;
+    sprintf(buf,"[%s.%s%s%u] ",str_ts(temp,1),msec<100? "0":"",msec<10? "0":"",msec); 
+    return buf;
+}
+
+char * str_ts(char * buf, uint8_t form) {
+    time_t now = time(0);
+	tm *ltm = localtime(&now);
+    char temp[20];
+    switch ( form ) {
+        case 1: {
+            sprintf(temp,"%d.%s%d.%s%d %s%d:%s%d:%s%d",ltm->tm_year + 1900, 
+                    ltm->tm_mon<9? "0":"", ltm->tm_mon+1, ltm->tm_mday<10? "0":"", ltm->tm_mday,
+                    ltm->tm_hour<10? " ":"", ltm->tm_hour, ltm->tm_min<10? "0":"", ltm->tm_min,
+                    ltm->tm_sec<10? "0":"", ltm->tm_sec);
+        }
+        break;
+        case 2: {
+            sprintf(temp,"%s%d.%s%d.%d %s%d:%s%d:%s%d", ltm->tm_mday<10? " ":"", ltm->tm_mday, 
+                    ltm->tm_mon<10? "0":"", ltm->tm_mon, ltm->tm_year + 1900,
+                    ltm->tm_hour<10? " ":"", ltm->tm_hour, ltm->tm_min<10? "0":"", ltm->tm_min,
+                    ltm->tm_sec<10? "0":"", ltm->tm_sec);
+        }
+        break;
+    }        
+    strcpy (buf, temp);
+    return buf;
 }
 
 uint64_t mymillis(void) {

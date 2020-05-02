@@ -1,117 +1,178 @@
 #include "node.h"
 
 Node::Node(void) {
-    initial_ptr = NULL;
 }
 
-void Node::cleanup(void) {
-    node_t *search_ptr;
-    search_ptr = initial_ptr;
-    while ( search_ptr ) {
-        initial_ptr = search_ptr->next;
-        free(search_ptr);
-        search_ptr = initial_ptr;
-    }
-}
-
-void Node::new_entry(Node::node_t* new_ptr) {
-    node_t *search_ptr;
-    new_ptr->next = NULL;
-    if (initial_ptr) {
-        search_ptr = initial_ptr;
-        while (search_ptr->next) {
-            search_ptr = search_ptr->next;
-        }
-        search_ptr->next = new_ptr;
-    } else {
-        initial_ptr = new_ptr;
-    }
-}
-
-void Node::add_node(uint16_t node_id, float u_batt, bool is_HB_node ) {
-    node_t *new_ptr = new node_t;
-    new_ptr->node_id = node_id;
-    new_ptr->u_batt = u_batt;
-    new_ptr->is_HB_node = is_HB_node;
-    new_ptr->HB_ts = 0;
-    new_entry(new_ptr);
-}
-
-bool Node::is_new_HB(uint16_t node_id, uint64_t mymillis) {
-    node_t *search_ptr;
-    bool retval = false;
-    search_ptr = initial_ptr;
-    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    while (search_ptr) {
-        if (search_ptr->node_id == node_id) {
-            if (logger->verboselevel & VERBOSEORDER) {
-                sprintf(debug,"Node.is_new_HB: Node %u last HB: %llu this HB: %llu", node_id, search_ptr->HB_ts, mymillis); 
-                logger->logmsg(VERBOSEORDER, debug);
+Node::node_t* Node::findNode(uint8_t node_id) {
+    void* p_buffer;
+    node_t* p_data;
+    node_t* retval = NULL;
+    p_buffer = nextEntry(NULL);
+    while ( p_buffer ) {
+        p_data = (node_t *)getDataPtr(p_buffer);
+        if (p_data) {
+            if ( p_data->node_id == node_id ) {
+                retval = p_data;
+                p_buffer = NULL;
+            } else {
+                p_buffer = nextEntry(p_buffer);
             }
-            if (search_ptr->HB_ts < mymillis - 5000) retval = true;
-            search_ptr->HB_ts = mymillis;
+        } else {
+            printf("Node::findNode => p_data <%p>\n", p_data);
         }
-        search_ptr = search_ptr->next;
-    }    
-    if (retval) {
-        if (logger->verboselevel & VERBOSEORDER) {
-            sprintf(debug,"Node: New HeartBeat from Node %u", node_id); 
-            logger->logmsg(VERBOSEORDER, debug);
-        }
-    } else {
-        if (logger->verboselevel & VERBOSEORDER) {
-            sprintf(debug,"Node: Old HeartBeat from Node %u", node_id); 
-            logger->logmsg(VERBOSEORDER, debug);
-        }
-    }        
-    free(debug);
+    }
     return retval;
 }
 
-bool Node::is_HB_node(uint16_t node_id) {
-    bool retval=false;
-    node_t *search_ptr;
-    search_ptr=initial_ptr;
-    while (search_ptr) {
-		if (search_ptr->node_id == node_id && search_ptr->is_HB_node) {
-			retval=true;
-		}
-		search_ptr=search_ptr->next;
-	}
-	return retval;
+void Node::cleanup(void) {
+    void* p_buffer;
+    void* p_data;
+    p_buffer = nextEntry(NULL);
+    while ( p_buffer ) {    
+        p_data = getDataPtr(p_buffer);
+        if (p_data) {
+            free(p_data);
+        } else {
+            printf("Node::cleanup => p_data <%p>\n", p_data);
+        }
+        delEntry(p_buffer);
+        p_buffer = nextEntry(NULL);
+    }
 }
 
-void Node::print_buffer2tn(int new_tn_in_socket) {
+void Node::addNode(uint8_t node_id, float u_batt, bool is_HB_node, uint8_t pa_level ) {
+    node_t *p_data = new node_t;
+    if (p_data) {
+        p_data->node_id = node_id;
+        p_data->u_batt = u_batt;
+        p_data->is_HB_node = is_HB_node;
+        p_data->HB_ts = 0;
+        p_data->pa_level = pa_level;
+        newEntry((void*)p_data);
+    } else {
+        printf("Node::addNode => p_data <%p>\n", p_data);
+    }
+}
+
+bool Node::isNewHB(uint8_t node_id, uint64_t mymillis) {
+    node_t* p_data;
+    bool retval = false;
+    p_data = findNode(node_id);
+    if (p_data) {
+        if (p_data->HB_ts < mymillis - 5000) retval = true;
+        p_data->HB_ts = mymillis;
+    } else {
+        printf("Node::isNewHB => p_data <%p>\n", p_data);
+    }
+    return retval;
+}
+
+bool Node::isHBNode(uint8_t node_id) {
+    node_t* p_data; 
+    p_data = findNode(node_id);
+    if (p_data) {
+        return p_data->is_HB_node;
+    } else {
+        printf("Node::isHBNode => p_data <%p>\n", p_data);
+        return false;
+    }
+}
+
+void Node::setPaLevel(uint8_t node_id, uint8_t pa_level) {
+    node_t* p_data;
+    bool retval = false;
+    char buf[] = TSBUFFERSTRING;
+    p_data = findNode(node_id);
+    if (p_data) {
+        p_data->pa_level = pa_level;  
+        sprintf(p_data->pa_level_datestr,"%s",str_ts(buf,2));
+    } else {
+        printf("Node::setPaLevel => p_data <%p>\n", p_data);
+    }
+}    
+
+void Node::setVoltage(uint8_t node_id, float u_batt) {
+    node_t* p_data;
+    bool retval = false;
+    p_data = findNode(node_id);
+    if (p_data) {
+        p_data->u_batt = u_batt;    
+    } else {
+        printf("Node::setVoltage => p_data <%p>\n", p_data);
+    }
+}
+
+void Node::printBuffer2tn(int new_tn_in_socket) {
+    void* p_buffer = nextEntry(NULL);
+    node_t* p_data;
     char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
-    node_t *search_ptr;
-    search_ptr = initial_ptr;
+    char paLevel[30];
     sprintf(client_message," ------ Nodes: ------\n"); 
     write(new_tn_in_socket , client_message , strlen(client_message));
-    while (search_ptr) {
-        sprintf(client_message,"Node %u,\tU-Batt:\t%f V,\t%s\n",
-                  search_ptr->node_id, search_ptr->u_batt, search_ptr->is_HB_node? "HeartBeat":"Normal");    
-		write(new_tn_in_socket , client_message , strlen(client_message));
-        search_ptr=search_ptr->next;
-	}
+    while ( p_buffer ) {
+        p_data = (node_t *)getDataPtr(p_buffer);
+        if (p_data) {
+            switch (p_data->pa_level) {
+                case 0:
+                    sprintf(paLevel,"%s(%s)","Min",p_data->pa_level_datestr);
+                break;
+                case 1:
+                    sprintf(paLevel,"%s(%s)","Low",p_data->pa_level_datestr);
+                break;
+                case 2:
+                    sprintf(paLevel,"%s(%s)","High",p_data->pa_level_datestr);
+                break;
+                case 3:
+                    sprintf(paLevel,"%s(%s)","Max",p_data->pa_level_datestr);
+                break;
+                default:
+                    sprintf(paLevel,"%s(-------------------)","???");
+            }
+            sprintf(client_message,"Node %s%s%u,\tU-Batt:\t%f V,\tPA-Lev: %s,\t%s \n", 
+                p_data->node_id<100? " ":"", p_data->node_id<10? " ":"", p_data->node_id, p_data->u_batt, 
+                paLevel, p_data->is_HB_node? "HeartBeat":"Normal");    
+            write(new_tn_in_socket , client_message , strlen(client_message));
+        } else {
+            printf("Node::printBuffer2tn => p_data <%p>\n", p_data);
+        }
+        p_buffer = nextEntry(p_buffer);
+    }
     free(client_message);
-    debug_print_buffer(VERBOSETELNET);
 }
 
-void Node::debug_print_buffer(uint16_t debuglevel) {
-    node_t *search_ptr;
-    search_ptr = initial_ptr;
-    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    sprintf(debug," ------ Nodes: ------"); 
-    logger->logmsg(debuglevel, debug);
-    while (search_ptr) {
-        sprintf(debug,"Node %u,\tU-Batt:\t%f V,\t%s",
-                  search_ptr->node_id, search_ptr->u_batt, search_ptr->is_HB_node? "HeartBeat":"Normal");    
-        logger->logmsg(debuglevel, debug);
-        search_ptr=search_ptr->next;
-	}
-	free(debug);
+void Node::printBuffer(uint16_t debuglevel) {
+    char buf[] = TSBUFFERSTRING;
+    void* p_buffer = nextEntry(NULL);
+    node_t* p_data;
+    char paLevel[6];
+    if (debuglevel & verboselevel) {
+        while ( p_buffer ) {
+            p_data = (node_t *)getDataPtr(p_buffer);
+            if (p_data) {
+                switch (p_data->pa_level) {
+                    case 0:
+                        sprintf(paLevel,"%s","Min");
+                    break;
+                    case 1:
+                        sprintf(paLevel,"%s","Low");
+                    break;
+                    case 2:
+                        sprintf(paLevel,"%s","High");
+                    break;
+                    case 3:
+                        sprintf(paLevel,"%s","Max");
+                    break;
+                    default:
+                        sprintf(paLevel,"%s","???");
+                }
+                printf("Node %s%s%u,\tU-Batt:\t%f V,\tPA-Lev: %s,\t%s \n", 
+                    p_data->node_id<100? " ":"", p_data->node_id<10? " ":"", p_data->node_id, p_data->u_batt, 
+                    paLevel, p_data->is_HB_node? "HeartBeat":"Normal");    
+            } else {
+                printf("Node::printBuffer => p_data <%p>\n", p_data);
+            }
+            p_buffer = nextEntry(p_buffer);
+        }
+    }
 }
 
-void Node::begin(Logger* _logger) {
-    logger = _logger;
-}
