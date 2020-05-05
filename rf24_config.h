@@ -1,0 +1,123 @@
+#ifndef RF24_CONFIG_H   
+#define RF24_CONFIG_H
+
+/***********************************
+ * Definition der RF24 Parameter
+ * Diese Datei wird vom Hub und
+ * von den Nodes eingebunden !!!
+ **********************************/
+
+#define RF24_CHANNEL        92
+#define RF24_SPEED          RF24_1MBPS
+#define RF24_HUB2NODE       { 0xf0, 0xcc, 0xfc, 0xcc, 0xcc}
+#define RF24_NODE2HUB       { 0x33, 0xcc, 0xfc, 0xcc, 0xcc}
+
+/***********************************
+ * Definition der Kontrollregister
+ **********************************/
+
+
+
+
+
+/***********************************
+ * Definition der Nachrichtenarten
+ **********************************/
+
+// Payload Message Flags
+// Leeres Flag
+#define PAYLOAD_FLAG_EMPTY       0b00000000
+// Flag zeigt an das diese Nachricht die letzte (Teil-)Nachricht war
+#define PAYLOAD_FLAG_LASTMESSAGE 0b00000001
+// ****** Payload Message Type ******
+// Nachricht ist ein Init
+// Datenformat: komprimiert Channel und float
+// Ursprung: Node; Empfänger: Hub
+#define PAYLOAD_TYPE_INIT        1
+
+// Nachricht ist ein Heatbeat
+// Datenformat: komprimiert Channel und float
+// Ursprung: Node; Empfänger: Hub
+#define PAYLOAD_TYPE_HB          51
+// Nachricht ist eine Quittung für einen Heatbeat,
+// Datenformat: Alle 6 data Felder sind leer (0)
+// Ursprung: Hub; Empfänger: Node
+#define PAYLOAD_TYPE_HB_RESP      52
+// Nachricht ist eine Quittung für die Quittung auf ein Heatbeat,
+// Datenformat: Alle 6 data Felder sind leer (0)
+// Ursprung: Node; Empfänger: Hub
+#define PAYLOAD_TYPE_HB_STOP      53
+
+// Daten Nachricht
+// Datenformat: komprimiert Channel und float
+// Ursprung: Hub; Empfänger: Node
+#define PAYLOAD_TYPE_DAT         61
+// Antwort auf Daten Nachricht
+// verarbeitete Daten werden unverändert zurückgesand
+// Datenformat: komprimiert Channel und float
+// Ursprung: Node; Empfänger: Hub
+#define PAYLOAD_TYPE_DATRESP     62
+// Antwort auf Datenantwort(PAYLOAD_TYPE_DATRES) / Stoppnachricht
+// Daten sind leer
+// Datenformat: komprimiert Channel und float
+// Ursprung: Hub; Empfänger: Node
+#define PAYLOAD_TYPE_DATSTOP     63
+
+// Nachricht ist ein Ping, Antwort wird erwartet
+// Sendeleistung ist Minimal (-18 dBm)
+/*************************************
+ * Ein Ping geht immer vom Node aus 
+ * und wird vom Hub zwingend beantwortet
+ * Durch die unterschiedlichen
+ * Sendeleistungen kann die Qualität
+ * der Funkverbindung beurteilt werden
+ ************************************/
+#define PAYLOAD_TYPE_PING_POW_MIN 101
+// Nachricht ist ein Ping, Antwort wird erwartet
+// Sendeleistung ist Low (-12 dBm)
+#define PAYLOAD_TYPE_PING_POW_LOW 102
+// Nachricht ist ein Ping, Antwort wird erwartet
+// Sendeleistung ist High (-6 dBm)
+#define PAYLOAD_TYPE_PING_POW_HIGH 103
+// Nachricht ist ein Ping, Antwort wird erwartet
+// Sendeleistung ist Max ( 0 dBm)
+#define PAYLOAD_TYPE_PING_POW_MAX 104
+
+// Structure of our payload
+typedef struct {   // Our payload can be 32 byte max.
+    // Die Node_ID ist der eindeutige Identifizierer für einen Node.
+    // Hier können die Nodes 1..255 genutzt werden (8 Bit begrenzung)
+    uint8_t    node_id;         
+    // Die MSG_ID ist der eindeutige Identifizierer einer Nachricht.
+    // Muss einen Nachricht wiederholt werden, wird sie hochgezählt.
+    uint8_t     msg_id;          
+    // Art der Nachricht, Definition siehe oben.
+    uint8_t     msg_type;        
+    // Nachrichtenflags, Definition siehe oben.
+    uint8_t     msg_flags;   
+    // Ordernummern werden im Hub verwaltet.
+    // Auf eine Anfrage vom Hub wird immer mit der selben ORDER_NO geantwortet
+    // Nachrichten, die ihren Ursprung im Node haben ( z.B. Heatbeatmessages ) 
+    // erhalten die ORDER_NO "0"    
+    uint8_t     orderno;         
+    // noch nicht genutzt
+    uint8_t     reserved1;      
+    // noch nicht genutzt
+    uint8_t     reserved2;      
+    // noch nicht genutzt
+    uint8_t     reserved3;      
+    // Datenpaket 1 (32Bit)
+    uint32_t    data1;         
+    // Datenpaket 2 (32Bit)
+    uint32_t    data2;         
+    // Datenpaket 3 (32Bit)
+    uint32_t    data3;         
+    // Datenpaket 4 (32Bit)
+    uint32_t    data4;         
+    // Datenpaket 5 (32Bit)
+    uint32_t    data5;         
+    // Datenpaket 6 (32Bit)
+    uint32_t    data6;         
+} payload_t;
+
+#endif

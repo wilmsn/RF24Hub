@@ -20,7 +20,6 @@
 #include "node.h"
 #include "sensor.h"
 #include "common.h"
-#include "log.h"
 
 using namespace std; 
 
@@ -31,21 +30,21 @@ private:
     MYSQL       *db;
     MYSQL_RES   *res;
     MYSQL_ROW   row;
-    Logger      *logger;
     char*       pEnd;
     void do_sql(char* stmt);
     void db_check_error(void);
+    void debugPrintSQL(char* sqlstmt);
 
 public:
 
-    void begin(Logger* _logger);
     bool connect(string db_hostname, string db_username, string db_password, string db_schema, int db_port);
     void storeSensorValue(uint32_t mysensor, float value);
     void storeNodeConfig(uint16_t node, uint8_t channel, float value);
     void initSensor(Sensor* sensor);
     void initNode(Node* node);
     void initSystem(void);
-    void exitSystem(void);
+    void syncSensor(void);
+    void syncSensorData(void);
 };
 
 #endif // _DATABASE_H_

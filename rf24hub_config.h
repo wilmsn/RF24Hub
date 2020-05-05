@@ -6,7 +6,7 @@ rf24hub_config.h ==> all global definitions go here
 #define _RF24HUB_CONFIG_H_
 
 #define PRGNAME "rf24hub"
-#define PRGVERSION "1.3.1 vom 07.12.2019"
+#define PRGVERSION "1.4.1 vom 05.05.2020 (Testversion mit Debuginfo)"
 
 //
 // default values: can be overwritten in config file
@@ -22,48 +22,44 @@ rf24hub_config.h ==> all global definitions go here
 //
 // How long do we try to deliver (in msec) => 20 Min.
 #define KEEPINBUFFERTIME 1200000    
-#define FHEMDEVLENGTH 50
 // Interval to send a request to the regular node in millisec.
 #define SENDINTERVAL 500
 // Interval to send a request to the regular node in millisec.
-#define HB_SENDINTERVAL 100
+#define SENDINTERVAL_HB 100
+// Number of stopmessages to send
+#define SENDSTOPCOUNT 3
 // Interval for deleting unsend requests for order for regular nodes in millisec.
-// 600 Sec = 10 Min.
-#define DELETEINTERVAL 600000
+// 60 Sec = 1 Min.
+#define DELETEINTERVAL 2000
 // Interval for deleting unsend requests for order for Heartbeat nodes in millisec.
-// 10 Sec.
-#define HB_DELETEINTERVAL 1000
+// 1 Sec.
+#define DELETEINTERVAL_HB 1000
+
 #define PARAM_MAXLEN 80
-#define PARAM_MAXLEN_CONFIGFILE 40
-#define PARAM_MAXLEN_LOGFILE 40
-#define PARAM_MAXLEN_PIDFILE 40
-#define PARAM_MAXLEN_RF24NETWORK_CHANNEL 4
-#define PARAM_MAXLEN_RF24NETWORK_SPEED 10
-#define PARAM_MAXLEN_HOSTNAME 20
-#define PARAM_MAXLEN_DB_SCHEMA 20
-#define PARAM_MAXLEN_DB_USERNAME 20
-#define PARAM_MAXLEN_DB_PASSWORD 20
-#define DEBUGSTRINGSIZE 500
+// array of char sizes
+#define DEBUGSTRINGSIZE 600
+#define FHEMDEVLENGTH 50
+#define TELNETBUFFERSIZE 200
+#define TSBUFFERSIZE 30
 #define SQLSTRINGSIZE 500
+#define TSBUFFERSTRING "                           "
 // Verboselevel
 #define VERBOSECRITICAL          0b0000000000000001
 #define VERBOSESTARTUP           0b0000000000000010
 #define VERBOSECONFIG            0b0000000000000100
 #define VERBOSEORDER             0b0000000000001000
-#define VERBOSEORDERBUFFER       0b0000000000010000
+#define VERBOSEOBUFFER           0b0000000000010000
 #define VERBOSETELNET            0b0000000000100000
 #define VERBOSESQL               0b0000000001000000
 #define VERBOSERF24              0b0000000010000000
 #define VERBOSEOTHER             0b0000000100000000
-// Payload Message Flags
-#define PAYLOAD_FLAG_EMPTY       0b00000000
-#define PAYLOAD_FLAG_LASTMESSAGE 0b00000001
-// Payload Message Type
-#define PAYLOAD_TYPE_HB          51
-#define PAYLOAD_TYPE_HBSESP      52
-#define PAYLOAD_TYPE_NORMAL      61
+#define VERBOSEORDEREXT          0b0000001000000000
+#define VERBOSEBUFFERPOINTER     0b0000010000000000
+#define VERBOSEOBUFFEREXT        0b0000100000000000
+#define VERBOSEPOINTER           0b0001000000000000
 
-#define TELNETBUFFERSIZE 800
+#define STARTUPVERBOSELEVEL      0b0001111111111111 
+
 
 
 #endif // _RF24HUB_CONFIG_H_

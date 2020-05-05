@@ -9,8 +9,11 @@
 #include <stdint.h>
 #include <cstring>
 #include <unistd.h>
-#include "rf24hub_config.h"
-#include "log.h"
+#include "rf24_config.h"
+#include "common.h"
+#include "dataformat.h"
+
+extern uint16_t verboselevel;   
 
 class OrderBuffer {
 
@@ -21,29 +24,27 @@ private:
 
     struct orderbuffer_t {
         uint64_t		entrytime;
-        uint16_t     	node;
+        uint8_t     	node_id;
         uint8_t     	channel;
         float        	value;
-        orderbuffer_t*  next;          // poiter to the next record
+        orderbuffer_t*  p_next;          // poiter to the p_next record
     };
 
-    Logger* logger;
-    orderbuffer_t* initial_ptr;
-    void new_entry(orderbuffer_t*);
-    bool del_entry(orderbuffer_t*);
-    void debug_print_buffer(void);
+    orderbuffer_t* p_initial;
+    void newEntry(orderbuffer_t*);
+    bool delEntry(orderbuffer_t*);
+    orderbuffer_t* findNode(uint8_t node_id);
 
 public:
     
-
-    void add_orderbuffer(uint64_t millis, uint16_t node, uint8_t channel, float value);
-    void *find_order4node(uint16_t node, void* last_ptr, uint8_t* channel, float* value);
-    bool del_node_channel(uint16_t, uint8_t);
-    bool del_node(uint16_t);
-    bool node_has_entry(uint16_t);
-    void begin(Logger* _logger);
-    void print_buffer(int new_tn_in_socket);
-    void html_buffer(int new_tn_in_socket);
+    void* findOrder4Node(uint8_t node_id, void* p_last, uint8_t* channel, float* value);
+    void addOrderBuffer(uint64_t millis, uint8_t node_id, uint8_t channel, float value);
+    bool delByNodeChannel(uint8_t node_id, uint8_t channel);
+    bool delByNode(uint8_t node_id);
+    bool nodeHasEntry(uint8_t node_id);
+    void printBuffer2tn(int new_tn_in_socket);
+    void htmlBuffer2tn(int new_tn_in_socket);
+    void printBuffer(uint16_t debuglevel);    
     OrderBuffer(void);
 
 };

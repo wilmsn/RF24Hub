@@ -1,62 +1,69 @@
 #include "database.h"
 
-void Database::begin(Logger* _logger) {
-    logger = _logger;
+void Database::debugPrintSQL(char* sqlstmt) {
+    if ( verboselevel & VERBOSESQL) {    
+        char buf[] = TSBUFFERSTRING;
+        cout << log_ts(buf) << "SQL: " << sqlstmt << endl;
+    }
 }
 
 void Database::db_check_error(void) {
 	if (mysql_errno(db) != 0) {
-        char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-		sprintf(debug, "DB-Fehler: %s\n", mysql_error(db));
-        logger->logmsg(VERBOSECRITICAL, debug);
-        free(debug);
+		printf("DB-Fehler: %s\n", mysql_error(db));
     }
 }
-
+/*
 void Database::exitSystem(void) {
     char *sql_stmt =  (char*) malloc (SQLSTRINGSIZE);
 	sprintf (sql_stmt, "update sensor a set value = ( select value from sensor_im where sensor_id = a.sensor_id ), utime = ( select utime from sensor_im where sensor_id = a.sensor_id )");
-    if ( logger->verboselevel & VERBOSESQL) {    
-        logger->logmsg(VERBOSESQL, sql_stmt);
-    }
+    debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
 	sprintf (sql_stmt, "insert into sensordata(sensor_id, utime, value) select sensor_id, utime, value from sensordata_im where (sensor_id,utime) not in (select sensor_id, utime from sensordata)");
-    if ( logger->verboselevel & VERBOSESQL) {    
-        logger->logmsg(VERBOSESQL, sql_stmt);
-    }
+    debugPrintSQL(sql_stmt);
+    mysql_query(db, sql_stmt);
+	db_check_error();
+    free(sql_stmt);
+}
+*/
+void Database::initSystem(void) {
+    char *sql_stmt =  (char*) malloc (SQLSTRINGSIZE);
+    // Copy sensordata and sensor to memorytable since yesterday
+	sprintf (sql_stmt, "truncate table sensor_im");
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+	sprintf (sql_stmt, "insert into sensor_im(sensor_id, sensor_name, add_info, node_id, channel, store_days, fhem_dev, html_show, value) select sensor_id, sensor_name, add_info, node_id, channel, store_days, fhem_dev, html_show, value from sensor");
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+	sprintf (sql_stmt, "truncate table sensordata_im");
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+	sprintf (sql_stmt, "insert into sensordata_im(sensor_id, utime, value) select sensor_id, utime, value from sensordata where utime > UNIX_TIMESTAMP(subdate(current_date, 2))");
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+    free(sql_stmt);
+}
+
+void Database::syncSensorData(void) {
+    char *sql_stmt =  (char*) malloc (SQLSTRINGSIZE);
+	sprintf (sql_stmt, "insert into sensordata(sensor_id, utime, value) select sensor_id, utime, value from sensordata_im where (sensor_id,utime) not in (select sensor_id, utime from sensordata)");
+    debugPrintSQL(sql_stmt);
     mysql_query(db, sql_stmt);
 	db_check_error();
     free(sql_stmt);
 }
 
-void Database::initSystem(void) {
+void Database::syncSensor(void) {
     char *sql_stmt =  (char*) malloc (SQLSTRINGSIZE);
-    // Copy sensordata and sensor to memorytable since yesterday
-	sprintf (sql_stmt, "truncate table sensor_im");
-    if ( logger->verboselevel & VERBOSESQL) {    
-        logger->logmsg(VERBOSESQL, sql_stmt);
-    }
+	sprintf (sql_stmt, "update sensor a set value = ( select value from sensor_im where sensor_id = a.sensor_id )");
+    debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
-	sprintf (sql_stmt, "insert into sensor_im(sensor_id, sensor_name, add_info, node_id, channel, store_days, fhem_dev, html_show, value) select sensor_id, sensor_name, add_info, node_id, channel, store_days, fhem_dev, html_show, value from sensor");
-    if ( logger->verboselevel & VERBOSESQL) {    
-        logger->logmsg(VERBOSESQL, sql_stmt);
-    }
-	mysql_query(db, sql_stmt);
-	db_check_error();
-	sprintf (sql_stmt, "truncate table sensordata_im");
-    if ( logger->verboselevel & VERBOSESQL) {    
-        logger->logmsg(VERBOSESQL, sql_stmt);
-    }
-	mysql_query(db, sql_stmt);
-	db_check_error();
-	sprintf (sql_stmt, "insert into sensordata_im(sensor_id, utime, value) select sensor_id, utime, value from sensordata where utime > UNIX_TIMESTAMP(subdate(current_date, 2))");
-    if ( logger->verboselevel & VERBOSESQL) {    
-        logger->logmsg(VERBOSESQL, sql_stmt);
-    }
-	mysql_query(db, sql_stmt);
-	db_check_error();
+    free(sql_stmt);
 }
 
 void Database::initNode(Node* node) {
@@ -66,7 +73,7 @@ void Database::initNode(Node* node) {
     char cmp_y[]="y",cmp_j[]="j"; 
 	MYSQL_ROW row;
 	sprintf (sql_stmt, "select node_id, heartbeat from node");
-	logger->logmsg(VERBOSESQL, sql_stmt);
+    debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
 	MYSQL_RES *result = mysql_store_result(db);
@@ -74,7 +81,7 @@ void Database::initNode(Node* node) {
 	while ((row = mysql_fetch_row(result))) {
 		if ( row[0] != NULL ) mynode = strtoul(row[0], &pEnd,10);
         if ((strcmp(row[1],cmp_y) == 0) || (strcmp(row[1],cmp_j) == 0)) { myHBnode = true; } else { myHBnode = false; }
-        node->add_node(mynode, 0, myHBnode); 
+        node->addNode(mynode, 0, myHBnode, 0); 
 	}
 	mysql_free_result(result);    
     free(sql_stmt);   
@@ -88,7 +95,7 @@ void Database::initSensor(Sensor* sensor) {
     uint8_t     	mychannel;
 	MYSQL_ROW row;
 	sprintf (sql_stmt, "select sensor_id, node_id, channel, fhem_dev from sensor");
-	logger->logmsg(VERBOSESQL, sql_stmt);
+    debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
 	MYSQL_RES *result = mysql_store_result(db);
@@ -98,49 +105,37 @@ void Database::initSensor(Sensor* sensor) {
 		if ( row[1] != NULL ) mynode = strtoul(row[1], &pEnd,10); else mynode = 0; 
 		if ( row[2] != NULL ) mychannel = strtoul(row[2], &pEnd,10); else mychannel = 0;
 		if ( row[3] != NULL ) sprintf(fhem_dev,"%s",row[3]); else sprintf(fhem_dev,"not_set");
-        sensor->add_sensor(mysensor, mynode, mychannel, fhem_dev, 0, 0);
+        sensor->addSensor(mysensor, mynode, mychannel, fhem_dev, 0, 0);
 	}
 	mysql_free_result(result);
     free(sql_stmt);
     free(fhem_dev); 
 }
 
-void Database::do_sql(char *sqlstmt) {
-    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    sprintf(debug, "%s", sqlstmt);
-	logger->logmsg(VERBOSESQL, debug);
-	if (mysql_query(db, sqlstmt)) {
-		sprintf(debug, "%s", mysql_error(db));
-		logger->logmsg(VERBOSECRITICAL, debug);
+void Database::do_sql(char *sql_stmt) {
+    debugPrintSQL(sql_stmt);
+	if (mysql_query(db, sql_stmt)) {
+		printf("%s", mysql_error(db));
 	}
-	free(debug);
 }
 
 void Database::storeSensorValue(uint32_t mysensor, float value) {
-    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
     char *sql_stmt =  (char*) malloc (SQLSTRINGSIZE);
-	sprintf(debug, "database.storeSensorValue: Sensor: %u Value: %g ", mysensor, value);
-	logger->logmsg(VERBOSEORDER, debug);        
     sprintf(sql_stmt,"insert into sensordata_im (sensor_ID, utime, value) values (%u, UNIX_TIMESTAMP(), %g)", mysensor, value);
     do_sql(sql_stmt);
     sprintf(sql_stmt,"update sensor_im set value = %g where sensor_id = %u",value ,mysensor);
     do_sql(sql_stmt);
-    free(debug);  
     free(sql_stmt);
 }
 
 void Database::storeNodeConfig(uint16_t node, uint8_t channel, float value) {
-    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
     char *sql_stmt =  (char*) malloc (SQLSTRINGSIZE);
-	sprintf(debug, "database.storeNodeConfig: Node: %u Channel: %u Value: %f ", node, channel, value);
-	logger->logmsg(VERBOSEORDER, debug);        
     sprintf(sql_stmt,"insert into node_configdata_history (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %f ) ", node, channel, value);
     do_sql(sql_stmt);
     sprintf(sql_stmt,"delete from node_configdata where node_id = %u and channel = %u ", node, channel);
     do_sql(sql_stmt);
     sprintf(sql_stmt,"insert into node_configdata (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %f ) ", node, channel, value);
     do_sql(sql_stmt);
-    free(debug);    
     free(sql_stmt);
 }
 
@@ -148,14 +143,11 @@ bool Database::connect(string db_hostname, string db_username, string db_passwor
     int mysql_wait_count = 0;
     bool retval = true;
     char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    sprintf(debug,"Maria-DB:");
-    logger->logmsg(VERBOSESTARTUP, debug);
-    sprintf(debug,"MySQL client version: %s", mysql_get_client_info());
-    logger->logmsg(VERBOSESTARTUP, debug);
+    printf("Maria-DB:");
+    printf("MySQL client version: %s", mysql_get_client_info());
     db = mysql_init(NULL);
     while (db == NULL) {
-		sprintf(debug,"Waiting for Database: %d Sec.", 20-mysql_wait_count);
-		logger->logmsg(VERBOSESTARTUP, debug);		
+		printf("Waiting for Database: %d Sec.", 20-mysql_wait_count);
 		if ( mysql_wait_count < 20 ) {
 			mysql_wait_count++;
 			sleep(1);
@@ -169,8 +161,7 @@ bool Database::connect(string db_hostname, string db_username, string db_passwor
     if ( retval ) {
         mysql_wait_count = 0;
         while (mysql_real_connect(db, db_hostname.c_str(), db_username.c_str(), db_password.c_str(), db_schema.c_str(), db_port, NULL, 0) == NULL) {
-            sprintf(debug,"Waiting for Database: %d Sec.", 20-mysql_wait_count);
-            logger->logmsg(VERBOSESTARTUP, debug);		
+            printf("Waiting for Database: %d Sec.", 20-mysql_wait_count);
             if ( mysql_wait_count < 20 ) {
                 mysql_wait_count++;
                 sleep(1);
@@ -180,11 +171,7 @@ bool Database::connect(string db_hostname, string db_username, string db_passwor
                 retval = false;
             }
         }
-        sprintf(debug, "Connected to host %s with DB %s on port %d", db_hostname.c_str(), mysql_get_server_info(db), db_port);
-        logger->logmsg(VERBOSESTARTUP, debug);
+        printf("Connected to host %s with DB %s on port %d", db_hostname.c_str(), mysql_get_server_info(db), db_port);
     }
-    sprintf(debug,"insert into sensordata(sensor_id, utime, value) values (1, UNIX_TIMESTAMP(), 22)");
-    mysql_query(db, debug);
-    free(debug);
     return retval;
 }

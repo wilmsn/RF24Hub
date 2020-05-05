@@ -10,14 +10,14 @@ On Branch: no_network @ rpi1  !!!!!
 // Select only one at one time !!!!
 //#define AUSSENTHERMOMETER
 //#define AUSSENTHERMOMETER2
-//#define SCHLAFZIMMERTHERMOMETER
-#define BASTELZIMMERTHERMOMETER
+#define SCHLAFZIMMERTHERMOMETER
+//#define BASTELZIMMERTHERMOMETER
 //#define KUECHETHERMOMETER
 //#define WOHNZIMMERTHERMOMETER
 //#define ANKLEIDEZIMMERTHERMOMETER
 //#define GAESTEZIMMERTHERMOMETER
-//#define TESTNODE
 //#define UNOTESTNODE
+//#define UNOTESTNODE_AO
 //****************************************************
 //          Define node general settings
 //  Can be overwritten in individual settings later
@@ -26,7 +26,6 @@ On Branch: no_network @ rpi1  !!!!!
 #define EEPROM_VERSION 0
 #define RF24NODE 00
 //****************************************************
-#define RF24CHANNEL     91
 // Delay between 2 transmission in ms
 #define RF24SENDDELAY   50
 // Delay between 2 transmission in ms
@@ -43,7 +42,7 @@ On Branch: no_network @ rpi1  !!!!!
 #define RF24EMPTYLOOPCOUNT  0
 // Voltage Faktor will be divided by 100 (Integer !!)!!!!
 #define VOLTAGEFACTOR 100
-// Add a constant number her (will be divided by 100)!!!
+// Add a constant number here (will be divided by 100)!!!
 #define VOLTAGEADDED 0
 // Kontrast of the display
 #define DISPLAY_KONTRAST 65;
@@ -53,14 +52,14 @@ On Branch: no_network @ rpi1  !!!!!
 #define LOWVOLTAGELEVEL 2.8
 // Change the versionnumber to store new values in EEPROM
 // Set versionnumber to "0" to disable 
-// #define EEPROM_VERSION 2
-// 4 voltages for the battery (empty ... full)
+#define EEPROM_VERSION 1
+// 5 voltages for the battery (empty ... full)
 #define U0 3.6
 #define U1 3.7
 #define U2 3.8
 #define U3 3.9
 #define U4 4.0
-// DISPLAY is 84 * 48 Pixel
+// DISPLAY Nokia 5110 is 84 * 48 Pixel
 //  012345678901234567890123456789012345678901234567890123456789012345678901234567890123
 // 0                                                                          BBBBBBBBBB     B = Batterie
 // 1                                                                          BBBBBBBBBB
@@ -110,6 +109,7 @@ On Branch: no_network @ rpi1  !!!!!
 // 5|                                        |                                         |
 // 6|                                        |                                         |
 // 7------------------------------------------------------------------------------------
+// Define the location of the display symbols
 // set X0 and Y0 of battery symbol ( is 10 * 5 pixel )
 #define BATT_X0 74
 #define BATT_Y0 0
@@ -137,45 +137,36 @@ On Branch: no_network @ rpi1  !!!!!
 //    Individual settings
 //-----------------------------------------------------
 #if defined(AUSSENTHERMOMETER)
-#define BME280
-#define RF24NODE        0
-#define STATUSLED       7
-#define STATUSLED_ON    LOW
-#define STATUSLED_OFF   HIGH
-#define LOWVOLTAGELEVEL 1
-#define EEPROM_VERSION  1
-
-#endif
-//-----------------------------------------------------
-#if defined(AUSSENTHERMOMETER2)
-#define BMP_280
+#define BME_280
 #define RF24NODE        200
 #define STATUSLED       3
 #define STATUSLED_ON    HIGH
 #define STATUSLED_OFF   LOW
 #define LOWVOLTAGELEVEL 1
-#define EEPROM_VERSION  1
-
+#define EEPROM_VERSION  2
+#define HBNODE
 #endif
 //-----------------------------------------------------
 #if defined(SCHLAFZIMMERTHERMOMETER)
 #define DALLAS_18B20
 #define DISPLAY_5110
-#define RF24NODE        0
-#define EEPROM_VERSION  3
-#define VOLTAGEADDED    55
- 
+#define RF24NODE             101
+#define EEPROM_VERSION       1
+#define VOLTAGEADDED         55
+#define STATUSLED_ON         LOW
+#define STATUSLED_OFF        HIGH
+#define HBNODE
 #endif
 //-----------------------------------------------------
 #if defined(BASTELZIMMERTHERMOMETER)
 #define DALLAS_18B20
 #define DISPLAY_5110
 #define RF24NODE            100
-#define EEPROM_VERSION      10
+#define EEPROM_VERSION      1
 #define VOLTAGEADDED        55
-#define DISPLAY_KONTRAST    10
 #define RF24SLEEPTIME       300000
-#define RF24EMPTYLOOPCOUNT  3 
+#define HBNODE
+//#define RF24EMPTYLOOPCOUNT  3 
 #endif
 //-----------------------------------------------------
 #if defined(KUECHETHERMOMETER)
@@ -186,7 +177,7 @@ On Branch: no_network @ rpi1  !!!!!
 #define VOLTAGEADDED        55
 #define RF24SLEEPTIME       1200000
 #define RF24EMPTYLOOPCOUNT  0 
- 
+#define HBNODE
 #endif
 //-----------------------------------------------------
 #if defined(ANKLEIDEZIMMERTHERMOMETER)
@@ -194,10 +185,12 @@ On Branch: no_network @ rpi1  !!!!!
 #define DISPLAY_5110
 #define DISPLAY_KONTRAST     65
 #define RF24NODE             110
-#define EEPROM_VERSION       8
+#define EEPROM_VERSION       1
 #define VOLTAGEADDED         55
 #define STATUSLED_ON         LOW
-#define STATUSLED_OFF        HIGH 
+#define STATUSLED_OFF        HIGH
+#define RF24EMPTYLOOPCOUNT   5
+#define HBNODE
 #endif
 //-----------------------------------------------------
 #if defined(GAESTEZIMMERTHERMOMETER)
@@ -206,29 +199,44 @@ On Branch: no_network @ rpi1  !!!!!
 #define RF24NODE        0
 #define EEPROM_VERSION  3
 #define VOLTAGEADDED    55
- 
+#define HBNODE
 #endif
 //-----------------------------------------------------
 #if defined(TESTNODE)
-#define RF24NODE        431
+#define RF24NODE        1
 #define EEPROM_VERSION  4
 #define STATUSLED       13 
 #define ACTOR           A5
 #define RF24SLEEPTIME   60000
 #define TEST_LED
 #define SERIAL_DEBUG
+#define HBNODE
 #define sleep4ms        delay
 #endif
-
 //-----------------------------------------------------
 #if defined(UNOTESTNODE)
-#define RF24NODE         431
-#define EEPROM_VERSION   1
+#define RF24NODE         1
+#define EEPROM_VERSION   3
 #define STATUSLED        13 
 #define ACTOR            A5
 #define RF24SLEEPTIME    60000
 #define RF24SENDDELAY    200
 #define RF24RECEIVEDELAY 200
+#define BMP_280
+#define SERIAL_DEBUG
+#define TEST_LED
+#define HBNODE
+#endif
+//-----------------------------------------------------
+#if defined(UNOTESTNODE_AO)
+#define RF24NODE         2
+#define EEPROM_VERSION   3
+#define STATUSLED        13 
+#define RF24SLEEPTIME    60000
+#define RF24SENDDELAY    200
+#define RF24RECEIVEDELAY 200
+#define BMP_280
+#define SERIAL_DEBUG
 #define TEST_LED
 #endif
 //-----------------------------------------------------
@@ -242,7 +250,9 @@ On Branch: no_network @ rpi1  !!!!!
 #include <sleeplib.h>
 #include <Vcc.h>
 #include <EEPROM.h>
-#include "zahlenformat.h"
+#include "dataformat.h"
+#include "printf.h"
+#include "rf24_config.h"
 
 #if defined(DISPLAY_5110)
 #define HAS_DISPLAY
@@ -254,7 +264,7 @@ On Branch: no_network @ rpi1  !!!!!
 #include <DallasTemperature.h>
 #endif
 
-#if defined(BME280)
+#if defined(BME_280)
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BME280.h>
 #endif
@@ -269,6 +279,9 @@ Vcc vcc(1.0);
 
 ISR(WDT_vect) { watchdogEvent(); }
 
+#if defined(TEST_LED)
+#define TEST_LED_PIN A0
+#endif
 #if defined(HAS_DISPLAY)
 #if defined(DISPLAY_5110)
 LCD5110 myGLCD(7,6,5,2,4);
@@ -283,50 +296,36 @@ DallasTemperature sensor(&oneWire);
 float temp;
 #endif
 
-#if defined(BME280)
+#if defined(BME_280)
 Adafruit_BME280 sensor;
 float temp, pres, humi;
 #endif
 
 #if defined(BMP_280)
-BMP280 bmp(0x76);
+BMP280 sensor(0x76);
 float temp, pres;
 #endif
 
-// Structure of our payload
-struct payload_t {
-  uint16_t    node_id;         
-  uint8_t     msg_id;          
-  uint8_t     msg_type;        
-  uint8_t     msg_flags;       
-  uint8_t     orderno;         
-  uint8_t     reserved1;      
-  uint8_t     reserved2;      
-  uint32_t    data1;         
-  uint32_t    data2;         
-  uint32_t    data3;         
-  uint32_t    data4;         
-  uint32_t    data5;         
-  uint32_t    data6;     
-};
 payload_t payload;    
 
+uint8_t  rf24_node2hub[] = RF24_NODE2HUB;
+uint8_t  rf24_hub2node[] = RF24_HUB2NODE;
+
 struct eeprom_t {
+   uint8_t  versionnumber;
    uint32_t sleeptime;
    uint16_t sendloopcount;
    uint16_t receiveloopcount;
    uint16_t emptyloopcount;
    uint16_t voltagefactor;
    int      voltageadded;
-   uint16_t node;
-   uint8_t  channel;
    int      display_contrast;
-   uint8_t  versionnumber;
 };
 eeprom_t eeprom;
 
 boolean             display_down = false;
 boolean             low_voltage_flag = false;
+boolean             exec_pingTest = false;
 //Some Var for restore after sleep of display
 #if defined(HAS_DISPLAY)
 boolean             monitormode = false;
@@ -334,15 +333,10 @@ float               field1_val, field2_val, field3_val, field4_val;
 #endif
 float               cur_voltage;
 uint16_t            loopcount;
-uint16_t            receiveloopcount;
-uint16_t            sendloopcount;
 long int            sleep_kor_time;
 uint32_t            last_send;
 uint8_t             last_orderno = 0;
 uint8_t             msg_id = 0;
-uint8_t             address1[] = { 0xf0, 0xcc, 0xcc, 0xcc, 0xcc};
-uint8_t             address2[] = { 0x33, 0xcc, 0xcc, 0xcc, 0xcc};
-uint8_t             pipe_num;
 
 
 // nRF24L01(+) radio attached using Getting Started board 
@@ -356,7 +350,7 @@ void get_sensordata(void) {
   delay(10);
   temp=sensor.getTempCByIndex(0);
 #endif
-#if defined(BME280)
+#if defined(BME_280)
   sensor.takeForcedMeasurement();
   sleep4ms(800);
   delay(10);
@@ -365,11 +359,11 @@ void get_sensordata(void) {
   humi=sensor.readHumidity();
 #endif
 #if defined(BMP_280)
-  bmp.startSingleMeasure();
+  sensor.startSingleMeasure();
   sleep4ms(800);
   delay(10);
-  temp = bmp.readTemperature();
-  pres = bmp.readPressureAtSealevel(91);
+  temp = sensor.readTemperature();
+  pres = sensor.readPressureAtSealevel(91);
 #endif
 }
 
@@ -377,17 +371,18 @@ uint32_t action_loop(uint32_t data) {
   uint32_t retval = 0;
   uint8_t channel = getChannel(data);
   float value = getValue_f(data);
+//print_field(value,4);
     switch (channel) {
 #if defined(TEST_LED)
       case 21:
         // Set field 1
         if ( value > 0.5 ) {
-          digitalWrite(A5,STATUSLED_ON); 
+          digitalWrite(TEST_LED_PIN,STATUSLED_ON); 
 #if defined(SERIAL_DEBUG)
   Serial.println("LED ein");
 #endif
         } else {
-          digitalWrite(A5,STATUSLED_OFF); 
+          digitalWrite(TEST_LED_PIN,STATUSLED_OFF); 
 #if defined(SERIAL_DEBUG)
   Serial.println("LED aus");
 #endif
@@ -414,7 +409,7 @@ uint32_t action_loop(uint32_t data) {
         // Set field 4
         field4_val= value;
         print_field(field4_val,4);
-       break;
+      break;
       case 31:
         // Displaylight ON <-> OFF
         if (value > 0.5 && value < 1.5) {
@@ -431,9 +426,17 @@ uint32_t action_loop(uint32_t data) {
       case 101:  
       // battery voltage
         value = cur_voltage;
-        break;      
-      case 110:
+      break;      
 #if defined(HAS_DISPLAY)
+      case 109:
+          if ( value > 0.5 && value < 1.5 ) {
+            monitor(eeprom.sleeptime/2); 
+            monitormode = true;
+          } else {
+            monitormode = false;
+          }
+      break;
+      case 110:
 #if defined(DISPLAY_5110)
         if (value > 0.5 || value < 101) {
           eeprom.display_contrast=(uint8_t)value;
@@ -451,7 +454,7 @@ uint32_t action_loop(uint32_t data) {
           EEPROM.put(0, eeprom);
         }
         value = (float)eeprom.sleeptime;
-        break;
+      break;
       case 112:
       // sendloopcount - number sendloop befor giving up 
         if (value > 0.5 || value < 21) {
@@ -459,7 +462,7 @@ uint32_t action_loop(uint32_t data) {
           EEPROM.put(0, eeprom);
         }
         value = (float)eeprom.sendloopcount;
-        break;
+      break;
       case 113:
       // receiveloopcount - number of receivloops befor giving up.
         if (value > 0.5 || value < 21) {
@@ -467,22 +470,22 @@ uint32_t action_loop(uint32_t data) {
           EEPROM.put(0, eeprom);
         }
         value = (float)eeprom.receiveloopcount;
-        break;
+      break;
       case 114:
       // emptyloopcount - only loop 0 will transmit all other loops will only read and display
-        if (value >= 0.5 && value < 21) {
+        if (value >= 0 && value < 21) {
           eeprom.emptyloopcount=(uint16_t)value;
           EEPROM.put(0, eeprom);
         } 
         value = (float)eeprom.emptyloopcount;
-        break;
+      break;
       case 115:
       // sleep korrektion faktor in ms - will only be used once!
         if ((value > 0.5 && value < 600001) || (value < -0.5 && value > -600001)) {
           sleep_kor_time = (long int)value;
         }
         value = sleep_kor_time;
-        break;
+      break;
       case 116:
       // Voltagefactor - will be divided by 100
         if (value > 10 && value < 1000) {
@@ -490,7 +493,7 @@ uint32_t action_loop(uint32_t data) {
           EEPROM.put(0, eeprom);
         }
         value = (float)eeprom.voltagefactor;
-        break;
+      break;
       case 117:
       // Voltageadded - will be divided by 100
         if (value > -300 && value < 300) {
@@ -498,17 +501,10 @@ uint32_t action_loop(uint32_t data) {
           EEPROM.put(0, eeprom);
         }
         value = (float)eeprom.voltageadded;
-        break;
-#if defined(HAS_DISPLAY)
+      break;
       case 118:
-          if ( value > 0.5 && value < 1.5 ) {
-            monitor(eeprom.sleeptime/2); 
-            monitormode = true;
-          } else {
-            monitormode = false;
-          }
-        break;
-#endif
+        exec_pingTest = true;
+      break;
     }  
     return calcTransportValue_f(channel, value);
 }  
@@ -516,6 +512,10 @@ uint32_t action_loop(uint32_t data) {
 void setup(void) {
   delay(500);
   pinMode(STATUSLED, OUTPUT);     
+#if defined(TEST_LED)
+  pinMode(TEST_LED_PIN, OUTPUT);
+  digitalWrite(TEST_LED_PIN,STATUSLED_ON); 
+#endif
   digitalWrite(STATUSLED,STATUSLED_ON); 
   EEPROM.get(0, eeprom);
   if (eeprom.versionnumber != EEPROM_VERSION && EEPROM_VERSION > 0) {
@@ -526,34 +526,36 @@ void setup(void) {
     eeprom.emptyloopcount = RF24EMPTYLOOPCOUNT;
     eeprom.voltagefactor = VOLTAGEFACTOR;
     eeprom.voltageadded = VOLTAGEADDED;
-    eeprom.node = RF24NODE;
-    eeprom.channel = RF24CHANNEL; 
     eeprom.display_contrast = DISPLAY_KONTRAST;
     EEPROM.put(0, eeprom);
   }
 #if defined(SERIAL_DEBUG)
-  Serial.begin(9600);
+  Serial.begin(115200);
+  Serial.println("Debug started xxx ");
+  printf_begin();
 #endif
   SPI.begin();
 #if defined(DALLAS_18B20)
   sensor.begin(); 
 #endif
-#if defined(BME280)
-  sensor.begin(); 
+#if defined(BME_280)
+  sensor.begin(0x76, &Wire); 
 #endif
 #if defined(BMP_280)
-  bmp.begin(); 
+  sensor.begin(); 
 #endif
   radio.begin();
-  radio.setChannel(RF24CHANNEL);
-//  radio.setDataRate( RF24_250KBPS );
-  radio.setDataRate( RF24_1MBPS );
+  radio.setChannel(RF24_CHANNEL);
+  radio.setDataRate( RF24_SPEED );
   radio.setPALevel( RF24_PA_MAX ) ;
-  radio.setRetries(15, 15);
+  radio.setRetries(15, 5);
 //  radio.setAutoAck(0,0);
   radio.enableDynamicPayloads();
-  radio.openWritingPipe(address1);
-  radio.openReadingPipe(1,address2);
+  radio.openWritingPipe(rf24_node2hub);
+  radio.openReadingPipe(1,rf24_hub2node);
+#if defined(SERIAL_DEBUG)
+  radio.printDetails();
+#endif    
   delay(1000);
   digitalWrite(STATUSLED,STATUSLED_OFF); 
 #if defined(HAS_DISPLAY)
@@ -572,9 +574,10 @@ void setup(void) {
   loopcount = 0;
   last_send = 0;
 // on init send config to hub
-  payload.node_id = RF24NODE;
-  payload.msg_type = 51;
-  payload.orderno = 0;
+  payload.node_id  = RF24NODE;
+  payload.msg_type = PAYLOAD_TYPE_INIT;
+  payload.msg_id   = 1;
+  payload.orderno  = 0;
   payload.data1 = calcTransportValue_f(111, (float)eeprom.sleeptime);
   payload.data2 = calcTransportValue_f(112, (float)eeprom.sendloopcount);
   payload.data3 = calcTransportValue_f(113, (float)eeprom.receiveloopcount);
@@ -582,26 +585,41 @@ void setup(void) {
   payload.data5 = calcTransportValue_f(116, (float)eeprom.voltagefactor);
   payload.data6 = calcTransportValue_f(117, (float)eeprom.voltageadded);  
   radio.stopListening();
-  radio.openWritingPipe(address1);
-  int ii = 0;
-  while ( ! radio.write(&payload, sizeof(payload))) {
-    ii++;
-    if (ii > 30) break;    
+  radio.openWritingPipe(rf24_node2hub);
+  while ( payload.msg_id < 11 ) { 
+    if (radio.write(&payload, sizeof(payload))) {
+#if defined(SERIAL_DEBUG)
+      Serial.println("write OK");
+#endif    
+      payload.msg_id=11;
+    } else {
+#if defined(SERIAL_DEBUG)
+      Serial.println("write failed");
+#endif    
+    }
+    payload.msg_id++;
     delay(100);
   }
   radio.startListening();
-  radio.openReadingPipe(1,address2);
+  radio.openReadingPipe(1,rf24_hub2node);
   delay(500);
-  while ( radio.isValid() && radio.available(&pipe_num) ) {
+  while ( radio.isValid() && radio.available() ) {
     radio.read(&payload,sizeof(payload));
+#if defined(SERIAL_DEBUG)
+      Serial.println("read data");
+#endif    
     delay(50);
-    if (payload.data1 > 0) { payload.data1 = action_loop(payload.data1); } else { payload.data1 = 0; }
-    if (payload.data2 > 0) { payload.data2 = action_loop(payload.data2); } else { payload.data2 = 0; }
-    if (payload.data3 > 0) { payload.data3 = action_loop(payload.data3); } else { payload.data3 = 0; }
-    if (payload.data4 > 0) { payload.data4 = action_loop(payload.data4); } else { payload.data4 = 0; }
-    if (payload.data5 > 0) { payload.data5 = action_loop(payload.data5); } else { payload.data5 = 0; }
-    if (payload.data6 > 0) { payload.data6 = action_loop(payload.data6); } else { payload.data6 = 0; }
+    if (payload.data1 > 0) payload.data1 = action_loop(payload.data1); 
+    if (payload.data2 > 0) payload.data2 = action_loop(payload.data2); 
+    if (payload.data3 > 0) payload.data3 = action_loop(payload.data3); 
+    if (payload.data4 > 0) payload.data4 = action_loop(payload.data4); 
+    if (payload.data5 > 0) payload.data5 = action_loop(payload.data5); 
+    if (payload.data6 > 0) payload.data6 = action_loop(payload.data6); 
   } 
+#if defined(TEST_LED)
+  digitalWrite(TEST_LED_PIN,STATUSLED_OFF); 
+#endif
+  pingTest();
 }
 
 #if defined(HAS_DISPLAY)
@@ -614,8 +632,6 @@ void monitor(uint32_t delaytime) {
   const char string_6[] PROGMEM = "Node: ";
   const char string_7[] PROGMEM = "Channel: ";
   const char string_8[] PROGMEM = "Kontrast: ";
-//  const char string_9[] PROGMEM = "Channel: ";
-//  const char string_10[] PROGMEM = "Channel: ";
 #if defined(DISPLAY_5110)
   myGLCD.setFont(SmallFont);
   get_sensordata();
@@ -640,9 +656,9 @@ void monitor(uint32_t delaytime) {
   myGLCD.clrScr();
   myGLCD.print(string_5, 0, 0);
   myGLCD.print(string_6, 0, 10);
-  myGLCD.printNumI(eeprom.node, 55, 10);
+  myGLCD.printNumI(RF24NODE, 55, 10);
   myGLCD.print(string_7, 0, 20);
-  myGLCD.printNumI(eeprom.channel, 60, 20);
+  myGLCD.printNumI(RF24_CHANNEL, 60, 20);
   myGLCD.update();
   sleep4ms(delaytime);
   myGLCD.clrScr();
@@ -674,6 +690,7 @@ void display_sleep(boolean dmode) {
       myGLCD.disableSleep(); 
 #endif
         get_sensordata();
+        draw_temp(temp);
         print_field(field1_val,1);
         print_field(field2_val,2);
         print_field(field3_val,3);
@@ -894,12 +911,15 @@ void wipe_antenna(int x, int y) {
 }  
 #endif
 
-void payload_init(uint16_t node, uint8_t msg_type, uint8_t msg_flags) {
-  payload.node_id = node;
+void payloadInitHeader(uint8_t msg_type, uint8_t msg_flags, uint8_t orderno) {
+  payload.node_id = RF24NODE;
   payload.msg_type = msg_type;
   payload.msg_flags = msg_flags;
-  payload.msg_id = ++msg_id;
-  payload.orderno = 0;
+  payload.msg_id = 1;
+  payload.orderno = orderno;
+}
+
+void payloadInitData(void) {
   payload.data1 = 0;
   payload.data2 = 0;
   payload.data3 = 0;
@@ -908,9 +928,47 @@ void payload_init(uint16_t node, uint8_t msg_type, uint8_t msg_flags) {
   payload.data6 = 0;
 }
 
-void payload_send(void) {
+#if defined(SERIAL_DEBUG)
+void printPayload(payload_t* pl) {
+    String buf;
+    buf = F(" Typ: ");
+    buf += String(payload.msg_type);
+    buf += F(" OrderNo: ");
+    buf += String(payload.orderno);
+    buf += F(" (");
+    buf += String(getChannel(payload.data1));
+    buf += F("/");
+    buf += String(getValue_f(payload.data1));
+    buf += F(")");
+    buf += F("(");
+    buf += String(getChannel(payload.data2));
+    buf += F("/");
+    buf += String(getValue_f(payload.data2));
+    buf += F(")");
+    buf += F("(");
+    buf += String(getChannel(payload.data3));
+    buf += F("/");
+    buf += String(getValue_f(payload.data3));
+    buf += F(")");
+    buf += F("(");
+    buf += String(getChannel(payload.data4));
+    buf += F("/");
+    buf += String(getValue_f(payload.data4));
+    buf += F(")");
+    buf += F("(");
+    buf += String(getChannel(payload.data5));
+    buf += F("/");
+    buf += String(getValue_f(payload.data5));
+    buf += F(")");
+    buf += F("(");
+    buf += String(getChannel(payload.data6));
+    buf += F("/");
+    buf += String(getValue_f(payload.data6));
+    buf += F(")");
+    Serial.println(buf);
   
 }
+#endif
 
 void payload_data(uint8_t pos, uint8_t channel, float value) {
   switch (pos) {
@@ -934,9 +992,166 @@ void payload_data(uint8_t pos, uint8_t channel, float value) {
     break;    
   }
 }
+
+/*
+ * Ping Test durchführen
+ * Ergebnis ist die geringste Sendeleistung die vom Hub erkannt wurde
+ */
+void pingTest(void) {
+  uint8_t PA_Level = radio.getPALevel();
+  radio.setPALevel( RF24_PA_MAX) ;
+  payloadInitHeader(PAYLOAD_TYPE_PING_POW_MAX, PAYLOAD_FLAG_LASTMESSAGE, 0);
+  payloadInitData();
+  sendData(3);
+  radio.setPALevel( RF24_PA_HIGH ) ;
+  payloadInitHeader(PAYLOAD_TYPE_PING_POW_HIGH, PAYLOAD_FLAG_LASTMESSAGE, 0);
+  payloadInitData();
+  sendData(3);
+  radio.setPALevel( RF24_PA_LOW ) ;
+  payloadInitHeader(PAYLOAD_TYPE_PING_POW_LOW, PAYLOAD_FLAG_LASTMESSAGE, 0);
+  payloadInitData();
+  sendData(3);
+  radio.setPALevel( RF24_PA_MIN ) ;
+  payloadInitHeader(PAYLOAD_TYPE_PING_POW_MIN, PAYLOAD_FLAG_LASTMESSAGE, 0);
+  payloadInitData();
+  sendData(3);
+  radio.setPALevel( PA_Level ) ;
+  exec_pingTest = false;
+}
   
+/****************************************************
+ * Returns true if data are send to the hub
+ * and data are acknoledged, otherwise false
+ ***************************************************/
+bool sendData(uint8_t maxSendLoop) {
+  bool retval = false;
+  uint8_t sendloopcount = 0;
+  while ( sendloopcount < maxSendLoop ) {
+// Solange keine Nachricht für uns vorliegt UND die Sendezeit nicht abgelaufen ist ==> senden
+    radio.stopListening();
+    radio.openWritingPipe(rf24_node2hub);
+    delay(10);
+#if defined(SERIAL_DEBUG)
+    if (radio.write(&payload, sizeof(payload))) {
+      Serial.println("write Msg => OK");
+    } else {
+      Serial.println("write Msg => failed");
+    } 
+#else
+    radio.write(&payload, sizeof(payload));
+#endif         
+    radio.startListening();
+    for(uint8_t i=0; i<RF24SENDDELAY; i++) {
+      delay(2);
+      if ( receiveData() ) {
+#if defined(SERIAL_DEBUG)
+        Serial.println("Got Msg; Stopp transmitting ");
+#endif    
+// Wenn wir die erste Nachricht empfangen, wird das Senden eingestellt
+        sendloopcount = maxSendLoop;
+        i = RF24SENDDELAY;
+        retval = true;
+      }
+      i++;
+    }
+    payload.msg_id++;
+    sendloopcount++;
+  }
+  return retval;
+}
+
+/****************************************************
+ * Returns true if there are valid data
+ * for this node, otherwise returns false
+ ***************************************************/
+bool receiveData(void) {        
+  bool retval = false;
+  if ( radio.available() ) {
+    radio.read(&payload,sizeof(payload));
+    if (payload.node_id == RF24NODE ) {
+#if defined(SERIAL_DEBUG)
+      Serial.println("Msg for this Node received");
+      printPayload(&payload);
+#endif    
+      radio.flush_tx();
+      retval = true;
+    } else {
+      retval = false;
+    }
+  } else {
+    retval = false;
+  }
+  return retval;
+}
+
+void processData(uint8_t maxReceiveLoop) {
+  uint8_t receiveloopcount = 0;
+  while ( receiveloopcount < maxReceiveLoop) {
+// Wenn Flag PAYLOAD_FLAG_LASTMESSAGE gesetzt ist dann wird keine nachfolgende Nachricht erwartet
+    if ((payload.msg_flags & PAYLOAD_FLAG_LASTMESSAGE) == PAYLOAD_FLAG_LASTMESSAGE ) {
+      receiveloopcount = maxReceiveLoop;
+    } else {
+      receiveloopcount = 0;
+    }
+#if defined(SERIAL_DEBUG)
+        Serial.print("Payload Type = ");
+        Serial.println(payload.msg_type);
+#endif    
+    switch(payload.msg_type) {
+      case PAYLOAD_TYPE_HB_RESP: {
+        // Eine Nachricht vom Typ PAYLOAD_TYPE_HBRESP ist eine leere ENDE Nachricht            
+        // Keine Verarbeitung nötig
+        payloadInitHeader(PAYLOAD_TYPE_HB_STOP, PAYLOAD_FLAG_LASTMESSAGE, payload.orderno);
+#if defined(SERIAL_DEBUG)
+        Serial.println("Sende Quittung HB_RESP");
+        printPayload(&payload);
+#endif    
+        sendData(3);
+        receiveloopcount = maxReceiveLoop;
+      }
+      case PAYLOAD_TYPE_DATSTOP: {
+        // Eine Nachricht vom Typ PAYLOAD_TYPE_DATSTOP ist eine leere ENDE Nachricht            
+        // Keine Verarbeitung nötig
+#if defined(SERIAL_DEBUG)
+        Serial.println("Nachricht DATSTOP");
+        printPayload(&payload);
+#endif    
+        receiveloopcount = maxReceiveLoop;
+      }
+      break;
+      case PAYLOAD_TYPE_DAT:
+      default: {
+        // Andere Nachrichten werden durch den "action_loop" geschickt              
+        if (payload.data1 > 0) { payload.data1 = action_loop(payload.data1); }
+        if (payload.data2 > 0) { payload.data2 = action_loop(payload.data2); }
+        if (payload.data3 > 0) { payload.data3 = action_loop(payload.data3); }
+        if (payload.data4 > 0) { payload.data4 = action_loop(payload.data4); }
+        if (payload.data5 > 0) { payload.data5 = action_loop(payload.data5); }
+        if (payload.data6 > 0) { payload.data6 = action_loop(payload.data6); }
+// Quittung senden           
+        payloadInitHeader(PAYLOAD_TYPE_DATRESP, PAYLOAD_FLAG_LASTMESSAGE, payload.orderno);
+#if defined(SERIAL_DEBUG)
+        Serial.println("Send Quittung Daten");
+        printPayload(&payload);
+#endif    
+        sendData(eeprom.sendloopcount);
+      }
+    }
+    if (receiveloopcount < maxReceiveLoop) delay(RF24RECEIVEDELAY);
+    receiveloopcount++;
+  }
+// Buffer leeren
+  while ( radio.available() ) radio.read(&payload,sizeof(payload));  
+}
+
+void exec_jobs(void) {
+  // Test if there are some jobs to do
+  if (exec_pingTest) pingTest();
+}
+
 void loop(void) {
   delay(10);  
+#if defined(HBNODE)  
   cur_voltage = (vcc.Read_Volts()+((float)eeprom.voltageadded/100.0))*((float)eeprom.voltagefactor)/100.0;
   low_voltage_flag = (vcc.Read_Volts() <= LOWVOLTAGELEVEL);
   if ((! low_voltage_flag) || (last_send > 3600000)) {
@@ -958,90 +1173,45 @@ void loop(void) {
 #endif
       radio.powerUp();
       radio.startListening();
-      radio.openReadingPipe(1,address2);
+      radio.openReadingPipe(1,rf24_hub2node);
       delay(10);
-      payload.node_id = RF24NODE;
-      payload.msg_type = 51;
-      payload.orderno = 0;
-      payload.data1 = calcTransportValue_f(101, cur_voltage);
+      payloadInitHeader(PAYLOAD_TYPE_HB, PAYLOAD_FLAG_LASTMESSAGE, 0);
+      payloadInitData();
+#if defined(SERIAL_DEBUG)
+          delay(100);
+          Serial.println("WakeUp");
+          Serial.print("Voltage: ");
+          Serial.println(cur_voltage);
+          Serial.print("Temperature: ");
+          Serial.println(temp);
+          Serial.print("Pressure: ");
+          Serial.println(pres);
+#endif  
+      payload_data(1, 101, cur_voltage);
 #if defined(DALLAS_18B20)
-      payload.data2 = calcTransportValue_f(1, temp);
-      payload.data3 = 0;
-      payload.data4 = 0;
-      payload.data5 = 0;
-      payload.data6 = 0;
+      payload_data(2, 1, temp);
 #endif
-#if defined(BME280)
-      payload.data2 = calcTransportValue_f(1, temp);
-      payload.data3 = calcTransportValue_f(2, pres);
-      payload.data4 = calcTransportValue_f(3, humi);
-      payload.data5 = 0;
-      payload.data6 = 0;      
+#if defined(BME_280)
+      payload_data(2, 1, temp);
+      payload_data(3, 2, pres);
+      payload_data(4, 3, humi);
 #endif
 #if defined(BMP_280)
-      payload.data2 = calcTransportValue_f(1, temp);
-      payload.data3 = calcTransportValue_f(2, pres);
-      payload.data4 = 0;
-      payload.data5 = 0;
-      payload.data6 = 0;      
+      payload_data(2, 1, temp);
+      payload_data(3, 2, pres);
 #endif
-      receiveloopcount = 0;
-      sendloopcount = 0;
-// SendLoop
-      while ( sendloopcount < eeprom.sendloopcount ) {
-// Solange keine Nachricht für uns vorliegt UND die Sendezeit nicht abgelaufen ist ==> senden
-        radio.stopListening();
-        radio.openWritingPipe(address1);
-        delay(10);
-        radio.write(&payload,sizeof(payload));    
-        delay(10);
-        radio.startListening();
-        delay(RF24SENDDELAY);
-        if ( radio.available() ) {
-// Wenn wir die erste Nachricht empfangen, wird das Senden eingestellt
-          sendloopcount = eeprom.sendloopcount;
-        }
-        sendloopcount++;
-      }
-// ReceiveLoop        
-      while ( receiveloopcount < eeprom.receiveloopcount ) {          
-        if ( radio.available() ) {
-          radio.read(&payload,sizeof(payload));
-// Eine Nachricht vom Typ 52 ist eine ENDE Nachricht            
-          if ( payload.msg_type == 52 ) {
-            receiveloopcount = eeprom.receiveloopcount;
-          } else {
-// Andere Nachrichten werden durch den "action_loop" geschickt              
-            if (payload.data1 > 0) { payload.data1 = action_loop(payload.data1); } else { payload.data1 = 0; }
-            if (payload.data2 > 0) { payload.data2 = action_loop(payload.data2); } else { payload.data2 = 0; }
-            if (payload.data3 > 0) { payload.data3 = action_loop(payload.data3); } else { payload.data3 = 0; }
-            if (payload.data4 > 0) { payload.data4 = action_loop(payload.data4); } else { payload.data4 = 0; }
-            if (payload.data5 > 0) { payload.data5 = action_loop(payload.data5); } else { payload.data5 = 0; }
-            if (payload.data6 > 0) { payload.data6 = action_loop(payload.data6); } else { payload.data6 = 0; }
-          }
-// Wenn Flag 0x01 gesetzt ist dann wird keine nachfolgende Nachricht erwartet
-          if ((payload.msg_flags & 0x01) == 0x01 ) {
-            receiveloopcount = eeprom.receiveloopcount;
-          }
-// Quittung senden            
-          radio.stopListening();
-          delay(10);
-          radio.write(&payload,sizeof(payload));
-          delay(10);
-          radio.startListening();
-          receiveloopcount = 0;
-        }
-        if (receiveloopcount < eeprom.receiveloopcount) delay(RF24RECEIVEDELAY);
-        receiveloopcount++;
-      }
-    }
-//myGLCD.print(string_3,40,40);
-//myGLCD.update();    
-    radio.stopListening();
+      if ( sendData(eeprom.sendloopcount) ) processData(eeprom.receiveloopcount);
+      exec_jobs();
+      radio.stopListening();
+#if defined(SERIAL_DEBUG)
+      Serial.println("GoSleep");
+      delay(100);
+#endif
 #if defined(HAS_DISPLAY)
-    wipe_antenna(ANT_X0, ANT_Y0);
+      wipe_antenna(ANT_X0, ANT_Y0);
 #endif
-    radio.powerDown();
+      radio.powerDown();
+    }
   } else {
 #if defined(HAS_DISPLAY)
     display_sleep(true);
@@ -1072,4 +1242,13 @@ void loop(void) {
   last_send += eeprom.sleeptime;
   loopcount++;
   if (loopcount > eeprom.emptyloopcount) loopcount=0;
+#else
+// Always On Node from here  
+  if ( receiveData() ) { 
+    processData(1);
+    exec_jobs();
+  } else {
+    delay(300);
+  }
+#endif
 }

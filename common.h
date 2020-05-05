@@ -8,90 +8,10 @@
 #include <ctype.h> 
 #include <time.h>
 #include <sys/time.h>
-#include "rf24hub_config.h"
-
-// Structure of our payload
-typedef struct {   // Our payload can be 32 byte max.
-  uint16_t    node_id;         
-  uint8_t     msg_id;          
-  uint8_t     msg_type;        
-  uint8_t     msg_flags;       
-  uint8_t     orderno;         
-  uint8_t     reserved1;      
-  uint8_t     reserved2;      
-  uint32_t    data1;         
-  uint32_t    data2;         
-  uint32_t    data3;         
-  uint32_t    data4;         
-  uint32_t    data5;         
-  uint32_t    data6;         
-} payload_t;
-
-
-/*************************************
- * Stellt die Funktionen bereit um das Zahlenformat
- * für die Übertragung aufzubereiten und nach der
- * Übertragung wieder zu dekodieren
- * 
- * Genauigkeit: 1 von 100.000 = 0,01 Promille
- * 
- *************************************/
-
-#define ZF_SENSOR_NO        0b11111110000000000000000000000000
-#define ZF_ZAHL_NEGATIV     0b00000001000000000000000000000000
-#define ZF_EXPO_NEGATIV     0b00000000100000000000000000000000
-#define ZF_EXPO_WERT        0b00000000011110000000000000000000
-#define ZF_ZAHL_WERT        0b00000000000001111111111111111111
-
-#include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
-/************************************
- * Das Ergebnis wird mit einer Genauigkeit von 19 Bit 
- * (524288 max, genutzt 500000 = 0,02 Promille) gespeichert.
- * Zahlenformat X * 10^Y
- * Format des Sensorwertes
- * Bitreihenfolge: Bit 1 (MSB) ... Bit 32 (LSB)
- * Bit 1..7:    Sensornummer (1..127)
- * Bit 8:       Vorzeichen (0=positiv; 1=negativ)
- * Bit 9:       Vorzeichen Exponent (0=10^X; 1=10^-X)
- * Bit 10..13   Exponent (0..15)
- * Bit 14..32   Mantisse (0..10000)
- ***********************************/
-
-
-/***************************************************
- * Extrahiert die Sensornummer aus dem Transportwert
- ***************************************************/
-uint8_t getChannel(uint32_t val);
-
-/***************************************************
- * Extrahiert den Sensorwert aus dem Transportwert
- * Hier: Float
- ***************************************************/
-float getValue_f(uint32_t val);
-
-/***************************************************
- * Extrahiert den Sensorwert aus dem Transportwert
- * Hier: Integer
- ***************************************************/
-uint16_t getValue_i(uint32_t val);
-
-/******************************************************
- * Verpackt die Sensornummer und den Messwert zu einem 
- * TransportWert des Datentyps uint32_t.
- * Sensor: gültige Werte zwischen 1..127
- * Value: gültige Werte: -1*10^19 .. 1*10^19
- ******************************************************/
-uint32_t calcTransportValue_f(uint8_t sensor, float value);
-
-/******************************************************
- * Verpackt die Sensornummer und den Messwert zu einem 
- * TransportWert des Datentyps uint32_t.
- * Sensor: gültige Werte zwischen 1..127
- * Value: gültige Werte: 0 .. 65535
- ******************************************************/
-uint32_t calcTransportValue_i(uint8_t sensor, uint16_t value);
+#include <cstdio>
+#include "rf24hub_config.h"
 
 /******************************************************
  * trim: get rid of trailing and leading whitespace...
@@ -99,9 +19,30 @@ uint32_t calcTransportValue_i(uint8_t sensor, uint16_t value);
  ******************************************************/
 char * trim (char * s);
 
+/*
+ * log_ts: liefert einen Zeitstempel für Logausgaben
+ * in der Form: [2020.04.20 18:38:17.233]
+ * Wichtig: Es muss ein Speicherplatz zur Aufnahme 
+ * des Strings ( Grösse 26 Byte ) übergeben werden!
+ */
+char * log_ts(char * buf);
+
+/*
+ * str_ts: liefert einen Zeitstempel als array of char
+ * in der Form: 2020.04.20 18:38:17
+ * Wichtig: Es muss ein Speicherplatz zur Aufnahme 
+ * des Strings ( Grösse 20 Byte ) übergeben werden!
+ */
+char * str_ts(char * buf, uint8_t form);
+
+char* alloc_str(uint16_t verboselevel, const char* msgTxt, size_t size);
+
+void free_str(uint16_t verboselevel, const char* msgTxt, char* str);
+
 uint64_t mymillis(void);
 
 uint16_t decodeVerbose(uint16_t oldLevel, char* verboselevel);
+
 
 #endif // _RF24HUBD_COMMON_H_
 

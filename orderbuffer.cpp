@@ -1,221 +1,166 @@
 #include "orderbuffer.h"
 
 OrderBuffer::OrderBuffer(void) {
-    initial_ptr = NULL;
+    p_initial = NULL;
 }
 
-void OrderBuffer::new_entry(OrderBuffer::orderbuffer_t* new_ptr) {
-    orderbuffer_t *search_ptr;
-    new_ptr->next = NULL;
-    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    if (logger->verboselevel & VERBOSEORDERBUFFER) {
-        sprintf(debug,"OrderBuffer: new_entry %p", new_ptr); 
-        logger->logmsg(VERBOSEORDERBUFFER, debug);    
-        sprintf(debug,"Bestand vorher"); 
-        logger->logmsg(VERBOSEORDERBUFFER, debug);
-        debug_print_buffer();
-    }
-    if (initial_ptr) {
-        search_ptr = initial_ptr;
-        while (search_ptr->next) {
-            search_ptr = search_ptr->next;
+void OrderBuffer::newEntry(OrderBuffer::orderbuffer_t* p_new) {
+    orderbuffer_t *p_search;
+    p_new->p_next = NULL;
+    if (p_initial) {
+        p_search = p_initial;
+        while (p_search->p_next) {
+            p_search = p_search->p_next;
         }
-        search_ptr->next = new_ptr;
+        p_search->p_next = p_new;
     } else {
-        initial_ptr = new_ptr;
+        p_initial = p_new;
     }
-    if (logger->verboselevel & VERBOSEORDERBUFFER) {
-        sprintf(debug,"Bestand nachher"); 
-        logger->logmsg(VERBOSEORDERBUFFER, debug);
-        debug_print_buffer();
-    }
-    free(debug);
 }
 
-bool OrderBuffer::del_entry(OrderBuffer::orderbuffer_t* my_ptr) {
+bool OrderBuffer::delEntry(OrderBuffer::orderbuffer_t* p_del) {
     bool retval = false;
-    orderbuffer_t *search_ptr, *tmp1_ptr;
-    search_ptr = initial_ptr;
-    tmp1_ptr = initial_ptr;
-    while (search_ptr) {
-        if (search_ptr == my_ptr ) {
-            if (search_ptr == initial_ptr) {
-                if (initial_ptr->next) { 
-                    tmp1_ptr=initial_ptr->next;
-                    delete initial_ptr;
-                    initial_ptr=tmp1_ptr;
+    orderbuffer_t *p_search, *p_tmp;
+    p_search = p_initial;
+    p_tmp = p_initial;
+    while (p_search) {
+        if (p_search == p_del ) {
+            if (p_search == p_initial) {
+                if (p_initial->p_next) { 
+                    p_tmp=p_initial->p_next;
+                    delete p_initial;
+                    p_initial=p_tmp;
                 } else {
-                    delete initial_ptr;
-                    initial_ptr = NULL;
+                    delete p_initial;
+                    p_initial = NULL;
                 }
             } else            {
-                tmp1_ptr->next=search_ptr->next;
-                delete search_ptr;
+                p_tmp->p_next=p_search->p_next;
+                delete p_search;
             }
-            search_ptr = NULL;
+            p_search = NULL;
             retval = true;
         } else {
-            tmp1_ptr = search_ptr;
-            search_ptr=search_ptr->next;
+            p_tmp = p_search;
+            p_search=p_search->p_next;
         }
     }
     return retval;
 }
 
-bool OrderBuffer::del_node_channel(uint16_t node, uint8_t channel) {
+bool OrderBuffer::delByNodeChannel(uint8_t node_id, uint8_t channel) {
     int retval = false;
-    orderbuffer_t *search_ptr;
-    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    if (logger->verboselevel & VERBOSEORDERBUFFER) {
-        sprintf(debug,"OrderBuffer: del_node_channel N:%u C:%u", node, channel); 
-        logger->logmsg(VERBOSEORDERBUFFER, debug);    
-        sprintf(debug,"Bestand vorher"); 
-        logger->logmsg(VERBOSEORDERBUFFER, debug);
-        debug_print_buffer();
-    }
-    search_ptr = initial_ptr;
-    while (search_ptr) {
-        if (search_ptr->node == node && search_ptr->channel == channel) {
-            if (del_entry(search_ptr)) retval = true;
+    orderbuffer_t *p_search;
+    p_search = p_initial;
+    while (p_search) {
+        if (p_search->node_id == node_id && p_search->channel == channel) {
+            if (delEntry(p_search)) retval = true;
         }
-        search_ptr=search_ptr->next;
+        p_search=p_search->p_next;
     }
-    if (logger->verboselevel & VERBOSEORDERBUFFER) {
-        sprintf(debug,"Bestand nachher"); 
-        logger->logmsg(VERBOSEORDERBUFFER, debug);
-        debug_print_buffer();
-    }
-    free(debug);
     return retval;
 }
 
-bool OrderBuffer::del_node(uint16_t node) {
+bool OrderBuffer::delByNode(uint8_t node_id) {
     int retval = false;
-    orderbuffer_t *search_ptr;
-    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    if (logger->verboselevel & VERBOSEORDERBUFFER) {
-        sprintf(debug,"OrderBuffer: del_node N:%u", node); 
-        logger->logmsg(VERBOSEORDERBUFFER, debug);    
-        sprintf(debug,"Bestand vorher"); 
-        logger->logmsg(VERBOSEORDERBUFFER, debug);
-        debug_print_buffer();
-    }
-    search_ptr = initial_ptr;
-    while (search_ptr) {
-        if (search_ptr->node == node) {
-            if (del_entry(search_ptr)) retval = true;
+    orderbuffer_t *p_search;
+    p_search = p_initial;
+    while (p_search) {
+        if (p_search->node_id == node_id) {
+            if (delEntry(p_search)) retval = true;
         }
-        search_ptr=search_ptr->next;
+        p_search=p_search->p_next;
     }
-    if (logger->verboselevel & VERBOSEORDERBUFFER) {
-        sprintf(debug,"Bestand nachher"); 
-        logger->logmsg(VERBOSEORDERBUFFER, debug);
-        debug_print_buffer();
-    }
-    free(debug);
     return retval;
 }
 
-bool OrderBuffer::node_has_entry(uint16_t node) {
+bool OrderBuffer::nodeHasEntry(uint8_t node_id) {
     int retval = false;
-    orderbuffer_t *search_ptr;
-    search_ptr = initial_ptr;
-    while (search_ptr) {
-        if (search_ptr->node == node) {
+    orderbuffer_t *p_search;
+    p_search = p_initial;
+    while (p_search) {
+        if (p_search->node_id == node_id) {
             retval = true;
         }
-        search_ptr=search_ptr->next;
+        p_search=p_search->p_next;
     }
     return retval;
 }
 
-void OrderBuffer::add_orderbuffer(uint64_t millis, uint16_t node, uint8_t channel, float value) {
-    orderbuffer_t *new_ptr = new orderbuffer_t;
-    del_node_channel(node, channel);
-    new_ptr->entrytime = millis;
-    new_ptr->node = node;
-    new_ptr->channel = channel;
-    new_ptr->value = value;
-    new_entry(new_ptr);
+void OrderBuffer::addOrderBuffer(uint64_t millis, uint8_t node_id, uint8_t channel, float value) {
+    orderbuffer_t *p_new = new orderbuffer_t;
+    delByNodeChannel(node_id, channel);
+    p_new->entrytime = millis;
+    p_new->node_id = node_id;
+    p_new->channel = channel;
+    p_new->value = value;
+    newEntry(p_new);
 }
 
-void *OrderBuffer::find_order4node(uint16_t node, void* last_ptr, uint8_t* channel, float* value) {
-    orderbuffer_t *search_ptr;
+void* OrderBuffer::findOrder4Node(uint8_t node_id, void* p_last, uint8_t* channel, float* value) {
+    orderbuffer_t *p_search;
     void* retval = NULL;
-    bool rec_found = false;
-    if (last_ptr) {
-        search_ptr = (orderbuffer_t*)last_ptr;
-        search_ptr = search_ptr->next;
+    if (p_last) {
+        p_search = (orderbuffer_t*)p_last;
+        p_search = p_search->p_next;
     } else {
-        search_ptr = initial_ptr;
+        p_search = p_initial;
     }
-    while ( ! rec_found && search_ptr ) {
-        if ( search_ptr->node == node ) {
-            *channel = search_ptr->channel;
-            *value = search_ptr->value;
-            retval = (void*)search_ptr;
-            rec_found = true;
+    while ( p_search ) {
+        if ( p_search->node_id == node_id ) {
+            *channel = p_search->channel;
+            *value = p_search->value;
+            retval = (void*)p_search;
+            p_search = NULL;;
+        } else {
+            p_search=p_search->p_next;
         }
-        search_ptr=search_ptr->next;
     }
     return retval;
 }
 
-void OrderBuffer::debug_print_buffer(void) {
-    orderbuffer_t *search_ptr;
-    search_ptr = initial_ptr;
-    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    sprintf(debug,"OrderBuffer: ---- Buffercontent ----"); 
-    logger->logmsg(VERBOSEORDERBUFFER, debug);
-    while (search_ptr) {
-        sprintf(debug,"OrderBuffer: %p N:%u C:%u V:%g", 
-                search_ptr, search_ptr->node, 
-                search_ptr->channel, search_ptr->value );
-        logger->logmsg(VERBOSEORDERBUFFER, debug);
-        search_ptr=search_ptr->next;
+void OrderBuffer::printBuffer(uint16_t debuglevel) {
+    orderbuffer_t *p_search;
+    p_search = p_initial;
+    if (verboselevel & debuglevel) {
+        printf("OrderBuffer: ---- Buffercontent ----"); 
+        while (p_search) {
+            printf("OrderBuffer: %p N:%u C:%u V:%g", p_search, p_search->node_id, p_search->channel, p_search->value );
+            p_search=p_search->p_next;
+        }
+        printf("OrderBuffer: -- END Buffercontent --"); 
     }
-    sprintf(debug,"OrderBuffer: -- END Buffercontent --"); 
-    logger->logmsg(VERBOSEORDERBUFFER, debug);
-    free(debug);
 }
 
-void OrderBuffer::print_buffer(int new_tn_in_socket) {
+void OrderBuffer::printBuffer2tn(int new_tn_in_socket) {
     char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
-    orderbuffer_t *search_ptr;
-    search_ptr = initial_ptr;
+    orderbuffer_t *p_search;
+    p_search = p_initial;
     sprintf(client_message," ---- OrderBuffer ----\n"); 
     write(new_tn_in_socket , client_message , strlen(client_message));
-    while (search_ptr) {
-        sprintf(client_message,"<%p> Node:%u Channel:%u Value:%g\n", 
-                search_ptr, search_ptr->node, 
-                search_ptr->channel, search_ptr->value );
+    while (p_search) {
+        sprintf(client_message,"<%p> Node:%u Channel:%u Value:%g\n", p_search, p_search->node_id, p_search->channel, p_search->value );
         write(new_tn_in_socket , client_message , strlen(client_message));
-        search_ptr=search_ptr->next;
+        p_search=p_search->p_next;
     }
     free(client_message);
-    if (logger->verboselevel & VERBOSEORDERBUFFER) {
-        debug_print_buffer();
-    }
 }
 
-void OrderBuffer::html_buffer(int new_tn_in_socket) {
+void OrderBuffer::htmlBuffer2tn(int new_tn_in_socket) {
     char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
-    orderbuffer_t *search_ptr;
-    search_ptr = initial_ptr;
+    orderbuffer_t *p_search;
+    p_search = p_initial;
 	sprintf(client_message,"\n<center><big>Orderbuffer</big><table><tr><th>EntryTime</th><th>Node</th><th>Channel</th><th>Value</th></tr>\n"); 
     write(new_tn_in_socket , client_message , strlen(client_message));
-    while (search_ptr) {
+    while (p_search) {
 		sprintf(client_message,"<tr><td>%llu</td><td>%u</td><td>%u</td><td>%g</td></tr>\n", 
-                search_ptr->entrytime, search_ptr->node, 
-                search_ptr->channel, search_ptr->value );
+                p_search->entrytime, p_search->node_id, 
+                p_search->channel, p_search->value );
         write(new_tn_in_socket , client_message , strlen(client_message));
-        search_ptr=search_ptr->next;
+        p_search=p_search->p_next;
     }
 	sprintf(client_message,"</table><br>\n"); 
 	write(new_tn_in_socket , client_message , strlen(client_message));
     free(client_message);
 }
 
-void OrderBuffer::begin(Logger* _logger) {
-    logger = _logger;
-}
