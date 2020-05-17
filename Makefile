@@ -40,7 +40,7 @@ rf24hubd: config.o dataformat.o database.o node.o sensor.o orderbuffer.o order.o
 	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24network ${MYSQLLIBS} $^ -o $@
 
 # Test of order object
-ordertest: order.o order_test.cpp
+ordertest: sensor.o node.o orderbuffer.o common.o dataformat.o order.o order_test.cpp
 	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24network ${MYSQLLIBS} $^ -o $@
 
 # Test of orderbuffer object
@@ -49,7 +49,7 @@ orderbuffertest: orderbuffer.o orderbuffer_test.cpp
 
 # clear build files
 clean:
-	rm *.o rf24hubd
+	rm *.o rf24hubd rf24hubd_debug
 
 # Install the sensorhub
 install: 

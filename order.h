@@ -10,22 +10,22 @@
 #include <stdio.h> 
 #include <iostream>
 #include "rf24_config.h"
+#include "rf24hub_config.h"
 #include "common.h"
 #include "dataformat.h"
 
-extern uint16_t verboselevel;   
 
 class Order {
 
 private:
 
-    // Structure to handle the orderqueue
-    struct order_t {
-        uint8_t                node_id;   		// the destination node
+// Structure to handle the orderqueue
+struct order_t {
+        NODE_DATTYPE           node_id;   		// the destination node
         uint8_t                msg_id;          // ==> payload.msg_id
         uint8_t                msg_type;      	// ==> payload.msg_type
         uint8_t   	           msg_flags;     	// ==> payload.msg_flags
-        uint8_t 	           orderno;   		// ==> payload.orderno
+        ONR_DATTYPE	           orderno;   		// ==> payload.orderno
         uint32_t      	       data1;		    // The transportvalue for the Sensor 1 and Value 1
         uint32_t      	       data2;		    // The transportvalue for the Sensor 2 and Value 2
         uint32_t      	       data3;		    // The transportvalue for the Sensor 3 and Value 3
@@ -36,32 +36,91 @@ private:
         uint64_t		       entrytime;       // Timestamp for creating of this record
         uint64_t	  	       last_send;		// Timestamp for last sending of this record
         order_t*               p_next;
-    };
+};
 
-    order_t*  p_initial;
-    
-    bool delEntry(order_t* p_del);
-    void newEntry(order_t* p_new);
-    order_t* findNode(uint8_t node_id);
+order_t*  p_initial;
+/**************************************************************
+ * char buffer zur Ausgabe des timestrings ==> ts(buf)
+ *************************************************************/
+char*       buf;
+/**************************************************************
+ * Bufferinterner Speicher für den verboselevel
+ *************************************************************/
+uint16_t    verboselevel;
+/**************************************************************
+ * Binärer Speicher der anzeigt ob mind. 1 Datensatz 
+ * im Speicher ist.
+ *************************************************************/
+bool has_order;
+/**************************************************************
+ * Die aktuelle OrderNummer
+ *************************************************************/
+ONR_DATTYPE orderno;
+/**************************************************************
+ * fügt einen neuen record zum Buffer hinzu
+ *************************************************************/
+void newEntry(order_t* p_new);
+/**************************************************************
+ * löscht den übergebenen record aus dem Buffer
+ *************************************************************/
+bool delEntry(order_t* p_del);
+/**************************************************************
+ * findet den ersten record zum Node
+ *************************************************************/
+order_t* findNode(NODE_DATTYPE node_id);
     
 public:
     
-    uint8_t orderno;
-    bool has_order;
-    
-    bool isOrderNo(uint8_t orderno);
-    bool delOrderNo(uint8_t orderno);
-    bool delByOrderNo(uint8_t orderno);
-    bool delByNode(uint8_t node_id);
-    void addOrder(uint8_t node_id, uint8_t msg_type, bool HB_order, uint32_t data, uint64_t entrytime);
-    void modifyOrder(uint8_t node_id, uint8_t pos, uint32_t data);
-    void modifyOrderFlags(uint8_t node_id, uint8_t msg_flags);
-    void addEndOrder(uint8_t node_id, uint8_t msg_type, uint64_t entrytime);
-    bool getOrderForTransmission(payload_t* payload, uint64_t mytime); 
-    void printBuffer2tn(int new_tn_in_socket);
-    void htmlBuffer2tn(int new_tn_in_socket);
-    void printBuffer(uint16_t verboselevel);    
-    Order(void);
+/**************************************************************
+ *  Setzt das Verboselevel
+ *************************************************************/    
+void setVerbose(uint16_t _verboselevel);
+/**************************************************************
+ * true wenn min ein Eintrag vorhanden sonst false
+ *************************************************************/
+bool hasEntry(void);
+/**************************************************************
+ * true wenn die übergebene orderno einen record im Speicher hat
+ *************************************************************/
+bool isOrderNo(ONR_DATTYPE orderno);
+/**************************************************************
+ * löscht den record im Buffer mit der übergebenen orderno
+ *************************************************************/
+bool delByOrderNo(ONR_DATTYPE orderno);
+/**************************************************************
+ * löscht den record im Buffer mit der übergebenen node_id
+ *************************************************************/
+bool delByNode(NODE_DATTYPE node_id);
+/**************************************************************
+ * fügt einen neuen record zum Buffer hinzu
+ *************************************************************/
+void addOrder(NODE_DATTYPE node_id, uint8_t msg_type, bool HB_order, uint32_t data, uint64_t entrytime);
+/**************************************************************
+ * Füllt das data Feld an der Position pos 2..6 => data2..data6
+ *************************************************************/
+void modifyOrder(NODE_DATTYPE node_id, uint8_t pos, uint32_t data);
+/**************************************************************
+ * Setzt das msg_flag für die übergebene node_id
+ *************************************************************/
+void modifyOrderFlags(NODE_DATTYPE node_id, uint8_t msg_flags);
+/**************************************************************
+ * füllt den Payload mit den Daten für die nächste Sendung
+ *************************************************************/
+bool getOrderForTransmission(payload_t* payload, uint64_t mytime); 
+/**************************************************************
+ * Druckt alle records im Buffer in de tn_socket im HTML Format
+ *************************************************************/
+void printBuffer2tn(int tn_socket);
+/**************************************************************
+ * Druckt alle records im Buffer in de tn_socket
+ *************************************************************/
+void htmlBuffer2tn(int tn_socket);
+/**************************************************************
+ * Druckt alle records im Buffer in den STDIO
+ *************************************************************/
+void printBuffer(void);    
+
+Order(void);
 
 };
 

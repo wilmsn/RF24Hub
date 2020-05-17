@@ -31,4 +31,7 @@
 *.out
 *.app
 rf24hubd
+rf24hubd_debug
 rf24hub.log
+ordertest
+orderbuffertest

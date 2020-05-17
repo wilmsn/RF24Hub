@@ -16,10 +16,11 @@
 #include <time.h> 
 #include <iostream>
 #include <mariadb/mysql.h>
+#include "rf24_config.h"
 #include "rf24hub_config.h"
+#include "common.h"
 #include "node.h"
 #include "sensor.h"
-#include "common.h"
 
 using namespace std; 
 
@@ -31,20 +32,27 @@ private:
     MYSQL_RES   *res;
     MYSQL_ROW   row;
     char*       pEnd;
+    char*       buf;
+    uint16_t    verboselevel;
     void do_sql(char* stmt);
-    void db_check_error(void);
     void debugPrintSQL(char* sqlstmt);
+    void db_check_error(void);
 
 public:
 
+/**************************************************************
+ *  Setzt das Verboselevel
+ *************************************************************/    
+void setVerbose(uint16_t _verboselevel);
     bool connect(string db_hostname, string db_username, string db_password, string db_schema, int db_port);
     void storeSensorValue(uint32_t mysensor, float value);
-    void storeNodeConfig(uint16_t node, uint8_t channel, float value);
+    void storeNodeConfig(NODE_DATTYPE node, uint8_t channel, float value);
     void initSensor(Sensor* sensor);
     void initNode(Node* node);
     void initSystem(void);
-    void syncSensor(void);
-    void syncSensorData(void);
+    void sync_sensor(void);
+    void sync_sensordata(void);
+    Database(void);
 };
 
 #endif // _DATABASE_H_

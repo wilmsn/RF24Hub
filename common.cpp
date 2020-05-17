@@ -15,36 +15,39 @@ char * trim (char * s) {
   return s;
 }
 
-char * log_ts(char * buf) {
-    char temp[20];
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    unsigned int msec=tv.tv_usec / 1000;
-    sprintf(buf,"[%s.%s%s%u] ",str_ts(temp,1),msec<100? "0":"",msec<10? "0":"",msec); 
+char* utime2str(time_t utime, char* buf, uint8_t form) {
+    struct tm lt;
+    const char* format;
+    char res[22];
+    if (utime == 0) utime = time(0);
+    localtime_r(&utime, &lt);
+    switch (form) {
+        case 1:
+            format = default_format1;
+            break;
+        case 2:
+            format = default_format2;
+            break;
+    }            
+    if (strftime(res, sizeof(res), format, &lt) == 0) {
+        sprintf(buf,"Error");
+    } else {
+        sprintf(buf,"%s",res);
+    }
     return buf;
 }
 
-char * str_ts(char * buf, uint8_t form) {
+char* ts(char* buf) {
     time_t now = time(0);
 	tm *ltm = localtime(&now);
-    char temp[20];
-    switch ( form ) {
-        case 1: {
-            sprintf(temp,"%d.%s%d.%s%d %s%d:%s%d:%s%d",ltm->tm_year + 1900, 
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    unsigned int msec=tv.tv_usec / 1000;
+    sprintf(buf,"[%d.%s%d.%s%d %s%d:%s%d:%s%d.%s%u] ",ltm->tm_year + 1900, 
                     ltm->tm_mon<9? "0":"", ltm->tm_mon+1, ltm->tm_mday<10? "0":"", ltm->tm_mday,
                     ltm->tm_hour<10? " ":"", ltm->tm_hour, ltm->tm_min<10? "0":"", ltm->tm_min,
-                    ltm->tm_sec<10? "0":"", ltm->tm_sec);
-        }
-        break;
-        case 2: {
-            sprintf(temp,"%s%d.%s%d.%d %s%d:%s%d:%s%d", ltm->tm_mday<10? " ":"", ltm->tm_mday, 
-                    ltm->tm_mon<10? "0":"", ltm->tm_mon, ltm->tm_year + 1900,
-                    ltm->tm_hour<10? " ":"", ltm->tm_hour, ltm->tm_min<10? "0":"", ltm->tm_min,
-                    ltm->tm_sec<10? "0":"", ltm->tm_sec);
-        }
-        break;
-    }        
-    strcpy (buf, temp);
+                    ltm->tm_sec<10? "0":"", ltm->tm_sec,
+                    msec<10? "00":msec<100? "0":"", msec );
     return buf;
 }
 
@@ -56,20 +59,61 @@ uint64_t mymillis(void) {
 	return timebuf;
 }
 
+char* printVerbose(uint16_t verboseLevel, char* buf) {
+    if (verboseLevel & VERBOSECRITICAL )   sprintf(buf,"%s critical",buf);
+    if (verboseLevel & VERBOSESTARTUP )    sprintf(buf,"%s startup",buf);
+    if (verboseLevel & VERBOSECONFIG )     sprintf(buf,"%s config",buf);
+    if (verboseLevel & VERBOSETELNET )     sprintf(buf,"%s telnet",buf);
+    if (verboseLevel & VERBOSERF24 )       sprintf(buf,"%s rf24",buf);
+    if (verboseLevel & VERBOSESENSOR )     sprintf(buf,"%s sensor",buf);
+    if (verboseLevel & VERBOSEOBUFFER )    sprintf(buf,"%s obuffer",buf);
+    if (verboseLevel & VERBOSEOBUFFEREXT ) sprintf(buf,"%s obufferext",buf);
+    if (verboseLevel & VERBOSEORDER )      sprintf(buf,"%s order",buf);
+    if (verboseLevel & VERBOSEORDEREXT )   sprintf(buf,"%s orderext",buf);
+    if (verboseLevel & VERBOSESQL )        sprintf(buf,"%s sql",buf);
+    if (verboseLevel & VERBOSEOTHER )      sprintf(buf,"%s other",buf);
+    if (verboseLevel & VERBOSEPOINTER )    sprintf(buf,"%s pointer",buf);
+    return buf;
+}
+
 uint16_t decodeVerbose(uint16_t oldLevel, char* verboseSet) {
     uint16_t retval = 0;
-    char cmp_addVBtn[]="+telnet",
+    char cmp_VBall[]="all",
+         cmp_VBnone[]="none",
+         cmp_addVBconf[]="+config",
+         cmp_rmVBconf[]="-config",
+         cmp_addVBtn[]="+telnet",
          cmp_rmVBtn[]="-telnet",
          cmp_addVBrf24[]="+rf24",
          cmp_rmVBrf24[]="-rf24",
+         cmp_addVBsens[]="+sensor",
+         cmp_rmVBsens[]="-sensor",
          cmp_addVBob[]="+obuffer",
          cmp_rmVBob[]="-obuffer",
+         cmp_addVBobex[]="+obufferext",
+         cmp_rmVBobex[]="-obufferext",
          cmp_addVBorder[]="+order",
          cmp_rmVBorder[]="-order",
+         cmp_addVBorderex[]="+orderext",
+         cmp_rmVBorderex[]="-orderext",
          cmp_addVBsql[]="+sql",
          cmp_rmVBsql[]="-sql",
+         cmp_addVBother[]="+other",
+         cmp_rmVBother[]="-other",
          cmp_addVBpnt[]="+pointer",
          cmp_rmVBpnt[]="-pointer";
+    if (strcmp(verboseSet,cmp_VBall) == 0) {
+        retval = VERBOSEALL;
+    }
+    if (strcmp(verboseSet,cmp_VBnone) == 0) {
+        retval = VERBOSENONE;
+    }
+    if (strcmp(verboseSet,cmp_addVBconf) == 0) {
+        retval = oldLevel | VERBOSECONFIG;
+    }
+    if (strcmp(verboseSet,cmp_rmVBconf) == 0) {
+        retval = oldLevel ^ VERBOSECONFIG;
+    }
     if (strcmp(verboseSet,cmp_addVBtn) == 0) {
         retval = oldLevel | VERBOSETELNET;
     }
@@ -82,17 +126,11 @@ uint16_t decodeVerbose(uint16_t oldLevel, char* verboseSet) {
     if (strcmp(verboseSet,cmp_rmVBrf24) == 0) {
         retval = oldLevel ^ VERBOSERF24;
     }    
-    if (strcmp(verboseSet,cmp_addVBsql) == 0) {
-        retval = oldLevel | VERBOSESQL;
+    if (strcmp(verboseSet,cmp_addVBsens) == 0) {
+        retval = oldLevel | VERBOSESENSOR;
     }
-    if (strcmp(verboseSet,cmp_rmVBsql) == 0) {
-        retval = oldLevel ^ VERBOSESQL;
-    }    
-    if (strcmp(verboseSet,cmp_addVBpnt) == 0) {
-        retval = oldLevel | VERBOSEPOINTER;
-    }
-    if (strcmp(verboseSet,cmp_rmVBpnt) == 0) {
-        retval = oldLevel ^ VERBOSEPOINTER;
+    if (strcmp(verboseSet,cmp_rmVBsens) == 0) {
+        retval = oldLevel ^ VERBOSESENSOR;
     }    
     if (strcmp(verboseSet,cmp_addVBob) == 0) {
         retval = oldLevel | VERBOSEOBUFFER;
@@ -100,11 +138,41 @@ uint16_t decodeVerbose(uint16_t oldLevel, char* verboseSet) {
     if (strcmp(verboseSet,cmp_rmVBob) == 0) {
         retval = oldLevel ^ VERBOSEOBUFFER;
     }    
+    if (strcmp(verboseSet,cmp_addVBobex) == 0) {
+        retval = oldLevel | VERBOSEOBUFFEREXT;
+    }
+    if (strcmp(verboseSet,cmp_rmVBobex) == 0) {
+        retval = oldLevel ^ VERBOSEOBUFFEREXT;
+    }    
     if (strcmp(verboseSet,cmp_addVBorder) == 0) {
         retval = oldLevel | VERBOSEORDER;
     }
     if (strcmp(verboseSet,cmp_rmVBorder) == 0) {
         retval = oldLevel ^ VERBOSEORDER;
+    }    
+    if (strcmp(verboseSet,cmp_addVBorderex) == 0) {
+        retval = oldLevel | VERBOSEORDEREXT;
+    }
+    if (strcmp(verboseSet,cmp_rmVBorderex) == 0) {
+        retval = oldLevel ^ VERBOSEORDEREXT;
+    }    
+    if (strcmp(verboseSet,cmp_addVBsql) == 0) {
+        retval = oldLevel | VERBOSESQL;
+    }
+    if (strcmp(verboseSet,cmp_rmVBsql) == 0) {
+        retval = oldLevel ^ VERBOSESQL;
+    }    
+    if (strcmp(verboseSet,cmp_addVBother) == 0) {
+        retval = oldLevel | VERBOSEOTHER;
+    }
+    if (strcmp(verboseSet,cmp_rmVBother) == 0) {
+        retval = oldLevel ^ VERBOSEOTHER;
+    }    
+    if (strcmp(verboseSet,cmp_addVBpnt) == 0) {
+        retval = oldLevel | VERBOSEPOINTER;
+    }
+    if (strcmp(verboseSet,cmp_rmVBpnt) == 0) {
+        retval = oldLevel ^ VERBOSEPOINTER;
     }    
     return retval;
 }
@@ -113,7 +181,7 @@ uint16_t decodeVerbose(uint16_t oldLevel, char* verboseSet) {
 char* alloc_str(uint16_t verboselevel, const char* msgTxt, size_t size) {
     if (verboselevel & VERBOSEPOINTER) {
         char buf[] = TSBUFFERSTRING;
-        printf("%sMalloc %s P:", log_ts(buf), msgTxt);
+        printf("%sMalloc %s P:", ts(buf), msgTxt);
     }    
     char *retval =  (char*) malloc (size);
     memset(retval, 0, size);
@@ -127,7 +195,7 @@ char* alloc_str(uint16_t verboselevel, const char* msgTxt, size_t size) {
 void free_str(uint16_t verboselevel, const char* msgTxt, char* str) {
     if (verboselevel & VERBOSEPOINTER) {
         char buf[] = TSBUFFERSTRING;
-        printf("%sFree %s P:<%p>", log_ts(buf), msgTxt, str);
+        printf("%sFree %s P:<%p>", ts(buf), msgTxt, str);
     }    
     free(str);
     if (verboselevel & VERBOSEPOINTER) {
