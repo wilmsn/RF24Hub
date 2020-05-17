@@ -10,7 +10,8 @@ On Branch: no_network @ rpi1  !!!!!
 // Select only one at one time !!!!
 //#define AUSSENTHERMOMETER
 //#define AUSSENTHERMOMETER2
-#define SCHLAFZIMMERTHERMOMETER
+//#define SCHLAFZIMMERTHERMOMETER
+#define TESTZIMMERTHERMOMETER
 //#define BASTELZIMMERTHERMOMETER
 //#define KUECHETHERMOMETER
 //#define WOHNZIMMERTHERMOMETER
@@ -151,11 +152,22 @@ On Branch: no_network @ rpi1  !!!!!
 #define DALLAS_18B20
 #define DISPLAY_5110
 #define RF24NODE             101
-#define EEPROM_VERSION       1
+#define EEPROM_VERSION       2
 #define VOLTAGEADDED         55
 #define STATUSLED_ON         LOW
 #define STATUSLED_OFF        HIGH
 #define HBNODE
+#endif
+//-----------------------------------------------------
+#if defined(TESTZIMMERTHERMOMETER)
+#define DALLAS_18B20
+#define DISPLAY_5110
+#define RF24NODE             102
+#define EEPROM_VERSION       2
+#define VOLTAGEADDED         55
+#define HBNODE
+#define RF24EMPTYLOOPCOUNT   10
+#define RF24RECEIVEDELAY     500
 #endif
 //-----------------------------------------------------
 #if defined(BASTELZIMMERTHERMOMETER)
@@ -567,9 +579,10 @@ void setup(void) {
 #endif
 #endif
 #if defined(HAS_DISPLAY)
-  monitor(3000);
+  monitor(1000);
   draw_antenna(ANT_X0, ANT_Y0);
   draw_therm(THERM_X0, THERM_Y0);
+  draw_hb_countdown(8);
 #endif
   loopcount = 0;
   last_send = 0;
@@ -711,16 +724,16 @@ void draw_therm(byte x, byte y) {
 
 void draw_hb_countdown(uint8_t watermark) {
   uint8_t i = HB_X0;
-  uint8_t j = HB_Y0;
+  uint8_t j = HB_Y0 + 7;
   if ( ! display_down ) {
-    if ( watermark > 7 ) watermark = 7;
+    if ( watermark > 8 ) watermark = 8;
 #if defined(DISPLAY_5110)
-    for (uint8_t y=j+7; y>j; y--) {
+    for (uint8_t y=j; y>=HB_Y0; y--) {
       for (byte x=i; x<i+4; x++) { 
         myGLCD.clrPixel(x,y);
       }
     }
-    for (uint8_t y=j+7; y>j+watermark; y--) {
+    for (uint8_t y=j; y>j-watermark; y--) {
       for (byte x=i; x<i+4; x++) { 
         myGLCD.setPixel(x,y);
       }
@@ -1159,7 +1172,7 @@ void loop(void) {
     if ( ! monitormode ) {
       draw_battery(BATT_X0,BATT_Y0,cur_voltage);
       draw_therm(THERM_X0, THERM_Y0);
-      draw_hb_countdown((uint8_t) 8 * ( eeprom.emptyloopcount + 1) / (loopcount + 1) );
+      draw_hb_countdown((uint8_t) 8 * (1- ((float)loopcount / eeprom.emptyloopcount)) );
     }
 #endif
     get_sensordata();

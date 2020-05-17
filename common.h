@@ -13,6 +13,22 @@
 #include <cstdio>
 #include "rf24hub_config.h"
 
+static const char default_format1[] = "%d.%m.%Y %H:%M:%S";
+static const char default_format2[] = "%Y.%m.%d %H:%M:%S";
+
+/*
+ * utime2str: konvertiert den übergebenen
+ * Unix Zeitstempel utime in einen String
+ * Ist utime = 0 wird die aktuelle Zeit genommen.
+ * Für form gilt:
+ * 1 => 20.04.2020 18:38:17
+ * 2 => 2020.04.20 18:38:17
+ * Wichtig: Es muss ein Speicherplatz buf zur Aufnahme 
+ * des Strings ( Grösse 20 Byte ) übergeben werden!
+ */
+char* utime2str(time_t utime, char* buf, uint8_t form);
+
+char* ts(char* buf);
 
 /******************************************************
  * trim: get rid of trailing and leading whitespace...
@@ -26,17 +42,16 @@ char * trim (char * s);
  * Wichtig: Es muss ein Speicherplatz zur Aufnahme 
  * des Strings ( Grösse 26 Byte ) übergeben werden!
  */
-char * log_ts(char * buf);
+//char * log_ts(char * buf);
 
-/*
- * str_ts: liefert einen Zeitstempel als array of char
- * in der Form: 2020.04.20 18:38:17
- * Wichtig: Es muss ein Speicherplatz zur Aufnahme 
- * des Strings ( Grösse 20 Byte ) übergeben werden!
- */
-char * str_ts(char * buf, uint8_t form);
+
+char* alloc_str(uint16_t verboselevel, const char* msgTxt, size_t size);
+
+void free_str(uint16_t verboselevel, const char* msgTxt, char* str);
 
 uint64_t mymillis(void);
+
+char* printVerbose(uint16_t verboseLevel, char* buf);
 
 uint16_t decodeVerbose(uint16_t oldLevel, char* verboselevel);
 

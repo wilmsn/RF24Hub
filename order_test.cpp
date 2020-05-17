@@ -1,38 +1,46 @@
 #include "order.h"
-#include <thread>
 #include <stdint.h>
 #include <stdio.h> 
-#include <iostream>
+#include "rf24_config.h"
+#include "rf24hub_config.h"
+#include "common.h"
 
 
 int main()
 {
-    Order myorder;
-    struct Order::order_t neworder;
-    Order::order_t* order_ptr;
-    for (int i=1; i<101; ++i) {
-        neworder.orderno = i;
-        myorder.new_entry(&neworder);
-    }
-    order_ptr=myorder.initial_order_ptr;
-    while ( order_ptr ) {
-      printf("%d\n",order_ptr->orderno);
-      order_ptr=order_ptr->next;
-    }
-    myorder.del_entry(98);
-    myorder.del_entry(97);
-    myorder.del_entry(96);
-    myorder.del_entry(95);
-    myorder.del_entry(93);
-    myorder.del_entry(92);
-    myorder.del_entry(98);
-    myorder.del_entry(80);
-    myorder.del_entry(79);
-    myorder.del_entry(50);
-    order_ptr=myorder.initial_order_ptr;
-    while ( order_ptr ) {
-      printf("%d\n",order_ptr->orderno);
-      order_ptr=order_ptr->next;
-    }
-    
+    Order order;
+    order.addOrder(1,1,true,1,0);
+    order.addOrder(2,1,true,1,0);
+    order.addOrder(3,1,true,1,0);
+    order.addOrder(4,1,true,1,0);
+    order.addOrder(5,1,true,1,0);
+    order.addOrder(6,1,true,1,0);
+    order.addOrder(7,1,true,1,0);
+    order.addOrder(8,1,true,1,0);
+    order.addOrder(9,1,true,1,0);
+    order.addOrder(10,1,true,1,0);
+    order.addOrder(11,1,true,1,0);
+    order.addOrder(12,1,true,1,0);
+    order.addOrder(13,1,true,1,0);
+    order.addOrder(14,1,true,1,0);
+    order.addOrder(15,1,true,1,0);
+    order.addOrder(16,1,true,1,0);
+    order.printBuffer();
+    printf("---------\nDelete by Node: 1,2,6,10,11,15,16\n--------------\n");
+    order.delByNode(2);
+    order.delByNode(16);
+    order.delByNode(6);
+    order.delByNode(1);
+    order.delByNode(10);
+    order.delByNode(11);
+    order.delByNode(15);    
+    order.printBuffer();
+    printf("---------\nDelete by OrderNo: 5,6,9,10,14,15\n--------------\n");
+    order.delByOrderNo(15);
+    order.delByOrderNo(10);
+    order.delByOrderNo(14);
+    order.delByOrderNo(9);
+    order.delByOrderNo(5);
+    order.delByOrderNo(6);
+    order.printBuffer();    
 }

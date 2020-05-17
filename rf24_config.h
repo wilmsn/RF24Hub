@@ -11,6 +11,8 @@
 #define RF24_SPEED          RF24_1MBPS
 #define RF24_HUB2NODE       { 0xf0, 0xcc, 0xfc, 0xcc, 0xcc}
 #define RF24_NODE2HUB       { 0x33, 0xcc, 0xfc, 0xcc, 0xcc}
+#define NODE_DATTYPE        uint8_t
+#define ONR_DATTYPE         uint8_t
 
 /***********************************
  * Definition der Kontrollregister
@@ -83,11 +85,12 @@
 // Sendeleistung ist Max ( 0 dBm)
 #define PAYLOAD_TYPE_PING_POW_MAX 104
 
+
 // Structure of our payload
 typedef struct {   // Our payload can be 32 byte max.
     // Die Node_ID ist der eindeutige Identifizierer für einen Node.
-    // Hier können die Nodes 1..255 genutzt werden (8 Bit begrenzung)
-    uint8_t    node_id;         
+    // Hier können die Nodes 1..255 genutzt werden (8 Bit Begrenzung)
+    NODE_DATTYPE    node_id;         
     // Die MSG_ID ist der eindeutige Identifizierer einer Nachricht.
     // Muss einen Nachricht wiederholt werden, wird sie hochgezählt.
     uint8_t     msg_id;          
@@ -99,7 +102,7 @@ typedef struct {   // Our payload can be 32 byte max.
     // Auf eine Anfrage vom Hub wird immer mit der selben ORDER_NO geantwortet
     // Nachrichten, die ihren Ursprung im Node haben ( z.B. Heatbeatmessages ) 
     // erhalten die ORDER_NO "0"    
-    uint8_t     orderno;         
+    ONR_DATTYPE     orderno;         
     // noch nicht genutzt
     uint8_t     reserved1;      
     // noch nicht genutzt

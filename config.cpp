@@ -20,6 +20,7 @@ void Config::processParams(int argc, char* argv[]) {
 		static struct option long_options[] = {	
 			{"daemon",  no_argument, 0, 'd'},
             {"configfile",    required_argument, 0, 'c'},
+			{"verbose", required_argument, 0, 'v'},
 			{"scanner", required_argument, 0, 's'},
             {"scannchannel", required_argument, 0, 't'},
             {"help", no_argument, 0, 'h'},
@@ -27,7 +28,7 @@ void Config::processParams(int argc, char* argv[]) {
 		};
         /* getopt_long stores the option index here. */
         int option_index = 0;
-        c = getopt_long (argc, argv, "?dht:s:c:",long_options, &option_index);
+        c = getopt_long (argc, argv, "?dht:s:c:v:",long_options, &option_index);
         /* Detect the end of the options. */
         if (c == -1) break;
         switch (c) {
@@ -50,7 +51,13 @@ void Config::processParams(int argc, char* argv[]) {
                         cout << "Error Channel required\n" << endl;
                       }
                       break;
-
+            case 'v':
+                      if (optarg[0]) {
+                          verboselevel = decodeVerbose(verboselevel, optarg);
+                      } else {
+                          usage();
+                      }
+                      break;
             case 's':
                       if (optarg[0] && ! optarg[1]) {
                           startScanner = true;
