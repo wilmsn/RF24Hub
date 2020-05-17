@@ -31,6 +31,9 @@ using namespace std;
  * 2. Verbosemode
  * 
  */
+
+extern uint16_t verboselevel;
+
 class Config {
     
 private:

@@ -81,7 +81,6 @@ UP: fill_order_buffer   =>  Füllt das ARRAY "order_buffer" mit dem übergebenen
 #include "database.h"
 #include "rf24_config.h"
 #include "dataformat.h"
-#include "textbuffer.h"
 #include "rf24hub_config.h"
 #include "rf24hub_text.h"
 
@@ -94,7 +93,6 @@ struct sockaddr_in serv_addr;
 struct hostent *server;
 FILE * pidfile_ptr;
 FILE * logfile_ptr;
-char* pEnd;
 
 uint16_t verboselevel = STARTUPVERBOSELEVEL;
 
@@ -102,19 +100,18 @@ uint16_t verboselevel = STARTUPVERBOSELEVEL;
 RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
 //RF24 radio(22,0,BCM2835_SPI_SPEED_1MHZ);
 
+struct TnMsg_t {
+        long mtype;
+        char tntext[DEBUGSTRINGSIZE];
+        int  tn_socket;
+};
+
 Order           order;
 OrderBuffer     orderbuffer;
 Sensor          sensor;
 Node            node;
 Database        database;
 Config          cfg;
-Textbuffer      textbuffer;
-
-/*
- * trim: get rid of trailing and leading whitespace...
- *       ...including the annoying "\n" from fgets()
- */
-/// char * trim (char * s);
 
 /*******************************************************************************************
 *
@@ -123,7 +120,7 @@ Textbuffer      textbuffer;
 *
 ********************************************************************************************/
 
-void do_tn_cmd(uint8_t node, uint8_t sensor, float value);
+void do_tn_cmd(NODE_DATTYPE node, uint8_t sensor, float value);
 
 void process_tn_in(int new_socket, char* buffer, char* client_message);
 
@@ -134,39 +131,15 @@ void process_tn_in(int new_socket, char* buffer, char* client_message);
 *
 ********************************************************************************************/
 
-void print_sensor(void);
-
 void init_system(void);
 
 void exit_system(void);
 
-void init_order(unsigned int element);
+void make_order(NODE_DATTYPE node_id, uint8_t mytype);
 
-void print_order(void);
+void store_sensor_value(NODE_DATTYPE node_id, uint32_t data);
 
-void init_order_buffer(unsigned int element);
-
-void print_orderbuffer(void);
-
-void fill_orderbuffer( uint8_t node_id, unsigned char channel, float value);
-
-bool is_valid_orderno(uint8_t myorderno);
-
-void make_order(uint8_t node, uint8_t mytype);
-
-//uint16_t set_sensor(uint32_t mysensor, float value);
-
-//uint16_t get_sensor(uint32_t mysensor);
-
-bool node_is_next(uint8_t node);
-
-bool is_HB_node(uint8_t node);
-
-void store_sensor_value(uint8_t node, uint32_t data);
-
-void process_sensor(uint8_t node, uint32_t data);
-
-//void store_node_config(uint16_t node, uint8_t channel, float value);
+void process_sensor(NODE_DATTYPE node_id, uint32_t data);
 
 /*******************************************************************************************
 *
