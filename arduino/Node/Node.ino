@@ -12,6 +12,7 @@ On Branch: no_network @ rpi1  !!!!!
 //#define AUSSENTHERMOMETER2
 //#define SCHLAFZIMMERTHERMOMETER
 #define TESTZIMMERTHERMOMETER
+//#define TESTZIMMER1THERMOMETER
 //#define BASTELZIMMERTHERMOMETER
 //#define KUECHETHERMOMETER
 //#define WOHNZIMMERTHERMOMETER
@@ -25,7 +26,7 @@ On Branch: no_network @ rpi1  !!!!!
 //****************************************************
 // Dummy values, be sure to overwrite later!!
 #define EEPROM_VERSION 0
-#define RF24NODE 00
+#define RF24NODE 0
 //****************************************************
 // Delay between 2 transmission in ms
 #define RF24SENDDELAY   50
@@ -159,15 +160,29 @@ On Branch: no_network @ rpi1  !!!!!
 #define HBNODE
 #endif
 //-----------------------------------------------------
-#if defined(TESTZIMMERTHERMOMETER)
+#if defined(TESTZIMMER1THERMOMETER)
 #define DALLAS_18B20
 #define DISPLAY_5110
-#define RF24NODE             102
-#define EEPROM_VERSION       2
+#define RF24NODE             103
+#define EEPROM_VERSION       1
 #define VOLTAGEADDED         55
 #define HBNODE
 #define RF24EMPTYLOOPCOUNT   10
 #define RF24RECEIVEDELAY     500
+#define STATUSLED_ON         LOW
+#define STATUSLED_OFF        HIGH
+#endif
+//-----------------------------------------------------
+#if defined(TESTZIMMERTHERMOMETER)
+#define DALLAS_18B20
+#define DISPLAY_5110
+#define RF24NODE             102
+#define EEPROM_VERSION       3
+#define VOLTAGEADDED         55
+#define HBNODE
+#define RF24EMPTYLOOPCOUNT   0
+#define RF24RECEIVELOOPCOUNT 30
+#define RF24RECEIVEDELAY     1000
 #endif
 //-----------------------------------------------------
 #if defined(BASTELZIMMERTHERMOMETER)
@@ -216,7 +231,7 @@ On Branch: no_network @ rpi1  !!!!!
 //-----------------------------------------------------
 #if defined(TESTNODE)
 #define RF24NODE        1
-#define EEPROM_VERSION  4
+#define EEPROM_VERSION  5
 #define STATUSLED       13 
 #define ACTOR           A5
 #define RF24SLEEPTIME   60000
@@ -264,6 +279,7 @@ On Branch: no_network @ rpi1  !!!!!
 #include <EEPROM.h>
 #include "dataformat.h"
 #include "printf.h"
+#include "version.h"
 #include "rf24_config.h"
 
 #if defined(DISPLAY_5110)
@@ -515,7 +531,11 @@ uint32_t action_loop(uint32_t data) {
         value = (float)eeprom.voltageadded;
       break;
       case 118:
-        exec_pingTest = true;
+        if (value > 9 && value < 11) exec_pingTest = true;
+        //if (
+      break;
+      case 125:
+        value = SWVERSION;
       break;
     }  
     return calcTransportValue_f(channel, value);
@@ -637,6 +657,7 @@ void setup(void) {
 
 #if defined(HAS_DISPLAY)
 void monitor(uint32_t delaytime) {
+  const char string_0[] PROGMEM = "SW Version: ";
   const char string_1[] PROGMEM = "Temp: ";
   const char string_2[] PROGMEM = "Ubatt: ";
   const char string_3[] PROGMEM = "Sleep: ";
@@ -647,6 +668,12 @@ void monitor(uint32_t delaytime) {
   const char string_8[] PROGMEM = "Kontrast: ";
 #if defined(DISPLAY_5110)
   myGLCD.setFont(SmallFont);
+  myGLCD.print(string_0, 10, 5);
+  myGLCD.printNumI(SWVERSION, 35, 30);
+  myGLCD.update();
+  sleep4ms(delaytime);
+  delay(10);
+  myGLCD.clrScr();
   get_sensordata();
   myGLCD.print(string_1, 0, 0);
   myGLCD.printNumF(temp,1, 30, 0);
@@ -682,9 +709,9 @@ void monitor(uint32_t delaytime) {
     myGLCD.printNumI(i, 20, 20);        
     myGLCD.setContrast(i);
     myGLCD.update();
-    delay(500);
+    delay(300);
   }
-  sleep4ms(1000);
+  sleep4ms(5000);
   myGLCD.setContrast(eeprom.display_contrast);
   delay(10);
   myGLCD.clrScr();

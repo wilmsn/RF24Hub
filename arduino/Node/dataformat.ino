@@ -52,16 +52,11 @@ float getValue_f(uint32_t val) {
 
 /***************************************************
  * Extrahiert den Sensorwert aus dem Transportwert
- * Hier: Integer max. 16 bit
+ * Hier: Float
  ***************************************************/
-int getValue_i(uint32_t val) {
-  int retval;
+uint16_t getValue_i(uint32_t val) {
+  uint16_t retval;
   retval = val & ZF_ZAHL_WERT;
-  if ( val & ZF_ZAHL_NEGATIV ) {
-    retval = (val & ZF_ZAHL_WERT_INT) * -1;
-  } else {
-      retval = val & ZF_ZAHL_WERT_INT;
-  }  
   return retval;
 }
 

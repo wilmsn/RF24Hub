@@ -2,11 +2,12 @@
 rf24hub_config.h ==> all global definitions go here
 
 */
+#include "version.h"
 #ifndef _RF24HUB_CONFIG_H_   
 #define _RF24HUB_CONFIG_H_
 
 #define PRGNAME "rf24hub"
-#define PRGVERSION "1.5.1 vom 17.05.2020"
+//#define PRGVERSION "1.5.1 vom 17.05.2020"
 
 //
 // default values: can be overwritten in config file

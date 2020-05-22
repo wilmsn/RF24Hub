@@ -80,9 +80,9 @@ UP: fill_order_buffer   =>  Füllt das ARRAY "order_buffer" mit dem übergebenen
 #include "config.h"
 #include "database.h"
 #include "rf24_config.h"
-#include "dataformat.h"
 #include "rf24hub_config.h"
 #include "rf24hub_text.h"
+#include "dataformat.h"
 
 #define BUF 1024
 

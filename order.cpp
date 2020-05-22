@@ -155,6 +155,7 @@ void Order::addOrder(NODE_DATTYPE node_id, uint8_t msg_type, bool HB_order, uint
         if (verboselevel & VERBOSEORDER) printf("%sOrder: addOrder <%p> N:%u T:%u HB:%s D1:(%u/%f)\n", ts(buf), p_new, node_id, msg_type, HB_order? "true":"false", getChannel(data), getValue_f(data) ); 
         p_new->orderno = orderno;
         p_new->node_id = node_id;
+        p_new->msg_id = 1;
         p_new->msg_type = msg_type;
         p_new->msg_flags = PAYLOAD_FLAG_EMPTY;
         p_new->HB_order = HB_order;
@@ -222,6 +223,7 @@ bool Order::getOrderForTransmission(payload_t* payload, uint64_t mytime){
         if ( (p_search->last_send + sendInterval) < mytime) {
             payload->orderno = p_search->orderno;
             payload->node_id = p_search->node_id;
+            payload->msg_id = p_search->msg_id++;
             payload->msg_type = p_search->msg_type;
             payload->msg_flags = p_search->msg_flags;
             payload->data1 = p_search->data1;

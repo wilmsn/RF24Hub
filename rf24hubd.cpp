@@ -87,7 +87,7 @@ void receive_tn_in(int tnsocket, struct sockaddr_in * address) {
         }
         
     }
-    sprintf(buffer,"%s %s\n",PRGNAME,PRGVERSION);
+    sprintf(buffer,"%s %d\n",PRGNAME,SWVERSION);
     write(tnsocket , buffer , strlen(buffer));
     close (tnsocket);
     free_str(verboselevel,"receive_tn_in buffer",buffer);
@@ -595,15 +595,15 @@ int main(int argc, char* argv[]) {
 	int msgID;
     TnMsg_t LogMsg;
 	
+    // processing argc and argv[]
+    cfg.processParams(argc, argv);
+
 	// check if started as root
 	if ( getuid()!=0 ) {
 		cout << ts(buf) << PRGNAME << " has to be startet as user root" << endl; 
         exit(1);
     }
     
-    // processing argc and argv[]
-    cfg.processParams(argc, argv);
-
     // check for PID file, if exists terminate else create it
     if ( cfg.checkPidFileSet() ) {
          exit(1);

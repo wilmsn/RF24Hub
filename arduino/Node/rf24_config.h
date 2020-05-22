@@ -65,22 +65,23 @@
 // Ursprung: Hub; Empfänger: Node
 #define PAYLOAD_TYPE_DATSTOP     63
 
+// Nachricht ist ein Ping, Antwort wird erwartet
+// Sendeleistung ist Minimal (-18 dBm)
 /*************************************
- * Ein Ping geht immer vom Node aus. 
+ * Ein Ping geht immer vom Node aus 
+ * und wird vom Hub zwingend beantwortet
  * Durch die unterschiedlichen
  * Sendeleistungen kann die Qualität
  * der Funkverbindung beurteilt werden
  ************************************/
-// Nachricht ist ein Ping.
-// Sendeleistung ist Minimal (-18 dBm)
 #define PAYLOAD_TYPE_PING_POW_MIN 101
-// Nachricht ist ein Ping.
+// Nachricht ist ein Ping, Antwort wird erwartet
 // Sendeleistung ist Low (-12 dBm)
 #define PAYLOAD_TYPE_PING_POW_LOW 102
-// Nachricht ist ein Ping.
+// Nachricht ist ein Ping, Antwort wird erwartet
 // Sendeleistung ist High (-6 dBm)
 #define PAYLOAD_TYPE_PING_POW_HIGH 103
-// Nachricht ist ein Ping.
+// Nachricht ist ein Ping, Antwort wird erwartet
 // Sendeleistung ist Max ( 0 dBm)
 #define PAYLOAD_TYPE_PING_POW_MAX 104
 

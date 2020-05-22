@@ -45,10 +45,10 @@ void Config::processParams(int argc, char* argv[]) {
                         if (channel < 126) {
                              startChannelScanner=channel; 
                         } else {
-                          cout << "Error Channel must be in 0 ... 125" << endl;
+                          printf("Error Channel must be in 0 ... 125\n");
                         }
                       } else {
-                        cout << "Error Channel required\n" << endl;
+                        printf("Error Channel required\n");;
                       }
                       break;
             case 'v':
@@ -85,8 +85,8 @@ void Config::processParams(int argc, char* argv[]) {
     }
     /* Print any remaining command line arguments (not options). */
     if (optind < argc) {
-        cout << "non-option ARGV-elements: " << endl;
-        while (optind < argc) cout << argv[optind++] << endl;
+        printf("non-option ARGV-elements: \n");
+        while (optind < argc) printf("%s\n",argv[optind++]);
     }
     // END processing argc and argv[]
     // check if config file is readable
@@ -95,10 +95,10 @@ void Config::processParams(int argc, char* argv[]) {
 //    printf("%s\n",configFile.c_str());
     FILE *fp = fopen (configFile.c_str(), "r");
     if (fp == NULL) {
-        cout << "Configfile " << configFile << " nicht gefunden!" << endl;
+        fprintf(stderr,"Configfile: %s nicht gefunden!\n", configFile.c_str() );
         exit(1);
     } else {
-		cout << "Reading configuration from " << configFile << endl;
+		printf("Reading configuration from %s\n", configFile.c_str() );
     }
     // Processing config file
     char *s, buff[256];
@@ -148,14 +148,14 @@ void Config::processParams(int argc, char* argv[]) {
             pidFileName = value;
 		}
     else
-      cout << "WARNING: " << name << "=" << value << ": Unknown name=value pair!" << endl;
+      printf("WARNING: %s = %s Unknown name=value pair!\n", name, value );
   }
   /* Close file */
 	fclose (fp);
     if ( startDaemon ) {
         logfile_ptr = fopen (logFileName.c_str(),"a");
         if ( ! logfile_ptr ) {
-            cerr << "LOGFILE: "<< logFileName<< " can't open logfile, terminating !!!" << endl;
+            fprintf(stderr,"LOGFILE: %s can't open logfile, terminating !!!\n", logFileName.c_str());
             exit(1);
         }
         fclose( logfile_ptr );
@@ -163,33 +163,37 @@ void Config::processParams(int argc, char* argv[]) {
 }
 
 void Config::printConfig (void) {
-    cout << "Logfile: "        << logFileName << endl;
-    cout << "PIDfile: "        << pidFileName << endl;
-    cout << "DB-Hostname:"     << dbHostName << endl;
-    cout << "DB-Port:"         << dbPort << endl;
-    cout << "DB-Schema:"       << dbSchema << endl;
-    cout << "DB-Username:"     << dbUserName << endl;
-    cout << "DB-Password:"     << dbPassWord << endl;
-    cout << "FHEM-Hostname:"   << fhemHost << endl;
-    cout << "FHEM-Port:"       << fhemPort << endl;
-    cout << "incoming Port:"   << incomingPort << endl;
+    printf("Logfile: %s\n", logFileName.c_str() );
+    printf("PIDfile: %s\n", pidFileName.c_str() );
+    printf("DB-Hostname: %s\n", dbHostName.c_str() );
+    printf("DB-Port: %s\n", dbPort.c_str() );
+    printf("DB-Schema: %s\n", dbSchema.c_str() );
+    printf("DB-Username: %s\n", dbUserName.c_str() );
+    printf("DB-Password: %s\n", dbPassWord.c_str() );
+    printf("FHEM-Hostname: %s\n", fhemHost.c_str() );
+    printf("FHEM-Port: %s\n", fhemPort.c_str() );
+    printf("incoming Port: %s\n", incomingPort.c_str() );
 }
 
 void Config::usage(void) {
-    cout << PRGNAME << " version " << PRGVERSION << endl;
-    cout << "Usage: " << PRGNAME << " <option>" << endl;
-    cout << "with options: " << endl;
-    cout << "   -h or -? or --help" << endl;
-    cout << "           Print help" << endl;
-    cout << "   -d or --daemon" << endl;
-    cout << "         Starts as daemon" << endl;
-    cout << "   -c or --configfilename <filename>" << endl;
-    cout << "         Set configfilename" << endl;
-    cout << "   -s or --scanner <scanlevel>" << endl;
-    cout << "         Set scannlevel (0...9) and scan all channels" << endl;
-    cout << "   -t or --scannchannel <channel>" << endl;
-    cout << "         Scanns the single channel <channel>" << endl;
-    cout << "For clean exit use \"CTRL-C\" or \"kill -15 <pid>\"" << endl;
+    printf("%s Version %d vom %s\n",PRGNAME, SWVERSION, SWDATUM);
+    printf("Usage: %s <option>\n",PRGNAME);
+    printf("with options: \n");
+    printf("   -h or -? or --help\n");
+    printf("           Print help\n");
+    printf("   -d or --daemon\n");
+    printf("         Starts as daemon\n");
+    printf("   -v or --verbose +<verboselevel>\n");
+    printf("         Sets the verboselevel, can be repeated\n");
+    printf("         Verboselevels are: sql, telnet, rf24, order, orderext,\n");
+    printf("                            obuffer, obufferext, pointer, other\n");
+    printf("   -c or --configfilename <filename>\n");
+    printf("         Set configfilename\n");
+    printf("   -s or --scanner <scanlevel>\n");
+    printf("         Set scannlevel (0...9) and scan all channels\n");
+    printf("   -t or --scannchannel <channel>\n");
+    printf("         Scanns the single channel <channel>\n");
+    printf("For clean exit use \"CTRL-C\" or \"kill -15 <pid>\"\n");
 }
 
 
@@ -205,7 +209,7 @@ int Config::setPidFile(void) {
 
 int Config::checkPidFileSet(void) {
 	if( access( pidFileName.c_str(), F_OK ) != -1 ) {
-		cerr << "PIDFILE: "; cerr << pidFileName; cerr << " exists, terminating" << endl;
+		fprintf(stderr,"PIDFILE: %s exists, terminating\n", pidFileName.c_str() );
 		return -1;
 	} else {
 		return 0;
