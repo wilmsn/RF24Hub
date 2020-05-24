@@ -12,6 +12,7 @@
 #include "rf24_config.h"
 #include "rf24hub_config.h"
 #include "common.h"
+#include "dataformat.h"
 
 
 class OrderBuffer {

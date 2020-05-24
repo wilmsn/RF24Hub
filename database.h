@@ -33,6 +33,7 @@ private:
     MYSQL_ROW   row;
     char*       pEnd;
     char*       buf;
+    char*       sql_stmt;
     uint16_t    verboselevel;
     void do_sql(char* stmt);
     void debugPrintSQL(char* sqlstmt);
