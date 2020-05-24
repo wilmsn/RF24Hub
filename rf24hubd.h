@@ -124,6 +124,8 @@ void do_tn_cmd(NODE_DATTYPE node, uint8_t sensor, float value);
 
 void process_tn_in(int new_socket, char* buffer, char* client_message);
 
+uint32_t packData(uint8_t mychannel, char* wort4);
+
 /*******************************************************************************************
 *
 * Nodehandling 
@@ -137,8 +139,6 @@ void exit_system(void);
 
 void make_order(NODE_DATTYPE node_id, uint8_t mytype);
 
-void store_sensor_value(NODE_DATTYPE node_id, uint32_t data);
-
 void process_sensor(NODE_DATTYPE node_id, uint32_t data);
 
 /*******************************************************************************************
@@ -148,7 +148,7 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t data);
 ********************************************************************************************/
 void sighandler(int signal);
 
-void debug_print_payload(uint16_t loglevel, const char* msg_header, const char* result, payload_t * mypayload);
+void printPayload(uint16_t loglevel, const char* msg_header, const char* result, payload_t * mypayload);
 
 void process_payload(payload_t* mypayload);
 

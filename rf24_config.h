@@ -19,9 +19,26 @@
  **********************************/
 
 
-
-
-
+/***********************************
+ * Definition der Register
+ **********************************/
+#define REG_BATT            101
+#define REG_VOLTFAC         102
+#define REG_VOLTOFF         103
+#define REG_LOWVOLTLEV      104
+#define REG_SLEEPTIMEADJ    106
+#define REG_SLEEPTIMEKOR    107
+#define REG_TRANSREG        111
+#define REG_MONITOR         112
+#define REG_DISPLAY         113
+#define REG_SLEEPTIME       114
+#define REG_EMPTYLOOPS      115
+#define REG_SENDDELAY       116
+#define REG_SNDCNTN         117
+#define REG_SNDCNTS         118
+#define REG_LOWVOLTINT      119
+#define REG_PALEVEL         124
+#define REG_SW              125
 /***********************************
  * Definition der Nachrichtenarten
  **********************************/

@@ -37,6 +37,11 @@ rf24hub_config.h ==> all global definitions go here
 // Interval for deleting unsend requests for order for Heartbeat nodes in millisec.
 // 1 Sec.
 #define DELETEINTERVAL_HB 1000
+// Intervall to sync sensordata_im to sensordata 
+// In case of server crash you will loose data
+// in sensordata_im !!!!!!
+// Time in Seconds: 21600 = 6 Hours
+#define DBSYNCINTERVAL   21600
 
 #define PARAM_MAXLEN 80
 // array of char sizes
