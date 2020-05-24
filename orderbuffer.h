@@ -27,7 +27,7 @@ struct orderbuffer_t {
         NODE_DATTYPE   	node_id;
         uint8_t     	channel;
         uint32_t        utime;
-        float        	value;
+        uint32_t        data;
         orderbuffer_t*  p_next;
 };
 orderbuffer_t*     p_initial;
@@ -60,11 +60,11 @@ void setVerbose(uint16_t _verboselevel);
  *  Beim nächsten Aufruf wird der Rückgabewert des
  *  letzten Aufrufs bei p_last übergeben
  *************************************************************/    
-void* findOrder4Node(NODE_DATTYPE node_id, void* p_last, uint8_t* channel, float* value);
+void* findOrder4Node(NODE_DATTYPE node_id, void* p_last, uint8_t* channel, uint32_t* data);
 /**************************************************************
- *  Fügt einen neuen record ein 
+ *  Fügt einen neuen record vom typ float ein 
  *************************************************************/    
-void addOrderBuffer(uint64_t millis, NODE_DATTYPE node_id, uint8_t channel, float value);
+void addOrderBuffer(uint64_t millis, NODE_DATTYPE node_id, uint8_t channel, uint32_t data);
 /**************************************************************
  *  Löscht den record für die übergebe Kombinaltion
  *  von node_id und channel

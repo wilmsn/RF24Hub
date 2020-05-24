@@ -2,11 +2,12 @@
 rf24hub_config.h ==> all global definitions go here
 
 */
+#include "version.h"
 #ifndef _RF24HUB_CONFIG_H_   
 #define _RF24HUB_CONFIG_H_
 
 #define PRGNAME "rf24hub"
-#define PRGVERSION "1.5.1 vom 17.05.2020"
+//#define PRGVERSION "1.5.1 vom 17.05.2020"
 
 //
 // default values: can be overwritten in config file
@@ -36,6 +37,11 @@ rf24hub_config.h ==> all global definitions go here
 // Interval for deleting unsend requests for order for Heartbeat nodes in millisec.
 // 1 Sec.
 #define DELETEINTERVAL_HB 1000
+// Intervall to sync sensordata_im to sensordata 
+// In case of server crash you will loose data
+// in sensordata_im !!!!!!
+// Time in Seconds: 21600 = 6 Hours
+#define DBSYNCINTERVAL   21600
 
 #define PARAM_MAXLEN 80
 // array of char sizes

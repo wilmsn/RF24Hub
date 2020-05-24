@@ -5,7 +5,7 @@ rf24hub_text.h ==> all text goes here => Easy to translate!
 #ifndef _RF24HUB_TEXT_H_   
 #define _RF24HUB_TEXT_H_
 const char empty[] = "";
-const char version[] = PRGNAME " version " PRGVERSION;
+const char version[] = PRGNAME " version SWVERSION vom " SWDATUM;
 
 const char tn_usage01[] = "Usage:"; 
 const char tn_usage02[] = "set[last] sensor <sensornumber> <sensorvalue>";

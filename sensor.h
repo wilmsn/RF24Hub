@@ -25,6 +25,8 @@ struct sensor_t {
         char			fhem_dev[FHEMDEVLENGTH];
         uint64_t        last_ts;
         float			last_val;
+        int16_t         last_int;
+        uint16_t        last_ui;
         uint32_t        last_val_utime;
         sensor_t*       p_next;
 };
@@ -59,12 +61,30 @@ void cleanup(void);
 /**************************************************************
  *  Fügt einen neuen Sensor hinzu
  *************************************************************/    
-void addSensor(uint32_t sensor, NODE_DATTYPE node_id, uint8_t channel, char* fhem_dev, uint32_t last_val_utime, float last_val);
+void addSensor(uint32_t sensor, NODE_DATTYPE node_id, uint8_t channel, char* fhem_dev, uint32_t last_val_utime, float last_val, int16_t last_int, uint16_t last_ui);
 /**************************************************************
  *  Setzt value und last_ts auf den übergebenen Wert, 
+ *  Rückgabewert: true wenn ein update erfolgt ist.
+ *  Hier: float Werte => last_val
+ *************************************************************/
+bool updateLastVal_f(uint32_t sensor_id, float value, uint64_t mymillis);
+/**************************************************************
+ *  Setzt value und last_ts auf den übergebenen Wert, 
+ *  Rückgabewert: true wenn ein update erfolgt ist.
+ *  Hier: float Werte => last_int
+ *************************************************************/
+bool updateLastVal_i(uint32_t sensor_id, int16_t value, uint64_t mymillis);
+/**************************************************************
+ *  Setzt value und last_ts auf den übergebenen Wert, 
+ *  Rückgabewert: true wenn ein update erfolgt ist.
+ *  Hier: float Werte => last_ui
+ *************************************************************/
+bool updateLastVal_ui(uint32_t sensor_id, uint16_t value, uint64_t mymillis);
+/**************************************************************
+ *  Findet die Sensor_id durch node_id und channel, 
  *  Rückgabewert ist die sensor_id
  *************************************************************/
-uint32_t updateLastVal(NODE_DATTYPE node_id, uint8_t channel, float value, uint64_t mymillis);
+uint32_t getSensorByNodeChannel(NODE_DATTYPE node_id, uint8_t channel);
 /**************************************************************
  *  Findet node_id und channel des Sensors durch die sensor_id
  *************************************************************/

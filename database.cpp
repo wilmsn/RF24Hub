@@ -104,7 +104,8 @@ void Database::initSensor(Sensor* sensor) {
 		if ( row[3] != NULL ) sprintf(fhem_dev,"%s",trim(row[3])); else sprintf(fhem_dev,"not_set");
 		if ( row[4] != NULL ) myvalue = strtof(row[4], &pEnd); else myvalue = 0;
 		if ( row[5] != NULL ) utime = strtoul(row[5], &pEnd, 10); else utime = 1;
-        sensor->addSensor(mysensor, node_id, mychannel, fhem_dev, utime, myvalue);
+        // ToDo
+        sensor->addSensor(mysensor, node_id, mychannel, fhem_dev, utime, myvalue, 0 , 0);
 	}
 	mysql_free_result(result);
     free_str(verboselevel,"Database::initSensor sql_stmt",sql_stmt);
@@ -117,26 +118,26 @@ void Database::do_sql(char *sqlstmt) {
     db_check_error();
 }
 
-void Database::storeSensorValue(uint32_t mysensor, float value) {
+void Database::storeSensorValue(uint32_t mysensor, char* value) {
     char* sql_stmt = alloc_str(verboselevel,"Database::storeSensorValue sql_stmt",SQLSTRINGSIZE);
-    sprintf(sql_stmt,"insert into sensordata_im (sensor_ID, utime, value) values (%u, UNIX_TIMESTAMP(), %g)", mysensor, value);
+    sprintf(sql_stmt,"insert into sensordata_im (sensor_ID, utime, value) values (%u, UNIX_TIMESTAMP(), %s)", mysensor, value);
     do_sql(sql_stmt);
-    sprintf(sql_stmt,"update sensor_im set value = %g, utime = UNIX_TIMESTAMP() where sensor_id = %u",value ,mysensor);
+    sprintf(sql_stmt,"update sensor_im set value = %s, utime = UNIX_TIMESTAMP() where sensor_id = %u",value ,mysensor);
     do_sql(sql_stmt);
     free_str(verboselevel,"Database::storeSensorValue sql_stmt",sql_stmt);
 }
 
-void Database::storeNodeConfig(NODE_DATTYPE node_id, uint8_t channel, float value) {
+void Database::storeNodeConfig(NODE_DATTYPE node_id, uint8_t channel, char* value) {
     char* sql_stmt = alloc_str(verboselevel,"Database::storeNodeConfig sql_stmt",SQLSTRINGSIZE);
-    sprintf(sql_stmt,"update node set pa_level = %f, pa_utime = UNIX_TIMESTAMP() where node_id = %u and 118 = %u",value,node_id,channel);
+    sprintf(sql_stmt,"update node set pa_level = %s, pa_utime = UNIX_TIMESTAMP() where node_id = %u and 124 = %u",value,node_id,channel);
     do_sql(sql_stmt);
     sprintf(sql_stmt,"delete from node_configdata_history where node_id = %u and channel = %u and utime > UNIX_TIMESTAMP() - 100 ", node_id, channel);
     do_sql(sql_stmt);
-    sprintf(sql_stmt,"insert into node_configdata_history (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %f ) ", node_id, channel, value);
+    sprintf(sql_stmt,"insert into node_configdata_history (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %s ) ", node_id, channel, value);
     do_sql(sql_stmt);
 //    sprintf(sql_stmt,"delete from node_configdata where node_id = %u and channel = %u ", node_id, channel);
 //    do_sql(sql_stmt);
-    sprintf(sql_stmt,"insert into node_configdata (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %f ) ON DUPLICATE KEY UPDATE value = %f, utime = UNIX_TIMESTAMP()", node_id, channel, value, value);
+    sprintf(sql_stmt,"insert into node_configdata (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %f ) ON DUPLICATE KEY UPDATE value = %s, utime = UNIX_TIMESTAMP()", node_id, channel, value, value);
     do_sql(sql_stmt);
     free_str(verboselevel,"Database::storeNodeConfig sql_stmt",sql_stmt);
 }

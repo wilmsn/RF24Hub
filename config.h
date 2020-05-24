@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <iostream> 
+//#include <iostream> 
 #include <cstdio>
 #include <string> // for string class 
 #include <string.h>
@@ -12,7 +12,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <getopt.h>
-#include <fstream>
+//#include <fstream>
 #include <stdint.h>
 #include "rf24hub_config.h"
 #include "common.h"

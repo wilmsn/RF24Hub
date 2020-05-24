@@ -1,12 +1,5 @@
 #include "rf24hubd.h" 
 
-/*******************************************************************************************
-*
-* Telnethandling
-* Used for communication with FHEM
-*
-********************************************************************************************/
-
 // do_tn_cmd ==> send a telnet comand to the fhem-host
 // usage example: do_tn_cmd("set device1 on");
 void do_tn_cmd(NODE_DATTYPE node_id, uint8_t channel, float value) {
@@ -87,7 +80,7 @@ void receive_tn_in(int tnsocket, struct sockaddr_in * address) {
         }
         
     }
-    sprintf(buffer,"%s %s\n",PRGNAME,PRGVERSION);
+    sprintf(buffer,"%s %d\n",PRGNAME,SWVERSION);
     write(tnsocket , buffer , strlen(buffer));
     close (tnsocket);
     free_str(verboselevel,"receive_tn_in buffer",buffer);
@@ -168,21 +161,27 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 		// In word3 we may have a) the number of the sensor b) the name of the sensor c) the fhem_dev of a sensor
 		// for the processing we need the number of the sensor ==> find it!
         NODE_DATTYPE mynode = 0;
-        uint8_t mychannel = 0;
-        float   myvalue = strtof(wort4, &pEnd);
+        uint8_t   mychannel = 0;
+        uint32_t  mydata = 0;
         if ( wort3[0] >= 'A' && wort3[0] <= 'z' ) {
             if (sensor.getNodeChannelByFhemDev(&mynode, &mychannel, wort3) ) {
-                orderbuffer.addOrderBuffer(mymillis(),mynode,mychannel,myvalue);
+                //orderbuffer.addOrderBuffer(mymillis(),mynode,mychannel,myvalue);
           		tn_input_ok = true;
             }
         } else {
             uint32_t mysensor = strtol(wort3, &pEnd, 10);
             if ( sensor.getNodeChannelBySensorID(&mynode, &mychannel, mysensor ) ) {
-                orderbuffer.addOrderBuffer(mymillis(),mynode,mychannel,myvalue);
+                //orderbuffer.addOrderBuffer(mymillis(),mynode,mychannel,myvalue);
                 tn_input_ok = true;
             }
         }
-		if ( tn_input_ok && strcmp(wort1,cmp_setlast) == 0 && ! node.isHBNode(mynode) ) {
+        mydata = packData(mychannel, wort4); 
+        orderbuffer.addOrderBuffer(mymillis(),mynode,mychannel,mydata);
+        //ToDo
+        
+        
+        
+        if ( tn_input_ok && strcmp(wort1,cmp_setlast) == 0 && ! node.isHBNode(mynode) ) {
 			make_order(mynode, PAYLOAD_TYPE_DAT);
         } 
     }
@@ -275,49 +274,64 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
     return tn_input_ok;
 }
 	
-/*******************************************************************************************
-*
-* END Telnethandling
-*
-********************************************************************************************/
-/*******************************************************************************************
-*
-* Nodehandling 
-* Used for communication with the nodes
-*
-********************************************************************************************/
+
+uint32_t packData(uint8_t mychannel, char* wort4) {
+    uint32_t retval = 0;
+    char* pEnd; 
+    switch ( mychannel ) {
+        case 1 ... 40:
+        case 101 ... 105:  
+        {
+            float val_f = strtof(wort4, &pEnd);
+            retval = calcTransportValue_f(mychannel, val_f);
+        }
+        break;
+        case 41 ... 50:
+        case 106 ... 110:
+        {
+            int16_t val_i = (int16_t)strtol(wort4, &pEnd, 10);
+            retval = calcTransportValue_i(mychannel, val_i);
+        }
+        break;
+        case 51 ... 60:
+        case 111 ... 125:
+        {
+            uint16_t val_ui = (uint16_t)strtoul(wort4, &pEnd, 10);
+            retval = calcTransportValue_ui(mychannel, val_ui);
+        }
+        break;
+        case 61 ... 80:
+            // ToDo Wort kann ein kompletter Text sein, das in verschiedene Channels zerlegt wird
+            //      Max Länge 20*3=60 Zeichen
+        break;
+    }
+    return retval;
+}
 
 void make_order(NODE_DATTYPE mynode, uint8_t mytype) {
     uint8_t channel; 
-    float value;
     void* ret_ptr;
     uint32_t data;
     order.delByNode(mynode);
-    ret_ptr = orderbuffer.findOrder4Node(mynode, NULL, &channel, &value);
-    data = calcTransportValue_f(channel, value);
+    ret_ptr = orderbuffer.findOrder4Node(mynode, NULL, &channel, &data);
     if (ret_ptr) {
         order.addOrder(mynode, mytype, node.isHBNode(mynode), data, mymillis());
-        ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &channel, &value);
-        data = calcTransportValue_f(channel, value);
+        ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &channel, &data);
         if (ret_ptr) {
             order.modifyOrder(mynode, 2, data);
-            ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &channel, &value);
-            data = calcTransportValue_f(channel, value);
+            ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &channel, &data);
             if (ret_ptr) {
                 order.modifyOrder(mynode, 3, data);
-                ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &channel, &value);
-                data = calcTransportValue_f(channel, value);
+                ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &channel, &data);
                 if (ret_ptr) {
                     order.modifyOrder(mynode, 4, data);
-                    ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &channel, &value);
-                    data = calcTransportValue_f(channel, value);
+                    ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &channel, &data);
                     if (ret_ptr) {
                         order.modifyOrder(mynode, 5, data);
-                        ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &channel, &value);
-                        data = calcTransportValue_f(channel, value);
+                        ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &channel, &data);
                         if (ret_ptr) {
                             order.modifyOrder(mynode, 4, data);
-                            ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &channel, &value);
+                            ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &channel, &data);
                             if (ret_ptr) {
                                 order.modifyOrderFlags(mynode, PAYLOAD_FLAG_EMPTY );
                             } else {
@@ -341,12 +355,6 @@ void make_order(NODE_DATTYPE mynode, uint8_t mytype) {
     }
 }
 
-/*******************************************************************************************
-*
-* END Nodehandling 
-*
-********************************************************************************************/
-
 void exit_system(void) {
     // Save data from sensordata_im and sensor_im to persistant tables
     database.sync_sensordata();
@@ -361,51 +369,79 @@ void init_system(void) {
     sensor.printBuffer();
 }
 
-void store_sensor_value(NODE_DATTYPE node_id, uint8_t channel, float value) {
-    uint32_t sensor_id = sensor.updateLastVal(node_id, channel, value, mymillis() );
-    if ( sensor_id > 0 ) {    
-        database.storeSensorValue(sensor_id, value);
-        if ( cfg.incomingPortSet ) { 
-            do_tn_cmd(node_id, channel, value); 
-        }
-    }
-}
-
 void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
     char* buf = alloc_str(verboselevel,"process_sensor buf",TSBUFFERSIZE);
     uint8_t channel = getChannel(mydata);
-    float value = getValue_f(mydata);
+    uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
 	switch (channel) {
-		case 1 ... 99: {
-		// Sensor or Actor
+		case 1 ... 40: {
+            // Sensor or Actor
+            float value = getValue_f(mydata);
             if ( verboselevel & VERBOSECONFIG) {    
-                cout << ts(buf) << "Value of Node: " << (int)node_id << " Channel: " << (int)channel << " is " << value << endl;
+                printf("%sValue of Node: %u Channel: %u is %f\n", ts(buf), node_id, channel, value);
             }
-			store_sensor_value(node_id, channel, value);
+            sprintf(buf,"%f",value);
+			sensor.updateLastVal_f(sensor_id, value, mymillis());
+		}
+		break; 
+		case 41 ... 50: {
+            // Sensor or Actor
+            int16_t value = getValue_i(mydata);
+            if ( verboselevel & VERBOSECONFIG) {    
+                printf("%sValue of Node: %u Channel: %u is %d\n", ts(buf), node_id, channel, value);
+            }
+            sprintf(buf,"%d",value);
+			sensor.updateLastVal_i(sensor_id, value, mymillis());
+		}
+		break; 
+		case 51 ... 60: {
+            // Sensor or Actor
+            uint16_t value = getValue_ui(mydata);
+            if ( verboselevel & VERBOSECONFIG) {    
+                printf("%sValue of Node: %u Channel: %u is %u\n", ts(buf), node_id, channel, value);
+            }
+            sprintf(buf,"%u",value);
+			sensor.updateLastVal_ui(sensor_id, value, mymillis());
 		}
 		break; 
 		case 101: {
-		// battery voltage
+            // battery voltage
+            float value = getValue_f(mydata);
             if ( verboselevel & VERBOSECONFIG) {    
-                cout << ts(buf) << "Voltage of Node: " << (int)node_id << " is " << value << "V" << endl;
+                printf("%sVoltage of Node: %u is %fV\n", ts(buf), node_id, value);
             }
-// TODO
-//			do_sql(sql_stmt);
-			store_sensor_value(node_id, channel, value);
+            sprintf(buf,"%f",value);
+			sensor.updateLastVal_f(sensor_id, value, mymillis());
             node.setVoltage(node_id, value);
 		}
 		break; 
-		case 102 ... 127: { // System settings
+		case 102 ... 105: {
+            // float values
+            float value = getValue_f(mydata);
             if ( verboselevel & VERBOSECONFIG) {    
-                cout << ts(buf) << "Value of Node: " << (int)node_id << " Channel: " << (int)channel << " is " << value << endl;
+                printf("%sValue of Node: %u Channel: %u is %f\n", ts(buf), node_id, channel, value);
             }
-            database.storeNodeConfig(node_id, channel, value);
+            sprintf(buf,"%f",value);
+            database.storeNodeConfig(node_id, channel, buf);
 		}	
 		break; 
-		default: { 
+		case 106 ... 110: {
+            // int values
+            int16_t value = getValue_i(mydata);
             if ( verboselevel & VERBOSECONFIG) {    
-                cout << ts(buf) << "Message dropped!!!! Node: " << (int)node_id << " Channel: " << (int)channel << " Value: " << value << endl;
+                printf("%sValue of Node: %u Channel: %u is %d\n", ts(buf), node_id, channel, value);
             }
+            sprintf(buf,"%d",value);
+            database.storeNodeConfig(node_id, channel, buf);
+		}
+		case 111 ... 123: {
+            // int values
+            int16_t value = getValue_i(mydata);
+            if ( verboselevel & VERBOSECONFIG) {    
+                printf("%sValue of Node: %u Channel: %u is %d\n", ts(buf), node_id, channel, value);
+            }
+            sprintf(buf,"%d",value);
+            database.storeNodeConfig(node_id, channel, buf);
 		}
 	}	
 	orderbuffer.delByNodeChannel(node_id, channel);
@@ -555,9 +591,9 @@ void scanner(char scanlevel) {
   printf("\n"); 
 }
 
-void debug_print_payload(uint16_t loglevel, const char* msg_header, const char* result, payload_t* mypayload) {
+void printPayload(uint16_t loglevel, const char* msg_header, const char* result, payload_t* mypayload) {
 	if ( verboselevel & loglevel  ) {        
-        char* buf = alloc_str(verboselevel,"debug_print_payload buf",TSBUFFERSIZE);
+        char* buf = alloc_str(verboselevel,"printPayload buf",TSBUFFERSIZE);
         cout << ts(buf) << msg_header << ": N:" << (int)mypayload->node_id << " T:" <<  (int)mypayload->msg_type << " M:" <<
         (int)mypayload->msg_id << " F:" << hex << setfill('0') << setw(2) << (int)mypayload->msg_flags << dec << 
         " O:" << (int)mypayload->orderno << " " <<
@@ -568,7 +604,7 @@ void debug_print_payload(uint16_t loglevel, const char* msg_header, const char* 
         "(" << (int)getChannel(mypayload->data5) << "/" << getValue_f(mypayload->data5) << ")" <<
         "(" << (int)getChannel(mypayload->data6) << "/" << getValue_f(mypayload->data6) << ")" <<
         result << endl;   
-        free_str(verboselevel, "debug_print_payload buf", buf);
+        free_str(verboselevel, "printPayload buf", buf);
     }
 }
 
@@ -594,16 +630,17 @@ int main(int argc, char* argv[]) {
 	const int y = 1;
 	int msgID;
     TnMsg_t LogMsg;
+    time_t lastDBsync = time(0);
 	
+    // processing argc and argv[]
+    cfg.processParams(argc, argv);
+
 	// check if started as root
 	if ( getuid()!=0 ) {
 		cout << ts(buf) << PRGNAME << " has to be startet as user root" << endl; 
         exit(1);
     }
     
-    // processing argc and argv[]
-    cfg.processParams(argc, argv);
-
     // check for PID file, if exists terminate else create it
     if ( cfg.checkPidFileSet() ) {
          exit(1);
@@ -695,11 +732,10 @@ int main(int argc, char* argv[]) {
 
     // Main Loop
     while(1) {
-        //print messages if we have
-        //if (textbuffer.hasMessage) textbuffer.printMessage();
         // sync sensordata_im to sensordata
-        if ( (unsigned)time(NULL) == ((unsigned)time(NULL) & 0b11111111111111111111000000000000 ) ) {
+        if ( time(0) - lastDBsync > DBSYNCINTERVAL ) {
            database.sync_sensordata();   
+           lastDBsync = time(0);
         }
         /* Handling of incoming messages */
 		if ( cfg.incomingPortSet ) {
@@ -742,7 +778,9 @@ int main(int argc, char* argv[]) {
 // Receive loop: react on the message from the nodes
 //
 			radio.read(&payload,sizeof(payload));
-            debug_print_payload(VERBOSERF24, "Rec", " ", &payload);
+            printPayload(VERBOSERF24, "Rec", " ", &payload);
+            char pa[2];
+            pa[1] = 0;
 			switch ( payload.msg_type ) {
                 case PAYLOAD_TYPE_INIT: { // Init message from a node!!
                     process_payload(&payload);
@@ -792,22 +830,26 @@ int main(int argc, char* argv[]) {
                 break;
                 case PAYLOAD_TYPE_PING_POW_MIN: {
                     node.setPaLevel(payload.node_id, 0);
-                    database.storeNodeConfig(payload.node_id, 118, 0);
+                    pa[0] = '0';
+                    database.storeNodeConfig(payload.node_id, REG_PALEVEL, pa);
                 }
                 break;
                 case PAYLOAD_TYPE_PING_POW_LOW: {
                     node.setPaLevel(payload.node_id, 1);
-                    database.storeNodeConfig(payload.node_id, 118, 1);
+                    pa[0] = '1';
+                    database.storeNodeConfig(payload.node_id, REG_PALEVEL, pa);
                 }
                 break;
                 case PAYLOAD_TYPE_PING_POW_HIGH: {
                     node.setPaLevel(payload.node_id, 2);
-                    database.storeNodeConfig(payload.node_id, 118, 2);
+                    pa[0] = '2';
+                    database.storeNodeConfig(payload.node_id, REG_PALEVEL, pa);
                 }
                 break;
                 case PAYLOAD_TYPE_PING_POW_MAX: {
                     node.setPaLevel(payload.node_id, 3);
-                    database.storeNodeConfig(payload.node_id, 118, 3);
+                    pa[0] = '3';
+                    database.storeNodeConfig(payload.node_id, REG_PALEVEL, pa);
                 }
                 break;
                 default: {	
@@ -838,10 +880,10 @@ int main(int argc, char* argv[]) {
                     radio.openWritingPipe(rf24_hub2node);
 					if (radio.write(&payload,sizeof(payload))) {
                         radio.startListening();
-                        debug_print_payload(VERBOSERF24, "Snd", "OK", &payload);
+                        printPayload(VERBOSERF24, "Snd", "OK", &payload);
 					} else {
                         radio.startListening();
-                        debug_print_payload(VERBOSERF24, "Snd", "Fail", &payload);
+                        printPayload(VERBOSERF24, "Snd", "Fail", &payload);
                     }
                 }
 				usleep(50000);

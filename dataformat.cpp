@@ -52,11 +52,25 @@ float getValue_f(uint32_t val) {
 
 /***************************************************
  * Extrahiert den Sensorwert aus dem Transportwert
- * Hier: Float
+ * Hier: Integer max. 16 bit
  ***************************************************/
-uint16_t getValue_i(uint32_t val) {
+int16_t getValue_i(uint32_t val) {
+  int retval;
+  if ( val & ZF_ZAHL_NEGATIV ) {
+    retval = (val & ZF_ZAHL_WERT_INT) * -1;
+  } else {
+    retval = val & ZF_ZAHL_WERT_INT;
+  }  
+  return retval;
+}
+
+/***************************************************
+ * Extrahiert den Sensorwert aus dem Transportwert
+ * Hier: unsigned Integer max. 16 bit
+ ***************************************************/
+uint16_t getValue_ui(uint32_t val) {
   uint16_t retval;
-  retval = val & ZF_ZAHL_WERT;
+  retval = val & ZF_ZAHL_WERT_UINT;
   return retval;
 }
 
@@ -104,10 +118,36 @@ uint32_t calcTransportValue_f(uint8_t sensor, float value) {
  * Sensor: gültige Werte zwischen 1..127
  * Value: gültige Werte: 0 .. 65535
  ******************************************************/
-uint32_t calcTransportValue_i(uint8_t sensor, uint16_t value) {  
+uint32_t calcTransportValue_ui(uint8_t sensor, uint16_t value) {  
   uint32_t result = 0;
   result = sensor;
   result <<= 25; 
   result |= (uint32_t) value;
   return result; 
+}
+
+/******************************************************
+ * Verpackt die Sensornummer und den Messwert zu einem 
+ * TransportWert des Datentyps uint32_t.
+ * Sensor: gültige Werte zwischen 1..127
+ * Value: gültige Werte: 0 .. 65535
+ ******************************************************/
+uint32_t calcTransportValue_i(uint8_t sensor, int16_t value) {  
+  uint32_t result = 0;
+  result = sensor;
+  result <<= 25; 
+  if ( value & 0b1000000000000000 ) result |= ZF_ZAHL_NEGATIV;
+  result |= (value & ZF_ZAHL_WERT_INT);
+  return result; 
+}
+
+uint32_t calcTransportValue_c(uint8_t sensor, char* value, uint16_t* pos) {
+  uint32_t result = 0;
+  uint32_t c1 = value[*pos]<<16;
+  uint32_t c2 = value[*pos+1]<<8;
+  uint32_t c3 = value[*pos+2];
+  result = sensor;
+  result <<= 25; 
+  result = result | c1 | c2 | c3;  
+  return result;  
 }

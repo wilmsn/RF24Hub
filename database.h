@@ -45,8 +45,8 @@ public:
  *************************************************************/    
 void setVerbose(uint16_t _verboselevel);
     bool connect(string db_hostname, string db_username, string db_password, string db_schema, int db_port);
-    void storeSensorValue(uint32_t mysensor, float value);
-    void storeNodeConfig(NODE_DATTYPE node, uint8_t channel, float value);
+    void storeSensorValue(uint32_t mysensor, char* value);
+    void storeNodeConfig(NODE_DATTYPE node, uint8_t channel, char* value);
     void initSensor(Sensor* sensor);
     void initNode(Node* node);
     void initSystem(void);

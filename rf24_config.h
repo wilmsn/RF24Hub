@@ -19,9 +19,26 @@
  **********************************/
 
 
-
-
-
+/***********************************
+ * Definition der Register
+ **********************************/
+#define REG_BATT            101
+#define REG_VOLTFAC         102
+#define REG_VOLTOFF         103
+#define REG_LOWVOLTLEV      104
+#define REG_SLEEPTIMEADJ    106
+#define REG_SLEEPTIMEKOR    107
+#define REG_TRANSREG        111
+#define REG_MONITOR         112
+#define REG_DISPLAY         113
+#define REG_SLEEPTIME       114
+#define REG_EMPTYLOOPS      115
+#define REG_SENDDELAY       116
+#define REG_SNDCNTN         117
+#define REG_SNDCNTS         118
+#define REG_LOWVOLTINT      119
+#define REG_PALEVEL         124
+#define REG_SW              125
 /***********************************
  * Definition der Nachrichtenarten
  **********************************/
@@ -65,23 +82,22 @@
 // Ursprung: Hub; Empfänger: Node
 #define PAYLOAD_TYPE_DATSTOP     63
 
-// Nachricht ist ein Ping, Antwort wird erwartet
-// Sendeleistung ist Minimal (-18 dBm)
 /*************************************
- * Ein Ping geht immer vom Node aus 
- * und wird vom Hub zwingend beantwortet
+ * Ein Ping geht immer vom Node aus. 
  * Durch die unterschiedlichen
  * Sendeleistungen kann die Qualität
  * der Funkverbindung beurteilt werden
  ************************************/
+// Nachricht ist ein Ping.
+// Sendeleistung ist Minimal (-18 dBm)
 #define PAYLOAD_TYPE_PING_POW_MIN 101
-// Nachricht ist ein Ping, Antwort wird erwartet
+// Nachricht ist ein Ping.
 // Sendeleistung ist Low (-12 dBm)
 #define PAYLOAD_TYPE_PING_POW_LOW 102
-// Nachricht ist ein Ping, Antwort wird erwartet
+// Nachricht ist ein Ping.
 // Sendeleistung ist High (-6 dBm)
 #define PAYLOAD_TYPE_PING_POW_HIGH 103
-// Nachricht ist ein Ping, Antwort wird erwartet
+// Nachricht ist ein Ping.
 // Sendeleistung ist Max ( 0 dBm)
 #define PAYLOAD_TYPE_PING_POW_MAX 104
 
