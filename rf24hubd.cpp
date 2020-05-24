@@ -412,6 +412,7 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
 			sensor.updateLastVal_f(sensor_id, getValue_f(mydata), mymillis());
             node.setVoltage(node_id, getValue_f(mydata));
             database.storeSensorValue(sensor_id, buf);
+            do_tn_cmd(node_id, channel,buf);
 		}
 		break; 
 		case 102 ... 105: {
