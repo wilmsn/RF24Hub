@@ -9,21 +9,21 @@ On Branch: no_network @ rpi1  !!!!!
 // My definitions for my nodes based on this sketch
 // Select only one at one time !!!!
 //#define AUSSENTHERMOMETER
-//#define AUSSENTHERMOMETER2
 //#define SCHLAFZIMMERTHERMOMETER
-//#define TESTZIMMERTHERMOMETER
+#define TESTZIMMERTHERMOMETER
 //#define TESTZIMMER1THERMOMETER
 //#define BASTELZIMMERTHERMOMETER
 //#define KUECHETHERMOMETER
 //#define WOHNZIMMERTHERMOMETER
 //#define ANKLEIDEZIMMERTHERMOMETER
 //#define GAESTEZIMMERTHERMOMETER
-//#define UNOTESTNODE
-#define UNOTESTNODE_AO
+//#define UNOTESTNODE_AO
 //****************************************************
 // Default values => can be oberwritten by node config
 // Kontrast of the display
 #define CONTRAST 65;
+// Brightnes of the display - unused until now
+#define BRIGHTNES 0;
 // Sleeptime in Seconds !! 
 // (valid: 10 ... 32.400)
 #define SLEEPTIME_SEC   120
@@ -41,7 +41,7 @@ On Branch: no_network @ rpi1  !!!!!
 #define MAX_SENDCOUNT   10
 // Max number of attempts to send for a stop message!!
 // (valid 1 ... 20)
-#define MAX_STOPCOUNT   10
+#define MAX_STOPCOUNT   3
 // Voltage faktor will be multiplied to the messured value !!!!
 // (valid 0.1 ... 10)
 #define VOLT_FAC        1.0
@@ -138,14 +138,15 @@ On Branch: no_network @ rpi1  !!!!!
 //    Individual settings
 //-----------------------------------------------------
 #if defined(AUSSENTHERMOMETER)
-#define BME_280
+#define HBNODE
 #define RF24NODE        200
+#define BME_280
 #define STATUSLED       3
 #define STATUSLED_ON    HIGH
 #define STATUSLED_OFF   LOW
-#define LOWVOLTAGELEVEL 1
-#define EEPROM_VERSION  2
-#define HBNODE
+#define LOW_VOLT_LEVEL  1
+#define EEPROM_VERSION  5
+#define SLEEPTIME_SEC   900
 #endif
 //-----------------------------------------------------
 #if defined(SCHLAFZIMMERTHERMOMETER)
@@ -164,7 +165,7 @@ On Branch: no_network @ rpi1  !!!!!
 #define RF24NODE             102
 #define DALLAS_18B20
 #define DISPLAY_5110
-#define EEPROM_VERSION       8
+#define EEPROM_VERSION       1
 #define EMPTYLOOPS           9
 #define VOLT_FAC             1
 #define VOLT_OFF             0.55
@@ -227,32 +228,6 @@ On Branch: no_network @ rpi1  !!!!!
 #define RF24NODE        0
 #define EEPROM_VERSION  3
 #define VOLTAGEADDED    55
-#define HBNODE
-#endif
-//-----------------------------------------------------
-#if defined(TESTNODE)
-#define RF24NODE        1
-#define EEPROM_VERSION  5
-#define STATUSLED       13 
-#define ACTOR           A5
-#define RF24SLEEPTIME   60000
-#define TEST_LED
-#define SERIAL_DEBUG
-#define HBNODE
-#define sleep4ms        delay
-#endif
-//-----------------------------------------------------
-#if defined(UNOTESTNODE)
-#define RF24NODE         1
-#define EEPROM_VERSION   3
-#define STATUSLED        13 
-#define ACTOR            A5
-#define RF24SLEEPTIME    60000
-#define RF24SENDDELAY    200
-#define RF24RECEIVEDELAY 200
-#define BMP_280
-#define SERIAL_DEBUG
-#define TEST_LED
 #define HBNODE
 #endif
 //-----------------------------------------------------
@@ -661,6 +636,7 @@ void setup(void) {
   EEPROM.get(0, eeprom);
   if (eeprom.versionnumber != EEPROM_VERSION && EEPROM_VERSION > 0) {
     eeprom.versionnumber    = EEPROM_VERSION;
+    eeprom.brightnes        = BRIGHTNES
     eeprom.contrast         = CONTRAST;
     eeprom.sleeptime_sec    = SLEEPTIME_SEC;
     eeprom.sleeptime_adj    = SLEEPTIME_ADJ;
@@ -1121,20 +1097,21 @@ void pingTest(void) {
   exec_pingTest = false;
 }
 
+
 void send_register(void) {
-  s_payload.data1 = calcTransportValue_f(111, eeprom.sleeptime_sec);
-  s_payload.data2 = calcTransportValue_f(112, eeprom.sleeptime_adj);
-  s_payload.data3 = calcTransportValue_f(113, eeprom.emptyloops);
-  s_payload.data4 = calcTransportValue_f(115, eeprom.senddelay);
-  s_payload.data5 = calcTransportValue_f(116, eeprom.max_sendcount);
-  s_payload.data6 = calcTransportValue_f(117, eeprom.max_stopcount);
+  s_payload.data1 = calcTransportValue_f(REG_VOLTFAC, eeprom.volt_fac);
+  s_payload.data2 = calcTransportValue_f(REG_VOLTOFF, eeprom.volt_off);
+  s_payload.data3 = calcTransportValue_f(REG_LOWVOLTLEV, eeprom.low_volt_level);
+  s_payload.data4 = calcTransportValue_i(REG_SLEEPTIMEADJ, eeprom.sleeptime_adj);
+  s_payload.data5 = calcTransportValue_ui(REG_LOWVOLTINT, eeprom.low_volt_sendint);
+  s_payload.data6 = calcTransportValue_ui(REG_SW, SWVERSION);
   prep_data(3,PAYLOAD_TYPE_INIT,PAYLOAD_FLAG_EMPTY,0,false);
-  s_payload.data1 = calcTransportValue_f(110, eeprom.contrast);
-  s_payload.data2 = calcTransportValue_f(118, eeprom.volt_fac);
-  s_payload.data3 = calcTransportValue_f(119, eeprom.volt_off);
-  s_payload.data4 = calcTransportValue_f(120, eeprom.low_volt_level);
-  s_payload.data5 = calcTransportValue_f(121, eeprom.low_volt_sendint);
-  s_payload.data6 = calcTransportValue_f(125, SWVERSION);;
+  s_payload.data1 = calcTransportValue_ui(REG_DISPLAY, (eeprom.brightnes<<8 | eeprom.contrast) );
+  s_payload.data2 = calcTransportValue_ui(REG_SLEEPTIME, eeprom.sleeptime_sec);
+  s_payload.data3 = calcTransportValue_ui(REG_EMPTYLOOPS, eeprom.emptyloops);
+  s_payload.data4 = calcTransportValue_ui(REG_SENDDELAY, eeprom.senddelay);
+  s_payload.data5 = calcTransportValue_ui(REG_SNDCNTN, eeprom.max_sendcount);
+  s_payload.data6 = calcTransportValue_ui(REG_SNDCNTS, eeprom.max_stopcount);
   prep_data(3,PAYLOAD_TYPE_INIT,PAYLOAD_FLAG_LASTMESSAGE,0,false);
   exec_RegTrans = false;
 }

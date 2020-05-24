@@ -2,7 +2,7 @@
 
 // do_tn_cmd ==> send a telnet comand to the fhem-host
 // usage example: do_tn_cmd("set device1 on");
-void do_tn_cmd(NODE_DATTYPE node_id, uint8_t channel, float value) {
+void do_tn_cmd(NODE_DATTYPE node_id, uint8_t channel, char* value) {
     char* tn_cmd = alloc_str(verboselevel,"do_tn_cmd tn_cmd",TELNETBUFFERSIZE);
     char tn_quit[] =  "\r\nquit\r\n";
     char* buf = alloc_str(verboselevel,"do_tn_cmd buf",TSBUFFERSIZE);
@@ -10,38 +10,33 @@ void do_tn_cmd(NODE_DATTYPE node_id, uint8_t channel, float value) {
     struct sockaddr_in serv_addr;
     struct hostent *server;
     char* fhem_dev;
-    if ( verboselevel & VERBOSETELNET) {    
-        cout << ts(buf) << "do_tn_cmd: Node: " << (int)node_id << " Channel: " << (int)channel << " Value: " << value << endl;
-    }
     fhem_dev = sensor.getFhemDevByNodeChannel(node_id, channel); 
-	sprintf(tn_cmd,"set %s %f", fhem_dev, value);
+	sprintf(tn_cmd,"set %s %s", fhem_dev, value);
     if ( verboselevel & VERBOSETELNET) {    
-        cout << ts(buf) << "do_tn_cmd: " << tn_cmd << endl;
+        printf("%sdo_tn_cmd: %s\n", ts(buf), tn_cmd );
     }
     portno = std::stoi(cfg.fhemPort);
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
-        cout << ts(buf) << "ERROR: do_tn_cmd: error opening socket" << endl;
+        printf("%sERROR: do_tn_cmd: error opening socket\n", ts(buf));
 	}	
     server = gethostbyname(cfg.fhemHost.c_str());
     if (server == NULL) {
-        cout << ts(buf) << "ERROR: do_tn_cmd: no such host" << endl;
+        printf("%sERROR: do_tn_cmd: no such host\n", ts(buf));
     }
     bzero((char *) &serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
-    bcopy((char *)server->h_addr, 
-         (char *)&serv_addr.sin_addr.s_addr,
-         server->h_length);
+    bcopy((char *)server->h_addr, (char *)&serv_addr.sin_addr.s_addr, server->h_length);
     serv_addr.sin_port = htons(portno);
     if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0) { 
-        cout << ts(buf) << "ERROR: do_tn_cmd: error connecting" << endl;
+        printf("%sERROR: do_tn_cmd: error connecting\n", ts(buf));
 	} else {	
 		n = write(sockfd,tn_cmd,strlen(tn_cmd));
 		if (n < 0) {
-			cout << ts(buf) << "ERROR: do_tn_cmd: error writing to socket" << endl;
+			printf("%sERROR: do_tn_cmd: error writing to socket\n", ts(buf));
 		} else {
             if ( verboselevel & VERBOSETELNET) {    
-                cout << ts(buf) << "do_tn_cmd: Telnet to " << cfg.fhemHost << " Port " << portno << " successfull Command: " <<  tn_cmd << endl;
+                printf("%sdo_tn_cmd: Telnet to %s Port %u successfull Command: %s\n", ts(buf), cfg.fhemHost.c_str(), portno, tn_cmd);
             }
 		}		
 		write(sockfd,tn_quit,strlen(tn_quit));
@@ -213,6 +208,7 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
             sensor.setVerbose(verboselevel);
             order.setVerbose(verboselevel);
             orderbuffer.setVerbose(verboselevel);
+            database.setVerbose(verboselevel);
 //		}	
 	}
     // show order
@@ -375,72 +371,73 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
     uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
 	switch (channel) {
 		case 1 ... 40: {
-            // Sensor or Actor
-            float value = getValue_f(mydata);
+            // Sensor or Actor type float
+            sprintf(buf,"%f", getValue_f(mydata));
             if ( verboselevel & VERBOSECONFIG) {    
-                printf("%sValue of Node: %u Channel: %u is %f\n", ts(buf), node_id, channel, value);
+                printf("%sValue of Node: %u Channel: %u is %s\n", ts(buf), node_id, channel, buf);
             }
-            sprintf(buf,"%f",value);
-			sensor.updateLastVal_f(sensor_id, value, mymillis());
+			sensor.updateLastVal_f(sensor_id, getValue_f(mydata), mymillis());
+            database.storeSensorValue(sensor_id, buf);
+            do_tn_cmd(node_id, channel,buf);
 		}
 		break; 
 		case 41 ... 50: {
-            // Sensor or Actor
-            int16_t value = getValue_i(mydata);
+            // Sensor or Actor type int16_t
+            sprintf(buf,"%d", getValue_i(mydata));
             if ( verboselevel & VERBOSECONFIG) {    
-                printf("%sValue of Node: %u Channel: %u is %d\n", ts(buf), node_id, channel, value);
+                printf("%sValue of Node: %u Channel: %u is %s\n", ts(buf), node_id, channel, buf);
             }
-            sprintf(buf,"%d",value);
-			sensor.updateLastVal_i(sensor_id, value, mymillis());
+			sensor.updateLastVal_i(sensor_id, getValue_i(mydata), mymillis());
+            database.storeSensorValue(sensor_id, buf);
+            do_tn_cmd(node_id, channel,buf);
 		}
 		break; 
 		case 51 ... 60: {
-            // Sensor or Actor
-            uint16_t value = getValue_ui(mydata);
+            // Sensor or Actor type uint16_t
+            sprintf(buf,"%u", getValue_ui(mydata));
             if ( verboselevel & VERBOSECONFIG) {    
-                printf("%sValue of Node: %u Channel: %u is %u\n", ts(buf), node_id, channel, value);
+                printf("%sValue of Node: %u Channel: %u is %s\n", ts(buf), node_id, channel, buf);
             }
-            sprintf(buf,"%u",value);
-			sensor.updateLastVal_ui(sensor_id, value, mymillis());
+			sensor.updateLastVal_ui(sensor_id, getValue_ui(mydata), mymillis());
+            database.storeSensorValue(sensor_id, buf);
+            do_tn_cmd(node_id, channel,buf);
 		}
 		break; 
 		case 101: {
             // battery voltage
-            float value = getValue_f(mydata);
+            sprintf(buf,"%g", getValue_f(mydata));
             if ( verboselevel & VERBOSECONFIG) {    
-                printf("%sVoltage of Node: %u is %fV\n", ts(buf), node_id, value);
+                printf("%sVoltage of Node: %u is %sV\n", ts(buf), node_id, buf);
             }
-            sprintf(buf,"%f",value);
-			sensor.updateLastVal_f(sensor_id, value, mymillis());
-            node.setVoltage(node_id, value);
+			sensor.updateLastVal_f(sensor_id, getValue_f(mydata), mymillis());
+            node.setVoltage(node_id, getValue_f(mydata));
+            database.storeSensorValue(sensor_id, buf);
 		}
 		break; 
 		case 102 ... 105: {
             // float values
-            float value = getValue_f(mydata);
+            sprintf(buf,"%g", getValue_f(mydata));
             if ( verboselevel & VERBOSECONFIG) {    
-                printf("%sValue of Node: %u Channel: %u is %f\n", ts(buf), node_id, channel, value);
+                printf("%sValue of Node: %u Channel: %u is %s\n", ts(buf), node_id, channel, buf);
             }
-            sprintf(buf,"%f",value);
             database.storeNodeConfig(node_id, channel, buf);
 		}	
 		break; 
 		case 106 ... 110: {
             // int values
-            int16_t value = getValue_i(mydata);
+            sprintf(buf,"%d", getValue_i(mydata));
             if ( verboselevel & VERBOSECONFIG) {    
-                printf("%sValue of Node: %u Channel: %u is %d\n", ts(buf), node_id, channel, value);
+                printf("%sValue of Node: %u Channel: %u is %s\n", ts(buf), node_id, channel, buf);
             }
-            sprintf(buf,"%d",value);
             database.storeNodeConfig(node_id, channel, buf);
 		}
-		case 111 ... 123: {
+		case 111 ... 123:
+        case 125: {
             // int values
-            int16_t value = getValue_i(mydata);
+            sprintf(buf,"%u", getValue_ui(mydata));
             if ( verboselevel & VERBOSECONFIG) {    
-                printf("%sValue of Node: %u Channel: %u is %d\n", ts(buf), node_id, channel, value);
+                printf("%sValue of Node: %u Channel: %u is %s\n", ts(buf), node_id, channel, buf);
             }
-            sprintf(buf,"%d",value);
             database.storeNodeConfig(node_id, channel, buf);
 		}
 	}	
@@ -728,6 +725,7 @@ int main(int argc, char* argv[]) {
     sensor.setVerbose(verboselevel);
     order.setVerbose(verboselevel);
     orderbuffer.setVerbose(verboselevel);
+    database.setVerbose(verboselevel);
     init_system();
 
     // Main Loop
@@ -779,8 +777,6 @@ int main(int argc, char* argv[]) {
 //
 			radio.read(&payload,sizeof(payload));
             printPayload(VERBOSERF24, "Rec", " ", &payload);
-            char pa[2];
-            pa[1] = 0;
 			switch ( payload.msg_type ) {
                 case PAYLOAD_TYPE_INIT: { // Init message from a node!!
                     process_payload(&payload);
@@ -830,26 +826,26 @@ int main(int argc, char* argv[]) {
                 break;
                 case PAYLOAD_TYPE_PING_POW_MIN: {
                     node.setPaLevel(payload.node_id, 0);
-                    pa[0] = '0';
-                    database.storeNodeConfig(payload.node_id, REG_PALEVEL, pa);
+                    sprintf(buf,"%s","0");
+                    database.storeNodeConfig(payload.node_id, REG_PALEVEL, buf);
                 }
                 break;
                 case PAYLOAD_TYPE_PING_POW_LOW: {
                     node.setPaLevel(payload.node_id, 1);
-                    pa[0] = '1';
-                    database.storeNodeConfig(payload.node_id, REG_PALEVEL, pa);
+                    sprintf(buf,"%s","1");
+                    database.storeNodeConfig(payload.node_id, REG_PALEVEL, buf);
                 }
                 break;
                 case PAYLOAD_TYPE_PING_POW_HIGH: {
                     node.setPaLevel(payload.node_id, 2);
-                    pa[0] = '2';
-                    database.storeNodeConfig(payload.node_id, REG_PALEVEL, pa);
+                    sprintf(buf,"%s","2");
+                    database.storeNodeConfig(payload.node_id, REG_PALEVEL, buf);
                 }
                 break;
                 case PAYLOAD_TYPE_PING_POW_MAX: {
                     node.setPaLevel(payload.node_id, 3);
-                    pa[0] = '3';
-                    database.storeNodeConfig(payload.node_id, REG_PALEVEL, pa);
+                    sprintf(buf,"%s","3");
+                    database.storeNodeConfig(payload.node_id, REG_PALEVEL, buf);
                 }
                 break;
                 default: {	

@@ -120,7 +120,7 @@ Config          cfg;
 *
 ********************************************************************************************/
 
-void do_tn_cmd(NODE_DATTYPE node, uint8_t sensor, float value);
+void do_tn_cmd(NODE_DATTYPE node, uint8_t sensor, char* value);
 
 void process_tn_in(int new_socket, char* buffer, char* client_message);
 

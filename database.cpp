@@ -2,37 +2,31 @@
 
 Database::Database(void) {
     buf = alloc_str(verboselevel,"Database buf",TSBUFFERSIZE);
+    sql_stmt = alloc_str(verboselevel,"Database sql_stmt",SQLSTRINGSIZE);
     verboselevel = 0;
 }
 
 void Database::db_check_error(void) {
 	if (mysql_errno(db) != 0) {
-        char* buf = alloc_str(verboselevel,"Database::db_check_error buf",TSBUFFERSIZE);
-		cout << ts(buf) << "DB-Fehler: " << mysql_error(db) << endl;
-        free_str(verboselevel,"Database::db_check_error buf",buf);
+		printf("DB-Fehler: %s\n", mysql_error(db));
     }
 }
 
 void Database::sync_sensordata(void) {
-    char* sql_stmt = alloc_str(verboselevel,"Database::sync_sensordata sql_stmt",SQLSTRINGSIZE);
 	sprintf (sql_stmt, "insert into sensordata(sensor_id, utime, value) select sensor_id, utime, value from sensordata_im where (sensor_id,utime) not in (select sensor_id, utime from sensordata)");
     debugPrintSQL(sql_stmt);
     mysql_query(db, sql_stmt);
 	db_check_error();
-    free_str(verboselevel,"Database::sync_sensordata sql_stmt",sql_stmt);
 }
 
 void Database::sync_sensor(void) {
-    char* sql_stmt = alloc_str(verboselevel,"Database::sync_sensor sql_stmt",SQLSTRINGSIZE);
 	sprintf (sql_stmt, "update sensor a set value = ( select value from sensor_im where sensor_id = a.sensor_id ), utime = ( select utime from sensor_im where sensor_id = a.sensor_id )");
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
-    free_str(verboselevel,"Database::sync_sensor sql_stmt",sql_stmt);
 }
 
 void Database::initSystem(void) {
-    char* sql_stmt = alloc_str(verboselevel,"Database::initSystem sql_stmt",SQLSTRINGSIZE);
     // Falls das letzte Programmende ein Chrash war soll die Tabelle "sensordata_im" gesichert werden!
 	sprintf (sql_stmt, "insert into sensordata(sensor_id, utime, value) select sensor_id, utime, value from sensordata_im where (sensor_id,utime) not in (select sensor_id, utime from sensordata)");
     debugPrintSQL(sql_stmt);
@@ -54,11 +48,9 @@ void Database::initSystem(void) {
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
-    free_str(verboselevel,"Database::initSystem sql_stmt",sql_stmt);
 }
 
 void Database::initNode(Node* node) {
-    char* sql_stmt = alloc_str(verboselevel,"Database::initNode sql_stmt",SQLSTRINGSIZE);
     NODE_DATTYPE node_id = 0;
     bool myHBnode = false;
     uint32_t pa_utime;
@@ -79,11 +71,9 @@ void Database::initNode(Node* node) {
         node->addNode(node_id, 0, myHBnode, pa_level, pa_utime); 
 	}
 	mysql_free_result(result);    
-    free_str(verboselevel,"Database::initNode sql_stmt",sql_stmt);   
 }
 
 void Database::initSensor(Sensor* sensor) {
-    char* sql_stmt = alloc_str(verboselevel,"Database::initSensor sql_stmt",SQLSTRINGSIZE);
     char* fhem_dev = alloc_str(verboselevel,"Database::initSensor fhem_dev",FHEMDEVLENGTH);
     uint32_t     	mysensor;
     NODE_DATTYPE   	node_id;
@@ -108,7 +98,6 @@ void Database::initSensor(Sensor* sensor) {
         sensor->addSensor(mysensor, node_id, mychannel, fhem_dev, utime, myvalue, 0 , 0);
 	}
 	mysql_free_result(result);
-    free_str(verboselevel,"Database::initSensor sql_stmt",sql_stmt);
     free_str(verboselevel,"Database::initSensor fhem_dev",fhem_dev); 
 }
 
@@ -119,33 +108,28 @@ void Database::do_sql(char *sqlstmt) {
 }
 
 void Database::storeSensorValue(uint32_t mysensor, char* value) {
-    char* sql_stmt = alloc_str(verboselevel,"Database::storeSensorValue sql_stmt",SQLSTRINGSIZE);
     sprintf(sql_stmt,"insert into sensordata_im (sensor_ID, utime, value) values (%u, UNIX_TIMESTAMP(), %s)", mysensor, value);
     do_sql(sql_stmt);
     sprintf(sql_stmt,"update sensor_im set value = %s, utime = UNIX_TIMESTAMP() where sensor_id = %u",value ,mysensor);
     do_sql(sql_stmt);
-    free_str(verboselevel,"Database::storeSensorValue sql_stmt",sql_stmt);
 }
 
 void Database::storeNodeConfig(NODE_DATTYPE node_id, uint8_t channel, char* value) {
-    char* sql_stmt = alloc_str(verboselevel,"Database::storeNodeConfig sql_stmt",SQLSTRINGSIZE);
-    sprintf(sql_stmt,"update node set pa_level = %s, pa_utime = UNIX_TIMESTAMP() where node_id = %u and 124 = %u",value,node_id,channel);
-    do_sql(sql_stmt);
+    if ( channel == REG_PALEVEL ) {
+        sprintf(sql_stmt,"update node set pa_level = %s, pa_utime = UNIX_TIMESTAMP() where node_id = %u ", value, node_id);
+        do_sql(sql_stmt);
+    }
     sprintf(sql_stmt,"delete from node_configdata_history where node_id = %u and channel = %u and utime > UNIX_TIMESTAMP() - 100 ", node_id, channel);
     do_sql(sql_stmt);
     sprintf(sql_stmt,"insert into node_configdata_history (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %s ) ", node_id, channel, value);
     do_sql(sql_stmt);
-//    sprintf(sql_stmt,"delete from node_configdata where node_id = %u and channel = %u ", node_id, channel);
-//    do_sql(sql_stmt);
-    sprintf(sql_stmt,"insert into node_configdata (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %f ) ON DUPLICATE KEY UPDATE value = %s, utime = UNIX_TIMESTAMP()", node_id, channel, value, value);
+    sprintf(sql_stmt,"insert into node_configdata (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %s ) ON DUPLICATE KEY UPDATE value = %s, utime = UNIX_TIMESTAMP()", node_id, channel, value, value);
     do_sql(sql_stmt);
-    free_str(verboselevel,"Database::storeNodeConfig sql_stmt",sql_stmt);
 }
 
 bool Database::connect(string db_hostname, string db_username, string db_password, string db_schema, int db_port) {
     int mysql_wait_count = 0;
     bool retval = true;
-    char buf[] = TSBUFFERSTRING;
     if ( verboselevel & VERBOSESTARTUP) {    
         cout << ts(buf) << "Maria-DB client version: " << mysql_get_client_info() << endl;
     }
@@ -188,8 +172,7 @@ bool Database::connect(string db_hostname, string db_username, string db_passwor
 
 void Database::debugPrintSQL(char* sqlstmt) {
     if ( verboselevel & VERBOSESQL) {    
-        char buf[] = TSBUFFERSTRING;
-        cout << ts(buf) << "SQL: " << sqlstmt << endl;
+        printf("%sSQL: %s\n", ts(buf), sqlstmt);
     }
 }
 

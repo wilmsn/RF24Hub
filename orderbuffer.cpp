@@ -175,8 +175,33 @@ void OrderBuffer::printBuffer2tn(int tn_socket) {
     sprintf(client_message," ---- OrderBuffer ----\n"); 
     write(tn_socket , client_message , strlen(client_message));
     while (p_search) {
-        sprintf(client_message,"Node:%u Channel:%u Value:%g Entry:%s\n", 
-                p_search->node_id, p_search->channel, p_search->data, utime2str(p_search->utime, buf, 1) );
+        switch (p_search->channel) {
+            case 1 ... 40:
+            case 101 ... 105:  
+            {
+                sprintf(client_message,"Node:%u Channel:%u Value:%g Entry:%s\n", 
+                p_search->node_id, p_search->channel, getValue_f(p_search->data), utime2str(p_search->utime, buf, 1) );
+            }
+            break;
+            case 41 ... 50:
+            case 106 ... 110:
+            {
+                sprintf(client_message,"Node:%u Channel:%u Value:%d Entry:%s\n", 
+                p_search->node_id, p_search->channel, getValue_i(p_search->data), utime2str(p_search->utime, buf, 1) );
+            }
+            break;
+            case 51 ... 60:
+            case 111 ... 125:
+            {
+                sprintf(client_message,"Node:%u Channel:%u Value:%u Entry:%s\n", 
+                p_search->node_id, p_search->channel, getValue_ui(p_search->data), utime2str(p_search->utime, buf, 1) );
+            }
+            break;
+            case 61 ... 80:
+            {
+                //ToDo
+            }
+        }            
         write(tn_socket , client_message , strlen(client_message));
         p_search=p_search->p_next;
     }
