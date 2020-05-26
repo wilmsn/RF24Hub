@@ -55,6 +55,7 @@ void Database::initNode(Node* node) {
     bool myHBnode = false;
     uint32_t pa_utime;
     uint32_t pa_level;
+    float u_batt;
     char cmp_y[]="y",cmp_j[]="j"; 
 	MYSQL_ROW row;
 	sprintf (sql_stmt, "select node_id, heartbeat, pa_utime, pa_level from node");
@@ -71,6 +72,19 @@ void Database::initNode(Node* node) {
         node->addNode(node_id, 0, myHBnode, pa_level, pa_utime); 
 	}
 	mysql_free_result(result);    
+	sprintf (sql_stmt, "select node_id, value from sensor where channel = 101");
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+	result = mysql_store_result(db);
+	db_check_error();
+	while ((row = mysql_fetch_row(result))) {
+		if ( row[0] != NULL ) node_id = strtoul(row[0], &pEnd,10);
+		if ( row[1] != NULL ) u_batt = strtof(row[1], &pEnd); else u_batt = 0;
+        node->setVoltage(node_id, u_batt); 
+	}
+	mysql_free_result(result);    
+    
 }
 
 void Database::initSensor(Sensor* sensor) {

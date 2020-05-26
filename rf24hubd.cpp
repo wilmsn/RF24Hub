@@ -215,8 +215,8 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 	// lists the current orderbuffer
 	if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
 		tn_input_ok = true;
-        orderbuffer.printBuffer2tn(tn_socket);
-        order.printBuffer2tn(tn_socket);
+        orderbuffer.printBuffer2tn(tn_socket, false);
+        order.printBuffer2tn(tn_socket, false);
 	}	
     // show sensor
 	// lists the current node- and sensorbuffer
@@ -240,8 +240,8 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 	// lists the current order/orderbuffer for html page
 	if (( strcmp(wort1,cmp_html) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
 		tn_input_ok = true;
-        orderbuffer.htmlBuffer2tn(tn_socket);
-        order.htmlBuffer2tn(tn_socket);
+        orderbuffer.printBuffer2tn(tn_socket, true);
+        order.printBuffer2tn(tn_socket, true);
     }	
     // init
 	// initialisation of rf24hubd: reloads data from database
@@ -270,7 +270,7 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
     return tn_input_ok;
 }
 	
-
+/*
 uint32_t packData(uint8_t mychannel, char* wort4) {
     uint32_t retval = 0;
     char* pEnd; 
@@ -303,6 +303,7 @@ uint32_t packData(uint8_t mychannel, char* wort4) {
     }
     return retval;
 }
+*/
 
 void make_order(NODE_DATTYPE mynode, uint8_t mytype) {
     uint8_t channel; 

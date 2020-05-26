@@ -83,12 +83,10 @@ bool nodeHasEntry(NODE_DATTYPE node_id);
 /*************************************************************
  *  Git den Inhalt des Nodebuffers über den übergebenen 
  *  telnet socket aus
+ *  Der zweite Parameter bestimmt das Format,
+ *  true => HTML Format; false => Textformat
  ************************************************************/
-void printBuffer2tn(int new_tn_in_socket);
-/**************************************************************
- *  Druckt alle records im Buffer in de tn_socket
- *************************************************************/
-void htmlBuffer2tn(int new_tn_in_socket);
+void printBuffer2tn(int new_tn_in_socket, bool htmlFormat);
 /**************************************************************
  *  Druckt den Inhalt des Buffers auf StdIO
  *************************************************************/

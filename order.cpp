@@ -6,6 +6,12 @@ Order::Order(void) {
     orderno = 1;
     verboselevel = 0;
     buf = (char*)alloc_str(VERBOSEPOINTER,"Order::Order buf",TSBUFFERSIZE);
+    buf1 = (char*)alloc_str(VERBOSEPOINTER,"Order::Order buf1",20);
+    buf2 = (char*)alloc_str(VERBOSEPOINTER,"Order::Order buf2",20);
+    buf3 = (char*)alloc_str(VERBOSEPOINTER,"Order::Order buf3",20);
+    buf4 = (char*)alloc_str(VERBOSEPOINTER,"Order::Order buf4",20);
+    buf5 = (char*)alloc_str(VERBOSEPOINTER,"Order::Order buf5",20);
+    buf6 = (char*)alloc_str(VERBOSEPOINTER,"Order::Order buf6",20);
 }
 
 bool Order::hasEntry(void) {
@@ -255,14 +261,14 @@ void Order::printBuffer(void) {
     p_search = p_initial;
     printf("%sOrder: ---- Buffercontent ----\n",ts(buf)); 
     while (p_search) {
-        printf("Order: <%p> O:%u N:%u T:%u F:%02x (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g) <%p>\n", 
+        printf("Order: <%p> O:%u N:%u T:%u F:%02x (%u/%s) (%u/%s) (%u/%s) (%u/%s) (%u/%s) (%u/%s) <%p>\n", 
                 p_search, p_search->orderno, p_search->node_id, p_search->msg_type, p_search->msg_flags 
-                ,getChannel(p_search->data1), getValue_f(p_search->data1)
-                ,getChannel(p_search->data2), getValue_f(p_search->data2)
-                ,getChannel(p_search->data3), getValue_f(p_search->data3)
-                ,getChannel(p_search->data4), getValue_f(p_search->data4)
-                ,getChannel(p_search->data5), getValue_f(p_search->data5)
-                ,getChannel(p_search->data6), getValue_f(p_search->data6)
+                ,getChannel(p_search->data1), unpackData(p_search->data1, buf1)
+                ,getChannel(p_search->data2), unpackData(p_search->data2, buf2)
+                ,getChannel(p_search->data3), unpackData(p_search->data3, buf3)
+                ,getChannel(p_search->data4), unpackData(p_search->data4, buf4)
+                ,getChannel(p_search->data5), unpackData(p_search->data5, buf5)
+                ,getChannel(p_search->data6), unpackData(p_search->data6, buf6)
                 ,p_search->p_next
                );
         p_search=p_search->p_next;
@@ -270,28 +276,54 @@ void Order::printBuffer(void) {
     printf("Order: -- END Buffercontent --\n"); 
 }
 
-void Order::printBuffer2tn(int new_tn_in_socket) {
+void Order::printBuffer2tn(int new_tn_in_socket, bool htmlFormat) {
     order_t *p_search;
     char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
     p_search = p_initial;
-    sprintf(client_message,"------ Order: --------\n"); 
+    if (htmlFormat) {
+        sprintf(client_message,"</table><br><big>Order</big><br><table><tr><th>OrderNo</th><th>Node</th><th>Type</th><th>Flags</th><th>Channel</th><th>Value</th></tr>\n"); 
+    } else {
+        sprintf(client_message,"------ Order: --------\n"); 
+    }
     write(new_tn_in_socket , client_message , strlen(client_message));
     while (p_search) {
-        sprintf(client_message,"Order: <%p> O:%u N:%u T:%u F:%02x (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g) (%u/%g) <%p>\n", 
+        if (htmlFormat) {
+            sprintf(client_message,"<tr><td>%u</td><td>%u</td><td>%u</td><td>%u</td><td>%u<br>%u<br>%u<br>%u<br>%u<br>%u</td><td>%s<br>%s<br>%s<br>%s<br>%s<br>%s</td></tr>\n", 
+            p_search->orderno, p_search->node_id, 
+            getChannel(p_search->data1), 
+            getChannel(p_search->data2), 
+            getChannel(p_search->data3), 
+            getChannel(p_search->data4), 
+            getChannel(p_search->data5), 
+            getChannel(p_search->data6),  
+            unpackData(p_search->data1, buf1), 
+            unpackData(p_search->data2, buf2),
+            unpackData(p_search->data3, buf3),
+            unpackData(p_search->data4, buf4),
+            unpackData(p_search->data5, buf5),
+            unpackData(p_search->data6, buf6)  );
+        } else {
+            sprintf(client_message,"Order: <%p> O:%u N:%u T:%u F:%02x (%u/%s) (%u/%s) (%u/%s) (%u/%s) (%u/%s) (%u/%s) <%p>\n", 
                 p_search, p_search->orderno, p_search->node_id, p_search->msg_type, p_search->msg_flags 
-                ,getChannel(p_search->data1), getValue_f(p_search->data1)
-                ,getChannel(p_search->data2), getValue_f(p_search->data2)
-                ,getChannel(p_search->data3), getValue_f(p_search->data3)
-                ,getChannel(p_search->data4), getValue_f(p_search->data4)
-                ,getChannel(p_search->data5), getValue_f(p_search->data5)
-                ,getChannel(p_search->data6), getValue_f(p_search->data6)
+                ,getChannel(p_search->data1), unpackData(p_search->data1, buf1)
+                ,getChannel(p_search->data2), unpackData(p_search->data2, buf2)
+                ,getChannel(p_search->data3), unpackData(p_search->data3, buf3)
+                ,getChannel(p_search->data4), unpackData(p_search->data4, buf4)
+                ,getChannel(p_search->data5), unpackData(p_search->data5, buf5)
+                ,getChannel(p_search->data6), unpackData(p_search->data6, buf6)
                 ,p_search->p_next
                );
+        }
+        write(new_tn_in_socket , client_message , strlen(client_message));
         p_search=p_search->p_next;
+    }
+    if (htmlFormat) {
+        sprintf(client_message,"</table></center>\n"); 
+        write(new_tn_in_socket , client_message , strlen(client_message));
     }
     free(client_message);
 }
-
+/*
 void Order::htmlBuffer2tn(int new_tn_in_socket) {
     order_t *p_search;
     char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
@@ -320,7 +352,7 @@ void Order::htmlBuffer2tn(int new_tn_in_socket) {
 	write(new_tn_in_socket , client_message , strlen(client_message));
     free(client_message);
 }
-
+*/
 void Order::setVerbose(uint16_t _verboselevel) {
     verboselevel = _verboselevel;
 }

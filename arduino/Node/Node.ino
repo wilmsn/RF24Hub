@@ -10,14 +10,14 @@ On Branch: no_network @ rpi1  !!!!!
 // Select only one at one time !!!!
 //#define AUSSENTHERMOMETER
 //#define SCHLAFZIMMERTHERMOMETER
-#define TESTZIMMERTHERMOMETER
+//#define TESTZIMMERTHERMOMETER
 //#define TESTZIMMER1THERMOMETER
 //#define BASTELZIMMERTHERMOMETER
 //#define KUECHETHERMOMETER
 //#define WOHNZIMMERTHERMOMETER
 //#define ANKLEIDEZIMMERTHERMOMETER
 //#define GAESTEZIMMERTHERMOMETER
-//#define UNOTESTNODE_AO
+#define UNOTESTNODE_AO
 //****************************************************
 // Default values => can be oberwritten by node config
 // Kontrast of the display
@@ -150,14 +150,17 @@ On Branch: no_network @ rpi1  !!!!!
 #endif
 //-----------------------------------------------------
 #if defined(SCHLAFZIMMERTHERMOMETER)
+#define HBNODE
+#define RF24NODE             101
 #define DALLAS_18B20
 #define DISPLAY_5110
-#define RF24NODE             101
-#define EEPROM_VERSION       2
-#define VOLTAGEADDED         55
+#define EEPROM_VERSION       9
+#define EMPTYLOOPS           9
+#define VOLT_FAC             1
+#define VOLT_OFF             0.55
+#define LOW_VOLT_LEVEL       3.6
 #define STATUSLED_ON         LOW
 #define STATUSLED_OFF        HIGH
-#define HBNODE
 #endif
 //-----------------------------------------------------
 #if defined(TESTZIMMERTHERMOMETER)
@@ -210,16 +213,17 @@ On Branch: no_network @ rpi1  !!!!!
 #endif
 //-----------------------------------------------------
 #if defined(ANKLEIDEZIMMERTHERMOMETER)
+#define HBNODE
+#define RF24NODE             110
 #define DALLAS_18B20
 #define DISPLAY_5110
-#define DISPLAY_KONTRAST     65
-#define RF24NODE             110
-#define EEPROM_VERSION       1
-#define VOLTAGEADDED         55
+#define EEPROM_VERSION       22
+#define EMPTYLOOPS           9
+#define VOLT_FAC             1
+#define VOLT_OFF             0.55
+#define LOW_VOLT_LEVEL       3.6
 #define STATUSLED_ON         LOW
 #define STATUSLED_OFF        HIGH
-#define RF24EMPTYLOOPCOUNT   5
-#define HBNODE
 #endif
 //-----------------------------------------------------
 #if defined(GAESTEZIMMERTHERMOMETER)
@@ -233,10 +237,10 @@ On Branch: no_network @ rpi1  !!!!!
 //-----------------------------------------------------
 #if defined(UNOTESTNODE_AO)
 #define RF24NODE         2
-#define EEPROM_VERSION   6
-#define STATUSLED        13 
 #define BMP_280
 #define SERIAL_DEBUG
+#define EEPROM_VERSION   8
+#define STATUSLED        13 
 #define TEST_LED
 #define TEST_LED1_PIN 3
 #define TEST_LED2_PIN 4

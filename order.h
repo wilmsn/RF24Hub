@@ -43,6 +43,12 @@ order_t*  p_initial;
  * char buffer zur Ausgabe des timestrings ==> ts(buf)
  *************************************************************/
 char*       buf;
+char*       buf1;
+char*       buf2;
+char*       buf3;
+char*       buf4;
+char*       buf5;
+char*       buf6;
 /**************************************************************
  * Bufferinterner Speicher für den verboselevel
  *************************************************************/
@@ -108,13 +114,11 @@ void modifyOrderFlags(NODE_DATTYPE node_id, uint8_t msg_flags);
  *************************************************************/
 bool getOrderForTransmission(payload_t* payload, uint64_t mytime); 
 /**************************************************************
- * Druckt alle records im Buffer in de tn_socket im HTML Format
+ * Druckt alle records im Buffer in den tn_socket
+ *  Der zweite Parameter bestimmt das Format,
+ *  true => HTML Format; false => Textformat
  *************************************************************/
-void printBuffer2tn(int tn_socket);
-/**************************************************************
- * Druckt alle records im Buffer in de tn_socket
- *************************************************************/
-void htmlBuffer2tn(int tn_socket);
+void printBuffer2tn(int tn_socket, bool htmlFormat);
 /**************************************************************
  * Druckt alle records im Buffer in den STDIO
  *************************************************************/

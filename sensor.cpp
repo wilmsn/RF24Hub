@@ -50,7 +50,7 @@ bool Sensor::updateLastVal_f(uint32_t sensor_id, float value, uint64_t mymillis)
     sensor_t *p_search;
     p_search=p_initial;
     while (p_search) {
-        if ( p_search->sensor_id ) {
+        if ( p_search->sensor_id == sensor_id) {
             if ( mymillis - p_search->last_ts > 1000 ) {
                 p_search->last_val = value;
                 p_search->last_val_utime = time(0);
@@ -73,7 +73,7 @@ bool Sensor::updateLastVal_i(uint32_t sensor_id, int16_t value, uint64_t mymilli
     sensor_t *p_search;
     p_search=p_initial;
     while (p_search) {
-        if ( p_search->sensor_id ) {
+        if ( p_search->sensor_id == sensor_id) {
             if ( mymillis - p_search->last_ts > 1000 ) {
                 p_search->last_int = value;
                 p_search->last_val_utime = time(0);
@@ -96,7 +96,7 @@ bool Sensor::updateLastVal_ui(uint32_t sensor_id, uint16_t value, uint64_t mymil
     sensor_t *p_search;
     p_search=p_initial;
     while (p_search) {
-        if ( p_search->sensor_id ) {
+        if ( p_search->sensor_id == sensor_id) {
             if ( mymillis - p_search->last_ts > 1000 ) {
                 p_search->last_ui = value;
                 p_search->last_val_utime = time(0);

@@ -168,12 +168,76 @@ void OrderBuffer::printBuffer(void) {
     printf("OrderBuffer: -- END Buffercontent --\n"); 
 }
 
-void OrderBuffer::printBuffer2tn(int tn_socket) {
-    char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
+void OrderBuffer::printBuffer2tn(int tn_socket, bool htmlFormat) {
+    char* client_message =  (char*) malloc (TELNETBUFFERSIZE);
     orderbuffer_t *p_search;
     p_search = p_initial;
-    sprintf(client_message," ---- OrderBuffer ----\n"); 
+    if ( htmlFormat ) {
+        sprintf(client_message,"\n<center><big>Orderbuffer</big><table><tr><th>Node</th><th>Channel</th><th>Value</th><th>Entry</th></tr>\n"); 
+    } else {
+        sprintf(client_message," ---- OrderBuffer ----\n"); 
+    }        
     write(tn_socket , client_message , strlen(client_message));
+    while (p_search) {
+        switch (p_search->channel) {
+            case 1 ... 40:
+            case 101 ... 105:  
+            {
+                if ( htmlFormat ) {
+                    sprintf(client_message,"<tr><td>%u</td><td>%u</td><td>%g</td><td>%s</td></tr>\n", 
+                        p_search->node_id, p_search->channel, getValue_f(p_search->data), utime2str(p_search->utime, buf, 1) );
+                } else {
+                    sprintf(client_message,"Node:%u Channel:%u Value:%g Entry:%s\n", 
+                    p_search->node_id, p_search->channel, getValue_f(p_search->data), utime2str(p_search->utime, buf, 1) );
+                }
+            }
+            break;
+            case 41 ... 50:
+            case 106 ... 110:
+            {
+                if ( htmlFormat ) {
+                    sprintf(client_message,"<tr><td>%u</td><td>%u</td><td>%d</td><td>%s</td></tr>\n", 
+                        p_search->node_id, p_search->channel, getValue_i(p_search->data), utime2str(p_search->utime, buf, 1) );
+                } else {
+                    sprintf(client_message,"Node:%u Channel:%u Value:%d Entry:%s\n", 
+                    p_search->node_id, p_search->channel, getValue_i(p_search->data), utime2str(p_search->utime, buf, 1) );
+                }
+            }
+            break;
+            case 51 ... 60:
+            case 111 ... 125:
+            {
+                if ( htmlFormat ) {
+                    sprintf(client_message,"<tr><td>%u</td><td>%u</td><td>%u</td><td>%s</td></tr>\n", 
+                        p_search->node_id, p_search->channel, getValue_ui(p_search->data), utime2str(p_search->utime, buf, 1) );
+                } else {
+                    sprintf(client_message,"Node:%u Channel:%u Value:%u Entry:%s\n", 
+                    p_search->node_id, p_search->channel, getValue_ui(p_search->data), utime2str(p_search->utime, buf, 1) );
+                }
+            }
+            break;
+            case 61 ... 80:
+            {
+                //ToDo
+            }
+        }            
+        write(tn_socket , client_message , strlen(client_message));
+        p_search=p_search->p_next;
+    }
+    if ( htmlFormat ) {
+        sprintf(client_message,"</table><br>\n"); 
+        write(tn_socket, client_message , strlen(client_message));
+    }
+    free(client_message);
+}
+
+/*
+void OrderBuffer::htmlBuffer2tn(int tn_socket) {
+    char* client_message =  (char*) malloc (TELNETBUFFERSIZE);
+    orderbuffer_t *p_search;
+    p_search = p_initial;
+	sprintf(client_message,"\n<center><big>Orderbuffer</big><table><tr><th>Node</th><th>Channel</th><th>Value</th><th>Entry</th></tr>\n"); 
+    write(tn_socket, client_message , strlen(client_message));
     while (p_search) {
         switch (p_search->channel) {
             case 1 ... 40:
@@ -202,19 +266,6 @@ void OrderBuffer::printBuffer2tn(int tn_socket) {
                 //ToDo
             }
         }            
-        write(tn_socket , client_message , strlen(client_message));
-        p_search=p_search->p_next;
-    }
-    free(client_message);
-}
-
-void OrderBuffer::htmlBuffer2tn(int tn_socket) {
-    char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
-    orderbuffer_t *p_search;
-    p_search = p_initial;
-	sprintf(client_message,"\n<center><big>Orderbuffer</big><table><tr><th>Node</th><th>Channel</th><th>Value</th><th>Entry</th></tr>\n"); 
-    write(tn_socket, client_message , strlen(client_message));
-    while (p_search) {
 		sprintf(client_message,"<tr><td>%u</td><td>%u</td><td>%g</td><td>%s</td></tr>\n", 
                 p_search->node_id, p_search->channel, p_search->data, utime2str(p_search->utime, buf, 1) );
         write(tn_socket, client_message , strlen(client_message));
@@ -224,6 +275,7 @@ void OrderBuffer::htmlBuffer2tn(int tn_socket) {
 	write(tn_socket, client_message , strlen(client_message));
     free(client_message);
 }
+*/
 
 void OrderBuffer::setVerbose(uint16_t _verboselevel) {
     verboselevel = _verboselevel;
