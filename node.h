@@ -56,10 +56,6 @@ bool hasEntry(void);
  *************************************************************/    
 void cleanup(void);
 /**************************************************************
- *  Druckt den Inhalt des Buffers auf StdIO
- *************************************************************/
-void printBuffer(void);
-/**************************************************************
  *  Fügt einen neuen Node hinzu
  *************************************************************/    
 void addNode(NODE_DATTYPE node_id, float u_batt, bool is_HB_node, uint8_t PALevel, uint32_t PAUtime );
@@ -81,11 +77,15 @@ void setPaLevel(NODE_DATTYPE node_id, uint8_t pa_level);
  * Setzt die letzte gemessene Spannung des Nodes
  ************************************************************/
 void setVoltage(NODE_DATTYPE node_id, float u_batt);
-/*************************************************************
- * Git den Inhalt des Nodebuffers über den übergebenen 
- * telnet socket aus
- ************************************************************/
-void printBuffer2tn(int tn_socket);
+/**************************************************************
+ * Druckt alle records im Buffer in den out_socket
+ * out_socket ist dabei ein gültiger socket file descriptor
+ * entweder aus accept für einen socket oder mittels
+ * fileno(stdout) für den stdout
+ * Der zweite Parameter bestimmt das Format,
+ * true => HTML Format; false => Textformat
+ *************************************************************/
+void printBuffer(int tn_socket, bool htmlformat);
 /*************************************************************
  * Construktor des Buffers
  ************************************************************/

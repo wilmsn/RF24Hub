@@ -80,17 +80,16 @@ bool delByNode(NODE_DATTYPE node_id);
  *  dann true sonst false
  *************************************************************/    
 bool nodeHasEntry(NODE_DATTYPE node_id);
-/*************************************************************
- *  Git den Inhalt des Nodebuffers über den übergebenen 
- *  telnet socket aus
- *  Der zweite Parameter bestimmt das Format,
- *  true => HTML Format; false => Textformat
- ************************************************************/
-void printBuffer2tn(int new_tn_in_socket, bool htmlFormat);
 /**************************************************************
- *  Druckt den Inhalt des Buffers auf StdIO
+ * Druckt alle records im Buffer in den out_socket
+ * out_socket ist dabei ein gültiger socket file descriptor
+ * entweder aus accept für einen socket oder mittels
+ * fileno(stdout) für den stdout
+ * Der zweite Parameter bestimmt das Format,
+ * true => HTML Format; false => Textformat
  *************************************************************/
-void printBuffer(void);    
+void printBuffer(int out_socket, bool htmlFormat);
+
 OrderBuffer(void);
 
 };

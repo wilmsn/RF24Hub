@@ -12,6 +12,7 @@
 #include <stdbool.h>
 #include <cstdio>
 #include "rf24hub_config.h"
+#include "dataformat.h"
 
 static const char default_format1[] = "%d.%m.%Y %H:%M:%S";
 static const char default_format2[] = "%Y.%m.%d %H:%M:%S";
@@ -55,6 +56,9 @@ char* printVerbose(uint16_t verboseLevel, char* buf);
 
 uint16_t decodeVerbose(uint16_t oldLevel, char* verboselevel);
 
+uint32_t packData(uint8_t mychannel, char* wort4);
+
+char* unpackData(uint32_t data, char* buf);
 
 #endif // _RF24HUBD_COMMON_H_
 

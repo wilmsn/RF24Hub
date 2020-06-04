@@ -13,7 +13,7 @@ void OrderBuffer::newEntry(OrderBuffer::orderbuffer_t* p_new) {
         printf("%sOrderBuffer: newEntry <%p> N:%u C:%u V:%f\n", ts(buf), p_new, p_new->node_id, p_new->channel, p_new->data); 
     if (verboselevel & VERBOSEOBUFFEREXT) {
         printf("%sBestand vorher:\n", ts(buf)); 
-        printBuffer();
+        printBuffer(fileno(stdout), false);
     }
     if (p_initial) {
         p_search = p_initial;
@@ -26,7 +26,7 @@ void OrderBuffer::newEntry(OrderBuffer::orderbuffer_t* p_new) {
     }
     if (verboselevel & VERBOSEOBUFFEREXT) {
         printf("%sBestand nachher\n", ts(buf)); 
-        printBuffer();
+        printBuffer(fileno(stdout), false);
     }
 }
 
@@ -66,7 +66,7 @@ bool OrderBuffer::delByNodeChannel(NODE_DATTYPE node_id, uint8_t channel) {
     if (verboselevel & VERBOSEOBUFFER) printf("%sOrderBuffer:delByNodeChannel N:%u C:%u\n", ts(buf), node_id, channel); 
     if (verboselevel & VERBOSEOBUFFEREXT) {
         printf("%sBestand vorher\n", ts(buf)); 
-        printBuffer();
+        printBuffer(fileno(stdout), false);
     }
     p_search = p_initial;
     while (p_search) {
@@ -79,7 +79,7 @@ bool OrderBuffer::delByNodeChannel(NODE_DATTYPE node_id, uint8_t channel) {
     }
     if (verboselevel & VERBOSEOBUFFEREXT) {
         printf("%sBestand nachher\n", ts(buf)); 
-        printBuffer();
+        printBuffer(fileno(stdout), false);
     }
     return retval;
 }
@@ -90,7 +90,7 @@ bool OrderBuffer::delByNode(NODE_DATTYPE node_id) {
     if (verboselevel & VERBOSEOBUFFER) printf("%sOrderBuffer: delByNode N:%u\n", ts(buf), node_id); 
     if (verboselevel & VERBOSEOBUFFEREXT) {
         printf("%sBestand vorher\n", ts(buf)); 
-        printBuffer();
+        printBuffer(fileno(stdout), false);
     }
     p_search = p_initial;
     while (p_search) {
@@ -101,7 +101,7 @@ bool OrderBuffer::delByNode(NODE_DATTYPE node_id) {
     }
     if (verboselevel & VERBOSEOBUFFEREXT) {
         printf("%sBestand nachher\n", ts(buf)); 
-        printBuffer();
+        printBuffer(fileno(stdout), false);
     }
     return retval;
 }
@@ -156,19 +156,7 @@ void* OrderBuffer::findOrder4Node(NODE_DATTYPE node_id, void* p_last, uint8_t* c
     return retval;
 }
 
-void OrderBuffer::printBuffer(void) {
-    orderbuffer_t *p_search;
-    p_search = p_initial;
-    printf("OrderBuffer: ---- Buffercontent ----\n"); 
-    while (p_search) {
-        printf("OrderBuffer: <%p> N:%u C:%u V:%g E:%s <%p>\n", 
-               p_search, p_search->node_id, p_search->channel, p_search->data, utime2str(p_search->utime, buf, 1), p_search->p_next );
-        p_search=p_search->p_next;
-    }
-    printf("OrderBuffer: -- END Buffercontent --\n"); 
-}
-
-void OrderBuffer::printBuffer2tn(int tn_socket, bool htmlFormat) {
+void OrderBuffer::printBuffer(int out_socket, bool htmlFormat) {
     char* client_message =  (char*) malloc (TELNETBUFFERSIZE);
     orderbuffer_t *p_search;
     p_search = p_initial;
@@ -177,7 +165,7 @@ void OrderBuffer::printBuffer2tn(int tn_socket, bool htmlFormat) {
     } else {
         sprintf(client_message," ---- OrderBuffer ----\n"); 
     }        
-    write(tn_socket , client_message , strlen(client_message));
+    write(out_socket , client_message , strlen(client_message));
     while (p_search) {
         switch (p_search->channel) {
             case 1 ... 40:
@@ -221,61 +209,15 @@ void OrderBuffer::printBuffer2tn(int tn_socket, bool htmlFormat) {
                 //ToDo
             }
         }            
-        write(tn_socket , client_message , strlen(client_message));
+        write(out_socket , client_message , strlen(client_message));
         p_search=p_search->p_next;
     }
     if ( htmlFormat ) {
         sprintf(client_message,"</table><br>\n"); 
-        write(tn_socket, client_message , strlen(client_message));
+        write(out_socket, client_message , strlen(client_message));
     }
     free(client_message);
 }
-
-/*
-void OrderBuffer::htmlBuffer2tn(int tn_socket) {
-    char* client_message =  (char*) malloc (TELNETBUFFERSIZE);
-    orderbuffer_t *p_search;
-    p_search = p_initial;
-	sprintf(client_message,"\n<center><big>Orderbuffer</big><table><tr><th>Node</th><th>Channel</th><th>Value</th><th>Entry</th></tr>\n"); 
-    write(tn_socket, client_message , strlen(client_message));
-    while (p_search) {
-        switch (p_search->channel) {
-            case 1 ... 40:
-            case 101 ... 105:  
-            {
-                sprintf(client_message,"Node:%u Channel:%u Value:%g Entry:%s\n", 
-                p_search->node_id, p_search->channel, getValue_f(p_search->data), utime2str(p_search->utime, buf, 1) );
-            }
-            break;
-            case 41 ... 50:
-            case 106 ... 110:
-            {
-                sprintf(client_message,"Node:%u Channel:%u Value:%d Entry:%s\n", 
-                p_search->node_id, p_search->channel, getValue_i(p_search->data), utime2str(p_search->utime, buf, 1) );
-            }
-            break;
-            case 51 ... 60:
-            case 111 ... 125:
-            {
-                sprintf(client_message,"Node:%u Channel:%u Value:%u Entry:%s\n", 
-                p_search->node_id, p_search->channel, getValue_ui(p_search->data), utime2str(p_search->utime, buf, 1) );
-            }
-            break;
-            case 61 ... 80:
-            {
-                //ToDo
-            }
-        }            
-		sprintf(client_message,"<tr><td>%u</td><td>%u</td><td>%g</td><td>%s</td></tr>\n", 
-                p_search->node_id, p_search->channel, p_search->data, utime2str(p_search->utime, buf, 1) );
-        write(tn_socket, client_message , strlen(client_message));
-        p_search=p_search->p_next;
-    }
-	sprintf(client_message,"</table><br>\n"); 
-	write(tn_socket, client_message , strlen(client_message));
-    free(client_message);
-}
-*/
 
 void OrderBuffer::setVerbose(uint16_t _verboselevel) {
     verboselevel = _verboselevel;

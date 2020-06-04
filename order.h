@@ -114,15 +114,14 @@ void modifyOrderFlags(NODE_DATTYPE node_id, uint8_t msg_flags);
  *************************************************************/
 bool getOrderForTransmission(payload_t* payload, uint64_t mytime); 
 /**************************************************************
- * Druckt alle records im Buffer in den tn_socket
- *  Der zweite Parameter bestimmt das Format,
- *  true => HTML Format; false => Textformat
+ * Druckt alle records im Buffer in den out_socket
+ * out_socket ist dabei ein gültiger socket file descriptor
+ * entweder aus accept für einen socket oder mittels
+ * fileno(stdout) für den stdout
+ * Der zweite Parameter bestimmt das Format,
+ * true => HTML Format; false => Textformat
  *************************************************************/
-void printBuffer2tn(int tn_socket, bool htmlFormat);
-/**************************************************************
- * Druckt alle records im Buffer in den STDIO
- *************************************************************/
-void printBuffer(void);    
+void printBuffer(int out_socket, bool htmlFormat);
 
 Order(void);
 

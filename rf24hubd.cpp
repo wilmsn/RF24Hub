@@ -75,8 +75,8 @@ void receive_tn_in(int tnsocket, struct sockaddr_in * address) {
         }
         
     }
-    sprintf(buffer,"%s %d\n",PRGNAME,SWVERSION);
-    write(tnsocket , buffer , strlen(buffer));
+    //sprintf(buffer,"%s %d\n",PRGNAME,SWVERSION);
+    //write(tnsocket , buffer , strlen(buffer));
     close (tnsocket);
     free_str(verboselevel,"receive_tn_in buffer",buffer);
     free_str(verboselevel,"receive_tn_in client_message",client_message);
@@ -215,15 +215,15 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 	// lists the current orderbuffer
 	if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
 		tn_input_ok = true;
-        orderbuffer.printBuffer2tn(tn_socket, false);
-        order.printBuffer2tn(tn_socket, false);
+        orderbuffer.printBuffer(tn_socket, false);
+        order.printBuffer(tn_socket, false);
 	}	
     // show sensor
 	// lists the current node- and sensorbuffer
 	if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_sensor) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
 		tn_input_ok = true;
-        node.printBuffer2tn(tn_socket);
-        sensor.printBuffer2tn(tn_socket);
+        node.printBuffer(tn_socket, false);
+        sensor.printBuffer(tn_socket, false);
 	}	
     // show radio config
 	if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_radio) == 0) && (strcmp(wort3,cmp_config) == 0) && (strlen(wort4) == 0) ) {
@@ -240,8 +240,8 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 	// lists the current order/orderbuffer for html page
 	if (( strcmp(wort1,cmp_html) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
 		tn_input_ok = true;
-        orderbuffer.printBuffer2tn(tn_socket, true);
-        order.printBuffer2tn(tn_socket, true);
+        orderbuffer.printBuffer(tn_socket, true);
+        order.printBuffer(tn_socket, true);
     }	
     // init
 	// initialisation of rf24hubd: reloads data from database
@@ -251,8 +251,8 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
         node.cleanup();
         sensor.cleanup();
 		init_system();
-        node.printBuffer2tn(tn_socket);
-        sensor.printBuffer2tn(tn_socket);
+        node.printBuffer(tn_socket, false);
+        sensor.printBuffer(tn_socket, false);
 	}
 	if ( ! tn_input_ok) {
         //printf("%u \n",sizeof(tn_usage_txt)/ sizeof(int));
@@ -362,8 +362,8 @@ void init_system(void) {
     database.initSystem();
     database.initSensor(&sensor);
     database.initNode(&node);
-    node.printBuffer();
-    sensor.printBuffer();
+    node.printBuffer(fileno(stdout), false);
+    sensor.printBuffer(fileno(stdout), false);
 }
 
 void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {

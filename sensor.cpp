@@ -178,7 +178,7 @@ bool Sensor::getNodeChannelByFhemDev(NODE_DATTYPE *p_node_id, uint8_t* p_channel
     return retval;
 }
 
-void Sensor::printBuffer2tn(int tn_socket) {
+void Sensor::printBuffer(int tn_socket, bool html) {
     char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
     sensor_t *p_search;
     p_search = p_initial;
@@ -191,17 +191,6 @@ void Sensor::printBuffer2tn(int tn_socket) {
         p_search=p_search->p_next;
 	}
     free(client_message);
-}
-
-void Sensor::printBuffer(void) {
-    sensor_t *p_search;
-    p_search = p_initial;
-    printf(" ------ Sensor: ------\n"); 
-    while (p_search) {
-		printf("Sensor: %u\tNode: %u,\tChannel:%u,\tFHEM: %s,\tVal: %f (%s)\n", 
-                 p_search->sensor_id, p_search->node_id, p_search->channel, p_search->fhem_dev, p_search->last_val, utime2str(p_search->last_val_utime,buf,1));   
-        p_search=p_search->p_next;
-	}
 }
 
 void Sensor::setVerbose(uint16_t _verboselevel) {

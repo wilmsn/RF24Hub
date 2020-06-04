@@ -99,7 +99,6 @@ void Node::setVoltage(NODE_DATTYPE node_id, float u_batt) {
 	}
 }
 
-
 bool Node::isHBNode(NODE_DATTYPE node_id) {
     bool retval=false;
     node_t *p_search;
@@ -116,7 +115,7 @@ bool Node::isHBNode(NODE_DATTYPE node_id) {
 	return retval;
 }
 
-void Node::printBuffer2tn(int tn_socket) {
+void Node::printBuffer(int tn_socket, bool htmlformat) {
     char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
     node_t *p_search;
     p_search = p_initial;
@@ -131,19 +130,6 @@ void Node::printBuffer2tn(int tn_socket) {
         p_search=p_search->p_next;
 	}
     free(client_message);
-}
-
-void Node::printBuffer(void) {
-    node_t *p_search;
-    p_search = p_initial;
-    printf(" ------ Nodes: ------\n"); 
-    while (p_search) {
-            printf("Node %s%s%u,\tU-Batt:\t%f V,\t%s\tPA: %s (%s)\n", p_search->node_id<100? " ":"", p_search->node_id<10? " ":"", 
-                   p_search->node_id, p_search->u_batt, p_search->is_HB_node? "HeartBeat":"Normal   ",
-                   p_search->pa_level==0? "Min ":p_search->pa_level==1? "Low ":p_search->pa_level==2? "High":p_search->pa_level==3? "Max ":"??? ",
-                   utime2str(p_search->pa_utime, buf, 1) );    
-        p_search=p_search->p_next;
-    }
 }
 
 void Node::setVerbose(uint16_t _verboselevel) {

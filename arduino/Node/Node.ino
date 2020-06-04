@@ -8,7 +8,7 @@ On Branch: no_network @ rpi1  !!!!!
 //****************************************************
 // My definitions for my nodes based on this sketch
 // Select only one at one time !!!!
-//#define AUSSENTHERMOMETER
+#define AUSSENTHERMOMETER
 //#define SCHLAFZIMMERTHERMOMETER
 //#define TESTZIMMERTHERMOMETER
 //#define TESTZIMMER1THERMOMETER
@@ -17,7 +17,7 @@ On Branch: no_network @ rpi1  !!!!!
 //#define WOHNZIMMERTHERMOMETER
 //#define ANKLEIDEZIMMERTHERMOMETER
 //#define GAESTEZIMMERTHERMOMETER
-#define UNOTESTNODE_AO
+//#define UNOTESTNODE_AO
 //****************************************************
 // Default values => can be oberwritten by node config
 // Kontrast of the display
@@ -1290,6 +1290,7 @@ void loop(void) {
     monitor(2);
   } else {
 #endif
+//ToDo prüfen und ggf. überarbeiten
   long int tempsleeptime = (long int)(eeprom.sleeptime_sec + eeprom.sleeptime_adj + sleeptime_kor) * 1000;
   sleeptime_kor = 0;  
   sleep4ms(tempsleeptime);
@@ -1299,6 +1300,7 @@ void loop(void) {
   last_send += eeprom.sleeptime_sec;
   loopcount++;
   if (loopcount > eeprom.emptyloops) loopcount=0;
+// Ende ToDo  
 #else
 // Always On Node from here  
   if (receive_data()) {

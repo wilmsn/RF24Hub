@@ -12,7 +12,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <cstdio>
 
 #define ZF_SENSOR_NO        0b11111110000000000000000000000000
 #define ZF_ZAHL_NEGATIV     0b00000001000000000000000000000000
@@ -95,8 +94,5 @@ uint32_t calcTransportValue_i(uint8_t sensor, int16_t value);
  ******************************************************/
 uint32_t calcTransportValue_c(uint8_t sensor, char* value, uint16_t* pos);
 
-uint32_t packData(uint8_t mychannel, char* wort4);
-
-char* unpackData(uint32_t data, char* buf);
 
 #endif

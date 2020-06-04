@@ -98,13 +98,14 @@ bool getNodeChannelByFhemDev(NODE_DATTYPE *p_node_id, uint8_t* p_channel, char* 
  *************************************************************/
 char* getFhemDevByNodeChannel(NODE_DATTYPE node_id, uint8_t channel);
 /**************************************************************
- *  Druckt den Inhalt des Buffers auf StdIO
+ * Druckt alle records im Buffer in den out_socket
+ * out_socket ist dabei ein gültiger socket file descriptor
+ * entweder aus accept für einen socket oder mittels
+ * fileno(stdout) für den stdout
+ * Der zweite Parameter bestimmt das Format,
+ * true => HTML Format; false => Textformat
  *************************************************************/
-void printBuffer(void);
-/**************************************************************
- *  Druckt den Inhalt des Buffers auf Telnet Socket
- *************************************************************/
-void printBuffer2tn(int new_tn_in_socket);
+void printBuffer(int new_tn_in_socket, bool html);
 
 Sensor(void);
 

@@ -203,3 +203,65 @@ void free_str(uint16_t verboselevel, const char* msgTxt, char* str) {
         printf(" OK\n");
     }    
 }
+
+uint32_t packData(uint8_t mychannel, char* wort4) {
+    uint32_t retval = 0;
+    char* pEnd; 
+    switch ( mychannel ) {
+        case 1 ... 40:
+        case 101 ... 105:  
+        {
+            float val_f = strtof(wort4, &pEnd);
+            retval = calcTransportValue_f(mychannel, val_f);
+        }
+        break;
+        case 41 ... 50:
+        case 106 ... 110:
+        {
+            int16_t val_i = (int16_t)strtol(wort4, &pEnd, 10);
+            retval = calcTransportValue_i(mychannel, val_i);
+        }
+        break;
+        case 51 ... 60:
+        case 111 ... 125:
+        {
+            uint16_t val_ui = (uint16_t)strtoul(wort4, &pEnd, 10);
+            retval = calcTransportValue_ui(mychannel, val_ui);
+        }
+        break;
+        case 61 ... 80:
+            // ToDo Wort kann ein kompletter Text sein, das in verschiedene Channels zerlegt wird
+            //      Max Länge 20*3=60 Zeichen
+        break;
+    }
+    return retval;
+}
+
+char* unpackData(uint32_t data, char* buf) {
+    uint8_t channel = getChannel(data);
+    switch ( channel ) {
+        case 1 ... 40:
+        case 101 ... 105:  
+        {
+            sprintf(buf,"%f",getValue_f(data));
+        }
+        break;
+        case 41 ... 50:
+        case 106 ... 110:
+        {
+            sprintf(buf,"%d",getValue_i(data));
+        }
+        break;
+        case 51 ... 60:
+        case 111 ... 125:
+        {
+            sprintf(buf,"%u",getValue_ui(data));
+        }
+        break;
+        case 61 ... 80:
+            // ToDo Wort kann ein kompletter Text sein, das in verschiedene Channels zerlegt wird
+            //      Max Länge 20*3=60 Zeichen
+        break;
+    }
+    return buf;
+}
