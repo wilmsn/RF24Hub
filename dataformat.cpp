@@ -14,6 +14,42 @@
  * Bit 16..32   Mantisse (0..10000)
  ***********************************/
 
+/***************************************************
+ * Extrahiert den Datentyp auf Basis des verwendeten 
+ * Channels 
+ ***************************************************/
+uint8_t getDataTyp(uint8_t channel) {
+    uint8_t retval;
+    switch ( channel ) {
+        case 0:
+        // invalid data !!!!!    
+        case 126 ... 255:
+            retval = 0;
+            break;
+        case 1 ... 40:
+        case 101 ... 105:  
+        // datatyp is float    
+            retval = 1;
+            break;
+        case 41 ... 50:
+        case 106 ... 110:
+        // datatyp is int16_t    
+            retval = 2;
+            break;
+        case 51 ... 60:
+        case 111 ... 125:
+        // datatyp is uint16_t    
+            retval = 3;
+            break;
+        case 61 ... 80:
+        // datatyp is char[3]    
+            retval = 4;
+            // ToDo Wort kann ein kompletter Text sein, das in verschiedene Channels zerlegt wird
+            //      Max Länge 20*3=60 Zeichen
+        break;
+    }
+    return retval;
+}
 
 /***************************************************
  * Extrahiert die Sensornummer aus dem Transportwert
@@ -151,3 +187,4 @@ uint32_t calcTransportValue_c(uint8_t sensor, char* value, uint16_t* pos) {
   result = result | c1 | c2 | c3;  
   return result;  
 }
+

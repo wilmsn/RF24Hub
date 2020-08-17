@@ -33,9 +33,13 @@ struct orderbuffer_t {
 };
 orderbuffer_t*     p_initial;
 /**************************************************************
- * char buffer zur Ausgabe des timestrings ==> ts(buf)
+ * char buffer zur Ausgabe, generisch 
  *************************************************************/
 char*       buf;
+/**************************************************************
+ * char buffer zur Ausgabe des timestrings ==> ts(tsbuf)
+ *************************************************************/
+char*       tsbuf;
 /**************************************************************
  * Bufferinterner Speicher für den verboselevel
  *************************************************************/
@@ -61,7 +65,7 @@ void setVerbose(uint16_t _verboselevel);
  *  Beim nächsten Aufruf wird der Rückgabewert des
  *  letzten Aufrufs bei p_last übergeben
  *************************************************************/    
-void* findOrder4Node(NODE_DATTYPE node_id, void* p_last, uint8_t* channel, uint32_t* data);
+void* findOrder4Node(NODE_DATTYPE node_id, void* p_last, uint32_t* data);
 /**************************************************************
  *  Fügt einen neuen record vom typ float ein 
  *************************************************************/    

@@ -32,7 +32,7 @@ private:
     MYSQL_RES   *res;
     MYSQL_ROW   row;
     char*       pEnd;
-    char*       buf;
+    char*       tsbuf;
     char*       sql_stmt;
     uint16_t    verboselevel;
     void do_sql(char* stmt);
@@ -53,6 +53,7 @@ void setVerbose(uint16_t _verboselevel);
     void initSystem(void);
     void sync_sensor(void);
     void sync_sensordata(void);
+    void sync_sensordata_d(void);
     Database(void);
 };
 

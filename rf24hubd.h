@@ -70,7 +70,7 @@ UP: fill_order_buffer   =>  Füllt das ARRAY "order_buffer" mit dem übergebenen
 #include <netdb.h> 
 #include <arpa/inet.h>
 #include <fcntl.h>
-#include <thread>
+#include <pthread.h>
 
 #include "node.h"
 #include "sensor.h"
@@ -95,15 +95,26 @@ FILE * pidfile_ptr;
 FILE * logfile_ptr;
 
 uint16_t verboselevel = STARTUPVERBOSELEVEL;
+char* buf;
+char* tsbuf;
 
 // Setup for GPIO 25 CE and CE0 CSN with SPI Speed @ 8Mhz
-RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
+//RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
+RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_CLOCK_DIVIDER_32768);
 //RF24 radio(22,0,BCM2835_SPI_SPEED_1MHZ);
+
+struct TnData_t {
+        char tntext[DEBUGSTRINGSIZE];
+        int  tn_socket;    
+};
 
 struct TnMsg_t {
         long mtype;
-        char tntext[DEBUGSTRINGSIZE];
-        int  tn_socket;
+        struct TnData_t TnData;
+};
+
+struct thread_data {
+   int tnsocket;
 };
 
 Order           order;

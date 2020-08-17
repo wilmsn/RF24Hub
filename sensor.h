@@ -24,17 +24,19 @@ struct sensor_t {
         uint8_t     	channel;
         char			fhem_dev[FHEMDEVLENGTH];
         uint64_t        last_ts;
-        float			last_val;
-        int16_t         last_int;
-        uint16_t        last_ui;
+        uint32_t    	last_data;
         uint32_t        last_val_utime;
         sensor_t*       p_next;
 };
 sensor_t*     p_initial;
 /**************************************************************
- * char buffer zur Ausgabe des timestrings ==> ts(buf)
+ * char buffer zur allgemeinen Ausgabe
  *************************************************************/
 char*       buf;
+/**************************************************************
+ * char buffer zur Ausgabe des timestrings ==> ts(tsbuf)
+ *************************************************************/
+char*       tsbuf;
 /**************************************************************
  * Bufferinterner Speicher für den verboselevel
  *************************************************************/
@@ -61,25 +63,13 @@ void cleanup(void);
 /**************************************************************
  *  Fügt einen neuen Sensor hinzu
  *************************************************************/    
-void addSensor(uint32_t sensor, NODE_DATTYPE node_id, uint8_t channel, char* fhem_dev, uint32_t last_val_utime, float last_val, int16_t last_int, uint16_t last_ui);
+void addSensor(uint32_t sensor, NODE_DATTYPE node_id, uint8_t channel, char* fhem_dev, uint32_t last_val_utime, uint32_t last_data);
 /**************************************************************
  *  Setzt value und last_ts auf den übergebenen Wert, 
  *  Rückgabewert: true wenn ein update erfolgt ist.
  *  Hier: float Werte => last_val
  *************************************************************/
-bool updateLastVal_f(uint32_t sensor_id, float value, uint64_t mymillis);
-/**************************************************************
- *  Setzt value und last_ts auf den übergebenen Wert, 
- *  Rückgabewert: true wenn ein update erfolgt ist.
- *  Hier: float Werte => last_int
- *************************************************************/
-bool updateLastVal_i(uint32_t sensor_id, int16_t value, uint64_t mymillis);
-/**************************************************************
- *  Setzt value und last_ts auf den übergebenen Wert, 
- *  Rückgabewert: true wenn ein update erfolgt ist.
- *  Hier: float Werte => last_ui
- *************************************************************/
-bool updateLastVal_ui(uint32_t sensor_id, uint16_t value, uint64_t mymillis);
+bool updateLastVal(uint32_t sensor_id, uint32_t data, uint64_t mymillis);
 /**************************************************************
  *  Findet die Sensor_id durch node_id und channel, 
  *  Rückgabewert ist die sensor_id

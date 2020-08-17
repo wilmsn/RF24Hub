@@ -31,13 +31,13 @@ DEBUGFLAGS=-ggdb3 -O0
 all: rf24hubd 
 debug: rf24hubd_debug
 
-# Make the sensorhub deamon
+# Make the rf24hub deamon in debug mode
 rf24hubd_debug: config.o dataformat.o database.o node.o sensor.o orderbuffer.o order.o common.o rf24hubd.cpp
-	g++ ${CCFLAGS} ${DEBUGFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24network ${MYSQLLIBS} $^ -o $@
+	g++ ${CCFLAGS} ${DEBUGFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24 ${MYSQLLIBS} $^ -o $@
 
-# Make the sensorhub deamon
+# Make the rf24hub deamon
 rf24hubd: config.o dataformat.o database.o node.o sensor.o orderbuffer.o order.o common.o rf24hubd.cpp
-	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24network ${MYSQLLIBS} $^ -o $@
+	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24 ${MYSQLLIBS} $^ -o $@
 
 # Test of order object
 ordertest: sensor.o node.o orderbuffer.o common.o dataformat.o order.o order_test.cpp

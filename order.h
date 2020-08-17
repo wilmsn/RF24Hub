@@ -40,8 +40,9 @@ struct order_t {
 
 order_t*  p_initial;
 /**************************************************************
- * char buffer zur Ausgabe des timestrings ==> ts(buf)
+ * char buffer zur Ausgabe des timestrings ==> ts(tsbuf)
  *************************************************************/
+char*       tsbuf;
 char*       buf;
 char*       buf1;
 char*       buf2;

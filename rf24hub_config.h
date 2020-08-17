@@ -21,6 +21,8 @@ rf24hub_config.h ==> all global definitions go here
 //
 //-------------------------------------------------------
 //
+// Define an empty string for displaying data in all its forms
+//#define DATASTRING '----------'
 // The Key for the Messagebuffer
 #define MSGKEY 3452
 // How long do we try to deliver (in msec) => 20 Min.
@@ -70,6 +72,7 @@ rf24hub_config.h ==> all global definitions go here
 #define VERBOSENONE              0b0000000000000011
 
 #define STARTUPVERBOSELEVEL      0b0000000000000011 
+//#define STARTUPVERBOSELEVEL      0b0011111111111111 
 
 
 #endif // _RF24HUB_CONFIG_H_

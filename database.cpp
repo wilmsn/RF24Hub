@@ -1,8 +1,8 @@
 #include "database.h"
 
 Database::Database(void) {
-    buf = alloc_str(verboselevel,"Database buf",TSBUFFERSIZE);
-    sql_stmt = alloc_str(verboselevel,"Database sql_stmt",SQLSTRINGSIZE);
+    tsbuf = (char*) malloc (TSBUFFERSIZE);
+    sql_stmt = (char*) malloc(SQLSTRINGSIZE);
     verboselevel = 0;
 }
 
@@ -12,6 +12,13 @@ void Database::db_check_error(void) {
     }
 }
 
+void Database::sync_sensor(void) {
+	sprintf (sql_stmt, "update sensor a set value = ( select value from sensor_im where sensor_id = a.sensor_id ), utime = ( select utime from sensor_im where sensor_id = a.sensor_id )");
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+}
+
 void Database::sync_sensordata(void) {
 	sprintf (sql_stmt, "insert into sensordata(sensor_id, utime, value) select sensor_id, utime, value from sensordata_im where (sensor_id,utime) not in (select sensor_id, utime from sensordata)");
     debugPrintSQL(sql_stmt);
@@ -19,8 +26,16 @@ void Database::sync_sensordata(void) {
 	db_check_error();
 }
 
-void Database::sync_sensor(void) {
-	sprintf (sql_stmt, "update sensor a set value = ( select value from sensor_im where sensor_id = a.sensor_id ), utime = ( select utime from sensor_im where sensor_id = a.sensor_id )");
+void Database::sync_sensordata_d(void) {
+    sprintf (sql_stmt, "truncate table sensordata_d");
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+	sprintf (sql_stmt, "%s", "insert into sensordata_d(sensor_id, value, utime) select sensor_id, min(value) as min_val, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))+21600 from sensordata group by sensor_id, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))" );
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+    sprintf (sql_stmt, "%s", "insert into sensordata_d(sensor_id, value, utime) select sensor_id, max(value) as min_val, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))+64800 from sensordata group by sensor_id, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))" );
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
@@ -48,6 +63,7 @@ void Database::initSystem(void) {
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
+    sync_sensordata_d();
 }
 
 void Database::initNode(Node* node) {
@@ -84,11 +100,10 @@ void Database::initNode(Node* node) {
         node->setVoltage(node_id, u_batt); 
 	}
 	mysql_free_result(result);    
-    
 }
 
 void Database::initSensor(Sensor* sensor) {
-    char* fhem_dev = alloc_str(verboselevel,"Database::initSensor fhem_dev",FHEMDEVLENGTH);
+    char* fhem_dev = alloc_str(verboselevel,"Database::initSensor fhem_dev",FHEMDEVLENGTH, ts(tsbuf));
     uint32_t     	mysensor;
     NODE_DATTYPE   	node_id;
     uint8_t     	mychannel;
@@ -109,15 +124,17 @@ void Database::initSensor(Sensor* sensor) {
 		if ( row[4] != NULL ) myvalue = strtof(row[4], &pEnd); else myvalue = 0;
 		if ( row[5] != NULL ) utime = strtoul(row[5], &pEnd, 10); else utime = 1;
         // ToDo
-        sensor->addSensor(mysensor, node_id, mychannel, fhem_dev, utime, myvalue, 0 , 0);
+        sensor->addSensor(mysensor, node_id, mychannel, fhem_dev, utime, myvalue);
 	}
 	mysql_free_result(result);
-    free_str(verboselevel,"Database::initSensor fhem_dev",fhem_dev); 
+    free_str(verboselevel,"Database::initSensor fhem_dev",fhem_dev, ts(tsbuf)); 
 }
 
 void Database::do_sql(char *sqlstmt) {
     debugPrintSQL(sqlstmt);
-	mysql_query(db, sqlstmt);
+	if (mysql_query(db, sqlstmt) != 0) {
+        printf("%s\n", sqlstmt);
+    }
     db_check_error();
 }
 
@@ -137,20 +154,20 @@ void Database::storeNodeConfig(NODE_DATTYPE node_id, uint8_t channel, char* valu
     do_sql(sql_stmt);
     sprintf(sql_stmt,"insert into node_configdata_history (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %s ) ", node_id, channel, value);
     do_sql(sql_stmt);
-    sprintf(sql_stmt,"insert into node_configdata (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %s ) ON DUPLICATE KEY UPDATE value = %s, utime = UNIX_TIMESTAMP()", node_id, channel, value, value);
+    sprintf(sql_stmt,"replace into node_configdata (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %s ) ", node_id, channel, value);
     do_sql(sql_stmt);
 }
 
 bool Database::connect(string db_hostname, string db_username, string db_password, string db_schema, int db_port) {
     int mysql_wait_count = 0;
     bool retval = true;
-    if ( verboselevel & VERBOSESTARTUP) {    
-        cout << ts(buf) << "Maria-DB client version: " << mysql_get_client_info() << endl;
+    if ( verboselevel & VERBOSESTARTUP) {
+        printf("%sMaria-DB client version: %s\n", ts(tsbuf), mysql_get_client_info());
     }
     db = mysql_init(NULL);
     while (db == NULL) {
-        if ( verboselevel & VERBOSESTARTUP) {    
-            cout << ts(buf) << "Waiting for Database: " << 20-mysql_wait_count << "Sek," << endl;
+        if ( verboselevel & VERBOSESTARTUP) {
+            printf("%sWaiting for Database: %d Sek.\n", ts(tsbuf), 20-mysql_wait_count); 
         }
 		if ( mysql_wait_count < 20 ) {
 			mysql_wait_count++;
@@ -166,7 +183,7 @@ bool Database::connect(string db_hostname, string db_username, string db_passwor
         mysql_wait_count = 0;
         while (mysql_real_connect(db, db_hostname.c_str(), db_username.c_str(), db_password.c_str(), db_schema.c_str(), db_port, NULL, 0) == NULL) {
             if ( verboselevel & VERBOSESTARTUP) {    
-                cout << ts(buf) << "Waiting for Database: " << 20-mysql_wait_count << "Sek," << endl;
+                printf("%sWaiting for Database: %d Sek.\n", ts(tsbuf), 20-mysql_wait_count); 
             }
             if ( mysql_wait_count < 20 ) {
                 mysql_wait_count++;
@@ -177,8 +194,8 @@ bool Database::connect(string db_hostname, string db_username, string db_passwor
                 retval = false;
             }
         }
-        if ( verboselevel & VERBOSESTARTUP) {    
-            cout << ts(buf) << "Connected to host " << db_hostname << " with DB " << mysql_get_server_info(db) << " on port " << db_port << endl;
+        if ( verboselevel & VERBOSESTARTUP) {
+            printf("%sConnected to host %s with DB %s on port %s\n", ts(tsbuf), db_hostname, mysql_get_server_info(db), db_port);
         }
     }
     return retval;
@@ -186,7 +203,7 @@ bool Database::connect(string db_hostname, string db_username, string db_passwor
 
 void Database::debugPrintSQL(char* sqlstmt) {
     if ( verboselevel & VERBOSESQL) {    
-        printf("%sSQL: %s\n", ts(buf), sqlstmt);
+        printf("%sSQL: %s\n", ts(tsbuf), sqlstmt);
     }
 }
 

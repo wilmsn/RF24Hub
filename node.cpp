@@ -3,7 +3,8 @@
 Node::Node(void) {
     p_initial = NULL;
     verboselevel = 0;
-    buf = (char*)alloc_str(VERBOSEPOINTER,"Node::Node buf",TSBUFFERSIZE);
+    buf = (char*)malloc(TSBUFFERSIZE);
+    tsbuf = (char*)malloc(TSBUFFERSIZE);
 }
 
 void Node::cleanup(void) {
@@ -38,7 +39,7 @@ void Node::addNode(NODE_DATTYPE node_id, float u_batt, bool is_HB_node, uint8_t 
     p_new->HB_ts = 0;
     p_new->pa_level = PALevel;
     p_new->pa_utime = PAUtime;
-    if (verboselevel & VERBOSESENSOR) printf("%sNode.addNode: N:%u U:%f HB:%s PA:%s(%s)\n",ts(buf),node_id, u_batt, is_HB_node? "HeartBeat":"Normal   ",
+    if (verboselevel & VERBOSESENSOR) printf("%sNode.addNode: N:%u U:%f HB:%s PA:%s(%s)\n",ts(tsbuf),node_id, u_batt, is_HB_node? "HeartBeat":"Normal   ",
                    PALevel==0? "Min ":PALevel==1? "Low ":PALevel==2? "High":PALevel==3? "Max ":"??? ", utime2str(PAUtime, buf, 1));
     newEntry(p_new);
 }
@@ -49,8 +50,8 @@ bool Node::isNewHB(NODE_DATTYPE node_id, uint64_t mymillis) {
     p_search = p_initial;
     while (p_search) {
         if (p_search->node_id == node_id) {
-            if (verboselevel & VERBOSESENSOR) 
-                printf("Node.is_new_HB: Node:%u last HB %llu msec. ago\n",node_id, mymillis - p_search->HB_ts);
+            if (verboselevel & VERBOSEORDER) 
+                printf("%sNode.is_new_HB: Node:%u last HB %llu msec. ago => ", ts(tsbuf), node_id, mymillis - p_search->HB_ts);
             if (p_search->HB_ts < mymillis - 5000) retval = true;
             p_search->HB_ts = mymillis;
             p_search = NULL;
@@ -60,11 +61,11 @@ bool Node::isNewHB(NODE_DATTYPE node_id, uint64_t mymillis) {
     }    
     if (retval) {
         if (verboselevel & VERBOSEORDER) {
-            printf("Node: New HeartBeat from Node:%u\n",node_id);;
+            printf("New HeartBeat\n");;
         }
     } else {
         if (verboselevel & VERBOSEORDER) {
-            printf("Node: Old HeartBeat from Node:%u\n",node_id);
+            printf("Old HeartBeat\n");
         }
     }        
     return retval;
@@ -73,7 +74,7 @@ bool Node::isNewHB(NODE_DATTYPE node_id, uint64_t mymillis) {
 void Node::setPaLevel(NODE_DATTYPE node_id, uint8_t PALevel) {
     node_t *p_search;
     p_search=p_initial;
-    if (verboselevel & VERBOSESENSOR) printf("%sNode.setPaLevel: N:%u PA:%s\n",ts(buf),node_id, PALevel==0? "??? ":PALevel==1? "Min ":PALevel==2? "Low ":PALevel==3? "High":"Max ");
+    if (verboselevel & VERBOSESENSOR) printf("%sNode.setPaLevel: N:%u PA:%s\n",ts(tsbuf),node_id, PALevel==0? "??? ":PALevel==1? "Min ":PALevel==2? "Low ":PALevel==3? "High":"Max ");
     while (p_search) {
 		if (p_search->node_id == node_id) {
 			p_search->pa_level = PALevel;
@@ -88,7 +89,7 @@ void Node::setPaLevel(NODE_DATTYPE node_id, uint8_t PALevel) {
 void Node::setVoltage(NODE_DATTYPE node_id, float u_batt) {
     node_t *p_search;
     p_search=p_initial;
-    if (verboselevel & VERBOSESENSOR) printf("%sNode.setVoltage: N:%u U:%f\n",ts(buf),node_id, u_batt);
+    if (verboselevel & VERBOSESENSOR) printf("%sNode.setVoltage: N:%u U:%f\n",ts(tsbuf),node_id, u_batt);
     while (p_search) {
 		if (p_search->node_id == node_id) {
 			p_search->u_batt = u_batt;
@@ -111,22 +112,22 @@ bool Node::isHBNode(NODE_DATTYPE node_id) {
             p_search=p_search->p_next;
         }
 	}
-    if (verboselevel & VERBOSESENSOR) printf("%sNode.isHBNode: N:%u is %s\n",node_id, retval? "Heartbeat":"Normal");
+    if (verboselevel & VERBOSESENSOR) printf("%sNode.isHBNode: N:%u is %s\n", ts(tsbuf), node_id, retval? "Heartbeat":"Normal");
 	return retval;
 }
 
-void Node::printBuffer(int tn_socket, bool htmlformat) {
+void Node::printBuffer(int out_socket, bool htmlformat) {
     char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
     node_t *p_search;
     p_search = p_initial;
     sprintf(client_message," ------ Nodes: ------\n"); 
-    write(tn_socket , client_message , strlen(client_message));
+    write(out_socket , client_message , strlen(client_message));
     while (p_search) {
         sprintf(client_message,"Node %s%s%u,\tU-Batt:\t%f V,\t%s\tPA: %s (%s)\n", p_search->node_id<100? " ":"", p_search->node_id<10? " ":"", 
-                   p_search->node_id, p_search->u_batt, p_search->is_HB_node? "HeartBeat":"Normal   ",
-                   p_search->pa_level==0? "Min ":p_search->pa_level==1? "Low ":p_search->pa_level==2? "High":p_search->pa_level==3? "Max ":"??? ",
-                   utime2str(p_search->pa_utime, buf, 1) );    
-		write(tn_socket , client_message , strlen(client_message));
+                p_search->node_id, p_search->u_batt, p_search->is_HB_node? "HeartBeat":"Normal   ",
+                p_search->pa_level==0? "Min ":p_search->pa_level==1? "Low ":p_search->pa_level==2? "High":p_search->pa_level==3? "Max ":"??? ",
+                utime2str(p_search->pa_utime, buf, 1) );    
+		write(out_socket , client_message , strlen(client_message));
         p_search=p_search->p_next;
 	}
     free(client_message);

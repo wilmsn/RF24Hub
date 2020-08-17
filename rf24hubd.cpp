@@ -3,9 +3,8 @@
 // do_tn_cmd ==> send a telnet comand to the fhem-host
 // usage example: do_tn_cmd("set device1 on");
 void do_tn_cmd(NODE_DATTYPE node_id, uint8_t channel, char* value) {
-    char* tn_cmd = alloc_str(verboselevel,"do_tn_cmd tn_cmd",TELNETBUFFERSIZE);
+    char* tn_cmd = alloc_str(verboselevel,"do_tn_cmd tn_cmd",TELNETBUFFERSIZE,ts(tsbuf));
     char tn_quit[] =  "\r\nquit\r\n";
-    char* buf = alloc_str(verboselevel,"do_tn_cmd buf",TSBUFFERSIZE);
     int sockfd, portno, n;
     struct sockaddr_in serv_addr;
     struct hostent *server;
@@ -13,73 +12,77 @@ void do_tn_cmd(NODE_DATTYPE node_id, uint8_t channel, char* value) {
     fhem_dev = sensor.getFhemDevByNodeChannel(node_id, channel); 
 	sprintf(tn_cmd,"set %s %s", fhem_dev, value);
     if ( verboselevel & VERBOSETELNET) {    
-        printf("%sdo_tn_cmd: %s\n", ts(buf), tn_cmd );
+        printf("%sdo_tn_cmd: %s\n", ts(tsbuf), tn_cmd );
     }
     portno = std::stoi(cfg.fhemPort);
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
-        printf("%sERROR: do_tn_cmd: error opening socket\n", ts(buf));
+        printf("%sERROR: do_tn_cmd: error opening socket\n", ts(tsbuf));
 	}	
     server = gethostbyname(cfg.fhemHost.c_str());
     if (server == NULL) {
-        printf("%sERROR: do_tn_cmd: no such host\n", ts(buf));
+        printf("%sERROR: do_tn_cmd: no such host\n", ts(tsbuf));
     }
     bzero((char *) &serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
     bcopy((char *)server->h_addr, (char *)&serv_addr.sin_addr.s_addr, server->h_length);
     serv_addr.sin_port = htons(portno);
     if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0) { 
-        printf("%sERROR: do_tn_cmd: error connecting\n", ts(buf));
+        printf("%sERROR: do_tn_cmd: error connecting\n", ts(tsbuf));
 	} else {	
 		n = write(sockfd,tn_cmd,strlen(tn_cmd));
 		if (n < 0) {
-			printf("%sERROR: do_tn_cmd: error writing to socket\n", ts(buf));
+			printf("%sERROR: do_tn_cmd: error writing to socket\n", ts(tsbuf));
 		} else {
             if ( verboselevel & VERBOSETELNET) {    
-                printf("%sdo_tn_cmd: Telnet to %s Port %u successfull Command: %s\n", ts(buf), cfg.fhemHost.c_str(), portno, tn_cmd);
+                printf("%sdo_tn_cmd: Telnet to %s Port %u successfull Command: %s\n", ts(tsbuf), cfg.fhemHost.c_str(), portno, tn_cmd);
             }
 		}		
 		write(sockfd,tn_quit,strlen(tn_quit));
 	}		 
-    free_str(verboselevel, "do_tn_cmd buf", buf);
     close(sockfd);
-    free_str(verboselevel, "do_tn_cmd tn_cmd", tn_cmd);
+    free_str(verboselevel, "do_tn_cmd tn_cmd", tn_cmd,ts(tsbuf));
 }
 
-void receive_tn_in(int tnsocket, struct sockaddr_in * address) {
-    char* buffer = alloc_str(verboselevel,"receive_tn_in buffer",TELNETBUFFERSIZE);
-    char* client_message = alloc_str(verboselevel,"receive_tn_in client_message",DEBUGSTRINGSIZE);
+/* Die Thread-Funktion fuer den Empfang von telnet Daten*/
+static void* receive_tn_in (void *arg) {
+    struct thread_data *f = (struct thread_data *)arg;
+    char* buffer = alloc_str(verboselevel,"receive_tn_in buffer",TELNETBUFFERSIZE,ts(tsbuf));
+    char* client_message = alloc_str(verboselevel,"receive_tn_in client_message",DEBUGSTRINGSIZE,ts(tsbuf));
     ssize_t MsgLen;
     TnMsg_t TnMsg;
     int ret;
     // send something like a prompt. perl telnet is waiting for it otherwise we get error
     // use this in perl: my $t = new Net::Telnet (Timeout => 2, Port => 7001, Prompt => '/rf24hub>/');
     sprintf(client_message,"rf24hub> ");
-    write(tnsocket , client_message , strlen(client_message));
-    MsgLen = recv(tnsocket, buffer, TELNETBUFFERSIZE, 0);
+    write(f->tnsocket , client_message , strlen(client_message));
+    MsgLen = recv(f->tnsocket, buffer, TELNETBUFFERSIZE, 0);
     if (MsgLen>0) {
         int msgID = msgget(MSGKEY, IPC_CREAT | 0600);
         TnMsg.mtype = 1;
-        TnMsg.tn_socket = 0;
-        sprintf(TnMsg.tntext,"Incoming telnet data from %s:",inet_ntoa(address->sin_addr));
+        TnMsg.TnData.tn_socket = 0;
+        //sprintf(TnMsg.tntext,"Incoming telnet data from %s:",inet_ntoa(address->sin_addr));
+        sprintf(TnMsg.TnData.tntext,"Incoming telnet data from :");
         if (msgID >= 0) msgsnd(msgID, &TnMsg, sizeof(TnMsg), 0);
         TnMsg.mtype = 2;
-        TnMsg.tn_socket = tnsocket;
-        sprintf(TnMsg.tntext,"%s", trim(buffer));
+        TnMsg.TnData.tn_socket = f->tnsocket;
+        sprintf(TnMsg.TnData.tntext,"%s", trim(buffer));
         if (msgID >= 0) msgsnd(msgID, &TnMsg, sizeof(TnMsg), 0);
             
         // Wait for a message with processing result            
         ret=msgrcv(msgID, &TnMsg, sizeof(TnMsg), 9, 0);
         if ( ret > 5 ) {
-            write(tnsocket , TnMsg.tntext , strlen(TnMsg.tntext));
+            write(f->tnsocket, TnMsg.TnData.tntext, strlen(TnMsg.TnData.tntext));
         }
         
     }
     //sprintf(buffer,"%s %d\n",PRGNAME,SWVERSION);
     //write(tnsocket , buffer , strlen(buffer));
-    close (tnsocket);
-    free_str(verboselevel,"receive_tn_in buffer",buffer);
-    free_str(verboselevel,"receive_tn_in client_message",client_message);
+    sleep(1);
+    close (f->tnsocket);
+    free_str(verboselevel,"receive_tn_in buffer",buffer,ts(tsbuf));
+    free_str(verboselevel,"receive_tn_in client_message",client_message,ts(tsbuf));
+    pthread_exit((void *)pthread_self());
 }
 	
 bool process_tn_in( char* inbuffer, int tn_socket) {
@@ -97,7 +100,7 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 		setlast		sensor		<sensor#> 	<value>				Sets Sensor to Value and starts sending (Store in Orderbuffer and transfer all requests for this Node to Order)
 			
 */
-			
+
 	char cmp_init[]="init", 
 		 cmp_sensor[]="sensor",
 		 cmp_set[]="set",
@@ -108,11 +111,11 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
          cmp_push[]="push",
          cmp_show[]="show",
          cmp_radio[]="radio",
+         cmp_sync[]="sync",
          cmp_config[]="config";
 	char *wort1a, *wort2a, *wort3a, *wort4a;
 	char *wort1, *wort2, *wort3, *wort4;
-    char* buf = alloc_str(verboselevel,"process_tn_in buf",120);
-    char* message = alloc_str(verboselevel,"process_tn_in message",120);
+    char* message = alloc_str(verboselevel,"process_tn_in message",120,ts(tsbuf));
 	bool tn_input_ok = false;
 	char delimiter[] = " ";
 	//trim(buffer);
@@ -122,31 +125,31 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 	wort4a = strtok(NULL, delimiter);
     char* pEnd;
     if (wort1a) { 
-        wort1 = alloc_str(verboselevel,"process_tn_in wort1",strlen(wort1a)+1);
+        wort1 = alloc_str(verboselevel,"process_tn_in wort1",strlen(wort1a)+1,ts(tsbuf));
         strcpy(wort1, wort1a);
     } else { 
-        wort1 = alloc_str(verboselevel,"process_tn_in wort1",1);
+        wort1 = alloc_str(verboselevel,"process_tn_in wort1",1,ts(tsbuf));
         wort1[0] = '\0';
     }
     if (wort2a) { 
-        wort2 = alloc_str(verboselevel,"process_tn_in wort2",strlen(wort2a)+1);
+        wort2 = alloc_str(verboselevel,"process_tn_in wort2",strlen(wort2a)+1,ts(tsbuf));
         strcpy(wort2, wort2a);
     } else { 
-        wort2 = alloc_str(verboselevel,"process_tn_in wort2",1);
+        wort2 = alloc_str(verboselevel,"process_tn_in wort2",1,ts(tsbuf));
         wort2[0] = '\0';
     }
     if (wort3a) { 
-        wort3 = alloc_str(verboselevel,"process_tn_in wort3",strlen(wort3a)+1);
+        wort3 = alloc_str(verboselevel,"process_tn_in wort3",strlen(wort3a)+1,ts(tsbuf));
         strcpy(wort3, wort3a);
     } else { 
-        wort3 = alloc_str(verboselevel,"process_tn_in wort3",1);
+        wort3 = alloc_str(verboselevel,"process_tn_in wort3",1,ts(tsbuf));
         wort3[0] = '\0';
     }
     if (wort4a) { 
-        wort4 = alloc_str(verboselevel,"process_tn_in wort4",strlen(wort4a)+1);
+        wort4 = alloc_str(verboselevel,"process_tn_in wort4",strlen(wort4a)+1,ts(tsbuf));
         strcpy(wort4, wort4a);
     } else { 
-        wort4 = alloc_str(verboselevel,"process_tn_in wort4",1);
+        wort4 = alloc_str(verboselevel,"process_tn_in wort4",1,ts(tsbuf));
         wort4[0] = '\0';
     }
 //printf("+++++Wort1..4: %s %s %s %s\n",wort1, wort2, wort3, wort4);
@@ -186,8 +189,7 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 		tn_input_ok = true;
         NODE_DATTYPE mynode = strtol(wort2, &pEnd, 10);
         uint8_t mychannel = strtol(wort3, &pEnd, 10);
-        float   myvalue = strtof(wort4, &pEnd);
-        orderbuffer.addOrderBuffer(mymillis(),mynode,mychannel,myvalue);
+        orderbuffer.addOrderBuffer(mymillis(), mynode, mychannel, packData(mychannel, wort4) );
         if ( ! node.isHBNode(mynode) ) {
 			make_order(mynode, PAYLOAD_TYPE_DAT);
         }
@@ -243,6 +245,14 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
         orderbuffer.printBuffer(tn_socket, true);
         order.printBuffer(tn_socket, true);
     }	
+    // sync
+	// syncronisation of all relevant tables of rf24hubd: stores in memory table data to database hard disk tables 
+	if ( (strcmp(wort1,cmp_sync) == 0) && (strlen(wort2) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
+		tn_input_ok = true;
+        database.sync_sensor();
+        database.sync_sensordata();
+        database.sync_sensordata_d();
+    }
     // init
 	// initialisation of rf24hubd: reloads data from database
 	if ( (strcmp(wort1,cmp_init) == 0) && (strlen(wort2) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
@@ -261,74 +271,37 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
             write(tn_socket , message , strlen(message));
         }
 	}		
-	free_str(verboselevel,"process_tn_in wort1",wort1);
-    free_str(verboselevel,"process_tn_in wort2",wort2);
-    free_str(verboselevel,"process_tn_in wort3",wort3);
-    free_str(verboselevel,"process_tn_in wort4",wort4);
-    free_str(verboselevel,"process_tn_in buf", buf);
-    free_str(verboselevel,"process_tn_in message", message);
+	free_str(verboselevel,"process_tn_in wort1",wort1,ts(tsbuf));
+    free_str(verboselevel,"process_tn_in wort2",wort2,ts(tsbuf));
+    free_str(verboselevel,"process_tn_in wort3",wort3,ts(tsbuf));
+    free_str(verboselevel,"process_tn_in wort4",wort4,ts(tsbuf));
+    free_str(verboselevel,"process_tn_in message", message,ts(tsbuf));
     return tn_input_ok;
 }
-	
-/*
-uint32_t packData(uint8_t mychannel, char* wort4) {
-    uint32_t retval = 0;
-    char* pEnd; 
-    switch ( mychannel ) {
-        case 1 ... 40:
-        case 101 ... 105:  
-        {
-            float val_f = strtof(wort4, &pEnd);
-            retval = calcTransportValue_f(mychannel, val_f);
-        }
-        break;
-        case 41 ... 50:
-        case 106 ... 110:
-        {
-            int16_t val_i = (int16_t)strtol(wort4, &pEnd, 10);
-            retval = calcTransportValue_i(mychannel, val_i);
-        }
-        break;
-        case 51 ... 60:
-        case 111 ... 125:
-        {
-            uint16_t val_ui = (uint16_t)strtoul(wort4, &pEnd, 10);
-            retval = calcTransportValue_ui(mychannel, val_ui);
-        }
-        break;
-        case 61 ... 80:
-            // ToDo Wort kann ein kompletter Text sein, das in verschiedene Channels zerlegt wird
-            //      Max Länge 20*3=60 Zeichen
-        break;
-    }
-    return retval;
-}
-*/
 
 void make_order(NODE_DATTYPE mynode, uint8_t mytype) {
-    uint8_t channel; 
     void* ret_ptr;
     uint32_t data;
     order.delByNode(mynode);
-    ret_ptr = orderbuffer.findOrder4Node(mynode, NULL, &channel, &data);
+    ret_ptr = orderbuffer.findOrder4Node(mynode, NULL, &data);
     if (ret_ptr) {
         order.addOrder(mynode, mytype, node.isHBNode(mynode), data, mymillis());
-        ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &channel, &data);
+        ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &data);
         if (ret_ptr) {
             order.modifyOrder(mynode, 2, data);
-            ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &channel, &data);
+            ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &data);
             if (ret_ptr) {
                 order.modifyOrder(mynode, 3, data);
-                ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &channel, &data);
+                ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &data);
                 if (ret_ptr) {
                     order.modifyOrder(mynode, 4, data);
-                    ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &channel, &data);
+                    ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &data);
                     if (ret_ptr) {
                         order.modifyOrder(mynode, 5, data);
-                        ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &channel, &data);
+                        ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &data);
                         if (ret_ptr) {
-                            order.modifyOrder(mynode, 4, data);
-                            ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &channel, &data);
+                            order.modifyOrder(mynode, 6, data);
+                            ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &data);
                             if (ret_ptr) {
                                 order.modifyOrderFlags(mynode, PAYLOAD_FLAG_EMPTY );
                             } else {
@@ -367,84 +340,45 @@ void init_system(void) {
 }
 
 void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
-    char* buf = alloc_str(verboselevel,"process_sensor buf",TSBUFFERSIZE);
     uint8_t channel = getChannel(mydata);
     uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
+    buf = unpackData(mydata, buf);
+    if ( verboselevel & VERBOSEORDER) {
+        printf("%sprocess_sensor: Node: %u Data: %u\n", ts(tsbuf), node_id, mydata);
+    }
 	switch (channel) {
-		case 1 ... 40: {
-            // Sensor or Actor type float
-            sprintf(buf,"%f", getValue_f(mydata));
+		case 1 ... 99: {
+            // Sensor or Actor any type
             if ( verboselevel & VERBOSECONFIG) {    
-                printf("%sValue of Node: %u Channel: %u is %s\n", ts(buf), node_id, channel, buf);
+                printf("%sValue of Node: %u Channel: %u is %s\n", ts(tsbuf), node_id, channel, buf);
             }
-			sensor.updateLastVal_f(sensor_id, getValue_f(mydata), mymillis());
+			sensor.updateLastVal(sensor_id, mydata, mymillis());
             database.storeSensorValue(sensor_id, buf);
-            do_tn_cmd(node_id, channel,buf);
-		}
-		break; 
-		case 41 ... 50: {
-            // Sensor or Actor type int16_t
-            sprintf(buf,"%d", getValue_i(mydata));
-            if ( verboselevel & VERBOSECONFIG) {    
-                printf("%sValue of Node: %u Channel: %u is %s\n", ts(buf), node_id, channel, buf);
-            }
-			sensor.updateLastVal_i(sensor_id, getValue_i(mydata), mymillis());
-            database.storeSensorValue(sensor_id, buf);
-            do_tn_cmd(node_id, channel,buf);
-		}
-		break; 
-		case 51 ... 60: {
-            // Sensor or Actor type uint16_t
-            sprintf(buf,"%u", getValue_ui(mydata));
-            if ( verboselevel & VERBOSECONFIG) {    
-                printf("%sValue of Node: %u Channel: %u is %s\n", ts(buf), node_id, channel, buf);
-            }
-			sensor.updateLastVal_ui(sensor_id, getValue_ui(mydata), mymillis());
-            database.storeSensorValue(sensor_id, buf);
-            do_tn_cmd(node_id, channel,buf);
+            do_tn_cmd(node_id, channel, buf);
 		}
 		break; 
 		case 101: {
             // battery voltage
             sprintf(buf,"%g", getValue_f(mydata));
             if ( verboselevel & VERBOSECONFIG) {    
-                printf("%sVoltage of Node: %u is %sV\n", ts(buf), node_id, buf);
+                printf("%sVoltage of Node: %u is %sV\n", ts(tsbuf), node_id, buf);
             }
-			sensor.updateLastVal_f(sensor_id, getValue_f(mydata), mymillis());
+			sensor.updateLastVal(sensor_id, mydata, mymillis());
             node.setVoltage(node_id, getValue_f(mydata));
             database.storeSensorValue(sensor_id, buf);
             do_tn_cmd(node_id, channel,buf);
 		}
 		break; 
-		case 102 ... 105: {
-            // float values
-            sprintf(buf,"%g", getValue_f(mydata));
+		case 102 ... 125: {
+            // Node config register
             if ( verboselevel & VERBOSECONFIG) {    
-                printf("%sValue of Node: %u Channel: %u is %s\n", ts(buf), node_id, channel, buf);
+                printf("%sConfigregister of Node: %u Channel: %u is %s\n", ts(tsbuf), node_id, channel, buf);
             }
             database.storeNodeConfig(node_id, channel, buf);
 		}	
 		break; 
-		case 106 ... 110: {
-            // int values
-            sprintf(buf,"%d", getValue_i(mydata));
-            if ( verboselevel & VERBOSECONFIG) {    
-                printf("%sValue of Node: %u Channel: %u is %s\n", ts(buf), node_id, channel, buf);
-            }
-            database.storeNodeConfig(node_id, channel, buf);
-		}
-		case 111 ... 123:
-        case 125: {
-            // int values
-            sprintf(buf,"%u", getValue_ui(mydata));
-            if ( verboselevel & VERBOSECONFIG) {    
-                printf("%sValue of Node: %u Channel: %u is %s\n", ts(buf), node_id, channel, buf);
-            }
-            database.storeNodeConfig(node_id, channel, buf);
-		}
-	}	
+    }	
 	orderbuffer.delByNodeChannel(node_id, channel);
-    free_str(verboselevel, "process_sensor buf", buf);
 }	
 
 /*******************************************************************************************
@@ -453,20 +387,18 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
 *
 ********************************************************************************************/
 void sighandler(int signal) {
-    char* buf = alloc_str(verboselevel,"sighandler buf",TSBUFFERSIZE);
-	cout << ts(buf) << "SIGTERM: Cleanup system ... saving *_im tables ..." << endl;
+    printf("%sSIGTERM: Cleanup system ... saving *_im tables ...\n",ts(tsbuf));
     exit_system(); 
-	cout << ts(buf) << "SIGTERM: Shutting down ... " << endl;
+    printf("%sSIGTERM: Shutting down ...\n",ts(tsbuf));
     cfg.removePidFile();
 //	msgctl(msqid, IPC_RMID, NULL);
-    free_str(verboselevel, "sighandler buf", buf);
     exit (0);
 }
 
 
 void channelscanner (uint8_t channel) {
   int values=0;
-  cout << "Scanning channel " << channel << ":" << endl;
+  printf("Scanning channel: %u\n", channel);
   radio.begin();
   for (int i=0; i < 1000; i++) {
     radio.setChannel(channel);
@@ -485,7 +417,7 @@ void channelscanner (uint8_t channel) {
     radio.stopListening();
 
   }
-  cout << endl << endl << "1000 passes: Detect " << values << " times a carrier" << endl;
+  printf("1000 passes: Detect %d times a carrier\n", values);
 }
 
 void scanner(char scanlevel) {
@@ -591,19 +523,34 @@ void scanner(char scanlevel) {
 }
 
 void printPayload(uint16_t loglevel, const char* msg_header, const char* result, payload_t* mypayload) {
-	if ( verboselevel & loglevel  ) {        
-        char* buf = alloc_str(verboselevel,"printPayload buf",TSBUFFERSIZE);
-        cout << ts(buf) << msg_header << ": N:" << (int)mypayload->node_id << " T:" <<  (int)mypayload->msg_type << " M:" <<
-        (int)mypayload->msg_id << " F:" << hex << setfill('0') << setw(2) << (int)mypayload->msg_flags << dec << 
-        " O:" << (int)mypayload->orderno << " " <<
-        "(" << (int)getChannel(mypayload->data1) << "/" << getValue_f(mypayload->data1) << ")" <<
-        "(" << (int)getChannel(mypayload->data2) << "/" << getValue_f(mypayload->data2) << ")" <<
-        "(" << (int)getChannel(mypayload->data3) << "/" << getValue_f(mypayload->data3) << ")" <<
-        "(" << (int)getChannel(mypayload->data4) << "/" << getValue_f(mypayload->data4) << ")" <<
-        "(" << (int)getChannel(mypayload->data5) << "/" << getValue_f(mypayload->data5) << ")" <<
-        "(" << (int)getChannel(mypayload->data6) << "/" << getValue_f(mypayload->data6) << ")" <<
-        result << endl;   
-        free_str(verboselevel, "printPayload buf", buf);
+	if ( verboselevel & loglevel  ) {   
+        char* vbuf1 = alloc_str(verboselevel,"vbuf1",10,ts(tsbuf));
+        char* vbuf2 = alloc_str(verboselevel,"vbuf2",10,ts(tsbuf));
+        char* vbuf3 = alloc_str(verboselevel,"vbuf3",10,ts(tsbuf));
+        char* vbuf4 = alloc_str(verboselevel,"vbuf4",10,ts(tsbuf));
+        char* vbuf5 = alloc_str(verboselevel,"vbuf5",10,ts(tsbuf));
+        char* vbuf6 = alloc_str(verboselevel,"vbuf6",10,ts(tsbuf));
+        vbuf1=unpackData(mypayload->data1, vbuf1);
+        vbuf2=unpackData(mypayload->data2, vbuf2);
+        vbuf3=unpackData(mypayload->data3, vbuf3);
+        vbuf4=unpackData(mypayload->data4, vbuf4);
+        vbuf5=unpackData(mypayload->data5, vbuf5);
+        vbuf6=unpackData(mypayload->data6, vbuf6);
+        printf("%s%s: N:%u T:%u m:%u F:0x%02X O:%u (%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)%s\n",
+               ts(tsbuf), msg_header, mypayload->node_id, mypayload->msg_type, mypayload->msg_id, mypayload->msg_flags, mypayload->orderno,
+               getChannel(mypayload->data1), vbuf1,
+               getChannel(mypayload->data2), vbuf2,
+               getChannel(mypayload->data3), vbuf3,
+               getChannel(mypayload->data4), vbuf4,
+               getChannel(mypayload->data5), vbuf5,
+               getChannel(mypayload->data6), vbuf6,
+               result);   
+        free_str(verboselevel,"vbuf1",vbuf1,ts(tsbuf));
+        free_str(verboselevel,"vbuf2",vbuf2,ts(tsbuf));
+        free_str(verboselevel,"vbuf3",vbuf3,ts(tsbuf));
+        free_str(verboselevel,"vbuf4",vbuf4,ts(tsbuf));
+        free_str(verboselevel,"vbuf5",vbuf5,ts(tsbuf));
+        free_str(verboselevel,"vbuf6",vbuf6,ts(tsbuf));
     }
 }
 
@@ -619,7 +566,8 @@ void process_payload(payload_t* mypayload) {
 int main(int argc, char* argv[]) {
     pid_t pid;
     payload_t payload;
-    char* buf = alloc_str(verboselevel,"main buf",TSBUFFERSIZE);
+    buf = (char*)malloc(TSBUFFERSIZE);
+    tsbuf = (char*)malloc(TSBUFFERSIZE);
 	/* vars for telnet socket handling */
 	int tn_in_socket = 0;
     int new_tn_in_socket = 0;
@@ -636,7 +584,7 @@ int main(int argc, char* argv[]) {
 
 	// check if started as root
 	if ( getuid()!=0 ) {
-		cout << ts(buf) << PRGNAME << " has to be startet as user root" << endl; 
+        printf("%s has to be startet as user root!\n",PRGNAME);
         exit(1);
     }
     
@@ -646,8 +594,8 @@ int main(int argc, char* argv[]) {
     } else {
          cfg.setPidFile();
     }
-    cout << "--------------------------------------------------" << endl;
-    cout << ts(buf) << "Startup Parameters:" << endl; 
+    printf("--------------------------------------------------\n");
+    printf("%sStartup Parameters:\n",ts(tsbuf));
     cfg.printConfig();
 
     // init SIGTERM and SIGINT handling
@@ -662,13 +610,13 @@ int main(int argc, char* argv[]) {
             chdir ("/");
             umask (0);
         } else if (pid > 0) {
-       // Parentprozess -> exit and return to shell
-            cout << ts(buf) << "Starting " << PRGNAME << " as daemon..." << endl;
+            // Parentprozess -> exit and return to shell
+            printf("%sStarting %s as daemon...\n",ts(tsbuf),PRGNAME);
             // and exit
             exit(0);
         } else {
             // nagativ is an error
-            cout << ts(buf) << "Fork ERROR ... exiting" << endl; 
+            printf("%sFork ERROR ... exiting\n",ts(tsbuf));
             cfg.removePidFile();
             exit(1);
         }
@@ -681,7 +629,7 @@ int main(int argc, char* argv[]) {
     database.connect(cfg.dbHostName, cfg.dbUserName, cfg.dbPassWord, cfg.dbSchema, std::stoi(cfg.dbPort));
 
     if ( cfg.fhemPortSet && cfg.fhemHostSet ) {
-        cout << ts(buf) << "telnet session to FHEM started: Host: " << cfg.fhemHost << " Port: " << cfg.fhemPort << endl;
+        printf("%stelnet session to FHEM started: Host: %s Port: %s\n",ts(tsbuf), cfg.fhemHost.c_str(), cfg.fhemPort.c_str());
     }
 
     if ( cfg.incomingPortSet ) {
@@ -692,7 +640,7 @@ int main(int argc, char* argv[]) {
             address.sin_port = htons ( std::stoi ( cfg.incomingPort ) );
             setsockopt( tn_in_socket, SOL_SOCKET, SO_REUSEADDR, &y, sizeof(int) );
             if (bind( tn_in_socket, (struct sockaddr *) &address, sizeof (address)) == 0 ) {
-                cout << ts(buf) << "Socket für eingehende Messages auf Port " << cfg.incomingPort << " angelegt" << endl;
+                printf("%sSocket für eingehende Messages auf Port %s angelegt\n", ts(tsbuf), cfg.incomingPort.c_str());
             }
             listen (tn_in_socket, 5);
             addrlen = sizeof (struct sockaddr_in);
@@ -700,12 +648,12 @@ int main(int argc, char* argv[]) {
             save_fd |= O_NONBLOCK;
             fcntl( tn_in_socket, F_SETFL, save_fd );
         } else {
-            cout << ts(buf) << "Error opening Socket " << cfg.incomingPort << endl;
+            printf("%sError opening Socket %s\n", ts(tsbuf), cfg.incomingPort.c_str());
             exit(1);
         }            
 	}
     sleep(2);
-    cout << ts(buf) << "starting radio on channel ... " << RF24_CHANNEL << endl;
+    printf("%sstarting radio on channel ... %d\n", ts(tsbuf), RF24_CHANNEL);
     radio.begin();
     radio.setPALevel( RF24_PA_MAX ) ;
     radio.setChannel( RF24_CHANNEL );
@@ -720,7 +668,6 @@ int main(int argc, char* argv[]) {
     radio.openReadingPipe(1,rf24_node2hub);
     radio.startListening();
     radio.printDetails();
-    cout << ts(buf) << PRGNAME << " up and running .... " << endl;
 
     // Init Arrays
     node.setVerbose(verboselevel);
@@ -729,6 +676,7 @@ int main(int argc, char* argv[]) {
     orderbuffer.setVerbose(verboselevel);
     database.setVerbose(verboselevel);
     init_system();
+    printf("%s%s up and running\n", ts(tsbuf),PRGNAME); 
 
     // Main Loop
     while(1) {
@@ -741,8 +689,15 @@ int main(int argc, char* argv[]) {
 		if ( cfg.incomingPortSet ) {
             new_tn_in_socket = accept ( tn_in_socket, (struct sockaddr *) &address, &addrlen );
             if (new_tn_in_socket > 0) {
-                thread t2(receive_tn_in, new_tn_in_socket, &address);
-                t2.detach();
+                pthread_t a_thread;
+                int ret;
+                struct thread_data *f;
+                f = (struct thread_data *)malloc(sizeof(struct thread_data));
+                f->tnsocket = new_tn_in_socket;
+                ret = pthread_create(&a_thread, NULL, &receive_tn_in, f);
+                if (ret == 0) {
+                    pthread_detach(a_thread);
+                }                
             }
             // Read the messagequeue
             msgID = msgget(MSGKEY, IPC_CREAT | 0600);
@@ -751,23 +706,23 @@ int main(int argc, char* argv[]) {
                 // Logmessages
                 ret=msgrcv(msgID, &LogMsg, sizeof(LogMsg), 1, IPC_NOWAIT);
                 if ( (ret > 5) && (verboselevel & VERBOSETELNET)) {
-                    printf("%s%s\n", ts(buf), LogMsg.tntext);
+                    printf("%s%s\n", ts(tsbuf), LogMsg.TnData.tntext);
                 }
                 // store into orderbuffer and make order
                 ret=msgrcv(msgID, &LogMsg, sizeof(LogMsg), 2, IPC_NOWAIT);
                 if ( ret > 5 ) {
                     if ( verboselevel & VERBOSETELNET ) {
-                        printf("%s%s\n", ts(buf), LogMsg.tntext);
+                        printf("%s%s\n", ts(tsbuf), LogMsg.TnData.tntext);
                     }
-                    char* tnstr = alloc_str(verboselevel,"main tnstr",DEBUGSTRINGSIZE);
-                    strcpy(tnstr,LogMsg.tntext);
-                    bool result = process_tn_in(tnstr,LogMsg.tn_socket);
-                    free_str(verboselevel,"main tnstr",tnstr);
+                    char* tnstr = alloc_str(verboselevel,"main tnstr",DEBUGSTRINGSIZE,ts(tsbuf));
+                    strcpy(tnstr, LogMsg.TnData.tntext);
+                    bool result = process_tn_in(tnstr,LogMsg.TnData.tn_socket);
+                    free_str(verboselevel,"main tnstr",tnstr,ts(tsbuf));
                     LogMsg.mtype = 9;
                     if ( result ) {
-                        sprintf(LogMsg.tntext,"Command received => OK\n");
+                        sprintf(LogMsg.TnData.tntext,"Command received => OK\n");
                     } else {
-                        sprintf(LogMsg.tntext,"Command received => Error\n");
+                        sprintf(LogMsg.TnData.tntext,"Command received => Error\n");
                     }
                     if (msgID >= 0) msgsnd(msgID, &LogMsg, sizeof(LogMsg), 0);
                 }
@@ -790,13 +745,9 @@ int main(int argc, char* argv[]) {
                         if ( orderbuffer.nodeHasEntry(payload.node_id) ) {  // WE have orders for this node
                             make_order(payload.node_id, PAYLOAD_TYPE_DAT);                    
                             if ( verboselevel & VERBOSEORDER ) {
-                                cout << ts(buf) << "Entries for Heartbeat Node found, sending them" << endl;
+                                printf("%sEntries for Heartbeat Node found, sending them\n",ts(tsbuf));
                             }
                         } else {
-                            make_order(payload.node_id, PAYLOAD_TYPE_HB_RESP);                    
-                            if ( verboselevel & VERBOSEORDER) {
-                                cout << ts(buf) << "No Entries for Heartbeat Node found, sending Endmessage" << endl;
-                            }
                             order.addOrder(payload.node_id, PAYLOAD_TYPE_HB_RESP, true, 0, mymillis());    
                             order.modifyOrderFlags(payload.node_id, PAYLOAD_FLAG_LASTMESSAGE);
                         }
@@ -814,7 +765,7 @@ int main(int argc, char* argv[]) {
                         if ( orderbuffer.nodeHasEntry(payload.node_id) ) {  // WE have orders for this node
                             make_order(payload.node_id, PAYLOAD_TYPE_DAT);                    
                             if ( verboselevel & VERBOSEORDER ) {
-                                cout << ts(buf) << "Entries for Heartbeat Node found, sending them" << endl;
+                                printf("%sEntries for Heartbeat Node found, sending them\n",ts(tsbuf));
                             }
                         }
                         order.addOrder(payload.node_id, PAYLOAD_TYPE_DATSTOP, true, 0, mymillis());    
@@ -852,7 +803,7 @@ int main(int argc, char* argv[]) {
                 break;
                 default: {	
                     if ( verboselevel & VERBOSEORDER) {
-                        cout << ts(buf) << "Processing Node: " << (int)payload.node_id << " Type: " << (int)payload.msg_type << " Orderno: " << (int)payload.orderno << endl;
+                        printf("%sProcessing Node:%u Type:%u Orderno: %u\n", ts(tsbuf), payload.node_id, payload.msg_type, payload.orderno);
                     }
                     if ( order.isOrderNo(payload.orderno) ) {
                         process_payload(&payload);
@@ -860,7 +811,7 @@ int main(int argc, char* argv[]) {
                         if ( orderbuffer.nodeHasEntry(payload.node_id) ) {  // WE have orders for this node
                             make_order(payload.node_id, PAYLOAD_TYPE_DAT);                    
                             if ( verboselevel & VERBOSEORDER ) {
-                                cout << ts(buf) << "Entries for Heartbeat Node found, sending them" << endl;
+                                printf("%sEntries for Heartbeat Node found, sending them\n", ts(tsbuf));
                             }
                         }
                     }

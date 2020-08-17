@@ -48,6 +48,8 @@
 #define PAYLOAD_FLAG_EMPTY       0b00000000
 // Flag zeigt an das diese Nachricht die letzte (Teil-)Nachricht war
 #define PAYLOAD_FLAG_LASTMESSAGE 0b00000001
+// Flag zeigt an das der Node Support benötigt (z.B. durch niedrige Spannung)
+#define PAYLOAD_FLAG_NEEDHELP    0b10000000
 // ****** Payload Message Type ******
 // Nachricht ist ein Init
 // Datenformat: komprimiert Channel und float

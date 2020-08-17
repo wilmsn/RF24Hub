@@ -3,16 +3,17 @@
 OrderBuffer::OrderBuffer(void) {
     p_initial = NULL;
     verboselevel = 0;
-    buf = (char*)alloc_str(VERBOSEPOINTER,"OrderBuffer::OrderBuffer buf",TSBUFFERSIZE);
+    buf = (char*)malloc(TSBUFFERSIZE);
+    tsbuf = (char*)malloc(TSBUFFERSIZE);
 }
 
 void OrderBuffer::newEntry(OrderBuffer::orderbuffer_t* p_new) {
     orderbuffer_t *p_search;
     p_new->p_next = NULL;
     if (verboselevel & VERBOSEOBUFFER) 
-        printf("%sOrderBuffer: newEntry <%p> N:%u C:%u V:%f\n", ts(buf), p_new, p_new->node_id, p_new->channel, p_new->data); 
+        printf("%sOrderBuffer: newEntry <%p> N:%u C:%u V:%f\n", ts(tsbuf), p_new, p_new->node_id, p_new->channel, p_new->data); 
     if (verboselevel & VERBOSEOBUFFEREXT) {
-        printf("%sBestand vorher:\n", ts(buf)); 
+        printf("%sBestand vorher:\n", ts(tsbuf)); 
         printBuffer(fileno(stdout), false);
     }
     if (p_initial) {
@@ -25,7 +26,7 @@ void OrderBuffer::newEntry(OrderBuffer::orderbuffer_t* p_new) {
         p_initial = p_new;
     }
     if (verboselevel & VERBOSEOBUFFEREXT) {
-        printf("%sBestand nachher\n", ts(buf)); 
+        printf("%sBestand nachher\n", ts(tsbuf)); 
         printBuffer(fileno(stdout), false);
     }
 }
@@ -63,9 +64,9 @@ bool OrderBuffer::delEntry(orderbuffer_t* p_del) {
 bool OrderBuffer::delByNodeChannel(NODE_DATTYPE node_id, uint8_t channel) {
     int retval = false;
     orderbuffer_t *p_search;
-    if (verboselevel & VERBOSEOBUFFER) printf("%sOrderBuffer:delByNodeChannel N:%u C:%u\n", ts(buf), node_id, channel); 
+    if (verboselevel & VERBOSEOBUFFER) printf("%sOrderBuffer:delByNodeChannel N:%u C:%u\n", ts(tsbuf), node_id, channel); 
     if (verboselevel & VERBOSEOBUFFEREXT) {
-        printf("%sBestand vorher\n", ts(buf)); 
+        printf("%sBestand vorher\n", ts(tsbuf)); 
         printBuffer(fileno(stdout), false);
     }
     p_search = p_initial;
@@ -78,7 +79,7 @@ bool OrderBuffer::delByNodeChannel(NODE_DATTYPE node_id, uint8_t channel) {
         }
     }
     if (verboselevel & VERBOSEOBUFFEREXT) {
-        printf("%sBestand nachher\n", ts(buf)); 
+        printf("%sBestand nachher\n", ts(tsbuf)); 
         printBuffer(fileno(stdout), false);
     }
     return retval;
@@ -87,9 +88,9 @@ bool OrderBuffer::delByNodeChannel(NODE_DATTYPE node_id, uint8_t channel) {
 bool OrderBuffer::delByNode(NODE_DATTYPE node_id) {
     int retval = false;
     orderbuffer_t *p_search;
-    if (verboselevel & VERBOSEOBUFFER) printf("%sOrderBuffer: delByNode N:%u\n", ts(buf), node_id); 
+    if (verboselevel & VERBOSEOBUFFER) printf("%sOrderBuffer: delByNode N:%u\n", ts(tsbuf), node_id); 
     if (verboselevel & VERBOSEOBUFFEREXT) {
-        printf("%sBestand vorher\n", ts(buf)); 
+        printf("%sBestand vorher\n", ts(tsbuf)); 
         printBuffer(fileno(stdout), false);
     }
     p_search = p_initial;
@@ -100,7 +101,7 @@ bool OrderBuffer::delByNode(NODE_DATTYPE node_id) {
         p_search=p_search->p_next;
     }
     if (verboselevel & VERBOSEOBUFFEREXT) {
-        printf("%sBestand nachher\n", ts(buf)); 
+        printf("%sBestand nachher\n", ts(tsbuf)); 
         printBuffer(fileno(stdout), false);
     }
     return retval;
@@ -134,7 +135,7 @@ void OrderBuffer::addOrderBuffer(uint64_t millis, NODE_DATTYPE node_id, uint8_t 
     }
 }
 
-void* OrderBuffer::findOrder4Node(NODE_DATTYPE node_id, void* p_last, uint8_t* channel, uint32_t* data) {
+void* OrderBuffer::findOrder4Node(NODE_DATTYPE node_id, void* p_last, uint32_t* data) {
     orderbuffer_t *p_search;
     void* retval = NULL;
     if (p_last) {
@@ -145,10 +146,9 @@ void* OrderBuffer::findOrder4Node(NODE_DATTYPE node_id, void* p_last, uint8_t* c
     }
     while ( p_search ) {
         if ( p_search->node_id == node_id ) {
-            *channel = p_search->channel;
             *data = p_search->data;
             retval = (void*)p_search;
-            p_search = NULL;;
+            p_search = NULL;
         } else {
             p_search=p_search->p_next;
         }
@@ -159,52 +159,54 @@ void* OrderBuffer::findOrder4Node(NODE_DATTYPE node_id, void* p_last, uint8_t* c
 void OrderBuffer::printBuffer(int out_socket, bool htmlFormat) {
     char* client_message =  (char*) malloc (TELNETBUFFERSIZE);
     orderbuffer_t *p_search;
+    bool writeTS = ( out_socket == fileno(stdout) );
     p_search = p_initial;
     if ( htmlFormat ) {
         sprintf(client_message,"\n<center><big>Orderbuffer</big><table><tr><th>Node</th><th>Channel</th><th>Value</th><th>Entry</th></tr>\n"); 
     } else {
+        if (writeTS) sprintf(client_message,"%s",ts(tsbuf));
         sprintf(client_message," ---- OrderBuffer ----\n"); 
     }        
     write(out_socket , client_message , strlen(client_message));
     while (p_search) {
-        switch (p_search->channel) {
-            case 1 ... 40:
-            case 101 ... 105:  
+        switch (getDataTyp(p_search->channel)) {
+            case 1:
             {
                 if ( htmlFormat ) {
                     sprintf(client_message,"<tr><td>%u</td><td>%u</td><td>%g</td><td>%s</td></tr>\n", 
                         p_search->node_id, p_search->channel, getValue_f(p_search->data), utime2str(p_search->utime, buf, 1) );
                 } else {
+                    if (writeTS) sprintf(client_message,"%s",ts(tsbuf));
                     sprintf(client_message,"Node:%u Channel:%u Value:%g Entry:%s\n", 
                     p_search->node_id, p_search->channel, getValue_f(p_search->data), utime2str(p_search->utime, buf, 1) );
                 }
             }
             break;
-            case 41 ... 50:
-            case 106 ... 110:
+            case 2:
             {
                 if ( htmlFormat ) {
                     sprintf(client_message,"<tr><td>%u</td><td>%u</td><td>%d</td><td>%s</td></tr>\n", 
                         p_search->node_id, p_search->channel, getValue_i(p_search->data), utime2str(p_search->utime, buf, 1) );
                 } else {
+                    if (writeTS) sprintf(client_message,"%s",ts(tsbuf));
                     sprintf(client_message,"Node:%u Channel:%u Value:%d Entry:%s\n", 
                     p_search->node_id, p_search->channel, getValue_i(p_search->data), utime2str(p_search->utime, buf, 1) );
                 }
             }
             break;
-            case 51 ... 60:
-            case 111 ... 125:
+            case 3:
             {
                 if ( htmlFormat ) {
                     sprintf(client_message,"<tr><td>%u</td><td>%u</td><td>%u</td><td>%s</td></tr>\n", 
                         p_search->node_id, p_search->channel, getValue_ui(p_search->data), utime2str(p_search->utime, buf, 1) );
                 } else {
+                    if (writeTS) sprintf(client_message,"%s",ts(tsbuf));
                     sprintf(client_message,"Node:%u Channel:%u Value:%u Entry:%s\n", 
                     p_search->node_id, p_search->channel, getValue_ui(p_search->data), utime2str(p_search->utime, buf, 1) );
                 }
             }
             break;
-            case 61 ... 80:
+            case 4:
             {
                 //ToDo
             }

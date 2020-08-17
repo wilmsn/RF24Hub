@@ -29,9 +29,13 @@ struct node_t {
     };
 node_t*     p_initial;
 /**************************************************************
- * char buffer zur Ausgabe des timestrings ==> ts(buf)
+ * char buffer zur generischen Verwendung
  *************************************************************/
 char*       buf;
+/**************************************************************
+ * char buffer zur Ausgabe des timestrings ==> ts(tsbuf)
+ *************************************************************/
+char*       tsbuf;
 /**************************************************************
  * Bufferinterner Speicher für den verboselevel
  *************************************************************/

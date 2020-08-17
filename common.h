@@ -46,9 +46,9 @@ char * trim (char * s);
 //char * log_ts(char * buf);
 
 
-char* alloc_str(uint16_t verboselevel, const char* msgTxt, size_t size);
+char* alloc_str(uint16_t verboselevel, const char* msgTxt, size_t size, char* timestring);
 
-void free_str(uint16_t verboselevel, const char* msgTxt, char* str);
+void free_str(uint16_t verboselevel, const char* msgTxt, char* str, char* timestring);
 
 uint64_t mymillis(void);
 

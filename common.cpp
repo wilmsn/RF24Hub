@@ -178,58 +178,56 @@ uint16_t decodeVerbose(uint16_t oldLevel, char* verboseSet) {
 }
 
 
-char* alloc_str(uint16_t verboselevel, const char* msgTxt, size_t size) {
+char* alloc_str(uint16_t verboselevel, const char* msgTxt, size_t size, char* timestamp) {
     if (verboselevel & VERBOSEPOINTER) {
-        char buf[] = TSBUFFERSTRING;
-        printf("%sMalloc %s P:", ts(buf), msgTxt);
+        printf("%sMalloc %s P:", timestamp, msgTxt);
     }    
     char *retval =  (char*) malloc (size);
     memset(retval, 0, size);
     if (verboselevel & VERBOSEPOINTER) {
-        char buf[] = TSBUFFERSTRING;
         printf("<%p> OK\n", retval);
     }    
     return retval;
 }
 
-void free_str(uint16_t verboselevel, const char* msgTxt, char* str) {
+void free_str(uint16_t verboselevel, const char* msgTxt, char* str, char* timestamp) {
     if (verboselevel & VERBOSEPOINTER) {
-        char buf[] = TSBUFFERSTRING;
-        printf("%sFree %s P:<%p>", ts(buf), msgTxt, str);
+        printf("%sFree %s P:<%p>", timestamp, msgTxt, str);
     }    
     free(str);
     if (verboselevel & VERBOSEPOINTER) {
-        char buf[] = TSBUFFERSTRING;
         printf(" OK\n");
     }    
 }
 
 uint32_t packData(uint8_t mychannel, char* wort4) {
     uint32_t retval = 0;
+    uint8_t dataTyp = getDataTyp(mychannel);
     char* pEnd; 
-    switch ( mychannel ) {
-        case 1 ... 40:
-        case 101 ... 105:  
+    switch ( dataTyp ) {
+        case 0:
+        {
+            retval = 0;
+        }
+        case 1:
         {
             float val_f = strtof(wort4, &pEnd);
             retval = calcTransportValue_f(mychannel, val_f);
         }
         break;
-        case 41 ... 50:
-        case 106 ... 110:
+        case 2:
         {
             int16_t val_i = (int16_t)strtol(wort4, &pEnd, 10);
             retval = calcTransportValue_i(mychannel, val_i);
         }
         break;
-        case 51 ... 60:
-        case 111 ... 125:
+        case 3:
         {
             uint16_t val_ui = (uint16_t)strtoul(wort4, &pEnd, 10);
             retval = calcTransportValue_ui(mychannel, val_ui);
         }
         break;
-        case 61 ... 80:
+        case 4:
             // ToDo Wort kann ein kompletter Text sein, das in verschiedene Channels zerlegt wird
             //      Max Länge 20*3=60 Zeichen
         break;
@@ -238,27 +236,36 @@ uint32_t packData(uint8_t mychannel, char* wort4) {
 }
 
 char* unpackData(uint32_t data, char* buf) {
-    uint8_t channel = getChannel(data);
-    switch ( channel ) {
-        case 1 ... 40:
-        case 101 ... 105:  
+    uint8_t dataTyp = getDataTyp( getChannel(data) );
+    switch ( dataTyp ) {
+        case 0:
+            sprintf(buf,"%d",0);
+        break;            
+        case 1:  
         {
-            sprintf(buf,"%f",getValue_f(data));
+            float myval = getValue_f(data);
+            if ( myval > 500 ) {
+                sprintf(buf,"%.0f", myval);
+            } else {
+                if ( myval > 9.9 ) {
+                    sprintf(buf,"%.1f", myval);
+                } else {
+                    sprintf(buf,"%.2f", myval);
+                }   
+            }
         }
         break;
-        case 41 ... 50:
-        case 106 ... 110:
+        case 2:
         {
             sprintf(buf,"%d",getValue_i(data));
         }
         break;
-        case 51 ... 60:
-        case 111 ... 125:
+        case 3:
         {
             sprintf(buf,"%u",getValue_ui(data));
         }
         break;
-        case 61 ... 80:
+        case 4:
             // ToDo Wort kann ein kompletter Text sein, das in verschiedene Channels zerlegt wird
             //      Max Länge 20*3=60 Zeichen
         break;

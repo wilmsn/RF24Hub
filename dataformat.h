@@ -34,6 +34,17 @@
  * Bit 14..32   Mantisse (0..100000)
  ***********************************/
 
+/***************************************************
+ * Extrahiert den Datentyp auf Basis des verwendeten 
+ * Channels 
+ * Dabei gilt folgende Zuordnung:
+ * 0 => ungueltiger Wert
+ * 1 => float Value
+ * 2 => integer Value
+ * 3 => unsigned int Value
+ * 4 => Character
+ ***************************************************/
+uint8_t getDataTyp(uint8_t channel);
 
 /***************************************************
  * Extrahiert die Sensornummer aus dem Transportwert

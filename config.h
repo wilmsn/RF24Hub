@@ -3,8 +3,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-//#include <iostream> 
-#include <cstdio>
 #include <string> // for string class 
 #include <string.h>
 #include <ctype.h>
@@ -12,11 +10,9 @@
 #include <time.h>
 #include <unistd.h>
 #include <getopt.h>
-//#include <fstream>
 #include <stdint.h>
 #include "rf24hub_config.h"
 #include "common.h"
-//#include "log.h"
 
 using namespace std; 
 
@@ -60,10 +56,6 @@ string pidFileName;
 string incomingPort;
 // rf24HubTelnetPortSet is true when an incomine telnet port is set by configuration
 bool incomingPortSet;
-// Speed for rf24 Network, can be one of: "RF24_2MBPS", "RF24_250KBPS", "RF24_1MBPS" 
-string rf24Speed;
-// Channel for rf24 Network
-string rf24Channel;
 /**********************************************
  * Database
  **********************************************/
