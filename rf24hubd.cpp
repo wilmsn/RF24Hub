@@ -342,42 +342,44 @@ void init_system(void) {
 void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
     uint8_t channel = getChannel(mydata);
     uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
-    buf = unpackData(mydata, buf);
-    if ( verboselevel & VERBOSEORDER) {
-        printf("%sprocess_sensor: Node: %u Data: %u\n", ts(tsbuf), node_id, mydata);
+    if ( sensor_id > 0 ) { 
+        buf = unpackData(mydata, buf);
+        if ( verboselevel & VERBOSEORDER) {
+            printf("%sprocess_sensor: Node: %u Data: %u\n", ts(tsbuf), node_id, mydata);
+        }
+        switch (channel) {
+            case 1 ... 99: {
+                // Sensor or Actor any type
+                if ( verboselevel & VERBOSECONFIG) {    
+                    printf("%sValue of Node: %u Channel: %u is %s\n", ts(tsbuf), node_id, channel, buf);
+                }
+                sensor.updateLastVal(sensor_id, mydata, mymillis());
+                database.storeSensorValue(sensor_id, buf);
+                do_tn_cmd(node_id, channel, buf);
+            }
+            break; 
+            case 101: {
+                // battery voltage
+                sprintf(buf,"%g", getValue_f(mydata));
+                if ( verboselevel & VERBOSECONFIG) {    
+                    printf("%sVoltage of Node: %u is %sV\n", ts(tsbuf), node_id, buf);
+                }
+                sensor.updateLastVal(sensor_id, mydata, mymillis());
+                node.setVoltage(node_id, getValue_f(mydata));
+                database.storeSensorValue(sensor_id, buf);
+                do_tn_cmd(node_id, channel,buf);
+            }
+            break; 
+            case 102 ... 125: {
+                // Node config register
+                if ( verboselevel & VERBOSECONFIG) {    
+                    printf("%sConfigregister of Node: %u Channel: %u is %s\n", ts(tsbuf), node_id, channel, buf);
+                }
+                database.storeNodeConfig(node_id, channel, buf);
+            }	
+            break; 
+        }
     }
-	switch (channel) {
-		case 1 ... 99: {
-            // Sensor or Actor any type
-            if ( verboselevel & VERBOSECONFIG) {    
-                printf("%sValue of Node: %u Channel: %u is %s\n", ts(tsbuf), node_id, channel, buf);
-            }
-			sensor.updateLastVal(sensor_id, mydata, mymillis());
-            database.storeSensorValue(sensor_id, buf);
-            do_tn_cmd(node_id, channel, buf);
-		}
-		break; 
-		case 101: {
-            // battery voltage
-            sprintf(buf,"%g", getValue_f(mydata));
-            if ( verboselevel & VERBOSECONFIG) {    
-                printf("%sVoltage of Node: %u is %sV\n", ts(tsbuf), node_id, buf);
-            }
-			sensor.updateLastVal(sensor_id, mydata, mymillis());
-            node.setVoltage(node_id, getValue_f(mydata));
-            database.storeSensorValue(sensor_id, buf);
-            do_tn_cmd(node_id, channel,buf);
-		}
-		break; 
-		case 102 ... 125: {
-            // Node config register
-            if ( verboselevel & VERBOSECONFIG) {    
-                printf("%sConfigregister of Node: %u Channel: %u is %s\n", ts(tsbuf), node_id, channel, buf);
-            }
-            database.storeNodeConfig(node_id, channel, buf);
-		}	
-		break; 
-    }	
 	orderbuffer.delByNodeChannel(node_id, channel);
 }	
 

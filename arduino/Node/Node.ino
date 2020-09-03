@@ -20,121 +20,8 @@ On Branch: rpi1_entw @ rpi1  !!!!!
 //#define GAESTEZIMMERTHERMOMETER
 //#define UNOTESTNODE_AO
 //****************************************************
-// Default values => can be oberwritten by node config
-// Kontrast of the display
-#define CONTRAST 65;
-// Brightnes of the display - unused until now
-#define BRIGHTNES 0;
-// Sleeptime in Seconds !! 
-// (valid: 10 ... 32.400)
-#define SLEEPTIME_SEC   120
-// Sleeptime adjust - will be added to sleeptime_sec
-// (valid: -1000 ... 1000)
-#define SLEEPTIME_ADJ   0
-// number of empty loop after sending data
-// (valid: 0...20)
-#define EMPTYLOOPS      0
-// waiting time between 2 transmissions in ms
-// (valid 100 ... 1000)
-#define SENDDELAY       1000
-// Max number of attempts to send for a nomal message!!
-// (valid 1 ... 20)
-#define MAX_SENDCOUNT   10
-// Max number of attempts to send for a stop message!!
-// (valid 1 ... 20)
-#define MAX_STOPCOUNT   3
-// Voltage faktor will be multiplied to the messured value !!!!
-// (valid 0.1 ... 10)
-#define VOLT_FAC        1.0
-// Voltage offset will be added to messured value * volt_fac !!!
-// (valid -10 ... 10)
-#define VOLT_OFF        0
-// Define low voltage level on processor
-// below that level the thermometer will be switched off 
-// until the battery will be reloaded
-#define LOW_VOLT_LEVEL 2
-// In case of low Voltage send every X Seconds
-// 43200 => every 12 hours
-#define LOW_VOLT_SENDINT  43200
-// 5 voltages for the battery (empty ... full)
-#define U0 3.6
-#define U1 3.7
-#define U2 3.8
-#define U3 3.9
-#define U4 4.0
-// DISPLAY Nokia 5110 is 84 * 48 Pixel
-//  012345678901234567890123456789012345678901234567890123456789012345678901234567890123
-// 0                                                                          BBBBBBBBBB     B = Batterie
-// 1                                                                          BBBBBBBBBB
-// 2                                                                          BBBBBBBBBB
-// 3                                                                          BBBBBBBBBB
-// 4                                                                          BBBBBBBBBB
-// 5
-// 6                                                                          AAAAAAAAAA     A = Antenna
-// 7                                                                          AAAAAAAAAA
-// 8                                                                          AAAAAAAAAA
-// 9                                                                          AAAAAAAAAA
-// 0                                                                          AAAAAAAAAA
-// 1                                                                          AAAAAAAAAA
-// 2                                                                          AAAAAAAAAA
-// 3                                                                          AAAAAAAAAA
-// 4                                                                          AAAAAAAAAA
-// 5                                                                          AAAAAAAAAA
-// 6
-// 7                                                                          TTT   HHHH      T = Thermometer
-// 8                                                                          TTT   HHHH 
-// 9                                                                          TTT   HHHH      H = Heatbeat countdown
-// 0                                                                          TTT   HHHH      
-// 1                                                                          TTT   HHHH
-// 2                                                                          TTT   HHHH
-// 3                                                                                HHHH
-// 4                                                                                HHHH
-// 5------------------------------------------------------------------------------------
-// 6|                                        |                                         |
-// 7|                                        |                                         |
-// 8|                                        |                                         |
-// 9|                                        |                                         |
-// 0|        Field 1                         |            Field 2                      |
-// 1|                                        |                                         |
-// 2|                                        |                                         |
-// 3|                                        |                                         |
-// 4|                                        |                                         |
-// 5|                                        |                                         |
-// 6------------------------------------------------------------------------------------
-// 7|                                        |                                         |
-// 8|                                        |                                         |
-// 9|                                        |                                         |
-// 0|                                        |                                         |
-// 1|        Field 3                         |            Field 4                      |
-// 2|                                        |                                         |
-// 3|                                        |                                         |
-// 4|                                        |                                         |
-// 5|                                        |                                         |
-// 6|                                        |                                         |
-// 7------------------------------------------------------------------------------------
-// Define the location of the display symbols
-// set X0 and Y0 of battery symbol ( is 10 * 5 pixel )
-#define BATT_X0 74
-#define BATT_Y0 0
-// set X0 and Y0 of antenna symbol ( is 10 * 10 pixel )
-#define ANT_X0 74
-#define ANT_Y0 6
-// set X0 and Y0 of thermometer symbol ( is 3 * 6 pixel )
-#define THERM_X0 74
-#define THERM_Y0 17
-// set X0 and Y0 of HB countdown symbol ( is 4 * 10 pixel )
-#define HB_X0 80
-#define HB_Y0 17
-// The CE Pin of the Radio module
-#define RADIO_CE_PIN 10
-// The CS Pin of the Radio module
-#define RADIO_CSN_PIN 9
-// The pin of the statusled
-#define STATUSLED 3
-#define STATUSLED_ON HIGH
-#define STATUSLED_OFF LOW
-#define ONE_WIRE_BUS 8
-
+// Default settings are in "default.h" now !!!!!
+#include "defaults.h"
 //*****************************************************
 //    Individual settings
 //-----------------------------------------------------
@@ -171,11 +58,11 @@ On Branch: rpi1_entw @ rpi1  !!!!!
 #define BOSCH_SENSOR
 #define DISPLAY_5110
 //#define MONITOR
-#define EEPROM_VERSION       2
-#define EMPTYLOOPS           1
-#define VOLT_FAC             1
-#define VOLT_OFF             0.55
-#define LOW_VOLT_LEVEL       3.6
+#define EEPROM_VERSION       6
+#define EMPTYLOOPS           0
+//#define VOLT_FAC             1
+//#define VOLT_OFF             0.55
+#define LOW_VOLT_LEVEL       0
 #define SERIAL_DEBUG_SENSOR
 #define SERIAL_DEBUG_TXRX
 #endif
@@ -248,13 +135,16 @@ On Branch: rpi1_entw @ rpi1  !!!!!
 #include <Vcc.h>
 #include <EEPROM.h>
 #include "dataformat.h"
-#include "printf.h"
 #include "version.h"
 #include "rf24_config.h"
 
+#if defined(SERIAL_DEBUG)
+#include "printf.h"
+#endif
+
 #if defined(DISPLAY_5110)
 #define HAS_DISPLAY
-#include <LCD5110_Graph.h>
+#include "LCD5110.h"
 #endif
 
 #if defined(DALLAS_18B20)
@@ -274,9 +164,7 @@ ISR(WDT_vect) { watchdogEvent(); }
 
 #if defined(HAS_DISPLAY)
 #if defined(DISPLAY_5110)
-LCD5110 myGLCD(7,6,5,2,4);
-extern uint8_t SmallFont[];
-extern uint8_t BigNumbers[];
+LCD5110 lcd(N5110_RST,N5110_CE,N5110_DC,N5110_DIN,N5110_CLK);
 #endif
 #endif
 
@@ -314,7 +202,7 @@ struct eeprom_t {
 };
 eeprom_t eeprom;
 
-boolean             display_down = false;
+boolean             display_on = true;
 boolean             low_voltage_flag = false;
 boolean             exec_pingTest = false;
 boolean             exec_RegTrans = false;
@@ -336,12 +224,37 @@ float               field1_val, field2_val, field3_val, field4_val;
 // Usage: radio(CE_pin, CS_pin)
 RF24 radio(RADIO_CE_PIN,RADIO_CSN_PIN);
 
+void get_voltage(void) {
+  cur_voltage = vcc.Read_Volts()*eeprom.volt_fac+eeprom.volt_off;
+  low_voltage_flag = (eeprom.low_volt_level > 1.5) && (cur_voltage <= eeprom.low_volt_level);
+#if defined(SERIAL_DEBUG_SENSOR)
+   Serial.print("Volt (gemessen): ");
+   Serial.println(vcc.Read_Volts());
+   Serial.print("Volt Faktor: ");
+   Serial.println(eeprom.volt_fac);
+   Serial.print("Volt Offset: ");
+   Serial.println(eeprom.volt_off);
+   Serial.print("Volt: ");
+   Serial.println(cur_voltage);
+   Serial.print("Low Voltage Flag: ");
+   if ( low_voltage_flag ) {       
+     Serial.println("set");
+   } else {
+     Serial.println("not set");
+   }
+#endif  
+}
+
 void get_sensordata(void) {
 #if defined(DALLAS_18B20)
   sensor.requestTemperatures(); // Send the command to get temperatures
   sleep4ms(800);
   delay(10);
   temp=sensor.getTempCByIndex(0);
+#if defined(SERIAL_DEBUG_SENSOR)
+    Serial.print("Temp: ");
+    Serial.print(temp);
+#endif
 #endif
 #if defined(BOSCH_SENSOR)
 #if defined(SERIAL_DEBUG_SENSOR)
@@ -350,9 +263,27 @@ void get_sensordata(void) {
   if (sensor.isBME280()) Serial.println("BME280"); 
 #endif
   sensor.startSingleMeasure();
-  if (sensor.hasTemperature() ) temp=sensor.getTemperature();
-  if (sensor.hasPressure() ) pres=sensor.getPressureAtSealevel(95.0);
-  if (sensor.hasHumidity() ) humi=sensor.getHumidity();
+  if (sensor.hasTemperature() ) {
+    temp = sensor.getTemperature();
+#if defined(SERIAL_DEBUG_SENSOR)
+    Serial.print("Temp: ");
+    Serial.println(temp);
+#endif
+  }
+  if (sensor.hasPressure() ) {
+    pres = sensor.getPressureAtSealevel(95.0);
+#if defined(SERIAL_DEBUG_SENSOR)
+    Serial.print("Pres: ");
+    Serial.println(pres);
+#endif
+  }
+  if (sensor.hasHumidity() )  {
+    humi = sensor.getHumidity();
+#if defined(SERIAL_DEBUG_SENSOR)
+    Serial.print("Humi: ");
+    Serial.println(humi);
+#endif
+  }
 #endif
 }
 
@@ -412,7 +343,7 @@ uint32_t action_loop(uint32_t data) {
         uint8_t brightnes = (val>>8);
         if (contrast > 0 && contrast < 101) {
 #if defined(DISPLAY_5110)
-          myGLCD.setContrast(eeprom.contrast);
+          lcd.setContrast(eeprom.contrast);
 #endif
           eeprom.contrast = contrast;
           EEPROM.put(0, eeprom);
@@ -582,10 +513,12 @@ void setup(void) {
   digitalWrite(STATUSLED,STATUSLED_OFF); 
 #if defined(HAS_DISPLAY)
 #if defined(DISPLAY_5110)
-  myGLCD.InitLCD();
-  myGLCD.setContrast(eeprom.contrast);
-  myGLCD.clrScr();
-  myGLCD.update();
+  lcd.begin();
+  lcd.setContrast(eeprom.contrast);
+//  print_field(15.3,1);
+//  print_field(1024.89,2);
+//  print_field(58.37,3);
+//  print_field(4.5678,4);
 #endif
 #endif
 #if defined(HAS_DISPLAY)
@@ -614,70 +547,75 @@ void monitor(uint32_t delaytime) {
   const char string_7[] PROGMEM = "Channel: ";
   const char string_8[] PROGMEM = "Kontrast: ";
 #if defined(DISPLAY_5110)
-  myGLCD.setFont(SmallFont);
-  myGLCD.print(string_0, 10, 5);
-  myGLCD.printNumI(SWVERSION, 35, 30);
-  myGLCD.update();
+  lcd.setFont(LCD5110::small);
+  lcd.clear();
+  lcd.println();
+  lcd.println(string_0);
+  lcd.println();
+  lcd.print("    ");
+  lcd.print(SWVERSION);
+  lcd.draw();
   sleep4ms(delaytime);
   delay(10);
-  myGLCD.clrScr();
+  lcd.clear();
   get_sensordata();
-  myGLCD.print(string_1, 0, 0);
-  myGLCD.printNumF(temp,1, 30, 0);
-  cur_voltage = vcc.Read_Volts()*eeprom.volt_fac+eeprom.volt_off;
-  float mes_voltage = vcc.Read_Volts();
-  myGLCD.print(string_2, 0, 10);
-  myGLCD.printNumF(cur_voltage,1, 40, 10);
-  myGLCD.printNumF(mes_voltage,1, 65, 10);
-  myGLCD.print(string_3, 0, 20);
-  myGLCD.printNumI(eeprom.sleeptime_sec, 45, 20);
-  myGLCD.print("/", 60, 20);
-  myGLCD.printNumI(eeprom.emptyloops, 70, 20);
-  myGLCD.print(string_4, 0, 30);
-  myGLCD.printNumI(eeprom.senddelay, 0, 40);
-  myGLCD.print("/", 20, 40);
-  myGLCD.printNumI(eeprom.max_sendcount, 30, 40);
-  myGLCD.print("/", 60, 40);
-  myGLCD.printNumI(eeprom.max_stopcount, 70, 40);
-  myGLCD.update();
+  lcd.print(string_1);
+  lcd.println(temp,1);
+  get_voltage();
+  lcd.print(string_2);
+  lcd.print(cur_voltage,1);
+  lcd.print("/");
+  lcd.println(vcc.Read_Volts(),1);
+  lcd.print(string_3);
+  lcd.print(eeprom.sleeptime_sec);
+  lcd.print("/");
+  lcd.println(eeprom.emptyloops);
+  lcd.print(string_4);
+  lcd.print(eeprom.senddelay);
+  lcd.print("/");
+  lcd.print(eeprom.max_sendcount);
+  lcd.print("/");
+  lcd.print(eeprom.max_stopcount);
+  lcd.draw();
   sleep4ms(delaytime);
   delay(10);
-  myGLCD.clrScr();
-  myGLCD.print(string_5, 0, 0);
-  myGLCD.print(string_6, 0, 10);
-  myGLCD.printNumI(RF24NODE, 55, 10);
-  myGLCD.print(string_7, 0, 20);
-  myGLCD.printNumI(RF24_CHANNEL, 60, 20);
-  myGLCD.update();
+  lcd.clear();
+  lcd.println(string_5);
+  lcd.print(string_6);
+  lcd.println(RF24NODE);
+  lcd.print(string_7);
+  lcd.print(RF24_CHANNEL);
+  lcd.draw();
   sleep4ms(delaytime);
-  myGLCD.clrScr();
-  myGLCD.print(string_8, 0, 0);
-  myGLCD.printNumI(eeprom.contrast, 55, 0);
-  myGLCD.setFont(BigNumbers);
+  lcd.clear();
+  lcd.print(string_8);
+  lcd.print(eeprom.contrast);
+  lcd.setFont(LCD5110::big);
   for (int i=0; i<100; i+=5) {
-    myGLCD.printNumI(i, 20, 20);        
-    myGLCD.setContrast(i);
-    myGLCD.update();
+    lcd.setCursor(25,20);
+    lcd.print(i);        
+    lcd.setContrast(i);
+    lcd.draw();
     delay(300);
   }
   sleep4ms(5000);
-  myGLCD.setContrast(eeprom.contrast);
+  lcd.setContrast(eeprom.contrast);
   delay(10);
-  myGLCD.clrScr();
+  lcd.clear();
 #endif  
 #endif
 }
 
 void display_sleep(boolean dmode) {
-  display_down = dmode;
+  display_on != dmode;
   if ( dmode ) { // Display go to sleep
 #if defined(DISPLAY_5110)
-    myGLCD.enableSleep(); 
+    lcd.off(); 
 #endif
   } else {
     if ( ! low_voltage_flag ) {  
 #if defined(DISPLAY_5110)
-      myGLCD.disableSleep(); 
+      lcd.on(); 
 #endif
         get_sensordata();
         draw_temp(temp);
@@ -689,213 +627,180 @@ void display_sleep(boolean dmode) {
   }  
 }
 
-void draw_therm(byte x, byte y) {
-  if ( ! display_down ) {
-#if defined(DISPLAY_5110)
-    myGLCD.drawRect(x+1,y,x+1,y+3);
-    myGLCD.drawRect(x,y+4,x+2,y+5);
-    myGLCD.update();
-#endif
-  }
-}
-
 void draw_hb_countdown(uint8_t watermark) {
-  uint8_t i = HB_X0;
-  uint8_t j = HB_Y0 + 7;
-  if ( ! display_down ) {
+//  uint8_t i = HB_X0;
+//  uint8_t j = HB_Y0 + 7;
+  if ( display_on ) {
     if ( watermark > 8 ) watermark = 8;
 #if defined(DISPLAY_5110)
-    for (uint8_t y=j; y>=HB_Y0; y--) {
-      for (byte x=i; x<i+4; x++) { 
-        myGLCD.clrPixel(x,y);
-      }
-    }
-    for (uint8_t y=j; y>j-watermark; y--) {
-      for (byte x=i; x<i+4; x++) { 
-        myGLCD.setPixel(x,y);
-      }
-    }
-    myGLCD.update();
+    lcd.drawRect(HB_X0,HB_Y0,4,7,false,true,false);
+// TBD.
+    lcd.drawRect(HB_X0, HB_Y0 + 7, 4, 8-watermark, true, true, true);
+//    for (uint8_t y=j; y>j-watermark; y--) {
+//      for (byte x=i; x<i+4; x++) { 
+//        lcd.setPixel(x,y);
+//      }
+//    }
+    lcd.draw();
 #endif
   }
 }
 
-void wipe_therm(byte x, byte y) {
-  if ( ! display_down ) {
-    for (byte i=x; i<x+3; i++) {
-      for (byte j=y; j<y+6; j++) {
+void wipe_therm(uint8_t x, uint8_t y) {
+  if ( display_on ) {
 #if defined(DISPLAY_5110)
-        myGLCD.clrPixel(i,j);
-        myGLCD.update();
+    lcd.drawRect(x,y,3,7,false,true,false);
+    lcd.draw();
 #endif
-      }
-    }
+  }
+}
+
+void draw_therm(uint8_t x, uint8_t y) {
+// Ein Thermometersymbol 4*8 Pixel   
+  if ( display_on ) {
+#if defined(DISPLAY_5110)
+    lcd.drawRect(x+1,y,1,3);
+    lcd.drawRect(x,y+4,3,2);
+    lcd.draw();
+#endif
   }
 }
 
 void draw_temp(float t) {
-  int temp_abs, temp_i, temp_dez_i; 
-  if ( ! display_down ) {
+  if ( display_on ) {
 #if defined(DISPLAY_5110)
-    if (t < 0.0) {
-      temp_abs=t*-1;
-      myGLCD.drawRect(0,10,9,12);
-    } else {
-      temp_abs=t;
-    }      
-    temp_i=(int)temp_abs;
-    temp_dez_i=t*10-temp_i*10;
-    for(byte i=0; i<74; i++) {
-      for (byte j=0; j<25; j++) {
-        myGLCD.clrPixel(i,j);
-      }
+    lcd.drawRect(0,0,72, 24,false,true,false);
+    lcd.setFont(LCD5110::big);
+    lcd.setCursor(0,0);
+    if (t > -0.01) {
+      lcd.print(" ");
     }
-    if (temp_i < 100) {
-      myGLCD.setFont(BigNumbers);
-      if ( temp_i < 10 ) {
-        myGLCD.printNumI(temp_i, 20, 0);        
-      } else {
-        myGLCD.printNumI(temp_i, 10, 0);
-      }
-      myGLCD.drawRect(40,20,43,23);
-      myGLCD.printNumI(temp_dez_i, 45, 0);
-      myGLCD.drawRect(61,2,64,5);
-    } else {
-      myGLCD.drawRect(15,10,24,12);
-      myGLCD.drawRect(30,10,39,12);
-      myGLCD.drawRect(45,10,54,12);
+    if (t < 10) {
+      lcd.print(" ");
     }
-    myGLCD.update();
+    lcd.print(t,1);
+    lcd.print("*");
+    lcd.draw();
 #endif
   }
 }
 
 void print_field(float val, int field) {
-  int x0, y0;
-  if ( ! display_down ) {
+  uint8_t x0, y0, x1, y1;
+  x1=41;
+  y1=10;
+  if ( display_on ) {
 #if defined(DISPLAY_5110)
     switch (field) {
-      case 1: x0=0; y0=25; break;
-      case 2: x0=42; y0=25; break;
-      case 3: x0=0; y0=36; break;
-      case 4: x0=42; y0=36; break;
+      case 1: x0=0; y0=27;  break;
+      case 2: x0=42; y0=27; break;
+      case 3: x0=0; y0=37;  break;
+      case 4: x0=42; y0=37; break;
     }
-    for (int i=x0; i < x0+42; i++) {
-      for (int j=y0; j< y0+12; j++) {
-        myGLCD.clrPixel(i,j);
-      }
-    }
-    myGLCD.drawRect(x0,y0,x0+41,y0+11);
-    myGLCD.setFont(SmallFont);
+    //lcd.clrRect(x0,y0,x1,y1);
+    lcd.drawRect(x0,y0,x1,y1,true,true,false);
+    lcd.setFont(LCD5110::small);
+    lcd.setCursor(x0+7,y0+2);
     if ( val > 100 ) {
       if (val+0.5 > 1000) { 
-       myGLCD.printNumI(val, x0+9, y0+3);
+       lcd.print(val,0);
       } else {
-       myGLCD.printNumI(val, x0+12, y0+3);
+       lcd.print(" "); 
+       lcd.print(val,0);
       }    
     } else {
       if (val >= 10) {
-        myGLCD.printNumF(val,1, x0+9, y0+3);
+        lcd.print(val,1);
       } else {
-        myGLCD.printNumF(val,2, x0+9, y0+3);
+        lcd.print(val,2);
       }      
     }
-    myGLCD.update();
+    lcd.draw();
 #endif
   }
 }
 
-void draw_battery_filled(int x, int y) {
-#if defined(DISPLAY_5110)
-  myGLCD.setPixel(x,y); 
-  myGLCD.setPixel(x,y+1); 
-  myGLCD.setPixel(x,y+2); 
-  myGLCD.setPixel(x+1,y); 
-  myGLCD.setPixel(x+1,y+1); 
-  myGLCD.setPixel(x+1,y+2); 
-#endif
-}
-
 void draw_battery(int x, int y, float u) {
-  if ( ! display_down ) {
+  if ( display_on ) {
 #if defined(DISPLAY_5110)
+// Das Batteriesymbol ist 10*5 Pixel
     // Clear the drawing field
-    for (byte i=x; i<=x+9; i++) {
-      for (byte j=y; j<=y+5; j++) {
-        myGLCD.clrPixel(i,j);
-      }
-    }
+    //lcd.clrRect(x,y,9,5);
     // Drawing a symbol of an battery
     // Size: 10x5 pixel
     // at position x and y
-    myGLCD.drawRect(x+2,y,x+9,y+4);
-    myGLCD.drawRect(x,y+1,x+1,y+3);
-    if ( u > U1 ) draw_battery_filled(x+8,y+1); else myGLCD.drawLine(x+3,y,x+7,y+4);
-    if ( u > U2 ) draw_battery_filled(x+6,y+1);
-    if ( u > U3 ) draw_battery_filled(x+4,y+1);
-    if ( u > U4 ) draw_battery_filled(x+2,y+1);
-    myGLCD.update();
+    lcd.drawRect(x+2,y,7,4,true,true,false);
+    lcd.drawRect(x,y+1,1,2,true,true,false);
+    if ( u > U1 ) {
+      lcd.drawRect(x+8,y+1,1,2,true,true,true); 
+    } else {
+      lcd.setPixel(x+3,y);
+      lcd.setPixel(x+4,y+1);
+      lcd.setPixel(x+5,y+2);
+      lcd.setPixel(x+6,y+3);
+      lcd.setPixel(x+7,y+4);
+    }
+    if ( u > U2 ) lcd.drawRect(x+6,y+1,1,2,true,true,true);
+    if ( u > U3 ) lcd.drawRect(x+4,y+1,1,2,true,true,true);
+    if ( u > U4 ) lcd.drawRect(x+2,y+1,1,2,true,true,true);
+    lcd.draw();
 #endif
   }
 }
 
 void draw_antenna(int x, int y) {
-  if ( ! display_down ) {
+  if ( display_on ) {
 #if defined(DISPLAY_5110)
     // Drawing a symbol of an antenna
     // Size: 10x10 pixel
     // at position x and y
-    myGLCD.setPixel(x+7,y+0);
-    myGLCD.setPixel(x+1,y+1);
-    myGLCD.setPixel(x+8,y+1);
-    myGLCD.setPixel(x+0,y+2);
-    myGLCD.setPixel(x+3,y+2);
-    myGLCD.setPixel(x+6,y+2);
-    myGLCD.setPixel(x+9,y+2);
-    myGLCD.setPixel(x+0,y+3);
-    myGLCD.setPixel(x+2,y+3);
-    myGLCD.setPixel(x+7,y+3);
-    myGLCD.setPixel(x+9,y+3);
-    myGLCD.setPixel(x+0,y+4);
-    myGLCD.setPixel(x+2,y+4);
-    myGLCD.setPixel(x+4,y+4);
-    myGLCD.setPixel(x+5,y+4);
-    myGLCD.setPixel(x+7,y+4);
-    myGLCD.setPixel(x+9,y+4);
-    myGLCD.setPixel(x+0,y+5);
-    myGLCD.setPixel(x+2,y+5);
-    myGLCD.setPixel(x+4,y+5);
-    myGLCD.setPixel(x+5,y+5);
-    myGLCD.setPixel(x+7,y+5);
-    myGLCD.setPixel(x+9,y+5);
-    myGLCD.setPixel(x+0,y+6);
-    myGLCD.setPixel(x+3,y+6);
-    myGLCD.setPixel(x+4,y+6);
-    myGLCD.setPixel(x+5,y+6);
-    myGLCD.setPixel(x+6,y+6);
-    myGLCD.setPixel(x+9,y+6);
-    myGLCD.setPixel(x+1,y+7);
-    myGLCD.setPixel(x+4,y+7);
-    myGLCD.setPixel(x+5,y+7);
-    myGLCD.setPixel(x+8,y+7);
-    myGLCD.setPixel(x+4,y+8);
-    myGLCD.setPixel(x+5,y+8);
-    myGLCD.setPixel(x+4,y+9);
-    myGLCD.setPixel(x+5,y+9);
-    myGLCD.update();
+    lcd.setPixel(x+7,y+0);
+    lcd.setPixel(x+1,y+1);
+    lcd.setPixel(x+8,y+1);
+    lcd.setPixel(x+0,y+2);
+    lcd.setPixel(x+3,y+2);
+    lcd.setPixel(x+6,y+2);
+    lcd.setPixel(x+9,y+2);
+    lcd.setPixel(x+0,y+3);
+    lcd.setPixel(x+2,y+3);
+    lcd.setPixel(x+7,y+3);
+    lcd.setPixel(x+9,y+3);
+    lcd.setPixel(x+0,y+4);
+    lcd.setPixel(x+2,y+4);
+    lcd.setPixel(x+4,y+4);
+    lcd.setPixel(x+5,y+4);
+    lcd.setPixel(x+7,y+4);
+    lcd.setPixel(x+9,y+4);
+    lcd.setPixel(x+0,y+5);
+    lcd.setPixel(x+2,y+5);
+    lcd.setPixel(x+4,y+5);
+    lcd.setPixel(x+5,y+5);
+    lcd.setPixel(x+7,y+5);
+    lcd.setPixel(x+9,y+5);
+    lcd.setPixel(x+0,y+6);
+    lcd.setPixel(x+3,y+6);
+    lcd.setPixel(x+4,y+6);
+    lcd.setPixel(x+5,y+6);
+    lcd.setPixel(x+6,y+6);
+    lcd.setPixel(x+9,y+6);
+    lcd.setPixel(x+1,y+7);
+    lcd.setPixel(x+4,y+7);
+    lcd.setPixel(x+5,y+7);
+    lcd.setPixel(x+8,y+7);
+    lcd.setPixel(x+4,y+8);
+    lcd.setPixel(x+5,y+8);
+    lcd.setPixel(x+4,y+9);
+    lcd.setPixel(x+5,y+9);
+    lcd.draw();
 #endif
   }
 }   
  
 void wipe_antenna(int x, int y) {
-  if ( ! display_down ) {
+  if ( display_on ) {
 #if defined(DISPLAY_5110)
-    for (int i=x; i<x+10; i++) {
-      for (int j=y; j<y+10; j++) {
-        myGLCD.clrPixel(i,j);
-      }
-    }
-    myGLCD.update();
+    lcd.drawRect(x,y,9,9,false,true,false);
+    lcd.draw();
 #endif
   }
 }  
@@ -1016,10 +921,10 @@ bool send_data(uint8_t maxSendLoopCount) {
   while ( s_payload.msg_id <= maxSendLoopCount ) {
     radio.stopListening();
 #if defined(SERIAL_DEBUG_TXRX)
-    Serial.print("TX => I:");
-    Serial.print(s_payload.msg_id);
-    Serial.print(" T:");
+    Serial.print("TX => T:");
     Serial.print(s_payload.msg_type);
+    Serial.print(" m:");
+    Serial.print(s_payload.msg_id);
     Serial.print(" O:");
     Serial.print(s_payload.orderno);
     Serial.print(" ");
@@ -1051,10 +956,10 @@ bool receive_data(void) {
         radio.read(&r_payload, sizeof(r_payload));
         if (r_payload.node_id == RF24NODE ) {
 #if defined(SERIAL_DEBUG_TXRX)
-          Serial.print("RX I:");
+          Serial.print("RX T:");
+          Serial.print(r_payload.msg_type);
+          Serial.print(" m:");
           Serial.print(r_payload.msg_id);
-          Serial.print(" T:");
-          Serial.println(r_payload.msg_type);
           Serial.print(" O:");
           Serial.println(r_payload.orderno);
 #endif    
@@ -1100,9 +1005,8 @@ void exec_jobs(void) {
 
 void loop(void) {
   delay(10);  
-  cur_voltage = vcc.Read_Volts()*eeprom.volt_fac+eeprom.volt_off;
-  low_voltage_flag = (cur_voltage <= eeprom.low_volt_level);
   payloadInitData();
+  get_voltage();
 #if defined(HBNODE)  
 #if defined(HAS_DISPLAY)
     if (low_voltage_flag) display_sleep(true);
@@ -1141,14 +1045,6 @@ void loop(void) {
           delay(100);
           Serial.println("WakeUp");
 #endif
-#if defined(SERIAL_DEBUG_SENSOR)
-          Serial.print("Volt: ");
-          Serial.println(cur_voltage);
-          Serial.print("Temp: ");
-          Serial.println(temp);
-          Serial.print("Pres: ");
-          Serial.println(pres);
-#endif  
       payload_data(1, 101, cur_voltage);
 #if defined(DALLAS_18B20)
       payload_data(2, 1, temp);
