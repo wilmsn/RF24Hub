@@ -245,12 +245,12 @@ char* unpackData(uint32_t data, char* buf) {
         {
             float myval = getValue_f(data);
             if ( myval > 500 ) {
-                sprintf(buf,"%.0f", myval);
+                sprintf(buf,"%.1f", myval);
             } else {
                 if ( myval > 9.9 ) {
-                    sprintf(buf,"%.1f", myval);
-                } else {
                     sprintf(buf,"%.2f", myval);
+                } else {
+                    sprintf(buf,"%.3f", myval);
                 }   
             }
         }

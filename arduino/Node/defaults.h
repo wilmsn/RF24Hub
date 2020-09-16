@@ -19,7 +19,7 @@
 #define EMPTYLOOPS      0
 // waiting time between 2 transmissions in ms
 // (valid 100 ... 1000)
-#define SENDDELAY       1000
+#define SENDDELAY       200
 // Max number of attempts to send for a nomal message!!
 // (valid 1 ... 20)
 #define MAX_SENDCOUNT   10

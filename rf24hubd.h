@@ -113,8 +113,13 @@ struct TnMsg_t {
         struct TnData_t TnData;
 };
 
-struct thread_data {
+struct thread_tn_data {
    int tnsocket;
+};
+
+struct thread_db_data {
+   uint32_t     sensor_id;
+   char         buf[20];
 };
 
 Order           order;

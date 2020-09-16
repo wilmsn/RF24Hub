@@ -1,2 +1,2 @@
-#define SWVERSION   164
-#define SWDATUM     "17.08.2020"
+#define SWVERSION   170
+#define SWDATUM     "07.09.2020"

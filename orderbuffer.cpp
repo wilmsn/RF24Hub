@@ -169,18 +169,18 @@ void OrderBuffer::printBuffer(int out_socket, bool htmlFormat) {
     }        
     write(out_socket , client_message , strlen(client_message));
     while (p_search) {
-        switch (getDataTyp(p_search->channel)) {
+/*        switch (getDataTyp(p_search->channel)) {
             case 1:
-            {
+            { */
                 if ( htmlFormat ) {
-                    sprintf(client_message,"<tr><td>%u</td><td>%u</td><td>%g</td><td>%s</td></tr>\n", 
-                        p_search->node_id, p_search->channel, getValue_f(p_search->data), utime2str(p_search->utime, buf, 1) );
+                    sprintf(client_message,"<tr><td>%u</td><td>%u</td><td>%s</td><td>%s</td></tr>\n", 
+                        p_search->node_id, p_search->channel, unpackData(p_search->data, buf), utime2str(p_search->utime, buf, 1) );
                 } else {
                     if (writeTS) sprintf(client_message,"%s",ts(tsbuf));
                     sprintf(client_message,"Node:%u Channel:%u Value:%g Entry:%s\n", 
-                    p_search->node_id, p_search->channel, getValue_f(p_search->data), utime2str(p_search->utime, buf, 1) );
+                    p_search->node_id, p_search->channel, unpackData(p_search->data, buf), utime2str(p_search->utime, buf, 1) );
                 }
-            }
+/*            }
             break;
             case 2:
             {
@@ -210,7 +210,7 @@ void OrderBuffer::printBuffer(int out_socket, bool htmlFormat) {
             {
                 //ToDo
             }
-        }            
+        } */            
         write(out_socket , client_message , strlen(client_message));
         p_search=p_search->p_next;
     }

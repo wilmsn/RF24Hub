@@ -12,6 +12,21 @@ void Database::db_check_error(void) {
     }
 }
 
+void Database::sync_config(void) {
+    sprintf (sql_stmt, "insert into node_configdata_history(node_id, channel, value, utime) select node_id, channel, value, utime from node_configdata_history_im where (node_id, channel, value, utime) not in ( select node_id, channel, value, utime from  node_configdata_history )");
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+    sprintf (sql_stmt, "delete from node_configdata where (node_id, channel, value) in ( select node_id, channel, value from  node_configdata_im)");
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+    sprintf (sql_stmt, "insert into node_configdata(node_id, channel, value, utime) select node_id, channel, value, utime from node_configdata_im");
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+}
+
 void Database::sync_sensor(void) {
 	sprintf (sql_stmt, "update sensor a set value = ( select value from sensor_im where sensor_id = a.sensor_id ), utime = ( select utime from sensor_im where sensor_id = a.sensor_id )");
     debugPrintSQL(sql_stmt);
@@ -42,11 +57,10 @@ void Database::sync_sensordata_d(void) {
 }
 
 void Database::initSystem(void) {
-    // Falls das letzte Programmende ein Chrash war soll die Tabelle "sensordata_im" gesichert werden!
-	sprintf (sql_stmt, "insert into sensordata(sensor_id, utime, value) select sensor_id, utime, value from sensordata_im where (sensor_id,utime) not in (select sensor_id, utime from sensordata)");
-    debugPrintSQL(sql_stmt);
-	mysql_query(db, sql_stmt);
-	db_check_error();
+    // Falls das letzte Programmende ein Chrash war sollen einige "*_im" Tabellen gesichert werden!
+    sync_config();
+    sync_sensordata();
+    sync_sensor();
 	sprintf (sql_stmt, "truncate table sensor_im");
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
@@ -150,11 +164,13 @@ void Database::storeNodeConfig(NODE_DATTYPE node_id, uint8_t channel, char* valu
         sprintf(sql_stmt,"update node set pa_level = %s, pa_utime = UNIX_TIMESTAMP() where node_id = %u ", value, node_id);
         do_sql(sql_stmt);
     }
-    sprintf(sql_stmt,"delete from node_configdata_history where node_id = %u and channel = %u and utime > UNIX_TIMESTAMP() - 100 ", node_id, channel);
+    //sprintf(sql_stmt,"delete from node_configdata_history where node_id = %u and channel = %u and utime > UNIX_TIMESTAMP() - 100 ", node_id, channel);
+    //do_sql(sql_stmt);
+    sprintf(sql_stmt,"insert into node_configdata_history_im (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %s ) ", node_id, channel, value);
     do_sql(sql_stmt);
-    sprintf(sql_stmt,"insert into node_configdata_history (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %s ) ", node_id, channel, value);
+    sprintf(sql_stmt,"delete from node_configdata_im where node_id = %u and channel = %u ", node_id, channel, value);
     do_sql(sql_stmt);
-    sprintf(sql_stmt,"replace into node_configdata (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %s ) ", node_id, channel, value);
+    sprintf(sql_stmt,"insert into node_configdata_im (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %s ) ", node_id, channel, value);
     do_sql(sql_stmt);
 }
 

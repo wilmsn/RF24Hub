@@ -74,9 +74,14 @@ bool isNewHB(NODE_DATTYPE node_id, uint64_t mymillis);
 bool isHBNode(NODE_DATTYPE node_id);
 /*************************************************************
  * Setzt den letzten ermittelten PA Level für diesen Node
- * PA Level 0=Min; 1=Low; 2=High; 3=Max; 9=unknown
+ * PA Level 0=unknown; 1=Min; 2=Low; 3=High; 4=Max
  ************************************************************/
 void setPaLevel(NODE_DATTYPE node_id, uint8_t pa_level);
+/*************************************************************
+ * Liest den letzten ermittelten PA Level für diesen Node aus
+ * PA Level 0=unknown; 1=Min; 2=Low; 3=High; 4=Max
+ ************************************************************/
+uint8_t getPaLevel(NODE_DATTYPE node_id);
 /*************************************************************
  * Setzt die letzte gemessene Spannung des Nodes
  ************************************************************/

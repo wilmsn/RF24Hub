@@ -8,7 +8,7 @@
  **********************************/
 
 #define RF24_CHANNEL        92
-#define RF24_SPEED          RF24_1MBPS
+#define RF24_SPEED          RF24_250KBPS
 #define RF24_HUB2NODE       { 0xf0, 0xcc, 0xfc, 0xcc, 0xcc}
 #define RF24_NODE2HUB       { 0x33, 0xcc, 0xfc, 0xcc, 0xcc}
 #define NODE_DATTYPE        uint8_t
@@ -64,10 +64,6 @@
 // Datenformat: Alle 6 data Felder sind leer (0)
 // Ursprung: Hub; Empfänger: Node
 #define PAYLOAD_TYPE_HB_RESP      52
-// Nachricht ist eine Quittung für die Quittung auf ein Heatbeat,
-// Datenformat: Alle 6 data Felder sind leer (0)
-// Ursprung: Node; Empfänger: Hub
-#define PAYLOAD_TYPE_HB_STOP      53
 
 // Daten Nachricht
 // Datenformat: komprimiert Channel und float
@@ -102,6 +98,9 @@
 // Nachricht ist ein Ping.
 // Sendeleistung ist Max ( 0 dBm)
 #define PAYLOAD_TYPE_PING_POW_MAX 104
+// Nachricht ist ein Ping.
+// Ende des Tests Sendeleistung ist Max ( 0 dBm)
+#define PAYLOAD_TYPE_PING_END 105
 
 
 // Structure of our payload

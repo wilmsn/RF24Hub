@@ -46,7 +46,7 @@ void do_tn_cmd(NODE_DATTYPE node_id, uint8_t channel, char* value) {
 
 /* Die Thread-Funktion fuer den Empfang von telnet Daten*/
 static void* receive_tn_in (void *arg) {
-    struct thread_data *f = (struct thread_data *)arg;
+    struct thread_tn_data *f = (struct thread_tn_data *)arg;
     char* buffer = alloc_str(verboselevel,"receive_tn_in buffer",TELNETBUFFERSIZE,ts(tsbuf));
     char* client_message = alloc_str(verboselevel,"receive_tn_in client_message",DEBUGSTRINGSIZE,ts(tsbuf));
     ssize_t MsgLen;
@@ -80,11 +80,14 @@ static void* receive_tn_in (void *arg) {
     //write(tnsocket , buffer , strlen(buffer));
     sleep(1);
     close (f->tnsocket);
+    free(f);
     free_str(verboselevel,"receive_tn_in buffer",buffer,ts(tsbuf));
     free_str(verboselevel,"receive_tn_in client_message",client_message,ts(tsbuf));
     pthread_exit((void *)pthread_self());
 }
 	
+/* Die Thread-Funktion fuer den Speicherung der Sensor Daten*/
+
 bool process_tn_in( char* inbuffer, int tn_socket) {
 /* Messages can look like this:
        <word1		word2		word3		word4 				function>
@@ -329,6 +332,7 @@ void exit_system(void) {
     // Save data from sensordata_im and sensor_im to persistant tables
     database.sync_sensordata();
     database.sync_sensor();
+    database.sync_config();
 }
 
 void init_system(void) {
@@ -341,44 +345,45 @@ void init_system(void) {
 
 void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
     uint8_t channel = getChannel(mydata);
-    uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
-    if ( sensor_id > 0 ) { 
-        buf = unpackData(mydata, buf);
-        if ( verboselevel & VERBOSEORDER) {
-            printf("%sprocess_sensor: Node: %u Data: %u\n", ts(tsbuf), node_id, mydata);
-        }
-        switch (channel) {
-            case 1 ... 99: {
+    switch (channel) {
+        case 1 ... 99: {
                 // Sensor or Actor any type
+            uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
+            if ( sensor_id > 0 ) { 
+                buf = unpackData(mydata, buf);
                 if ( verboselevel & VERBOSECONFIG) {    
-                    printf("%sValue of Node: %u Channel: %u is %s\n", ts(tsbuf), node_id, channel, buf);
+                    printf("%sValue of Node: %u Data: %u ==> Channel: %u is %s\n", ts(tsbuf), node_id, mydata, channel, buf);
                 }
                 sensor.updateLastVal(sensor_id, mydata, mymillis());
                 database.storeSensorValue(sensor_id, buf);
                 do_tn_cmd(node_id, channel, buf);
             }
-            break; 
-            case 101: {
+        }
+        break; 
+        case 101: {
                 // battery voltage
-                sprintf(buf,"%g", getValue_f(mydata));
+            uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
+            if ( sensor_id > 0 ) { 
+                buf = unpackData(mydata, buf);
                 if ( verboselevel & VERBOSECONFIG) {    
                     printf("%sVoltage of Node: %u is %sV\n", ts(tsbuf), node_id, buf);
                 }
                 sensor.updateLastVal(sensor_id, mydata, mymillis());
-                node.setVoltage(node_id, getValue_f(mydata));
+                node.setVoltage(node_id, strtof(unpackData(mydata,buf),NULL));
                 database.storeSensorValue(sensor_id, buf);
                 do_tn_cmd(node_id, channel,buf);
             }
-            break; 
-            case 102 ... 125: {
-                // Node config register
-                if ( verboselevel & VERBOSECONFIG) {    
-                    printf("%sConfigregister of Node: %u Channel: %u is %s\n", ts(tsbuf), node_id, channel, buf);
-                }
-                database.storeNodeConfig(node_id, channel, buf);
-            }	
-            break; 
         }
+        break; 
+        case 102 ... 125: {
+                // Node config register
+            buf = unpackData(mydata, buf);
+            if ( verboselevel & VERBOSECONFIG) {    
+                printf("%sConfigregister of Node: %u Channel: %u is %s\n", ts(tsbuf), node_id, channel, buf);
+            }
+            database.storeNodeConfig(node_id, channel, buf);
+        }	
+        break; 
     }
 	orderbuffer.delByNodeChannel(node_id, channel);
 }	
@@ -693,8 +698,8 @@ int main(int argc, char* argv[]) {
             if (new_tn_in_socket > 0) {
                 pthread_t a_thread;
                 int ret;
-                struct thread_data *f;
-                f = (struct thread_data *)malloc(sizeof(struct thread_data));
+                struct thread_tn_data *f;
+                f = (struct thread_tn_data *)malloc(sizeof(struct thread_tn_data));
                 f->tnsocket = new_tn_in_socket;
                 ret = pthread_create(&a_thread, NULL, &receive_tn_in, f);
                 if (ret == 0) {
@@ -756,10 +761,6 @@ int main(int argc, char* argv[]) {
                     }
                 }
                 break;    
-                case PAYLOAD_TYPE_HB_STOP: { // Quittung für einen Heatbeatresponse!!
-                    order.delByOrderNo(payload.orderno);  // Nachricht ist angekommen => löschen
-                }
-                break;
                 case PAYLOAD_TYPE_DATRESP: { // Quittung für eine Nachricht vom Typ PAYLOAD_TYPE_DATNOR !!
                     if ( order.isOrderNo(payload.orderno) ) {
                         process_payload(&payload);
@@ -780,27 +781,27 @@ int main(int argc, char* argv[]) {
                 }
                 break;
                 case PAYLOAD_TYPE_PING_POW_MIN: {
-                    node.setPaLevel(payload.node_id, 0);
-                    sprintf(buf,"%s","0");
-                    database.storeNodeConfig(payload.node_id, REG_PALEVEL, buf);
+                    node.setPaLevel(payload.node_id, 1);
                 }
                 break;
                 case PAYLOAD_TYPE_PING_POW_LOW: {
-                    node.setPaLevel(payload.node_id, 1);
-                    sprintf(buf,"%s","1");
-                    database.storeNodeConfig(payload.node_id, REG_PALEVEL, buf);
+                    node.setPaLevel(payload.node_id, 2);
                 }
                 break;
                 case PAYLOAD_TYPE_PING_POW_HIGH: {
-                    node.setPaLevel(payload.node_id, 2);
-                    sprintf(buf,"%s","2");
-                    database.storeNodeConfig(payload.node_id, REG_PALEVEL, buf);
+                    node.setPaLevel(payload.node_id, 3);
                 }
                 break;
                 case PAYLOAD_TYPE_PING_POW_MAX: {
-                    node.setPaLevel(payload.node_id, 3);
-                    sprintf(buf,"%s","3");
-                    database.storeNodeConfig(payload.node_id, REG_PALEVEL, buf);
+                    node.setPaLevel(payload.node_id, 4);
+                }
+                break;
+                case PAYLOAD_TYPE_PING_END: {
+                    //we use a timeshift to make shure the messures will be recognized as a new heartbeat
+                    if (node.isNewHB(payload.node_id, mymillis()-7000)) {  // Got a new Heaqrtbeat -> process it!
+                        sprintf(buf,"%u",node.getPaLevel(payload.node_id));
+                        database.storeNodeConfig(payload.node_id, REG_PALEVEL, buf);
+                    }
                 }
                 break;
                 default: {	

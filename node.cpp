@@ -40,7 +40,7 @@ void Node::addNode(NODE_DATTYPE node_id, float u_batt, bool is_HB_node, uint8_t 
     p_new->pa_level = PALevel;
     p_new->pa_utime = PAUtime;
     if (verboselevel & VERBOSESENSOR) printf("%sNode.addNode: N:%u U:%f HB:%s PA:%s(%s)\n",ts(tsbuf),node_id, u_batt, is_HB_node? "HeartBeat":"Normal   ",
-                   PALevel==0? "Min ":PALevel==1? "Low ":PALevel==2? "High":PALevel==3? "Max ":"??? ", utime2str(PAUtime, buf, 1));
+                   PALevel==0? "??? ":PALevel==1? "Low ":PALevel==2? "Min ":PALevel==3? "High":"Max ", utime2str(PAUtime, buf, 1));
     newEntry(p_new);
 }
 
@@ -84,6 +84,21 @@ void Node::setPaLevel(NODE_DATTYPE node_id, uint8_t PALevel) {
             p_search=p_search->p_next;
         }
 	}
+}
+
+uint8_t Node::getPaLevel(NODE_DATTYPE node_id) {
+    node_t *p_search;
+    uint8_t retval=0;
+    p_search=p_initial;
+    while (p_search) {
+		if (p_search->node_id == node_id) {
+			retval = p_search->pa_level;
+            p_search = NULL;
+		} else {
+            p_search=p_search->p_next;
+        }
+	}
+	return retval;
 }
 
 void Node::setVoltage(NODE_DATTYPE node_id, float u_batt) {
