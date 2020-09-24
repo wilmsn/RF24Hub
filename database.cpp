@@ -13,18 +13,20 @@ void Database::db_check_error(void) {
 }
 
 void Database::sync_config(void) {
-    sprintf (sql_stmt, "insert into node_configdata_history(node_id, channel, value, utime) select node_id, channel, value, utime from node_configdata_history_im where (node_id, channel, value, utime) not in ( select node_id, channel, value, utime from  node_configdata_history )");
+/*    sprintf (sql_stmt, "insert into node_configdata_history(node_id, channel, value, utime) select node_id, channel, value, utime from node_configdata_history_im where (node_id, channel, value, utime) not in ( select node_id, channel, value, utime from  node_configdata_history )");
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error(); */
+    sprintf (sql_stmt, "delete from node_configdata where (node_id, channel) in ( select node_id, channel from  node_configdata_im)");
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
-    sprintf (sql_stmt, "delete from node_configdata where (node_id, channel, value) in ( select node_id, channel, value from  node_configdata_im)");
-    debugPrintSQL(sql_stmt);
-	mysql_query(db, sql_stmt);
-	db_check_error();
+    mysql_commit(db);
     sprintf (sql_stmt, "insert into node_configdata(node_id, channel, value, utime) select node_id, channel, value, utime from node_configdata_im");
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
+    mysql_commit(db);
 }
 
 void Database::sync_sensor(void) {
@@ -77,7 +79,17 @@ void Database::initSystem(void) {
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
+    sync_config();
+	sprintf (sql_stmt, "truncate table node_configdata_im");
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+    sprintf (sql_stmt, "insert into node_configdata_im(node_id, channel, value, utime) select node_id, channel, value, utime from node_configdata");
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
     sync_sensordata_d();
+    mysql_commit(db);
 }
 
 void Database::initNode(Node* node) {
@@ -166,8 +178,8 @@ void Database::storeNodeConfig(NODE_DATTYPE node_id, uint8_t channel, char* valu
     }
     //sprintf(sql_stmt,"delete from node_configdata_history where node_id = %u and channel = %u and utime > UNIX_TIMESTAMP() - 100 ", node_id, channel);
     //do_sql(sql_stmt);
-    sprintf(sql_stmt,"insert into node_configdata_history_im (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %s ) ", node_id, channel, value);
-    do_sql(sql_stmt);
+    //sprintf(sql_stmt,"insert into node_configdata_history_im (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %s ) ", node_id, channel, value);
+    //do_sql(sql_stmt);
     sprintf(sql_stmt,"delete from node_configdata_im where node_id = %u and channel = %u ", node_id, channel, value);
     do_sql(sql_stmt);
     sprintf(sql_stmt,"insert into node_configdata_im (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %s ) ", node_id, channel, value);

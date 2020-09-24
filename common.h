@@ -14,8 +14,8 @@
 #include "rf24hub_config.h"
 #include "dataformat.h"
 
-static const char default_format1[] = "%d.%m.%Y %H:%M:%S";
-static const char default_format2[] = "%Y.%m.%d %H:%M:%S";
+static const char date_format1[] = "%d.%m.%Y %H:%M:%S";
+static const char date_format2[] = "%Y.%m.%d %H:%M:%S";
 
 /*
  * utime2str: konvertiert den übergebenen

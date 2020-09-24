@@ -23,10 +23,10 @@ char* utime2str(time_t utime, char* buf, uint8_t form) {
     localtime_r(&utime, &lt);
     switch (form) {
         case 1:
-            format = default_format1;
+            format = date_format1;
             break;
         case 2:
-            format = default_format2;
+            format = date_format2;
             break;
     }            
     if (strftime(res, sizeof(res), format, &lt) == 0) {

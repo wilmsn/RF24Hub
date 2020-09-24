@@ -4,6 +4,7 @@ OrderBuffer::OrderBuffer(void) {
     p_initial = NULL;
     verboselevel = 0;
     buf = (char*)malloc(TSBUFFERSIZE);
+    buf1 = (char*)malloc(TSBUFFERSIZE);
     tsbuf = (char*)malloc(TSBUFFERSIZE);
 }
 
@@ -169,48 +170,14 @@ void OrderBuffer::printBuffer(int out_socket, bool htmlFormat) {
     }        
     write(out_socket , client_message , strlen(client_message));
     while (p_search) {
-/*        switch (getDataTyp(p_search->channel)) {
-            case 1:
-            { */
-                if ( htmlFormat ) {
-                    sprintf(client_message,"<tr><td>%u</td><td>%u</td><td>%s</td><td>%s</td></tr>\n", 
-                        p_search->node_id, p_search->channel, unpackData(p_search->data, buf), utime2str(p_search->utime, buf, 1) );
-                } else {
-                    if (writeTS) sprintf(client_message,"%s",ts(tsbuf));
-                    sprintf(client_message,"Node:%u Channel:%u Value:%g Entry:%s\n", 
-                    p_search->node_id, p_search->channel, unpackData(p_search->data, buf), utime2str(p_search->utime, buf, 1) );
-                }
-/*            }
-            break;
-            case 2:
-            {
-                if ( htmlFormat ) {
-                    sprintf(client_message,"<tr><td>%u</td><td>%u</td><td>%d</td><td>%s</td></tr>\n", 
-                        p_search->node_id, p_search->channel, getValue_i(p_search->data), utime2str(p_search->utime, buf, 1) );
-                } else {
-                    if (writeTS) sprintf(client_message,"%s",ts(tsbuf));
-                    sprintf(client_message,"Node:%u Channel:%u Value:%d Entry:%s\n", 
-                    p_search->node_id, p_search->channel, getValue_i(p_search->data), utime2str(p_search->utime, buf, 1) );
-                }
-            }
-            break;
-            case 3:
-            {
-                if ( htmlFormat ) {
-                    sprintf(client_message,"<tr><td>%u</td><td>%u</td><td>%u</td><td>%s</td></tr>\n", 
-                        p_search->node_id, p_search->channel, getValue_ui(p_search->data), utime2str(p_search->utime, buf, 1) );
-                } else {
-                    if (writeTS) sprintf(client_message,"%s",ts(tsbuf));
-                    sprintf(client_message,"Node:%u Channel:%u Value:%u Entry:%s\n", 
-                    p_search->node_id, p_search->channel, getValue_ui(p_search->data), utime2str(p_search->utime, buf, 1) );
-                }
-            }
-            break;
-            case 4:
-            {
-                //ToDo
-            }
-        } */            
+        if ( htmlFormat ) {
+            sprintf(client_message,"<tr><td>%u</td><td>%u</td><td>%s</td><td>%s</td></tr>\n", 
+            p_search->node_id, p_search->channel, unpackData(p_search->data, buf1), utime2str(p_search->utime, buf, 1) );
+        } else {
+            if (writeTS) sprintf(client_message,"%s",ts(tsbuf));
+            sprintf(client_message,"Node:%u Channel:%u Value:%g Entry:%s\n", 
+            p_search->node_id, p_search->channel, unpackData(p_search->data, buf1), utime2str(p_search->utime, buf, 1) );
+        }
         write(out_socket , client_message , strlen(client_message));
         p_search=p_search->p_next;
     }

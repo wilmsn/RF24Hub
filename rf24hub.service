@@ -5,5 +5,5 @@ After=systemd-user-sessions.service mariadb.service
 Type=forking
 ExecStart=/usr/local/bin/rf24hubd -d
 [Install]
-WantedBy=multi-user.target
+WantedBy=appl.target
 

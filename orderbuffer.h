@@ -36,6 +36,7 @@ orderbuffer_t*     p_initial;
  * char buffer zur Ausgabe, generisch 
  *************************************************************/
 char*       buf;
+char*       buf1;
 /**************************************************************
  * char buffer zur Ausgabe des timestrings ==> ts(tsbuf)
  *************************************************************/
