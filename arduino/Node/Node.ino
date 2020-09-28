@@ -15,10 +15,10 @@ On Branch: rpi1_entw @ rpi1  !!!!!
 //****************************************************
 // My definitions for my nodes based on this sketch
 // Select only one at one time !!!!
-//#define AUSSENTHERMOMETER
+#define AUSSENTHERMOMETER
 //#define SCHLAFZIMMERTHERMOMETER
 //#define TESTZIMMERTHERMOMETER
-#define TESTZIMMER1THERMOMETER
+//#define TESTZIMMER1THERMOMETER
 //#define BASTELZIMMERTHERMOMETER
 //#define KUECHETHERMOMETER
 //#define WOHNZIMMERTHERMOMETER
@@ -133,6 +133,7 @@ int                 sleeptime_kor;
 uint32_t            last_send;
 uint8_t             last_orderno = 0;
 uint8_t             msg_id = 0;
+uint8_t             heartbeatno=0;
 boolean             monitormode = false;
 
 //Some Var for restore after sleep of display
@@ -784,15 +785,15 @@ void payload_data(uint8_t pos, uint8_t channel, float value) {
 void pingTest(void) {
   uint8_t PA_Level = radio.getPALevel();
   radio.setPALevel( RF24_PA_MAX) ;
-  do_transmit(3, PAYLOAD_TYPE_PING_POW_MAX, PAYLOAD_FLAG_LASTMESSAGE, 0);
+  do_transmit(3, PAYLOAD_TYPE_PING_POW_MAX, PAYLOAD_FLAG_LASTMESSAGE, 0, 251);
   radio.setPALevel( RF24_PA_HIGH) ;
-  do_transmit(3, PAYLOAD_TYPE_PING_POW_HIGH, PAYLOAD_FLAG_LASTMESSAGE, 0);
+  do_transmit(3, PAYLOAD_TYPE_PING_POW_HIGH, PAYLOAD_FLAG_LASTMESSAGE, 0, 252);
   radio.setPALevel( RF24_PA_LOW) ;
-  do_transmit(3, PAYLOAD_TYPE_PING_POW_LOW, PAYLOAD_FLAG_LASTMESSAGE, 0);
+  do_transmit(3, PAYLOAD_TYPE_PING_POW_LOW, PAYLOAD_FLAG_LASTMESSAGE, 0, 253);
   radio.setPALevel( RF24_PA_MIN) ;
-  do_transmit(3, PAYLOAD_TYPE_PING_POW_MIN, PAYLOAD_FLAG_LASTMESSAGE, 0);
+  do_transmit(3, PAYLOAD_TYPE_PING_POW_MIN, PAYLOAD_FLAG_LASTMESSAGE, 0, 254);
   radio.setPALevel( RF24_PA_MAX) ;
-  do_transmit(3, PAYLOAD_TYPE_PING_END, PAYLOAD_FLAG_LASTMESSAGE, 0);
+  do_transmit(3, PAYLOAD_TYPE_PING_END, PAYLOAD_FLAG_LASTMESSAGE, 0, 255);
   radio.setPALevel( PA_Level ); 
   exec_pingTest = false;
 }
@@ -804,7 +805,7 @@ void send_register(void) {
   s_payload.data4 = calcTransportValue_i(REG_SLEEPTIMEADJ, eeprom.sleeptime_adj);
   s_payload.data5 = calcTransportValue_ui(REG_LOWVOLTINT, eeprom.low_volt_sendint);
   s_payload.data6 = calcTransportValue_ui(REG_SW, SWVERSION);
-  do_transmit(3,PAYLOAD_TYPE_INIT,PAYLOAD_FLAG_EMPTY,0);
+  do_transmit(3,PAYLOAD_TYPE_INIT,PAYLOAD_FLAG_EMPTY,0, 241);
 // Hub needs some time to prcess data !!!  
   delay(1000);
   s_payload.data1 = calcTransportValue_ui(REG_DISPLAY, (eeprom.brightnes<<8 | eeprom.contrast) );
@@ -813,16 +814,23 @@ void send_register(void) {
   s_payload.data4 = calcTransportValue_ui(REG_SENDDELAY, eeprom.senddelay);
   s_payload.data5 = calcTransportValue_ui(REG_SNDCNTN, eeprom.max_sendcount);
   s_payload.data6 = calcTransportValue_ui(REG_SNDCNTS, eeprom.max_stopcount);
-  do_transmit(3,PAYLOAD_TYPE_INIT,PAYLOAD_FLAG_LASTMESSAGE,0);
+  do_transmit(3,PAYLOAD_TYPE_INIT,PAYLOAD_FLAG_LASTMESSAGE,0, 242);
   exec_RegTrans = false;
 }
 
-void prep_data(uint8_t msg_type, uint8_t msg_flags, ONR_DATTYPE orderno) {
+void prep_data(uint8_t msg_type, uint8_t msg_flags, ONR_DATTYPE orderno, uint8_t myheartbeatno) {
   s_payload.node_id = RF24NODE;
   s_payload.msg_id = 0;
   s_payload.msg_type = msg_type;
   s_payload.msg_flags = msg_flags;
   s_payload.orderno = orderno;
+  if (myheartbeatno > 0) {
+    s_payload.heartbeatno = myheartbeatno;
+  } else {
+    heartbeatno++;
+    if ( heartbeatno > 200 ) heartbeatno = 1;
+    s_payload.heartbeatno = heartbeatno;
+  }
 }
 
 void send_data(void) {
@@ -831,14 +839,14 @@ void send_data(void) {
     radio.startListening(); 
 }
 
-void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, ONR_DATTYPE orderno) {
+void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, ONR_DATTYPE orderno, uint8_t myheartbeatno) {
 // ToDo: Verarbeitung des MSG_FLAGS !!!!
     unsigned long start_ts;
     uint8_t tx_loopcount = 0;
     ONR_DATTYPE last_orderno = 0;
     bool doLoop;
     start_ts = millis();
-    prep_data(msg_type, msg_flags, orderno);
+    prep_data(msg_type, msg_flags, orderno, myheartbeatno);
     while ( tx_loopcount < max_tx_loopcount ) {
       s_payload.msg_id++;
       send_data();
@@ -857,7 +865,7 @@ void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, 
                 if (r_payload.data4 > 0) { s_payload.data4 = action_loop(r_payload.data4); } else { s_payload.data4 = 0; }
                 if (r_payload.data5 > 0) { s_payload.data5 = action_loop(r_payload.data5); } else { s_payload.data5 = 0; }
                 if (r_payload.data6 > 0) { s_payload.data6 = action_loop(r_payload.data6); } else { s_payload.data6 = 0; }
-                prep_data(PAYLOAD_TYPE_DATRESP,PAYLOAD_FLAG_LASTMESSAGE,r_payload.orderno);
+                prep_data(PAYLOAD_TYPE_DATRESP,PAYLOAD_FLAG_LASTMESSAGE,r_payload.orderno, 0);
                 tx_loopcount = 0; 
                 if (r_payload.msg_flags & PAYLOAD_FLAG_LASTMESSAGE ) {
                   // Wenn das LASTMESSAGEFLAG gesetzt ist sollte nur noch eine Endmessage kommen
@@ -947,7 +955,7 @@ void loop(void) {
 #endif
       uint8_t msg_flags = PAYLOAD_FLAG_LASTMESSAGE;
       if ( low_voltage_flag ) msg_flags |= PAYLOAD_FLAG_NEEDHELP; 
-      do_transmit(eeprom.max_sendcount, PAYLOAD_TYPE_HB, msg_flags, 0);
+      do_transmit(eeprom.max_sendcount, PAYLOAD_TYPE_HB, msg_flags, 0, 0);
       exec_jobs();
       radio.stopListening();
       radio.powerDown();

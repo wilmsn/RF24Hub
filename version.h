@@ -1,3 +1,3 @@
-#define SWVERSION   171
-#define SWVERSION_STR   "171"
-#define SWDATUM     "20.09.2020"
+#define SWVERSION   172
+#define SWVERSION_STR   "172"
+#define SWDATUM     "04.10.2020"

@@ -44,7 +44,7 @@ void Node::addNode(NODE_DATTYPE node_id, float u_batt, bool is_HB_node, uint8_t 
     newEntry(p_new);
 }
 
-bool Node::isNewHB(NODE_DATTYPE node_id, uint64_t mymillis) {
+bool Node::isNewHB(NODE_DATTYPE node_id, uint8_t heartbeatno, uint64_t mymillis) {
     node_t *p_search;
     bool retval = false;
     p_search = p_initial;
@@ -52,8 +52,9 @@ bool Node::isNewHB(NODE_DATTYPE node_id, uint64_t mymillis) {
         if (p_search->node_id == node_id) {
             if (verboselevel & VERBOSEORDER) 
                 printf("%sNode.is_new_HB: Node:%u last HB %llu msec. ago => ", ts(tsbuf), node_id, mymillis - p_search->HB_ts);
-            if (p_search->HB_ts < mymillis - 5000) retval = true;
-            p_search->HB_ts = mymillis;
+//            if (p_search->HB_ts < mymillis - 5000 ) retval = true;
+            if (p_search->heartbeatno != heartbeatno ) retval = true;
+            p_search->heartbeatno = heartbeatno;
             p_search = NULL;
         } else {
             p_search = p_search->p_next;
