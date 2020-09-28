@@ -120,8 +120,10 @@ typedef struct {   // Our payload can be 32 byte max.
     // Nachrichten, die ihren Ursprung im Node haben ( z.B. Heatbeatmessages ) 
     // erhalten die ORDER_NO "0"    
     ONR_DATTYPE     orderno;         
-    // noch nicht genutzt
-    uint8_t     reserved1;      
+    // Die heartbeatno wird bei jedem neuen Heartbeat hochgezählt
+    // Da es sich um eine 8 Bit Zahl handelt wird der gültige Bereich für normale Heartbeats von 1...200 festgelegt
+    // Der Bereich 201...255 gilt für besondere Nachrichten (z.B. Initialisierung )
+    uint8_t     heartbeatno;      
     // noch nicht genutzt
     uint8_t     reserved2;      
     // noch nicht genutzt

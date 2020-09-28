@@ -23,6 +23,7 @@ struct node_t {
         uint8_t         pa_level;
         uint32_t        pa_utime;
         float			u_batt;	
+        uint8_t         heartbeatno;
         bool            is_HB_node;
         uint64_t        HB_ts;
         node_t*         p_next;
@@ -67,7 +68,7 @@ void addNode(NODE_DATTYPE node_id, float u_batt, bool is_HB_node, uint8_t PALeve
  *  Prüft ob ein Heartbeat neu (>5000ms zum letzten Heartbeat) 
  *  oder alt ist.
  ************************************************************/
-bool isNewHB(NODE_DATTYPE node_id, uint64_t mymillis);
+bool isNewHB(NODE_DATTYPE node_id, uint8_t heartbeatno, uint64_t mymillis);
 /*************************************************************
  *  Prüft ob ein Node ein Heartbeat Node ist oder nicht 
  ************************************************************/

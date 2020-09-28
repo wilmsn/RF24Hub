@@ -543,8 +543,8 @@ void printPayload(uint16_t loglevel, const char* msg_header, const char* result,
         vbuf4=unpackData(mypayload->data4, vbuf4);
         vbuf5=unpackData(mypayload->data5, vbuf5);
         vbuf6=unpackData(mypayload->data6, vbuf6);
-        printf("%s%s: N:%u T:%u m:%u F:0x%02X O:%u (%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)%s\n",
-               ts(tsbuf), msg_header, mypayload->node_id, mypayload->msg_type, mypayload->msg_id, mypayload->msg_flags, mypayload->orderno,
+        printf("%s%s: N:%u T:%u m:%u F:0x%02X O:%u H:%u (%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)%s\n",
+               ts(tsbuf), msg_header, mypayload->node_id, mypayload->msg_type, mypayload->msg_id, mypayload->msg_flags, mypayload->orderno, mypayload->heartbeatno,
                getChannel(mypayload->data1), vbuf1,
                getChannel(mypayload->data2), vbuf2,
                getChannel(mypayload->data3), vbuf3,
@@ -747,7 +747,7 @@ int main(int argc, char* argv[]) {
                 }
                 break;    
                 case PAYLOAD_TYPE_HB: { // heartbeat message!!
-                    if (node.isNewHB(payload.node_id, mymillis())) {  // Got a new Heaqrtbeat -> process it!
+                    if (node.isNewHB(payload.node_id, payload.heartbeatno, mymillis())) {  // Got a new Heaqrtbeat -> process it!
                         process_payload(&payload);
                         if ( orderbuffer.nodeHasEntry(payload.node_id) ) {  // WE have orders for this node
                             make_order(payload.node_id, PAYLOAD_TYPE_DAT);                    
@@ -797,8 +797,7 @@ int main(int argc, char* argv[]) {
                 }
                 break;
                 case PAYLOAD_TYPE_PING_END: {
-                    //we use a timeshift to make shure the messures will be recognized as a new heartbeat
-                    if (node.isNewHB(payload.node_id, mymillis()-7000)) {  // Got a new Heaqrtbeat -> process it!
+                    if (node.isNewHB(payload.node_id, payload.heartbeatno, mymillis())) {  // Got a new Heaqrtbeat -> process it!
                         sprintf(buf,"%u",node.getPaLevel(payload.node_id));
                         database.storeNodeConfig(payload.node_id, REG_PALEVEL, buf);
                     }
