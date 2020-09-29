@@ -4,6 +4,7 @@ Sensor::Sensor(void) {
     p_initial = NULL;
     verboselevel = 0;
     buf = (char*)malloc(TSBUFFERSIZE);
+    buf1 = (char*)malloc(TSBUFFERSIZE);
     tsbuf = (char*)malloc(TSBUFFERSIZE);
 }
 
@@ -140,7 +141,7 @@ void Sensor::printBuffer(int tn_socket, bool html) {
     write(tn_socket , client_message , strlen(client_message));
     while (p_search) {
 		sprintf(client_message,"Sensor: %u\tNode: %u,\tChannel:%u,\tFHEM: %s,\tVal: %s (%s)\n", 
-                 p_search->sensor_id, p_search->node_id, p_search->channel, p_search->fhem_dev, unpackData(p_search->last_data, buf), utime2str(p_search->last_val_utime, buf, 1) );   
+                 p_search->sensor_id, p_search->node_id, p_search->channel, p_search->fhem_dev, unpackData(p_search->last_data, buf), utime2str(p_search->last_val_utime, buf1, 1) );   
 		write(tn_socket , client_message , strlen(client_message));
         p_search=p_search->p_next;
 	}

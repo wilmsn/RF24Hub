@@ -668,7 +668,8 @@ int main(int argc, char* argv[]) {
 //    radio.setAutoAck( true );
     radio.enableDynamicPayloads();
     radio.setDataRate( RF24_SPEED );
-	radio.setRetries(15,5);
+//	radio.setRetries(15,5);
+    radio.setRetries(0,0);
     uint8_t  rf24_node2hub[] = RF24_NODE2HUB;
     uint8_t  rf24_hub2node[] = RF24_HUB2NODE;
     radio.openWritingPipe(rf24_hub2node);
@@ -743,7 +744,7 @@ int main(int argc, char* argv[]) {
             printPayload(VERBOSERF24, "Rec", " ", &payload);
 			switch ( payload.msg_type ) {
                 case PAYLOAD_TYPE_INIT: { // Init message from a node!!
-                    process_payload(&payload);
+                    if (node.isNewHB(payload.node_id, payload.heartbeatno, mymillis())) process_payload(&payload);
                 }
                 break;    
                 case PAYLOAD_TYPE_HB: { // heartbeat message!!
@@ -828,6 +829,7 @@ int main(int argc, char* argv[]) {
 			// Look if we have something to send
 			while ( order.getOrderForTransmission(&payload, mymillis() ) ) {
                     radio.stopListening();
+                    radio.flush_tx();
                     radio.openWritingPipe(rf24_hub2node);
 					if (radio.write(&payload,sizeof(payload))) {
                         radio.startListening();

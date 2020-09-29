@@ -33,6 +33,7 @@ sensor_t*     p_initial;
  * char buffer zur allgemeinen Ausgabe
  *************************************************************/
 char*       buf;
+char*       buf1;
 /**************************************************************
  * char buffer zur Ausgabe des timestrings ==> ts(tsbuf)
  *************************************************************/

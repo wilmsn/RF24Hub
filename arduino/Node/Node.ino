@@ -15,10 +15,10 @@ On Branch: rpi1_entw @ rpi1  !!!!!
 //****************************************************
 // My definitions for my nodes based on this sketch
 // Select only one at one time !!!!
-#define AUSSENTHERMOMETER
+//#define AUSSENTHERMOMETER
 //#define SCHLAFZIMMERTHERMOMETER
 //#define TESTZIMMERTHERMOMETER
-//#define TESTZIMMER1THERMOMETER
+#define TESTZIMMER1THERMOMETER
 //#define BASTELZIMMERTHERMOMETER
 //#define KUECHETHERMOMETER
 //#define WOHNZIMMERTHERMOMETER
@@ -424,11 +424,24 @@ void setup(void) {
 #endif
   radio.begin();
   radio.setChannel(RF24_CHANNEL);
+  radio.setDataRate(RF24_SPEED);
+  radio.setPALevel(RF24_PA_MAX);
+  radio.setChannel(RF24_CHANNEL);
   radio.setDataRate( RF24_SPEED );
   radio.setPALevel( RF24_PA_MAX ) ;
+/*
+ * Funktionierende Kombination
   radio.setRetries(15, 5);
-//  radio.setAutoAck(0,0);
   radio.enableDynamicPayloads();
+ */
+  radio.setRetries(0, 0);
+  radio.enableDynamicPayloads();
+//  radio.setAutoAck(false);
+//  radio.setRetries(15, 5);
+//  radio.setAutoAck(0,0);
+//  radio.enableDynamicPayloads();
+//  radio.disableDynamicPayloads();
+//  radio.setPayloadSize(32);
   radio.openWritingPipe(rf24_node2hub);
   radio.openReadingPipe(1,rf24_hub2node);
 #if defined(SERIAL_DEBUG_TXRX)
@@ -833,12 +846,6 @@ void prep_data(uint8_t msg_type, uint8_t msg_flags, ONR_DATTYPE orderno, uint8_t
   }
 }
 
-void send_data(void) {
-    radio.stopListening();
-    radio.write(&s_payload, sizeof(s_payload));
-    radio.startListening(); 
-}
-
 void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, ONR_DATTYPE orderno, uint8_t myheartbeatno) {
 // ToDo: Verarbeitung des MSG_FLAGS !!!!
     unsigned long start_ts;
@@ -849,7 +856,10 @@ void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, 
     prep_data(msg_type, msg_flags, orderno, myheartbeatno);
     while ( tx_loopcount < max_tx_loopcount ) {
       s_payload.msg_id++;
-      send_data();
+      radio.stopListening();
+      radio.write(&s_payload, sizeof(s_payload));
+//      radio.writeFast(&s_payload, sizeof(s_payload), 1);
+      radio.startListening(); 
       start_ts = millis();
       doLoop = true;
       while ( (millis() < start_ts + eeprom.senddelay) && doLoop ) {
@@ -870,15 +880,15 @@ void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, 
                 if (r_payload.msg_flags & PAYLOAD_FLAG_LASTMESSAGE ) {
                   // Wenn das LASTMESSAGEFLAG gesetzt ist sollte nur noch eine Endmessage kommen
                   // Zeit wird verkürzt
-                  max_tx_loopcount = 3;
+                  max_tx_loopcount = eeprom.max_stopcount;
                 } else {
-                  max_tx_loopcount = 10;
+                  max_tx_loopcount = eeprom.max_sendcount;
                 }
                 doLoop = false;;
               break;
               case PAYLOAD_TYPE_HB_RESP:
               case PAYLOAD_TYPE_DATSTOP:
-                  tx_loopcount = 10; 
+                  tx_loopcount = max_tx_loopcount; 
                   doLoop = false;
               break;  
             }
