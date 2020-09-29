@@ -394,8 +394,10 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
 *
 ********************************************************************************************/
 void sighandler(int signal) {
-    printf("%sSIGTERM: Cleanup system ... saving *_im tables ...\n",ts(tsbuf));
-    exit_system(); 
+    if ( ! cfg.startSniffer ) {
+        printf("%sSIGTERM: Cleanup system ... saving *_im tables ...\n",ts(tsbuf));
+        exit_system();
+    }
     printf("%sSIGTERM: Shutting down ...\n",ts(tsbuf));
     cfg.removePidFile();
 //	msgctl(msqid, IPC_RMID, NULL);
@@ -529,6 +531,25 @@ void scanner(char scanlevel) {
   printf("\n"); 
 }
 
+void sniffer(void) {
+    payload_t payload;
+    radio.flush_tx();
+    radio.setCRCLength(RF24_CRC_16);
+    while (true) {
+        if ( radio.available() ) {
+            if ( radio.isValid() ) {
+                radio.read(&payload,sizeof(payload));
+                printPayload(0xffff, "Rec", " ", &payload);
+            } else {
+                radio.flush_rx();
+            }
+        } else {  
+            radio.flush_rx();
+            usleep(10000);
+        }
+    }
+}
+
 void printPayload(uint16_t loglevel, const char* msg_header, const char* result, payload_t* mypayload) {
 	if ( verboselevel & loglevel  ) {   
         char* vbuf1 = alloc_str(verboselevel,"vbuf1",10,ts(tsbuf));
@@ -632,6 +653,28 @@ int main(int argc, char* argv[]) {
         freopen(cfg.logFileName.c_str(), "a+", stderr); 
     }
     
+    if ( cfg.startSniffer ) {
+        radio.begin();
+        radio.setPALevel( RF24_PA_MAX ) ;
+        radio.setChannel( RF24_CHANNEL );
+        radio.setDataRate( RF24_SPEED );
+//    radio.setAutoAck(0,0);
+        radio.setRetries(0,0);
+        radio.setAutoAck( false );
+        radio.enableDynamicPayloads();
+//        radio.disableDynamicPayloads();
+//        radio.setPayloadSize(32);
+//	radio.setRetries(15,5);
+        uint8_t  rf24_node2hub[] = RF24_NODE2HUB;
+        uint8_t  rf24_hub2node[] = RF24_HUB2NODE;
+        radio.openReadingPipe(0,rf24_node2hub);
+        radio.openReadingPipe(1,rf24_hub2node);
+        radio.startListening();
+        radio.printDetails();
+        printf("\n");
+        printf("%ssniffing on radio on channel ... %d\n", ts(tsbuf), RF24_CHANNEL);
+        sniffer();
+    }
     // connect database
     database.connect(cfg.dbHostName, cfg.dbUserName, cfg.dbPassWord, cfg.dbSchema, std::stoi(cfg.dbPort));
 

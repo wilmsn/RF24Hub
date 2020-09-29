@@ -19,6 +19,7 @@ void Config::processParams(int argc, char* argv[]) {
 	while (1) {
 		static struct option long_options[] = {	
 			{"daemon",  no_argument, 0, 'd'},
+			{"sniffer",  no_argument, 0, 'S'},
             {"configfile",    required_argument, 0, 'c'},
 			{"verbose", required_argument, 0, 'v'},
 			{"scanner", required_argument, 0, 's'},
@@ -28,7 +29,7 @@ void Config::processParams(int argc, char* argv[]) {
 		};
         /* getopt_long stores the option index here. */
         int option_index = 0;
-        c = getopt_long (argc, argv, "?dht:s:c:v:",long_options, &option_index);
+        c = getopt_long (argc, argv, "?dhSt:s:c:v:",long_options, &option_index);
         /* Detect the end of the options. */
         if (c == -1) break;
         switch (c) {
@@ -66,6 +67,9 @@ void Config::processParams(int argc, char* argv[]) {
                           usage();
                       }
                       break;
+            case 'S':
+				startSniffer = true;
+            break;
             case 'd':
 				startDaemon = true;
             break;
@@ -191,6 +195,8 @@ void Config::usage(void) {
     printf("         Set configfilename\n");
     printf("   -s or --scanner <scanlevel>\n");
     printf("         Set scannlevel (0...9) and scan all channels\n");
+    printf("   -S or --sniffer\n");
+    printf("         Starts a sniffer and prints out all catched payloads\n");
     printf("   -t or --scannchannel <channel>\n");
     printf("         Scanns the single channel <channel>\n");
     printf("For clean exit use \"CTRL-C\" or \"kill -15 <pid>\"\n");

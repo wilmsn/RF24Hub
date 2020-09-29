@@ -90,6 +90,8 @@ string prgName;
 string prgVersion;
 // startDaemon is true when start as a deamon is configured
 bool startDaemon = false;
+// startSniffer is true when start as sniffer is configured
+bool startSniffer = false;
 // will start the scanner running over all channels
 bool startScanner = false;
 // set the level for the scanner

@@ -164,6 +164,8 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t data);
 ********************************************************************************************/
 void sighandler(int signal);
 
+void sniffer(void);
+
 void printPayload(uint16_t loglevel, const char* msg_header, const char* result, payload_t * mypayload);
 
 void process_payload(payload_t* mypayload);
