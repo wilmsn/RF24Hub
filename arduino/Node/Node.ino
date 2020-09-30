@@ -15,10 +15,10 @@ On Branch: rpi1_entw @ rpi1  !!!!!
 //****************************************************
 // My definitions for my nodes based on this sketch
 // Select only one at one time !!!!
-//#define AUSSENTHERMOMETER
+#define AUSSENTHERMOMETER
 //#define SCHLAFZIMMERTHERMOMETER
 //#define TESTZIMMERTHERMOMETER
-#define TESTZIMMER1THERMOMETER
+//#define TESTZIMMER1THERMOMETER
 //#define BASTELZIMMERTHERMOMETER
 //#define KUECHETHERMOMETER
 //#define WOHNZIMMERTHERMOMETER
@@ -435,13 +435,14 @@ void setup(void) {
   radio.enableDynamicPayloads();
  */
   radio.setRetries(0, 0);
-  radio.enableDynamicPayloads();
-//  radio.setAutoAck(false);
+//  radio.enableDynamicPayloads();
+  radio.setAutoAck(false);
 //  radio.setRetries(15, 5);
 //  radio.setAutoAck(0,0);
 //  radio.enableDynamicPayloads();
-//  radio.disableDynamicPayloads();
-//  radio.setPayloadSize(32);
+  radio.disableDynamicPayloads();
+  radio.setPayloadSize(32);
+  radio.setCRCLength(RF24_CRC_16);
   radio.openWritingPipe(rf24_node2hub);
   radio.openReadingPipe(1,rf24_hub2node);
 #if defined(SERIAL_DEBUG_TXRX)
