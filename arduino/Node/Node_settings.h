@@ -66,17 +66,18 @@ debugging options:
 #if defined(TESTZIMMERTHERMOMETER)
 #define HBNODE
 #define RF24NODE             102
+//#define DALLAS_18B20
 #define BOSCH_SENSOR
 #define DISPLAY_5110
 //#define MONITOR
-#define EEPROM_VERSION       7
+#define EEPROM_VERSION       8
 #define EMPTYLOOPS           0
 //#define VOLT_FAC             1
 //#define VOLT_OFF             0.55
 #define LOW_VOLT_LEVEL       0
-#define DEBUG_SERIAL_SENSOR
-#define DEBUG_SERIAL_TXRX
-#define DEBUG_SERIAL_PROZ
+//#define DEBUG_SERIAL_SENSOR
+//#define DEBUG_SERIAL_TXRX
+//#define DEBUG_SERIAL_PROZ
 #endif
 //-----------------------------------------------------
 #if defined(TESTZIMMER1THERMOMETER)
