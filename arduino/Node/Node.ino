@@ -15,16 +15,16 @@ On Branch: rpi1_entw @ rpi1  !!!!!
 //****************************************************
 // My definitions for my nodes based on this sketch
 // Select only one at one time !!!!
-#define AUSSENTHERMOMETER
+//#define AUSSENTHERMOMETER
 //#define SCHLAFZIMMERTHERMOMETER
 //#define TESTZIMMERTHERMOMETER
 //#define TESTZIMMER1THERMOMETER
+#define TESTZIMMER2THERMOMETER
 //#define BASTELZIMMERTHERMOMETER
 //#define KUECHETHERMOMETER
 //#define WOHNZIMMERTHERMOMETER
 //#define ANKLEIDEZIMMERTHERMOMETER
 //#define GAESTEZIMMERTHERMOMETER
-//#define UNOTESTNODE_AO
 //****************************************************
 // Default settings are in "default.h" now !!!!!
 #include "defaults.h"
@@ -41,10 +41,10 @@ On Branch: rpi1_entw @ rpi1  !!!!!
 #if defined(SERIAL_DEBUG_TXRX)
 #define SERIAL_DEBUG
 #endif
-#if defined(SERIAL_DEBUG_CONFIG)
+#if defined(DEBUG_SERIAL_CONFIG)
 #define SERIAL_DEBUG
 #endif
-#if defined(SERIAL_DEBUG_PAYLOAD)
+#if defined(DEBUG_SERIAL_PAYLOAD)
 #define SERIAL_DEBUG
 #endif
 
@@ -429,17 +429,8 @@ void setup(void) {
   radio.setChannel(RF24_CHANNEL);
   radio.setDataRate( RF24_SPEED );
   radio.setPALevel( RF24_PA_MAX ) ;
-/*
- * Funktionierende Kombination
-  radio.setRetries(15, 5);
-  radio.enableDynamicPayloads();
- */
   radio.setRetries(0, 0);
-//  radio.enableDynamicPayloads();
   radio.setAutoAck(false);
-//  radio.setRetries(15, 5);
-//  radio.setAutoAck(0,0);
-//  radio.enableDynamicPayloads();
   radio.disableDynamicPayloads();
   radio.setPayloadSize(32);
   radio.setCRCLength(RF24_CRC_16);
@@ -454,17 +445,22 @@ void setup(void) {
 #if defined(DISPLAY_5110)
   lcd.begin();
   lcd.setContrast(eeprom.contrast);
-//  print_field(15.3,1);
-//  print_field(1024.89,2);
-//  print_field(58.37,3);
-//  print_field(4.5678,4);
+  lcd.clear();
+  lcd.setCursor(20,5);
+  lcd.println("Node:");
+  lcd.setCursor(30,15);
+  lcd.println(RF24NODE);
+  lcd.setCursor(0,25);
+  lcd.println(NODESTR);
+  lcd.draw();
+  lcd.clear();
+  delay(2000);
 #endif
-#endif
-#if defined(HAS_DISPLAY)
   monitor(1000);
   draw_antenna(ANT_X0, ANT_Y0);
   draw_therm(THERM_X0, THERM_Y0);
   draw_hb_countdown(8);
+  update_display();
 #endif
   loopcount = 0;
   last_send = 0;
@@ -472,6 +468,14 @@ void setup(void) {
   pingTest();
   send_register();
 }
+
+#if defined(HAS_DISPLAY)
+void update_display() {
+#if defined(DISPLAY_5110)
+  lcd.draw();
+#endif  
+}
+#endif
 
 #if defined(HAS_DISPLAY)
 void monitor(uint32_t delaytime) {
@@ -737,7 +741,7 @@ void payloadInitData(void) {
   s_payload.data6 = 0;
 }
 
-#if defined(SERIAL_DEBUG_PAYLOAD)
+#if defined(DEBUG_SERIAL_PAYLOAD)
 void printPayloadData(uint32_t pldata) {
     Serial.print("(");
     Serial.print(getChannel(pldata));
@@ -750,7 +754,7 @@ void printPayloadData(uint32_t pldata) {
 #endif
 
 void printPayload(payload_t* pl) {
-#if defined(SERIAL_DEBUG_PAYLOAD)
+#if defined(DEBUG_SERIAL_PAYLOAD)
     Serial.print("I:");
     Serial.print(pl->msg_id);
     Serial.print(" T:");
@@ -945,15 +949,17 @@ void loop(void) {
       Serial.println("Radio WakeUp");
 #endif
       radio.powerUp();
+      delay(10);
+      radio.flush_rx();
+      radio.flush_tx();
       radio.startListening();
       radio.openReadingPipe(1,rf24_hub2node);
-      delay(10);
       
-      // Empty FiFo Buffer from old transmissions
+/*      // Empty FiFo Buffer from old transmissions
       while ( radio.available() ) {
         radio.read(&r_payload, sizeof(r_payload));
         delay(10);
-      }
+      }  */
 
       payload_data(1, 101, cur_voltage);
 #if defined(DALLAS_18B20)

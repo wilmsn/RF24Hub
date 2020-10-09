@@ -2,6 +2,9 @@
 #define RADIO_CE_PIN 10
 // The CS Pin of the Radio module
 #define RADIO_CSN_PIN 9
+// Just an empty definition
+// Should be overwritten if the node has a display
+// #define NODESTR "empty"
 // The pin of the statusled
 #define STATUSLED 3
 #define STATUSLED_ON HIGH

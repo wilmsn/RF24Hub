@@ -7,12 +7,6 @@ Order::Order(void) {
     verboselevel = 0;
     buf = (char*)malloc(TSBUFFERSIZE);
     tsbuf = (char*)malloc(TSBUFFERSIZE);
-    buf1 = (char*)alloc_str(VERBOSEPOINTER,"Order::Order buf1",20,ts(tsbuf));
-    buf2 = (char*)alloc_str(VERBOSEPOINTER,"Order::Order buf2",20,ts(tsbuf));
-    buf3 = (char*)alloc_str(VERBOSEPOINTER,"Order::Order buf3",20,ts(tsbuf));
-    buf4 = (char*)alloc_str(VERBOSEPOINTER,"Order::Order buf4",20,ts(tsbuf));
-    buf5 = (char*)alloc_str(VERBOSEPOINTER,"Order::Order buf5",20,ts(tsbuf));
-    buf6 = (char*)alloc_str(VERBOSEPOINTER,"Order::Order buf6",20,ts(tsbuf));
 }
 
 bool Order::hasEntry(void) {
@@ -262,6 +256,12 @@ void Order::printBuffer(int out_socket, bool htmlFormat) {
     order_t *p_search;
     bool writeTS = ( out_socket == fileno(stdout) );
     char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
+    char *buf1 = (char*)malloc(20);
+    char *buf2 = (char*)malloc(20);
+    char *buf3 = (char*)malloc(20);
+    char *buf4 = (char*)malloc(20);
+    char *buf5 = (char*)malloc(20);
+    char *buf6 = (char*)malloc(20);
     p_search = p_initial;
     if (htmlFormat) {
         sprintf(client_message,"</table><br><big>Order</big><br><table><tr><th>OrderNo</th><th>Node</th><th>Type</th><th>Flags</th><th>Channel</th><th>Value</th></tr>\n"); 
@@ -307,6 +307,12 @@ void Order::printBuffer(int out_socket, bool htmlFormat) {
         write(out_socket , client_message , strlen(client_message));
     }
     free(client_message);
+    free(buf1);
+    free(buf2);
+    free(buf3);
+    free(buf4);
+    free(buf5);
+    free(buf6);
 }
 
 void Order::setVerbose(uint16_t _verboselevel) {

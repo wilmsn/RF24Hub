@@ -104,7 +104,7 @@ CREATE TABLE sensor_im
    store_days   INT            DEFAULT NULL,
    fhem_dev     VARCHAR(50)    DEFAULT NULL,
    html_show    CHAR(1)        DEFAULT NULL,
-   html_order   INT            DEFAULT 1,
+   html_order   INT            DEFAULT NULL,
    value        FLOAT          DEFAULT NULL,
    utime        INT            DEFAULT NULL,
    CONSTRAINT `PRIMARY` PRIMARY KEY (sensor_id)

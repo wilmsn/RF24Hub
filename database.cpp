@@ -30,7 +30,11 @@ void Database::sync_config(void) {
 }
 
 void Database::sync_sensor(void) {
-	sprintf (sql_stmt, "update sensor a set value = ( select value from sensor_im where sensor_id = a.sensor_id ), utime = ( select utime from sensor_im where sensor_id = a.sensor_id )");
+	sprintf (sql_stmt, "insert into sensor(sensor_id, sensor_name, add_info, node_id, channel, html_show, html_order, fhem_dev, store_days) select sensor_id, sensor_name, add_info, node_id, channel, html_show, html_order, fhem_dev, store_days from sensor_im where sensor_id not in (select sensor_id from sensor)");
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+	sprintf (sql_stmt, "update sensor a, sensor_im b set a.value = b.value, a.sensor_name = b.sensor_name, a.add_info = b.add_info, a.node_id = b.node_id, a.channel = b.channel, a.html_show = b.html_show, a.html_order = b.html_order, a.fhem_dev = b.fhem_dev, a.store_days = b.store_days where a.sensor_id = b.sensor_id");
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
@@ -58,16 +62,27 @@ void Database::sync_sensordata_d(void) {
 	db_check_error();
 }
 
-void Database::initSystem(void) {
-    // Falls das letzte Programmende ein Chrash war sollen einige "*_im" Tabellen gesichert werden!
-    sync_config();
-    sync_sensordata();
-    sync_sensor();
+void Database::exitSystem(void) {
 	sprintf (sql_stmt, "truncate table sensor_im");
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
-	sprintf (sql_stmt, "insert into sensor_im(sensor_id, sensor_name, add_info, node_id, channel, store_days, fhem_dev, html_show, value, utime) select sensor_id, sensor_name, add_info, node_id, channel, store_days, fhem_dev, html_show, value, utime from sensor");
+	sprintf (sql_stmt, "truncate table sensordata_im");
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+	sprintf (sql_stmt, "truncate table node_configdata_im");
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+}
+
+void Database::initSystem(void) {
+	sprintf (sql_stmt, "truncate table sensor_im");
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+	sprintf (sql_stmt, "insert into sensor_im(sensor_id, sensor_name, add_info, node_id, channel, store_days, fhem_dev, html_show, html_order, value, utime) select sensor_id, sensor_name, add_info, node_id, channel, store_days, fhem_dev, html_show, html_order, value, utime from sensor");
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();

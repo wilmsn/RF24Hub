@@ -29,8 +29,9 @@ debugging options:
 // #define DEBUG_SERIAL_SENSOR
 // #define DEBUG_SERIAL_TXRX
 // #define DEBUG_SERIAL_PROZ
-// #define SERIAL_DEBUG_PAYLOAD
-// #define SERIAL_DEBUG_CONFIG
+// #define DEBUG_SERIAL_PAYLOAD
+// #define DEBUG_SERIAL_CONFIG
+// #define DEBUG_DISPLAY_PAYLOAD
 
 ******************************************************/
 //*****************************************************
@@ -51,6 +52,7 @@ debugging options:
 #if defined(SCHLAFZIMMERTHERMOMETER)
 #define HBNODE
 #define RF24NODE             101
+#define NODESTR              "Schlafzimmer"
 #define DALLAS_18B20
 #define DISPLAY_5110
 #define MONITOR
@@ -66,12 +68,13 @@ debugging options:
 #if defined(TESTZIMMERTHERMOMETER)
 #define HBNODE
 #define RF24NODE             102
-//#define DALLAS_18B20
-#define BOSCH_SENSOR
+#define NODESTR              "Testzimmer"
+#define DALLAS_18B20
+//#define BOSCH_SENSOR
 #define DISPLAY_5110
 //#define MONITOR
-#define EEPROM_VERSION       8
-#define EMPTYLOOPS           0
+#define EEPROM_VERSION       9
+#define EMPTYLOOPS           9
 //#define VOLT_FAC             1
 //#define VOLT_OFF             0.55
 #define LOW_VOLT_LEVEL       0
@@ -83,6 +86,7 @@ debugging options:
 #if defined(TESTZIMMER1THERMOMETER)
 #define HBNODE
 #define RF24NODE             103
+#define NODESTR              "Testzimmer1"
 #define DALLAS_18B20
 #define DISPLAY_5110
 //#define DEBUG_LED
@@ -93,26 +97,44 @@ debugging options:
 #define VOLT_OFF             0.55
 #define EMPTYLOOPS           5
 #define LOWVOLTAGELEVEL      3.5
-#define STATUSLED_ON         LOW
-#define STATUSLED_OFF        HIGH
+//#define STATUSLED_ON         LOW
+//#define STATUSLED_OFF        HIGH
+#endif
+//-----------------------------------------------------
+#if defined(TESTZIMMER2THERMOMETER)
+#define HBNODE
+#define RF24NODE             104
+#define NODESTR              "Testzimmer2"
+#define DALLAS_18B20
+#define DISPLAY_5110
+#define SLEEPTIME_SEC        20
+#define EEPROM_VERSION       7
+#define VOLT_FAC             1
+#define VOLT_OFF             0.55
+#define EMPTYLOOPS           5
+#define LOWVOLTAGELEVEL      3.5
 #endif
 //-----------------------------------------------------
 #if defined(BASTELZIMMERTHERMOMETER)
 #define HBNODE
 #define RF24NODE             100
+#define NODESTR              "Bastelzimmer"
 #define DALLAS_18B20
 #define DISPLAY_5110
-#define MONITOR
+//#define MONITOR
 #define EEPROM_VERSION       3
 #define VOLT_FAC             1
 #define VOLT_OFF             0.55
 #define EMPTYLOOPS           9
 #define LOW_VOLT_LEVEL       3.6
+#define STATUSLED_ON         LOW
+#define STATUSLED_OFF        HIGH
 #endif
 //-----------------------------------------------------
 #if defined(ANKLEIDEZIMMERTHERMOMETER)
 #define HBNODE
 #define RF24NODE             110
+#define NODESTR              "Ankleidezimmer"
 #define DALLAS_18B20
 #define DISPLAY_5110
 #define MONITOR

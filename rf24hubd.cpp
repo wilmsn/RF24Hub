@@ -333,9 +333,15 @@ void exit_system(void) {
     database.sync_sensordata();
     database.sync_sensor();
     database.sync_config();
+    database.exitSystem();
 }
 
 void init_system(void) {
+    // Falls das letzte Programmende ein Chrash war sollen einige "*_im" Tabellen gesichert werden!
+    database.sync_sensordata();
+    database.sync_sensor();
+    database.sync_config();
+    // Jetzt die normale initialisierung
     database.initSystem();
     database.initSensor(&sensor);
     database.initNode(&node);

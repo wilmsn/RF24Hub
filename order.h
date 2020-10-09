@@ -44,12 +44,6 @@ order_t*  p_initial;
  *************************************************************/
 char*       tsbuf;
 char*       buf;
-char*       buf1;
-char*       buf2;
-char*       buf3;
-char*       buf4;
-char*       buf5;
-char*       buf6;
 /**************************************************************
  * Bufferinterner Speicher für den verboselevel
  *************************************************************/
