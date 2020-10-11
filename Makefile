@@ -28,15 +28,19 @@ CCFLAGS=-Ofast -mfpu=vfp -mfloat-abi=hard -march=$(ARCH) -mtune=arm1176jzf-s -st
 DEBUGFLAGS=-ggdb3 -O0
 
 # make all
-all: rf24hubd 
+all: rf24hubd rf24gwd
 debug: rf24hubd_debug
 
 # Make the rf24hub deamon in debug mode
-rf24hubd_debug: config.o dataformat.o database.o node.o sensor.o orderbuffer.o order.o common.o rf24hubd.cpp
+rf24hubd_debug: cfg.o dataformat.o database.o node.o sensor.o orderbuffer.o order.o common.o rf24hubd.cpp
 	g++ ${CCFLAGS} ${DEBUGFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24 ${MYSQLLIBS} $^ -o $@
 
 # Make the rf24hub deamon
-rf24hubd: config.o dataformat.o database.o node.o sensor.o orderbuffer.o order.o common.o rf24hubd.cpp
+rf24hubd: cfg.o gateway.o dataformat.o database.o node.o sensor.o orderbuffer.o order.o common.o rf24hubd.cpp
+	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24 ${MYSQLLIBS} $^ -o $@
+
+# Make the rf24gw deamon
+rf24gwd: cfg.o common.o dataformat.o rf24gwd.cpp
 	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24 ${MYSQLLIBS} $^ -o $@
 
 # Test of order object
@@ -49,7 +53,7 @@ orderbuffertest: orderbuffer.o orderbuffer_test.cpp
 
 # clear build files
 clean:
-	rm *.o rf24hubd rf24hubd_debug
+	rm *.o rf24hubd rf24gwd rf24hubd_debug
 
 # Install the sensorhub
 install: 

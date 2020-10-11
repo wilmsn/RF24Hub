@@ -142,4 +142,10 @@ typedef struct {   // Our payload can be 32 byte max.
     uint32_t    data6;         
 } payload_t;
 
+// structure of UDP data
+typedef struct {
+  uint16_t      gwno;         // the number of the sending gateway
+  payload_t     payload;      // the payload to send forward
+} udpdata_t;
+
 #endif

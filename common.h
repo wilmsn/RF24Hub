@@ -1,5 +1,9 @@
-// Common functions
-//
+/**************************************************
+ * Common functions
+ * used in rf24gwd and rf24hubd
+ * 
+ **************************************************/
+
 #ifndef _COMMON_H_   /* Include guard */
 #define _COMMON_H_
 
@@ -10,9 +14,20 @@
 #include <sys/time.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <netdb.h>
 #include <cstdio>
-#include "rf24hub_config.h"
+#include <netinet/in.h>
+#include <fcntl.h>
+#include "config.h"
 #include "dataformat.h"
+#include "rf24_config.h"
+#include "version.h"
+
+enum sockType_t { TCP, UDP};
 
 static const char date_format1[] = "%d.%m.%Y %H:%M:%S";
 static const char date_format2[] = "%Y.%m.%d %H:%M:%S";
@@ -37,15 +52,6 @@ char* ts(char* buf);
  ******************************************************/
 char * trim (char * s);
 
-/*
- * log_ts: liefert einen Zeitstempel für Logausgaben
- * in der Form: [2020.04.20 18:38:17.233]
- * Wichtig: Es muss ein Speicherplatz zur Aufnahme 
- * des Strings ( Grösse 26 Byte ) übergeben werden!
- */
-//char * log_ts(char * buf);
-
-
 char* alloc_str(uint16_t verboselevel, const char* msgTxt, size_t size, char* timestring);
 
 void free_str(uint16_t verboselevel, const char* msgTxt, char* str, char* timestring);
@@ -59,6 +65,10 @@ uint16_t decodeVerbose(uint16_t oldLevel, char* verboselevel);
 uint32_t packData(uint8_t mychannel, char* wort4);
 
 char* unpackData(uint32_t data, char* buf);
+
+void sendUdpMessage(const char* host, const char* port, udpdata_t * udpdata );
+
+void openSocket(const char* host, const char* port, struct sockaddr_in *address, int* handle, sockType_t sockType );
 
 #endif // _RF24HUBD_COMMON_H_
 

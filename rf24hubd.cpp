@@ -273,6 +273,8 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
             sprintf(message,"%s\n",tn_usage_txt[i]);
             write(tn_socket , message , strlen(message));
         }
+        sprintf(message,"%s version %s", PRGNAME, SWVERSION_STR);
+        write(tn_socket , message , strlen(message));
 	}		
 	free_str(verboselevel,"process_tn_in wort1",wort1,ts(tsbuf));
     free_str(verboselevel,"process_tn_in wort2",wort2,ts(tsbuf));
@@ -339,8 +341,10 @@ void init_system(void) {
     database.initSystem();
     database.initSensor(&sensor);
     database.initNode(&node);
+    database.initGateway(&gateway);
     node.printBuffer(fileno(stdout), false);
     sensor.printBuffer(fileno(stdout), false);
+    gateway.printBuffer(fileno(stdout), false);
 }
 
 void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
@@ -399,7 +403,7 @@ void sighandler(int signal) {
         exit_system();
     }
     printf("%sSIGTERM: Shutting down ...\n",ts(tsbuf));
-    cfg.removePidFile();
+    cfg.removePidFile(cfg.hub_pidFileName);
 //	msgctl(msqid, IPC_RMID, NULL);
     exit (0);
 }
@@ -531,27 +535,7 @@ void scanner(char scanlevel) {
   printf("\n"); 
 }
 
-void sniffer(void) {
-    payload_t payload;
-    radio.flush_tx();
-    radio.setCRCLength(RF24_CRC_16);
-    while (true) {
-        if ( radio.available() ) {
-            if ( radio.isValid() ) {
-                radio.read(&payload,sizeof(payload));
-                printPayload(0xffff, "Rec", " ", &payload);
-            } else {
-                radio.flush_rx();
-            }
-        } else {  
-            radio.flush_rx();
-            usleep(10000);
-        }
-    }
-}
-
-void printPayload(uint16_t loglevel, const char* msg_header, const char* result, payload_t* mypayload) {
-	if ( verboselevel & loglevel  ) {   
+void printPayload(payload_t* mypayload) {
         char* vbuf1 = alloc_str(verboselevel,"vbuf1",10,ts(tsbuf));
         char* vbuf2 = alloc_str(verboselevel,"vbuf2",10,ts(tsbuf));
         char* vbuf3 = alloc_str(verboselevel,"vbuf3",10,ts(tsbuf));
@@ -564,22 +548,20 @@ void printPayload(uint16_t loglevel, const char* msg_header, const char* result,
         vbuf4=unpackData(mypayload->data4, vbuf4);
         vbuf5=unpackData(mypayload->data5, vbuf5);
         vbuf6=unpackData(mypayload->data6, vbuf6);
-        printf("%s%s: N:%u T:%u m:%u F:0x%02X O:%u H:%u (%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)%s\n",
-               ts(tsbuf), msg_header, mypayload->node_id, mypayload->msg_type, mypayload->msg_id, mypayload->msg_flags, mypayload->orderno, mypayload->heartbeatno,
+        printf("Hub: N:%u T:%u m:%u F:0x%02X O:%u H:%u (%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)\n",
+               mypayload->node_id, mypayload->msg_type, mypayload->msg_id, mypayload->msg_flags, mypayload->orderno, mypayload->heartbeatno,
                getChannel(mypayload->data1), vbuf1,
                getChannel(mypayload->data2), vbuf2,
                getChannel(mypayload->data3), vbuf3,
                getChannel(mypayload->data4), vbuf4,
                getChannel(mypayload->data5), vbuf5,
-               getChannel(mypayload->data6), vbuf6,
-               result);   
+               getChannel(mypayload->data6), vbuf6);   
         free_str(verboselevel,"vbuf1",vbuf1,ts(tsbuf));
         free_str(verboselevel,"vbuf2",vbuf2,ts(tsbuf));
         free_str(verboselevel,"vbuf3",vbuf3,ts(tsbuf));
         free_str(verboselevel,"vbuf4",vbuf4,ts(tsbuf));
         free_str(verboselevel,"vbuf5",vbuf5,ts(tsbuf));
         free_str(verboselevel,"vbuf6",vbuf6,ts(tsbuf));
-    }
 }
 
 void process_payload(payload_t* mypayload) {
@@ -600,15 +582,19 @@ int main(int argc, char* argv[]) {
 	int tn_in_socket = 0;
     int new_tn_in_socket = 0;
 	socklen_t addrlen;
-	struct sockaddr_in address;
+	struct sockaddr_in address, udp_address;
+    struct sockaddr_in UDPinAddr;
 	long save_fd;
 	const int y = 1;
 	int msgID;
+    socklen_t len;
     TnMsg_t LogMsg;
     time_t lastDBsync = time(0);
+    ssize_t UdpMsgLen;
+    char udpServer[20];
 	
     // processing argc and argv[]
-    cfg.processParams(argc, argv);
+    cfg.processParams(PRGNAME, argc, argv);
 
 	// check if started as root
 	if ( getuid()!=0 ) {
@@ -617,14 +603,15 @@ int main(int argc, char* argv[]) {
     }
     
     // check for PID file, if exists terminate else create it
-    if ( cfg.checkPidFileSet() ) {
+    if ( cfg.checkPidFileSet(cfg.hub_pidFileName) ) {
          exit(1);
     } else {
-         cfg.setPidFile();
+         cfg.setPidFile(cfg.hub_pidFileName);
     }
     printf("--------------------------------------------------\n");
     printf("%sStartup Parameters:\n",ts(tsbuf));
-    cfg.printConfig();
+    cfg.printConfig_hub();
+    cfg.printConfig_db();
 
     // init SIGTERM and SIGINT handling
     signal(SIGTERM, sighandler);
@@ -632,6 +619,12 @@ int main(int argc, char* argv[]) {
 
     // run as daemon if started with -d
     if (cfg.startDaemon) {
+        logfile_ptr = fopen (cfg.hub_logFileName.c_str(),"a");
+        if ( ! logfile_ptr ) {
+            fprintf(stderr,"LOGFILE: %s can't open logfile, terminating !!!\n", cfg.hub_logFileName.c_str());
+            exit(1);
+        }
+        fclose( logfile_ptr );
         pid = fork ();
         if (pid == 0) {
         // Child prozess
@@ -645,32 +638,14 @@ int main(int argc, char* argv[]) {
         } else {
             // nagativ is an error
             printf("%sFork ERROR ... exiting\n",ts(tsbuf));
-            cfg.removePidFile();
+            cfg.removePidFile(cfg.hub_pidFileName);
             exit(1);
         }
 
-        freopen(cfg.logFileName.c_str(), "a+", stdout); 
-        freopen(cfg.logFileName.c_str(), "a+", stderr); 
+        freopen(cfg.hub_logFileName.c_str(), "a+", stdout); 
+        freopen(cfg.hub_logFileName.c_str(), "a+", stderr); 
     }
     
-    if ( cfg.startSniffer ) {
-        radio.begin();
-        radio.setPALevel( RF24_PA_MAX ) ;
-        radio.setChannel( RF24_CHANNEL );
-        radio.setDataRate( RF24_SPEED );
-        radio.setAutoAck( false );
-        radio.disableDynamicPayloads();
-        radio.setPayloadSize(32);
-        uint8_t  rf24_node2hub[] = RF24_NODE2HUB;
-        uint8_t  rf24_hub2node[] = RF24_HUB2NODE;
-        radio.openReadingPipe(0,rf24_node2hub);
-        radio.openReadingPipe(1,rf24_hub2node);
-        radio.startListening();
-        radio.printDetails();
-        printf("\n");
-        printf("%ssniffing on radio on channel ... %d\n", ts(tsbuf), RF24_CHANNEL);
-        sniffer();
-    }
     // connect database
     database.connect(cfg.dbHostName, cfg.dbUserName, cfg.dbPassWord, cfg.dbSchema, std::stoi(cfg.dbPort));
 
@@ -678,15 +653,15 @@ int main(int argc, char* argv[]) {
         printf("%stelnet session to FHEM started: Host: %s Port: %s\n",ts(tsbuf), cfg.fhemHost.c_str(), cfg.fhemPort.c_str());
     }
 
-    if ( cfg.incomingPortSet ) {
+    if ( cfg.hub_incomingPortSet ) {
     /* open incoming port for messages */
 		if ((tn_in_socket=socket( AF_INET, SOCK_STREAM, 0)) > 0) {
             address.sin_family = AF_INET;
             address.sin_addr.s_addr = INADDR_ANY;
-            address.sin_port = htons ( std::stoi ( cfg.incomingPort ) );
+            address.sin_port = htons ( std::stoi ( cfg.hub_incomingPort ) );
             setsockopt( tn_in_socket, SOL_SOCKET, SO_REUSEADDR, &y, sizeof(int) );
             if (bind( tn_in_socket, (struct sockaddr *) &address, sizeof (address)) == 0 ) {
-                printf("%sSocket für eingehende Messages auf Port %s angelegt\n", ts(tsbuf), cfg.incomingPort.c_str());
+                printf("%sSocket für eingehende Messages auf Port %s angelegt\n", ts(tsbuf), cfg.hub_incomingPort.c_str());
             }
             listen (tn_in_socket, 5);
             addrlen = sizeof (struct sockaddr_in);
@@ -694,25 +669,15 @@ int main(int argc, char* argv[]) {
             save_fd |= O_NONBLOCK;
             fcntl( tn_in_socket, F_SETFL, save_fd );
         } else {
-            printf("%sError opening Socket %s\n", ts(tsbuf), cfg.incomingPort.c_str());
+            printf("%sError opening Socket %s\n", ts(tsbuf), cfg.hub_incomingPort.c_str());
             exit(1);
         }            
 	}
     sleep(2);
-    printf("%sstarting radio on channel ... %d\n", ts(tsbuf), RF24_CHANNEL);
-    radio.begin();
-    radio.setPALevel( RF24_PA_MAX ) ;
-    radio.setChannel( RF24_CHANNEL );
-    radio.setDataRate( RF24_SPEED );
-    radio.setAutoAck( false );
-    radio.disableDynamicPayloads();
-    radio.setPayloadSize(32);
-    uint8_t  rf24_node2hub[] = RF24_NODE2HUB;
-    uint8_t  rf24_hub2node[] = RF24_HUB2NODE;
-    radio.openWritingPipe(rf24_hub2node);
-    radio.openReadingPipe(1,rf24_node2hub);
-    radio.startListening();
-    radio.printDetails();
+
+    // Eingehendes Socket für UDP Messages öffnen
+    printf("%sSocket für eingehende UDP Messages vom Gateway auf Port %s angelegt\n", ts(tsbuf), cfg.udp_hubPortno.c_str());
+    openSocket(NULL, cfg.udp_hubPortno.c_str(), &udp_address_in, &udp_sockfd_in, UDP);
 
     // Init Arrays
     node.setVerbose(verboselevel);
@@ -720,6 +685,7 @@ int main(int argc, char* argv[]) {
     order.setVerbose(verboselevel);
     orderbuffer.setVerbose(verboselevel);
     database.setVerbose(verboselevel);
+    gateway.setVerbose(verboselevel);
     init_system();
     printf("%s%s up and running\n", ts(tsbuf),PRGNAME); 
 
@@ -731,7 +697,7 @@ int main(int argc, char* argv[]) {
            lastDBsync = time(0);
         }
         /* Handling of incoming messages */
-		if ( cfg.incomingPortSet ) {
+		if ( cfg.hub_incomingPortSet ) {
             new_tn_in_socket = accept ( tn_in_socket, (struct sockaddr *) &address, &addrlen );
             if (new_tn_in_socket > 0) {
                 pthread_t a_thread;
@@ -773,13 +739,15 @@ int main(int argc, char* argv[]) {
                 }
             }
 		}
-		if ( radio.isValid() && radio.available() ) {
-//
-// Receive loop: react on the message from the nodes
-//
-			radio.read(&payload,sizeof(payload));
-            printPayload(VERBOSERF24, "Rec", " ", &payload);
-			switch ( payload.msg_type ) {
+// Verarbeitung von UDP Daten reinkommend
+    UdpMsgLen = recvfrom ( udp_sockfd_in, &udpdata, sizeof(udpdata), 0, (struct sockaddr *) &udp_address, &len );
+    if (UdpMsgLen > 0) {
+        sprintf(udpServer,"%s", inet_ntoa(udp_address.sin_addr) );
+        printf ("%s :UDP %u ", udpServer, ntohs (udp_address.sin_port));
+        memcpy(&payload, &udpdata.payload, sizeof(payload) );
+        printPayload(&payload);
+        if ( gateway.isGateway(udpServer) ) {
+            switch ( payload.msg_type ) {
                 case PAYLOAD_TYPE_INIT: { // Init message from a node!!
                     if (node.isNewHB(payload.node_id, payload.heartbeatno, mymillis())) process_payload(&payload);
                 }
@@ -843,7 +811,7 @@ int main(int argc, char* argv[]) {
                 break;
                 default: {	
                     if ( verboselevel & VERBOSEORDER) {
-                        printf("%sProcessing Node:%u Type:%u Orderno: %u\n", ts(tsbuf), payload.node_id, payload.msg_type, payload.orderno);
+                        printf("%sProcessing Node:%u Type:%u Orderno: %u\n", ts(tsbuf), payload.node_id, payload.msg_type,          payload.orderno);
                     }
                     if ( order.isOrderNo(payload.orderno) ) {
                         process_payload(&payload);
@@ -857,26 +825,28 @@ int main(int argc, char* argv[]) {
                     }
                 }
 			}
-			
-		} // radio.available
+        }  // gateway.isGateway
+    } // UDP Message > 0
 //
 // Orderloop: Tell the nodes what they have to do
 //
 		if ( order.hasEntry() ) {  // go transmitting if its time to do ..
 			// Look if we have something to send
+            char p_gw_ip[40];
 			while ( order.getOrderForTransmission(&payload, mymillis() ) ) {
-                    radio.stopListening();
-                    radio.flush_tx();
-                    radio.openWritingPipe(rf24_hub2node);
-					if (radio.write(&payload,sizeof(payload))) {
-                        radio.startListening();
-                        printPayload(VERBOSERF24, "Snd", "OK", &payload);
-					} else {
-                        radio.startListening();
-                        printPayload(VERBOSERF24, "Snd", "Fail", &payload);
-                    }
+                // Hier UDP Sender
+                void* p_rec = NULL;
+                p_rec = gateway.getGWIP(p_rec, p_gw_ip);
+                while ( p_rec ) { 
+                    printf("Snd: %s: ", p_gw_ip);
+                    printPayload(&payload);
+                    p_rec = gateway.getGWIP(p_rec, p_gw_ip);
+                    udpdata.gwno=0;
+                    memcpy(&udpdata.payload, &payload, sizeof(payload) );
+                    sendUdpMessage(p_gw_ip, cfg.udp_gwPortno.c_str(), &udpdata); 
                 }
-				usleep(50000);
+            }
+ 			usleep(50000);
         } else {
             usleep(200000);
         }

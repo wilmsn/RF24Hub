@@ -1,17 +1,17 @@
-#include "config.h"
+#include "cfg.h"
 
-Config::Config(string _prgName, string _prgVersion) {
+Cfg::Cfg(string _prgName, string _prgVersion) {
      prgName = _prgName;
      prgVersion = _prgVersion;
 }
 
-Config::~Config() {
+Cfg::~Cfg() {
 }
 
-Config::Config() {
+Cfg::Cfg() {
 }
 
-void Config::processParams(int argc, char* argv[]) {
+void Cfg::processParams(const char* prgname, int argc, char* argv[]) {
     configFile = "x";
 	int c;
 	
@@ -56,7 +56,7 @@ void Config::processParams(int argc, char* argv[]) {
                       if (optarg[0]) {
                           verboselevel = decodeVerbose(verboselevel, optarg);
                       } else {
-                          usage();
+                          usage(prgname);
                       }
                       break;
             case 's':
@@ -64,7 +64,7 @@ void Config::processParams(int argc, char* argv[]) {
                           startScanner = true;
                           setScanLevel = (int) optarg[0]-'0';
                       } else {
-                          usage();
+                          usage(prgname);
                       }
                       break;
             case 'S':
@@ -83,7 +83,7 @@ void Config::processParams(int argc, char* argv[]) {
 //                exit (0);
 //            break;
             default:
-                 usage ();
+                 usage (prgname);
                  exit (0);
         }
     }
@@ -141,47 +141,79 @@ void Config::processParams(int argc, char* argv[]) {
             fhemPort = value;
             fhemPortSet = true;
         }
-    else if (strcmp(name, "incoming_port")==0) {
-            incomingPort = value;
-            incomingPortSet = true;
+    else if (strcmp(name, "hub_incoming_port")==0) {
+            hub_incomingPort = value;
+            hub_incomingPortSet = true;
         }
-    else if (strcmp(name, "logfile")==0) {
-            logFileName = value;
+    else if (strcmp(name, "hub_logfile")==0) {
+            hub_logFileName = value;
         }
-    else if (strcmp(name, "pidfile")==0) {
-            pidFileName = value;
+    else if (strcmp(name, "hub_pidfile")==0) {
+            hub_pidFileName = value;
+		}
+    else if (strcmp(name, "gw_logfile")==0) {
+            gw_logFileName = value;
+        }
+    else if (strcmp(name, "gw_pidfile")==0) {
+            gw_pidFileName = value;
+		}
+    else if (strcmp(name, "gw_hubhostname")==0) {
+            gw_hubHostname = value;
+        }
+    else if (strcmp(name, "udp_hubportno")==0) {
+            udp_hubPortno = value;
+		}
+    else if (strcmp(name, "udp_gwportno")==0) {
+            udp_gwPortno = value;
+		}
+    else if (strcmp(name, "gw_gwid")==0) {
+            gw_gwID = value;
 		}
     else
       printf("WARNING: %s = %s Unknown name=value pair!\n", name, value );
   }
   /* Close file */
 	fclose (fp);
-    if ( startDaemon ) {
+/*    if ( startDaemon ) {
         logfile_ptr = fopen (logFileName.c_str(),"a");
         if ( ! logfile_ptr ) {
             fprintf(stderr,"LOGFILE: %s can't open logfile, terminating !!!\n", logFileName.c_str());
             exit(1);
         }
         fclose( logfile_ptr );
-    }
+    } */
 }
 
-void Config::printConfig (void) {
-    printf("Logfile: %s\n", logFileName.c_str() );
-    printf("PIDfile: %s\n", pidFileName.c_str() );
+void Cfg::printConfig_hub (void) {
+    printf("Hub Logfile: %s\n", hub_logFileName.c_str() );
+    printf("Hub PIDfile: %s\n", hub_pidFileName.c_str() );
+    printf("Hub-UDP Port: %s\n", udp_hubPortno.c_str() );
+    printf("Gateway UDP Port: %s\n", udp_gwPortno.c_str() );
+    printf("FHEM-Hostname: %s\n", fhemHost.c_str() );
+    printf("FHEM-Port: %s\n", fhemPort.c_str() );
+    printf("incoming Port: %s\n", hub_incomingPort.c_str() );
+}
+
+void Cfg::printConfig_gw (void) {
+    printf("Gw Logfile: %s\n", gw_logFileName.c_str() );
+    printf("Gw PIDfile: %s\n", gw_pidFileName.c_str() );
+    printf("Hub-Hostname: %s\n", gw_hubHostname.c_str() );
+    printf("Hub-UDP Port: %s\n", udp_hubPortno.c_str() );
+    printf("Gateway UDP Port: %s\n", udp_gwPortno.c_str() );
+    printf("Gw ID: %s\n", gw_gwID.c_str() );
+}
+
+void Cfg::printConfig_db (void) {
     printf("DB-Hostname: %s\n", dbHostName.c_str() );
     printf("DB-Port: %s\n", dbPort.c_str() );
     printf("DB-Schema: %s\n", dbSchema.c_str() );
     printf("DB-Username: %s\n", dbUserName.c_str() );
     printf("DB-Password: %s\n", dbPassWord.c_str() );
-    printf("FHEM-Hostname: %s\n", fhemHost.c_str() );
-    printf("FHEM-Port: %s\n", fhemPort.c_str() );
-    printf("incoming Port: %s\n", incomingPort.c_str() );
 }
 
-void Config::usage(void) {
-    printf("%s Version %d vom %s\n",PRGNAME, SWVERSION, SWDATUM);
-    printf("Usage: %s <option>\n",PRGNAME);
+void Cfg::usage(const char* prgname) {
+    printf("%s Version %d vom %s\n",prgname, SWVERSION, SWDATUM);
+    printf("Usage: %s <option>\n",prgname);
     printf("with options: \n");
     printf("   -h or -? or --help\n");
     printf("           Print help\n");
@@ -204,7 +236,7 @@ void Config::usage(void) {
 
 
     // get pid and write it to pidfile
-int Config::setPidFile(void) {
+int Cfg::setPidFile(string pidFileName) {
     pid_t pid;
     pid=getpid();
 	pidfile_ptr = fopen (pidFileName.c_str(),"w");
@@ -213,7 +245,7 @@ int Config::setPidFile(void) {
     return 1;
 }
 
-int Config::checkPidFileSet(void) {
+int Cfg::checkPidFileSet(string pidFileName) {
 	if( access( pidFileName.c_str(), F_OK ) != -1 ) {
 		fprintf(stderr,"PIDFILE: %s exists, terminating\n", pidFileName.c_str() );
 		return -1;
@@ -222,6 +254,6 @@ int Config::checkPidFileSet(void) {
 	}
 }
 
-void Config::removePidFile() {
+void Cfg::removePidFile(string pidFileName) {
     unlink(pidFileName.c_str());
 }

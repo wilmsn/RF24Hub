@@ -7,12 +7,12 @@ Order::Order(void) {
     verboselevel = 0;
     buf = (char*)malloc(TSBUFFERSIZE);
     tsbuf = (char*)malloc(TSBUFFERSIZE);
-    buf1 = (char*)alloc_str(VERBOSEPOINTER,"Order::Order buf1",20,ts(tsbuf));
-    buf2 = (char*)alloc_str(VERBOSEPOINTER,"Order::Order buf2",20,ts(tsbuf));
-    buf3 = (char*)alloc_str(VERBOSEPOINTER,"Order::Order buf3",20,ts(tsbuf));
-    buf4 = (char*)alloc_str(VERBOSEPOINTER,"Order::Order buf4",20,ts(tsbuf));
-    buf5 = (char*)alloc_str(VERBOSEPOINTER,"Order::Order buf5",20,ts(tsbuf));
-    buf6 = (char*)alloc_str(VERBOSEPOINTER,"Order::Order buf6",20,ts(tsbuf));
+    buf1 = (char*)malloc(20);
+    buf2 = (char*)malloc(20);
+    buf3 = (char*)malloc(20);
+    buf4 = (char*)malloc(20);
+    buf5 = (char*)malloc(20);
+    buf6 = (char*)malloc(20);
 }
 
 bool Order::hasEntry(void) {

@@ -63,9 +63,9 @@ Quick start guide:
    Have a least one node ready for test
    Add the configuration of this node to the table node inside the database
    Add at least one sensor to the table sensor
-   Edit the config file: rf24hubd.cfg
+   Edit the config file: rf24hub.cfg
 
-   sudo ./rf24hubd -v +rf24 -c rf24hubd.cfg #Just stop it with ctrl-c
+   sudo ./rf24hubd -v +rf24 -c rf24hub.cfg #Just stop it with ctrl-c
 
 9. If everything works, install it
 

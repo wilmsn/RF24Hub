@@ -26,6 +26,7 @@
 #include "common.h"
 #include "node.h"
 #include "sensor.h"
+#include "gateway.h"
 
 using namespace std; 
 
@@ -72,6 +73,11 @@ public:
  * from the Database
  **************************************************************/      
     void initNode(Node* node);
+/**************************************************************
+ * Reads the data to initializise the node array 
+ * from the Database
+ **************************************************************/      
+    void initGateway(Gateway* gateway);
 /**************************************************************
  * Initializise the system 
  * from the Database

@@ -88,10 +88,38 @@ void Database::initSystem(void) {
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
+	sprintf (sql_stmt, "truncate table gateway_im");
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+    sprintf (sql_stmt, "insert into gateway_im(gw_name, gw_ip, isactive) select gw_name, gw_ip, isactive from gateway");
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
     sync_sensordata_d();
     mysql_commit(db);
 }
 
+void Database::initGateway(Gateway* gateway) {
+	MYSQL_ROW row;
+    char gw_name[40];
+    char gw_ip[40];
+    bool isactive;
+	sprintf (sql_stmt, "select gw_name, gw_ip, isactive from gateway");
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+	MYSQL_RES *result = mysql_store_result(db);
+	db_check_error();
+	while ((row = mysql_fetch_row(result))) {
+		if ( row[0] != NULL ) sprintf(gw_name,"%s",trim(row[0])); else sprintf(gw_name," ");
+		if ( row[1] != NULL ) sprintf(gw_ip,"%s",trim(row[1])); else sprintf(gw_ip," ");
+		if ( row[2] != NULL ) isactive = strtoul(row[2], &pEnd, 10); else isactive = 0;
+        gateway->addGateway(gw_name, gw_ip, isactive); 
+	}
+	mysql_free_result(result);    
+}    
+    
 void Database::initNode(Node* node) {
     NODE_DATTYPE node_id = 0;
     bool myHBnode = false;

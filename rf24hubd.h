@@ -3,42 +3,6 @@ rf24hub.cpp
 A unix-deamon to handle and store the information from/to all connected sensornodes. 
 All information is stored in a MariaDB database.
 rf24hub is the successor of sensorhub.
-
-
-Ablaufbeschreibungen:
-
-Grundsetzliches:
-Da Sensoren und Aktoren gleich behandelt werden wird ein Sensor oder Aktor immer gesetzt und immer als Sensor bezeichnet.
-Der zurückgelieferte Wert ist beim Aktor der gesetzte Wert, 
-beim Sensor kann ein beliebiger Wert gesetzt werden, zurückgeliefert wird der Messwert des Sensors.
-
-1) Aetzen eines Aktors
-Quelle: Telnet request in der Form: "set<last> sensor <sensor> <wert>"
-Verarbeitung:
-UP: process_tn_in       => Wertet die telnet Eingabe aus.
-        Übersetzt den übergebenen "sensor" in die ID des Sensors. 
-        Übergibt die Sensor-ID und den Wert an die UP: "set_sensor" Rückgabewert: Node-ID
-        Node-ID <> 0:
-            nein:  Initialisierung des Systems mittels UP "init_system"
-            ja:    
-                Wenn "setlast" aufgerufen wurde:
-                    UP: get_order
-                    UP: print_order_buffer
-UP: get_order           =>  Überträgt Elemente aus dem ARRAY "order_buffer" in das ARRAY "order"
-        Arbeitsschritte:
-        1) Alte Orders für den aktuellen Node löschen
-        2) Die ersten 4 Orders für den aktuellen Node in das ARRAY "order" als 1 DS einfügen.
-
-
-UP: set_sensor          =>  Zur Sensor-ID werden Node und Channel ermittelt
-                            und an die UP "fill_order_buffer" übergeben.
-                        
-UP: fill_order_buffer   =>  Füllt das ARRAY "order_buffer" mit dem übergebenen Sensor.
-                            Dabei wird die "entytime" auf den aktuellen Unix-Zeitstempel und die "orderno" auf "0" gesetzt.
-
-
-
-
 */
 
 #ifndef _RF24HUBD_H_   /* Include guard */
@@ -71,18 +35,21 @@ UP: fill_order_buffer   =>  Füllt das ARRAY "order_buffer" mit dem übergebenen
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <pthread.h>
-
+#include <errno.h>
 #include "node.h"
 #include "sensor.h"
 #include "order.h"
 #include "orderbuffer.h"
+#include "gateway.h"
 #include "common.h"
 #include "config.h"
+#include "cfg.h"
 #include "database.h"
 #include "rf24_config.h"
 #include "rf24hub_config.h"
 #include "rf24hub_text.h"
 #include "dataformat.h"
+#include "version.h"
 
 #define BUF 1024
 
@@ -93,6 +60,9 @@ struct sockaddr_in serv_addr;
 struct hostent *server;
 FILE * pidfile_ptr;
 FILE * logfile_ptr;
+struct sockaddr_in udp_address_in;
+int udp_sockfd_in;
+udpdata_t udpdata;
 
 uint16_t verboselevel = STARTUPVERBOSELEVEL;
 char* buf;
@@ -127,7 +97,8 @@ OrderBuffer     orderbuffer;
 Sensor          sensor;
 Node            node;
 Database        database;
-Config          cfg;
+Gateway         gateway;
+Cfg             cfg;
 
 /*******************************************************************************************
 *
@@ -164,9 +135,7 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t data);
 ********************************************************************************************/
 void sighandler(int signal);
 
-void sniffer(void);
-
-void printPayload(uint16_t loglevel, const char* msg_header, const char* result, payload_t * mypayload);
+void printPayload(payload_t * mypayload);
 
 void process_payload(payload_t* mypayload);
 
