@@ -1,0 +1,5 @@
+[Unit]
+Description=A Target for Applications that have to be started last and shut down first
+Requires=multi-user.target
+After=multi-user.target
+AllowIsolate=yes

@@ -2,64 +2,52 @@
 rf24hub_config.h ==> all global definitions go here
 
 */
-#ifndef RF24HUB_GLOBALCONFIG_H   
-#define RF24HUB_GLOBALCONFIG_H
+#ifndef _RF24HUB_CONFIG_H_   
+#define _RF24HUB_CONFIG_H_
 
-// comment out this line if you have a working rf24 envirionment !!!!!
-#define TESTBUILD
-
+#define PRGNAME "rf24hub"
+//
+// default values: can be overwritten in config file
+//
+#define LOGFILE "/var/log/rf24hubd.log"
+#define PIDFILE "/var/run/rf24hubd.pid"
 
 //
-// default values
-//
-#define DEFAULT_CONFIG_FILE_HUB "/etc/rf24hub/rf24hub.cfg"
-#define DEFAULT_CONFIG_FILE_GW "/etc/rf24gw/rf24gw.cfg"
-#define RF24HUB_PRGNAME "rf24hubd"
-#define RF24GW_PRGNAME "rf24gwd"
-//
-// END default values
+// END default values: can be overwritten in config file
 //
 //-------------------------------------------------------
 //
-#define ORDERLENGTH 80
-#define ORDERBUFFERLENGTH 80
+// Define an empty string for displaying data in all its forms
+//#define DATASTRING '----------'
+// The Key for the Messagebuffer
+#define MSGKEY 3452
 // How long do we try to deliver (in msec) => 20 Min.
 #define KEEPINBUFFERTIME 1200000    
-#define SENSORARRAYSIZE 80
-//#define FHEMDEVLENGTH 50
-// Interval to send a request to the node in millisec.
+// Interval to send a request to the regular node in millisec.
 #define SENDINTERVAL 500
-// Interval for deleting unsend order requests in millisec.
-#define DELETEINTERVAL 900000
-#define LOGFILENAMESIZE 80
-#define TELNETBUFFERSIZE 100
-#define PARAM_MAXLEN 80
-//#define PARAM_MAXLEN_CONFIGFILE 40
-#define PARAM_MAXLEN_LOGFILE 40
-#define PARAM_MAXLEN_PIDFILE 40
-#define PARAM_MAXLEN_RF24NETWORK_CHANNEL 4
-#define PARAM_MAXLEN_RF24NETWORK_SPEED 10
-#define PARAM_MAXLEN_HOSTNAME 20
-#define PARAM_MAXLEN_DB_HOSTNAME 20
-#define PARAM_MAXLEN_DB_SCHEMA 20
-#define PARAM_MAXLEN_DB_USERNAME 20
-#define PARAM_MAXLEN_DB_PASSWORD 20
-#define PARAM_MAXLEN_TELNET_PORT 8
-#define PARAM_MAXLEN_UDP_PORT 8
-#define FHEMDEVLENGTH 20
-#define ERRSTR "ERROR: "
-#define DEBUGSTR "DEBUG: "
-#define DEBUGSTRINGSIZE 500
+// Interval to send a request to the regular node in millisec.
+#define SENDINTERVAL_HB 100
+// Number of stopmessages to send
+#define SENDSTOPCOUNT 3
+// Interval for deleting unsend requests for order for regular nodes in millisec.
+// 60 Sec = 1 Min.
+#define DELETEINTERVAL 2000
+// Interval for deleting unsend requests for order for Heartbeat nodes in millisec.
+// 1 Sec.
+#define DELETEINTERVAL_HB 1000
+// Intervall to sync sensordata_im to sensordata 
+// In case of server crash you will loose data
+// in sensordata_im !!!!!!
+// Time in Seconds: 21600 = 6 Hours
+#define DBSYNCINTERVAL   21600
+
+// array of char sizes
+#define DEBUGSTRINGSIZE 600
+#define FHEMDEVLENGTH 50
+#define TELNETBUFFERSIZE 200
+#define TSBUFFERSIZE 30
 #define SQLSTRINGSIZE 500
-// Verboselevel
-#define VERBOSECRITICAL 1
-#define VERBOSESTARTUP 2
-#define VERBOSECONFIG 5
-#define VERBOSERF24 6
-#define VERBOSETELNET 7
-#define VERBOSESQL 8
-#define VERBOSEOTHER 9
+#define TSBUFFERSTRING "                               "
 
 
-
-#endif // RF24HUB_GLOBALCONFIG_H
+#endif // _RF24HUB_CONFIG_H_

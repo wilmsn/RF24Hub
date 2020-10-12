@@ -1,10 +1,9 @@
 # RF24Hub
 A gateway and controler for Arduino nodes with nrf24l01 (demo nodes included)
 Main features:
- - the controler sould run on all linux based systems 
- - the gateway should run on a system where the nrf24l01 is connected (i tested raspberry pi, ESP8266)
- - runs as a background service (deamon) or in interactive mode
- - controls the communication to the nodes using RF24 library
+ - sould run on all linux based systems with a connected nrf24l01 (i use raspberry pi version 2 and 4)
+ - runs as a bachground service (deamon) or in interactive mode
+ - controls the communication to the nodes using RF24Network
  - all informations are stored in a MariaDB database
  - can be controled by telnet commands
  - can send telnet commands to a third party controler (i use FHEM)
@@ -17,7 +16,6 @@ More details (german only): https://wilmie.myhome-server.de/wiki/index.php?title
 Environment:
 ============
 - Server: Raspberry PI
-- Gateway: ESP8266
 - Nodes: "Arduino" like build with minimal cost based on ATmega328P
 
 Aim of the project:
@@ -60,17 +58,21 @@ Quick start guide:
 
    install tables from create_tab.sql
 
-6. Do a test run
+8. Do a test run
 
    Have a least one node ready for test
    Add the configuration of this node to the table node inside the database
    Add at least one sensor to the table sensor
+   Edit the config file: rf24hub.cfg
 
-   sudo ./rf24hubd -v9  #Just stop it with ctrl-c
+   sudo ./rf24hubd -v +rf24 -c rf24hub.cfg #Just stop it with ctrl-c
 
-7. If everything works, install it
+9. If everything works, install it
 
    sudo make install
+
+   Please be sure to edit "/etc/rf24hub/rf24hub.cfg" to your needs and restart the deamon after that:
+   "sudo systemctl stop rf24hub; sudo systemctl start rf24hub" after that
 
 Now its up to you:
 ==================

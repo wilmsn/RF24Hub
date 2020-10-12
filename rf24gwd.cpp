@@ -1,155 +1,349 @@
-#include "rf24gwd.h"
-#include "zahlenformat.h"
+#include "rf24gwd.h" 
 
-//#define DEBUG
 
+void exit_system(void) {
+}
+
+void init_system(void) {
+}
+
+/*******************************************************************************************
+*
+* All the rest 
+*
+********************************************************************************************/
 void sighandler(int signal) {
-//    exit_system(); 
-//	sprintf(debug, "SIGTERM: Shutting down ... ");
-    sprintf(debug,"%s","SIGTERM: Shutting down ... ");
-	cfg.logmsg(VERBOSECRITICAL, debug);
-    cfg.removePidFile();
-//    unlink(parms.pidfilename);
+    printf("%sSIGTERM: Shutting down ...\n",ts(tsbuf));
+    cfg.removePidFile(cfg.gw_pidFileName);
 //	msgctl(msqid, IPC_RMID, NULL);
     exit (0);
 }
 
-void error_exit(int myerrno, char* error) {
-//    exit_system(); 
-//	sprintf(debug, "SIGTERM: Shutting down ... ");
-//	logmsg(VERBOSECRITICAL, debug);
-    cfg.removePidFile();
-    //unlink(parms.pidfilename);
-    exit (myerrno);
-}    
 
+void channelscanner (uint8_t channel) {
+  int values=0;
+  printf("Scanning channel: %u\n", channel);
+  radio.begin();
+  for (int i=0; i < 1000; i++) {
+    radio.setChannel(channel);
+
+    // Listen for a little
+    radio.startListening();
+    usleep(1000);
+
+    // Did we get a carrier?
+    if ( radio.testCarrier() ){
+      values++;
+      printf("X");
+    } else {
+      printf(".");
+    }
+    radio.stopListening();
+
+  }
+  printf("1000 passes: Detect %d times a carrier\n", values);
+}
+
+void scanner(char scanlevel) {
+  // we have channel 0...125 => 126 channels
+  const uint8_t num_channels = 126;
+  uint8_t values[num_channels];
+  int num_reps;
+  int wait;
+
+  radio.begin();
+  switch (scanlevel) {
+    case '0':
+       num_reps=1;
+       wait=100;
+    break;
+    case '1':
+       num_reps=5;
+       wait=100;
+    break;
+    case '2':
+       num_reps=10;
+       wait=200;
+    break;
+    case '3':
+       num_reps=20;
+       wait=200;
+    break;
+    case '4':
+       num_reps=30;
+       wait=200;
+    break;
+    case '5':
+       num_reps=30;
+       wait=500;
+    break;
+    case '6':
+       num_reps=50;
+       wait=500;
+    break;
+    case '7':
+       num_reps=100;
+       wait=500;
+    break;
+    case '8':
+       num_reps=200;
+       wait=500;
+    break;
+    case '9':
+       num_reps=500;
+       wait=1000;
+    break;
+    default:
+       num_reps=30;
+       wait=500;
+  }
+  for (uint8_t i = 0; i < num_channels; i++) {
+    values[i]=0;
+  }
+  printf("Scanning all channels %d passes, listen %d microseconds to each channel\n", num_reps, wait);
+  printf("\t\t000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011111111111111111111111111\n");
+  printf("\t\t000000000011111111112222222222333333333344444444445555555555666666666677777777778888888888999999999900000000001111111111222222\n");
+  printf("\t\t012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345\n");
+  printf("\t\t------------------------------------------------------------------------------------------------------------------------------\n");
+  for (int rep_counter = 0; rep_counter < num_reps; rep_counter++) {
+    printf("\nPass: %d/%d \t", rep_counter+1, num_reps);
+    for (uint8_t i = 0; i < num_channels; i++) {
+
+      // Select this channel
+      radio.setChannel(i);
+ 
+      // Listen for a little
+      radio.startListening();
+      usleep(wait);
+      
+      // Did we get a carrier?
+      if ( radio.testCarrier() ){
+        values[i]++;
+        printf("X");
+      } else {
+        printf(".");
+      }
+      radio.stopListening();
+    }
+  }
+  printf("\n\n");
+  printf("\t\t000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011111111111111111111111111\n");
+  printf("\t\t000000000011111111112222222222333333333344444444445555555555666666666677777777778888888888999999999900000000001111111111222222\n");
+  printf("\t\t012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345\n"); 
+  printf("\t\t------------------------------------------------------------------------------------------------------------------------------\n");
+  printf("\t\t");
+  for (uint8_t i = 0; i < num_channels; i++) {
+    if (values[i] == 0) {
+      printf(".");
+    } else {
+      if (values[i] > 9 ) {
+        printf("X");
+      } else {
+        printf("%u",values[i]);
+      }
+    }
+  }
+  printf("\n"); 
+}
+
+/*
+void sniffer(void) {
+    payload_t payload;
+    radio.flush_tx();
+    radio.setCRCLength(RF24_CRC_16);
+    while (true) {
+        if ( radio.available() ) {
+            if ( radio.isValid() ) {
+                radio.read(&payload,sizeof(payload));
+                printPayload(0xffff, "Rec", " ", &payload);
+            } else {
+                radio.flush_rx();
+            }
+        } else {  
+            radio.flush_rx();
+            usleep(10000);
+        }
+    }
+}
+*/
+void printPayload(char* msg_header, payload_t* mypayload) {
+        char* vbuf1 = alloc_str(verboselevel,"vbuf1",10,ts(tsbuf));
+        char* vbuf2 = alloc_str(verboselevel,"vbuf2",10,ts(tsbuf));
+        char* vbuf3 = alloc_str(verboselevel,"vbuf3",10,ts(tsbuf));
+        char* vbuf4 = alloc_str(verboselevel,"vbuf4",10,ts(tsbuf));
+        char* vbuf5 = alloc_str(verboselevel,"vbuf5",10,ts(tsbuf));
+        char* vbuf6 = alloc_str(verboselevel,"vbuf6",10,ts(tsbuf));
+        vbuf1=unpackData(mypayload->data1, vbuf1);
+        vbuf2=unpackData(mypayload->data2, vbuf2);
+        vbuf3=unpackData(mypayload->data3, vbuf3);
+        vbuf4=unpackData(mypayload->data4, vbuf4);
+        vbuf5=unpackData(mypayload->data5, vbuf5);
+        vbuf6=unpackData(mypayload->data6, vbuf6);
+        printf("%s%s: N:%u T:%u m:%u F:0x%02X O:%u H:%u (%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)\n",
+               ts(tsbuf), msg_header, mypayload->node_id, mypayload->msg_type, mypayload->msg_id, mypayload->msg_flags, mypayload->orderno, mypayload->heartbeatno,
+               getChannel(mypayload->data1), vbuf1,
+               getChannel(mypayload->data2), vbuf2,
+               getChannel(mypayload->data3), vbuf3,
+               getChannel(mypayload->data4), vbuf4,
+               getChannel(mypayload->data5), vbuf5,
+               getChannel(mypayload->data6), vbuf6);   
+        free_str(verboselevel,"vbuf1",vbuf1,ts(tsbuf));
+        free_str(verboselevel,"vbuf2",vbuf2,ts(tsbuf));
+        free_str(verboselevel,"vbuf3",vbuf3,ts(tsbuf));
+        free_str(verboselevel,"vbuf4",vbuf4,ts(tsbuf));
+        free_str(verboselevel,"vbuf5",vbuf5,ts(tsbuf));
+        free_str(verboselevel,"vbuf6",vbuf6,ts(tsbuf));
+}
 
 int main(int argc, char* argv[]) {
     pid_t pid;
-    cfg.processParams(argc, argv);
+    payload_t payload;
+    char* buf1 = (char*)malloc(20);
+//    char* buf2 = (char*)malloc(20);
+    tsbuf = (char*)malloc(TSBUFFERSIZE);
+	/* vars for telnet socket handling */
+    struct sockaddr_in udp_address_in;
+    int udp_sockfd_in;
+    socklen_t len;
+    ssize_t UdpMsgLen;
+
+    // processing argc and argv[]
+    cfg.processParams(PRGNAME, argc, argv);
+
 	// check if started as root
 	if ( getuid()!=0 ) {
-		cout << "rf24gateway has to be startet as user root" << endl; 
+        printf("%s has to be startet as user root!\n",PRGNAME);
         exit(1);
     }
+    
     // check for PID file, if exists terminate else create it
-    if ( cfg.checkPidFileSet() ) {
-        return 1;
+    if ( cfg.checkPidFileSet(cfg.gw_pidFileName) ) {
+         exit(1);
+    } else {
+         cfg.setPidFile(cfg.gw_pidFileName);
     }
-	cout << "Startup Parameters:" << endl; 
-    cfg.printConfig();
-    // starts logging
-	if ( getuid()==0 ) {
-       cfg.setPidFile();
-    }
-
+    printf("--------------------------------------------------\n");
+    printf("%sStartup Parameters:\n",ts(tsbuf));
+    cfg.printConfig_gw();
+    sprintf(buf1,"GW:%s",cfg.gw_gwID.c_str());
+//    sprintf(buf2,"");
+    // init SIGTERM and SIGINT handling
     signal(SIGTERM, sighandler);
     signal(SIGINT, sighandler);
 
+    // run as daemon if started with -d
     if (cfg.startDaemon) {
-        // make sure that we have a logfile
-        if ( ! cfg.logFileMode ) {
-            printf("%s\n","Logfile is needed if runs as deamon ... exiting"); 
-            cfg.removePidFile();
+        logfile_ptr = fopen (cfg.gw_logFileName.c_str(),"a");
+        if ( ! logfile_ptr ) {
+            fprintf(stderr,"LOGFILE: %s can't open logfile, terminating !!!\n", cfg.gw_logFileName.c_str());
             exit(1);
+        }
+        fclose( logfile_ptr );
+        pid = fork ();
+        if (pid == 0) {
+        // Child prozess
+            chdir ("/");
+            umask (0);
+        } else if (pid > 0) {
+            // Parentprozess -> exit and return to shell
+            printf("%sStarting %s as daemon...\n",ts(tsbuf),PRGNAME);
+            // and exit
+            exit(0);
         } else {
-            // starts rf24gateway as a deamon
-            // no messages to console!
-            pid = fork ();
-            if (pid == 0) {
-                // Child prozess
-                chdir ("/");
-                umask (0);
-                sprintf(debug,"%s","Starting up ...."); cfg.logmsg(VERBOSESTARTUP,debug);
-            } else if (pid > 0) {
-                // Parentprozess -> exit and return to shell
-                // write a message to the console
-                sprintf(debug,"%s","Starting rf24gateway as daemon..."); cfg.logmsg(VERBOSESTARTUP,debug);
-                cout << debug << endl;
-                // and exit
-                exit (0);
-            } else {
-                // nagativ is an error
-            printf("%s","Fork ERROR ... exiting\n");; 
-            cfg.removePidFile();
+            // nagativ is an error
+            printf("%sFork ERROR ... exiting\n",ts(tsbuf));
+            cfg.removePidFile(cfg.gw_pidFileName);
             exit(1);
-            }
         }
+
+        freopen(cfg.gw_logFileName.c_str(), "a+", stdout); 
+        freopen(cfg.gw_logFileName.c_str(), "a+", stderr); 
     }
-    if ( cfg.rf24GWUdpPortSet ) {
-		openSocket(NULL, cfg.rf24GWUdpPort.c_str(),&udp_address,&udp_sockfd,UDP);
-	}
+    
+/*    if ( cfg.startSniffer ) {
+        radio.begin();
+        radio.setPALevel( RF24_PA_MAX ) ;
+        radio.setChannel( RF24_CHANNEL );
+        radio.setDataRate( RF24_SPEED );
+        radio.setAutoAck( false );
+        radio.disableDynamicPayloads();
+        radio.setPayloadSize(32);
+        uint8_t  rf24_node2hub[] = RF24_NODE2HUB;
+        uint8_t  rf24_hub2node[] = RF24_HUB2NODE;
+        radio.openReadingPipe(0,rf24_node2hub);
+        radio.openReadingPipe(1,rf24_hub2node);
+        radio.startListening();
+        radio.printDetails();
+        printf("\n");
+        printf("%ssniffing on radio on channel ... %d\n", ts(tsbuf), RF24_CHANNEL);
+        sniffer();
+    }
+*/
+    printf("%sstarting radio on channel ... %d\n", ts(tsbuf), RF24_CHANNEL);
     radio.begin();
-//    radio.setPALevel(RF24_PA_MIN);
     radio.setPALevel( RF24_PA_MAX ) ;
-    radio.setChannel( cfg.rf24Channel );
-    radio.setDataRate( (rf24_datarate_e) cfg.rf24Speed );
-    radio.setCRCLength ( (rf24_crclength_e)cfg.rf24Crc );
-    radio.setAutoAck(true);
-//	radio.setRetries(15,15);
-    radio.openWritingPipe(addresses[0]);
-    radio.openReadingPipe(0,addresses[0]);
-    radio.openReadingPipe(1,addresses[1]);
-	// Start the radio listening for data
-	radio.startListening();
-    delay(5);
-    sprintf(debug,"%s","starting radio ... "); cfg.logmsg(VERBOSESTARTUP, debug);
-    if (cfg.verboseLevel >= VERBOSECONFIG) { radio.printDetails(); }
+    radio.setChannel( RF24_CHANNEL );
+    radio.setDataRate( RF24_SPEED );
+    radio.setAutoAck( false );
+    radio.disableDynamicPayloads();
+    radio.setPayloadSize(32);
+    uint8_t  rf24_node2hub[] = RF24_NODE2HUB;
+    uint8_t  rf24_hub2node[] = RF24_HUB2NODE;
+    radio.openWritingPipe(rf24_hub2node);
+    radio.openReadingPipe(1,rf24_node2hub);
+    radio.startListening();
+    radio.printDetails();
+
+    // Eingehendes Socket für UDP Messages öffnen
+    printf("%sSocket für eingehende UDP Messages vom Gateway auf Port %s angelegt\n", ts(tsbuf), cfg.udp_gwPortno.c_str());
+    openSocket(NULL, cfg.udp_gwPortno.c_str(), &udp_address_in, &udp_sockfd_in, UDP);
+    //printf("opensocket: %s:%s\n",cfg.gw_hubHostname.c_str(), cfg.udp_hubPortno.c_str());
+    //openSocket(cfg.gw_hubHostname.c_str(), cfg.udp_hubPortno.c_str(),&udp_address,&udp_sockfd,UDP);
+
+    init_system();
+    printf("%s%s up and running\n", ts(tsbuf), PRGNAME); 
+
+    // Main Loop
     while(1) {
-// Is there some data for us via rf24?
-		bool goodSignal = radio.testRPD();
-        if ( radio.available() ){  
-            sprintf(debug,"%s",">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");		cfg.logmsg(VERBOSEOTHER, debug);
-			sprintf(debug,"Node %s", goodSignal ? "Strong signal > 64dBm" : "Weak signal < 64dBm" ); cfg.logmsg(VERBOSEOTHER, debug);
-			radio.read( &payload, sizeof(payload) );
-              if (cfg.network_id == payload.network_id) {
-    	    sprintf(debug,"Node Network: %u Node: %u Msg: %u Flags: %04x", payload.network_id,payload.node_id, payload.msg_id, payload.flags); 
-				cfg.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Sensor: %u Wert: %f", getSensor(payload.sensor1),getValue_f(payload.sensor1)); cfg.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Sensor: %u Wert: %f", getSensor(payload.sensor2),getValue_f(payload.sensor2)); cfg.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Sensor: %u Wert: %f", getSensor(payload.sensor3),getValue_f(payload.sensor3)); cfg.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"Node Sensor: %u Wert: %f", getSensor(payload.sensor4),getValue_f(payload.sensor4)); cfg.logmsg(VERBOSEOTHER, debug);
-            sprintf(debug,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");			cfg.logmsg(VERBOSEOTHER, debug);
-//            sprintf(debug,"######> %s %s",cfg.rf24HubHostName.c_str(), cfg.rf24HubUdpPort.c_str());  cfg.logmsg(VERBOSEOTHER, debug);
-//			sendUdpMessage(cfg.rf24HubHostName.c_str(), cfg.rf24HubUdpPort.c_str(), &udp_node_data); 
-              } else {
-                sprintf(debug,"Got Message for Network_number: %u ==> dropped!", payload.network_id); cfg.logmsg(VERBOSEOTHER, debug);  
-              }
-		}
-// Is there some data for us via UDP?
-        if ( cfg.rf24GWUdpPortSet ) {
-            numbytes = recvfrom(udp_sockfd, &udp_hub_data, sizeof(udp_hub_data), 0, (struct sockaddr *)&clientaddress,  &clientaddress_len);
-            if (numbytes >0) {
-                sprintf(debug,"packet from Hub via UDP received, legth: %u",numbytes);	cfg.logmsg(VERBOSEOTHER, debug);
-                sprintf(debug,"Hub: Network_number: %u",udp_hub_data.network_id);		cfg.logmsg(VERBOSEOTHER, debug);
-                sprintf(debug,"Hub: Mode_number: %u",udp_hub_data.node_id);				cfg.logmsg(VERBOSEOTHER, debug);
-                sprintf(debug,"Hub: Msg_number: %u",udp_hub_data.msg_id);				cfg.logmsg(VERBOSEOTHER, debug);
-//                sprintf(debug,"Hub: Sensor1_id: %u",udp_hub_data.sensor1_id);			cfg.logmsg(VERBOSEOTHER, debug);
-//                sprintf(debug,"Hub: Sensor1_value: %f",cfg.sensorValue(udp_hub_data.value1));				cfg.logmsg(VERBOSEOTHER, debug);
-//                sprintf(debug,"Hub: Sensor2_id: %u",udp_hub_data.sensor2_id);			cfg.logmsg(VERBOSEOTHER, debug);
-//                sprintf(debug,"Hub: Sensor2_value: %f",cfg.sensorValue(udp_hub_data.value2));				cfg.logmsg(VERBOSEOTHER, debug);
-				switch (clientaddress.ss_family) {
-					case AF_INET:
-						inet_ntop(clientaddress.ss_family,	&((struct sockaddr_in *)&clientaddress)->sin_addr, ipAddrStr, INET_ADDRSTRLEN);
-						sprintf(debug,"Hub IPV4: %s",ipAddrStr);  cfg.logmsg(VERBOSETELNET,debug);; 
-					break;
-					case AF_INET6:
-						inet_ntop(clientaddress.ss_family,	&((struct sockaddr_in6 *)&clientaddress)->sin6_addr, ipAddrStr, INET_ADDRSTRLEN);
-						sprintf(debug,"Hub IPV6: %s",ipAddrStr);  cfg.logmsg(VERBOSETELNET,debug);; 
-					break;
-				}
-				radio.stopListening();
-				if ( radio.write( &udp_hub_data, sizeof(udp_hub_data) ) ) {
-					sprintf(debug,"%s","Writing to Node -> OK"); cfg.logmsg(VERBOSERF24, debug);
-				} else {
-					sprintf(debug,"%s","Writing to Node -> ERROR"); cfg.logmsg(VERBOSERF24, debug);
-				}					
-				radio.startListening();
-            }
-        }
-		usleep(1000);
-	}
-    return 0;
+		if ( radio.isValid() && radio.available() ) {
+//
+// Receive loop: react on the message from the nodes
+//
+			radio.read(&payload,sizeof(payload));
+            udpdata.gwno = std::stoi(cfg.gw_gwID);;
+            udpdata.payload.node_id = payload.node_id;
+            udpdata.payload.msg_id = payload.msg_id;
+            udpdata.payload.msg_type = payload.msg_type;
+            udpdata.payload.msg_flags = payload.msg_flags;
+            udpdata.payload.orderno = payload.orderno;
+            udpdata.payload.heartbeatno = payload.heartbeatno;
+            udpdata.payload.data1 = payload.data1;
+            udpdata.payload.data2 = payload.data2;
+            udpdata.payload.data3 = payload.data3;
+            udpdata.payload.data4 = payload.data4;
+            udpdata.payload.data5 = payload.data5;
+            udpdata.payload.data6 = payload.data6;
+            printPayload(buf1, &udpdata.payload);
+			sendUdpMessage(cfg.gw_hubHostname.c_str(), cfg.udp_hubPortno.c_str(), &udpdata); 
+		} // radio.available
+//
+// Orderloop: Tell the nodes what they have to do
+//
+    UdpMsgLen = recvfrom ( udp_sockfd_in, &udpdata, sizeof(udpdata), 0, (struct sockaddr *) &udp_address, &len );
+    if (UdpMsgLen > 0) {
+        memcpy(&payload, &udpdata.payload, sizeof(payload) );
+        radio.stopListening();
+        radio.flush_tx();
+        radio.openWritingPipe(rf24_hub2node);
+        radio.write(&payload,sizeof(payload));
+        radio.startListening();
+        //sprintf(buf1,"Snd:");
+        printPayload("Snd:",&payload);
+    }
+//
+//  end orderloop
+//
+	} // while(1)
+	return 0;
 }
 
- 
