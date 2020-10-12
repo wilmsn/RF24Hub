@@ -326,7 +326,8 @@ void openSocket(const char* host, const char* port, struct sockaddr_in *address,
 		hints.ai_socktype = SOCK_DGRAM;
 	}		
     hints.ai_flags = AI_PASSIVE; // use my IP
-    if ((rv = getaddrinfo(host, port, &hints, &servinfo)) != 0) {
+    if ((rv = getaddrinfo(NULL, port, &hints, &servinfo)) != 0) {
+//    if ((rv = getaddrinfo(host, port, &hints, &servinfo)) != 0) {
         //return (int)-1;
     }
 	// loop through all the results and bind to the first we can

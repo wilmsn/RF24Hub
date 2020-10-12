@@ -332,6 +332,11 @@ int main(int argc, char* argv[]) {
     UdpMsgLen = recvfrom ( udp_sockfd_in, &udpdata, sizeof(udpdata), 0, (struct sockaddr *) &udp_address, &len );
     if (UdpMsgLen > 0) {
         memcpy(&payload, &udpdata.payload, sizeof(payload) );
+        radio.stopListening();
+        radio.flush_tx();
+        radio.openWritingPipe(rf24_hub2node);
+        radio.write(&payload,sizeof(payload));
+        radio.startListening();
         //sprintf(buf1,"Snd:");
         printPayload("Snd:",&payload);
     }
