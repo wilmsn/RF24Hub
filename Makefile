@@ -55,7 +55,14 @@ orderbuffertest: orderbuffer.o orderbuffer_test.cpp
 clean:
 	rm *.o rf24hubd rf24gwd rf24hubd_debug
 
-# Install the sensorhub
-install: 
-	./install.sh
+# Install the rf24hub and rf24gw
+install:  install_gw install_hub
+
+# Install the Gateway
+install_gw:
+	./install_gw.sh
+
+# Install the Hub
+install_hub:
+	./install_hub.sh
 

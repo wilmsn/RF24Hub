@@ -67,7 +67,7 @@ void Database::initSystem(void) {
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
-	sprintf (sql_stmt, "insert into sensor_im(sensor_id, sensor_name, add_info, node_id, channel, store_days, fhem_dev, html_show, value, utime) select sensor_id, sensor_name, add_info, node_id, channel, store_days, fhem_dev, html_show, value, utime from sensor");
+	sprintf (sql_stmt, "insert into sensor_im(sensor_id, sensor_name, add_info, node_id, channel, store_days, fhem_dev, html_show, html_order, value, utime) select sensor_id, sensor_name, add_info, node_id, channel, store_days, fhem_dev, html_show, html_order, value, utime from sensor");
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();

@@ -29,6 +29,20 @@
 
 enum sockType_t { TCP, UDP};
 
+struct TnData_t {
+        char tntext[DEBUGSTRINGSIZE];
+        int  tn_socket;    
+};
+
+struct TnMsg_t {
+        long mtype;
+        struct TnData_t TnData;
+};
+
+struct thread_tn_data {
+   int tnsocket;
+};
+
 static const char date_format1[] = "%d.%m.%Y %H:%M:%S";
 static const char date_format2[] = "%Y.%m.%d %H:%M:%S";
 
@@ -68,7 +82,9 @@ char* unpackData(uint32_t data, char* buf);
 
 void sendUdpMessage(const char* host, const char* port, udpdata_t * udpdata );
 
-void openSocket(const char* host, const char* port, struct sockaddr_in *address, int* handle, sockType_t sockType );
+bool openSocket(const char* port, struct sockaddr_in *address, int* handle, sockType_t sockType );
+
+void printPayload(char* ts, const char* header, payload_t* mypayload);
 
 #endif // _RF24HUBD_COMMON_H_
 

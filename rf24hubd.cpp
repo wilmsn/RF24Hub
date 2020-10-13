@@ -14,12 +14,12 @@ void do_tn_cmd(NODE_DATTYPE node_id, uint8_t channel, char* value) {
     if ( verboselevel & VERBOSETELNET) {    
         printf("%sdo_tn_cmd: %s\n", ts(tsbuf), tn_cmd );
     }
-    portno = std::stoi(cfg.fhemPort);
+    portno = std::stoi(cfg.fhemPortNo);
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
         printf("%sERROR: do_tn_cmd: error opening socket\n", ts(tsbuf));
 	}	
-    server = gethostbyname(cfg.fhemHost.c_str());
+    server = gethostbyname(cfg.fhemHostName.c_str());
     if (server == NULL) {
         printf("%sERROR: do_tn_cmd: no such host\n", ts(tsbuf));
     }
@@ -35,7 +35,7 @@ void do_tn_cmd(NODE_DATTYPE node_id, uint8_t channel, char* value) {
 			printf("%sERROR: do_tn_cmd: error writing to socket\n", ts(tsbuf));
 		} else {
             if ( verboselevel & VERBOSETELNET) {    
-                printf("%sdo_tn_cmd: Telnet to %s Port %u successfull Command: %s\n", ts(tsbuf), cfg.fhemHost.c_str(), portno, tn_cmd);
+                printf("%sdo_tn_cmd: Telnet to %s Port %u successfull Command: %s\n", ts(tsbuf), cfg.fhemHostName.c_str(), portno, tn_cmd);
             }
 		}		
 		write(sockfd,tn_quit,strlen(tn_quit));
@@ -58,7 +58,7 @@ static void* receive_tn_in (void *arg) {
     write(f->tnsocket , client_message , strlen(client_message));
     MsgLen = recv(f->tnsocket, buffer, TELNETBUFFERSIZE, 0);
     if (MsgLen>0) {
-        int msgID = msgget(MSGKEY, IPC_CREAT | 0600);
+        int msgID = msgget(MSGKEYHUB, IPC_CREAT | 0600);
         TnMsg.mtype = 1;
         TnMsg.TnData.tn_socket = 0;
         //sprintf(TnMsg.tntext,"Incoming telnet data from %s:",inet_ntoa(address->sin_addr));
@@ -398,17 +398,14 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
 *
 ********************************************************************************************/
 void sighandler(int signal) {
-    if ( ! cfg.startSniffer ) {
-        printf("%sSIGTERM: Cleanup system ... saving *_im tables ...\n",ts(tsbuf));
-        exit_system();
-    }
+    printf("%sSIGTERM: Cleanup system ... saving *_im tables ...\n",ts(tsbuf));
+    exit_system();
     printf("%sSIGTERM: Shutting down ...\n",ts(tsbuf));
-    cfg.removePidFile(cfg.hub_pidFileName);
-//	msgctl(msqid, IPC_RMID, NULL);
+    cfg.removePidFile(cfg.hubPidFileName);
     exit (0);
 }
 
-
+/*
 void channelscanner (uint8_t channel) {
   int values=0;
   printf("Scanning channel: %u\n", channel);
@@ -563,6 +560,7 @@ void printPayload(payload_t* mypayload) {
         free_str(verboselevel,"vbuf5",vbuf5,ts(tsbuf));
         free_str(verboselevel,"vbuf6",vbuf6,ts(tsbuf));
 }
+*/
 
 void process_payload(payload_t* mypayload) {
     if ( mypayload->data1 > 0 ) process_sensor(mypayload->node_id, mypayload->data1);
@@ -579,19 +577,22 @@ int main(int argc, char* argv[]) {
     buf = (char*)malloc(TSBUFFERSIZE);
     tsbuf = (char*)malloc(TSBUFFERSIZE);
 	/* vars for telnet socket handling */
-	int tn_in_socket = 0;
+//	int tn_in_socket = 0;
     int new_tn_in_socket = 0;
-	socklen_t addrlen;
-	struct sockaddr_in address, udp_address;
-    struct sockaddr_in UDPinAddr;
-	long save_fd;
-	const int y = 1;
+	socklen_t tcp_addrlen, udp_addrlen;
+    struct sockaddr_in udp_address_in, tcp_address_in;
+int udp_sockfd_in;
+int tcp_sockfd_in;
+//	struct sockaddr_in udp_address;
+//    struct sockaddr_in UDPinAddr;
+//	long save_fd;
+//	const int y = 1;
 	int msgID;
-    socklen_t len;
+//    socklen_t len;
     TnMsg_t LogMsg;
     time_t lastDBsync = time(0);
     ssize_t UdpMsgLen;
-    char udpServer[20];
+//    char udpServer[20];
 	
     // processing argc and argv[]
     cfg.processParams(PRGNAME, argc, argv);
@@ -603,10 +604,8 @@ int main(int argc, char* argv[]) {
     }
     
     // check for PID file, if exists terminate else create it
-    if ( cfg.checkPidFileSet(cfg.hub_pidFileName) ) {
+    if ( cfg.checkPidFileSet(cfg.hubPidFileName) ) {
          exit(1);
-    } else {
-         cfg.setPidFile(cfg.hub_pidFileName);
     }
     printf("--------------------------------------------------\n");
     printf("%sStartup Parameters:\n",ts(tsbuf));
@@ -619,9 +618,9 @@ int main(int argc, char* argv[]) {
 
     // run as daemon if started with -d
     if (cfg.startDaemon) {
-        logfile_ptr = fopen (cfg.hub_logFileName.c_str(),"a");
+        logfile_ptr = fopen (cfg.hubLogFileName.c_str(),"a");
         if ( ! logfile_ptr ) {
-            fprintf(stderr,"LOGFILE: %s can't open logfile, terminating !!!\n", cfg.hub_logFileName.c_str());
+            fprintf(stderr,"LOGFILE: %s can't open logfile, terminating !!!\n", cfg.hubLogFileName.c_str());
             exit(1);
         }
         fclose( logfile_ptr );
@@ -638,23 +637,25 @@ int main(int argc, char* argv[]) {
         } else {
             // nagativ is an error
             printf("%sFork ERROR ... exiting\n",ts(tsbuf));
-            cfg.removePidFile(cfg.hub_pidFileName);
+            cfg.removePidFile(cfg.hubPidFileName);
             exit(1);
         }
 
-        freopen(cfg.hub_logFileName.c_str(), "a+", stdout); 
-        freopen(cfg.hub_logFileName.c_str(), "a+", stderr); 
+        freopen(cfg.hubLogFileName.c_str(), "a+", stdout); 
+        freopen(cfg.hubLogFileName.c_str(), "a+", stderr); 
     }
     
+    cfg.setPidFile(cfg.hubPidFileName);
+
     // connect database
-    database.connect(cfg.dbHostName, cfg.dbUserName, cfg.dbPassWord, cfg.dbSchema, std::stoi(cfg.dbPort));
+    database.connect(cfg.dbHostName, cfg.dbUserName, cfg.dbPassWord, cfg.dbSchema, std::stoi(cfg.dbPortNo));
 
     if ( cfg.fhemPortSet && cfg.fhemHostSet ) {
-        printf("%stelnet session to FHEM started: Host: %s Port: %s\n",ts(tsbuf), cfg.fhemHost.c_str(), cfg.fhemPort.c_str());
+        printf("%stelnet session to FHEM started: Host: %s Port: %s\n",ts(tsbuf), cfg.fhemHostName.c_str(), cfg.fhemPortNo.c_str());
     }
 
-    if ( cfg.hub_incomingPortSet ) {
-    /* open incoming port for messages */
+/*    if ( cfg.hub_incomingPortSet ) {
+    // open incoming port for messages 
 		if ((tn_in_socket=socket( AF_INET, SOCK_STREAM, 0)) > 0) {
             address.sin_family = AF_INET;
             address.sin_addr.s_addr = INADDR_ANY;
@@ -674,11 +675,24 @@ int main(int argc, char* argv[]) {
         }            
 	}
     sleep(2);
+*/
+    
+    // Eingehendes Socket für TCP Messages öffnen
+    printf("%sSocket für eingehende TCP Messages (telnet) auf Port %s angelegt\n", ts(tsbuf), cfg.hubTcpPortNo.c_str());
+    if ( ! openSocket(cfg.hubTcpPortNo.c_str(), &tcp_address_in, &tcp_sockfd_in, TCP) ) {
+        printf("Error opening port !!!!\n");
+        cfg.removePidFile(cfg.hubPidFileName);
+        exit (0);
+    }
 
     // Eingehendes Socket für UDP Messages öffnen
-    printf("%sSocket für eingehende UDP Messages vom Gateway auf Port %s angelegt\n", ts(tsbuf), cfg.udp_hubPortno.c_str());
-    openSocket(NULL, cfg.udp_hubPortno.c_str(), &udp_address_in, &udp_sockfd_in, UDP);
-
+    printf("%sSocket für eingehende UDP Messages vom Gateway auf Port %s angelegt\n", ts(tsbuf), cfg.hubUdpPortNo.c_str());
+    if ( ! openSocket(cfg.hubUdpPortNo.c_str(), &udp_address_in, &udp_sockfd_in, UDP) ) {
+        printf("Error opening port !!!!\n");
+        cfg.removePidFile(cfg.hubPidFileName);
+        exit (0);
+    }
+    
     // Init Arrays
     node.setVerbose(verboselevel);
     sensor.setVerbose(verboselevel);
@@ -697,8 +711,8 @@ int main(int argc, char* argv[]) {
            lastDBsync = time(0);
         }
         /* Handling of incoming messages */
-		if ( cfg.hub_incomingPortSet ) {
-            new_tn_in_socket = accept ( tn_in_socket, (struct sockaddr *) &address, &addrlen );
+		if ( cfg.hubTcpPortSet ) {
+            new_tn_in_socket = accept ( tcp_sockfd_in, (struct sockaddr *) &tcp_address_in, &tcp_addrlen );
             if (new_tn_in_socket > 0) {
                 pthread_t a_thread;
                 int ret;
@@ -711,7 +725,7 @@ int main(int argc, char* argv[]) {
                 }                
             }
             // Read the messagequeue
-            msgID = msgget(MSGKEY, IPC_CREAT | 0600);
+            msgID = msgget(MSGKEYHUB, IPC_CREAT | 0600);
             if (msgID >= 0) {
                 int ret;
                 // Logmessages
@@ -740,13 +754,15 @@ int main(int argc, char* argv[]) {
             }
 		}
 // Verarbeitung von UDP Daten reinkommend
-    UdpMsgLen = recvfrom ( udp_sockfd_in, &udpdata, sizeof(udpdata), 0, (struct sockaddr *) &udp_address, &len );
+    UdpMsgLen = recvfrom ( udp_sockfd_in, &udpdata, sizeof(udpdata), 0, (struct sockaddr *) &udp_address_in, &udp_addrlen );
     if (UdpMsgLen > 0) {
-        sprintf(udpServer,"%s", inet_ntoa(udp_address.sin_addr) );
-        printf ("%s :UDP %u ", udpServer, ntohs (udp_address.sin_port));
         memcpy(&payload, &udpdata.payload, sizeof(payload) );
-        printPayload(&payload);
-        if ( gateway.isGateway(udpServer) ) {
+        if ( verboselevel & VERBOSERF24 ) {
+//            sprintf(udpServer,"%s", inet_ntoa(udp_address.sin_addr) );
+            printf ("%s UDP Message from: %s \n",ts(tsbuf), inet_ntoa(udp_address_in.sin_addr));
+            printPayload(ts(tsbuf), "G>H", &payload);
+        }
+        if ( gateway.isGateway(inet_ntoa(udp_address_in.sin_addr)) ) {
             switch ( payload.msg_type ) {
                 case PAYLOAD_TYPE_INIT: { // Init message from a node!!
                     if (node.isNewHB(payload.node_id, payload.heartbeatno, mymillis())) process_payload(&payload);
@@ -838,12 +854,12 @@ int main(int argc, char* argv[]) {
                 void* p_rec = NULL;
                 p_rec = gateway.getGWIP(p_rec, p_gw_ip);
                 while ( p_rec ) { 
-                    printf("Snd: %s: ", p_gw_ip);
-                    printPayload(&payload);
-                    p_rec = gateway.getGWIP(p_rec, p_gw_ip);
+                    // printf("Snd: %s: ", p_gw_ip);
+                    if ( verboselevel & VERBOSERF24) printPayload(ts(tsbuf), "H>G", &payload);
                     udpdata.gwno=0;
                     memcpy(&udpdata.payload, &payload, sizeof(payload) );
-                    sendUdpMessage(p_gw_ip, cfg.udp_gwPortno.c_str(), &udpdata); 
+                    sendUdpMessage(p_gw_ip, cfg.gwUdpPortNo.c_str(), &udpdata); 
+                    p_rec = gateway.getGWIP(p_rec, p_gw_ip);
                 }
             }
  			usleep(50000);

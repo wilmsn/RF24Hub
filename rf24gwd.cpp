@@ -1,5 +1,153 @@
 #include "rf24gwd.h" 
 
+/* Die Thread-Funktion fuer den Empfang von telnet Daten*/
+
+static void* receive_tn_in (void *arg) {
+    struct thread_tn_data *f = (struct thread_tn_data *)arg;
+    char* buffer = alloc_str(verboselevel,"receive_tn_in buffer",TELNETBUFFERSIZE,ts(tsbuf));
+    char* client_message = alloc_str(verboselevel,"receive_tn_in client_message",DEBUGSTRINGSIZE,ts(tsbuf));
+    ssize_t MsgLen;
+    TnMsg_t TnMsg;
+    int ret;
+    // send something like a prompt. perl telnet is waiting for it otherwise we get error
+    // use this in perl: my $t = new Net::Telnet (Timeout => 2, Port => 7001, Prompt => '/rf24hub>/');
+    sprintf(client_message,"rf24hub> ");
+    write(f->tnsocket , client_message , strlen(client_message));
+    MsgLen = recv(f->tnsocket, buffer, TELNETBUFFERSIZE, 0);
+    if (MsgLen>0) {
+        int msgID = msgget(MSGKEYGW, IPC_CREAT | 0600);
+        TnMsg.mtype = 1;
+        TnMsg.TnData.tn_socket = 0;
+        //sprintf(TnMsg.tntext,"Incoming telnet data from %s:",inet_ntoa(address->sin_addr));
+        sprintf(TnMsg.TnData.tntext,"Incoming telnet data from :");
+        if (msgID >= 0) msgsnd(msgID, &TnMsg, sizeof(TnMsg), 0);
+        TnMsg.mtype = 2;
+        TnMsg.TnData.tn_socket = f->tnsocket;
+        sprintf(TnMsg.TnData.tntext,"%s", trim(buffer));
+        if (msgID >= 0) msgsnd(msgID, &TnMsg, sizeof(TnMsg), 0);
+            
+        // Wait for a message with processing result            
+        ret=msgrcv(msgID, &TnMsg, sizeof(TnMsg), 9, 0);
+        if ( ret > 5 ) {
+            write(f->tnsocket, TnMsg.TnData.tntext, strlen(TnMsg.TnData.tntext));
+        }
+        
+    }
+    //sprintf(buffer,"%s %d\n",PRGNAME,SWVERSION);
+    //write(tnsocket , buffer , strlen(buffer));
+    sleep(1);
+    close (f->tnsocket);
+    free(f);
+    free_str(verboselevel,"receive_tn_in buffer",buffer,ts(tsbuf));
+    free_str(verboselevel,"receive_tn_in client_message",client_message,ts(tsbuf));
+    pthread_exit((void *)pthread_self());
+}
+
+/* Die Thread-Funktion fuer den Speicherung der Sensor Daten*/
+
+bool process_tn_in( char* inbuffer, int tn_socket) {
+/* Messages can look like this:
+       <word1		word2		word3		word4 				function>
+		init													Reinitialization of rf24hubd (reads actual values from database)
+		show		order										Lists open orders in textform
+                    sensor                                      Lists sensors and nodes
+                    radio       config                          Prints radio config to log
+		html 		order										Lists open orders in HTML form
+		set			sensor		<sensor#> 	<value>				Sets Sensor to Value (Store in Orderbuffer only)
+					node		<node#>		init				Initialize this Node (Send Initdata to the Node) 
+					verbose		<value>							Sets Verboselevel to new Value (1...9)
+		push		<node>      <channel>   <value>	            Pushes a value direct to a channel into a node 
+		setlast		sensor		<sensor#> 	<value>				Sets Sensor to Value and starts sending (Store in Orderbuffer and transfer all requests for this Node to Order)
+			
+*/
+
+	char 
+         //cmp_init[]="init", 
+		 //cmp_sensor[]="sensor",
+		 cmp_set[]="set",
+		 //cmp_setlast[]="setlast",
+		 //cmp_html[]="html",
+		 //cmp_order[]="order",	 
+		 cmp_verbose[]="verbose",	
+         //cmp_push[]="push",
+         cmp_show[]="show",
+         cmp_radio[]="radio",
+         //cmp_sync[]="sync",
+         cmp_config[]="config";
+	char *wort1a, *wort2a, *wort3a, *wort4a;
+	char *wort1, *wort2, *wort3, *wort4;
+    char* message = alloc_str(verboselevel,"process_tn_in message",120,ts(tsbuf));
+	bool tn_input_ok = false;
+	char delimiter[] = " ";
+	//trim(buffer);
+	wort1a = strtok(inbuffer, delimiter);
+	wort2a = strtok(NULL, delimiter);
+	wort3a = strtok(NULL, delimiter);
+	wort4a = strtok(NULL, delimiter);
+    //char* pEnd;
+    if (wort1a) { 
+        wort1 = alloc_str(verboselevel,"process_tn_in wort1",strlen(wort1a)+1,ts(tsbuf));
+        strcpy(wort1, wort1a);
+    } else { 
+        wort1 = alloc_str(verboselevel,"process_tn_in wort1",1,ts(tsbuf));
+        wort1[0] = '\0';
+    }
+    if (wort2a) { 
+        wort2 = alloc_str(verboselevel,"process_tn_in wort2",strlen(wort2a)+1,ts(tsbuf));
+        strcpy(wort2, wort2a);
+    } else { 
+        wort2 = alloc_str(verboselevel,"process_tn_in wort2",1,ts(tsbuf));
+        wort2[0] = '\0';
+    }
+    if (wort3a) { 
+        wort3 = alloc_str(verboselevel,"process_tn_in wort3",strlen(wort3a)+1,ts(tsbuf));
+        strcpy(wort3, wort3a);
+    } else { 
+        wort3 = alloc_str(verboselevel,"process_tn_in wort3",1,ts(tsbuf));
+        wort3[0] = '\0';
+    }
+    if (wort4a) { 
+        wort4 = alloc_str(verboselevel,"process_tn_in wort4",strlen(wort4a)+1,ts(tsbuf));
+        strcpy(wort4, wort4a);
+    } else { 
+        wort4 = alloc_str(verboselevel,"process_tn_in wort4",1,ts(tsbuf));
+        wort4[0] = '\0';
+    }
+    // set verbose <new verboselevel>
+	// sets the new verboselevel
+	if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (strlen(wort3) > 0) && (strlen(wort4) == 0) ) {
+//        if ( wort3[0] > '0' && wort3[0] < '9' + 1 ) {
+			tn_input_ok = true;
+			verboselevel = decodeVerbose(verboselevel, wort3);
+//		}	
+	}
+    // show radio config
+	if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_radio) == 0) && (strcmp(wort3,cmp_config) == 0) && (strlen(wort4) == 0) ) {
+		tn_input_ok = true;
+		radio.printDetails();
+	}
+    // show verbose
+	if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
+		tn_input_ok = true;
+		sprintf(message,"Active verboselevel: %s\n",printVerbose(verboselevel, buf));
+		write(tn_socket , message , strlen(message));
+    }
+	if ( ! tn_input_ok) {
+        //printf("%u \n",sizeof(tn_usage_txt)/ sizeof(int));
+        for(unsigned int i=0; i<sizeof(tn_usage_txt)/ sizeof(int); i++) {
+            sprintf(message,"%s\n",tn_usage_txt[i]);
+            write(tn_socket , message , strlen(message));
+        }
+        sprintf(message,"%s version %s", PRGNAME, SWVERSION_STR);
+        write(tn_socket , message , strlen(message));
+	}		
+	free_str(verboselevel,"process_tn_in wort1",wort1,ts(tsbuf));
+    free_str(verboselevel,"process_tn_in wort2",wort2,ts(tsbuf));
+    free_str(verboselevel,"process_tn_in wort3",wort3,ts(tsbuf));
+    free_str(verboselevel,"process_tn_in wort4",wort4,ts(tsbuf));
+    free_str(verboselevel,"process_tn_in message", message,ts(tsbuf));
+    return tn_input_ok;
+}
 
 void exit_system(void) {
 }
@@ -14,11 +162,9 @@ void init_system(void) {
 ********************************************************************************************/
 void sighandler(int signal) {
     printf("%sSIGTERM: Shutting down ...\n",ts(tsbuf));
-    cfg.removePidFile(cfg.gw_pidFileName);
-//	msgctl(msqid, IPC_RMID, NULL);
+    cfg.removePidFile(cfg.gwPidFileName);
     exit (0);
 }
-
 
 void channelscanner (uint8_t channel) {
   int values=0;
@@ -146,66 +292,21 @@ void scanner(char scanlevel) {
   printf("\n"); 
 }
 
-/*
-void sniffer(void) {
-    payload_t payload;
-    radio.flush_tx();
-    radio.setCRCLength(RF24_CRC_16);
-    while (true) {
-        if ( radio.available() ) {
-            if ( radio.isValid() ) {
-                radio.read(&payload,sizeof(payload));
-                printPayload(0xffff, "Rec", " ", &payload);
-            } else {
-                radio.flush_rx();
-            }
-        } else {  
-            radio.flush_rx();
-            usleep(10000);
-        }
-    }
-}
-*/
-void printPayload(char* msg_header, payload_t* mypayload) {
-        char* vbuf1 = alloc_str(verboselevel,"vbuf1",10,ts(tsbuf));
-        char* vbuf2 = alloc_str(verboselevel,"vbuf2",10,ts(tsbuf));
-        char* vbuf3 = alloc_str(verboselevel,"vbuf3",10,ts(tsbuf));
-        char* vbuf4 = alloc_str(verboselevel,"vbuf4",10,ts(tsbuf));
-        char* vbuf5 = alloc_str(verboselevel,"vbuf5",10,ts(tsbuf));
-        char* vbuf6 = alloc_str(verboselevel,"vbuf6",10,ts(tsbuf));
-        vbuf1=unpackData(mypayload->data1, vbuf1);
-        vbuf2=unpackData(mypayload->data2, vbuf2);
-        vbuf3=unpackData(mypayload->data3, vbuf3);
-        vbuf4=unpackData(mypayload->data4, vbuf4);
-        vbuf5=unpackData(mypayload->data5, vbuf5);
-        vbuf6=unpackData(mypayload->data6, vbuf6);
-        printf("%s%s: N:%u T:%u m:%u F:0x%02X O:%u H:%u (%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)\n",
-               ts(tsbuf), msg_header, mypayload->node_id, mypayload->msg_type, mypayload->msg_id, mypayload->msg_flags, mypayload->orderno, mypayload->heartbeatno,
-               getChannel(mypayload->data1), vbuf1,
-               getChannel(mypayload->data2), vbuf2,
-               getChannel(mypayload->data3), vbuf3,
-               getChannel(mypayload->data4), vbuf4,
-               getChannel(mypayload->data5), vbuf5,
-               getChannel(mypayload->data6), vbuf6);   
-        free_str(verboselevel,"vbuf1",vbuf1,ts(tsbuf));
-        free_str(verboselevel,"vbuf2",vbuf2,ts(tsbuf));
-        free_str(verboselevel,"vbuf3",vbuf3,ts(tsbuf));
-        free_str(verboselevel,"vbuf4",vbuf4,ts(tsbuf));
-        free_str(verboselevel,"vbuf5",vbuf5,ts(tsbuf));
-        free_str(verboselevel,"vbuf6",vbuf6,ts(tsbuf));
-}
-
 int main(int argc, char* argv[]) {
     pid_t pid;
     payload_t payload;
-    char* buf1 = (char*)malloc(20);
-//    char* buf2 = (char*)malloc(20);
+    buf = (char*)malloc(TSBUFFERSIZE);
     tsbuf = (char*)malloc(TSBUFFERSIZE);
+    char* buf1 = (char*)malloc(20);
+	socklen_t tcp_addrlen, udp_addrlen;
+    struct sockaddr_in udp_address_in, tcp_address_in;
+//    char* buf2 = (char*)malloc(20);
 	/* vars for telnet socket handling */
-    struct sockaddr_in udp_address_in;
-    int udp_sockfd_in;
-    socklen_t len;
+    int udp_sockfd_in, tcp_sockfd_in;
+    int new_tn_in_socket = 0;
+	int msgID;
     ssize_t UdpMsgLen;
+    TnMsg_t LogMsg;
 
     // processing argc and argv[]
     cfg.processParams(PRGNAME, argc, argv);
@@ -217,15 +318,13 @@ int main(int argc, char* argv[]) {
     }
     
     // check for PID file, if exists terminate else create it
-    if ( cfg.checkPidFileSet(cfg.gw_pidFileName) ) {
+    if ( cfg.checkPidFileSet(cfg.gwPidFileName) ) {
          exit(1);
-    } else {
-         cfg.setPidFile(cfg.gw_pidFileName);
     }
     printf("--------------------------------------------------\n");
     printf("%sStartup Parameters:\n",ts(tsbuf));
     cfg.printConfig_gw();
-    sprintf(buf1,"GW:%s",cfg.gw_gwID.c_str());
+    sprintf(buf1,"GW:%s",cfg.gwGwID.c_str());
 //    sprintf(buf2,"");
     // init SIGTERM and SIGINT handling
     signal(SIGTERM, sighandler);
@@ -233,9 +332,9 @@ int main(int argc, char* argv[]) {
 
     // run as daemon if started with -d
     if (cfg.startDaemon) {
-        logfile_ptr = fopen (cfg.gw_logFileName.c_str(),"a");
+        logfile_ptr = fopen (cfg.gwLogFileName.c_str(),"a");
         if ( ! logfile_ptr ) {
-            fprintf(stderr,"LOGFILE: %s can't open logfile, terminating !!!\n", cfg.gw_logFileName.c_str());
+            fprintf(stderr,"LOGFILE: %s can't open logfile, terminating !!!\n", cfg.gwLogFileName.c_str());
             exit(1);
         }
         fclose( logfile_ptr );
@@ -252,33 +351,32 @@ int main(int argc, char* argv[]) {
         } else {
             // nagativ is an error
             printf("%sFork ERROR ... exiting\n",ts(tsbuf));
-            cfg.removePidFile(cfg.gw_pidFileName);
+            cfg.removePidFile(cfg.gwPidFileName);
             exit(1);
         }
 
-        freopen(cfg.gw_logFileName.c_str(), "a+", stdout); 
-        freopen(cfg.gw_logFileName.c_str(), "a+", stderr); 
+        freopen(cfg.gwLogFileName.c_str(), "a+", stdout); 
+        freopen(cfg.gwLogFileName.c_str(), "a+", stderr); 
     }
-    
-/*    if ( cfg.startSniffer ) {
-        radio.begin();
-        radio.setPALevel( RF24_PA_MAX ) ;
-        radio.setChannel( RF24_CHANNEL );
-        radio.setDataRate( RF24_SPEED );
-        radio.setAutoAck( false );
-        radio.disableDynamicPayloads();
-        radio.setPayloadSize(32);
-        uint8_t  rf24_node2hub[] = RF24_NODE2HUB;
-        uint8_t  rf24_hub2node[] = RF24_HUB2NODE;
-        radio.openReadingPipe(0,rf24_node2hub);
-        radio.openReadingPipe(1,rf24_hub2node);
-        radio.startListening();
-        radio.printDetails();
-        printf("\n");
-        printf("%ssniffing on radio on channel ... %d\n", ts(tsbuf), RF24_CHANNEL);
-        sniffer();
+
+    cfg.setPidFile(cfg.gwPidFileName);
+
+    // Eingehendes Socket für TCP Messages öffnen
+    printf("%sSocket für eingehende TCP Messages (telnet) auf Port %s angelegt\n", ts(tsbuf), cfg.gwTcpPortNo.c_str());
+    if ( ! openSocket(cfg.gwTcpPortNo.c_str(), &tcp_address_in, &tcp_sockfd_in, TCP) ) {
+        printf("Error opening port !!!!\n");
+        cfg.removePidFile(cfg.gwPidFileName);
+        exit (0);
     }
-*/
+
+    // Eingehendes Socket für UDP Messages öffnen
+    printf("%sSocket für eingehende UDP Messages vom Gateway auf Port %s angelegt\n", ts(tsbuf), cfg.gwUdpPortNo.c_str());
+    if ( ! openSocket(cfg.gwUdpPortNo.c_str(), &udp_address_in, &udp_sockfd_in, UDP) ) {
+        printf("Error: Open socket !!!!!! \n");
+        cfg.removePidFile(cfg.gwPidFileName);
+        exit (0);
+    }
+
     printf("%sstarting radio on channel ... %d\n", ts(tsbuf), RF24_CHANNEL);
     radio.begin();
     radio.setPALevel( RF24_PA_MAX ) ;
@@ -294,24 +392,61 @@ int main(int argc, char* argv[]) {
     radio.startListening();
     radio.printDetails();
 
-    // Eingehendes Socket für UDP Messages öffnen
-    printf("%sSocket für eingehende UDP Messages vom Gateway auf Port %s angelegt\n", ts(tsbuf), cfg.udp_gwPortno.c_str());
-    openSocket(NULL, cfg.udp_gwPortno.c_str(), &udp_address_in, &udp_sockfd_in, UDP);
-    //printf("opensocket: %s:%s\n",cfg.gw_hubHostname.c_str(), cfg.udp_hubPortno.c_str());
-    //openSocket(cfg.gw_hubHostname.c_str(), cfg.udp_hubPortno.c_str(),&udp_address,&udp_sockfd,UDP);
-
     init_system();
     printf("%s%s up and running\n", ts(tsbuf), PRGNAME); 
 
     // Main Loop
     while(1) {
+		if ( cfg.hubTcpPortSet ) {
+            new_tn_in_socket = accept ( tcp_sockfd_in, (struct sockaddr *) &tcp_address_in, &tcp_addrlen );
+            if (new_tn_in_socket > 0) {
+                pthread_t a_thread;
+                int ret;
+                struct thread_tn_data *f;
+                f = (struct thread_tn_data *)malloc(sizeof(struct thread_tn_data));
+                f->tnsocket = new_tn_in_socket;
+                ret = pthread_create(&a_thread, NULL, &receive_tn_in, f);
+                if (ret == 0) {
+                    pthread_detach(a_thread);
+                }                
+            }
+            // Read the messagequeue
+            msgID = msgget(MSGKEYGW, IPC_CREAT | 0600);
+            if (msgID >= 0) {
+                int ret;
+                // Logmessages
+                ret=msgrcv(msgID, &LogMsg, sizeof(LogMsg), 1, IPC_NOWAIT);
+                if ( (ret > 5) && (verboselevel & VERBOSETELNET)) {
+                    printf("%s%s\n", ts(tsbuf), LogMsg.TnData.tntext);
+                }
+                // store into orderbuffer and make order
+                ret=msgrcv(msgID, &LogMsg, sizeof(LogMsg), 2, IPC_NOWAIT);
+                if ( ret > 5 ) {
+                    if ( verboselevel & VERBOSETELNET ) {
+                        printf("%s%s\n", ts(tsbuf), LogMsg.TnData.tntext);
+                    }
+                    char* tnstr = alloc_str(verboselevel,"main tnstr",DEBUGSTRINGSIZE,ts(tsbuf));
+                    strcpy(tnstr, LogMsg.TnData.tntext);
+                    bool result = process_tn_in(tnstr,LogMsg.TnData.tn_socket);
+                    free_str(verboselevel,"main tnstr",tnstr,ts(tsbuf));
+                    LogMsg.mtype = 9;
+                    if ( result ) {
+                        sprintf(LogMsg.TnData.tntext,"Command received => OK\n");
+                    } else {
+                        sprintf(LogMsg.TnData.tntext,"Command received => Error\n");
+                    }
+                    if (msgID >= 0) msgsnd(msgID, &LogMsg, sizeof(LogMsg), 0);
+                }
+            }
+		}
 		if ( radio.isValid() && radio.available() ) {
 //
 // Receive loop: react on the message from the nodes
 //
 			radio.read(&payload,sizeof(payload));
-            udpdata.gwno = std::stoi(cfg.gw_gwID);;
-            udpdata.payload.node_id = payload.node_id;
+            udpdata.gwno = std::stoi(cfg.gwGwID);
+            memcpy(&udpdata.payload, &payload, sizeof(payload) );
+/*            udpdata.payload.node_id = payload.node_id;
             udpdata.payload.msg_id = payload.msg_id;
             udpdata.payload.msg_type = payload.msg_type;
             udpdata.payload.msg_flags = payload.msg_flags;
@@ -322,14 +457,14 @@ int main(int argc, char* argv[]) {
             udpdata.payload.data3 = payload.data3;
             udpdata.payload.data4 = payload.data4;
             udpdata.payload.data5 = payload.data5;
-            udpdata.payload.data6 = payload.data6;
-            printPayload(buf1, &udpdata.payload);
-			sendUdpMessage(cfg.gw_hubHostname.c_str(), cfg.udp_hubPortno.c_str(), &udpdata); 
+            udpdata.payload.data6 = payload.data6;   */
+            if ( verboselevel & VERBOSERF24) printPayload(ts(tsbuf), "N>G", &udpdata.payload);
+			sendUdpMessage(cfg.gwHubHostName.c_str(), cfg.hubUdpPortNo.c_str(), &udpdata); 
 		} // radio.available
 //
 // Orderloop: Tell the nodes what they have to do
 //
-    UdpMsgLen = recvfrom ( udp_sockfd_in, &udpdata, sizeof(udpdata), 0, (struct sockaddr *) &udp_address, &len );
+    UdpMsgLen = recvfrom ( udp_sockfd_in, &udpdata, sizeof(udpdata), 0, (struct sockaddr *) &udp_address, &udp_addrlen );
     if (UdpMsgLen > 0) {
         memcpy(&payload, &udpdata.payload, sizeof(payload) );
         radio.stopListening();
@@ -338,7 +473,7 @@ int main(int argc, char* argv[]) {
         radio.write(&payload,sizeof(payload));
         radio.startListening();
         //sprintf(buf1,"Snd:");
-        printPayload("Snd:",&payload);
+        if ( verboselevel & VERBOSERF24) printPayload(ts(tsbuf), "G>N", &payload);
     }
 //
 //  end orderloop

@@ -36,6 +36,7 @@
 #include "cfg.h"
 #include "rf24_config.h"
 #include "rf24gw_config.h"
+#include "rf24gw_text.h"
 
 using namespace std;
 
@@ -45,9 +46,10 @@ FILE * logfile_ptr;
 struct sockaddr_in udp_address;
 int udp_sockfd;
 uint16_t verboselevel = STARTUPVERBOSELEVEL;
-char* tsbuf;
 payload_t payload;
 udpdata_t udpdata;
+char* buf;
+char* tsbuf;
 
 // Setup for GPIO 25 CE and CE0 CSN with SPI Speed @ 8Mhz
 //RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
@@ -56,9 +58,14 @@ RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_CLOCK_DIVIDER_32768);
 
 Cfg          cfg;
 
-void sighandler(int signal);
+static void* receive_tn_in (void *arg);
+bool process_tn_in( char* inbuffer, int tn_socket);
+void exit_system(void);
+void init_system(void);
+void channelscanner (uint8_t channel);
+void scanner(char scanlevel);
 
-void printPayload(char* msg_header, payload_t * mypayload);
+void sighandler(int signal);
 
 int main(int argc, char* argv[]);
 

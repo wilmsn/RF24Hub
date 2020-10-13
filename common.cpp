@@ -291,45 +291,46 @@ void sendUdpMessage(const char* host, const char* port, udpdata_t * udpdata ) {
 	// loop through all the results and make a socket
 	for(p = servinfo; p != NULL; p = p->ai_next) {
 		if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
-			perror("talker: socket");
+			perror("Error: socket");
 			continue;
 		}
 		break;
 	}
 
 	if (p == NULL) {
-		fprintf(stderr, "talker: failed to bind socket\n");
+		fprintf(stderr, "Error: failed to bind socket\n");
 		exit(1);
 	}
 	if ((numbytes = sendto(sockfd, udpdata, sizeof(udpdata_t), 0, p->ai_addr, p->ai_addrlen)) == -1) {
-		perror("talker: sendto error");
+		perror("Error: sendto error");
 		exit(1);
 	}
 	close(sockfd);
     freeaddrinfo(servinfo);
 }
 
-void openSocket(const char* host, const char* port, struct sockaddr_in *address, int* handle, sockType_t sockType ) {
+bool openSocket(const char* port, struct sockaddr_in *address, int* handle, sockType_t sockType ) {
     int in_socket = 0;
     int rv;
+    bool retval = true;
     long save_fd;
 	const int y = 1;
     struct addrinfo hints, *servinfo, *p;
-    memset(&hints, 0, sizeof hints);
-//    cout << host << ":" << port << endl;
-//   	hints.ai_family = AF_UNSPEC; // set to AF_INET to force IPv4
-//    hints.ai_family = AF_INET6; // set to AF_INET to force IPv4
-    hints.ai_family = AF_INET; // set to AF_INET to force IPv4
+//    hints.ai_family = AF_INET;  // force IPv4
+//    hints.ai_family = AF_INET6; // force IPv6
+    hints.ai_family = AF_UNSPEC;    /* Allow IPv4 or IPv6 */
     if ( sockType == TCP ) {
 		hints.ai_socktype = SOCK_STREAM;
 	} else {
 		hints.ai_socktype = SOCK_DGRAM;
 	}		
-    hints.ai_flags = AI_PASSIVE; // use my IP
-    if ((rv = getaddrinfo(NULL, port, &hints, &servinfo)) != 0) {
-//    if ((rv = getaddrinfo(host, port, &hints, &servinfo)) != 0) {
-        //return (int)-1;
-    }
+    hints.ai_flags = AI_PASSIVE;    /* For wildcard IP address */
+    hints.ai_protocol = 0;          /* Any protocol */
+    hints.ai_canonname = NULL;
+    hints.ai_addr = NULL;
+    hints.ai_next = NULL;
+    rv = getaddrinfo(NULL, port, &hints, &servinfo);
+    if (rv != 0) retval = false;
 	// loop through all the results and bind to the first we can
     for(p = servinfo; p != NULL; p = p->ai_next) {
         if ((in_socket = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
@@ -341,9 +342,6 @@ void openSocket(const char* host, const char* port, struct sockaddr_in *address,
         }
         break;
     }
-    if (p == NULL) {
-        //return (int)-1;
-    }
     freeaddrinfo(servinfo);
 	setsockopt( in_socket, SOL_SOCKET, SO_REUSEADDR, &y, sizeof(int) );
 	listen (in_socket, 5);
@@ -351,4 +349,29 @@ void openSocket(const char* host, const char* port, struct sockaddr_in *address,
 	save_fd |= O_NONBLOCK;
 	fcntl( in_socket, F_SETFL, save_fd );
     *handle = in_socket;
+    return retval;
 }
+
+void printPayload(char* ts, const char* header, payload_t* mypayload) {
+    char *buf[6];
+    for (int  i = 0; i < 6; i++) buf[i]=(char*)malloc(10);
+    buf[0]=unpackData(mypayload->data1, buf[0]);
+    buf[1]=unpackData(mypayload->data2, buf[1]);
+    buf[2]=unpackData(mypayload->data3, buf[2]);
+    buf[3]=unpackData(mypayload->data4, buf[3]);
+    buf[4]=unpackData(mypayload->data5, buf[4]);
+    buf[5]=unpackData(mypayload->data6, buf[5]);
+    printf("%s %s N:%u T:%u m:%u F:0x%02X O:%u H:%u (%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)\n", ts, header,
+               mypayload->node_id, mypayload->msg_type, mypayload->msg_id, mypayload->msg_flags, mypayload->orderno, mypayload->heartbeatno,
+               getChannel(mypayload->data1), buf[0],
+               getChannel(mypayload->data2), buf[1],
+               getChannel(mypayload->data3), buf[2],
+               getChannel(mypayload->data4), buf[3],
+               getChannel(mypayload->data5), buf[4],
+               getChannel(mypayload->data6), buf[5]);   
+    for (int  i = 0; i < 6; i++) free(buf[i]);
+}
+
+
+
+

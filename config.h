@@ -8,8 +8,10 @@
 
 #define DEFAULT_CONFIG_FILE "/etc/rf24hub/rf24hub.cfg"
 #define PARAM_MAXLEN 80
-// The Key for the Messagebuffer
-#define MSGKEY 3452
+// The Key for the Messagebuffer (Hub)
+#define MSGKEYHUB 3452
+// The Key for the Messagebuffer (GW)
+#define MSGKEYGW 3453
 // How long do we try to deliver (in msec) => 20 Min.
 #define KEEPINBUFFERTIME 1200000    
 // Interval to send a request to the regular node in millisec.

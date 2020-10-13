@@ -45,41 +45,46 @@ public:
 	
 // Hier die verwendeten Variablen:
 /**********************************************
- * Gemeinsam verwendet
- *********************************************/ 
-// UDP port of hub
-string udp_hubPortno;
-// UDP port of gw
-string udp_gwPortno;
-/**********************************************
- * rf24Hub
+ * Variablen für den Gateway
  **********************************************/
 // Logfilename for the gw
-string gw_logFileName;
+string gwLogFileName;
 // Pidfilename for the gw
-string gw_pidFileName;
+string gwPidFileName;
 // Hostname of hub
-string gw_hubHostname;
+string gwHubHostName;
+// UDP port of gw
+string gwUdpPortNo;
+// TCP port of gw
+string gwTcpPortNo;
+// gwTcpPortSet is true when an incoming TCP port is set by configuration
+bool gwTcpPortSet;
+// gwUdpPortSet is true when an incoming UDP port is set by configuration
+bool gwUdpPortSet;
 // A unique ID for this Gateway
-string gw_gwID;
+string gwGwID;
 /**********************************************
- * rf24Hub
+ * Variablen für den Hub
  **********************************************/
+// UDP port of hub
+string hubUdpPortNo;
 // Logfilename for the hub
-string hub_logFileName;
+string hubLogFileName;
 // Pidfilename for the hub
-string hub_pidFileName;
+string hubPidFileName;
 // telnet Port for incoming messages
-string hub_incomingPort;
-// rf24HubTelnetPortSet is true when an incomine telnet port is set by configuration
-bool hub_incomingPortSet;
+string hubTcpPortNo;
+// hubTcpPortSet is true when an incoming TCP port is set by configuration
+bool hubTcpPortSet;
+// rf24HubUdpPortSet is true when an incoming UDP port is set by configuration
+bool hubUdpPortSet;
 /**********************************************
  * Database
  **********************************************/
 //hostname for database server
 string dbHostName;
 //port on database server
-string dbPort;
+string dbPortNo;
 //Schema inside database
 string dbSchema;
 //Username for database
@@ -90,9 +95,9 @@ string dbPassWord;
  * FHEM
  **********************************************/
 //Hostname for FHEM server 
-string fhemHost;
+string fhemHostName;
 //Port for FHEM
-string fhemPort;
+string fhemPortNo;
 // fhemHostSet is true when an outgoing fhem hostname is set by configuration
 bool fhemHostSet;
 // fhemPortSet is true when an outgoing fhem port is set by configuration

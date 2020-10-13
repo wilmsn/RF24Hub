@@ -126,7 +126,7 @@ void Cfg::processParams(const char* prgname, int argc, char* argv[]) {
          trim (value);
     /* Copy into correct entry in parameters struct */
     if      (strcmp(name, "db_hostname")==0) dbHostName = value;
-    else if (strcmp(name, "db_port")==0)     dbPort = value;
+    else if (strcmp(name, "db_port")==0)     dbPortNo = value;
     else if (strcmp(name, "db_schema")==0)   dbSchema = value;
     else if (strcmp(name, "db_username")==0) dbUserName = value;
     else if (strcmp(name, "db_password")==0) dbPassWord = value;
@@ -134,40 +134,46 @@ void Cfg::processParams(const char* prgname, int argc, char* argv[]) {
 //            if (! verboseLevel) verboseLevel = atoi(value);
 //		}
     else if (strcmp(name, "fhem_hostname")==0) {
-            fhemHost = value;
+            fhemHostName = value;
             fhemHostSet=true;
         }
     else if (strcmp(name, "fhem_port")==0) {
-            fhemPort = value;
+            fhemPortNo = value;
             fhemPortSet = true;
         }
-    else if (strcmp(name, "hub_incoming_port")==0) {
-            hub_incomingPort = value;
-            hub_incomingPortSet = true;
+    else if (strcmp(name, "hub_tcp_port")==0) {
+            hubTcpPortNo = value;
+            hubTcpPortSet = true;
+        }
+    else if (strcmp(name, "gw_tcp_port")==0) {
+            gwTcpPortNo = value;
+            gwTcpPortSet = true;
         }
     else if (strcmp(name, "hub_logfile")==0) {
-            hub_logFileName = value;
+            hubLogFileName = value;
         }
     else if (strcmp(name, "hub_pidfile")==0) {
-            hub_pidFileName = value;
+            hubPidFileName = value;
 		}
     else if (strcmp(name, "gw_logfile")==0) {
-            gw_logFileName = value;
+            gwLogFileName = value;
         }
     else if (strcmp(name, "gw_pidfile")==0) {
-            gw_pidFileName = value;
+            gwPidFileName = value;
 		}
     else if (strcmp(name, "gw_hubhostname")==0) {
-            gw_hubHostname = value;
+            gwHubHostName = value;
         }
-    else if (strcmp(name, "udp_hubportno")==0) {
-            udp_hubPortno = value;
+    else if (strcmp(name, "hub_udp_portno")==0) {
+            hubUdpPortNo = value;
+            hubUdpPortSet = true;
 		}
-    else if (strcmp(name, "udp_gwportno")==0) {
-            udp_gwPortno = value;
+    else if (strcmp(name, "gw_udp_portno")==0) {
+            gwUdpPortNo = value;
+            gwUdpPortSet = true;
 		}
     else if (strcmp(name, "gw_gwid")==0) {
-            gw_gwID = value;
+            gwGwID = value;
 		}
     else
       printf("WARNING: %s = %s Unknown name=value pair!\n", name, value );
@@ -185,27 +191,27 @@ void Cfg::processParams(const char* prgname, int argc, char* argv[]) {
 }
 
 void Cfg::printConfig_hub (void) {
-    printf("Hub Logfile: %s\n", hub_logFileName.c_str() );
-    printf("Hub PIDfile: %s\n", hub_pidFileName.c_str() );
-    printf("Hub-UDP Port: %s\n", udp_hubPortno.c_str() );
-    printf("Gateway UDP Port: %s\n", udp_gwPortno.c_str() );
-    printf("FHEM-Hostname: %s\n", fhemHost.c_str() );
-    printf("FHEM-Port: %s\n", fhemPort.c_str() );
-    printf("incoming Port: %s\n", hub_incomingPort.c_str() );
+    printf("Hub Logfile: %s\n", hubLogFileName.c_str() );
+    printf("Hub PIDfile: %s\n", hubPidFileName.c_str() );
+    printf("Hub-UDP Port: %s\n", hubUdpPortNo.c_str() );
+    printf("Gateway UDP Port: %s\n", gwUdpPortNo.c_str() );
+    printf("FHEM-Hostname: %s\n", fhemHostName.c_str() );
+    printf("FHEM-Port: %s\n", fhemPortNo.c_str() );
+    printf("incoming Telnet Port: %s\n", hubTcpPortNo.c_str() );
 }
 
 void Cfg::printConfig_gw (void) {
-    printf("Gw Logfile: %s\n", gw_logFileName.c_str() );
-    printf("Gw PIDfile: %s\n", gw_pidFileName.c_str() );
-    printf("Hub-Hostname: %s\n", gw_hubHostname.c_str() );
-    printf("Hub-UDP Port: %s\n", udp_hubPortno.c_str() );
-    printf("Gateway UDP Port: %s\n", udp_gwPortno.c_str() );
-    printf("Gw ID: %s\n", gw_gwID.c_str() );
+    printf("Gw Logfile: %s\n", gwLogFileName.c_str() );
+    printf("Gw PIDfile: %s\n", gwPidFileName.c_str() );
+    printf("Hub-Hostname: %s\n", gwHubHostName.c_str() );
+    printf("Hub-UDP Port: %s\n", hubUdpPortNo.c_str() );
+    printf("Gateway UDP Port: %s\n", gwUdpPortNo.c_str() );
+    printf("Gw ID: %s\n", gwGwID.c_str() );
 }
 
 void Cfg::printConfig_db (void) {
     printf("DB-Hostname: %s\n", dbHostName.c_str() );
-    printf("DB-Port: %s\n", dbPort.c_str() );
+    printf("DB-Port: %s\n", dbPortNo.c_str() );
     printf("DB-Schema: %s\n", dbSchema.c_str() );
     printf("DB-Username: %s\n", dbUserName.c_str() );
     printf("DB-Password: %s\n", dbPassWord.c_str() );

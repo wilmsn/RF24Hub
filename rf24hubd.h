@@ -60,8 +60,6 @@ struct sockaddr_in serv_addr;
 struct hostent *server;
 FILE * pidfile_ptr;
 FILE * logfile_ptr;
-struct sockaddr_in udp_address_in;
-int udp_sockfd_in;
 udpdata_t udpdata;
 
 uint16_t verboselevel = STARTUPVERBOSELEVEL;
@@ -72,20 +70,6 @@ char* tsbuf;
 //RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
 RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_CLOCK_DIVIDER_32768);
 //RF24 radio(22,0,BCM2835_SPI_SPEED_1MHZ);
-
-struct TnData_t {
-        char tntext[DEBUGSTRINGSIZE];
-        int  tn_socket;    
-};
-
-struct TnMsg_t {
-        long mtype;
-        struct TnData_t TnData;
-};
-
-struct thread_tn_data {
-   int tnsocket;
-};
 
 struct thread_db_data {
    uint32_t     sensor_id;
@@ -111,7 +95,7 @@ void do_tn_cmd(NODE_DATTYPE node, uint8_t sensor, char* value);
 
 void process_tn_in(int new_socket, char* buffer, char* client_message);
 
-uint32_t packData(uint8_t mychannel, char* wort4);
+//uint32_t packData(uint8_t mychannel, char* wort4);
 
 /*******************************************************************************************
 *
@@ -135,7 +119,7 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t data);
 ********************************************************************************************/
 void sighandler(int signal);
 
-void printPayload(payload_t * mypayload);
+//void printPayload(payload_t * mypayload);
 
 void process_payload(payload_t* mypayload);
 
