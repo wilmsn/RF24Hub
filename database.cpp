@@ -104,8 +104,9 @@ void Database::initGateway(Gateway* gateway) {
 	MYSQL_ROW row;
     char gw_name[40];
     char gw_ip[40];
+    uint16_t gw_no;
     bool isactive;
-	sprintf (sql_stmt, "select gw_name, gw_ip, isactive from gateway");
+	sprintf (sql_stmt, "select gw_name, gw_ip, gw_no, isactive from gateway");
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
@@ -114,8 +115,9 @@ void Database::initGateway(Gateway* gateway) {
 	while ((row = mysql_fetch_row(result))) {
 		if ( row[0] != NULL ) sprintf(gw_name,"%s",trim(row[0])); else sprintf(gw_name," ");
 		if ( row[1] != NULL ) sprintf(gw_ip,"%s",trim(row[1])); else sprintf(gw_ip," ");
-		if ( row[2] != NULL ) isactive = strtoul(row[2], &pEnd, 10); else isactive = 0;
-        gateway->addGateway(gw_name, gw_ip, isactive); 
+        if ( row[2] != NULL ) gw_no = strtoul(row[2], &pEnd, 10); else gw_no = 0;
+		if ( row[3] != NULL ) isactive = strtoul(row[3], &pEnd, 10); else isactive = 0;
+        gateway->addGateway(gw_name, gw_ip, gw_no, isactive); 
 	}
 	mysql_free_result(result);    
 }    

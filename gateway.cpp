@@ -33,9 +33,10 @@ void Gateway::newEntry(gateway_t* p_new) {
     }
 }
 
-void Gateway::addGateway(char* gw_name, char* gw_ip, bool isActive) {
+void Gateway::addGateway(char* gw_name, char* gw_ip, uint16_t gw_no, bool isActive) {
     gateway_t *p_new = new gateway_t;
     p_new->gw_name = (char*)malloc(40);
+    p_new->gw_no = gw_no;
     p_new->gw_ip = (char*)malloc(40);
     sprintf(p_new->gw_name,"%s",gw_name);
     sprintf(p_new->gw_ip,"%s",gw_ip);
@@ -44,20 +45,25 @@ void Gateway::addGateway(char* gw_name, char* gw_ip, bool isActive) {
     newEntry(p_new);
 }
 
-void* Gateway::getGWIP(void* p_rec, char* p_gw_ip) {
+void* Gateway::getGW(void* p_rec, char* gw_ip, uint16_t *p_gw_no) {
     gateway_t *p_search;
+    void* retval = NULL;
     if (p_rec) {
         p_search = (gateway_t*)p_rec;
         p_search = p_search->p_next;
-        if ( p_search ) {
-            sprintf(p_gw_ip, "%s", p_search->gw_ip);
-        }
-        return (void*)p_search;
     } else {
-        sprintf(p_gw_ip, "%s", p_initial->gw_ip);
-        //p_rec = (void*)p_search->p_next;
-        return (void*)p_initial;
+        p_search = p_initial;
     }
+    while (p_search) {
+        if (p_search->isActive) {
+            sprintf(gw_ip, "%s", p_search->gw_ip);
+            *p_gw_no = p_search->gw_no;
+            retval = (void*)p_search;
+            p_search = NULL;
+        }
+        if (p_search) p_search = p_search->p_next;
+    }
+    return retval;
 }
 
 bool Gateway::isGateway(char* gw_ip) {
@@ -84,7 +90,7 @@ void Gateway::printBuffer(int out_socket, bool htmlformat) {
     sprintf(client_message," ------ Gateways: ------\n"); 
     write(out_socket , client_message , strlen(client_message));
     while (p_search) {
-        sprintf(client_message,"GW.Name:%s GW.IP: %s %s\n", p_search->gw_name, p_search->gw_ip, p_search->isActive? "aktiv":"nicht aktiv" );    
+        sprintf(client_message,"GW.Name:%s GW.NO %u GW.IP: %s %s\n", p_search->gw_name, p_search->gw_no, p_search->gw_ip, p_search->isActive? "aktiv":"nicht aktiv" );    
 		write(out_socket , client_message , strlen(client_message));
         p_search=p_search->p_next;
 	}

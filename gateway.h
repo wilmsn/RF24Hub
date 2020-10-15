@@ -19,6 +19,7 @@ private:
 
 struct gateway_t {
         char*              gw_name;
+        uint16_t           gw_no;
         char*              gw_ip;
         bool               isActive;
         gateway_t*         p_next;
@@ -51,7 +52,7 @@ public:
  * Wenn ein NULL Pointer zurückgegeben wird, 
  * dann war es der letzte Record 
  *************************************************************/
-void* getGWIP( void* p_rec, char* p_gw_ip );
+void* getGW( void* p_rec, char* p_gw_ip, uint16_t *p_gw_no );
 /**************************************************************
  *  Setzt das Verboselevel
  *************************************************************/    
@@ -67,7 +68,7 @@ void cleanup(void);
 /**************************************************************
  *  Fügt einen neuen Gateway hinzu
  *************************************************************/    
-void addGateway(char* gw_name, char* gw_ip, bool isActive );
+void addGateway(char* gw_name, char* gw_ip, uint16_t gw_no, bool isActive );
 /*************************************************************
  *  Prüft ob ein Gateway aktiv (= true) ist.
  ************************************************************/

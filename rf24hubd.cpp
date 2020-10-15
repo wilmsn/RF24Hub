@@ -405,163 +405,6 @@ void sighandler(int signal) {
     exit (0);
 }
 
-/*
-void channelscanner (uint8_t channel) {
-  int values=0;
-  printf("Scanning channel: %u\n", channel);
-  radio.begin();
-  for (int i=0; i < 1000; i++) {
-    radio.setChannel(channel);
-
-    // Listen for a little
-    radio.startListening();
-    usleep(1000);
-
-    // Did we get a carrier?
-    if ( radio.testCarrier() ){
-      values++;
-      printf("X");
-    } else {
-      printf(".");
-    }
-    radio.stopListening();
-
-  }
-  printf("1000 passes: Detect %d times a carrier\n", values);
-}
-
-void scanner(char scanlevel) {
-  // we have channel 0...125 => 126 channels
-  const uint8_t num_channels = 126;
-  uint8_t values[num_channels];
-  int num_reps;
-  int wait;
-
-  radio.begin();
-  switch (scanlevel) {
-    case '0':
-       num_reps=1;
-       wait=100;
-    break;
-    case '1':
-       num_reps=5;
-       wait=100;
-    break;
-    case '2':
-       num_reps=10;
-       wait=200;
-    break;
-    case '3':
-       num_reps=20;
-       wait=200;
-    break;
-    case '4':
-       num_reps=30;
-       wait=200;
-    break;
-    case '5':
-       num_reps=30;
-       wait=500;
-    break;
-    case '6':
-       num_reps=50;
-       wait=500;
-    break;
-    case '7':
-       num_reps=100;
-       wait=500;
-    break;
-    case '8':
-       num_reps=200;
-       wait=500;
-    break;
-    case '9':
-       num_reps=500;
-       wait=1000;
-    break;
-    default:
-       num_reps=30;
-       wait=500;
-  }
-  for (uint8_t i = 0; i < num_channels; i++) {
-    values[i]=0;
-  }
-  printf("Scanning all channels %d passes, listen %d microseconds to each channel\n", num_reps, wait);
-  printf("\t\t000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011111111111111111111111111\n");
-  printf("\t\t000000000011111111112222222222333333333344444444445555555555666666666677777777778888888888999999999900000000001111111111222222\n");
-  printf("\t\t012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345\n");
-  printf("\t\t------------------------------------------------------------------------------------------------------------------------------\n");
-  for (int rep_counter = 0; rep_counter < num_reps; rep_counter++) {
-    printf("\nPass: %d/%d \t", rep_counter+1, num_reps);
-    for (uint8_t i = 0; i < num_channels; i++) {
-
-      // Select this channel
-      radio.setChannel(i);
- 
-      // Listen for a little
-      radio.startListening();
-      usleep(wait);
-      
-      // Did we get a carrier?
-      if ( radio.testCarrier() ){
-        values[i]++;
-        printf("X");
-      } else {
-        printf(".");
-      }
-      radio.stopListening();
-    }
-  }
-  printf("\n\n");
-  printf("\t\t000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011111111111111111111111111\n");
-  printf("\t\t000000000011111111112222222222333333333344444444445555555555666666666677777777778888888888999999999900000000001111111111222222\n");
-  printf("\t\t012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345\n"); 
-  printf("\t\t------------------------------------------------------------------------------------------------------------------------------\n");
-  printf("\t\t");
-  for (uint8_t i = 0; i < num_channels; i++) {
-    if (values[i] == 0) {
-      printf(".");
-    } else {
-      if (values[i] > 9 ) {
-        printf("X");
-      } else {
-        printf("%u",values[i]);
-      }
-    }
-  }
-  printf("\n"); 
-}
-
-void printPayload(payload_t* mypayload) {
-        char* vbuf1 = alloc_str(verboselevel,"vbuf1",10,ts(tsbuf));
-        char* vbuf2 = alloc_str(verboselevel,"vbuf2",10,ts(tsbuf));
-        char* vbuf3 = alloc_str(verboselevel,"vbuf3",10,ts(tsbuf));
-        char* vbuf4 = alloc_str(verboselevel,"vbuf4",10,ts(tsbuf));
-        char* vbuf5 = alloc_str(verboselevel,"vbuf5",10,ts(tsbuf));
-        char* vbuf6 = alloc_str(verboselevel,"vbuf6",10,ts(tsbuf));
-        vbuf1=unpackData(mypayload->data1, vbuf1);
-        vbuf2=unpackData(mypayload->data2, vbuf2);
-        vbuf3=unpackData(mypayload->data3, vbuf3);
-        vbuf4=unpackData(mypayload->data4, vbuf4);
-        vbuf5=unpackData(mypayload->data5, vbuf5);
-        vbuf6=unpackData(mypayload->data6, vbuf6);
-        printf("Hub: N:%u T:%u m:%u F:0x%02X O:%u H:%u (%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)\n",
-               mypayload->node_id, mypayload->msg_type, mypayload->msg_id, mypayload->msg_flags, mypayload->orderno, mypayload->heartbeatno,
-               getChannel(mypayload->data1), vbuf1,
-               getChannel(mypayload->data2), vbuf2,
-               getChannel(mypayload->data3), vbuf3,
-               getChannel(mypayload->data4), vbuf4,
-               getChannel(mypayload->data5), vbuf5,
-               getChannel(mypayload->data6), vbuf6);   
-        free_str(verboselevel,"vbuf1",vbuf1,ts(tsbuf));
-        free_str(verboselevel,"vbuf2",vbuf2,ts(tsbuf));
-        free_str(verboselevel,"vbuf3",vbuf3,ts(tsbuf));
-        free_str(verboselevel,"vbuf4",vbuf4,ts(tsbuf));
-        free_str(verboselevel,"vbuf5",vbuf5,ts(tsbuf));
-        free_str(verboselevel,"vbuf6",vbuf6,ts(tsbuf));
-}
-*/
-
 void process_payload(payload_t* mypayload) {
     if ( mypayload->data1 > 0 ) process_sensor(mypayload->node_id, mypayload->data1);
     if ( mypayload->data2 > 0 ) process_sensor(mypayload->node_id, mypayload->data2);
@@ -575,24 +418,18 @@ int main(int argc, char* argv[]) {
     pid_t pid;
     payload_t payload;
     buf = (char*)malloc(TSBUFFERSIZE);
+    char *buf1 = (char*)malloc(TSBUFFERSIZE);
     tsbuf = (char*)malloc(TSBUFFERSIZE);
-	/* vars for telnet socket handling */
-//	int tn_in_socket = 0;
+    char *gw_ip=(char*)malloc(40);
+    uint16_t gw_no;
     int new_tn_in_socket = 0;
 	socklen_t tcp_addrlen, udp_addrlen;
     struct sockaddr_in udp_address_in, tcp_address_in;
-int udp_sockfd_in;
-int tcp_sockfd_in;
-//	struct sockaddr_in udp_address;
-//    struct sockaddr_in UDPinAddr;
-//	long save_fd;
-//	const int y = 1;
+    int udp_sockfd_in, tcp_sockfd_in;
 	int msgID;
-//    socklen_t len;
     TnMsg_t LogMsg;
     time_t lastDBsync = time(0);
     ssize_t UdpMsgLen;
-//    char udpServer[20];
 	
     // processing argc and argv[]
     cfg.processParams(PRGNAME, argc, argv);
@@ -654,29 +491,6 @@ int tcp_sockfd_in;
         printf("%stelnet session to FHEM started: Host: %s Port: %s\n",ts(tsbuf), cfg.fhemHostName.c_str(), cfg.fhemPortNo.c_str());
     }
 
-/*    if ( cfg.hub_incomingPortSet ) {
-    // open incoming port for messages 
-		if ((tn_in_socket=socket( AF_INET, SOCK_STREAM, 0)) > 0) {
-            address.sin_family = AF_INET;
-            address.sin_addr.s_addr = INADDR_ANY;
-            address.sin_port = htons ( std::stoi ( cfg.hub_incomingPort ) );
-            setsockopt( tn_in_socket, SOL_SOCKET, SO_REUSEADDR, &y, sizeof(int) );
-            if (bind( tn_in_socket, (struct sockaddr *) &address, sizeof (address)) == 0 ) {
-                printf("%sSocket für eingehende Messages auf Port %s angelegt\n", ts(tsbuf), cfg.hub_incomingPort.c_str());
-            }
-            listen (tn_in_socket, 5);
-            addrlen = sizeof (struct sockaddr_in);
-            save_fd = fcntl( tn_in_socket, F_GETFL );
-            save_fd |= O_NONBLOCK;
-            fcntl( tn_in_socket, F_SETFL, save_fd );
-        } else {
-            printf("%sError opening Socket %s\n", ts(tsbuf), cfg.hub_incomingPort.c_str());
-            exit(1);
-        }            
-	}
-    sleep(2);
-*/
-    
     // Eingehendes Socket für TCP Messages öffnen
     printf("%sSocket für eingehende TCP Messages (telnet) auf Port %s angelegt\n", ts(tsbuf), cfg.hubTcpPortNo.c_str());
     if ( ! openSocket(cfg.hubTcpPortNo.c_str(), &tcp_address_in, &tcp_sockfd_in, TCP) ) {
@@ -758,9 +572,9 @@ int tcp_sockfd_in;
     if (UdpMsgLen > 0) {
         memcpy(&payload, &udpdata.payload, sizeof(payload) );
         if ( verboselevel & VERBOSERF24 ) {
-//            sprintf(udpServer,"%s", inet_ntoa(udp_address.sin_addr) );
             printf ("%s UDP Message from: %s \n",ts(tsbuf), inet_ntoa(udp_address_in.sin_addr));
-            printPayload(ts(tsbuf), "G>H", &payload);
+            sprintf(buf1,"G:%u>H ", udpdata.gw_no);
+            printPayload(ts(tsbuf), buf1, &payload);
         }
         if ( gateway.isGateway(inet_ntoa(udp_address_in.sin_addr)) ) {
             switch ( payload.msg_type ) {
@@ -848,18 +662,19 @@ int tcp_sockfd_in;
 //
 		if ( order.hasEntry() ) {  // go transmitting if its time to do ..
 			// Look if we have something to send
-            char p_gw_ip[40];
 			while ( order.getOrderForTransmission(&payload, mymillis() ) ) {
                 // Hier UDP Sender
                 void* p_rec = NULL;
-                p_rec = gateway.getGWIP(p_rec, p_gw_ip);
+                p_rec = gateway.getGW(p_rec, gw_ip, &gw_no);
                 while ( p_rec ) { 
-                    // printf("Snd: %s: ", p_gw_ip);
-                    if ( verboselevel & VERBOSERF24) printPayload(ts(tsbuf), "H>G", &payload);
-                    udpdata.gwno=0;
+                    if ( verboselevel & VERBOSERF24) {
+                        sprintf(buf1,"H>G:%u ", gw_no);
+                        printPayload(ts(tsbuf), buf1, &payload);
+                    }
+                    udpdata.gw_no=0;
                     memcpy(&udpdata.payload, &payload, sizeof(payload) );
-                    sendUdpMessage(p_gw_ip, cfg.gwUdpPortNo.c_str(), &udpdata); 
-                    p_rec = gateway.getGWIP(p_rec, p_gw_ip);
+                    sendUdpMessage(gw_ip, cfg.gwUdpPortNo.c_str(), &udpdata); 
+                    p_rec = gateway.getGW(p_rec, gw_ip, &gw_no);
                 }
             }
  			usleep(50000);

@@ -62,7 +62,7 @@ bool gwTcpPortSet;
 // gwUdpPortSet is true when an incoming UDP port is set by configuration
 bool gwUdpPortSet;
 // A unique ID for this Gateway
-string gwGwID;
+string gwNo;
 /**********************************************
  * Variablen für den Hub
  **********************************************/

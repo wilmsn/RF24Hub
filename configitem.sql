@@ -46,4 +46,8 @@ INSERT INTO node_configitem( channel, itemname, MIN, MAX, readonly, html_show, h
 INSERT INTO node_configitem( channel, itemname, MIN, MAX, readonly, html_show, html_order )
     VALUES ( 125, 'Softwareversion', 0.0, 0.0, 'y', 'y', 21 );
 
+INSERT INTO gateway(gw_name, gw_no, gw_ip, isActive)
+VALUES ('test', 99, 'xxxx', false );
+
+
 COMMIT;

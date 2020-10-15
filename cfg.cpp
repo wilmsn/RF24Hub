@@ -172,8 +172,8 @@ void Cfg::processParams(const char* prgname, int argc, char* argv[]) {
             gwUdpPortNo = value;
             gwUdpPortSet = true;
 		}
-    else if (strcmp(name, "gw_gwid")==0) {
-            gwGwID = value;
+    else if (strcmp(name, "gw_no")==0) {
+            gwNo = value;
 		}
     else
       printf("WARNING: %s = %s Unknown name=value pair!\n", name, value );
@@ -206,7 +206,7 @@ void Cfg::printConfig_gw (void) {
     printf("Hub-Hostname: %s\n", gwHubHostName.c_str() );
     printf("Hub-UDP Port: %s\n", hubUdpPortNo.c_str() );
     printf("Gateway UDP Port: %s\n", gwUdpPortNo.c_str() );
-    printf("Gw ID: %s\n", gwGwID.c_str() );
+    printf("Gw ID: %s\n", gwNo.c_str() );
 }
 
 void Cfg::printConfig_db (void) {

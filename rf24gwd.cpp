@@ -11,7 +11,7 @@ static void* receive_tn_in (void *arg) {
     int ret;
     // send something like a prompt. perl telnet is waiting for it otherwise we get error
     // use this in perl: my $t = new Net::Telnet (Timeout => 2, Port => 7001, Prompt => '/rf24hub>/');
-    sprintf(client_message,"rf24hub> ");
+    sprintf(client_message,"rf24gw> ");
     write(f->tnsocket , client_message , strlen(client_message));
     MsgLen = recv(f->tnsocket, buffer, TELNETBUFFERSIZE, 0);
     if (MsgLen>0) {
@@ -324,12 +324,17 @@ int main(int argc, char* argv[]) {
     printf("--------------------------------------------------\n");
     printf("%sStartup Parameters:\n",ts(tsbuf));
     cfg.printConfig_gw();
-    sprintf(buf1,"GW:%s",cfg.gwGwID.c_str());
-//    sprintf(buf2,"");
+    sprintf(buf1,"GW:%s",cfg.gwNo.c_str());
+
     // init SIGTERM and SIGINT handling
     signal(SIGTERM, sighandler);
     signal(SIGINT, sighandler);
 
+    printf("Checking Network ..");
+    memset(&udpdata, 0x00, sizeof(udpdata));
+    sendUdpMessage(cfg.gwHubHostName.c_str(), cfg.hubUdpPortNo.c_str(), &udpdata); 
+    printf(".OK\n");
+    
     // run as daemon if started with -d
     if (cfg.startDaemon) {
         logfile_ptr = fopen (cfg.gwLogFileName.c_str(),"a");
@@ -444,20 +449,8 @@ int main(int argc, char* argv[]) {
 // Receive loop: react on the message from the nodes
 //
 			radio.read(&payload,sizeof(payload));
-            udpdata.gwno = std::stoi(cfg.gwGwID);
+            udpdata.gw_no = std::stoi(cfg.gwNo);
             memcpy(&udpdata.payload, &payload, sizeof(payload) );
-/*            udpdata.payload.node_id = payload.node_id;
-            udpdata.payload.msg_id = payload.msg_id;
-            udpdata.payload.msg_type = payload.msg_type;
-            udpdata.payload.msg_flags = payload.msg_flags;
-            udpdata.payload.orderno = payload.orderno;
-            udpdata.payload.heartbeatno = payload.heartbeatno;
-            udpdata.payload.data1 = payload.data1;
-            udpdata.payload.data2 = payload.data2;
-            udpdata.payload.data3 = payload.data3;
-            udpdata.payload.data4 = payload.data4;
-            udpdata.payload.data5 = payload.data5;
-            udpdata.payload.data6 = payload.data6;   */
             if ( verboselevel & VERBOSERF24) printPayload(ts(tsbuf), "N>G", &udpdata.payload);
 			sendUdpMessage(cfg.gwHubHostName.c_str(), cfg.hubUdpPortNo.c_str(), &udpdata); 
 		} // radio.available
@@ -481,4 +474,3 @@ int main(int argc, char* argv[]) {
 	} // while(1)
 	return 0;
 }
-

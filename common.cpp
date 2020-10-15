@@ -284,6 +284,7 @@ void sendUdpMessage(const char* host, const char* port, udpdata_t * udpdata ) {
 	hints.ai_socktype = SOCK_DGRAM;
 
 	if ((rv = getaddrinfo(host, port, &hints, &servinfo)) != 0) {
+        fprintf(stderr, "Host: %s Port: %p \n", host, port);
 		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
 		exit(1);
 	}
