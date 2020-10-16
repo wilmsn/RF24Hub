@@ -1,0 +1,8 @@
+#define EEPROM_VERSION  2
+#define HOSTNAME        "espgw1"
+#define HUB_IP          "192.168.178.211"
+#define HUB_UDP_PORTNO  7004
+#define GW_UDP_PORTNO   7003
+#define GW_NO           11
+#define RADIO_CE_PIN    D1
+#define RADIO_CSN_PIN   D0

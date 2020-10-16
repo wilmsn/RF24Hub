@@ -8,7 +8,7 @@ Bosch Temperature/Pressure/Humidity Sensor like BMP085/BMP180/BMP280/BME280
 Dallas Temperature Sensor 18B20
 Display Nokia 5110
 
-On Branch: rpi1_entw @ rpi1  !!!!!
+On Branch: entw_gw  !!!!!
 
 
 */
@@ -426,20 +426,8 @@ void setup(void) {
   radio.setChannel(RF24_CHANNEL);
   radio.setDataRate(RF24_SPEED);
   radio.setPALevel(RF24_PA_MAX);
-  radio.setChannel(RF24_CHANNEL);
-  radio.setDataRate( RF24_SPEED );
-  radio.setPALevel( RF24_PA_MAX ) ;
-/*
- * Funktionierende Kombination
-  radio.setRetries(15, 5);
-  radio.enableDynamicPayloads();
- */
   radio.setRetries(0, 0);
-//  radio.enableDynamicPayloads();
   radio.setAutoAck(false);
-//  radio.setRetries(15, 5);
-//  radio.setAutoAck(0,0);
-//  radio.enableDynamicPayloads();
   radio.disableDynamicPayloads();
   radio.setPayloadSize(32);
   radio.setCRCLength(RF24_CRC_16);
@@ -859,7 +847,6 @@ void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, 
       s_payload.msg_id++;
       radio.stopListening();
       radio.write(&s_payload, sizeof(s_payload));
-//      radio.writeFast(&s_payload, sizeof(s_payload), 1);
       radio.startListening(); 
       start_ts = millis();
       doLoop = true;

@@ -78,7 +78,7 @@ uint16_t decodeVerbose(uint16_t oldLevel, char* verboselevel);
 
 uint32_t packData(uint8_t mychannel, char* wort4);
 
-char* unpackData(uint32_t data, char* buf);
+//char* unpackData(uint32_t data, char* buf);
 
 void sendUdpMessage(const char* host, const char* port, udpdata_t * udpdata );
 

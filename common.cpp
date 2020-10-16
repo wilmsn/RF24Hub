@@ -234,7 +234,7 @@ uint32_t packData(uint8_t mychannel, char* wort4) {
     }
     return retval;
 }
-
+/*
 char* unpackData(uint32_t data, char* buf) {
     uint8_t dataTyp = getDataTyp( getChannel(data) );
     switch ( dataTyp ) {
@@ -272,7 +272,7 @@ char* unpackData(uint32_t data, char* buf) {
     }
     return buf;
 }
-
+*/
 void sendUdpMessage(const char* host, const char* port, udpdata_t * udpdata ) {
 	int sockfd;
 	struct addrinfo hints, *servinfo, *p;

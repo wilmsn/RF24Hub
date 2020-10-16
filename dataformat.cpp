@@ -14,6 +14,44 @@
  * Bit 16..32   Mantisse (0..10000)
  ***********************************/
 
+char* unpackData(uint32_t data, char* buf) {
+    uint8_t dataTyp = getDataTyp( getChannel(data) );
+    switch ( dataTyp ) {
+        case 0:
+            sprintf(buf,"%d",0);
+        break;            
+        case 1:  
+        {
+            float myval = getValue_f(data);
+            if ( myval > 500 ) {
+                sprintf(buf,"%.1f", myval);
+            } else {
+                if ( myval > 9.9 ) {
+                    sprintf(buf,"%.2f", myval);
+                } else {
+                    sprintf(buf,"%.3f", myval);
+                }   
+            }
+        }
+        break;
+        case 2:
+        {
+            sprintf(buf,"%d",getValue_i(data));
+        }
+        break;
+        case 3:
+        {
+            sprintf(buf,"%u",getValue_ui(data));
+        }
+        break;
+        case 4:
+            // ToDo Wort kann ein kompletter Text sein, das in verschiedene Channels zerlegt wird
+            //      Max Länge 20*3=60 Zeichen
+        break;
+    }
+    return buf;
+}
+
 /***************************************************
  * Extrahiert den Datentyp auf Basis des verwendeten 
  * Channels 

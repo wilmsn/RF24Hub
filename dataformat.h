@@ -12,6 +12,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #define ZF_SENSOR_NO        0b11111110000000000000000000000000
 #define ZF_ZAHL_NEGATIV     0b00000001000000000000000000000000
@@ -33,6 +34,8 @@
  * Bit 10..13   Exponent (0..15)
  * Bit 14..32   Mantisse (0..100000)
  ***********************************/
+
+char* unpackData(uint32_t data, char* buf);
 
 /***************************************************
  * Extrahiert den Datentyp auf Basis des verwendeten 
