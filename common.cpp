@@ -109,70 +109,70 @@ uint16_t decodeVerbose(uint16_t verboseLevel, char* verboseSet) {
         retval = VERBOSENONE;
     }
     if (strcmp(verboseSet,cmp_addVBconf) == 0) {
-        retval = oldLevel | VERBOSECONFIG;
+        retval = verboseLevel | VERBOSECONFIG;
     }
     if (strcmp(verboseSet,cmp_rmVBconf) == 0) {
-        retval = oldLevel ^ VERBOSECONFIG;
+        retval = verboseLevel ^ VERBOSECONFIG;
     }
     if (strcmp(verboseSet,cmp_addVBtn) == 0) {
-        retval = oldLevel | VERBOSETELNET;
+        retval = verboseLevel | VERBOSETELNET;
     }
     if (strcmp(verboseSet,cmp_rmVBtn) == 0) {
-        retval = oldLevel ^ VERBOSETELNET;
+        retval = verboseLevel ^ VERBOSETELNET;
     }
     if (strcmp(verboseSet,cmp_addVBrf24) == 0) {
-        retval = oldLevel | VERBOSERF24;
+        retval = verboseLevel | VERBOSERF24;
     }
     if (strcmp(verboseSet,cmp_rmVBrf24) == 0) {
-        retval = oldLevel ^ VERBOSERF24;
+        retval = verboseLevel ^ VERBOSERF24;
     }    
     if (strcmp(verboseSet,cmp_addVBsens) == 0) {
-        retval = oldLevel | VERBOSESENSOR;
+        retval = verboseLevel | VERBOSESENSOR;
     }
     if (strcmp(verboseSet,cmp_rmVBsens) == 0) {
-        retval = oldLevel ^ VERBOSESENSOR;
+        retval = verboseLevel ^ VERBOSESENSOR;
     }    
     if (strcmp(verboseSet,cmp_addVBob) == 0) {
-        retval = oldLevel | VERBOSEOBUFFER;
+        retval = verboseLevel | VERBOSEOBUFFER;
     }
     if (strcmp(verboseSet,cmp_rmVBob) == 0) {
-        retval = oldLevel ^ VERBOSEOBUFFER;
+        retval = verboseLevel ^ VERBOSEOBUFFER;
     }    
     if (strcmp(verboseSet,cmp_addVBobex) == 0) {
-        retval = oldLevel | VERBOSEOBUFFEREXT;
+        retval = verboseLevel | VERBOSEOBUFFEREXT;
     }
     if (strcmp(verboseSet,cmp_rmVBobex) == 0) {
-        retval = oldLevel ^ VERBOSEOBUFFEREXT;
+        retval = verboseLevel ^ VERBOSEOBUFFEREXT;
     }    
     if (strcmp(verboseSet,cmp_addVBorder) == 0) {
-        retval = oldLevel | VERBOSEORDER;
+        retval = verboseLevel | VERBOSEORDER;
     }
     if (strcmp(verboseSet,cmp_rmVBorder) == 0) {
-        retval = oldLevel ^ VERBOSEORDER;
+        retval = verboseLevel ^ VERBOSEORDER;
     }    
     if (strcmp(verboseSet,cmp_addVBorderex) == 0) {
-        retval = oldLevel | VERBOSEORDEREXT;
+        retval = verboseLevel | VERBOSEORDEREXT;
     }
     if (strcmp(verboseSet,cmp_rmVBorderex) == 0) {
-        retval = oldLevel ^ VERBOSEORDEREXT;
+        retval = verboseLevel ^ VERBOSEORDEREXT;
     }    
     if (strcmp(verboseSet,cmp_addVBsql) == 0) {
-        retval = oldLevel | VERBOSESQL;
+        retval = verboseLevel | VERBOSESQL;
     }
     if (strcmp(verboseSet,cmp_rmVBsql) == 0) {
-        retval = oldLevel ^ VERBOSESQL;
+        retval = verboseLevel ^ VERBOSESQL;
     }    
     if (strcmp(verboseSet,cmp_addVBother) == 0) {
-        retval = oldLevel | VERBOSEOTHER;
+        retval = verboseLevel | VERBOSEOTHER;
     }
     if (strcmp(verboseSet,cmp_rmVBother) == 0) {
-        retval = oldLevel ^ VERBOSEOTHER;
+        retval = verboseLevel ^ VERBOSEOTHER;
     }    
     if (strcmp(verboseSet,cmp_addVBpnt) == 0) {
-        retval = oldLevel | VERBOSEPOINTER;
+        retval = verboseLevel | VERBOSEPOINTER;
     }
     if (strcmp(verboseSet,cmp_rmVBpnt) == 0) {
-        retval = oldLevel ^ VERBOSEPOINTER;
+        retval = verboseLevel ^ VERBOSEPOINTER;
     }    
     return retval;
 }
