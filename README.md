@@ -9,13 +9,12 @@ Main features:
  - can send telnet commands to a third party controler (i use FHEM)
  - configuration via config file
 
-Attention: This Brunch uses a different payload structure!!!!!
-==============================================================
-More details (german only): https://wilmie.myhome-server.de/wiki/index.php?title=RF24Hub
+More details (german only): http://wilmsn.github.io/rf24hub
 
 Environment:
 ============
 - Server: Raspberry PI
+- Gateway: Raspberry Pi or ESP8266
 - Nodes: "Arduino" like build with minimal cost based on ATmega328P
 
 Aim of the project:
@@ -37,14 +36,14 @@ Quick start guide:
 
    cd ~/entw
 
-2.  Clone the RF24 Repo
+2. Clone the RF24 Repo
 
-    git clone https://github.com/nRF24/RF24.git RF24
+   git clone https://github.com/nRF24/RF24.git RF24
 
-3.  Change to the RF24 folder and compile it
+3. Change to the RF24 folder and compile it
 
-    cd RF24
-    sudo make install
+   cd RF24
+   sudo make install
 
 4. Clone the RF24Hub Repro
 
@@ -65,7 +64,15 @@ Quick start guide:
    Add at least one sensor to the table sensor
    Edit the config file: rf24hub.cfg
 
-   sudo ./rf24hubd -v +rf24 -c rf24hub.cfg #Just stop it with ctrl-c
+   Start the Hub:
+
+   sudo ./rf24hubd -c rf24hub.cfg # Just stop it with ctrl-c
+
+   Open a second terminal and go to the same dir as before
+
+   Start the Gateway:
+
+   sudo ./rf24gwd -v +rf24 -c rf24hub.cfg # Just stop it with ctrl-c
 
 9. If everything works, install it
 

@@ -5,13 +5,13 @@ Cfg::Cfg(string _prgName, string _prgVersion) {
      prgVersion = _prgVersion;
 }
 
-Cfg::~Cfg() {
-}
+//Cfg::~Cfg() {
+//}
 
-Cfg::Cfg() {
-}
+//Cfg::Cfg() {
+//}
 
-void Cfg::processParams(const char* prgname, int argc, char* argv[]) {
+void Cfg::processParams(const char* prgName, int argc, char* argv[]) {
     configFile = "x";
 	int c;
 	
@@ -44,7 +44,7 @@ void Cfg::processParams(const char* prgname, int argc, char* argv[]) {
                           }
                         }
                         if (channel < 126) {
-                             startChannelScanner=channel; 
+                             channelScanner_Channel=channel; 
                         } else {
                           printf("Error Channel must be in 0 ... 125\n");
                         }
@@ -56,7 +56,7 @@ void Cfg::processParams(const char* prgname, int argc, char* argv[]) {
                       if (optarg[0]) {
                           verboselevel = decodeVerbose(verboselevel, optarg);
                       } else {
-                          usage(prgname);
+                          usage(prgName);
                       }
                       break;
             case 's':
@@ -64,7 +64,7 @@ void Cfg::processParams(const char* prgname, int argc, char* argv[]) {
                           startScanner = true;
                           setScanLevel = (int) optarg[0]-'0';
                       } else {
-                          usage(prgname);
+                          usage(prgName);
                       }
                       break;
             case 'S':
@@ -83,7 +83,7 @@ void Cfg::processParams(const char* prgname, int argc, char* argv[]) {
 //                exit (0);
 //            break;
             default:
-                 usage (prgname);
+                 usage (prgName);
                  exit (0);
         }
     }
@@ -217,9 +217,9 @@ void Cfg::printConfig_db (void) {
     printf("DB-Password: %s\n", dbPassWord.c_str() );
 }
 
-void Cfg::usage(const char* prgname) {
-    printf("%s Version %d vom %s\n",prgname, SWVERSION, SWDATUM);
-    printf("Usage: %s <option>\n",prgname);
+void Cfg::usage(const char* prgName) {
+    printf("%s Version %d vom %s\n",prgName, SWVERSION, SWDATUM);
+    printf("Usage: %s <option>\n",prgName);
     printf("with options: \n");
     printf("   -h or -? or --help\n");
     printf("           Print help\n");
@@ -241,22 +241,25 @@ void Cfg::usage(const char* prgname) {
 }
 
 
-    // get pid and write it to pidfile
-int Cfg::setPidFile(string pidFileName) {
+bool Cfg::setPidFile(string pidFileName) {
     pid_t pid;
+    bool retval = false;
     pid=getpid();
 	pidfile_ptr = fopen (pidFileName.c_str(),"w");
-    fprintf(pidfile_ptr,"%d",pid);
-    fclose(pidfile_ptr);
-    return 1;
+    if ( pidfile_ptr ) {
+        fprintf(pidfile_ptr,"%d",pid);
+        fclose(pidfile_ptr);
+        retval = true;
+    }
+    return retval;
 }
 
-int Cfg::checkPidFileSet(string pidFileName) {
+bool Cfg::checkPidFileSet(string pidFileName) {
 	if( access( pidFileName.c_str(), F_OK ) != -1 ) {
-		fprintf(stderr,"PIDFILE: %s exists, terminating\n", pidFileName.c_str() );
-		return -1;
+		fprintf(stderr,"PIDFILE: %s exists\n", pidFileName.c_str() );
+		return true;
 	} else {
-		return 0;
+		return false;
 	}
 }
 

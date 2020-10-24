@@ -16,13 +16,9 @@
 
 
 class OrderBuffer {
-
-// Structure to handle the orderqueue
-    
     
 private:
 
-//char* buf;
 struct orderbuffer_t {
         uint64_t		entrytime;
         NODE_DATTYPE   	node_id;
@@ -56,43 +52,47 @@ bool    delEntry(orderbuffer_t*);
 
 public:
     
-/**************************************************************
+/**
  *  Setzt das Verboselevel
- *************************************************************/    
+ */
 void setVerbose(uint16_t _verboselevel);
-/**************************************************************
- *  Ruft den nächsten record für einen node ab.
+/**
+ *  @note Ruft den nächsten Record für einen Node ab.
  *  Initialer Aufruf mit p_last = NULL.
  *  Beim nächsten Aufruf wird der Rückgabewert des
  *  letzten Aufrufs bei p_last übergeben
- *************************************************************/    
-void* findOrder4Node(NODE_DATTYPE node_id, void* p_last, uint32_t* data);
-/**************************************************************
+ *  @param node_id: Die Node_ID
+ *  @param p_last: Beim ersten Aufruf NULL, sonst den Rückgabewert des letzten Aufrufs.
+ *  @param p_data: Pointer auf ein data Feld. Dieses Feld ist nach dem Aufruf gefüllt.
+ *  @return Ein gesetzter Pointer wenn ein Datensatz gefunden wurde, sonst NULL.
+ */
+void* findOrder4Node(NODE_DATTYPE node_id, void* p_last, uint32_t* p_data);
+/**
  *  Fügt einen neuen record vom typ float ein 
- *************************************************************/    
+ */
 void addOrderBuffer(uint64_t millis, NODE_DATTYPE node_id, uint8_t channel, uint32_t data);
-/**************************************************************
+/**
  *  Löscht den record für die übergebe Kombinaltion
  *  von node_id und channel
- *************************************************************/    
+ */
 bool delByNodeChannel(NODE_DATTYPE node_id, uint8_t channel);
-/**************************************************************
+/**
  *  Löscht alle records für die übergebene node_id
- *************************************************************/    
+ */
 bool delByNode(NODE_DATTYPE node_id);
-/**************************************************************
+/**
  *  Gibt es record für den übergebenen node_id 
  *  dann true sonst false
- *************************************************************/    
+ */
 bool nodeHasEntry(NODE_DATTYPE node_id);
-/**************************************************************
- * Druckt alle records im Buffer in den out_socket
+/**
+ * Druckt alle records im Buffer in den out_socket.
  * out_socket ist dabei ein gültiger socket file descriptor
  * entweder aus accept für einen socket oder mittels
  * fileno(stdout) für den stdout
  * Der zweite Parameter bestimmt das Format,
  * true => HTML Format; false => Textformat
- *************************************************************/
+ */
 void printBuffer(int out_socket, bool htmlFormat);
 
 OrderBuffer(void);

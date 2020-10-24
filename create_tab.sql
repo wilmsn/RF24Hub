@@ -20,7 +20,7 @@ CREATE TABLE node
    add_info    VARCHAR(500)   DEFAULT NULL,
    battery_id  INT            NOT NULL,
    html_show   CHAR(1)        DEFAULT NULL,
-   html_sort   INT            DEFAULT NULL,
+   html_order  INT            DEFAULT NULL,
    heartbeat   CHAR(1)        DEFAULT NULL,
    pa_utime    INT            DEFAULT NULL,
    pa_level    INT            DEFAULT NULL,

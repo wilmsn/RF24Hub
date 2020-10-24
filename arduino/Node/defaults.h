@@ -1,12 +1,23 @@
 // The CE Pin of the Radio module
-#define RADIO_CE_PIN 10
+#define RADIO_CE_PIN    10
 // The CS Pin of the Radio module
-#define RADIO_CSN_PIN 9
+#define RADIO_CSN_PIN   9
 // The pin of the statusled
 #define STATUSLED 3
-#define STATUSLED_ON HIGH
+#define STATUSLED_ON  HIGH
 #define STATUSLED_OFF LOW
-#define ONE_WIRE_BUS 8
+// Relais
+#define RELAIS_ON     HIGH
+#define RELAIS_OFF    LOW
+// One Wire Bus
+#define ONE_WIRE_BUS  8
+// Neopixel
+// Arduino Pin where the Data-Pin from the Neopixels is connected to
+#define NEOPIXEL_PIN 7
+// Default Color Values for the Neopixel
+#define NEOPIXEL_R_DEFAULT 100
+#define NEOPIXEL_G_DEFAULT 100
+#define NEOPIXEL_B_DEFAULT 100
 // Sleeptime in Seconds !! 
 // (valid: 10 ... 32.400)
 #define SLEEPTIME_SEC   120

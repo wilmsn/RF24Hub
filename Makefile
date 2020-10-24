@@ -14,7 +14,7 @@
 PREFIX=/usr/local
 EXECDIR=${PREFIX}/bin
 INCLUDEDIR=${PREFIX}/include
-INCLUDEDIR1=/usr/include/mariabd
+INCLUDEDIR1=/usr/include/mariadb
 MYSQLLIBS := $(shell mariadb_config --libs) 
 
 ARCH=armv6zk
@@ -41,7 +41,7 @@ rf24hubd: cfg.o gateway.o dataformat.o database.o node.o sensor.o orderbuffer.o 
 
 # Make the rf24gw deamon
 rf24gwd: cfg.o common.o dataformat.o rf24gwd.cpp
-	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24 ${MYSQLLIBS} $^ -o $@
+	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -lrf24-bcm -lrf24 $^ -o $@
 
 # Test of order object
 ordertest: sensor.o node.o orderbuffer.o common.o dataformat.o order.o order_test.cpp

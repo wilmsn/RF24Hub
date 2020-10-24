@@ -1,4 +1,4 @@
-/*************************************************
+/**
  * 
  * This module covers all 
  * the communication to the database.
@@ -9,7 +9,7 @@
  * Make sure that functions and parameters remain
  * unchanged !!!
  * 
- ************************************************/
+ */
 
 #ifndef _DATABASE_H_   
 #define _DATABASE_H_
@@ -47,64 +47,64 @@ private:
 
 public:
 
-/**************************************************************
+/**
  *  Setzt das Verboselevel
- *************************************************************/    
+ */
     void setVerbose(uint16_t _verboselevel);
-/**************************************************************
+/**
  * connects to the database
- **************************************************************/
+ */
     bool connect(string db_hostname, string db_username, string db_password, string db_schema, int db_port);
-/**************************************************************
+/**
  * Stores the data of a sensor
- **************************************************************/    
+ */
     void storeSensorValue(uint32_t mysensor, char* value);
-/**************************************************************
+/**
  * Stores the config data of a node
- **************************************************************/   
+ */
     void storeNodeConfig(NODE_DATTYPE node, uint8_t channel, char* value);
-/**************************************************************
+/**
  * Reads the data to initializise the sensor array 
  * from the Database
- **************************************************************/      
+ */
     void initSensor(Sensor* sensor);
-/**************************************************************
+/**
  * Reads the data to initializise the node array 
  * from the Database
- **************************************************************/      
+ */
     void initNode(Node* node);
-/**************************************************************
+/**
  * Reads the data to initializise the node array 
  * from the Database
- **************************************************************/      
+ */
     void initGateway(Gateway* gateway);
-/**************************************************************
+/**
  * Initializise the system 
  * from the Database
- **************************************************************/          
+ */
     void initSystem(void);
-/**************************************************************
+/**
  * Stores/Syncs all the data from node_configdata*_im
  * to node_configdata* to make them persistent
- **************************************************************/      
+ */
     void sync_config(void);
-/**************************************************************
+/**
  * Stores/Syncs all the data from "sensor_im"
  * to "sensor" to make them persistent
- **************************************************************/      
+ */
     void sync_sensor(void);
-/**************************************************************
+/**
  * Stores/Syncs all the data from "sensordata_im"
  * to "sensordata" to make them persistent
- **************************************************************/      
+ */
     void sync_sensordata(void);
-/**************************************************************
+/**
  * Refreshes the table sensordata_d from scratch
- **************************************************************/      
+ */
     void sync_sensordata_d(void);
-/**************************************************************
+/**
  * The constructor
- **************************************************************/      
+ */
     Database(void);
 };
 

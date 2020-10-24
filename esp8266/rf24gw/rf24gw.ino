@@ -21,7 +21,6 @@
 #include "dataformat.h"
 #include "rf24_config.h"
 #include "version.h"
-//#include "printf.h"
 
 udpdata_t udpdata;
 payload_t payload;
@@ -29,19 +28,18 @@ payload_t payload;
 WiFiUDP udp;
 RF24 radio(RADIO_CE_PIN,RADIO_CSN_PIN);
 
-char* buf;
-uint8_t  rf24_node2hub[] = RF24_NODE2HUB;
-uint8_t  rf24_hub2node[] = RF24_HUB2NODE;
-  
-#define MAX_TELNET_CLIENTS 2
+WiFiServer tcpServer(GW_TCP_PORTNO);
+WiFiClient clients[MAX_TCP_CONNECTIONS];
 
-WiFiServer TelnetServer(0);
-WiFiClient TelnetClient[MAX_TELNET_CLIENTS];
-WiFiUDP Udp;
 unsigned int remotePort;  // remote port to listen on
 uint16_t loopno;
 uint8_t sensor;
 int ledState = LOW;
+char* buf;
+uint8_t  rf24_node2hub[] = RF24_NODE2HUB;
+uint8_t  rf24_hub2node[] = RF24_HUB2NODE;
+// Buffer for incoming text
+char tcp_buffer[MAX_TCP_CONNECTIONS][30];
 
 struct eeprom_t {
    uint8_t      versionnumber;
@@ -55,8 +53,26 @@ struct eeprom_t {
 };
 eeprom_t eepromdata;
 
-void setup()
-{
+bool append_until(Stream& source, char* buffer, int bufSize, char terminator) {
+    int data=source.read();
+    if (data>=0)  {
+        int len=static_cast<int>(strlen(buffer));
+        do {
+            if (len<bufSize-1) {
+                buffer[len++]=static_cast<char>(data);
+            }
+            if (data==terminator) {
+                buffer[len]='\0';
+                return true;
+            }
+            data=source.read();
+        } while (data>=0);
+        buffer[len]='\0';  
+    }
+    return false;
+}
+
+void setup() {
   buf = (char*)malloc(10);
   EEPROM.begin(4095);
   EEPROM.get( 0, eepromdata );
@@ -73,25 +89,19 @@ void setup()
      EEPROM.put( 0, eepromdata );
   }
 
-  Serial.begin(9600);
-  //printf_begin();
+  Serial.begin(115200);
 
   WiFi.mode(WIFI_STA);
   WiFi.hostname(eepromdata.hostname);
   WiFi.begin(eepromdata.ssid, eepromdata.key);
 
-//  Udp.begin(cfgWifi.rf24GWUdpPort);
-//  TelnetServer.begin(cfgWifi.rf24GWTelnetPort);
-
   // ... Give ESP 10 seconds to connect to station.
   unsigned long startTime = millis();
-  while (WiFi.status() != WL_CONNECTED && millis() - startTime < 10000)
-  {
+  while (WiFi.status() != WL_CONNECTED && millis() - startTime < 10000) {
     delay(200);
   }
   
-  while (WiFi.status() != WL_CONNECTED)
-  {
+  while (WiFi.status() != WL_CONNECTED) {
     delay(3000);
     ESP.restart();
   }
@@ -123,6 +133,7 @@ void setup()
   radio.printDetails();
   
   udp.begin(eepromdata.gw_udp_portno);
+  tcpServer.begin();
 
 }
 
@@ -178,8 +189,6 @@ void loop() {
     udp.beginPacket(eepromdata.hub_ip,eepromdata.hub_udp_portno);
     udp.write((char*)&udpdata, sizeof(udpdata));
     udp.endPacket();
-
-    //delay(10);
     Serial.println("-------------------");
   }
   if (udp.parsePacket() > 0 ) {
@@ -192,6 +201,60 @@ void loop() {
     ledState = !ledState; 
     digitalWrite(LED_BUILTIN, ledState);  
   }
+  WiFiClient client = tcpServer.available();
+  if (client) {
+    Serial.print(F("New connection from "));
+    Serial.println(client.remoteIP().toString());        
+        // Find a freee space in the array   
+        for (int i = 0; i < MAX_TCP_CONNECTIONS; i++) {
+            if (!clients[i].connected()) {
+                // Found free space
+                clients[i] = client;
+                tcp_buffer[i][0]='\0';
+                Serial.print(F("Channel="));
+                Serial.println(i);
+                // Send a welcome message
+                client.print(F("RF24GW> "));
+                return;
+            }
+        }
+        Serial.println(F("To many connections"));
+        client.stop();
+  }
+    static int i=0;
+    // Only one connection is checked in each call
+    if (clients[i].available()) {
+        // Collect characters until line break
+        if (append_until(clients[i],tcp_buffer[i],sizeof(tcp_buffer[i]),'\n')) {        
+            // Display the received line
+            Serial.print(F("Received from "));
+            Serial.print(i);
+            Serial.print(": ");
+            Serial.print(tcp_buffer[i]);
 
-  delay(100);
+            // Send an echo back
+            clients[i].print(F("Echo: "));
+            clients[i].print(tcp_buffer[i]);
+            
+            // Execute some commands
+            if (strstr(tcp_buffer[i], "on")) {
+                digitalWrite(BUILTIN_LED, LOW);
+                clients[i].println(F("LED is on"));
+                clients[i].stop();
+            }
+            else if (strstr(tcp_buffer[i], "off")) {
+                digitalWrite(BUILTIN_LED, HIGH);
+                clients[i].println(F("LED is off"));
+                clients[i].stop();
+            }    
+            
+            // Clear the buffer to receive the next line
+            tcp_buffer[i][0]='\0';
+        }
+    }
+    
+    // Switch to the next connection for the next call
+    if (++i >= MAX_TCP_CONNECTIONS) {
+        i=0;
+    }
 }

@@ -36,144 +36,223 @@ private:
 
 FILE * pidfile_ptr;
 FILE * logfile_ptr;
-
+// The filename incl. path of the configfile
 string configFile;
-
-//Logger* logger;
-
+// the programm name goes here
+string prgName;
+// the programm version goes here
+string prgVersion;
+    
 public:
 	
 // Hier die verwendeten Variablen:
 /**********************************************
  * Variablen für den Gateway
  **********************************************/
-// Logfilename for the gw
+/**
+ * Logfilename für rf24gwd
+ */ 
 string gwLogFileName;
-// Pidfilename for the gw
+/**
+ * Pidfilename für rf24gwd
+ */
 string gwPidFileName;
-// Hostname of hub
+/**
+ * Speichert den eindeutigen Servernamen inkl. Domaine für rf24hubd
+ */ 
 string gwHubHostName;
-// UDP port of gw
+/**
+ * Eingehender UDP port vom rf24gwd
+ * @note Zwischen rf24hubd und rf24gwd werden Anweisungen mittels UDP ausgetauscht.
+ */
 string gwUdpPortNo;
-// TCP port of gw
+/**
+ * Eingehender TCP Port vom rf24gwd
+ * @note Über den TCP Port können Steuerbefehle an den rf24gwd gesendet werden
+ * @code $>telnet server.domain <tcp-port>
+ * 
+ *  rf24gwd> set verbose +rf24 @endcode
+ */
 string gwTcpPortNo;
-// gwTcpPortSet is true when an incoming TCP port is set by configuration
+/**
+ * gwTcpPortSet: true wenn ein eingehender TCP Port gesetzt ist, sonst flase
+ */
 bool gwTcpPortSet;
-// gwUdpPortSet is true when an incoming UDP port is set by configuration
+/**
+ * gwUdpPortSet: True wenn ein eingehender UDP Port gesetzt ist, sonst flase
+ */
 bool gwUdpPortSet;
-// A unique ID for this Gateway
+/**
+ * Die eindeutige Nummer(ID) für diesem rf24gwd
+ */
 string gwNo;
 /**********************************************
  * Variablen für den Hub
  **********************************************/
-// UDP port of hub
+/**
+ * Eingehender UDP port vom rf24hubd
+ * @note Zwischen rf24hubd und rf24gwd werden Anweisungen mittels UDP ausgetauscht.
+ */
 string hubUdpPortNo;
-// Logfilename for the hub
+/**
+ * Logfilename für rf24hubd
+ */ 
 string hubLogFileName;
-// Pidfilename for the hub
+/**
+ * Pidfilename für rf24hubd
+ */ 
 string hubPidFileName;
-// telnet Port for incoming messages
+/**
+ * Eingehender TCP Port vom rf24hubd
+ * @note Über den TCP Port können Steuerbefehle an den rf24hubd gesendet werden. 
+ * Diesen Port netzt auch FHEM um seine Steuerbefehle an den Hub zu senden. 
+ * @code $>telnet server.domain <tcp-port>
+ * 
+ *  rf24hubd> set verbose +order @endcode
+ */
 string hubTcpPortNo;
-// hubTcpPortSet is true when an incoming TCP port is set by configuration
+/**
+ * gwTcpPortSet: True wenn ein eingehender TCP Port gesetzt ist, sonst flase
+ */
 bool hubTcpPortSet;
-// rf24HubUdpPortSet is true when an incoming UDP port is set by configuration
+/**
+ * gwUdpPortSet: True wenn ein eingehender UDP Port gesetzt ist, sonst flase
+ */
 bool hubUdpPortSet;
 /**********************************************
  * Database
  **********************************************/
-//hostname for database server
+/**
+ * Hostname für den Datenbankserver
+ */
 string dbHostName;
-//port on database server
+/**
+ * Port für den Datenbankserver
+ */ 
 string dbPortNo;
-//Schema inside database
+/**
+ * Genutztes Schema innerhalb der Datenbank.
+ */ 
 string dbSchema;
-//Username for database
+/**
+ * Username zur Anmeldung an der Datenbank.
+ */
 string dbUserName;
-//Password for database
+/**
+ * Passwort zur Anmeldung an der Datenbank.
+ */
 string dbPassWord;
 /**********************************************
  * FHEM
  **********************************************/
-//Hostname for FHEM server 
+/**
+ * Hostname für den FHEM Server
+ */ 
 string fhemHostName;
-//Port for FHEM
+/**
+ * Port für den FHEM Server
+ * @note Über diesen TCP Port werden Steuerbefehle vom rf24hubd an FHEM geschickt. 
+ */
 string fhemPortNo;
-// fhemHostSet is true when an outgoing fhem hostname is set by configuration
+/**
+ * fhemSet: True wenn fhemHostName gesetzt ist, sonst flase
+ */
 bool fhemHostSet;
-// fhemPortSet is true when an outgoing fhem port is set by configuration
+/**
+ * fhemSet: True wenn fhemPortSet gesetzt ist, sonst flase
+ */
 bool fhemPortSet;
 
 /**********************************************
  * GENERIC
  **********************************************/
-// the programm name goes here
-string prgName;
-// the programm version goes here
-string prgVersion;
-// startDaemon is true when start as a deamon is configured
-bool startDaemon = false;
-// startSniffer is true when start as sniffer is configured
-bool startSniffer = false;
-// will start the scanner running over all channels
-bool startScanner = false;
-// set the level for the scanner
-int setScanLevel = 0;
-// will start a scanner for a single channels if set to 1..128; 0 is deaktivated
-int startChannelScanner = 0;
-
-Cfg(string _prgName, string _prgVersion);
-Cfg();
-~Cfg();
-
-/*
- * trim: get rid of trailing and leading whitespace...
- *       ...including the annoying "\n" from fgets()
- */
-//char * trim (char * s);
-
-/*
- * prints a usage message for the programm
- */
-void usage(const char* prgname);
-
-/*
- * reads all the command line parameters and processes them
- * after that the config file willb e processed
- * results are stored on parms.*
+/**
+ * startDaemon: True wenn der Programmaufruf mit -d oder --daemon erfolgte, sonst false
  */ 
-void processParams(const char* prgname, int argc, char* argv[]);
+bool startDaemon = false;
+/**
+ * startSniffer: True wenn der Programmaufruf mit -S oder --sniffer erfolgte, sonst false
+ */ 
+bool startSniffer = false;
+/**
+ * startScanner: True wenn der Programmaufruf mit -s oder --scanner erfolgte, sonst false
+ */ 
+bool startScanner = false;
+/**
+ * Beinhaltet das beim Programmaufruf übergebene Scanlevel (0..9)
+ */
+int setScanLevel = 0;
+/**
+ * Beinnhaltet den Kanal der gescannt werden soll (1..125); 0 is deaktiviert
+ */ 
+int channelScanner_Channel = 0;
 
-/*
- * prints the current config for gateway
+/**
+ * Constructor der Klasse Cfg
+ *
+ * @param _prgName: Ein String mit dem Namen des aufrufenden Programms.
+ * @param _prgVersion: Ein String mit der Programmversion
+ *
+ */
+Cfg(string _prgName, string _prgVersion);
+
+/**
+ * Gibt Nutzungsinformationen zum Programm aus
+ *
+ * @param prgName: Ein String mit dem Namen des aufrufenden Programms.
+ *
+ */
+void usage(const char* prgName);
+
+/**
+ * Verarbeitet die Parameter, die beim Start übergeben wurden. 
+ * Zusätzlich wird hier das Config-File ausgelesen und verarbeitet.
+ * 
+ * @param prgName: Ein String mit dem Namen des aufrufenden Programms.
+ * @param argc: Anzahl der Aufrufparameter
+ * @param argv: Ein Array mit den Aufrufparametern
+ * 
+ */ 
+void processParams(const char* prgName, int argc, char* argv[]);
+
+/**
+ * Gibt die Configuration für das Programm rf24gwd aus.
  */
 void printConfig_gw (void);
 
-/*
- * prints the current config for hub
+/**
+ * Gibt die Configuration für das Programm rf24hubd aus.
  */
 void printConfig_hub (void);
 
-/*
- * prints the current config for database
+/**
+ * Gibt die Configuration für die Datenbank aus.
  */
 void printConfig_db (void);
 
-/*
- * If a pidfile is defined in the config file it will be set 
+/**
+ * Setzt ein PID File
+ * 
+ * @param pidFileName: Dateiname mit absulutem Pfad
+ * @return True wenn PID-File gesetzt wurde, sonst False
  */
-int setPidFile(string pidFileName);
+bool setPidFile(string pidFileName);
 
-/*
- * If a pidfile is set it will be set 
+/**
+ * Löscht ein PID-File 
+ * 
+ * @param pidFileName: Dateiname mit absulutem Pfad
  */
 void removePidFile(string pidFileName);
 
-/*
- * checks if a pid file is set (=true)
+/**
+ * Prüft ob ein PID-File gesetzt ist.
+ * Bei gesetztem PID-File wird zusätzlich eine Warnmeldung "PIDFILE: <PIDFILE Name> exists" in den STDERR geschrieben.
+ * 
+ * @param pidFileName: Dateiname mit absulutem Pfad
+ * @return True wenn PID-File vorhanden ist, sonst False
  */
-int checkPidFileSet(string pidFileName);
-
-//void begin(Logger* _logger);
+bool checkPidFileSet(string pidFileName);
 
 };
 

@@ -76,7 +76,7 @@ char* printVerbose(uint16_t verboseLevel, char* buf) {
     return buf;
 }
 
-uint16_t decodeVerbose(uint16_t oldLevel, char* verboseSet) {
+uint16_t decodeVerbose(uint16_t verboseLevel, char* verboseSet) {
     uint16_t retval = 0;
     char cmp_VBall[]="all",
          cmp_VBnone[]="none",
@@ -190,89 +190,16 @@ char* alloc_str(uint16_t verboselevel, const char* msgTxt, size_t size, char* ti
     return retval;
 }
 
-void free_str(uint16_t verboselevel, const char* msgTxt, char* str, char* timestamp) {
-    if (verboselevel & VERBOSEPOINTER) {
+void free_str(uint16_t verboseLevel, const char* msgTxt, char* str, char* timestamp) {
+    if (verboseLevel & VERBOSEPOINTER) {
         printf("%sFree %s P:<%p>", timestamp, msgTxt, str);
     }    
     free(str);
-    if (verboselevel & VERBOSEPOINTER) {
+    if (verboseLevel & VERBOSEPOINTER) {
         printf(" OK\n");
     }    
 }
 
-uint32_t packData(uint8_t mychannel, char* wort4) {
-    uint32_t retval = 0;
-    uint8_t dataTyp = getDataTyp(mychannel);
-    char* pEnd; 
-    switch ( dataTyp ) {
-        case 0:
-        {
-            retval = 0;
-        }
-        case 1:
-        {
-            float val_f = strtof(wort4, &pEnd);
-            retval = calcTransportValue_f(mychannel, val_f);
-        }
-        break;
-        case 2:
-        {
-            int16_t val_i = (int16_t)strtol(wort4, &pEnd, 10);
-            retval = calcTransportValue_i(mychannel, val_i);
-        }
-        break;
-        case 3:
-        {
-            uint16_t val_ui = (uint16_t)strtoul(wort4, &pEnd, 10);
-            retval = calcTransportValue_ui(mychannel, val_ui);
-        }
-        break;
-        case 4:
-            // ToDo Wort kann ein kompletter Text sein, das in verschiedene Channels zerlegt wird
-            //      Max Länge 20*3=60 Zeichen
-        break;
-    }
-    return retval;
-}
-/*
-char* unpackData(uint32_t data, char* buf) {
-    uint8_t dataTyp = getDataTyp( getChannel(data) );
-    switch ( dataTyp ) {
-        case 0:
-            sprintf(buf,"%d",0);
-        break;            
-        case 1:  
-        {
-            float myval = getValue_f(data);
-            if ( myval > 500 ) {
-                sprintf(buf,"%.1f", myval);
-            } else {
-                if ( myval > 9.9 ) {
-                    sprintf(buf,"%.2f", myval);
-                } else {
-                    sprintf(buf,"%.3f", myval);
-                }   
-            }
-        }
-        break;
-        case 2:
-        {
-            sprintf(buf,"%d",getValue_i(data));
-        }
-        break;
-        case 3:
-        {
-            sprintf(buf,"%u",getValue_ui(data));
-        }
-        break;
-        case 4:
-            // ToDo Wort kann ein kompletter Text sein, das in verschiedene Channels zerlegt wird
-            //      Max Länge 20*3=60 Zeichen
-        break;
-    }
-    return buf;
-}
-*/
 void sendUdpMessage(const char* host, const char* port, udpdata_t * udpdata ) {
 	int sockfd;
 	struct addrinfo hints, *servinfo, *p;
@@ -353,23 +280,23 @@ bool openSocket(const char* port, struct sockaddr_in *address, int* handle, sock
     return retval;
 }
 
-void printPayload(char* ts, const char* header, payload_t* mypayload) {
+void printPayload(char* ts, const char* header, payload_t* payload) {
     char *buf[6];
     for (int  i = 0; i < 6; i++) buf[i]=(char*)malloc(10);
-    buf[0]=unpackData(mypayload->data1, buf[0]);
-    buf[1]=unpackData(mypayload->data2, buf[1]);
-    buf[2]=unpackData(mypayload->data3, buf[2]);
-    buf[3]=unpackData(mypayload->data4, buf[3]);
-    buf[4]=unpackData(mypayload->data5, buf[4]);
-    buf[5]=unpackData(mypayload->data6, buf[5]);
+    buf[0]=unpackTransportValue(payload->data1, buf[0]);
+    buf[1]=unpackTransportValue(payload->data2, buf[1]);
+    buf[2]=unpackTransportValue(payload->data3, buf[2]);
+    buf[3]=unpackTransportValue(payload->data4, buf[3]);
+    buf[4]=unpackTransportValue(payload->data5, buf[4]);
+    buf[5]=unpackTransportValue(payload->data6, buf[5]);
     printf("%s %s N:%u T:%u m:%u F:0x%02X O:%u H:%u (%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)\n", ts, header,
-               mypayload->node_id, mypayload->msg_type, mypayload->msg_id, mypayload->msg_flags, mypayload->orderno, mypayload->heartbeatno,
-               getChannel(mypayload->data1), buf[0],
-               getChannel(mypayload->data2), buf[1],
-               getChannel(mypayload->data3), buf[2],
-               getChannel(mypayload->data4), buf[3],
-               getChannel(mypayload->data5), buf[4],
-               getChannel(mypayload->data6), buf[5]);   
+               payload->node_id, payload->msg_type, payload->msg_id, payload->msg_flags, payload->orderno, payload->heartbeatno,
+               getChannel(payload->data1), buf[0],
+               getChannel(payload->data2), buf[1],
+               getChannel(payload->data3), buf[2],
+               getChannel(payload->data4), buf[3],
+               getChannel(payload->data5), buf[4],
+               getChannel(payload->data6), buf[5]);   
     for (int  i = 0; i < 6; i++) free(buf[i]);
 }
 

@@ -78,50 +78,50 @@ order_t* findNode(NODE_DATTYPE node_id);
     
 public:
     
-/**************************************************************
+/**
  *  Setzt das Verboselevel
- *************************************************************/    
+ */
 void setVerbose(uint16_t _verboselevel);
-/**************************************************************
+/**
  * true wenn min ein Eintrag vorhanden sonst false
- *************************************************************/
+ */
 bool hasEntry(void);
-/**************************************************************
+/**
  * true wenn die übergebene orderno einen record im Speicher hat
- *************************************************************/
+ */
 bool isOrderNo(ONR_DATTYPE orderno);
-/**************************************************************
+/**
  * löscht den record im Buffer mit der übergebenen orderno
- *************************************************************/
+ */
 bool delByOrderNo(ONR_DATTYPE orderno);
-/**************************************************************
+/**
  * löscht den record im Buffer mit der übergebenen node_id
- *************************************************************/
+ */
 bool delByNode(NODE_DATTYPE node_id);
-/**************************************************************
+/**
  * fügt einen neuen record zum Buffer hinzu
- *************************************************************/
+ */
 void addOrder(NODE_DATTYPE node_id, uint8_t msg_type, bool HB_order, uint32_t data, uint64_t entrytime);
-/**************************************************************
+/**
  * Füllt das data Feld an der Position pos 2..6 => data2..data6
- *************************************************************/
+ */
 void modifyOrder(NODE_DATTYPE node_id, uint8_t pos, uint32_t data);
-/**************************************************************
+/**
  * Setzt das msg_flag für die übergebene node_id
- *************************************************************/
+ */
 void modifyOrderFlags(NODE_DATTYPE node_id, uint8_t msg_flags);
-/**************************************************************
+/**
  * füllt den Payload mit den Daten für die nächste Sendung
- *************************************************************/
+ */
 bool getOrderForTransmission(payload_t* payload, uint64_t mytime); 
-/**************************************************************
+/**
  * Druckt alle records im Buffer in den out_socket
  * out_socket ist dabei ein gültiger socket file descriptor
  * entweder aus accept für einen socket oder mittels
  * fileno(stdout) für den stdout
  * Der zweite Parameter bestimmt das Format,
  * true => HTML Format; false => Textformat
- *************************************************************/
+ */
 void printBuffer(int out_socket, bool htmlFormat);
 
 Order(void);

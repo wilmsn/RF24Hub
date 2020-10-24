@@ -15,8 +15,8 @@ On Branch: entw_gw  !!!!!
 //****************************************************
 // My definitions for my nodes based on this sketch
 // Select only one at one time !!!!
-#define AUSSENTHERMOMETER
-//#define SCHLAFZIMMERTHERMOMETER
+//#define AUSSENTHERMOMETER
+#define SCHLAFZIMMERTHERMOMETER
 //#define TESTZIMMERTHERMOMETER
 //#define TESTZIMMER1THERMOMETER
 //#define BASTELZIMMERTHERMOMETER
@@ -25,6 +25,8 @@ On Branch: entw_gw  !!!!!
 //#define ANKLEIDEZIMMERTHERMOMETER
 //#define GAESTEZIMMERTHERMOMETER
 //#define UNOTESTNODE_AO
+//#define TERASSE
+//#define TESTSWITCH
 //****************************************************
 // Default settings are in "default.h" now !!!!!
 #include "defaults.h"
@@ -35,17 +37,14 @@ On Branch: entw_gw  !!!!!
 // ------ End of configuration part ------------
 
 //define constrains for debugging
-#if defined(SERIAL_DEBUG_SENSOR)
-#define SERIAL_DEBUG
+#if defined(DEBUG_SERIAL_SENSOR)
+#define DEBUG_SERIAL
 #endif
-#if defined(SERIAL_DEBUG_TXRX)
-#define SERIAL_DEBUG
+#if defined(DEBUG_SERIAL_RADIO)
+#define DEBUG_SERIAL
 #endif
-#if defined(SERIAL_DEBUG_CONFIG)
-#define SERIAL_DEBUG
-#endif
-#if defined(SERIAL_DEBUG_PAYLOAD)
-#define SERIAL_DEBUG
+#if defined(DEBUG_SERIAL_PROC)
+#define DEBUG_SERIAL
 #endif
 
 #include <avr/pgmspace.h>
@@ -59,7 +58,7 @@ On Branch: entw_gw  !!!!!
 #include "version.h"
 #include "rf24_config.h"
 
-#if defined(SERIAL_DEBUG)
+#if defined(DEBUG_SERIAL)
 #include "printf.h"
 #endif
 
@@ -77,11 +76,16 @@ On Branch: entw_gw  !!!!!
 #include <BMX_sensor.h>
 #endif
 
+#if defined(NEOPIXEL)
+#include <Adafruit_NeoPixel.h>
+#endif
 // ----- End of Includes ------------------------
 
 Vcc vcc(1.0);
 
+#if defined(HBNODE)
 ISR(WDT_vect) { watchdogEvent(); }
+#endif
 
 #if defined(HAS_DISPLAY)
 #if defined(DISPLAY_5110)
@@ -98,6 +102,13 @@ float temp;
 #if defined(BOSCH_SENSOR)
 BMX_SENSOR sensor;
 float temp, pres, humi;
+#endif
+
+#if defined(NEOPIXEL)
+Adafruit_NeoPixel neopixels(NEOPIXEL, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
+uint8_t neopixel_r;
+uint8_t neopixel_g;
+uint8_t neopixel_b;
 #endif
 
 payload_t r_payload, s_payload;    
@@ -123,7 +134,6 @@ struct eeprom_t {
 };
 eeprom_t eeprom;
 
-boolean             display_on = true;
 boolean             low_voltage_flag = false;
 boolean             exec_pingTest = false;
 boolean             exec_RegTrans = false;
@@ -139,6 +149,7 @@ boolean             monitormode = false;
 //Some Var for restore after sleep of display
 #if defined(HAS_DISPLAY)
 float               field1_val, field2_val, field3_val, field4_val;
+boolean             display_on = true;
 #endif
 
 
@@ -146,10 +157,13 @@ float               field1_val, field2_val, field3_val, field4_val;
 // Usage: radio(CE_pin, CS_pin)
 RF24 radio(RADIO_CE_PIN,RADIO_CSN_PIN);
 
+void pingTest(void);
+void sendRegister(void);
+
 void get_voltage(void) {
   cur_voltage = vcc.Read_Volts()*eeprom.volt_fac+eeprom.volt_off;
   low_voltage_flag = (eeprom.low_volt_level > 1.5) && (cur_voltage <= eeprom.low_volt_level);
-#if defined(SERIAL_DEBUG_SENSOR)
+#if defined(DEBUG_SERIAL_SENSOR)
    Serial.print("Volt (gemessen): ");
    Serial.println(vcc.Read_Volts());
    Serial.print("Volt Faktor: ");
@@ -168,18 +182,22 @@ void get_voltage(void) {
 }
 
 void get_sensordata(void) {
+// Sensor Dallas 18B20
 #if defined(DALLAS_18B20)
   sensor.requestTemperatures(); // Send the command to get temperatures
   sleep4ms(800);
   delay(10);
   temp=sensor.getTempCByIndex(0);
-#if defined(SERIAL_DEBUG_SENSOR)
+#if defined(DEBUG_SERIAL_SENSOR)
     Serial.print("Temp: ");
     Serial.print(temp);
 #endif
 #endif
+// ENDE: Sensor Dallas 18B20
+
+// Sensor Bosch BMP180; BMP280; BME280 
 #if defined(BOSCH_SENSOR)
-#if defined(SERIAL_DEBUG_SENSOR)
+#if defined(DEBUG_SERIAL_SENSOR)
   if (sensor.isBMP180()) Serial.println("BMP180");
   if (sensor.isBMP280()) Serial.println("BMP280");
   if (sensor.isBME280()) Serial.println("BME280"); 
@@ -187,33 +205,34 @@ void get_sensordata(void) {
   sensor.startSingleMeasure();
   if (sensor.hasTemperature() ) {
     temp = sensor.getTemperature();
-#if defined(SERIAL_DEBUG_SENSOR)
+#if defined(DEBUG_SERIAL_SENSOR)
     Serial.print("Temp: ");
     Serial.println(temp);
 #endif
   }
   if (sensor.hasPressure() ) {
     pres = sensor.getPressureAtSealevel(95.0);
-#if defined(SERIAL_DEBUG_SENSOR)
+#if defined(DEBUG_SERIAL_SENSOR)
     Serial.print("Pres: ");
     Serial.println(pres);
 #endif
   }
   if (sensor.hasHumidity() )  {
     humi = sensor.getHumidity();
-#if defined(SERIAL_DEBUG_SENSOR)
+#if defined(DEBUG_SERIAL_SENSOR)
     Serial.print("Humi: ");
     Serial.println(humi);
 #endif
   }
 #endif
+// ENDE: Sensor Bosch BMP180; BMP280; BME280 
 }
 
 uint32_t action_loop(uint32_t data) {
   uint32_t retval = 0;
   int      intval;
   uint8_t  channel = getChannel(data);
-#if defined(DEBUG_SERIAL_PROZ)
+#if defined(DEBUG_SERIAL_PROC)
     Serial.print("Processing: ");
     Serial.println(getChannel(data));
 #endif  
@@ -251,6 +270,96 @@ uint32_t action_loop(uint32_t data) {
         // Display Sleepmode ON <-> OFF
         display_sleep( getValue_ui(data) & 0x01 );
       break;
+#endif
+#if defined (RELAIS_1)
+      case 51:
+        // Relais_1 ON <-> OFF
+        if ( getValue_ui(data) & 0x01 ) {
+#if defined (DEBUG_SERIAL_SENSOR)
+          Serial.println("Relais 1 ein");
+#endif               
+          digitalWrite(RELAIS_1, RELAIS_ON); 
+        } else  {
+#if defined (DEBUG_SERIAL_SENSOR)
+          Serial.println("Relais 1 aus");
+#endif               
+          digitalWrite(RELAIS_1, RELAIS_OFF);
+        }
+      break;
+#endif
+#if defined (RELAIS_2)
+      case 52:
+        // Relais_2 ON <-> OFF
+        if ( getValue_ui(data) > 0x00 ) {
+#if defined (DEBUG_SERIAL_SENSOR)
+          Serial.println("Relais 2 ein");
+#endif               
+          digitalWrite(RELAIS_2, RELAIS_ON); 
+        } else  {
+#if defined (DEBUG_SERIAL_SENSOR)
+          Serial.println("Relais 2 aus");
+#endif               
+          digitalWrite(RELAIS_2, RELAIS_OFF);
+        }
+      break;
+#endif
+#if defined (RELAIS_3)
+      case 53:
+        // Relais_3 ON <-> OFF
+        if ( getValue_ui(data) & 0x01 ) {
+#if defined (DEBUG_SERIAL_SENSOR)
+          Serial.println("Relais 3 ein");
+#endif               
+          digitalWrite(RELAIS_3,RELAIS_ON); 
+        } else  {
+#if defined (DEBUG_SERIAL_SENSOR)
+          Serial.println("Relais 3 aus");
+#endif               
+          digitalWrite(RELAIS_3,RELAIS_OFF);
+        }
+      break;
+#endif
+#if defined (RELAIS_4)
+      case 54:
+        // Relais_4 ON <-> OFF
+        if ( getValue_ui(data) & 0x01 ) {
+#if defined (DEBUG_SERIAL_SENSOR)
+          Serial.println("Relais 4 ein");
+#endif               
+          digitalWrite(RELAIS_4,RELAIS_ON); 
+        } else  {
+#if defined (DEBUG_SERIAL_SENSOR)
+          Serial.println("Relais 4 aus");
+#endif               
+          digitalWrite(RELAIS_4,RELAIS_OFF);
+        }
+      break;
+#endif
+#if defined (NEOPIXEL)
+      case 51:
+        uint16_t pixeldata = getValue_ui(data);
+        uint8_t pixelcount = 0;
+        neopixel_b = (uint8_t)((pixeldata) & 0b0000000000011111)<<3;
+        neopixel_g = (uint8_t)((pixeldata>>5) & 0b0000000000011111)<<3;
+        neopixel_r = (uint8_t)((pixeldata>>10) & 0b0000000000011111)<<3;
+#if defined (DEBUG_SERIAL_SENSOR)
+          Serial.print("Neopixel Data:");
+          Serial.println(pixeldata);
+          Serial.print("Rot:");
+          Serial.print(neopixel_r);
+          Serial.print(" Grün:");
+          Serial.print(neopixel_g);
+          Serial.print(" Blau:");
+          Serial.println(neopixel_b);
+#endif               
+        neopixels.clear();
+        do {
+            neopixels.setPixelColor(pixelcount, neopixels.Color(neopixel_r, neopixel_g, neopixel_b));
+          pixelcount++;
+        }
+        while(pixelcount < NEOPIXEL);     
+        neopixels.show();
+      break;  
 #endif
       case REG_BATT:  
       // battery voltage
@@ -394,6 +503,22 @@ void setup(void) {
   delay(500);
   pinMode(STATUSLED, OUTPUT);     
   digitalWrite(STATUSLED,STATUSLED_ON); 
+#if defined(RELAIS_1)
+  pinMode(RELAIS_1, OUTPUT);     
+  digitalWrite(RELAIS_1,RELAIS_ON); 
+#endif
+#if defined(RELAIS_2)
+  pinMode(RELAIS_2, OUTPUT);     
+  digitalWrite(RELAIS_2,RELAIS_ON); 
+#endif
+#if defined(RELAIS_3)
+  pinMode(RELAIS_3, OUTPUT);     
+  digitalWrite(RELAIS_3,RELAIS_ON); 
+#endif
+#if defined(RELAIS_4)
+  pinMode(RELAIS_4, OUTPUT);     
+  digitalWrite(RELAIS_4,RELAIS_ON); 
+#endif
   EEPROM.get(0, eeprom);
   if (eeprom.versionnumber != EEPROM_VERSION && EEPROM_VERSION > 0) {
     eeprom.versionnumber    = EEPROM_VERSION;
@@ -410,8 +535,8 @@ void setup(void) {
     eeprom.low_volt_level   = LOW_VOLT_LEVEL;
     eeprom.low_volt_sendint = LOW_VOLT_SENDINT;
     EEPROM.put(0, eeprom);
-  }
-#if defined(SERIAL_DEBUG)
+  }  
+#if defined(DEBUG_SERIAL)
   Serial.begin(115200);
   printf_begin();
 #endif
@@ -421,6 +546,17 @@ void setup(void) {
 #endif
 #if defined(BOSCH_SENSOR)
   sensor.begin(); 
+#endif
+#if defined(NEOPIXEL)
+  neopixel_r = NEOPIXEL_R_DEFAULT;
+  neopixel_g = NEOPIXEL_G_DEFAULT;
+  neopixel_b = NEOPIXEL_B_DEFAULT;
+  neopixels.begin();
+  neopixels.clear();
+  for(int i=0; i<NEOPIXEL; i++) {
+    neopixels.setPixelColor(i, neopixels.Color(neopixel_r, neopixel_g, neopixel_b));
+  }
+  neopixels.show();   
 #endif
   radio.begin();
   radio.setChannel(RF24_CHANNEL);
@@ -433,11 +569,27 @@ void setup(void) {
   radio.setCRCLength(RF24_CRC_16);
   radio.openWritingPipe(rf24_node2hub);
   radio.openReadingPipe(1,rf24_hub2node);
-#if defined(SERIAL_DEBUG_TXRX)
+#if defined(DEBUG_SERIAL_RADIO)
   radio.printDetails();
 #endif    
   delay(1000);
   digitalWrite(STATUSLED,STATUSLED_OFF); 
+#if defined(RELAIS_1)
+  digitalWrite(RELAIS_1,RELAIS_OFF); 
+#endif
+#if defined(RELAIS_2)
+  digitalWrite(RELAIS_2,RELAIS_OFF); 
+#endif
+#if defined(RELAIS_3)
+  digitalWrite(RELAIS_3,RELAIS_OFF); 
+#endif
+#if defined(RELAIS_4)
+  digitalWrite(RELAIS_4,RELAIS_OFF); 
+#endif
+#if defined(NEOPIXEL)
+  neopixels.clear();
+  neopixels.show();   
+#endif
 #if defined(HAS_DISPLAY)
 #if defined(DISPLAY_5110)
   lcd.begin();
@@ -458,7 +610,7 @@ void setup(void) {
   last_send = 0;
 // on init send config to hub
   pingTest();
-  send_register();
+  sendRegister();
 }
 
 #if defined(HAS_DISPLAY)
@@ -715,6 +867,7 @@ void wipe_antenna(int x, int y) {
   }
 }  
 #endif
+// End of HAS_DISPLAY Block
 
 void payloadInitData(void) {
   s_payload.data1 = 0;
@@ -725,36 +878,35 @@ void payloadInitData(void) {
   s_payload.data6 = 0;
 }
 
-#if defined(SERIAL_DEBUG_PAYLOAD)
+#if defined(DEBUG_SERIAL_RADIO)
 void printPayloadData(uint32_t pldata) {
+    char buf[20];
     Serial.print("(");
     Serial.print(getChannel(pldata));
     Serial.print("/");
-// Überarbeiten !!!!!!!!
-// Datentyp ist abhängig vom Channel !!!!    
-    Serial.print(getValue_f(pldata));
+    Serial.print(unpackData(pldata,buf));
     Serial.print(")");
 }
-#endif
 
 void printPayload(payload_t* pl) {
-#if defined(SERIAL_DEBUG_PAYLOAD)
-    Serial.print("I:");
+    Serial.print(" N:");
+    Serial.print(pl->node_id);
+    Serial.print(" I:");
     Serial.print(pl->msg_id);
     Serial.print(" T:");
     Serial.print(pl->msg_type);
     Serial.print(" O:");
     Serial.print(pl->orderno);
     Serial.print(" ");
-    printPayloadData(pl->data1));
-    printPayloadData(pl->data2));
-    printPayloadData(pl->data3));
-    printPayloadData(pl->data4));
-    printPayloadData(pl->data5));
-    printPayloadData(pl->data6));
+    printPayloadData(pl->data1);
+    printPayloadData(pl->data2);
+    printPayloadData(pl->data3);
+    printPayloadData(pl->data4);
+    printPayloadData(pl->data5);
+    printPayloadData(pl->data6);
     Serial.println();
-#endif
 }
+#endif
 
 void payload_data(uint8_t pos, uint8_t channel, float value) {
   switch (pos) {
@@ -800,7 +952,7 @@ void pingTest(void) {
   exec_pingTest = false;
 }
 
-void send_register(void) {
+void sendRegister(void) {
   s_payload.data1 = calcTransportValue_f(REG_VOLTFAC, eeprom.volt_fac);
   s_payload.data2 = calcTransportValue_f(REG_VOLTOFF, eeprom.volt_off);
   s_payload.data3 = calcTransportValue_f(REG_LOWVOLTLEV, eeprom.low_volt_level);
@@ -839,13 +991,16 @@ void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, 
 // ToDo: Verarbeitung des MSG_FLAGS !!!!
     unsigned long start_ts;
     uint8_t tx_loopcount = 0;
-    ONR_DATTYPE last_orderno = 0;
     bool doLoop;
     start_ts = millis();
     prep_data(msg_type, msg_flags, orderno, myheartbeatno);
     while ( tx_loopcount < max_tx_loopcount ) {
       s_payload.msg_id++;
       radio.stopListening();
+#if defined(DEBUG_SERIAL_RADIO)
+      Serial.print("TX: ");
+      printPayload(&s_payload);
+#endif
       radio.write(&s_payload, sizeof(s_payload));
       radio.startListening(); 
       start_ts = millis();
@@ -853,6 +1008,10 @@ void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, 
       while ( (millis() < start_ts + eeprom.senddelay) && doLoop ) {
         if ( radio.available() ) {
           radio.read(&r_payload, sizeof(r_payload));
+#if defined(DEBUG_SERIAL_RADIO)
+          Serial.print("RX: ");
+          printPayload(&r_payload);
+#endif
           if (r_payload.node_id == RF24NODE && r_payload.orderno != last_orderno) {
             last_orderno = r_payload.orderno;
             switch(r_payload.msg_type) {
@@ -867,7 +1026,7 @@ void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, 
                 tx_loopcount = 0; 
                 if (r_payload.msg_flags & PAYLOAD_FLAG_LASTMESSAGE ) {
                   // Wenn das LASTMESSAGEFLAG gesetzt ist sollte nur noch eine Endmessage kommen
-                  // Zeit wird verkürzt
+                  // ==> Zeit wird verkürzt
                   max_tx_loopcount = eeprom.max_stopcount;
                 } else {
                   max_tx_loopcount = eeprom.max_sendcount;
@@ -894,16 +1053,16 @@ void exec_jobs(void) {
     delay(200);
   }
   if (exec_RegTrans) {
-    send_register();
+    sendRegister();
     delay(200);
   }
 }
 
 void loop(void) {
+#if defined(HBNODE)  
   delay(10);  
   payloadInitData();
   get_voltage();
-#if defined(HBNODE)  
 #if defined(HAS_DISPLAY)
     if (low_voltage_flag) display_sleep(true);
 #endif
@@ -924,10 +1083,7 @@ void loop(void) {
     wipe_therm(THERM_X0, THERM_Y0);
 #endif
     if ( loopcount == 0) {
-#if defined(DEBUG_LED)
-      digitalWrite(STATUSLED,STATUSLED_ON); 
-#endif
-#if defined(SERIAL_DEBUG_TXRX)
+#if defined(DEBUG_SERIAL_RADIO)
       delay(100);
       Serial.println("Radio WakeUp");
 #endif
@@ -957,12 +1113,9 @@ void loop(void) {
       exec_jobs();
       radio.stopListening();
       radio.powerDown();
-#if defined(SERIAL_DEBUG_TXRX)
+#if defined(DEBUG_SERIAL_RADIO)
       Serial.println("Radio Sleep");
       delay(100);
-#endif
-#if defined(DEBUG_LED)
-      digitalWrite(STATUSLED,STATUSLED_OFF); 
 #endif
     }
 #if defined(HAS_DISPLAY)
@@ -980,12 +1133,36 @@ void loop(void) {
   loopcount++;
   if (loopcount > eeprom.emptyloops) loopcount=0;
 // Ende ToDo  
+/**************************************** 
+ *  End Heartbeat Node
+ ****************************************/
 #else
-// Always On Node from here  
-// ToDo !!!!
-//  if (receive_data()) {
-//    process_data(); 
-//    exec_jobs();
-//  }
+/**************************************** 
+ *  Start always on Node
+ ****************************************/
+  if ( radio.available() ) {
+    radio.read(&r_payload, sizeof(r_payload));
+    if (r_payload.node_id == RF24NODE && r_payload.orderno != last_orderno) {
+#if defined(DEBUG_SERIAL_RADIO)
+      Serial.println(last_orderno);
+      Serial.print("RX: ");
+      printPayload(&r_payload);
+#endif
+      last_orderno = r_payload.orderno;
+      switch(r_payload.msg_type) {
+        case PAYLOAD_TYPE_DAT:
+          if (r_payload.data1 > 0) { s_payload.data1 = action_loop(r_payload.data1); } else { s_payload.data1 = 0; }
+          if (r_payload.data2 > 0) { s_payload.data2 = action_loop(r_payload.data2); } else { s_payload.data2 = 0; }
+          if (r_payload.data3 > 0) { s_payload.data3 = action_loop(r_payload.data3); } else { s_payload.data3 = 0; }
+          if (r_payload.data4 > 0) { s_payload.data4 = action_loop(r_payload.data4); } else { s_payload.data4 = 0; }
+          if (r_payload.data5 > 0) { s_payload.data5 = action_loop(r_payload.data5); } else { s_payload.data5 = 0; }
+          if (r_payload.data6 > 0) { s_payload.data6 = action_loop(r_payload.data6); } else { s_payload.data6 = 0; }
+          do_transmit(5, PAYLOAD_TYPE_DATRESP,/*PAYLOAD_FLAG_LASTMESSAGE*/99,r_payload.orderno, 0);
+        break;  
+      }
+    }
+  }
+  exec_jobs();
+  delay(500);
 #endif
 }

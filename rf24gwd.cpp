@@ -33,8 +33,6 @@ static void* receive_tn_in (void *arg) {
         }
         
     }
-    //sprintf(buffer,"%s %d\n",PRGNAME,SWVERSION);
-    //write(tnsocket , buffer , strlen(buffer));
     sleep(1);
     close (f->tnsocket);
     free(f);
@@ -138,7 +136,7 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
             sprintf(message,"%s\n",tn_usage_txt[i]);
             write(tn_socket , message , strlen(message));
         }
-        sprintf(message,"%s version %s", PRGNAME, SWVERSION_STR);
+        sprintf(message,"%s version %s\n", PRGNAME, SWVERSION_STR);
         write(tn_socket , message , strlen(message));
 	}		
 	free_str(verboselevel,"process_tn_in wort1",wort1,ts(tsbuf));
@@ -307,7 +305,9 @@ int main(int argc, char* argv[]) {
 	int msgID;
     ssize_t UdpMsgLen;
     TnMsg_t LogMsg;
-
+    useconds_t loopSleepTime = LOOPSLEEPTIME_BUSY;
+    unsigned int busyIndicator = 0;
+    
     // processing argc and argv[]
     cfg.processParams(PRGNAME, argc, argv);
 
@@ -444,7 +444,7 @@ int main(int argc, char* argv[]) {
                 }
             }
 		}
-		if ( radio.isValid() && radio.available() ) {
+		if ( radio.available() ) {
 //
 // Receive loop: react on the message from the nodes
 //
@@ -453,6 +453,7 @@ int main(int argc, char* argv[]) {
             memcpy(&udpdata.payload, &payload, sizeof(payload) );
             if ( verboselevel & VERBOSERF24) printPayload(ts(tsbuf), "N>G", &udpdata.payload);
 			sendUdpMessage(cfg.gwHubHostName.c_str(), cfg.hubUdpPortNo.c_str(), &udpdata); 
+            busyIndicator = 0;
 		} // radio.available
 //
 // Orderloop: Tell the nodes what they have to do
@@ -467,7 +468,11 @@ int main(int argc, char* argv[]) {
         radio.startListening();
         //sprintf(buf1,"Snd:");
         if ( verboselevel & VERBOSERF24) printPayload(ts(tsbuf), "G>N", &payload);
+        busyIndicator = 0;
     }
+    if (busyIndicator > 10) loopSleepTime = LOOPSLEEPTIME_QUIET; else loopSleepTime = LOOPSLEEPTIME_BUSY;
+    usleep(loopSleepTime);
+    busyIndicator++;
 //
 //  end orderloop
 //

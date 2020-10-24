@@ -1,9 +1,9 @@
 #include "rf24hubd.h" 
 
-// do_tn_cmd ==> send a telnet comand to the fhem-host
-// usage example: do_tn_cmd("set device1 on");
-void do_tn_cmd(NODE_DATTYPE node_id, uint8_t channel, char* value) {
-    char* tn_cmd = alloc_str(verboselevel,"do_tn_cmd tn_cmd",TELNETBUFFERSIZE,ts(tsbuf));
+// send_fhem_cmd ==> send a telnet comand to the fhem-host
+// usage example: send_fhem_cmd("set device1 on");
+void send_fhem_cmd(NODE_DATTYPE node_id, uint8_t channel, char* value) {
+    char* tn_cmd = alloc_str(verboselevel,"send_fhem_cmd tn_cmd",TELNETBUFFERSIZE,ts(tsbuf));
     char tn_quit[] =  "\r\nquit\r\n";
     int sockfd, portno, n;
     struct sockaddr_in serv_addr;
@@ -12,36 +12,36 @@ void do_tn_cmd(NODE_DATTYPE node_id, uint8_t channel, char* value) {
     fhem_dev = sensor.getFhemDevByNodeChannel(node_id, channel); 
 	sprintf(tn_cmd,"set %s %s", fhem_dev, value);
     if ( verboselevel & VERBOSETELNET) {    
-        printf("%sdo_tn_cmd: %s\n", ts(tsbuf), tn_cmd );
+        printf("%ssend_fhem_cmd: %s\n", ts(tsbuf), tn_cmd );
     }
     portno = std::stoi(cfg.fhemPortNo);
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
-        printf("%sERROR: do_tn_cmd: error opening socket\n", ts(tsbuf));
+        printf("%sERROR: send_fhem_cmd: error opening socket\n", ts(tsbuf));
 	}	
     server = gethostbyname(cfg.fhemHostName.c_str());
     if (server == NULL) {
-        printf("%sERROR: do_tn_cmd: no such host\n", ts(tsbuf));
+        printf("%sERROR: send_fhem_cmd: no such host\n", ts(tsbuf));
     }
     bzero((char *) &serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
     bcopy((char *)server->h_addr, (char *)&serv_addr.sin_addr.s_addr, server->h_length);
     serv_addr.sin_port = htons(portno);
     if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0) { 
-        printf("%sERROR: do_tn_cmd: error connecting\n", ts(tsbuf));
+        printf("%sERROR: send_fhem_cmd: error connecting\n", ts(tsbuf));
 	} else {	
 		n = write(sockfd,tn_cmd,strlen(tn_cmd));
 		if (n < 0) {
-			printf("%sERROR: do_tn_cmd: error writing to socket\n", ts(tsbuf));
+			printf("%sERROR: send_fhem_cmd: error writing to socket\n", ts(tsbuf));
 		} else {
             if ( verboselevel & VERBOSETELNET) {    
-                printf("%sdo_tn_cmd: Telnet to %s Port %u successfull Command: %s\n", ts(tsbuf), cfg.fhemHostName.c_str(), portno, tn_cmd);
+                printf("%ssend_fhem_cmd: Telnet to %s Port %u successfull Command: %s\n", ts(tsbuf), cfg.fhemHostName.c_str(), portno, tn_cmd);
             }
 		}		
 		write(sockfd,tn_quit,strlen(tn_quit));
 	}		 
     close(sockfd);
-    free_str(verboselevel, "do_tn_cmd tn_cmd", tn_cmd,ts(tsbuf));
+    free_str(verboselevel, "send_fhem_cmd tn_cmd", tn_cmd,ts(tsbuf));
 }
 
 /* Die Thread-Funktion fuer den Empfang von telnet Daten*/
@@ -113,9 +113,7 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 		 cmp_verbose[]="verbose",	
          cmp_push[]="push",
          cmp_show[]="show",
-         cmp_radio[]="radio",
-         cmp_sync[]="sync",
-         cmp_config[]="config";
+         cmp_sync[]="sync";
 	char *wort1a, *wort2a, *wort3a, *wort4a;
 	char *wort1, *wort2, *wort3, *wort4;
     char* message = alloc_str(verboselevel,"process_tn_in message",120,ts(tsbuf));
@@ -161,40 +159,38 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 	if ( (( strcmp(wort1,cmp_set) == 0 ) || ( strcmp(wort1,cmp_setlast) == 0 )) && (strcmp(wort2,cmp_sensor) == 0) && (strlen(wort3) > 0) && (strlen(wort4) > 0) ) {
 		// In word3 we may have a) the number of the sensor b) the name of the sensor c) the fhem_dev of a sensor
 		// for the processing we need the number of the sensor ==> find it!
-        NODE_DATTYPE mynode = 0;
-        uint8_t   mychannel = 0;
-        uint32_t  mydata = 0;
+        NODE_DATTYPE node_id = 0;
+        uint8_t   channel = 0;
+        uint32_t  data = 0;
         if ( wort3[0] >= 'A' && wort3[0] <= 'z' ) {
-            if (sensor.getNodeChannelByFhemDev(&mynode, &mychannel, wort3) ) {
-                //orderbuffer.addOrderBuffer(mymillis(),mynode,mychannel,myvalue);
+            if (sensor.getNodeChannelByFhemDev(&node_id, &channel, wort3) ) {
           		tn_input_ok = true;
             }
         } else {
-            uint32_t mysensor = strtol(wort3, &pEnd, 10);
-            if ( sensor.getNodeChannelBySensorID(&mynode, &mychannel, mysensor ) ) {
-                //orderbuffer.addOrderBuffer(mymillis(),mynode,mychannel,myvalue);
+            uint32_t sensor_id = strtol(wort3, &pEnd, 10);
+            if ( sensor.getNodeChannelBySensorID(&node_id, &channel, sensor_id ) ) {
                 tn_input_ok = true;
             }
         }
-        mydata = packData(mychannel, wort4); 
-        orderbuffer.addOrderBuffer(mymillis(),mynode,mychannel,mydata);
+        data = packTransportValue(channel, wort4); 
+        orderbuffer.addOrderBuffer(mymillis(),node_id,channel,data);
         //ToDo
         
         
         
-        if ( tn_input_ok && strcmp(wort1,cmp_setlast) == 0 && ! node.isHBNode(mynode) ) {
-			make_order(mynode, PAYLOAD_TYPE_DAT);
+        if ( tn_input_ok && strcmp(wort1,cmp_setlast) == 0 && ! node.isHBNode(node_id) ) {
+			make_order(node_id, PAYLOAD_TYPE_DAT);
         } 
     }
 	// push <node> <channel> <value>
 	// Pushes a value direct to a channel into a node
 	if (( strcmp(wort1,cmp_push) == 0 ) && (strlen(wort2) > 0) && (strlen(wort3) > 0) && (strlen(wort4) > 0) ) {
 		tn_input_ok = true;
-        NODE_DATTYPE mynode = strtol(wort2, &pEnd, 10);
+        NODE_DATTYPE node_id = strtol(wort2, &pEnd, 10);
         uint8_t mychannel = strtol(wort3, &pEnd, 10);
-        orderbuffer.addOrderBuffer(mymillis(), mynode, mychannel, packData(mychannel, wort4) );
-        if ( ! node.isHBNode(mynode) ) {
-			make_order(mynode, PAYLOAD_TYPE_DAT);
+        orderbuffer.addOrderBuffer(mymillis(), node_id, mychannel, packTransportValue(mychannel, wort4) );
+        if ( ! node.isHBNode(node_id) ) {
+			make_order(node_id, PAYLOAD_TYPE_DAT);
         }
     }
     // set node <node> init
@@ -230,11 +226,6 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
         node.printBuffer(tn_socket, false);
         sensor.printBuffer(tn_socket, false);
 	}	
-    // show radio config
-	if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_radio) == 0) && (strcmp(wort3,cmp_config) == 0) && (strlen(wort4) == 0) ) {
-		tn_input_ok = true;
-		radio.printDetails();
-	}
     // show verbose
 	if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
 		tn_input_ok = true;
@@ -273,7 +264,7 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
             sprintf(message,"%s\n",tn_usage_txt[i]);
             write(tn_socket , message , strlen(message));
         }
-        sprintf(message,"%s version %s", PRGNAME, SWVERSION_STR);
+        sprintf(message,"%s version %s\n", PRGNAME, SWVERSION_STR);
         write(tn_socket , message , strlen(message));
 	}		
 	free_str(verboselevel,"process_tn_in wort1",wort1,ts(tsbuf));
@@ -284,48 +275,48 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
     return tn_input_ok;
 }
 
-void make_order(NODE_DATTYPE mynode, uint8_t mytype) {
+void make_order(NODE_DATTYPE node_id, uint8_t msg_type) {
     void* ret_ptr;
     uint32_t data;
-    order.delByNode(mynode);
-    ret_ptr = orderbuffer.findOrder4Node(mynode, NULL, &data);
+    order.delByNode(node_id);
+    ret_ptr = orderbuffer.findOrder4Node(node_id, NULL, &data);
     if (ret_ptr) {
-        order.addOrder(mynode, mytype, node.isHBNode(mynode), data, mymillis());
-        ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &data);
+        order.addOrder(node_id, msg_type, node.isHBNode(node_id), data, mymillis());
+        ret_ptr = orderbuffer.findOrder4Node(node_id, ret_ptr, &data);
         if (ret_ptr) {
-            order.modifyOrder(mynode, 2, data);
-            ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &data);
+            order.modifyOrder(node_id, 2, data);
+            ret_ptr = orderbuffer.findOrder4Node(node_id, ret_ptr, &data);
             if (ret_ptr) {
-                order.modifyOrder(mynode, 3, data);
-                ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &data);
+                order.modifyOrder(node_id, 3, data);
+                ret_ptr = orderbuffer.findOrder4Node(node_id, ret_ptr, &data);
                 if (ret_ptr) {
-                    order.modifyOrder(mynode, 4, data);
-                    ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &data);
+                    order.modifyOrder(node_id, 4, data);
+                    ret_ptr = orderbuffer.findOrder4Node(node_id, ret_ptr, &data);
                     if (ret_ptr) {
-                        order.modifyOrder(mynode, 5, data);
-                        ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &data);
+                        order.modifyOrder(node_id, 5, data);
+                        ret_ptr = orderbuffer.findOrder4Node(node_id, ret_ptr, &data);
                         if (ret_ptr) {
-                            order.modifyOrder(mynode, 6, data);
-                            ret_ptr = orderbuffer.findOrder4Node(mynode, ret_ptr, &data);
+                            order.modifyOrder(node_id, 6, data);
+                            ret_ptr = orderbuffer.findOrder4Node(node_id, ret_ptr, &data);
                             if (ret_ptr) {
-                                order.modifyOrderFlags(mynode, PAYLOAD_FLAG_EMPTY );
+                                order.modifyOrderFlags(node_id, PAYLOAD_FLAG_EMPTY );
                             } else {
-                                order.modifyOrderFlags(mynode, PAYLOAD_FLAG_LASTMESSAGE );
+                                order.modifyOrderFlags(node_id, PAYLOAD_FLAG_LASTMESSAGE );
                             }                        
                         } else {
-                            order.modifyOrderFlags(mynode, PAYLOAD_FLAG_LASTMESSAGE );
+                            order.modifyOrderFlags(node_id, PAYLOAD_FLAG_LASTMESSAGE );
                         }                        
                     } else {
-                        order.modifyOrderFlags(mynode, PAYLOAD_FLAG_LASTMESSAGE );
+                        order.modifyOrderFlags(node_id, PAYLOAD_FLAG_LASTMESSAGE );
                     }                        
                 } else {
-                    order.modifyOrderFlags(mynode, PAYLOAD_FLAG_LASTMESSAGE );
+                    order.modifyOrderFlags(node_id, PAYLOAD_FLAG_LASTMESSAGE );
                 }                        
             } else {
-                order.modifyOrderFlags(mynode, PAYLOAD_FLAG_LASTMESSAGE );
+                order.modifyOrderFlags(node_id, PAYLOAD_FLAG_LASTMESSAGE );
             }                        
         } else {
-            order.modifyOrderFlags(mynode, PAYLOAD_FLAG_LASTMESSAGE );
+            order.modifyOrderFlags(node_id, PAYLOAD_FLAG_LASTMESSAGE );
         }                        
     }
 }
@@ -354,13 +345,13 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
                 // Sensor or Actor any type
             uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
             if ( sensor_id > 0 ) { 
-                buf = unpackData(mydata, buf);
+                buf = unpackTransportValue(mydata, buf);
                 if ( verboselevel & VERBOSECONFIG) {    
                     printf("%sValue of Node: %u Data: %u ==> Channel: %u is %s\n", ts(tsbuf), node_id, mydata, channel, buf);
                 }
                 sensor.updateLastVal(sensor_id, mydata, mymillis());
                 database.storeSensorValue(sensor_id, buf);
-                do_tn_cmd(node_id, channel, buf);
+                send_fhem_cmd(node_id, channel, buf);
             }
         }
         break; 
@@ -368,20 +359,20 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
                 // battery voltage
             uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
             if ( sensor_id > 0 ) { 
-                buf = unpackData(mydata, buf);
+                buf = unpackTransportValue(mydata, buf);
                 if ( verboselevel & VERBOSECONFIG) {    
                     printf("%sVoltage of Node: %u is %sV\n", ts(tsbuf), node_id, buf);
                 }
                 sensor.updateLastVal(sensor_id, mydata, mymillis());
-                node.setVoltage(node_id, strtof(unpackData(mydata,buf),NULL));
+                node.setVoltage(node_id, strtof(unpackTransportValue(mydata,buf),NULL));
                 database.storeSensorValue(sensor_id, buf);
-                do_tn_cmd(node_id, channel,buf);
+                send_fhem_cmd(node_id, channel,buf);
             }
         }
         break; 
         case 102 ... 125: {
                 // Node config register
-            buf = unpackData(mydata, buf);
+            buf = unpackTransportValue(mydata, buf);
             if ( verboselevel & VERBOSECONFIG) {    
                 printf("%sConfigregister of Node: %u Channel: %u is %s\n", ts(tsbuf), node_id, channel, buf);
             }

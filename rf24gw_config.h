@@ -21,5 +21,7 @@ rf24hub_config.h ==> all global definitions go here
 // Define an empty string for displaying data in all its forms
 
 #define BUF 1024
+#define LOOPSLEEPTIME_QUIET  200000
+#define LOOPSLEEPTIME_BUSY   50000
 
 #endif // _RF24GW_CONFIG_H_

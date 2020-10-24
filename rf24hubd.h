@@ -2,7 +2,6 @@
 rf24hub.cpp
 A unix-deamon to handle and store the information from/to all connected sensornodes. 
 All information is stored in a MariaDB database.
-rf24hub is the successor of sensorhub.
 */
 
 #ifndef _RF24HUBD_H_   /* Include guard */
@@ -66,11 +65,6 @@ uint16_t verboselevel = STARTUPVERBOSELEVEL;
 char* buf;
 char* tsbuf;
 
-// Setup for GPIO 25 CE and CE0 CSN with SPI Speed @ 8Mhz
-//RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
-RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_CLOCK_DIVIDER_32768);
-//RF24 radio(22,0,BCM2835_SPI_SPEED_1MHZ);
-
 struct thread_db_data {
    uint32_t     sensor_id;
    char         buf[20];
@@ -82,47 +76,62 @@ Sensor          sensor;
 Node            node;
 Database        database;
 Gateway         gateway;
-Cfg             cfg;
+Cfg             cfg(SWVERSION_STR,SWDATUM);
 
-/*******************************************************************************************
-*
-* Telnethandling
-* Used for communication with FHEM
-*
-********************************************************************************************/
+/**
+ * @brief send a telnet comand to the fhem-host
+ * 
+ * Die Eventverwaltung wird in meinem System durch FHEM realisiert.
+ * Dazu ist es nötig das alle geänderten Sensorwerte an FHEM übertragen werden.
+ */ 
+void send_fhem_cmd(NODE_DATTYPE node, uint8_t channel, char* value);
 
-void do_tn_cmd(NODE_DATTYPE node, uint8_t sensor, char* value);
-
+/**
+ * Verabeitet eine eingehende Telnet Nachricht
+ */
 void process_tn_in(int new_socket, char* buffer, char* client_message);
 
-//uint32_t packData(uint8_t mychannel, char* wort4);
-
-/*******************************************************************************************
-*
-* Nodehandling 
-* Used for communication with the nodes
-*
-********************************************************************************************/
-
+/**
+ * Initialisierung des Systems
+ */
 void init_system(void);
 
+/**
+ * Aufräumen bei Programmende
+ */
 void exit_system(void);
 
-void make_order(NODE_DATTYPE node_id, uint8_t mytype);
+/**
+ * @brief Erzeugung eines Datensatzes zur Übertragung an einen Node
+ * 
+ * In dieser Prozedure werden alle offenen (bis zu max. 6) Anweisungen für einen Node gesammelt und für die Übertragung vorbereitet.
+ * @param node_id Der Node
+ * @param msg_type Der Nachrichtentyp
+ */
+void make_order(NODE_DATTYPE node_id, uint8_t msg_type);
 
+/**
+ * @brief Verarbeitet einen empfangenen Wert
+ * 
+ * @param node_id Der sendende Node
+ * @param data Der Transportwert
+ */
 void process_sensor(NODE_DATTYPE node_id, uint32_t data);
 
-/*******************************************************************************************
-*
-* All the rest 
-*
-********************************************************************************************/
+/**
+ * Handler für die Interruptverarbeitung (z.B. CTRL-C)
+ */
 void sighandler(int signal);
 
-//void printPayload(payload_t * mypayload);
+/**
+ * Verarbeitet die empfangenen Daten einer Funksendung
+ */
+void process_payload(payload_t* payload);
 
-void process_payload(payload_t* mypayload);
-
+/**
+ * @brief Das Hauptprogramm
+ * 
+ */
 int main(int argc, char* argv[]);
 
 #endif // _RF24HUBD_H_

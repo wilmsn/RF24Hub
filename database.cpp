@@ -30,6 +30,10 @@ void Database::sync_config(void) {
 }
 
 void Database::sync_sensor(void) {
+	sprintf (sql_stmt, "insert into sensor(sensor_id, sensor_name, add_info, node_id, channel, store_days, fhem_dev, html_show, html_order, value, utime) select sensor_id, sensor_name, add_info, node_id, channel, store_days, fhem_dev, html_show, html_order, value, utime from sensor_im where sensor_id not in ( select sensor_id from sensor ) ");
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
 	sprintf (sql_stmt, "update sensor a set value = ( select value from sensor_im where sensor_id = a.sensor_id ), utime = ( select utime from sensor_im where sensor_id = a.sensor_id )");
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);

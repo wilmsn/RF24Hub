@@ -22,8 +22,9 @@
 #define ZF_ZAHL_WERT_INT    0b00000000000000000111111111111111
 #define ZF_ZAHL_WERT_UINT   0b00000000000000001111111111111111
 
-/************************************
- * Das Ergebnis wird mit einer Genauigkeit von 16 Bit 
+/*!\brief Beschreibung des verwendeten Zahlenformates zur Übertragung (TransportWert)
+ * Es handelt sich um ein 32 Bit unsigned Integer Format.
+ * Der Sensorwert wird mit einer Genauigkeit von 16 Bit 
  * (131072 max, genutzt 100000 = 5 Stellen = 0,01 Promille) gespeichert.
  * Zahlenformat X * 10^Y
  * Format des Sensorwertes
@@ -33,11 +34,29 @@
  * Bit 9:       Vorzeichen Exponent (0=10^X; 1=10^-X)
  * Bit 10..13   Exponent (0..15)
  * Bit 14..32   Mantisse (0..100000)
- ***********************************/
+ *
+ */
 
-char* unpackData(uint32_t data, char* buf);
 
-/***************************************************
+/**
+ * Entpackt die übertragenen Daten
+ * @note Der übergebene **buf** muss gross genug sein um den Rückgabewert aufzunehmen
+ * 
+ */
+char* unpackTransportValue(uint32_t data, char* buf);
+
+#if defined(__linux__)
+/**
+ * Diese Funktion packt die Daten entsprechend des verwendeten Channels ein.
+ * Grundlage ist die definierte Datenart je Channel.
+ * @note Diese Funktion läuft wegen den verwendetetn C Funktionen nur auf Linux Systemen
+ * @param channel Der Channel
+ * @param value Der Wert als String
+ * @return Den gepackten Transportwert
+ */
+uint32_t packTransportValue(uint8_t channel, char* value);
+#endif
+/**
  * Extrahiert den Datentyp auf Basis des verwendeten 
  * Channels 
  * Dabei gilt folgende Zuordnung:
@@ -46,55 +65,58 @@ char* unpackData(uint32_t data, char* buf);
  * 2 => integer Value
  * 3 => unsigned int Value
  * 4 => Character
- ***************************************************/
+ */
 uint8_t getDataTyp(uint8_t channel);
 
-/***************************************************
- * Extrahiert die Sensornummer aus dem Transportwert
- ***************************************************/
-uint8_t getChannel(uint32_t val);
+/**
+ * Extrahiert die Channel aus dem Transportwert
+ */
+uint8_t getChannel(uint32_t data);
 
-/***************************************************
+/**
  * Extrahiert den Sensorwert aus dem Transportwert
  * Hier: Float
- ***************************************************/
-float getValue_f(uint32_t val);
+ */
+float getValue_f(uint32_t data);
 
-/***************************************************
+/**
  * Extrahiert den Sensorwert aus dem Transportwert
  * Hier: Integer (15 Bit + Vorzeichen)
- ***************************************************/
-int16_t getValue_i(uint32_t val);
+ */
+int16_t getValue_i(uint32_t data);
 
-/***************************************************
+/**
  * Extrahiert den Sensorwert aus dem Transportwert
  * Hier: unsigned int (16 Bit)
- ***************************************************/
-uint16_t getValue_ui(uint32_t val);
+ */
+uint16_t getValue_ui(uint32_t data);
 
-/******************************************************
+/**
  * Verpackt die Sensornummer und den Messwert zu einem 
  * TransportWert des Datentyps uint32_t.
- * Sensor: gültige Werte zwischen 1..127
- * Value: gültige Werte: -1*10^19 .. 1*10^19
- ******************************************************/
-uint32_t calcTransportValue_f(uint8_t sensor, float value);
+ * @param channel Der Channel, gültige Werte zwischen 1..127
+ * @param value: gültige Werte: -1*10^19 .. 1*10^19
+ * @return Den Transportwert
+ */
+uint32_t calcTransportValue_f(uint8_t channel, float value);
 
-/******************************************************
+/**
  * Verpackt die Sensornummer und den Messwert zu einem 
  * TransportWert des Datentyps uint32_t.
- * Sensor: gültige Werte zwischen 1..127
- * Value: gültige Werte: 0 .. 65535
- ******************************************************/
-uint32_t calcTransportValue_ui(uint8_t sensor, uint16_t value);  
+ * @param channel Der Channel, gültige Werte zwischen 1..127
+ * @param value: Der Wert, gültige Werte: 0 .. 65535
+ * @return Den Transportwert
+ */
+uint32_t calcTransportValue_ui(uint8_t channel, uint16_t value);  
 
-/******************************************************
+/**
  * Verpackt die Sensornummer und den Messwert zu einem 
  * TransportWert des Datentyps uint32_t.
- * Sensor: gültige Werte zwischen 1..127
- * Value: gültige Werte: -32,768 to 32,767
- ******************************************************/
-uint32_t calcTransportValue_i(uint8_t sensor, int16_t value);
+ * @param channel gültige Werte zwischen 1..127
+ * @param value: gültige Werte: -32,768 to 32,767
+ * @return Den Transportwert
+ */
+uint32_t calcTransportValue_i(uint8_t channel, int16_t value);
 
 /******************************************************
  * Verpackt die Sensornummer und die ersten 3 Zeichen
@@ -106,7 +128,7 @@ uint32_t calcTransportValue_i(uint8_t sensor, int16_t value);
  *      bei Rückgabe Position des ersten 
  *                   nicht verarbeteten Zeichens
  ******************************************************/
-uint32_t calcTransportValue_c(uint8_t sensor, char* value, uint16_t* pos);
+uint32_t calcTransportValue_c(uint8_t channel, char* value, uint16_t* pos);
 
 
 #endif

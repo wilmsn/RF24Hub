@@ -102,7 +102,10 @@
 // Ende des Tests Sendeleistung ist Max ( 0 dBm)
 #define PAYLOAD_TYPE_PING_END 105
 
-
+/**
+ * @typedef payload_t Die Datenstructur zur Übertragung der Daten zwischen Gateway und Node
+ * In der aktuellen Struktur können bis zu 6 Transprortwerte (Vereinigeung von Channel und Wert) transportiert werden.
+ */
 // Structure of our payload
 typedef struct {   // Our payload can be 32 byte max.
     // Die Node_ID ist der eindeutige Identifizierer für einen Node.

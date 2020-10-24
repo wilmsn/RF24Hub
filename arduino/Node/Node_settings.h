@@ -11,6 +11,14 @@ optional:
 // #define BOSCH_SENSOR
 -- A Dallas 18B20 temperature sensor
 // #define DALLAS_18B20
+-- A Switch / Relais
+-- define a pin
+// #define RELAIS_1 3
+// #define RELAIS_2 3
+// #define RELAIS_3 3
+// #define RELAIS_4 3
+-- Use Neopixel
+// #define NEOPIXEL <Number of Pixel>
 - the status LED
 -- define a pin (default is 3)
 // #define STATUSLED       <LED PIN>
@@ -26,11 +34,12 @@ optional:
 // #define SLEEPTIME_SEC   900
 
 debugging options:
+// To get more Details about the sensor on serial monitor use:
 // #define DEBUG_SERIAL_SENSOR
-// #define DEBUG_SERIAL_TXRX
-// #define DEBUG_SERIAL_PROZ
-// #define SERIAL_DEBUG_PAYLOAD
-// #define SERIAL_DEBUG_CONFIG
+// To get more Details about the radio on serial monitor use:
+// #define DEBUG_SERIAL_RADIO
+// To get more Details about processing of data on serial monitor use:
+// #define DEBUG_SERIAL_PROC
 
 ******************************************************/
 //*****************************************************
@@ -76,8 +85,8 @@ debugging options:
 //#define VOLT_OFF             0.55
 #define LOW_VOLT_LEVEL       0
 //#define DEBUG_SERIAL_SENSOR
-//#define DEBUG_SERIAL_TXRX
-//#define DEBUG_SERIAL_PROZ
+//#define DEBUG_SERIAL_RADIO
+//#define DEBUG_SERIAL_PROC
 #endif
 //-----------------------------------------------------
 #if defined(TESTZIMMER1THERMOMETER)
@@ -123,4 +132,23 @@ debugging options:
 #define LOW_VOLT_LEVEL       3.6
 #define STATUSLED_ON         LOW
 #define STATUSLED_OFF        HIGH
+#endif
+//-----------------------------------------------------
+#if defined(TERASSE)
+#define RF24NODE             160
+#define EEPROM_VERSION       3
+#define RELAIS_1             4
+#define RELAIS_2             5
+#define RELAIS_ON            LOW
+#define RELAIS_OFF           HIGH
+#define STATUSLED            A2
+#endif
+//-----------------------------------------------------
+#if defined(TESTSWITCH)
+#define RF24NODE             150
+#define EEPROM_VERSION       1
+#define NEOPIXEL
+// The Number of Pixels that are connected to
+#define NEOPIXEL             46
+#define DEBUG_SERIAL_SENSOR
 #endif

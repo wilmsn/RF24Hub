@@ -14,7 +14,7 @@
  * Bit 16..32   Mantisse (0..10000)
  ***********************************/
 
-char* unpackData(uint32_t data, char* buf) {
+char* unpackTransportValue(uint32_t data, char* buf) {
     uint8_t dataTyp = getDataTyp( getChannel(data) );
     switch ( dataTyp ) {
         case 0:
@@ -51,6 +51,44 @@ char* unpackData(uint32_t data, char* buf) {
     }
     return buf;
 }
+
+#if defined(__linux__)
+
+uint32_t packTransportValue(uint8_t channel, char* value) {
+    uint32_t retval = 0;
+    uint8_t dataTyp = getDataTyp(channel);
+    char* pEnd; 
+    switch ( dataTyp ) {
+        case 0:
+        {
+            retval = 0;
+        }
+        case 1:
+        {
+            float val_f = strtof(value, &pEnd);
+            retval = calcTransportValue_f(channel, val_f);
+        }
+        break;
+        case 2:
+        {
+            int16_t val_i = (int16_t)strtol(value, &pEnd, 10);
+            retval = calcTransportValue_i(channel, val_i);
+        }
+        break;
+        case 3:
+        {
+            uint16_t val_ui = (uint16_t)strtoul(value, &pEnd, 10);
+            retval = calcTransportValue_ui(channel, val_ui);
+        }
+        break;
+        case 4:
+            // ToDo Wort kann ein kompletter Text sein, das in verschiedene Channels zerlegt wird
+            //      Max Länge 20*3=60 Zeichen
+        break;
+    }
+    return retval;
+}
+#endif
 
 /***************************************************
  * Extrahiert den Datentyp auf Basis des verwendeten 
@@ -92,22 +130,22 @@ uint8_t getDataTyp(uint8_t channel) {
 /***************************************************
  * Extrahiert die Sensornummer aus dem Transportwert
  ***************************************************/
-uint8_t getChannel(uint32_t val) {
-  val &= ZF_SENSOR_NO;
-  val >>= 25;
-  return val;
+uint8_t getChannel(uint32_t data) {
+  data &= ZF_SENSOR_NO;
+  data >>= 25;
+  return data;
 }
 
 /***************************************************
  * Extrahiert den Sensorwert aus dem Transportwert
  * Hier: Float
  ***************************************************/
-float getValue_f(uint32_t val) {
-  uint32_t exponent = (val & ZF_EXPO_WERT) >> 19;
-  bool expo_negativ = val & ZF_EXPO_NEGATIV;
-  bool zahl_negativ = val &  ZF_ZAHL_NEGATIV;
+float getValue_f(uint32_t data) {
+  uint32_t exponent = (data & ZF_EXPO_WERT) >> 19;
+  bool expo_negativ = data & ZF_EXPO_NEGATIV;
+  bool zahl_negativ = data &  ZF_ZAHL_NEGATIV;
   float retval;
-  retval = val & ZF_ZAHL_WERT;
+  retval = data & ZF_ZAHL_WERT;
   if ( expo_negativ ) {
     for (uint8_t i=exponent;i>0;i--) {
       retval /= 10.0;
@@ -128,12 +166,12 @@ float getValue_f(uint32_t val) {
  * Extrahiert den Sensorwert aus dem Transportwert
  * Hier: Integer max. 16 bit
  ***************************************************/
-int16_t getValue_i(uint32_t val) {
+int16_t getValue_i(uint32_t data) {
   int retval;
-  if ( val & ZF_ZAHL_NEGATIV ) {
-    retval = (val & ZF_ZAHL_WERT_INT) * -1;
+  if ( data & ZF_ZAHL_NEGATIV ) {
+    retval = (data & ZF_ZAHL_WERT_INT) * -1;
   } else {
-    retval = val & ZF_ZAHL_WERT_INT;
+    retval = data & ZF_ZAHL_WERT_INT;
   }  
   return retval;
 }
@@ -142,9 +180,9 @@ int16_t getValue_i(uint32_t val) {
  * Extrahiert den Sensorwert aus dem Transportwert
  * Hier: unsigned Integer max. 16 bit
  ***************************************************/
-uint16_t getValue_ui(uint32_t val) {
+uint16_t getValue_ui(uint32_t data) {
   uint16_t retval;
-  retval = val & ZF_ZAHL_WERT_UINT;
+  retval = data & ZF_ZAHL_WERT_UINT;
   return retval;
 }
 
@@ -154,12 +192,12 @@ uint16_t getValue_ui(uint32_t val) {
  * Sensor: gültige Werte zwischen 1..127
  * Value: gültige Werte: -1*10^19 .. 1*10^19
  ******************************************************/
-uint32_t calcTransportValue_f(uint8_t sensor, float value) {  
+uint32_t calcTransportValue_f(uint8_t channel, float value) {  
   float _val = value;
   uint32_t exponent=0;
   bool expo_negativ = false;
   uint32_t result = 0;
-  result = sensor;
+  result = channel;
   result <<= 25; 
   if ( value > 0.00001 || value < -0.00001 ) {
     bool negativ = value < 0.0;
@@ -192,9 +230,9 @@ uint32_t calcTransportValue_f(uint8_t sensor, float value) {
  * Sensor: gültige Werte zwischen 1..127
  * Value: gültige Werte: 0 .. 65535
  ******************************************************/
-uint32_t calcTransportValue_ui(uint8_t sensor, uint16_t value) {  
+uint32_t calcTransportValue_ui(uint8_t channel, uint16_t value) {  
   uint32_t result = 0;
-  result = sensor;
+  result = channel;
   result <<= 25; 
   result |= (uint32_t) value;
   return result; 
@@ -206,21 +244,21 @@ uint32_t calcTransportValue_ui(uint8_t sensor, uint16_t value) {
  * Sensor: gültige Werte zwischen 1..127
  * Value: gültige Werte: 0 .. 65535
  ******************************************************/
-uint32_t calcTransportValue_i(uint8_t sensor, int16_t value) {  
+uint32_t calcTransportValue_i(uint8_t channel, int16_t value) {  
   uint32_t result = 0;
-  result = sensor;
+  result = channel;
   result <<= 25; 
   if ( value & 0b1000000000000000 ) result |= ZF_ZAHL_NEGATIV;
   result |= (value & ZF_ZAHL_WERT_INT);
   return result; 
 }
 
-uint32_t calcTransportValue_c(uint8_t sensor, char* value, uint16_t* pos) {
+uint32_t calcTransportValue_c(uint8_t channel, char* value, uint16_t* pos) {
   uint32_t result = 0;
   uint32_t c1 = value[*pos]<<16;
   uint32_t c2 = value[*pos+1]<<8;
   uint32_t c3 = value[*pos+2];
-  result = sensor;
+  result = channel;
   result <<= 25; 
   result = result | c1 | c2 | c3;  
   return result;  

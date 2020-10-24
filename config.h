@@ -20,8 +20,17 @@
 #define SENDINTERVAL_HB 100
 // Number of stopmessages to send
 #define SENDSTOPCOUNT 3
-
-#define PARAM_MAXLEN 80
+// Interval for deleting unsend requests for order for regular nodes in millisec.
+// 60 Sec = 1 Min.
+#define DELETEINTERVAL 20000
+// Interval for deleting unsend requests for order for Heartbeat nodes in millisec.
+// 1 Sec.
+#define DELETEINTERVAL_HB 1000
+// Intervall to sync sensordata_im to sensordata 
+// In case of server crash you will loose data
+// in sensordata_im !!!!!!
+// Time in Seconds: 21600 = 6 Hours
+#define DBSYNCINTERVAL   21600
 // array of char sizes
 #define DEBUGSTRINGSIZE 600
 #define FHEMDEVLENGTH 50
@@ -48,7 +57,7 @@
 #define VERBOSEALL               0b0011111111111111
 #define VERBOSENONE              0b0000000000000011
 
-#define STARTUPVERBOSELEVEL      0b0000000010000011 
+#define STARTUPVERBOSELEVEL      0b0000000000000011 
 //#define STARTUPVERBOSELEVEL      0b0011111111111111 
 
 
