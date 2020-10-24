@@ -9,63 +9,123 @@
 #include <unistd.h>
 #include <stdio.h> 
 #include <iostream>
-#include "log.h"
+#include "rf24_config.h"
 #include "rf24hub_config.h"
+#include "common.h"
+#include "dataformat.h"
 
 
 class Order {
 
+private:
+
+// Structure to handle the orderqueue
+struct order_t {
+        NODE_DATTYPE           node_id;   		// the destination node
+        uint8_t                msg_id;          // ==> payload.msg_id
+        uint8_t                msg_type;      	// ==> payload.msg_type
+        uint8_t   	           msg_flags;     	// ==> payload.msg_flags
+        ONR_DATTYPE	           orderno;   		// ==> payload.orderno
+        uint32_t      	       data1;		    // The transportvalue for the Sensor 1 and Value 1
+        uint32_t      	       data2;		    // The transportvalue for the Sensor 2 and Value 2
+        uint32_t      	       data3;		    // The transportvalue for the Sensor 3 and Value 3
+        uint32_t      	       data4;		    // The transportvalue for the Sensor 4 and Value 4
+        uint32_t      	       data5;		    // The transportvalue for the Sensor 5 and Value 5
+        uint32_t      	       data6;		    // The transportvalue for the Sensor 6 and Value 6
+        bool                   HB_order;        // true if this node is a Heartbeat Node
+        uint64_t		       entrytime;       // Timestamp for creating of this record
+        uint64_t	  	       last_send;		// Timestamp for last sending of this record
+        order_t*               p_next;
+};
+
+order_t*  p_initial;
+/**************************************************************
+ * char buffer zur Ausgabe des timestrings ==> ts(tsbuf)
+ *************************************************************/
+char*       tsbuf;
+char*       buf;
+char*       buf1;
+char*       buf2;
+char*       buf3;
+char*       buf4;
+char*       buf5;
+char*       buf6;
+/**************************************************************
+ * Bufferinterner Speicher für den verboselevel
+ *************************************************************/
+uint16_t    verboselevel;
+/**************************************************************
+ * Binärer Speicher der anzeigt ob mind. 1 Datensatz 
+ * im Speicher ist.
+ *************************************************************/
+bool has_order;
+/**************************************************************
+ * Die aktuelle OrderNummer
+ *************************************************************/
+ONR_DATTYPE orderno;
+/**************************************************************
+ * fügt einen neuen record zum Buffer hinzu
+ *************************************************************/
+void newEntry(order_t* p_new);
+/**************************************************************
+ * löscht den übergebenen record aus dem Buffer
+ *************************************************************/
+bool delEntry(order_t* p_del);
+/**************************************************************
+ * findet den ersten record zum Node
+ *************************************************************/
+order_t* findNode(NODE_DATTYPE node_id);
     
 public:
     
-    uint16_t orderno;
-    bool has_order;
-    bool del_orderno(uint16_t);
-    bool del_node(uint16_t);
-    bool is_orderno(uint16_t orderno);
-    uint16_t del_old_entry(uint64_t entrytime);
-    void debug_print_buffer(int);
-    void begin(Logger* _logger);
-    void add_order(uint16_t node, uint8_t type, bool HB_order, uint8_t channel1, float value1, uint64_t entrytime);
-    void modify_order(uint16_t node, uint8_t pos, uint8_t channel, float value);
-    void modify_orderflags(uint16_t orderno, uint16_t flags);
-    void add_endorder(uint16_t node, uint64_t entrytime);
-    bool get_order_for_transmission(uint16_t* orderno, uint16_t* node, unsigned char* type, uint16_t* flags,
-                                    uint8_t* channel1, float* value1, uint8_t* channel2, float* value2, 
-                                    uint8_t* channel3, float* value3, uint8_t* channel4, float* value4, 
-                                    uint64_t systime); 
-    void print_buffer(int new_tn_in_socket);
-    void html_buffer(int new_tn_in_socket);
-    Order(void);
+/**
+ *  Setzt das Verboselevel
+ */
+void setVerbose(uint16_t _verboselevel);
+/**
+ * true wenn min ein Eintrag vorhanden sonst false
+ */
+bool hasEntry(void);
+/**
+ * true wenn die übergebene orderno einen record im Speicher hat
+ */
+bool isOrderNo(ONR_DATTYPE orderno);
+/**
+ * löscht den record im Buffer mit der übergebenen orderno
+ */
+bool delByOrderNo(ONR_DATTYPE orderno);
+/**
+ * löscht den record im Buffer mit der übergebenen node_id
+ */
+bool delByNode(NODE_DATTYPE node_id);
+/**
+ * fügt einen neuen record zum Buffer hinzu
+ */
+void addOrder(NODE_DATTYPE node_id, uint8_t msg_type, bool HB_order, uint32_t data, uint64_t entrytime);
+/**
+ * Füllt das data Feld an der Position pos 2..6 => data2..data6
+ */
+void modifyOrder(NODE_DATTYPE node_id, uint8_t pos, uint32_t data);
+/**
+ * Setzt das msg_flag für die übergebene node_id
+ */
+void modifyOrderFlags(NODE_DATTYPE node_id, uint8_t msg_flags);
+/**
+ * füllt den Payload mit den Daten für die nächste Sendung
+ */
+bool getOrderForTransmission(payload_t* payload, uint64_t mytime); 
+/**
+ * Druckt alle records im Buffer in den out_socket
+ * out_socket ist dabei ein gültiger socket file descriptor
+ * entweder aus accept für einen socket oder mittels
+ * fileno(stdout) für den stdout
+ * Der zweite Parameter bestimmt das Format,
+ * true => HTML Format; false => Textformat
+ */
+void printBuffer(int out_socket, bool htmlFormat);
 
-private:
+Order(void);
 
-    // Structure to handle the orderqueue
-    struct order_t {
-        uint16_t 	    orderno;   		// the orderno as primary key for our message for the nodes
-        uint16_t       	node;   		// the destination node
-        bool            HB_order;       // true if this node is a Heartbeat Node
-        uint8_t      	type;      		// Becomes networkheader.type
-        unsigned int   	flags;     		// Some flags as part of payload
-        uint8_t      	channel1;		// The channel for the sensor 1
-        float		    value1;    		// the information that is send to sensor 1
-        uint8_t        	channel2;  		// The channel for the sensor 2
-        float		    value2;   	 	// the information that is send to sensor 2
-        uint8_t      	channel3;  		// The channel for the sensor 3
-        float		    value3;    		// the information that is send to sensor 3
-        uint8_t      	channel4;  		// The channel for the sensor 1
-        float		    value4;    		// the information that is send to sensor 4
-        uint64_t		entrytime;      // Timestamp for creating of this record
-        uint64_t	  	last_send;		// Timestamp for last sending of this record
-        order_t         *next;          // poiter to the next record
-    };
-
-    Logger*   logger;
-    order_t  *initial_ptr;
-    void      new_entry(order_t*);
-    bool      del_entry(order_t*);
-    order_t  *find_node(uint16_t node);
-    
 };
 
 #endif // _ORDER_H_

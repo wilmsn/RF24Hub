@@ -14,7 +14,7 @@
 PREFIX=/usr/local
 EXECDIR=${PREFIX}/bin
 INCLUDEDIR=${PREFIX}/include
-INCLUDEDIR1=/usr/include/mariabd
+INCLUDEDIR1=/usr/include/mariadb
 MYSQLLIBS := $(shell mariadb_config --libs) 
 
 ARCH=armv6zk
@@ -25,16 +25,26 @@ endif
 # The recommended compiler flags for the Raspberry Pi
 #CCFLAGS=-Ofast -mfpu=vfp -mfloat-abi=hard -march=armv6zk -mtune=arm1176jzf-s
 CCFLAGS=-Ofast -mfpu=vfp -mfloat-abi=hard -march=$(ARCH) -mtune=arm1176jzf-s -std=c++0x -pthread
+DEBUGFLAGS=-ggdb3 -O0
 
 # make all
-all: rf24hubd 
+all: rf24hubd rf24gwd
+debug: rf24hubd_debug
 
-# Make the sensorhub deamon
-rf24hubd: log.o node.o sensor.o orderbuffer.o order.o rf24hubd.cpp
-	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24network ${MYSQLLIBS} $^ -o $@
+# Make the rf24hub deamon in debug mode
+rf24hubd_debug: cfg.o dataformat.o database.o node.o sensor.o orderbuffer.o order.o common.o rf24hubd.cpp
+	g++ ${CCFLAGS} ${DEBUGFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24 ${MYSQLLIBS} $^ -o $@
+
+# Make the rf24hub deamon
+rf24hubd: cfg.o gateway.o dataformat.o database.o node.o sensor.o orderbuffer.o order.o common.o rf24hubd.cpp
+	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24 ${MYSQLLIBS} $^ -o $@
+
+# Make the rf24gw deamon
+rf24gwd: cfg.o common.o dataformat.o rf24gwd.cpp
+	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -lrf24-bcm -lrf24 $^ -o $@
 
 # Test of order object
-ordertest: order.o order_test.cpp
+ordertest: sensor.o node.o orderbuffer.o common.o dataformat.o order.o order_test.cpp
 	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24network ${MYSQLLIBS} $^ -o $@
 
 # Test of orderbuffer object
@@ -43,9 +53,16 @@ orderbuffertest: orderbuffer.o orderbuffer_test.cpp
 
 # clear build files
 clean:
-	rm *.o rf24hubd
+	rm *.o rf24hubd rf24gwd rf24hubd_debug
 
-# Install the sensorhub
-install: 
-	./install.sh
+# Install the rf24hub and rf24gw
+install:  install_gw install_hub
+
+# Install the Gateway
+install_gw:
+	./install_gw.sh
+
+# Install the Hub
+install_hub:
+	./install_hub.sh
 

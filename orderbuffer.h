@@ -9,42 +9,93 @@
 #include <stdint.h>
 #include <cstring>
 #include <unistd.h>
+#include "rf24_config.h"
 #include "rf24hub_config.h"
-#include "log.h"
+#include "common.h"
+#include "dataformat.h"
+
 
 class OrderBuffer {
-
-// Structure to handle the orderqueue
-    
     
 private:
 
-    struct orderbuffer_t {
+struct orderbuffer_t {
         uint64_t		entrytime;
-        uint16_t     	node;
+        NODE_DATTYPE   	node_id;
         uint8_t     	channel;
-        float        	value;
-        orderbuffer_t*  next;          // poiter to the next record
-    };
-
-    Logger* logger;
-    orderbuffer_t* initial_ptr;
-    void new_entry(orderbuffer_t*);
-    bool del_entry(orderbuffer_t*);
-    void debug_print_buffer(void);
+        uint32_t        utime;
+        uint32_t        data;
+        orderbuffer_t*  p_next;
+};
+orderbuffer_t*     p_initial;
+/**************************************************************
+ * char buffer zur Ausgabe, generisch 
+ *************************************************************/
+char*       buf;
+char*       buf1;
+/**************************************************************
+ * char buffer zur Ausgabe des timestrings ==> ts(tsbuf)
+ *************************************************************/
+char*       tsbuf;
+/**************************************************************
+ * Bufferinterner Speicher für den verboselevel
+ *************************************************************/
+uint16_t    verboselevel;
+/**************************************************************
+ * fügt einen neuen record zum Buffer hibzu
+ *************************************************************/
+void    newEntry(orderbuffer_t*);
+/**************************************************************
+ * löscht den übergebenen record aus dem Buffer
+ *************************************************************/
+bool    delEntry(orderbuffer_t*);
 
 public:
     
+/**
+ *  Setzt das Verboselevel
+ */
+void setVerbose(uint16_t _verboselevel);
+/**
+ *  @note Ruft den nächsten Record für einen Node ab.
+ *  Initialer Aufruf mit p_last = NULL.
+ *  Beim nächsten Aufruf wird der Rückgabewert des
+ *  letzten Aufrufs bei p_last übergeben
+ *  @param node_id: Die Node_ID
+ *  @param p_last: Beim ersten Aufruf NULL, sonst den Rückgabewert des letzten Aufrufs.
+ *  @param p_data: Pointer auf ein data Feld. Dieses Feld ist nach dem Aufruf gefüllt.
+ *  @return Ein gesetzter Pointer wenn ein Datensatz gefunden wurde, sonst NULL.
+ */
+void* findOrder4Node(NODE_DATTYPE node_id, void* p_last, uint32_t* p_data);
+/**
+ *  Fügt einen neuen record vom typ float ein 
+ */
+void addOrderBuffer(uint64_t millis, NODE_DATTYPE node_id, uint8_t channel, uint32_t data);
+/**
+ *  Löscht den record für die übergebe Kombinaltion
+ *  von node_id und channel
+ */
+bool delByNodeChannel(NODE_DATTYPE node_id, uint8_t channel);
+/**
+ *  Löscht alle records für die übergebene node_id
+ */
+bool delByNode(NODE_DATTYPE node_id);
+/**
+ *  Gibt es record für den übergebenen node_id 
+ *  dann true sonst false
+ */
+bool nodeHasEntry(NODE_DATTYPE node_id);
+/**
+ * Druckt alle records im Buffer in den out_socket.
+ * out_socket ist dabei ein gültiger socket file descriptor
+ * entweder aus accept für einen socket oder mittels
+ * fileno(stdout) für den stdout
+ * Der zweite Parameter bestimmt das Format,
+ * true => HTML Format; false => Textformat
+ */
+void printBuffer(int out_socket, bool htmlFormat);
 
-    void add_orderbuffer(uint64_t millis, uint16_t node, uint8_t channel, float value);
-    void *find_order4node(uint16_t node, void* last_ptr, uint8_t* channel, float* value);
-    bool del_node_channel(uint16_t, uint8_t);
-    bool del_node(uint16_t);
-    bool node_has_entry(uint16_t);
-    void begin(Logger* _logger);
-    void print_buffer(int new_tn_in_socket);
-    void html_buffer(int new_tn_in_socket);
-    OrderBuffer(void);
+OrderBuffer(void);
 
 };
 

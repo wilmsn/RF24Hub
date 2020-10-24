@@ -10,18 +10,28 @@ if [ $ID = 0 ]; then
     /etc/init.d/rf24hub stop
     rm /etc/init.d/rf24hub
   fi
+  if [ ! -e /etc/systemd/system/appl.target ]; then
+    cp appl.target /etc/systemd/system
+    ln -sf /etc/systemd/system/appl.target /etc/systemd/system/default.target
+    systemctl isolate appl.target
+  fi
+  if [ ! -d /etc/systemd/system/appl.target.wants ]; then
+    mkdir /etc/systemd/system/appl.target.wants
+  fi
   if [ -e /etc/systemd/system/rf24hub.service ]; then
     echo "Old installation found!"
     echo "Cleanup"
     echo "Stop rf24hub (if installed and running)"
-    systemctl stop rf24hub    
-    cp rf24hub.service /etc/systemd/system/
+    systemctl stop rf24hub
+    if [ -e /etc/systemd/system/multi-user.target.wants/rf24hub.service ]; then
+      rm /etc/systemd/system/multi-user.target.wants/rf24hub.service
+    fi
   fi
   if [ ! -e /etc/rf24hub/rf24hub.cfg ]; then
     if [ ! -d /etc/rf24hub ]; then
-      mkdir /etc/rf24hub
+      mkdir -p /etc/rf24hub
     fi
-    cp rf24hubd.cfg /etc/rf24hub/rf24hub.cfg
+    cp rf24hub.cfg /etc/rf24hub/rf24hub.cfg
     echo "Please edit config template: /etc/rf24hub/rf24hub.cfg"
     echo "and run \"sudo systemctl stop rf24hub; sudo systemctl start rf24hub\" after that"
   fi
@@ -30,6 +40,7 @@ if [ $ID = 0 ]; then
   cp rf24hubd /usr/local/bin/rf24hubd
   echo "  rf24hub.service ==> /etc/systemd/system/rf24hub.service"
   cp ./rf24hub.service /etc/systemd/system/rf24hub.service
+  ln -sf /etc/systemd/system/rf24hub.service /etc/systemd/system/appl.target.wants/rf24hub.service
   chown root:root /etc/systemd/system/rf24hub.service
   chmod 444 /etc/systemd/system/rf24hub.service
   systemctl daemon-reload

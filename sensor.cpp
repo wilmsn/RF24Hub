@@ -1,124 +1,153 @@
 #include "sensor.h"
 
 Sensor::Sensor(void) {
-    initial_ptr = NULL;
+    p_initial = NULL;
+    verboselevel = 0;
+    buf = (char*)malloc(TSBUFFERSIZE);
+    buf1 = (char*)malloc(TSBUFFERSIZE);
+    tsbuf = (char*)malloc(TSBUFFERSIZE);
 }
 
-void Sensor::new_entry(Sensor::sensor_t* new_ptr) {
-    sensor_t *search_ptr;
-    new_ptr->next = NULL;
-    if (initial_ptr) {
-        search_ptr = initial_ptr;
-        while (search_ptr->next) {
-            search_ptr = search_ptr->next;
-        }
-        search_ptr->next = new_ptr;
-    } else {
-        initial_ptr = new_ptr;
+void Sensor::cleanup(void) {
+    sensor_t *p_search;
+    p_search = p_initial;
+    while ( p_search ) {
+        p_initial = p_search->p_next;
+        delete p_search;
+        p_search = p_initial;
     }
 }
 
-void Sensor::add_sensor(uint32_t sensor, uint16_t node, uint8_t	channel, char s_type, char* fhem_dev, 
-                        uint64_t last_ts, float last_val) {
-    sensor_t* new_ptr = new Sensor::sensor_t;
-    new_ptr->sensor = sensor;
-    new_ptr->node = node;
-    new_ptr->channel = channel;
-    new_ptr->s_type = s_type;
-    new_ptr->last_ts = last_ts;
-    new_ptr->last_val = last_val;
-    sprintf(new_ptr->fhem_dev,"%s", fhem_dev);
-    new_entry(new_ptr);
+void Sensor::newEntry(Sensor::sensor_t* p_new) {
+    sensor_t *p_search;
+    p_new->p_next = NULL;
+    if (p_initial) {
+        p_search = p_initial;
+        while (p_search->p_next) {
+            p_search = p_search->p_next;
+        }
+        p_search->p_next = p_new;
+    } else {
+        p_initial = p_new;
+    }
+}
+
+void Sensor::addSensor(uint32_t sensor_id, NODE_DATTYPE node_id, uint8_t channel, char* fhem_dev, uint32_t last_val_utime, uint32_t data) {
+    sensor_t* p_new = new Sensor::sensor_t;
+    p_new->sensor_id = sensor_id;
+    p_new->node_id = node_id;
+    p_new->channel = channel;
+    p_new->last_ts = 0;
+    p_new->last_val_utime = last_val_utime;
+    p_new->last_data = data;
+    sprintf(p_new->fhem_dev,"%s", fhem_dev);
+    newEntry(p_new);
 }
    
-bool Sensor::update_last_val(uint16_t node, uint8_t channel, float value, uint64_t mymillis) {
+bool Sensor::updateLastVal(uint32_t sensor_id, uint32_t data, uint64_t mymillis) {
     bool retval = false;
-    Sensor::sensor_t *search_ptr;
-    search_ptr=initial_ptr;
-    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    while (search_ptr) {
-        if ( search_ptr->node == node && search_ptr->channel == channel ) {
-            search_ptr->last_val = value;
-            if ( mymillis - search_ptr->last_ts > 1000 ) {
-                sprintf(debug,"sensor.update_last_val: N: 0%o C:%u V:%f ", node, channel, value); 
-                logger->logmsg(VERBOSEORDER, debug);
-                search_ptr->last_ts = mymillis;
+    uint8_t channel = getChannel(data);
+    uint8_t dataTyp = getDataTyp(channel);
+    sensor_t *p_search = p_initial;
+    //p_search=p_initial;
+    while (p_search) {
+        if ( p_search->sensor_id == sensor_id) {
+            if ( mymillis - p_search->last_ts > 1000 ) {
+                p_search->last_data = data;
+                p_search->last_val_utime = time(0);
+                p_search->last_ts = mymillis;
+                if ( verboselevel & VERBOSESENSOR) 
+                    printf("%ssensor.updateLastVal: S:%u N:%u C:%u V:%s\n", ts(tsbuf), p_search->sensor_id, p_search->node_id, p_search->channel, unpackTransportValue(data, buf) ); 
                 retval = true;
             } else {
-                sprintf(debug,"sensor.update_last_val: Old value - dropped!"); 
-                logger->logmsg(VERBOSEORDER, debug);
-                search_ptr->last_ts = mymillis;
-                retval = false;
+                if ( verboselevel & VERBOSESENSOR) printf("%ssensor.updateLastVal: Old value - dropped!\n", ts(tsbuf)); 
+                p_search->last_ts = mymillis;
             }
         }
-        search_ptr=search_ptr->next;
+        p_search=p_search->p_next;
     }
     return retval;
-    free(debug);
 }
 
-void Sensor::find_node_chanel(uint16_t* node_ptr, uint8_t* channel_ptr,char* fhem_dev, uint32_t mysensor) {
-    Sensor::sensor_t *search_ptr;
-    search_ptr=initial_ptr;
-    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    while (search_ptr) {
-        if ( strcmp(search_ptr->fhem_dev,fhem_dev) == 0 || search_ptr->sensor == mysensor ) {
-            sprintf(debug,"sensor.find_node_chanel: N: 0%o C:%u", search_ptr->node, search_ptr->channel); 
-            logger->logmsg(VERBOSEORDER, debug);
-            *node_ptr = search_ptr->node;
-            *channel_ptr = search_ptr->channel;
+uint32_t Sensor::getSensorByNodeChannel(NODE_DATTYPE node_id, uint8_t channel) {
+    uint32_t retval = 0;
+    sensor_t *p_search;
+    p_search=p_initial;
+    while (p_search) {
+        if ( p_search->node_id == node_id && p_search->channel == channel ) {
+            retval = p_search->sensor_id;
         }
-        search_ptr=search_ptr->next;
+        p_search=p_search->p_next;
     }
-    free(debug);
+    return retval;
 }
 
-void Sensor::find_fhem_dev(uint16_t* node_ptr, uint8_t* channel_ptr,char* fhem_dev) {
-    Sensor::sensor_t *search_ptr;
-    search_ptr=initial_ptr;
-    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    while (search_ptr) {
-        if ( search_ptr->node == *node_ptr && search_ptr->channel == *channel_ptr ) {
-            sprintf(debug,"sensor.find_fhem_dev: %s", search_ptr->fhem_dev); 
-            logger->logmsg(VERBOSEORDER, debug);
-            sprintf(fhem_dev,"%s",search_ptr->fhem_dev);
+char* Sensor::getFhemDevByNodeChannel(NODE_DATTYPE node_id, uint8_t channel) {
+    char* retval = NULL;
+    sensor_t *p_search;
+    p_search=p_initial;
+    while (p_search) {
+        if ( p_search->node_id == node_id && p_search->channel == channel ) {
+            retval = p_search->fhem_dev;
+            p_search = NULL;    
+        } else {
+            p_search=p_search->p_next;
         }
-        search_ptr=search_ptr->next;
     }
-    free(debug);
+    return retval;
 }
 
-void Sensor::print_buffer2tn(int new_tn_in_socket) {
+bool Sensor::getNodeChannelBySensorID(NODE_DATTYPE* p_node_id, uint8_t* p_channel, uint32_t sensor_id) {
+    sensor_t *p_search;
+    bool retval = false;
+    p_search=p_initial;
+    while (p_search) {
+        if ( p_search->sensor_id == sensor_id ) {
+            if (verboselevel & VERBOSESENSOR) printf("%ssensor.getNodeChannelBySensorID: S:%u N:%u C:%u\n", ts(tsbuf), p_search->sensor_id, p_search->node_id, p_search->channel); 
+            *p_node_id = p_search->node_id;
+            *p_channel = p_search->channel;
+            p_search = NULL;
+            retval = true;
+        } else {
+            p_search=p_search->p_next;
+        }
+    }
+    return retval;
+}
+
+bool Sensor::getNodeChannelByFhemDev(NODE_DATTYPE *p_node_id, uint8_t* p_channel, char* fhem_dev) {
+    sensor_t *p_search;
+    bool retval = false;
+    p_search=p_initial;
+    while (p_search) {
+        if ( strcmp(p_search->fhem_dev,fhem_dev) == 0 ) {
+            if (verboselevel & VERBOSESENSOR) printf("%ssensor.getNodeChannelByFhemDev: FHEM:%s N:%u C:%u\n", ts(tsbuf), p_search->fhem_dev, p_search->node_id, p_search->channel); 
+            *p_node_id = p_search->node_id;
+            *p_channel = p_search->channel;
+            p_search = NULL;
+            retval = true;
+        } else {
+            p_search=p_search->p_next;
+        }
+    }
+    return retval;
+}
+
+void Sensor::printBuffer(int tn_socket, bool html) {
     char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
-    sensor_t *search_ptr;
-    search_ptr = initial_ptr;
+    sensor_t *p_search;
+    p_search = p_initial;
     sprintf(client_message," ------ Sensor: ------\n"); 
-    write(new_tn_in_socket , client_message , strlen(client_message));
-    while (search_ptr) {
-		sprintf(client_message,"Sensor: %u\tNode: 0%o,\tChannel:%u,\tFHEM: %s,\ttype: %c\tVal: %f\tTS:%llu\n", 
-                 search_ptr->sensor, search_ptr->node, search_ptr->channel, search_ptr->fhem_dev, search_ptr->s_type, search_ptr->last_val, search_ptr->last_ts);   
-		write(new_tn_in_socket , client_message , strlen(client_message));
-        search_ptr=search_ptr->next;
+    write(tn_socket , client_message , strlen(client_message));
+    while (p_search) {
+		sprintf(client_message,"Sensor: %u\tNode: %u,\tChannel:%u,\tFHEM: %s,\tVal: %s (%s)\n", 
+                 p_search->sensor_id, p_search->node_id, p_search->channel, p_search->fhem_dev, unpackTransportValue(p_search->last_data, buf), utime2str(p_search->last_val_utime, buf1, 1) );   
+		write(tn_socket , client_message , strlen(client_message));
+        p_search=p_search->p_next;
 	}
     free(client_message);
-    print_buffer2log();
 }
 
-void Sensor::print_buffer2log(void) {
-    sensor_t *search_ptr;
-    search_ptr = initial_ptr;
-    char *debug =  (char*) malloc (DEBUGSTRINGSIZE);
-    sprintf(debug," ------ Sensor: ------"); 
-    logger->logmsg(VERBOSECONFIG, debug);
-    while (search_ptr) {
-		sprintf(debug,"Sensor: %u\tNode: 0%o,\tChannel:%u,\tFHEM: %s,\ttype: %c\tVal: %f\tTS:%llu", 
-                 search_ptr->sensor, search_ptr->node, search_ptr->channel, search_ptr->fhem_dev, search_ptr->s_type, search_ptr->last_val, search_ptr->last_ts);   
-        logger->logmsg(VERBOSECONFIG, debug);
-        search_ptr=search_ptr->next;
-	}
-	free(debug);
-}
-
-void Sensor::begin(Logger* _logger) {
-    logger = _logger;
+void Sensor::setVerbose(uint16_t _verboselevel) {
+    verboselevel = _verboselevel;
 }
