@@ -308,6 +308,9 @@ int main(int argc, char* argv[]) {
     useconds_t loopSleepTime = LOOPSLEEPTIME_BUSY;
     unsigned int busyIndicator = 0;
     
+    tcp_addrlen = sizeof(tcp_address_in);
+    udp_addrlen = sizeof(udp_address_in);
+
     // processing argc and argv[]
     cfg.processParams(PRGNAME, argc, argv);
 

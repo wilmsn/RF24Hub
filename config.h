@@ -22,7 +22,7 @@
 #define SENDSTOPCOUNT 3
 // Interval for deleting unsend requests for order for regular nodes in millisec.
 // 60 Sec = 1 Min.
-#define DELETEINTERVAL 20000
+#define DELETEINTERVAL 10000
 // Interval for deleting unsend requests for order for Heartbeat nodes in millisec.
 // 1 Sec.
 #define DELETEINTERVAL_HB 1000

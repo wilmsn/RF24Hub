@@ -156,22 +156,11 @@ CREATE TABLE gateway
    gw_name   VARCHAR(40)   NOT NULL,
    gw_no     INT           DEFAULT NULL,
    gw_ip     VARCHAR(40)   NOT NULL,
-   isActive  BIT           DEFAULT 0,
+   isActive  VARCHAR(1)    DEFAULT 'n',
    CONSTRAINT `PRIMARY` PRIMARY KEY (gw_ip)
 )
 ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS gateway_im;
-
-CREATE TABLE gateway_im
-(
-   gw_name   VARCHAR(40)   NOT NULL,
-   gw_no     INT           DEFAULT NULL,
-   gw_ip     VARCHAR(40)   NOT NULL,
-   isActive  BIT           DEFAULT 0,
-   CONSTRAINT `PRIMARY` PRIMARY KEY (gw_ip)
-)
-ENGINE=MEMORY;
 
 
 

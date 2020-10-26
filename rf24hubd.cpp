@@ -421,6 +421,9 @@ int main(int argc, char* argv[]) {
     TnMsg_t LogMsg;
     time_t lastDBsync = time(0);
     ssize_t UdpMsgLen;
+
+    tcp_addrlen = sizeof(tcp_address_in);
+    udp_addrlen = sizeof(udp_address_in);
 	
     // processing argc and argv[]
     cfg.processParams(PRGNAME, argc, argv);
