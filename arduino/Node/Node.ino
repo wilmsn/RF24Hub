@@ -8,7 +8,7 @@ Bosch Temperature/Pressure/Humidity Sensor like BMP085/BMP180/BMP280/BME280
 Dallas Temperature Sensor 18B20
 Display Nokia 5110
 
-On Branch: entw_gw  !!!!!
+On Branch: master  !!!!!
 
 
 */
@@ -16,17 +16,20 @@ On Branch: entw_gw  !!!!!
 // My definitions for my nodes based on this sketch
 // Select only one at one time !!!!
 //#define AUSSENTHERMOMETER
-#define SCHLAFZIMMERTHERMOMETER
+//#define AUSSENTHERMOMETER2
+//#define SCHLAFZIMMERTHERMOMETER
 //#define TESTZIMMERTHERMOMETER
 //#define TESTZIMMER1THERMOMETER
 //#define BASTELZIMMERTHERMOMETER
+//#define BASTELZIMMERTHERMOMETER_SW
 //#define KUECHETHERMOMETER
 //#define WOHNZIMMERTHERMOMETER
 //#define ANKLEIDEZIMMERTHERMOMETER
 //#define GAESTEZIMMERTHERMOMETER
 //#define UNOTESTNODE_AO
 //#define TERASSE
-//#define TESTSWITCH
+#define FLUR
+//#define TEST
 //****************************************************
 // Default settings are in "default.h" now !!!!!
 #include "defaults.h"
@@ -161,7 +164,7 @@ void pingTest(void);
 void sendRegister(void);
 
 void get_voltage(void) {
-  cur_voltage = vcc.Read_Volts()*eeprom.volt_fac+eeprom.volt_off;
+  cur_voltage = (vcc.Read_Volts()*eeprom.volt_fac)+eeprom.volt_off;
   low_voltage_flag = (eeprom.low_volt_level > 1.5) && (cur_voltage <= eeprom.low_volt_level);
 #if defined(DEBUG_SERIAL_SENSOR)
    Serial.print("Volt (gemessen): ");
@@ -211,7 +214,7 @@ void get_sensordata(void) {
 #endif
   }
   if (sensor.hasPressure() ) {
-    pres = sensor.getPressureAtSealevel(95.0);
+    pres = sensor.getPressureAtSealevel(ALTITUDEABOVESEALEVEL);
 #if defined(DEBUG_SERIAL_SENSOR)
     Serial.print("Pres: ");
     Serial.println(pres);
@@ -233,46 +236,69 @@ uint32_t action_loop(uint32_t data) {
   int      intval;
   uint8_t  channel = getChannel(data);
 #if defined(DEBUG_SERIAL_PROC)
-    Serial.print("Processing: ");
+    Serial.print("Processing: Channel: ");
     Serial.println(getChannel(data));
 #endif  
     switch (channel) {
+      case 1:
+      {      
+#if defined(DALLAS_18B20)
+        sensor.requestTemperatures(); // Send the command to get temperatures
+        delay(800);
+        temp=sensor.getTempCByIndex(0);
+        data = calcTransportValue_f(1, temp);
+#endif
+      }
+      break;
 #if defined(HAS_DISPLAY)
       case 21:
+      {
         // Set field 1
         field1_val = getValue_f(data);;
         print_field(field1_val,1);
+      }
       break;
       case 22:
+      {
         // Set field 2
         field2_val = getValue_f(data);;
         print_field(field2_val,2);
+      }
       break;
       case 23:
+      {
         // Set field 3
         field3_val = getValue_f(data);;
         print_field(field3_val,3);
+      }
       break;
       case 24:
+      {
         // Set field 4
         field4_val = getValue_f(data);;
         print_field(field4_val,4);
+      }
       break;
       case 51:
+      {
         // Displaylight ON <-> OFF
         if ( getValue_ui(data) & 0x01 ) {
           digitalWrite(STATUSLED,STATUSLED_ON); 
         } else  {
           digitalWrite(STATUSLED,STATUSLED_OFF);
         }
+      }
       break;
       case 52:
+      {
         // Display Sleepmode ON <-> OFF
-        display_sleep( getValue_ui(data) & 0x01 );
+        display_sleep( getValue_ui(data) == 0x00 );
+      }
       break;
 #endif
 #if defined (RELAIS_1)
       case 51:
+      {
         // Relais_1 ON <-> OFF
         if ( getValue_ui(data) & 0x01 ) {
 #if defined (DEBUG_SERIAL_SENSOR)
@@ -285,10 +311,12 @@ uint32_t action_loop(uint32_t data) {
 #endif               
           digitalWrite(RELAIS_1, RELAIS_OFF);
         }
+      }
       break;
 #endif
 #if defined (RELAIS_2)
       case 52:
+      {
         // Relais_2 ON <-> OFF
         if ( getValue_ui(data) > 0x00 ) {
 #if defined (DEBUG_SERIAL_SENSOR)
@@ -301,10 +329,12 @@ uint32_t action_loop(uint32_t data) {
 #endif               
           digitalWrite(RELAIS_2, RELAIS_OFF);
         }
+      }
       break;
 #endif
 #if defined (RELAIS_3)
       case 53:
+      {
         // Relais_3 ON <-> OFF
         if ( getValue_ui(data) & 0x01 ) {
 #if defined (DEBUG_SERIAL_SENSOR)
@@ -317,10 +347,12 @@ uint32_t action_loop(uint32_t data) {
 #endif               
           digitalWrite(RELAIS_3,RELAIS_OFF);
         }
+      }
       break;
 #endif
 #if defined (RELAIS_4)
       case 54:
+      {
         // Relais_4 ON <-> OFF
         if ( getValue_ui(data) & 0x01 ) {
 #if defined (DEBUG_SERIAL_SENSOR)
@@ -333,15 +365,17 @@ uint32_t action_loop(uint32_t data) {
 #endif               
           digitalWrite(RELAIS_4,RELAIS_OFF);
         }
+      }
       break;
 #endif
 #if defined (NEOPIXEL)
       case 51:
+      {
         uint16_t pixeldata = getValue_ui(data);
         uint8_t pixelcount = 0;
-        neopixel_b = (uint8_t)((pixeldata) & 0b0000000000011111)<<3;
-        neopixel_g = (uint8_t)((pixeldata>>5) & 0b0000000000011111)<<3;
-        neopixel_r = (uint8_t)((pixeldata>>10) & 0b0000000000011111)<<3;
+        neopixel_b = (uint8_t)((pixeldata & 0b0000000000011111)<<3);
+        neopixel_g = (uint8_t)((pixeldata & 0b0000001111100000)>>2);
+        neopixel_r = (uint8_t)((pixeldata & 0b0111110000000000)>>7);
 #if defined (DEBUG_SERIAL_SENSOR)
           Serial.print("Neopixel Data:");
           Serial.println(pixeldata);
@@ -359,19 +393,31 @@ uint32_t action_loop(uint32_t data) {
         }
         while(pixelcount < NEOPIXEL);     
         neopixels.show();
+      }
       break;  
 #endif
-      case REG_BATT:  
+      case REG_BATT: 
+      { 
       // battery voltage
+#if defined(DEBUG_SERIAL_PROC)
+    Serial.print("Processing: Volt: ");
+    Serial.println(cur_voltage);
+#endif  
         data = calcTransportValue_f(REG_BATT, cur_voltage);
+      }
       break;      
-      case REG_TRANSREG:  
+      case REG_TRANSREG:
+      {  
         exec_RegTrans = true;
+      }
       break;      
       case REG_MONITOR:
+      {
         monitormode = (getValue_ui(data) & 1);
+      }
       break;
-      case REG_DISPLAY: {
+      case REG_DISPLAY: 
+      {
         uint16_t val = getValue_ui(data);
         uint8_t contrast = (val & 0x00FF);
         uint8_t brightnes = (val>>8);
@@ -384,7 +430,8 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
-      case REG_SLEEPTIME: {
+      case REG_SLEEPTIME: 
+      {
         // sleeptime in sec!
         uint16_t val = getValue_ui(data);
         if ( val > 9 && val < 32401) {
@@ -393,7 +440,8 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
-      case REG_SLEEPTIMEADJ: {
+      case REG_SLEEPTIMEADJ: 
+      {
         // sleeptime adjust in sec!
         int16_t val = getValue_i(data);
         if (val >= -1000 && val <= 1000) {
@@ -402,7 +450,8 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
-      case REG_EMPTYLOOPS: {
+      case REG_EMPTYLOOPS: 
+      {
         // emptyloops - number of loops without sending to hub / messure and display only!
         uint8_t val = getValue_ui(data);
         if (val < 21) {
@@ -411,7 +460,8 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
-      case REG_SLEEPTIMEKOR: {
+      case REG_SLEEPTIMEKOR: 
+      {
         // sleeptime_kor: onetime adjust of sleeptime, will be reset to 0 after use 
         int16_t val = getValue_i(data);
         if (val > -1001 && val <= 1001) {
@@ -419,7 +469,8 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
-      case REG_SENDDELAY: {
+      case REG_SENDDELAY: 
+      {
         // senddelay in millisec.
         uint16_t val = getValue_ui(data);
         if (val > 49 && val < 1001) {
@@ -428,7 +479,8 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
-      case REG_SNDCNTN: {
+      case REG_SNDCNTN: 
+      {
         // max_sendcount: numbers of attempts to send for normal messages
         uint16_t val = getValue_ui(data);
         if (val > 0 && val < 21) {
@@ -437,7 +489,8 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
-      case REG_SNDCNTS: {
+      case REG_SNDCNTS: 
+      {
       // max_stopcount: numbers of attempts to send for stop messages
         uint16_t val = getValue_ui(data);
         if (val > 0 && val < 21) {
@@ -446,7 +499,8 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
-      case REG_VOLTFAC: {
+      case REG_VOLTFAC: 
+      {
         // Volt_fac - V = Vmess * Volt_fac
         float val = getValue_f(data);
         if (val >= 0.1 && val <= 10) {
@@ -455,7 +509,8 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
-      case REG_VOLTOFF: {
+      case REG_VOLTOFF: 
+      {
         // Volt_off - V = (Vmess * Volt_fac) + Volt_off
         float val = getValue_f(data);
         if (val >= -10 && val <= 10) {
@@ -464,7 +519,8 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
-      case REG_LOWVOLTLEV: {
+      case REG_LOWVOLTLEV: 
+      {
         // Low Voltage Level
         float val = getValue_f(data);
         if (val >= 1 && val <= 5) {
@@ -473,7 +529,8 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
-      case REG_LOWVOLTINT: {
+      case REG_LOWVOLTINT: 
+      {
         // Low Voltage send interval
         uint16_t val = getValue_ui(data);
         if (val > 59 && val < 1441) {
@@ -482,7 +539,8 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
-      case REG_PALEVEL: {
+      case REG_PALEVEL: 
+      {
         // PA Level
         uint16_t val = getValue_ui(data);
         if (val == 9) exec_pingTest = true;
@@ -493,7 +551,9 @@ uint32_t action_loop(uint32_t data) {
       }
       break;
       case REG_SW:
+      {
         data = calcTransportValue_f(REG_SW, SWVERSION);
+      }
       break;
     }  
     return data; 
@@ -884,7 +944,7 @@ void printPayloadData(uint32_t pldata) {
     Serial.print("(");
     Serial.print(getChannel(pldata));
     Serial.print("/");
-    Serial.print(unpackData(pldata,buf));
+    Serial.print(unpackTransportValue(pldata,buf));
     Serial.print(")");
 }
 
@@ -1163,6 +1223,8 @@ void loop(void) {
     }
   }
   exec_jobs();
+  if ( loopcount > 1000 ) { get_voltage(); loopcount=0; }
+  loopcount++;
   delay(500);
 #endif
 }

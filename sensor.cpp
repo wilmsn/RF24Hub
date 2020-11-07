@@ -32,37 +32,29 @@ void Sensor::newEntry(Sensor::sensor_t* p_new) {
     }
 }
 
-void Sensor::addSensor(uint32_t sensor_id, NODE_DATTYPE node_id, uint8_t channel, char* fhem_dev, uint32_t last_val_utime, uint32_t data) {
+void Sensor::addSensor(uint32_t sensor_id, NODE_DATTYPE node_id, uint8_t channel, char* fhem_dev, uint32_t last_utime, uint32_t last_data) {
     sensor_t* p_new = new Sensor::sensor_t;
     p_new->sensor_id = sensor_id;
     p_new->node_id = node_id;
     p_new->channel = channel;
-    p_new->last_ts = 0;
-    p_new->last_val_utime = last_val_utime;
-    p_new->last_data = data;
+    p_new->last_utime = last_utime;
+    p_new->last_data = last_data;
     sprintf(p_new->fhem_dev,"%s", fhem_dev);
     newEntry(p_new);
 }
    
-bool Sensor::updateLastVal(uint32_t sensor_id, uint32_t data, uint64_t mymillis) {
+bool Sensor::updateLastVal(uint32_t sensor_id, uint32_t last_data) {
     bool retval = false;
-    uint8_t channel = getChannel(data);
-    uint8_t dataTyp = getDataTyp(channel);
+    uint8_t channel = getChannel(last_data);
     sensor_t *p_search = p_initial;
     //p_search=p_initial;
     while (p_search) {
         if ( p_search->sensor_id == sensor_id) {
-            if ( mymillis - p_search->last_ts > 1000 ) {
-                p_search->last_data = data;
-                p_search->last_val_utime = time(0);
-                p_search->last_ts = mymillis;
-                if ( verboselevel & VERBOSESENSOR) 
-                    printf("%ssensor.updateLastVal: S:%u N:%u C:%u V:%s\n", ts(tsbuf), p_search->sensor_id, p_search->node_id, p_search->channel, unpackTransportValue(data, buf) ); 
-                retval = true;
-            } else {
-                if ( verboselevel & VERBOSESENSOR) printf("%ssensor.updateLastVal: Old value - dropped!\n", ts(tsbuf)); 
-                p_search->last_ts = mymillis;
-            }
+            p_search->last_data = last_data;
+            p_search->last_utime = time(0);
+            if ( verboselevel & VERBOSESENSOR) 
+                printf("%ssensor.updateLastVal: S:%u N:%u C:%u V:%s\n", ts(tsbuf), p_search->sensor_id, p_search->node_id, p_search->channel, unpackTransportValue(last_data, buf) ); 
+            retval = true;
         }
         p_search=p_search->p_next;
     }
@@ -141,7 +133,7 @@ void Sensor::printBuffer(int tn_socket, bool html) {
     write(tn_socket , client_message , strlen(client_message));
     while (p_search) {
 		sprintf(client_message,"Sensor: %u\tNode: %u,\tChannel:%u,\tFHEM: %s,\tVal: %s (%s)\n", 
-                 p_search->sensor_id, p_search->node_id, p_search->channel, p_search->fhem_dev, unpackTransportValue(p_search->last_data, buf), utime2str(p_search->last_val_utime, buf1, 1) );   
+                 p_search->sensor_id, p_search->node_id, p_search->channel, p_search->fhem_dev, unpackTransportValue(p_search->last_data, buf), utime2str(p_search->last_utime, buf1, 1) );   
 		write(tn_socket , client_message , strlen(client_message));
         p_search=p_search->p_next;
 	}

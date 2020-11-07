@@ -13,10 +13,6 @@ void Database::db_check_error(void) {
 }
 
 void Database::sync_config(void) {
-/*    sprintf (sql_stmt, "insert into node_configdata_history(node_id, channel, value, utime) select node_id, channel, value, utime from node_configdata_history_im where (node_id, channel, value, utime) not in ( select node_id, channel, value, utime from  node_configdata_history )");
-    debugPrintSQL(sql_stmt);
-	mysql_query(db, sql_stmt);
-	db_check_error(); */
     sprintf (sql_stmt, "delete from node_configdata where (node_id, channel) in ( select node_id, channel from  node_configdata_im)");
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
@@ -30,18 +26,14 @@ void Database::sync_config(void) {
 }
 
 void Database::sync_sensor(void) {
-	sprintf (sql_stmt, "insert into sensor(sensor_id, sensor_name, add_info, node_id, channel, store_days, fhem_dev, html_show, html_order, value, utime) select sensor_id, sensor_name, add_info, node_id, channel, store_days, fhem_dev, html_show, html_order, value, utime from sensor_im where sensor_id not in ( select sensor_id from sensor ) ");
-    debugPrintSQL(sql_stmt);
-	mysql_query(db, sql_stmt);
-	db_check_error();
-	sprintf (sql_stmt, "update sensor a set value = ( select value from sensor_im where sensor_id = a.sensor_id ), utime = ( select utime from sensor_im where sensor_id = a.sensor_id )");
+	sprintf (sql_stmt, "UPDATE sensor INNER JOIN sensor_im ON sensor_im.sensor_id = sensor.sensor_id set sensor.last_data = sensor_im.last_data, sensor.last_utime = sensor_im.last_utime, sensor.value = sensor_im.value");
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
 }
 
 void Database::sync_sensordata(void) {
-	sprintf (sql_stmt, "insert into sensordata(sensor_id, utime, value) select sensor_id, utime, value from sensordata_im where (sensor_id,utime) not in (select sensor_id, utime from sensordata)");
+	sprintf (sql_stmt, "insert into sensordata(sensor_id, utime, value) select sensor_id, utime, value from sensordata_im where (sensor_id, utime) not in (select sensor_id, utime from sensordata)");
     debugPrintSQL(sql_stmt);
     mysql_query(db, sql_stmt);
 	db_check_error();
@@ -71,7 +63,7 @@ void Database::initSystem(void) {
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
-	sprintf (sql_stmt, "insert into sensor_im(sensor_id, sensor_name, add_info, node_id, channel, store_days, fhem_dev, html_show, html_order, value, utime) select sensor_id, sensor_name, add_info, node_id, channel, store_days, fhem_dev, html_show, html_order, value, utime from sensor");
+	sprintf (sql_stmt, "insert into sensor_im(sensor_id, last_utime, last_data, value) select sensor_id, last_utime, last_data, value from sensor");
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
@@ -92,14 +84,6 @@ void Database::initSystem(void) {
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
-//	sprintf (sql_stmt, "truncate table gateway_im");
-//    debugPrintSQL(sql_stmt);
-//	mysql_query(db, sql_stmt);
-//	db_check_error();
-//    sprintf (sql_stmt, "insert into gateway_im(gw_name, gw_ip, gw_no, isactive) select gw_name, gw_ip, gw_no, isactive from gateway");
-//    debugPrintSQL(sql_stmt);
-//	mysql_query(db, sql_stmt);
-//	db_check_error();
     sync_sensordata_d();
     mysql_commit(db);
 }
@@ -117,7 +101,6 @@ void Database::initGateway(Gateway* gateway) {
 	MYSQL_RES *result = mysql_store_result(db);
 	db_check_error();
 	while ((row = mysql_fetch_row(result))) {
-printf("Gateway: %s\n",row[3]);
 		if ( row[0] != NULL ) sprintf(gw_name,"%s",trim(row[0])); else sprintf(gw_name," ");
 		if ( row[1] != NULL ) sprintf(gw_ip,"%s",trim(row[1])); else sprintf(gw_ip," ");
         if ( row[2] != NULL ) gw_no = strtoul(row[2], &pEnd, 10); else gw_no = 0;
@@ -149,7 +132,7 @@ void Database::initNode(Node* node) {
         node->addNode(node_id, 0, myHBnode, pa_level, pa_utime); 
 	}
 	mysql_free_result(result);    
-	sprintf (sql_stmt, "select node_id, value from sensor where channel = 101");
+	sprintf (sql_stmt, "select node_id, last_data from sensor where channel = 101");
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
@@ -157,7 +140,7 @@ void Database::initNode(Node* node) {
 	db_check_error();
 	while ((row = mysql_fetch_row(result))) {
 		if ( row[0] != NULL ) node_id = strtoul(row[0], &pEnd,10);
-		if ( row[1] != NULL ) u_batt = strtof(row[1], &pEnd); else u_batt = 0;
+		if ( row[1] != NULL ) u_batt = strtof(unpackTransportValue(strtoul(row[1], &pEnd,10),tsbuf),&pEnd); else u_batt = 0;
         node->setVoltage(node_id, u_batt); 
 	}
 	mysql_free_result(result);    
@@ -168,10 +151,11 @@ void Database::initSensor(Sensor* sensor) {
     uint32_t     	mysensor;
     NODE_DATTYPE   	node_id;
     uint8_t     	mychannel;
-    float           myvalue;
-    uint32_t        utime;
+    //float           myvalue;
+    uint32_t        last_utime;
+    uint32_t        last_data;
 	MYSQL_ROW row;
-	sprintf (sql_stmt, "select sensor_id, node_id, channel, fhem_dev, value, utime from sensor");
+	sprintf (sql_stmt, "select sensor_id, node_id, channel, fhem_dev, last_data, last_utime from sensor");
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
@@ -182,10 +166,10 @@ void Database::initSensor(Sensor* sensor) {
 		if ( row[1] != NULL ) node_id = strtoul(row[1], &pEnd,10); else node_id = 0; 
 		if ( row[2] != NULL ) mychannel = strtoul(row[2], &pEnd,10); else mychannel = 0;
 		if ( row[3] != NULL ) sprintf(fhem_dev,"%s",trim(row[3])); else sprintf(fhem_dev,"not_set");
-		if ( row[4] != NULL ) myvalue = strtof(row[4], &pEnd); else myvalue = 0;
-		if ( row[5] != NULL ) utime = strtoul(row[5], &pEnd, 10); else utime = 1;
+		if ( row[4] != NULL ) last_data = strtoul(row[4], &pEnd, 10); else last_data = 0;
+		if ( row[5] != NULL ) last_utime = strtoul(row[5], &pEnd, 10); else last_utime = 1;
         // ToDo
-        sensor->addSensor(mysensor, node_id, mychannel, fhem_dev, utime, myvalue);
+        sensor->addSensor(mysensor, node_id, mychannel, fhem_dev, last_utime, last_data);
 	}
 	mysql_free_result(result);
     free_str(verboselevel,"Database::initSensor fhem_dev",fhem_dev, ts(tsbuf)); 
@@ -199,10 +183,10 @@ void Database::do_sql(char *sqlstmt) {
     db_check_error();
 }
 
-void Database::storeSensorValue(uint32_t mysensor, char* value) {
-    sprintf(sql_stmt,"insert into sensordata_im (sensor_ID, utime, value) values (%u, UNIX_TIMESTAMP(), %s)", mysensor, value);
+void Database::storeSensorValue(uint32_t sensor_id, uint32_t data, char* value) {
+    sprintf(sql_stmt,"update sensor_im set last_data = %u, value = '%s', last_utime = UNIX_TIMESTAMP() where sensor_id = %u", data, value, sensor_id);
     do_sql(sql_stmt);
-    sprintf(sql_stmt,"update sensor_im set value = %s, utime = UNIX_TIMESTAMP() where sensor_id = %u",value ,mysensor);
+    sprintf(sql_stmt,"insert into sensordata_im (sensor_ID, utime, value) values (%u, UNIX_TIMESTAMP(), %s)", sensor_id, value);
     do_sql(sql_stmt);
 }
 
@@ -211,10 +195,6 @@ void Database::storeNodeConfig(NODE_DATTYPE node_id, uint8_t channel, char* valu
         sprintf(sql_stmt,"update node set pa_level = %s, pa_utime = UNIX_TIMESTAMP() where node_id = %u ", value, node_id);
         do_sql(sql_stmt);
     }
-    //sprintf(sql_stmt,"delete from node_configdata_history where node_id = %u and channel = %u and utime > UNIX_TIMESTAMP() - 100 ", node_id, channel);
-    //do_sql(sql_stmt);
-    //sprintf(sql_stmt,"insert into node_configdata_history_im (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %s ) ", node_id, channel, value);
-    //do_sql(sql_stmt);
     sprintf(sql_stmt,"delete from node_configdata_im where node_id = %u and channel = %u ", node_id, channel, value);
     do_sql(sql_stmt);
     sprintf(sql_stmt,"insert into node_configdata_im (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %s ) ", node_id, channel, value);

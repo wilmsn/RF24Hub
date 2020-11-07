@@ -1,4 +1,4 @@
-/*
+/**
 rf24hub.cpp
 A unix-deamon to handle and store the information from/to all connected sensornodes. 
 All information is stored in a MariaDB database.

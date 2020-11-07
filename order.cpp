@@ -202,7 +202,7 @@ void Order::modifyOrder(NODE_DATTYPE node, uint8_t pos, uint32_t data) {
             break;
         }
     }
-    if (verboselevel & VERBOSEORDER) printBuffer(fileno(stdout), false);
+    if (verboselevel & VERBOSEORDEREXT) printBuffer(fileno(stdout), false);
 }
 
 void Order::modifyOrderFlags(NODE_DATTYPE node_id, uint8_t msg_flags) {
@@ -211,7 +211,18 @@ void Order::modifyOrderFlags(NODE_DATTYPE node_id, uint8_t msg_flags) {
     if (p_mod) {
         p_mod->msg_flags = msg_flags;
     }
-    if (verboselevel & VERBOSEORDER) printBuffer(fileno(stdout), false);
+    if (verboselevel & VERBOSEORDEREXT) printBuffer(fileno(stdout), false);
+}
+
+void Order::adjustEntryTime(NODE_DATTYPE node_id, uint64_t newEntrytime) {
+    order_t *p_search;
+    p_search = p_initial;
+    while (p_search) {
+        if (p_search->node_id == node_id ) {
+            p_search->entrytime = newEntrytime;
+        }
+        p_search=p_search->p_next;
+    }    
 }
 
 bool Order::getOrderForTransmission(payload_t* payload, uint64_t mytime){
@@ -220,6 +231,7 @@ bool Order::getOrderForTransmission(payload_t* payload, uint64_t mytime){
     order_t *p_search;
     uint64_t sendInterval;
     uint64_t deleteInterval;
+    uint64_t stopmsg_deleteInterval;
     p_search = p_initial;
     while (p_search) {
         if (verboselevel & VERBOSEORDEREXT) {
@@ -244,7 +256,8 @@ bool Order::getOrderForTransmission(payload_t* payload, uint64_t mytime){
             if (verboselevel & VERBOSEORDER) {
                 printf("%sOrder::getOrderForTransmission <%p> O: %u (N:%u %s), TTL: %llu\n", ts(tsbuf), p_search, p_search->orderno, p_search->node_id, p_search->HB_order? "HB":"  ", p_search->entrytime + (uint64_t)deleteInterval - mytime ); 
             }
-            if ( p_search->entrytime + (uint64_t)deleteInterval < mytime ) {
+            if ( (p_search->entrytime + (uint64_t)deleteInterval < mytime) || 
+                (p_search->msg_type == PAYLOAD_TYPE_DATSTOP && (p_search->entrytime + (SENDSTOPCOUNT * sendInterval)) < mytime) ) {
                 p_delme = p_search;
                 if (verboselevel & VERBOSEORDER) {
                     printf("%sOrder::getOrderForTransmission Timeout - lösche <%p> O:%u (N:%u %s), entry:%llu last send: %llu Delinterv: %llu Sendinterv: %llu\n", ts(tsbuf), p_delme, p_delme->orderno, p_delme->node_id, p_search->HB_order? "HB":"  ", p_delme->entrytime, p_delme->last_send, (uint64_t)deleteInterval, (uint64_t)sendInterval ); 

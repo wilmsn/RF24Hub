@@ -60,18 +60,13 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 */
 
 	char 
-         //cmp_init[]="init", 
-		 //cmp_sensor[]="sensor",
 		 cmp_set[]="set",
-		 //cmp_setlast[]="setlast",
-		 //cmp_html[]="html",
-		 //cmp_order[]="order",	 
 		 cmp_verbose[]="verbose",	
-         //cmp_push[]="push",
          cmp_show[]="show",
          cmp_radio[]="radio",
-         //cmp_sync[]="sync",
-         cmp_config[]="config";
+         cmp_config[]="config",
+         cmp_truncate[]="truncate",
+         cmp_logfile[]="logfile";
 	char *wort1a, *wort2a, *wort3a, *wort4a;
 	char *wort1, *wort2, *wort3, *wort4;
     char* message = alloc_str(verboselevel,"process_tn_in message",120,ts(tsbuf));
@@ -129,6 +124,13 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 		tn_input_ok = true;
 		sprintf(message,"Active verboselevel: %s\n",printVerbose(verboselevel, buf));
 		write(tn_socket , message , strlen(message));
+    }
+	// truncate logfile
+	// truncation of the logfile for maintenance
+	if ( (strcmp(wort1,cmp_truncate) == 0) && (strcmp(wort2,cmp_logfile) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
+        truncate (cfg.gwLogFileName.c_str(), 0);
+        printf(message, "Logfile: %s geleert", cfg.gwLogFileName.c_str());
+		tn_input_ok = true;
     }
 	if ( ! tn_input_ok) {
         //printf("%u \n",sizeof(tn_usage_txt)/ sizeof(int));

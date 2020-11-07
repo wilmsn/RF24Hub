@@ -57,6 +57,18 @@ debugging options:
 #define SLEEPTIME_SEC   900
 #endif
 //-----------------------------------------------------
+#if defined(AUSSENTHERMOMETER2)
+#define HBNODE
+#define RF24NODE        201
+#define BOSCH_SENSOR
+#define STATUSLED       7
+#define STATUSLED_ON    HIGH
+#define STATUSLED_OFF   LOW
+#define LOW_VOLT_LEVEL  1
+#define EEPROM_VERSION  1
+#define SLEEPTIME_SEC   900
+#endif
+//-----------------------------------------------------
 #if defined(SCHLAFZIMMERTHERMOMETER)
 #define HBNODE
 #define RF24NODE             101
@@ -72,21 +84,44 @@ debugging options:
 #define STATUSLED_OFF        HIGH
 #endif
 //-----------------------------------------------------
-#if defined(TESTZIMMERTHERMOMETER)
+#if defined(WOHNZIMMERTHERMOMETER)
 #define HBNODE
 #define RF24NODE             102
-//#define DALLAS_18B20
 #define BOSCH_SENSOR
 #define DISPLAY_5110
+#define EEPROM_VERSION       1
+#define EMPTYLOOPS           9
+#define VOLT_FAC             1
+#define VOLT_OFF             0.55
+#define LOW_VOLT_LEVEL       3.6
+#define STATUSLED_ON         LOW
+#define STATUSLED_OFF        HIGH
+#endif
+//-----------------------------------------------------
+#if defined(KUECHETHERMOMETER)
+#define HBNODE
+#define RF24NODE             103
+#define DALLAS_18B20
+#define DISPLAY_5110
 //#define MONITOR
-#define EEPROM_VERSION       8
+#define EEPROM_VERSION       1
+#define EMPTYLOOPS           9
+#define VOLT_FAC             1
+#define VOLT_OFF             0.55
+#define LOW_VOLT_LEVEL       3.6
+#define STATUSLED_ON         LOW
+#define STATUSLED_OFF        HIGH
+#endif
+//-----------------------------------------------------
+#if defined(GAESTEZIMMERTHERMOMETER)
+#define HBNODE
+#define RF24NODE             104
+#define SLEEPTIME_SEC        900
+#define STATUSLED            7
+#define DALLAS_18B20
+#define EEPROM_VERSION       1
 #define EMPTYLOOPS           0
-//#define VOLT_FAC             1
-//#define VOLT_OFF             0.55
-#define LOW_VOLT_LEVEL       0
-//#define DEBUG_SERIAL_SENSOR
-//#define DEBUG_SERIAL_RADIO
-//#define DEBUG_SERIAL_PROC
+#define LOW_VOLT_LEVEL       3.5
 #endif
 //-----------------------------------------------------
 #if defined(TESTZIMMER1THERMOMETER)
@@ -119,6 +154,21 @@ debugging options:
 #define LOW_VOLT_LEVEL       3.6
 #endif
 //-----------------------------------------------------
+#if defined(BASTELZIMMERTHERMOMETER_SW)
+#define HBNODE
+#define RF24NODE             105
+#define DALLAS_18B20
+#define DISPLAY_5110
+//#define MONITOR
+#define EEPROM_VERSION       1
+#define VOLT_FAC             1
+#define VOLT_OFF             0.55
+#define EMPTYLOOPS           9
+#define LOW_VOLT_LEVEL       3.6
+#define STATUSLED_ON         LOW
+#define STATUSLED_OFF        HIGH
+#endif
+//-----------------------------------------------------
 #if defined(ANKLEIDEZIMMERTHERMOMETER)
 #define HBNODE
 #define RF24NODE             110
@@ -128,7 +178,7 @@ debugging options:
 #define EEPROM_VERSION       22
 #define EMPTYLOOPS           9
 #define VOLT_FAC             1
-#define VOLT_OFF             0.55
+#define VOLT_OFF             0.8
 #define LOW_VOLT_LEVEL       3.6
 #define STATUSLED_ON         LOW
 #define STATUSLED_OFF        HIGH
@@ -144,11 +194,19 @@ debugging options:
 #define STATUSLED            A2
 #endif
 //-----------------------------------------------------
-#if defined(TESTSWITCH)
-#define RF24NODE             150
-#define EEPROM_VERSION       1
-#define NEOPIXEL
-// The Number of Pixels that are connected to
+#if defined(FLUR)
+#define RF24NODE             161
+#define EEPROM_VERSION       2
 #define NEOPIXEL             46
+#define DALLAS_18B20
 #define DEBUG_SERIAL_SENSOR
+#endif
+//-----------------------------------------------------
+#if defined(TEST)
+#define RF24NODE             169
+#define EEPROM_VERSION       2
+#define NEOPIXEL             7
+#define DALLAS_18B20
+#define DEBUG_SERIAL_RADIO
+#define DEBUG_SERIAL_PROC
 #endif

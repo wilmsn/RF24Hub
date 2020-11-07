@@ -23,9 +23,8 @@ struct sensor_t {
         NODE_DATTYPE   	node_id;   		
         uint8_t     	channel;
         char			fhem_dev[FHEMDEVLENGTH];
-        uint64_t        last_ts;
         uint32_t    	last_data;
-        uint32_t        last_val_utime;
+        uint32_t        last_utime;
         sensor_t*       p_next;
 };
 sensor_t*     p_initial;
@@ -64,13 +63,12 @@ void cleanup(void);
 /**
  *  Fügt einen neuen Sensor hinzu
  */
-void addSensor(uint32_t sensor, NODE_DATTYPE node_id, uint8_t channel, char* fhem_dev, uint32_t last_val_utime, uint32_t last_data);
+void addSensor(uint32_t sensor, NODE_DATTYPE node_id, uint8_t channel, char* fhem_dev, uint32_t last_utime, uint32_t last_data);
 /**
- *  Setzt value und last_ts auf den übergebenen Wert, 
+ *  Setzt den letzten Wert dieses Sensors in der Form des TransportValues
  *  Rückgabewert: true wenn ein update erfolgt ist.
- *  Hier: float Werte => last_val
  */
-bool updateLastVal(uint32_t sensor_id, uint32_t data, uint64_t mymillis);
+bool updateLastVal(uint32_t sensor_id, uint32_t last_data);
 /**
  *  Findet die Sensor_id durch node_id und channel, 
  *  Rückgabewert ist die sensor_id

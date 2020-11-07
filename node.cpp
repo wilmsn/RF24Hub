@@ -36,7 +36,6 @@ void Node::addNode(NODE_DATTYPE node_id, float u_batt, bool is_HB_node, uint8_t 
     p_new->node_id = node_id;
     p_new->u_batt = u_batt;
     p_new->is_HB_node = is_HB_node;
-    p_new->HB_ts = 0;
     p_new->pa_level = PALevel;
     p_new->pa_utime = PAUtime;
     if (verboselevel & VERBOSESENSOR) printf("%sNode.addNode: N:%u U:%f HB:%s PA:%s(%s)\n",ts(tsbuf),node_id, u_batt, is_HB_node? "HeartBeat":"Normal   ",
@@ -44,15 +43,14 @@ void Node::addNode(NODE_DATTYPE node_id, float u_batt, bool is_HB_node, uint8_t 
     newEntry(p_new);
 }
 
-bool Node::isNewHB(NODE_DATTYPE node_id, uint8_t heartbeatno, uint64_t mymillis) {
+bool Node::isNewHB(NODE_DATTYPE node_id, uint8_t heartbeatno) {
     node_t *p_search;
     bool retval = false;
     p_search = p_initial;
     while (p_search) {
         if (p_search->node_id == node_id) {
             if (verboselevel & VERBOSEORDER) 
-                printf("%sNode.is_new_HB: Node:%u last HB %llu msec. ago => ", ts(tsbuf), node_id, mymillis - p_search->HB_ts);
-//            if (p_search->HB_ts < mymillis - 5000 ) retval = true;
+                printf("%sNode.is_new_HB: Node:%u last HB %u this HB %u => ", ts(tsbuf), node_id, p_search->heartbeatno, heartbeatno );
             if (p_search->heartbeatno != heartbeatno ) retval = true;
             p_search->heartbeatno = heartbeatno;
             p_search = NULL;
@@ -60,12 +58,10 @@ bool Node::isNewHB(NODE_DATTYPE node_id, uint8_t heartbeatno, uint64_t mymillis)
             p_search = p_search->p_next;
         }
     }    
-    if (retval) {
-        if (verboselevel & VERBOSEORDER) {
+    if (verboselevel & VERBOSEORDER) {
+        if (retval) {
             printf("New HeartBeat\n");;
-        }
-    } else {
-        if (verboselevel & VERBOSEORDER) {
+        } else {
             printf("Old HeartBeat\n");
         }
     }        

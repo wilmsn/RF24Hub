@@ -56,9 +56,9 @@ public:
  */
     bool connect(string db_hostname, string db_username, string db_password, string db_schema, int db_port);
 /**
- * Stores the data of a sensor
+ * Stores the last data(Transportvalue) of a sensor into the table sensor_im and sensordata_im
  */
-    void storeSensorValue(uint32_t mysensor, char* value);
+    void storeSensorValue(uint32_t sensor_id, uint32_t data, char* value);
 /**
  * Stores the config data of a node
  */

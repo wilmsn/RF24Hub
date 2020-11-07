@@ -111,6 +111,13 @@ void modifyOrder(NODE_DATTYPE node_id, uint8_t pos, uint32_t data);
  */
 void modifyOrderFlags(NODE_DATTYPE node_id, uint8_t msg_flags);
 /**
+ *  Setzt die entrytime auf den aktuellen Zeitpunkt für Orders zu diesem Node.
+ *  Anwendung: Wird trotz Quittung ein Nachrichtentyp weiter empfangen,
+ *  ist davon auszugehen das die Quittung nicht angekommen ist.
+ *  Beispiel: HB (->in) HBSTOP (->out)
+ */ 
+void adjustEntryTime(NODE_DATTYPE node_id, uint64_t newEntrytime);
+/**
  * füllt den Payload mit den Daten für die nächste Sendung
  */
 bool getOrderForTransmission(payload_t* payload, uint64_t mytime); 

@@ -25,7 +25,6 @@ struct node_t {
         float			u_batt;	
         uint8_t         heartbeatno;
         bool            is_HB_node;
-        uint64_t        HB_ts;
         node_t*         p_next;
     };
 node_t*     p_initial;
@@ -68,7 +67,7 @@ void addNode(NODE_DATTYPE node_id, float u_batt, bool is_HB_node, uint8_t PALeve
  *  Prüft ob ein Heartbeat neu (=neue heartbeatno)  
  *  oder alt ist.
  */
-bool isNewHB(NODE_DATTYPE node_id, uint8_t heartbeatno, uint64_t mymillis);
+bool isNewHB(NODE_DATTYPE node_id, uint8_t heartbeatno);
 /**
  *  Prüft ob ein Node ein Heartbeat Node ist oder nicht 
  */

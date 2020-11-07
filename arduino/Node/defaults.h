@@ -11,6 +11,8 @@
 #define RELAIS_OFF    LOW
 // One Wire Bus
 #define ONE_WIRE_BUS  8
+// Altitude above sealevel
+#define ALTITUDEABOVESEALEVEL   95.0
 // Neopixel
 // Arduino Pin where the Data-Pin from the Neopixels is connected to
 #define NEOPIXEL_PIN 7
