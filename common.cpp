@@ -60,7 +60,7 @@ uint64_t mymillis(void) {
 }
 
 char* printVerbose(uint16_t verboseLevel, char* buf) {
-    if (verboseLevel & VERBOSECRITICAL )   sprintf(buf,"%s critical",buf);
+    if (verboseLevel & VERBOSECRITICAL )   sprintf(buf,"critical");
     if (verboseLevel & VERBOSESTARTUP )    sprintf(buf,"%s startup",buf);
     if (verboseLevel & VERBOSECONFIG )     sprintf(buf,"%s config",buf);
     if (verboseLevel & VERBOSETELNET )     sprintf(buf,"%s telnet",buf);
@@ -210,7 +210,8 @@ void sendUdpMessage(const char* host, const char* port, udpdata_t * udpdata ) {
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_DGRAM;
 
-	if ((rv = getaddrinfo(host, port, &hints, &servinfo)) != 0) {
+    rv = getaddrinfo(host, port, &hints, &servinfo);
+	if ( rv != 0 ) {
         fprintf(stderr, "Host: %s Port: %p \n", host, port);
 		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
 		exit(1);
@@ -218,7 +219,8 @@ void sendUdpMessage(const char* host, const char* port, udpdata_t * udpdata ) {
 
 	// loop through all the results and make a socket
 	for(p = servinfo; p != NULL; p = p->ai_next) {
-		if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
+        sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
+		if ( sockfd == -1 ) {
 			perror("Error: socket");
 			continue;
 		}
@@ -233,8 +235,8 @@ void sendUdpMessage(const char* host, const char* port, udpdata_t * udpdata ) {
 		perror("Error: sendto error");
 		exit(1);
 	}
-	close(sockfd);
-    freeaddrinfo(servinfo);
+	if ( sockfd != -1 ) close(sockfd);
+    if ( rv == 0 ) freeaddrinfo(servinfo);
 }
 
 bool openSocket(const char* port, struct sockaddr_in *address, int* handle, sockType_t sockType ) {

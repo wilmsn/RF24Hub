@@ -1,1 +1,1 @@
-../../../secrets.h
+/home/norbert/projekte/wifisettings.h

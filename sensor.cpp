@@ -61,6 +61,34 @@ bool Sensor::updateLastVal(uint32_t sensor_id, uint32_t last_data) {
     return retval;
 }
 
+bool::Sensor::isSystemRegister(bool isHBNode, uint8_t channel) {
+  bool retval=false;
+  if (isHBNode) {
+    switch (channel) {
+      case 102 ... 104:
+      case 106 ... 107:
+      case 111 ... 119:
+      case 124:
+          retval = true;
+          break;
+      default:
+          retval = false;
+    }
+  } else {
+    switch (channel) {
+      case 102 ... 103:
+      case 111 ... 112:
+      case 116 ... 118:
+      case 124:
+          retval = true;
+          break;
+      default:
+          retval = false;
+    }
+  }
+  return retval;
+}
+
 uint32_t Sensor::getSensorByNodeChannel(NODE_DATTYPE node_id, uint8_t channel) {
     uint32_t retval = 0;
     sensor_t *p_search;

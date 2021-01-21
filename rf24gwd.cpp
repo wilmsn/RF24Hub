@@ -14,7 +14,7 @@ static void* receive_tn_in (void *arg) {
     sprintf(client_message,"rf24gw> ");
     write(f->tnsocket , client_message , strlen(client_message));
     MsgLen = recv(f->tnsocket, buffer, TELNETBUFFERSIZE, 0);
-    if (MsgLen>0) {
+    if ( MsgLen > 0 ) {
         int msgID = msgget(MSGKEYGW, IPC_CREAT | 0600);
         TnMsg.mtype = 1;
         TnMsg.TnData.tn_socket = 0;
@@ -317,7 +317,7 @@ int main(int argc, char* argv[]) {
     cfg.processParams(PRGNAME, argc, argv);
 
 	// check if started as root
-	if ( getuid()!=0 ) {
+	if ( getuid() != 0 ) {
         printf("%s has to be startet as user root!\n",PRGNAME);
         exit(1);
     }

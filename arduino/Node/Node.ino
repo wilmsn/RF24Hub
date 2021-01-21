@@ -27,8 +27,8 @@ On Branch: master  !!!!!
 //#define ANKLEIDEZIMMERTHERMOMETER
 //#define GAESTEZIMMERTHERMOMETER
 //#define UNOTESTNODE_AO
-//#define TERASSE
-#define FLUR
+#define TERASSE
+//#define FLUR
 //#define TEST
 //****************************************************
 // Default settings are in "default.h" now !!!!!
@@ -120,20 +120,20 @@ uint8_t  rf24_node2hub[] = RF24_NODE2HUB;
 uint8_t  rf24_hub2node[] = RF24_HUB2NODE;
 
 struct eeprom_t {
-   uint8_t  versionnumber;
-   uint8_t  contrast;
-   uint8_t  brightnes;
-   uint16_t sleeptime_sec;
-   int      sleeptime_adj;
-   uint8_t  emptyloops;
+   uint16_t versionnumber;
    uint16_t senddelay;
-   uint8_t  max_sendcount;
-   uint8_t  max_stopcount;
-   uint8_t  pa_level;
-   uint64_t low_volt_sendint;
    float    volt_fac;
    float    volt_off;
    float    low_volt_level;
+   uint16_t low_volt_sendint;
+   uint16_t sleeptime_sec;
+   int      sleeptime_adj;
+   uint8_t  emptyloops;
+   uint8_t  max_sendcount;
+   uint8_t  max_stopcount;
+   uint8_t  contrast;
+   uint8_t  brightnes;
+   uint8_t  pa_level;
 };
 eeprom_t eeprom;
 
@@ -464,7 +464,7 @@ uint32_t action_loop(uint32_t data) {
       {
         // sleeptime_kor: onetime adjust of sleeptime, will be reset to 0 after use 
         int16_t val = getValue_i(data);
-        if (val > -1001 && val <= 1001) {
+        if (val > -1001 && val < 1001) {
           sleeptime_kor = val;
         }
       }
@@ -654,14 +654,21 @@ void setup(void) {
 #if defined(DISPLAY_5110)
   lcd.begin();
   lcd.setContrast(eeprom.contrast);
-//  print_field(15.3,1);
-//  print_field(1024.89,2);
-//  print_field(58.37,3);
-//  print_field(4.5678,4);
+  lcd.setFont(LCD5110::small);
+  lcd.clear();
+  lcd.println();
+  lcd.print("Node: ");
+  lcd.println(RF24NODE);
+  lcd.println();
+  lcd.print("SW: ");
+  lcd.println(SWVERSION);
+  lcd.draw();
+  delay(1000);
+  lcd.clear();
 #endif
-#endif
-#if defined(HAS_DISPLAY)
+#if defined(MONITOR)
   monitor(1000);
+#endif
   draw_antenna(ANT_X0, ANT_Y0);
   draw_therm(THERM_X0, THERM_Y0);
   draw_hb_countdown(8);
@@ -1051,7 +1058,7 @@ void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, 
 // ToDo: Verarbeitung des MSG_FLAGS !!!!
     unsigned long start_ts;
     uint8_t tx_loopcount = 0;
-    bool doLoop;
+    bool doLoop = true;
     start_ts = millis();
     prep_data(msg_type, msg_flags, orderno, myheartbeatno);
     while ( tx_loopcount < max_tx_loopcount ) {
@@ -1065,7 +1072,7 @@ void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, 
       radio.startListening(); 
       start_ts = millis();
       doLoop = true;
-      while ( (millis() < start_ts + eeprom.senddelay) && doLoop ) {
+      while ( (millis() < (start_ts + eeprom.senddelay) ) && doLoop ) {
         if ( radio.available() ) {
           radio.read(&r_payload, sizeof(r_payload));
 #if defined(DEBUG_SERIAL_RADIO)
@@ -1100,7 +1107,7 @@ void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, 
               break;  
             }
           }
-        }
+        }  //radio.available
       }
       tx_loopcount++;
     }
@@ -1126,7 +1133,7 @@ void loop(void) {
 #if defined(HAS_DISPLAY)
     if (low_voltage_flag) display_sleep(true);
 #endif
-  if ((! low_voltage_flag) || (last_send > eeprom.low_volt_sendint)) {
+  if ((! low_voltage_flag) || (last_send > eeprom.low_volt_sendint * 60)) {
     if (last_send > eeprom.low_volt_sendint) last_send = 0;
 #if defined(HAS_DISPLAY)
     draw_battery(BATT_X0,BATT_Y0,cur_voltage);
@@ -1186,7 +1193,10 @@ void loop(void) {
 #endif
   }  
 //ToDo prüfen und ggf. überarbeiten
-  long int tempsleeptime = (long int)(eeprom.sleeptime_sec + eeprom.sleeptime_adj + sleeptime_kor) * 1000;
+  long int tempsleeptime = eeprom.sleeptime_sec;  // regelmaessige Schlafzeit in Sek.
+  tempsleeptime += sleeptime_kor;                 // einmalige Korrektur in Sek. (-1000 ... +1000)
+  tempsleeptime *= 1000;                          // Umrechnung in Millisek.
+  tempsleeptime += eeprom.sleeptime_adj;          // Feinjustierung in Millisek.
   sleeptime_kor = 0;  
   sleep4ms(tempsleeptime);
   last_send += eeprom.sleeptime_sec;

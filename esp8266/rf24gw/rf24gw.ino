@@ -79,8 +79,8 @@ void setup() {
   EEPROM.end();
   if ( eepromdata.versionnumber != EEPROM_VERSION && EEPROM_VERSION > 0) { 
      eepromdata.versionnumber = EEPROM_VERSION;
-     sprintf(eepromdata.ssid,"%s", SSID);
-     sprintf(eepromdata.key,"%s", KEY);
+     sprintf(eepromdata.ssid,"%s", ssid);
+     sprintf(eepromdata.key,"%s", password);
      sprintf(eepromdata.hostname,"%s", HOSTNAME);
      sprintf(eepromdata.hub_ip,"%s",HUB_IP);
      eepromdata.hub_udp_portno = HUB_UDP_PORTNO;
@@ -155,7 +155,7 @@ void printPayload(char * h1, char * h2, payload_t *payload) {
     Serial.print(" (");
     Serial.print(getChannel(payload->data1));
     Serial.print("/");
-    Serial.print(unpackData(payload->data1, buf));
+/*    Serial.print(unpackData(payload->data1, buf));
     Serial.print(")(");
     Serial.print(getChannel(payload->data2));
     Serial.print("/");
@@ -175,7 +175,7 @@ void printPayload(char * h1, char * h2, payload_t *payload) {
     Serial.print(")(");
     Serial.print(getChannel(payload->data6));
     Serial.print("/");
-    Serial.print(unpackData(payload->data6, buf));
+    Serial.print(unpackData(payload->data6, buf)); */
     Serial.println(")");  
 }
 

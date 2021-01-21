@@ -7,6 +7,21 @@ Node::Node(void) {
     tsbuf = (char*)malloc(TSBUFFERSIZE);
 }
 
+bool Node::isValidNode(NODE_DATTYPE node_id) {
+    node_t *p_search;
+    bool retval = false;
+    p_search = p_initial;
+    while (p_search) {
+        if (p_search->node_id == node_id) {
+            retval = true;
+            p_search = NULL;
+        } else {
+            p_search = p_search->p_next;
+        }
+    }
+    return retval;
+}
+
 void Node::cleanup(void) {
     node_t *p_search;
     p_search = p_initial;

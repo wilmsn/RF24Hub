@@ -75,6 +75,10 @@ bool updateLastVal(uint32_t sensor_id, uint32_t last_data);
  */
 uint32_t getSensorByNodeChannel(NODE_DATTYPE node_id, uint8_t channel);
 /**
+ *  TRUE wenn es sich um ein Systemregister handelt
+ */
+bool isSystemRegister(bool isHBNode, uint8_t channel);
+/**
  *  Findet node_id und channel des Sensors durch die sensor_id
  */
 bool getNodeChannelBySensorID(NODE_DATTYPE* p_node_id, uint8_t* p_channel, uint32_t sensor_id);

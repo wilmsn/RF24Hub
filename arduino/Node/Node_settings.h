@@ -74,14 +74,15 @@ debugging options:
 #define RF24NODE             101
 #define DALLAS_18B20
 #define DISPLAY_5110
-#define MONITOR
-#define EEPROM_VERSION       9
+// #define MONITOR
+#define EEPROM_VERSION       1
 #define EMPTYLOOPS           9
 #define VOLT_FAC             1
 #define VOLT_OFF             0.55
 #define LOW_VOLT_LEVEL       3.6
-#define STATUSLED_ON         LOW
-#define STATUSLED_OFF        HIGH
+//#define SLEEPTIME_SEC        110
+//#define STATUSLED_ON         LOW
+//#define STATUSLED_OFF        HIGH
 #endif
 //-----------------------------------------------------
 #if defined(WOHNZIMMERTHERMOMETER)

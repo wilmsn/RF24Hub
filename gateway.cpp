@@ -45,6 +45,21 @@ void Gateway::addGateway(char* gw_name, char* gw_ip, uint16_t gw_no, bool isActi
     newEntry(p_new);
 }
 
+void Gateway::setGateway(uint16_t gw_no, bool isActive ) {
+    gateway_t *p_search;
+    p_search = p_initial;
+    while (p_search) {
+        if (p_search->gw_no == gw_no) {
+            if (verboselevel & VERBOSETELNET)
+                printf("%sGateway.isGW: GW.Name:%s GW.IP: %s %s\n", ts(tsbuf), p_search->gw_name, p_search->gw_ip, p_search->isActive? "aktiv":"nicht aktiv");
+            p_search->isActive = isActive;
+            p_search = NULL;
+        } else {
+            p_search = p_search->p_next;
+        }
+    }
+}
+
 void* Gateway::getGW(void* p_rec, char* gw_ip, uint16_t *p_gw_no) {
     gateway_t *p_search;
     void* retval = NULL;

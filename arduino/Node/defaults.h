@@ -51,7 +51,7 @@
 #define LOW_VOLT_LEVEL 2
 // In case of low Voltage send every X Seconds
 // 43200 => every 12 hours
-#define LOW_VOLT_SENDINT  43200
+#define LOW_VOLT_SENDINT  720
 // 5 voltages for the battery (empty ... full)
 #define U0 3.6
 #define U1 3.7

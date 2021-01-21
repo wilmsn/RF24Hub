@@ -241,11 +241,12 @@ bool Order::getOrderForTransmission(payload_t* payload, uint64_t mytime){
         p_search->HB_order? sendInterval=SENDINTERVAL_HB : sendInterval=SENDINTERVAL;
         p_search->HB_order? deleteInterval=DELETEINTERVAL_HB : deleteInterval=DELETEINTERVAL;
         if ( (p_search->last_send + sendInterval) < mytime) {
-            payload->orderno = p_search->orderno;
             payload->node_id = p_search->node_id;
             payload->msg_id = p_search->msg_id++;
             payload->msg_type = p_search->msg_type;
             payload->msg_flags = p_search->msg_flags;
+            payload->orderno = p_search->orderno;
+            payload->heartbeatno = 0;
             payload->data1 = p_search->data1;
             payload->data2 = p_search->data2;
             payload->data3 = p_search->data3;

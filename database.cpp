@@ -12,6 +12,14 @@ void Database::db_check_error(void) {
     }
 }
 
+void Database::lowVoltage(NODE_DATTYPE node_id, bool lowVoltageFlag) {
+    sprintf (sql_stmt, "update node set low_voltage = '%s' where node_id = %u and low_voltage != '%s' ", lowVoltageFlag? "y" : "n", node_id, lowVoltageFlag? "y" : "n" );
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+    mysql_commit(db);
+}
+
 void Database::sync_config(void) {
     sprintf (sql_stmt, "delete from node_configdata where (node_id, channel) in ( select node_id, channel from  node_configdata_im)");
     debugPrintSQL(sql_stmt);

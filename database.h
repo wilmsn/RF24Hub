@@ -56,6 +56,10 @@ public:
  */
     bool connect(string db_hostname, string db_username, string db_password, string db_schema, int db_port);
 /**
+ * Sets (true) or resets(false) the low Voltage State of a Node
+ */
+   void lowVoltage(NODE_DATTYPE node_id, bool lowVoltageFlag);
+/**
  * Stores the last data(Transportvalue) of a sensor into the table sensor_im and sensordata_im
  */
     void storeSensorValue(uint32_t sensor_id, uint32_t data, char* value);

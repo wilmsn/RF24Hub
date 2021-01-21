@@ -16,31 +16,33 @@ void send_fhem_cmd(NODE_DATTYPE node_id, uint8_t channel, char* value) {
     }
     portno = std::stoi(cfg.fhemPortNo);
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd < 0) {
+    if (sockfd != 0) {
+        server = gethostbyname(cfg.fhemHostName.c_str());
+        if (server != NULL) {
+            bzero((char *) &serv_addr, sizeof(serv_addr));
+            serv_addr.sin_family = AF_INET;
+            bcopy((char *)server->h_addr, (char *)&serv_addr.sin_addr.s_addr, server->h_length);
+            serv_addr.sin_port = htons(portno);
+            if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0) {
+                printf("%sERROR: send_fhem_cmd: error connecting\n", ts(tsbuf));
+            } else {
+                n = write(sockfd,tn_cmd,strlen(tn_cmd));
+                if (n < 0) {
+                    printf("%sERROR: send_fhem_cmd: error writing to socket\n", ts(tsbuf));
+                } else {
+                    if ( verboselevel & VERBOSETELNET) {
+                        printf("%ssend_fhem_cmd: Telnet to %s Port %u successfull Command: %s\n", ts(tsbuf), cfg.fhemHostName.c_str(), portno, tn_cmd);
+                    }
+                }
+                write(sockfd,tn_quit,strlen(tn_quit));
+            }
+            close(sockfd);
+        } else { // server == NULL
+            printf("%sERROR: send_fhem_cmd: no such host\n", ts(tsbuf));
+        }
+    } else { // sockfd == 0
         printf("%sERROR: send_fhem_cmd: error opening socket\n", ts(tsbuf));
 	}	
-    server = gethostbyname(cfg.fhemHostName.c_str());
-    if (server == NULL) {
-        printf("%sERROR: send_fhem_cmd: no such host\n", ts(tsbuf));
-    }
-    bzero((char *) &serv_addr, sizeof(serv_addr));
-    serv_addr.sin_family = AF_INET;
-    bcopy((char *)server->h_addr, (char *)&serv_addr.sin_addr.s_addr, server->h_length);
-    serv_addr.sin_port = htons(portno);
-    if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0) { 
-        printf("%sERROR: send_fhem_cmd: error connecting\n", ts(tsbuf));
-	} else {	
-		n = write(sockfd,tn_cmd,strlen(tn_cmd));
-		if (n < 0) {
-			printf("%sERROR: send_fhem_cmd: error writing to socket\n", ts(tsbuf));
-		} else {
-            if ( verboselevel & VERBOSETELNET) {    
-                printf("%ssend_fhem_cmd: Telnet to %s Port %u successfull Command: %s\n", ts(tsbuf), cfg.fhemHostName.c_str(), portno, tn_cmd);
-            }
-		}		
-		write(sockfd,tn_quit,strlen(tn_quit));
-	}		 
-    close(sockfd);
     free_str(verboselevel, "send_fhem_cmd tn_cmd", tn_cmd,ts(tsbuf));
 }
 
@@ -105,6 +107,8 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 */
 
 	char cmp_init[]="init", 
+         cmp_on[]="on",
+         cmp_off[]="off",
 		 cmp_sensor[]="sensor",
 		 cmp_set[]="set",
 		 cmp_setlast[]="setlast",
@@ -114,6 +118,7 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
          cmp_push[]="push",
          cmp_show[]="show",
          cmp_sync[]="sync",
+         cmp_gateway[]="gateway",
          cmp_truncate[]="truncate",
          cmp_logfile[]="logfile";
 	char *wort1a, *wort2a, *wort3a, *wort4a;
@@ -189,7 +194,7 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 	if (( strcmp(wort1,cmp_push) == 0 ) && (strlen(wort2) > 0) && (strlen(wort3) > 0) && (strlen(wort4) > 0) ) {
         NODE_DATTYPE node_id = strtol(wort2, &pEnd, 10);
         uint8_t channel = strtol(wort3, &pEnd, 10);
-        if ( sensor.getSensorByNodeChannel(node_id, channel) >0 ) { 
+        if ( node.isValidNode(node_id) && ( sensor.getSensorByNodeChannel(node_id, channel) > 0 || sensor.isSystemRegister(node.isHBNode(node_id), channel) ) ) {
             orderbuffer.addOrderBuffer(mymillis(), node_id, channel, packTransportValue(channel, wort4) );
             if ( ! node.isHBNode(node_id) ) make_order(node_id, PAYLOAD_TYPE_DAT);
             tn_input_ok = true;
@@ -214,18 +219,38 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 		tn_input_ok = true;
         orderbuffer.printBuffer(tn_socket, false);
         order.printBuffer(tn_socket, false);
-	}	
+	}
     // show sensor
 	// lists the current node- and sensorbuffer
 	if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_sensor) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
 		tn_input_ok = true;
         node.printBuffer(tn_socket, false);
         sensor.printBuffer(tn_socket, false);
-	}	
+	}
+    // show gateway
+	// lists the current gateway status
+	if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_gateway) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
+		tn_input_ok = true;
+        gateway.printBuffer(tn_socket, false);
+	}
+    // set gateway <GW_NO> on
+	// lists the current node- and sensorbuffer
+	if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_gateway) == 0) && (strlen(wort3) > 0) && (strcmp(wort4,cmp_on) == 0) ) {
+		tn_input_ok = true;
+        gateway.setGateway((uint16_t)strtoul(wort3, &pEnd, 10), true);
+        gateway.printBuffer(tn_socket, false);
+	}
+    // set gateway <GW_NO> off
+	// lists the current node- and sensorbuffer
+	if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_gateway) == 0) && (strlen(wort3) > 0) && (strcmp(wort4,cmp_off) == 0) ) {
+		tn_input_ok = true;
+        gateway.setGateway((uint16_t)strtoul(wort3, &pEnd, 10), false);
+        gateway.printBuffer(tn_socket, false);
+	}
     // show verbose
 	if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
 		tn_input_ok = true;
-		sprintf(message,"Active verboselevel: %s\n",printVerbose(verboselevel, buf));
+		sprintf(message,"Active verboselevel: %s\n", printVerbose(verboselevel, buf));
 		write(tn_socket , message , strlen(message));
     }
 	// html order
@@ -601,6 +626,7 @@ int main(int argc, char* argv[]) {
                 break;    
                 case PAYLOAD_TYPE_HB: { // heartbeat message!!
                     if ( node.isNewHB(payload.node_id, payload.heartbeatno) ) {  // Got a new Heaqrtbeat -> process it!
+                        database.lowVoltage(payload.node_id, payload.msg_flags & PAYLOAD_FLAG_NEEDHELP);
                         process_payload(&payload);
                         if ( orderbuffer.nodeHasEntry(payload.node_id) ) {  // WE have orders for this node
                             make_order(payload.node_id, PAYLOAD_TYPE_DAT);                    

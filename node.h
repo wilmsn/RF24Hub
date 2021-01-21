@@ -54,7 +54,7 @@ void setVerbose(uint16_t _verboselevel);
 /**
  *  Gibt an ob mind. ein Datensatz vorhanden ist
  */
-bool hasEntry(void);
+bool isValidNode(NODE_DATTYPE node_id);
 /**
  *  Löscht den kompletten Inhalt und leert den Buffer
  */
