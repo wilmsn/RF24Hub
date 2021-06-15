@@ -20,6 +20,7 @@ private:
 //char* buf;
 struct node_t {
         NODE_DATTYPE   	node_id;
+        char            node_name[NODENAMESIZE];
         uint8_t         pa_level;
         uint32_t        pa_utime;
         float			u_batt;	
@@ -62,7 +63,11 @@ void cleanup(void);
 /**
  *  Fügt einen neuen Node hinzu
  */
-void addNode(NODE_DATTYPE node_id, float u_batt, bool is_HB_node, uint8_t PALevel, uint32_t PAUtime );
+void addNode(NODE_DATTYPE node_id, char* node_name, float u_batt, bool is_HB_node, uint8_t PALevel, uint32_t PAUtime );
+/**
+ *  Gibt zur NodeID den Namen des Nodes zurück
+ */
+char* getNodeName(NODE_DATTYPE node_id);
 /**
  *  Prüft ob ein Heartbeat neu (=neue heartbeatno)  
  *  oder alt ist.

@@ -1,16 +1,22 @@
 #include "rf24hubd.h" 
 
-// send_fhem_cmd ==> send a telnet comand to the fhem-host
-// usage example: send_fhem_cmd("set device1 on");
 void send_fhem_cmd(NODE_DATTYPE node_id, uint8_t channel, char* value) {
     char* tn_cmd = alloc_str(verboselevel,"send_fhem_cmd tn_cmd",TELNETBUFFERSIZE,ts(tsbuf));
+    char* fhem_dev;
+    fhem_dev = sensor.getFhemDevByNodeChannel(node_id, channel); 
+	sprintf(tn_cmd,"set %s %s", fhem_dev, value);
+    send_fhem_tn(tn_cmd);
+    free_str(verboselevel, "send_fhem_cmd tn_cmd", tn_cmd,ts(tsbuf));
+}
+
+// send_fhem_tn ==> send a telnet comand to the fhem-host
+// usage example: send_fhem_cmd("set device1 on");
+
+void send_fhem_tn(char* tn_cmd) {
     char tn_quit[] =  "\r\nquit\r\n";
     int sockfd, portno, n;
     struct sockaddr_in serv_addr;
     struct hostent *server;
-    char* fhem_dev;
-    fhem_dev = sensor.getFhemDevByNodeChannel(node_id, channel); 
-	sprintf(tn_cmd,"set %s %s", fhem_dev, value);
     if ( verboselevel & VERBOSETELNET) {    
         printf("%ssend_fhem_cmd: %s\n", ts(tsbuf), tn_cmd );
     }
@@ -43,7 +49,6 @@ void send_fhem_cmd(NODE_DATTYPE node_id, uint8_t channel, char* value) {
     } else { // sockfd == 0
         printf("%sERROR: send_fhem_cmd: error opening socket\n", ts(tsbuf));
 	}	
-    free_str(verboselevel, "send_fhem_cmd tn_cmd", tn_cmd,ts(tsbuf));
 }
 
 /* Die Thread-Funktion fuer den Empfang von telnet Daten*/
@@ -275,9 +280,11 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
         exit_system();
         node.cleanup();
         sensor.cleanup();
+        gateway.cleanup();
 		init_system();
         node.printBuffer(tn_socket, false);
         sensor.printBuffer(tn_socket, false);
+        gateway.printBuffer(tn_socket, false);
 	}
 	// truncate logfile
 	// truncation of the logfile for maintenance
@@ -615,6 +622,13 @@ int main(int argc, char* argv[]) {
             printPayload(ts(tsbuf), buf1, &payload);
         }
         if ( gateway.isGateway(inet_ntoa(udp_address_in.sin_addr)) ) {
+            if (payload.msg_flags & PAYLOAD_FLAG_NEEDHELP ) {
+                char* tn_buf;
+                tn_buf = (char*)malloc(100);
+                sprintf(tn_buf,"set %s_Status 1", node.getNodeName(payload.node_id));
+                send_fhem_tn(tn_buf);
+                free(tn_buf);
+            }
             switch ( payload.msg_type ) {
                 case PAYLOAD_TYPE_INIT: { // Init message from a node!!
                     if ( node.isNewHB(payload.node_id, payload.heartbeatno) ) {

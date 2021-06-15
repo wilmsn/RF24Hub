@@ -21,13 +21,13 @@ On Branch: master  !!!!!
 //#define TESTZIMMERTHERMOMETER
 //#define TESTZIMMER1THERMOMETER
 //#define BASTELZIMMERTHERMOMETER
-//#define BASTELZIMMERTHERMOMETER_SW
+#define BASTELZIMMERTHERMOMETER_SW
 //#define KUECHETHERMOMETER
 //#define WOHNZIMMERTHERMOMETER
 //#define ANKLEIDEZIMMERTHERMOMETER
 //#define GAESTEZIMMERTHERMOMETER
 //#define UNOTESTNODE_AO
-#define TERASSE
+//#define TERASSE
 //#define FLUR
 //#define TEST
 //****************************************************
@@ -91,6 +91,7 @@ ISR(WDT_vect) { watchdogEvent(); }
 #endif
 
 #if defined(HAS_DISPLAY)
+bool displayIsSleeping = false;
 #if defined(DISPLAY_5110)
 LCD5110 lcd(N5110_RST,N5110_CE,N5110_DC,N5110_DIN,N5110_CLK);
 #endif
@@ -125,7 +126,7 @@ struct eeprom_t {
    float    volt_fac;
    float    volt_off;
    float    low_volt_level;
-   uint16_t low_volt_sendint;
+   uint16_t lowVoltLoops;
    uint16_t sleeptime_sec;
    int      sleeptime_adj;
    uint8_t  emptyloops;
@@ -141,9 +142,9 @@ boolean             low_voltage_flag = false;
 boolean             exec_pingTest = false;
 boolean             exec_RegTrans = false;
 float               cur_voltage;
-uint8_t             loopcount;
+uint16_t            loopcount;
+uint16_t            max_loopcount;
 int                 sleeptime_kor;
-uint32_t            last_send;
 uint8_t             last_orderno = 0;
 uint8_t             msg_id = 0;
 uint8_t             heartbeatno=0;
@@ -529,12 +530,12 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
-      case REG_LOWVOLTINT: 
+      case REG_LOWVOLTLOOPS: 
       {
         // Low Voltage send interval
         uint16_t val = getValue_ui(data);
-        if (val > 59 && val < 1441) {
-          eeprom.volt_off = val;
+        if ( val < 1001) {
+          eeprom.lowVoltLoops = val;
           EEPROM.put(0, eeprom);
         }
       }
@@ -593,7 +594,7 @@ void setup(void) {
     eeprom.volt_fac         = VOLT_FAC;
     eeprom.volt_off         = VOLT_OFF;
     eeprom.low_volt_level   = LOW_VOLT_LEVEL;
-    eeprom.low_volt_sendint = LOW_VOLT_SENDINT;
+    eeprom.lowVoltLoops     = LOW_VOLT_LOOPS;
     EEPROM.put(0, eeprom);
   }  
 #if defined(DEBUG_SERIAL)
@@ -674,7 +675,6 @@ void setup(void) {
   draw_hb_countdown(8);
 #endif
   loopcount = 0;
-  last_send = 0;
 // on init send config to hub
   pingTest();
   sendRegister();
@@ -752,23 +752,26 @@ void monitor(uint32_t delaytime) {
 #endif
 }
 
-void display_sleep(boolean dmode) {
-  display_on != dmode;
-  if ( dmode ) { // Display go to sleep
+void display_sleep(boolean displayGotoSleep) {
+  if ( displayIsSleeping != displayGotoSleep ) {
+    if ( displayGotoSleep ) { // Display go to sleep
 #if defined(DISPLAY_5110)
-    lcd.off(); 
+      lcd.off(); 
+      displayIsSleeping = true;
 #endif
-  } else {
-    if ( ! low_voltage_flag ) {  
+    } else {
+      if ( ! low_voltage_flag ) {  
 #if defined(DISPLAY_5110)
-      lcd.on(); 
+        lcd.on(); 
+        displayIsSleeping = false;
 #endif
-        get_sensordata();
+//        get_sensordata();
         draw_temp(temp);
         print_field(field1_val,1);
         print_field(field2_val,2);
         print_field(field3_val,3);
         print_field(field4_val,4);
+      }
     }
   }  
 }
@@ -1024,7 +1027,7 @@ void sendRegister(void) {
   s_payload.data2 = calcTransportValue_f(REG_VOLTOFF, eeprom.volt_off);
   s_payload.data3 = calcTransportValue_f(REG_LOWVOLTLEV, eeprom.low_volt_level);
   s_payload.data4 = calcTransportValue_i(REG_SLEEPTIMEADJ, eeprom.sleeptime_adj);
-  s_payload.data5 = calcTransportValue_ui(REG_LOWVOLTINT, eeprom.low_volt_sendint);
+  s_payload.data5 = calcTransportValue_ui(REG_LOWVOLTLOOPS, eeprom.lowVoltLoops);
   s_payload.data6 = calcTransportValue_ui(REG_SW, SWVERSION);
   do_transmit(3,PAYLOAD_TYPE_INIT,PAYLOAD_FLAG_EMPTY,0, 241);
 // Hub needs some time to prcess data !!!  
@@ -1130,16 +1133,25 @@ void loop(void) {
   delay(10);  
   payloadInitData();
   get_voltage();
+
+  if (low_voltage_flag) {   // Low Voltage Handling
 #if defined(HAS_DISPLAY)
-    if (low_voltage_flag) display_sleep(true);
+    display_sleep(true);
 #endif
-  if ((! low_voltage_flag) || (last_send > eeprom.low_volt_sendint * 60)) {
-    if (last_send > eeprom.low_volt_sendint) last_send = 0;
+    if ( loopcount > eeprom.lowVoltLoops ) {
+      loopcount = 0;
+    }
+    if ( loopcount == 0 ) get_sensordata();
+  } else { // regular Voltage Handling
+#if defined(HAS_DISPLAY)
+    display_sleep(false);
+#endif
+    if ( loopcount > eeprom.emptyloops ) loopcount = 0;
 #if defined(HAS_DISPLAY)
     draw_battery(BATT_X0,BATT_Y0,cur_voltage);
     draw_therm(THERM_X0, THERM_Y0);
     draw_hb_countdown((uint8_t) 8 * (1- ((float)loopcount / eeprom.emptyloops)) );
-    draw_antenna(ANT_X0, ANT_Y0);
+    if ( loopcount == 0) draw_antenna(ANT_X0, ANT_Y0);
 #if defined(DISPLAY_5110)
     lcd.draw();
 #endif
@@ -1149,49 +1161,49 @@ void loop(void) {
     draw_temp(temp);
     wipe_therm(THERM_X0, THERM_Y0);
 #endif
-    if ( loopcount == 0) {
+  } // END regular Voltage Handling
+  if ( loopcount == 0) {
 #if defined(DEBUG_SERIAL_RADIO)
-      delay(100);
-      Serial.println("Radio WakeUp");
+    delay(100);
+    Serial.println("Radio WakeUp");
 #endif
-      radio.powerUp();
-      radio.startListening();
-      radio.openReadingPipe(1,rf24_hub2node);
-      delay(10);
+    radio.powerUp();
+    radio.startListening();
+    radio.openReadingPipe(1,rf24_hub2node);
+    delay(10);
       
-      // Empty FiFo Buffer from old transmissions
-      while ( radio.available() ) {
-        radio.read(&r_payload, sizeof(r_payload));
-        delay(10);
-      }
+    // Empty FiFo Buffer from old transmissions
+    while ( radio.available() ) {
+      radio.read(&r_payload, sizeof(r_payload));
+      delay(10);
+    }
 
-      payload_data(1, 101, cur_voltage);
+    payload_data(1, 101, cur_voltage);
 #if defined(DALLAS_18B20)
-      payload_data(2, 1, temp);
+    payload_data(2, 1, temp);
 #endif
 #if defined(BOSCH_SENSOR)
-      if (sensor.hasTemperature() ) payload_data(2, 1, temp);
-      if (sensor.hasPressure() )    payload_data(3, 2, pres);
-      if (sensor.hasHumidity() )    payload_data(4, 3, humi);
+    if (sensor.hasTemperature() ) payload_data(2, 1, temp);
+    if (sensor.hasPressure() )    payload_data(3, 2, pres);
+    if (sensor.hasHumidity() )    payload_data(4, 3, humi);
 #endif
-      uint8_t msg_flags = PAYLOAD_FLAG_LASTMESSAGE;
-      if ( low_voltage_flag ) msg_flags |= PAYLOAD_FLAG_NEEDHELP; 
-      do_transmit(eeprom.max_sendcount, PAYLOAD_TYPE_HB, msg_flags, 0, 0);
-      exec_jobs();
-      radio.stopListening();
-      radio.powerDown();
+    uint8_t msg_flags = PAYLOAD_FLAG_LASTMESSAGE;
+    if ( low_voltage_flag ) msg_flags |= PAYLOAD_FLAG_NEEDHELP; 
+    do_transmit(eeprom.max_sendcount, PAYLOAD_TYPE_HB, msg_flags, 0, 0);
+    exec_jobs();
+    radio.stopListening();
+    radio.powerDown();
 #if defined(DEBUG_SERIAL_RADIO)
-      Serial.println("Radio Sleep");
-      delay(100);
+    Serial.println("Radio Sleep");
+    delay(100);
 #endif
-    }
 #if defined(HAS_DISPLAY)
     wipe_antenna(ANT_X0, ANT_Y0);
-#if defined(DISPLAY_5110)
-    lcd.draw();
-#endif
 #endif
   }  
+#if defined(DISPLAY_5110)
+  lcd.draw();
+#endif
 //ToDo prüfen und ggf. überarbeiten
   long int tempsleeptime = eeprom.sleeptime_sec;  // regelmaessige Schlafzeit in Sek.
   tempsleeptime += sleeptime_kor;                 // einmalige Korrektur in Sek. (-1000 ... +1000)
@@ -1199,9 +1211,7 @@ void loop(void) {
   tempsleeptime += eeprom.sleeptime_adj;          // Feinjustierung in Millisek.
   sleeptime_kor = 0;  
   sleep4ms(tempsleeptime);
-  last_send += eeprom.sleeptime_sec;
   loopcount++;
-  if (loopcount > eeprom.emptyloops) loopcount=0;
 // Ende ToDo  
 /**************************************** 
  *  End Heartbeat Node

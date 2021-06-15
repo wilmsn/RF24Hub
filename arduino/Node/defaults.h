@@ -50,8 +50,8 @@
 // until the battery will be reloaded
 #define LOW_VOLT_LEVEL 2
 // In case of low Voltage send every X Seconds
-// 43200 => every 12 hours
-#define LOW_VOLT_SENDINT  720
+// 90 => every 3 hours (sleeptime 120)
+#define LOW_VOLT_LOOPS  90
 // 5 voltages for the battery (empty ... full)
 #define U0 3.6
 #define U1 3.7

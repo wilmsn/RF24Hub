@@ -147,12 +147,14 @@ debugging options:
 #define RF24NODE             100
 #define DALLAS_18B20
 #define DISPLAY_5110
-#define MONITOR
+//#define MONITOR
 #define EEPROM_VERSION       3
 #define VOLT_FAC             1
 #define VOLT_OFF             0.55
 #define EMPTYLOOPS           9
 #define LOW_VOLT_LEVEL       3.6
+#define STATUSLED_ON         LOW
+#define STATUSLED_OFF        HIGH
 #endif
 //-----------------------------------------------------
 #if defined(BASTELZIMMERTHERMOMETER_SW)

@@ -23,7 +23,7 @@
 #define DELETEINTERVAL 300000
 // Interval for deleting unanswered requests for order for Heartbeat nodes in millisec.
 // 1 Sec.
-#define DELETEINTERVAL_HB 3000
+#define DELETEINTERVAL_HB 500
 // Intervall to sync sensordata_im to sensordata 
 // In case of server crash you will loose data
 // in sensordata_im !!!!!!
@@ -36,6 +36,7 @@
 #define TSBUFFERSIZE 30
 #define SQLSTRINGSIZE 500
 #define TSBUFFERSTRING "                               "
+#define NODENAMESIZE 50
 
 // Verboselevel
 #define VERBOSECRITICAL          0b0000000000000001

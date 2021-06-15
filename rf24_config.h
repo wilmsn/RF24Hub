@@ -36,7 +36,7 @@
 #define REG_SENDDELAY       116
 #define REG_SNDCNTN         117
 #define REG_SNDCNTS         118
-#define REG_LOWVOLTINT      119
+#define REG_LOWVOLTLOOPS    119
 #define REG_PALEVEL         124
 #define REG_SW              125
 /***********************************

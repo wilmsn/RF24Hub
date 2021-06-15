@@ -4,8 +4,12 @@
 
 static void* receive_tn_in (void *arg) {
     struct thread_tn_data *f = (struct thread_tn_data *)arg;
-    char* buffer = alloc_str(verboselevel,"receive_tn_in buffer",TELNETBUFFERSIZE,ts(tsbuf));
-    char* client_message = alloc_str(verboselevel,"receive_tn_in client_message",DEBUGSTRINGSIZE,ts(tsbuf));
+    char *buffer =  (char*) malloc (TELNETBUFFERSIZE);
+    memset(buffer, 0, TELNETBUFFERSIZE);
+    //char* buffer = alloc_str(verboselevel,"receive_tn_in buffer",TELNETBUFFERSIZE,ts(tsbuf));
+    char *client_message =  (char*) malloc (DEBUGSTRINGSIZE);
+    memset(client_message, 0, DEBUGSTRINGSIZE);
+    //char* client_message = alloc_str(verboselevel,"receive_tn_in client_message",DEBUGSTRINGSIZE,ts(tsbuf));
     ssize_t MsgLen;
     TnMsg_t TnMsg;
     int ret;
@@ -36,12 +40,12 @@ static void* receive_tn_in (void *arg) {
     sleep(1);
     close (f->tnsocket);
     free(f);
-    free_str(verboselevel,"receive_tn_in buffer",buffer,ts(tsbuf));
-    free_str(verboselevel,"receive_tn_in client_message",client_message,ts(tsbuf));
+    free(buffer);
+    //free_str(verboselevel,"receive_tn_in buffer",buffer,ts(tsbuf));
+    free(client_message);
+    //free_str(verboselevel,"receive_tn_in client_message",client_message,ts(tsbuf));
     pthread_exit((void *)pthread_self());
 }
-
-/* Die Thread-Funktion fuer den Speicherung der Sensor Daten*/
 
 bool process_tn_in( char* inbuffer, int tn_socket) {
 /* Messages can look like this:

@@ -120,13 +120,15 @@ void Database::initGateway(Gateway* gateway) {
     
 void Database::initNode(Node* node) {
     NODE_DATTYPE node_id = 0;
+    char node_name[NODENAMESIZE];
+    node_name[0] = 0;
     bool myHBnode = false;
     uint32_t pa_utime;
     uint32_t pa_level;
     float u_batt;
     char cmp_y[]="y",cmp_j[]="j"; 
 	MYSQL_ROW row;
-	sprintf (sql_stmt, "select node_id, heartbeat, pa_utime, pa_level from node");
+	sprintf (sql_stmt, "select node_id, node_name, heartbeat, pa_utime, pa_level from node");
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
@@ -134,10 +136,11 @@ void Database::initNode(Node* node) {
 	db_check_error();
 	while ((row = mysql_fetch_row(result))) {
 		if ( row[0] != NULL ) node_id = strtoul(row[0], &pEnd,10);
-        if ((strcmp(row[1],cmp_y) == 0) || (strcmp(row[1],cmp_j) == 0)) { myHBnode = true; } else { myHBnode = false; }
-		if ( row[2] != NULL ) pa_utime = strtoul(row[2], &pEnd, 10); else pa_utime = 1;
-		if ( row[3] != NULL ) pa_level = strtoul(row[3], &pEnd, 10); else pa_level = 9;
-        node->addNode(node_id, 0, myHBnode, pa_level, pa_utime); 
+		if ( row[1] != NULL ) sprintf(node_name, row[1]);
+        if ((strcmp(row[2],cmp_y) == 0) || (strcmp(row[1],cmp_j) == 0)) { myHBnode = true; } else { myHBnode = false; }
+		if ( row[3] != NULL ) pa_utime = strtoul(row[2], &pEnd, 10); else pa_utime = 1;
+		if ( row[4] != NULL ) pa_level = strtoul(row[3], &pEnd, 10); else pa_level = 9;
+        node->addNode(node_id, node_name, 0, myHBnode, pa_level, pa_utime); 
 	}
 	mysql_free_result(result);    
 	sprintf (sql_stmt, "select node_id, last_data from sensor where channel = 101");

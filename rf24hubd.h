@@ -84,6 +84,14 @@ Cfg             cfg(SWVERSION_STR,SWDATUM);
  * Die Eventverwaltung wird in meinem System durch FHEM realisiert.
  * Dazu ist es nötig das alle geänderten Sensorwerte an FHEM übertragen werden.
  */ 
+void send_fhem_tn(char* tn_cmd);
+
+/**
+ * @brief send a value of a sensor to the fhem-host
+ * 
+ * Ein Sensor ist eindeutig durch die Kombination aus Node und Channel bestimmt.
+ * Der Wert des Sensors wird hier an FHEM übertragen.
+ */ 
 void send_fhem_cmd(NODE_DATTYPE node, uint8_t channel, char* value);
 
 /**

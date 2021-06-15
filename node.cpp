@@ -46,9 +46,10 @@ void Node::newEntry(node_t* p_new) {
     }
 }
 
-void Node::addNode(NODE_DATTYPE node_id, float u_batt, bool is_HB_node, uint8_t PALevel, uint32_t PAUtime ) {
+void Node::addNode(NODE_DATTYPE node_id, char* node_name, float u_batt, bool is_HB_node, uint8_t PALevel, uint32_t PAUtime ) {
     node_t *p_new = new node_t;
     p_new->node_id = node_id;
+    sprintf(p_new->node_name, node_name);
     p_new->u_batt = u_batt;
     p_new->is_HB_node = is_HB_node;
     p_new->pa_level = PALevel;
@@ -56,6 +57,21 @@ void Node::addNode(NODE_DATTYPE node_id, float u_batt, bool is_HB_node, uint8_t 
     if (verboselevel & VERBOSESENSOR) printf("%sNode.addNode: N:%u U:%f HB:%s PA:%s(%s)\n",ts(tsbuf),node_id, u_batt, is_HB_node? "HeartBeat":"Normal   ",
                    PALevel==0? "??? ":PALevel==1? "Low ":PALevel==2? "Min ":PALevel==3? "High":"Max ", utime2str(PAUtime, buf, 1));
     newEntry(p_new);
+}
+
+char* Node::getNodeName(NODE_DATTYPE node_id) {
+    node_t *p_search;
+    char *retval = NULL;
+    p_search = p_initial;
+    while (p_search) {
+        if (p_search->node_id == node_id) {
+            retval = p_search->node_name;
+            p_search = NULL;
+        } else {
+            p_search = p_search->p_next;
+        }
+    }    
+    return retval;
 }
 
 bool Node::isNewHB(NODE_DATTYPE node_id, uint8_t heartbeatno) {
@@ -150,8 +166,9 @@ void Node::printBuffer(int out_socket, bool htmlformat) {
     sprintf(client_message," ------ Nodes: ------\n"); 
     write(out_socket , client_message , strlen(client_message));
     while (p_search) {
-        sprintf(client_message,"Node %s%s%u,\tU-Batt:\t%f V,\t%s\tPA: %s (%s)\n", p_search->node_id<100? " ":"", p_search->node_id<10? " ":"", 
-                p_search->node_id, p_search->u_batt, p_search->is_HB_node? "HeartBeat":"Normal   ",
+        sprintf(client_message,"Node %s%s%u,\t%s\tU-Batt:\t%f V,\t%s\tPA: %s (%s)\n", 
+                p_search->node_id<100? " ":"", p_search->node_id<10? " ":"", 
+                p_search->node_id, p_search->node_name, p_search->u_batt, p_search->is_HB_node? "HeartBeat":"Normal   ",
                 p_search->pa_level==0? "Min ":p_search->pa_level==1? "Low ":p_search->pa_level==2? "High":p_search->pa_level==3? "Max ":"??? ",
                 utime2str(p_search->pa_utime, buf, 1) );    
 		write(out_socket , client_message , strlen(client_message));
