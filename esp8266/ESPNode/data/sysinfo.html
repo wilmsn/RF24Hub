@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<link rel='stylesheet' type='text/css' href='style.css' />
+<script src="/espnode.js"></script> 
+<script type="text/javascript">
+var page="sysinfo";
+var title="Systeminformationen";
+</script>
+<title id="titel"></title>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="div_header">
+      <h2 id="titel1" class="titel1">Titel1</h2>
+      <h3 id="titel2" class="titel2">Titel2</h3>
+      <hr>
+    </div>
+    <div class="div_content">
+      <table style="width:100%" id="Tab"><tbody>
+        <tr><td colspan=2 class="tab_head">Host:</td></tr>
+        <tr><td class="tab_left"> Hostname: </td><td class="tab_right"> <div id="f_hostname">xxx</div> </td></tr>
+        <tr><td class="tab_left"> CPU Speed: </td><td class="tab_right"> <div id="f_cpufreq">xxx</div> </td></tr>
+        <tr><td class="tab_left"> Flash Size: </td><td class="tab_right"> <div id="f_flashsize">xxx</div> </td></tr>
+        <tr><td class="tab_left"> Flash Speed: </td><td class="tab_right"> <div id="f_flashspeed">xxx</div> </td></tr>
+        <tr><td class="tab_left"> Sketch Size: </td><td class="tab_right"> <div id="f_sketchsize">xxx</div> </td></tr>
+        <tr><td class="tab_left"> Free Space: </td><td class="tab_right"> <div id="f_freespace">xxx</div> </td></tr>
+        <tr><td class="tab_left"> Heap free: </td><td class="tab_right"> <div id="f_freeheep">xxx</div> </td></tr>
+        <tr><td class="tab_left"> Heap max: </td><td class="tab_right"> <div id="f_maxheep">xxx</div> </td></tr>
+        <tr><td class="tab_left"> Heap Fragmentation: </td><td class="tab_right"> <div id="f_heapfrag">xxx</div> </td></tr>
+        <tr><td class="tab_left"> Reset Reason: </td><td class="tab_right"> <div id="f_resetreason">xxx</div> </td></tr>
+        <tr><td class="tab_left"> MQTT Hostname: </td><td class="tab_right"> <div id="f_mqtthostname">xxx</div> </td></tr>
+        <tr><td class="tab_left"> Uptime: </td><td class="tab_right"> <div id="f_uptime">xxx</div> </td></tr>
+        <tr><td colspan=2 class="tab_head">Network:</td></tr>
+        <tr><td class="tab_left"> IP Adress: </td><td class="tab_right"> <div id="f_localip">xxx</div> </td></tr>
+        <tr><td class="tab_left"> Sub Net Mask: </td><td class="tab_right"> <div id="f_subnetmask">xxx</div> </td></tr>
+        <tr><td class="tab_left"> Gateway IP: </td><td class="tab_right"> <div id="f_gatewayip">xxx</div> </td></tr>
+        <tr><td class="tab_left"> DNS Server IP: </td><td class="tab_right"> <div id="f_dnsip">xxx</div> </td></tr>
+        <tr><td class="tab_left"> SSID: </td><td class="tab_right"> <div id="f_ssid">xxx</div> </td></tr>
+        <tr><td class="tab_left"> Channel: </td><td class="tab_right"> <div id="f_channel">xxx</div> </td></tr>
+        <tr><td class="tab_left"> BSSID: </td><td class="tab_right"> <div id="f_bssid">xxx</div> </td></tr>
+        <tr><td class="tab_left"> Mac Address: </td><td class="tab_right"> <div id="f_macaddress">xxx</div> </td></tr>
+        <tr><td colspan=2 class="tab_head">Build System:</td></tr>
+        <tr><td class="tab_left"> IDE Version: </td><td class="tab_right"> <div id="f_ideversion">xxx</div> </td></tr>
+        <tr><td class="tab_left"> Core Version: </td><td class="tab_right"> <div id="f_coreversion">xxx</div> </td></tr>
+        <tr><td class="tab_left"> SDK Version: </td><td class="tab_right"> <div id="f_sdkversion">xxx</div> </td></tr>
+        <tr><td class="tab_left"> Software Version: </td><td class="tab_right"> <div id="f_swversion">xxx</div> </td></tr>
+        <tr><td class="tab_left"> HTML Version: </td><td class="tab_right"> <div id="f_htmlversion">xxx</div> </td></tr>
+        </tbody></table>
+    </div>
+    <button class="button bg_bk" onclick="window.location.href='/index.html'">Hauptseite</button>
+    <div class="div_footer">
+      <hr>
+      ESPNode von Norbert Wilms
+    </div>
+  </div>
+</body>
+</html>

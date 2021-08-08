@@ -7,10 +7,12 @@ optional:
 - To mark a node as heartbeatnode use:
 // #define HBNODE
 - Select a sensor
+-- A Dummy for test purposes
+// #define SENSOR_DUMMY
 -- a Bosch sensor like BMP185/BMP280/BME280
-// #define BOSCH_SENSOR
+// #define SENSOR_BOSCH
 -- A Dallas 18B20 temperature sensor
-// #define DALLAS_18B20
+// #define SENSOR_18B20
 -- A Switch / Relais
 -- define a pin
 // #define RELAIS_1 3
@@ -48,7 +50,7 @@ debugging options:
 #if defined(AUSSENTHERMOMETER)
 #define HBNODE
 #define RF24NODE        200
-#define BOSCH_SENSOR
+#define SENSOR_BOSCH
 #define STATUSLED       3
 #define STATUSLED_ON    HIGH
 #define STATUSLED_OFF   LOW
@@ -60,7 +62,7 @@ debugging options:
 #if defined(AUSSENTHERMOMETER2)
 #define HBNODE
 #define RF24NODE        201
-#define BOSCH_SENSOR
+#define SENSOR_BOSCH
 #define STATUSLED       7
 #define STATUSLED_ON    HIGH
 #define STATUSLED_OFF   LOW
@@ -72,12 +74,11 @@ debugging options:
 #if defined(SCHLAFZIMMERTHERMOMETER)
 #define HBNODE
 #define RF24NODE             101
-#define DALLAS_18B20
+#define SENSOR_18B20
 #define DISPLAY_5110
 // #define MONITOR
 #define EEPROM_VERSION       1
 #define EMPTYLOOPS           9
-#define VOLT_FAC             1
 #define VOLT_OFF             0.55
 #define LOW_VOLT_LEVEL       3.6
 //#define SLEEPTIME_SEC        110
@@ -88,12 +89,11 @@ debugging options:
 #if defined(WOHNZIMMERTHERMOMETER)
 #define HBNODE
 #define RF24NODE             102
-#define BOSCH_SENSOR
+#define SENSOR_BOSCH
 #define DISPLAY_5110
-#define EEPROM_VERSION       1
+#define EEPROM_VERSION       3
 #define EMPTYLOOPS           9
-#define VOLT_FAC             1
-#define VOLT_OFF             0.55
+#define VOLT_OFF             0.65
 #define LOW_VOLT_LEVEL       3.6
 #define STATUSLED_ON         LOW
 #define STATUSLED_OFF        HIGH
@@ -102,12 +102,11 @@ debugging options:
 #if defined(KUECHETHERMOMETER)
 #define HBNODE
 #define RF24NODE             103
-#define DALLAS_18B20
+#define SENSOR_18B20
 #define DISPLAY_5110
 //#define MONITOR
 #define EEPROM_VERSION       1
 #define EMPTYLOOPS           9
-#define VOLT_FAC             1
 #define VOLT_OFF             0.55
 #define LOW_VOLT_LEVEL       3.6
 #define STATUSLED_ON         LOW
@@ -119,37 +118,29 @@ debugging options:
 #define RF24NODE             104
 #define SLEEPTIME_SEC        900
 #define STATUSLED            7
-#define DALLAS_18B20
+#define SENSOR_18B20
 #define EEPROM_VERSION       1
 #define EMPTYLOOPS           0
 #define LOW_VOLT_LEVEL       3.5
 #endif
 //-----------------------------------------------------
-#if defined(TESTZIMMER1THERMOMETER)
+#if defined(TESTNODE)
 #define HBNODE
-#define RF24NODE             103
-#define DALLAS_18B20
+#define RF24NODE             169
+#define SENSOR_DUMMY
 #define DISPLAY_5110
-//#define DEBUG_LED
-//#define MONITOR
-#define SLEEPTIME_SEC        20
-#define EEPROM_VERSION       7
-#define VOLT_FAC             1
+#define EEPROM_VERSION       1
 #define VOLT_OFF             0.55
-#define EMPTYLOOPS           5
-#define LOWVOLTAGELEVEL      3.5
-#define STATUSLED_ON         LOW
-#define STATUSLED_OFF        HIGH
+#define LOWVOLTAGELEVEL      3.0
 #endif
 //-----------------------------------------------------
 #if defined(BASTELZIMMERTHERMOMETER)
 #define HBNODE
 #define RF24NODE             100
-#define DALLAS_18B20
+#define SENSOR_18B20
 #define DISPLAY_5110
 //#define MONITOR
 #define EEPROM_VERSION       3
-#define VOLT_FAC             1
 #define VOLT_OFF             0.55
 #define EMPTYLOOPS           9
 #define LOW_VOLT_LEVEL       3.6
@@ -160,11 +151,10 @@ debugging options:
 #if defined(BASTELZIMMERTHERMOMETER_SW)
 #define HBNODE
 #define RF24NODE             105
-#define DALLAS_18B20
+#define SENSOR_18B20
 #define DISPLAY_5110
 //#define MONITOR
 #define EEPROM_VERSION       1
-#define VOLT_FAC             1
 #define VOLT_OFF             0.55
 #define EMPTYLOOPS           9
 #define LOW_VOLT_LEVEL       3.6
@@ -175,16 +165,26 @@ debugging options:
 #if defined(ANKLEIDEZIMMERTHERMOMETER)
 #define HBNODE
 #define RF24NODE             110
-#define DALLAS_18B20
+#define SENSOR_18B20
 #define DISPLAY_5110
-#define MONITOR
-#define EEPROM_VERSION       22
+//#define MONITOR
+#define EEPROM_VERSION       1
 #define EMPTYLOOPS           9
-#define VOLT_FAC             1
-#define VOLT_OFF             0.8
-#define LOW_VOLT_LEVEL       3.6
+#define VOLT_OFF             0.68
+#define LOW_VOLT_LEVEL       3.0
+#define SLEEP4MS_FAC         950
 #define STATUSLED_ON         LOW
 #define STATUSLED_OFF        HIGH
+#endif
+//-----------------------------------------------------
+#if defined(FEUCHTESENSOR_170)
+#define HBNODE
+#define RF24NODE             170
+#define EEPROM_VERSION       1
+#define LOW_VOLT_LEVEL       1.8
+#define EEPROM_VERSION       5
+#define SLEEPTIME_SEC        900
+#define EMPTYLOOPS           0
 #endif
 //-----------------------------------------------------
 #if defined(TERASSE)
@@ -201,7 +201,7 @@ debugging options:
 #define RF24NODE             161
 #define EEPROM_VERSION       2
 #define NEOPIXEL             46
-#define DALLAS_18B20
+#define SENSOR_18B20
 #define DEBUG_SERIAL_SENSOR
 #endif
 //-----------------------------------------------------
@@ -209,7 +209,7 @@ debugging options:
 #define RF24NODE             169
 #define EEPROM_VERSION       2
 #define NEOPIXEL             7
-#define DALLAS_18B20
+#define SENSOR_DUMMY
 #define DEBUG_SERIAL_RADIO
 #define DEBUG_SERIAL_PROC
 #endif

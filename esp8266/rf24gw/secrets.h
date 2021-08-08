@@ -1,1 +1,0 @@
-/home/norbert/projekte/wifisettings.h

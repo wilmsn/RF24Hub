@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<link rel='stylesheet' type='text/css' href='style.css' />
+<script src="espnode.js"></script> 
+<script type="text/javascript">
+var page="settings";
+var title="Einstellungen";
+</script>
+
+<title id="titel"></title>
+</head>
+<body>
+<div class="wrapper" class="header">
+  <div class="div_header">
+    <h2 id="titel1" class="titel1">Titel1</h2>
+    <h3 id="titel2" class="titel2">Titel2</h3>
+    <hr>
+  </div>
+  <div class="div_content">
+<fieldset> 
+	<legend>Logmedium:</legend> 
+	<input type="checkbox" name="logmedium" value="logfile" id="logfile" class="checkbox">
+	<label for="logfile">Logfile</label><br>
+	<input type="checkbox" name="logmedium" value="console" id="console" class="checkbox">
+	<label for="logfile">Konsole</label><br>
+</fieldset>
+  
+<fieldset> 
+	<legend>Zu loggende Inhalte:</legend> 
+	<input type="checkbox" name="logcontent" value="startup" id="log_startup" class="checkbox">
+	<label for="log_startup">Startup</label><br>
+	<div id="div_rf24">
+	<input type="checkbox" name="logcontent" value="rf24" id="log_rf24" class="checkbox">
+	<label for="log_rf24" id="log_rf24l">RF24</label><br>
+	</div>
+	<input type="checkbox" name="logcontent" value="sensor" id="log_sensor" class="checkbox">
+	<label for="log_sensor">Sensor</label><br>
+	<input type="checkbox" name="logcontent" value="mqtt" id="log_mqtt" class="checkbox">
+	<label for="log_mqtt">MQTT</label><br>
+	<input type="checkbox" name="logcontent" value="webcmd" id="log_webcmd" class="checkbox">
+	<label for="log_webcmd">Web Kommando</label><br>
+	<input type="checkbox" name="logcontent" value="sysinfo" id="log_sysinfo" class="checkbox">
+	<label for="log_sysinfo">System Informationen</label><br>
+</fieldset>
+
+<fieldset id="xyz"> 
+	<legend>Dauerhaft speichern?</legend> 
+	<input type="radio" name="saveeprom" value="1" id="eprom_yes" class="checkbox">
+	<label for="logfile">Im EEPROM speichern</label><br>
+	<input type="radio" name="saveeprom" value="0" id="eprom_no" class="checkbox" checked>
+	<label for="logfile">Nur temporär verwenden</label><br>
+</fieldset>
+
+  </div>
+    <button class="button bg_gr" onclick="store();">Speichern</button>
+    <button class="button bg_gr" onclick="dellog();">Logfile löschen</button>
+    <button class="button bg_gr" onclick="window.location.href='/update'">Firmware updaten</button>
+    <button class="button bg_rt" onclick="do_restart();">Neustart</button>
+    <button class="button bg_bk" onclick="window.location.href='/index.html'">Hauptseite</button>
+  <div class="div_footer">
+    <hr>
+    ESPNode von Norbert Wilms
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,1359 @@
+/*
+A Node for the rf24hub based on esp8266.
+Can be used as switch or a matrix display
+
+Build in Parts (selectable):
+Relais
+Matrix Display
+NeoPixel
+Dallas Temperature Sensor 18B20
+Rf24GW
+
+On Branch: rf24hub@rpi2 => master  !!!!!
+
+
+*/
+//****************************************************
+// My definitions for my nodes based on this sketch
+// Select only one at one time !!!!
+//#define TEICHPUMPE
+#define FLURLICHT
+//#define WOHNZIMMERDISPLAY
+//#define TESTNODE
+//#define WITTYNODE
+//#define RF24GWTEST
+//#define ESPMINI
+//****************************************************
+// Default settings are in "default.h" now !!!!!
+#include "defaults.h"
+// Default settings for the individual nodes are in "Node_settings.h"
+#include "Node_settings.h"
+//-----------------------------------------------------
+//*****************************************************
+/* Configuration of NTP */
+#define MY_NTP_SERVER "de.pool.ntp.org"           
+#define MY_TZ "CET-1CEST,M3.5.0/02,M10.5.0/03"   
+// ------ End of configuration part ------------
+
+#include <ESP8266WiFi.h>
+#include <ESP8266mDNS.h>
+#include <ESP8266WebServer.h>
+#include <ESP8266HTTPUpdateServer.h>
+#include <WiFiUdp.h>
+#include <ArduinoOTA.h>
+#include <EEPROM.h>
+#include <FS.h>
+#include <LittleFS.h>
+#include <PubSubClient.h>
+#include <time.h>
+#include <uptime.h>
+#include <strings.h>
+#include <logger.h>
+#include "secrets.h"
+#include "version.h"
+#include "defaults.h"
+#include "Node_settings.h"
+#include "version.h"
+#if defined(SENSOR_18B20)
+#include <OneWire.h>
+#include <DallasTemperature.h>
+#endif
+#if defined(RF24GW)
+#include <RF24.h>
+#include "rf24_config.h"
+#include "dataformat.h"
+#endif
+#if defined(LEDMATRIX)
+#include <LED_Matrix.h>
+#endif
+#if defined(NEOPIXEL)
+#include <Adafruit_NeoPixel.h>
+#endif
+
+ESP8266WebServer httpServer(80);
+ESP8266HTTPUpdateServer httpUpdater;
+WiFiClient mqtt_wifi_client;
+PubSubClient mqttClient(mqtt_wifi_client);
+Logger logger(LOGGER_NUMLINES,LOGGER_LINESIZE);
+#if defined(SENSOR_18B20)
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature sensors(&oneWire);
+#endif
+#if defined(RF24GW)
+WiFiUDP udp;
+RF24 radio(RADIO_CE_PIN,RADIO_CSN_PIN);
+#endif
+#if defined(LEDMATRIX)
+LED_Matrix matrix(LEDMATRIX_DIN, LEDMATRIX_CLK, LEDMATRIX_CS, LEDMATRIX_DEVICES_X, LEDMATRIX_DEVICES_Y);
+#endif
+#if defined(NEOPIXEL)
+Adafruit_NeoPixel pixels(NEOPIXELNUM, NEOPIXELPIN, NEO_GRB + NEO_KHZ800);
+#endif
+
+typedef enum {message=0, sensorinfo} call_t;
+typedef enum {ok_json=0, ok_html, ok_text, error, epromchange} status_t;
+typedef enum {on=0, off, toggle, state} tristate_t;
+time_t now;                         // this is the epoch
+tm tm;                              // the structure tm holds time information in a more convient way
+char timeStr[9];
+char mytopic[TOPIC_BUFFER_SIZE];
+char info_str[INFOSIZE];
+unsigned long lastMsg = 0;
+unsigned long lastInfo = 0;
+const char val_on[] = "1";
+const char val_off[] = "0";
+const char c_on[] =  "Ein";
+const char c_off[] = "Aus";
+const char* mqtt_val;
+#if defined(NEOPIXEL)
+uint32_t rgb = RGBINIT;
+#endif
+//bool log_startup = false;
+#if defined(SWITCH1)
+bool state_switch1 = SWITCH1INITSTATE;
+#endif
+#if defined(SWITCH2)
+bool state_switch2 = SWITCH2INITSTATE;
+#endif
+#if defined(SWITCH3)
+bool state_switch3 = SWITCH3INITSTATE;
+#endif
+#if defined(SWITCH4)
+bool state_switch4 = SWITCH4INITSTATE;
+#endif
+#if defined(RF24GW)
+payload_t payload;
+udpdata_t udpdata;
+uint8_t  rf24_node2hub[] = RF24_NODE2HUB;
+uint8_t  rf24_hub2node[] = RF24_HUB2NODE;
+uint16_t rf24_verboselevel = RF24GW_STARTUPVERBOSELEVEL;
+#endif
+
+struct eeprom_t {
+   uint32_t  magicNo;
+   bool      logfile;
+   bool      logger;
+   bool      log_startup;
+   bool      log_rf24;
+   bool      log_sensor;
+   bool      log_mqtt;
+   bool      log_webcmd;
+   bool      log_sysinfo;
+};
+eeprom_t eepromdata;
+
+void setup() {
+  pinMode(BUILTIN_LED, OUTPUT);
+  digitalWrite(BUILTIN_LED, LOW);
+  Serial.begin(115200);
+
+  EEPROM.begin(512);
+  EEPROM.get( 0, eepromdata );
+  //EEPROM.end();
+
+  if ( eepromdata.magicNo != MAGICNO ) {
+    eepromdata.magicNo = MAGICNO;
+    eepromdata.logfile = false;
+    eepromdata.logger = false;
+    eepromdata.log_startup = false;
+    eepromdata.log_rf24 = false;
+    eepromdata.log_sensor = false;
+    eepromdata.log_mqtt = false;
+    eepromdata.log_webcmd = false;
+    eepromdata.log_sysinfo = false;
+    EEPROM.put( 0, eepromdata );
+    EEPROM.commit();
+  }
+  logger.begin();
+  httpServer.begin();
+
+  WiFi.persistent(false);
+  WiFi.mode(WIFI_STA);
+  WiFi.hostname(HOSTNAME);
+  WiFi.begin(ssid, password);
+
+  // ... Give ESP 10 seconds to connect to station.
+  unsigned int i=0;
+  while (WiFi.status() != WL_CONNECTED && i < 100) {
+    delay(200);
+    i++;
+  }
+  configTime(MY_TZ, MY_NTP_SERVER); 
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(3000);
+    ESP.restart();
+  }
+  if (eepromdata.log_startup) {
+    sprintf(info_str,"%s %s %s %s", F("Connected to "), ssid, F(" IP address: "), WiFi.localIP().toString().c_str() );
+    write2log(info_str);
+  } 
+#if defined(RF24GW)
+  udp.begin(GW_UDP_PORTNO);
+  if (eepromdata.log_startup) {
+    sprintf(info_str,"%s %u", F("Opened UDP Port: "), GW_UDP_PORTNO );
+    write2log(info_str);
+  } 
+#endif  
+  if (!LittleFS.begin()) {
+    ESP.restart();
+    return;
+  } else {
+    if (eepromdata.log_startup) {
+      sprintf(info_str,"%s",F("LittleFS mounted"));
+      write2log(info_str);
+    }
+  }
+
+  //MQTT
+  mqttClient.setServer(MQTT_SERVER, 1883);
+  mqttClient.setCallback(callback);
+  mqttClient.setBufferSize(512);
+  if (eepromdata.log_startup) {
+    sprintf(info_str,"%s %s %s", F("MQTT: Connected to Server "), MQTT_SERVER, F(" Port: 1883") );
+    write2log(info_str);
+  }
+  // OTA
+  ArduinoOTA.setHostname(HOSTNAME);
+  ArduinoOTA.begin();
+  MDNS.begin(HOSTNAME);
+  httpUpdater.setup(&httpServer);
+  httpServer.begin();
+  MDNS.addService("http", "tcp", 80);
+  setupFS();
+  httpServer.on("/", handleWebRoot);
+  httpServer.on("/cmd", handleCmd);
+  httpServer.on("/restart", []() { httpServer.send(304, "message/http"); ESP.restart(); });
+  httpServer.on("/console", []() { httpServer.send(200, "text/plain", logger.printBuffer()); });
+  httpServer.onNotFound([]() {
+    if (!handleFile(httpServer.urlDecode(httpServer.uri())))
+      httpServer.send(404, "text/plain", "FileNotFound");
+  });
+
+// Init additional modules
+#if defined(RF24GW)
+  // init rf24
+  radio.begin();
+  delay(100);
+  radio.setChannel(RF24_CHANNEL);
+  radio.setDataRate(RF24_SPEED);
+  radio.setPALevel(RF24_PA_MAX);
+  radio.setRetries(0, 0);
+  radio.setAutoAck(false);
+  radio.disableDynamicPayloads();
+  radio.setPayloadSize(32);
+  radio.setCRCLength(RF24_CRC_16);
+  radio.openWritingPipe(rf24_hub2node);
+  radio.openReadingPipe(1,rf24_node2hub);
+  radio.startListening();
+  radio.printDetails();
+  Serial.print("RF24_CHANNEL: ");
+  Serial.println(RF24_CHANNEL);
+  Serial.print("RF24_SPEED: ");
+  Serial.println(RF24_SPEED);
+  Serial.println("RF24 online");
+  Serial.print(rf24_hub2node[0],HEX);
+  Serial.print(rf24_hub2node[1],HEX);
+  Serial.print(rf24_hub2node[2],HEX);
+  Serial.print(rf24_hub2node[3],HEX);
+  Serial.println(rf24_hub2node[4],HEX);
+#endif
+#if defined(LEDMATRIX)
+  matrix.begin();
+  for (int address=0; address < (LEDMATRIX_DEVICES_X * LEDMATRIX_DEVICES_Y); address++) {
+    matrix.displayTest(address, true);
+    delay(200);
+    matrix.displayTest(address, false);
+  }
+  matrix.setFont(2);
+  matrix.setIntensity(1);
+  matrix.setCursor(3,8);
+  matrix.print("Init");
+  matrix.display();
+  delay(500);
+  matrix.off();
+  delay(500);
+  matrix.on();
+  delay(500);
+  matrix.clear();    
+  matrix.display();
+#endif
+#if defined(NEOPIXEL)
+  pixels.begin();
+#endif
+ 
+// Init sensors
+#if defined(SENSOR_18B20)
+  sensors.begin();
+#endif
+
+#if defined(SWITCH1)
+#if defined(SWITCH1PIN1)
+  pinMode(SWITCH1PIN1, OUTPUT);
+#endif
+#if defined(SWITCH1PIN2)
+  pinMode(SWITCH1PIN2, OUTPUT);
+#endif
+  if (SWITCH1INITSTATE) { handleSwitch1(on); } else { handleSwitch1(off); }
+#endif
+
+#if defined(SWITCH2)
+#if defined(SWITCH2PIN1)
+  pinMode(SWITCH2PIN1, OUTPUT);
+#endif
+#if defined(SWITCH2PIN2)
+  pinMode(SWITCH2PIN2, OUTPUT);
+#endif
+  if (SWITCH2INITSTATE) { handleSwitch2("on"); } else { handleSwitch2("off"); }
+#endif
+
+#if defined(SWITCH3)
+#if defined(SWITCH3PIN1)
+  pinMode(SWITCH3PIN1, OUTPUT);
+#endif
+#if defined(SWITCH3PIN2)
+  pinMode(SWITCH3PIN2, OUTPUT);
+#endif
+  if (SWITCH3INITSTATE) { handleSwitch3("on"); } else { handleSwitch3("off"); }
+#endif
+
+#if defined(SWITCH4)
+#if defined(SWITCH4PIN1)
+  pinMode(SWITCH4PIN1, OUTPUT);
+#endif
+#if defined(SWITCH4PIN2)
+  pinMode(SWITCH4PIN2, OUTPUT);
+#endif
+  if (SWITCH4INITSTATE) { handleSwitch4("on"); } else { handleSwitch4("off"); }
+#endif
+
+#if defined(VALUE1_PIN)
+  pinMode(VALUE1_PIN, INPUT);
+#endif
+  delay(200);
+  if (eepromdata.log_startup) {
+    sprintf(info_str,"%s", F("-------------------Ende Startup-------------------------"));
+    write2log(info_str);
+  }
+  digitalWrite(BUILTIN_LED, HIGH);
+}
+
+void handleCmd() {
+  status_t status = error;
+  bool do_eepromchange = false;
+  for (int argNo=0; argNo <  httpServer.args(); argNo++ ) { 
+    if ( httpServer.argName(argNo) == "dellogfile" ) {
+      if (LittleFS.remove("logfile.txt")) {
+        sprintf(info_str,"Logfile deleted");
+        status = ok_text;  
+      }
+    }
+    if ( httpServer.argName(argNo) == F("saveeprom") ) {
+      if (httpServer.arg(argNo) == "1" ) {
+        do_eepromchange = true;
+        status = epromchange;
+      }
+    }
+    if ( httpServer.argName(argNo) == F("logfile") ) {
+      if (httpServer.arg(argNo) == "1" ) {
+        if ( ! eepromdata.logfile) {
+           eepromdata.logfile = true;
+           status = epromchange;  
+        }
+      } else {
+        if ( eepromdata.logfile) {
+           eepromdata.logfile = false;
+           status = epromchange;  
+        }
+      }
+    }
+    if ( httpServer.argName(argNo) == F("logger") ) {
+      if (httpServer.arg(argNo) == "1" ) {
+        if ( ! eepromdata.logger) {
+           eepromdata.logger = true;
+           status = epromchange;  
+        }
+      } else {
+        if ( eepromdata.logger) {
+           eepromdata.logger = false;
+           status = epromchange;  
+        }
+      }
+    }
+    if ( httpServer.argName(argNo) == F("log_startup") ) {
+      if (httpServer.arg(argNo) == "1" ) {
+        if ( ! eepromdata.log_startup) {
+           eepromdata.log_startup = true;
+           status = epromchange;  
+        }
+      } else {
+        if ( eepromdata.log_startup) {
+           eepromdata.log_startup = false;
+           status = epromchange;  
+        }
+      }
+    }
+    if ( httpServer.argName(argNo) == F("log_rf24") ) {
+      if (httpServer.arg(argNo) == "1" ) {
+        if ( ! eepromdata.log_rf24) {
+           eepromdata.log_rf24 = true;
+           status = epromchange;  
+        }
+      } else {
+        if ( eepromdata.log_rf24) {
+           eepromdata.log_rf24 = false;
+           status = epromchange;  
+        }
+      }
+    }
+    if ( httpServer.argName(argNo) == F("log_sensor") ) {
+      if (httpServer.arg(argNo) == "1" ) {
+        if ( ! eepromdata.log_sensor) {
+           eepromdata.log_sensor = true;
+           status = epromchange;  
+        }
+      } else {
+        if ( eepromdata.log_sensor) {
+           eepromdata.log_sensor = false;
+           status = epromchange;  
+        }
+      }
+    }
+    if ( httpServer.argName(argNo) == F("log_mqtt") ) {
+      if (httpServer.arg(argNo) == "1" ) {
+        if ( ! eepromdata.log_mqtt) {
+           eepromdata.log_mqtt = true;
+           status = epromchange;  
+        }
+      } else {
+        if ( eepromdata.log_mqtt) {
+           eepromdata.log_mqtt = false;
+           status = epromchange;  
+        }
+      }
+    }
+    if ( httpServer.argName(argNo) == F("log_webcmd") ) {
+      if (httpServer.arg(argNo) == "1" ) {
+        if ( ! eepromdata.log_webcmd) {
+           eepromdata.log_webcmd = true;
+           status = epromchange;  
+        }
+      } else {
+        if ( eepromdata.log_webcmd) {
+           eepromdata.log_webcmd = false;
+           status = epromchange;  
+        }
+      }
+    }
+    if ( httpServer.argName(argNo) == F("log_sysinfo") ) {
+      if (httpServer.arg(argNo) == "1" ) {
+        if ( ! eepromdata.log_sysinfo) {
+           eepromdata.log_sysinfo = true;
+           status = epromchange;  
+        }
+      } else {
+        if ( eepromdata.log_sysinfo) {
+           eepromdata.log_sysinfo = false;
+           status = epromchange;  
+        }
+      }
+    }
+    if ( httpServer.argName(argNo) == F("sysinfo1") ) {
+      fill_sysinfo1(info_str);
+      status = ok_json;
+    }
+    if ( httpServer.argName(argNo) == F("sysinfo2") ) {
+      fill_sysinfo2(info_str);
+      status = ok_json;
+    }
+    if ( httpServer.argName(argNo) == F("sysinfo3") ) {
+      fill_sysinfo3(info_str);
+      status = ok_json;
+    }
+    if ( httpServer.argName(argNo) == F("sysinfo4") ) {
+      fill_sysinfo4(info_str);
+      status = ok_json;
+    }
+    if ( httpServer.argName(argNo) == F("sysinfo5") ) {
+      fill_sysinfo5(info_str);
+      status = ok_json;
+    }
+    if ( httpServer.argName(argNo) == F("webcfg1") ) {
+      fill_webcfg1(info_str);
+      status = ok_json;
+    }
+    if ( httpServer.argName(argNo) == F("webcfg2") ) {
+      fill_webcfg2(info_str);
+      status = ok_json;
+    }
+    if ( httpServer.argName(argNo) == F("status") ) {
+      handlestatus(info_str);
+      status = ok_json;
+    }
+    if ( httpServer.argName(argNo) == F("sensor1") ) {
+      handlesensor(info_str, sensorinfo);
+      status = ok_json;
+    }
+    if ( httpServer.argName(argNo) == F("message1") ) {
+      handlesensor(info_str, message);
+      status = ok_json;
+    }
+    
+#if defined(SWITCH1)
+    if ( httpServer.argName(argNo) == "sw1" ) {
+      if ( httpServer.arg(argNo) == "on" ) handleSwitch1(on);
+      if ( httpServer.arg(argNo) == "off" ) handleSwitch1(off);
+      if ( httpServer.arg(argNo) == "toggle" ) handleSwitch1(toggle);
+      if ( httpServer.arg(argNo) == "state" ) handleSwitch1(state);
+      status = ok_json;
+    }
+#endif  
+#if defined(SWITCH2)
+    if ( httpServer.argName(argNo) == "sw2" ) {
+      if ( httpServer.arg(argNo) == "on" ) handleSwitch2(on);
+      if ( httpServer.arg(argNo) == "off" ) handleSwitch2(off);
+      if ( httpServer.arg(argNo) == "toggle" ) handleSwitch2(toggle);
+      if ( httpServer.arg(argNo) == "state" ) handleSwitch2(state);
+      status = ok_json;
+    }
+#endif  
+#if defined(SWITCH3)
+    if ( httpServer.argName(argNo) == "sw3" ) {
+      if ( httpServer.arg(argNo) == "on" ) handleSwitch3(on);
+      if ( httpServer.arg(argNo) == "off" ) handleSwitch3(off);
+      if ( httpServer.arg(argNo) == "toggle" ) handleSwitch3(toggle);
+      if ( httpServer.arg(argNo) == "state" ) handleSwitch3(state);
+      status = ok_json;
+    }
+#endif  
+#if defined(SWITCH4)
+    if ( httpServer.argName(argNo) == "sw4" ) {
+      if ( httpServer.arg(argNo) == "on" ) handleSwitch4(on);
+      if ( httpServer.arg(argNo) == "off" ) handleSwitch4(off);
+      if ( httpServer.arg(argNo) == "toggle" ) handleSwitch4(toggle);
+      if ( httpServer.arg(argNo) == "state" ) handleSwitch4(state);
+      status = ok_json;
+    }
+#endif  
+#if defined(RF24GW)
+    if ( httpServer.argName(argNo) == "rf24gw" ) {
+      handlerf24gw(info_str);
+      status = ok_json;
+    }
+#endif  
+#if defined(LEDMATRIX)
+    if ( httpServer.argName(argNo) == "matrixFB" ) {
+      getMatrixFB(info_str);
+      status = ok_text;  
+    }
+    if ( httpServer.argName(argNo) == "intensity" ) {
+      char conv[3];
+      strncpy(conv,httpServer.arg(argNo).c_str(),2);
+      uint8_t wert = (conv[0]-'0');
+      if ( wert == 1 && ((conv[1]-'0') >=0) && ((conv[1]-'0') < 6) ) {
+        wert = 10*wert+(conv[1]-'0');
+      }
+      if ( wert >= 0 && wert < 16) {
+        matrix.setIntensity(wert);
+        snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,"intensity");
+        mqttClient.publish(mytopic, conv);
+        if (eepromdata.log_mqtt) {
+          sprintf(info_str,"MQTT: %s : %s",mytopic, mqtt_val);
+          write2log(info_str);
+        }
+      }
+      sprintf(info_str,"%s",httpServer.arg(argNo).c_str());
+      status = ok_text;  
+    }
+#endif  
+#if defined(NEOPIXEL)
+    if ( httpServer.argName(argNo) == "getrgb" ) {
+      sprintf(info_str,"%u",rgb);
+      status = ok_text;  
+    }
+    if ( httpServer.argName(argNo) == "setrgbr" ) {
+      uint32_t red = httpServer.arg(argNo).toInt();
+      rgb &= 0xFFFF00;
+      rgb |= red & 0x0000FF;
+Serial.println(state_switch1);      
+      if (state_switch1) set_neopixel(on);
+      sprintf(info_str,"%u",rgb);
+      status = ok_text;  
+    }
+    if ( httpServer.argName(argNo) == "setrgbg" ) {
+      uint32_t green = httpServer.arg(argNo).toInt();
+      green <<= 8;
+      rgb &= 0xFF00FF;
+      rgb |= green & 0x00FF00;
+Serial.println(state_switch1);      
+      if (state_switch1) set_neopixel(on);
+      sprintf(info_str,"%u",rgb);
+      status = ok_text;  
+    }
+    if ( httpServer.argName(argNo) == "setrgbb" ) {
+      uint32_t blue = httpServer.arg(argNo).toInt();
+      blue <<= 16;
+      rgb &= 0x00FFFF;
+      rgb |= blue & 0xFF0000;
+Serial.println(state_switch1);      
+      if (state_switch1) set_neopixel(on);
+      sprintf(info_str,"%u",rgb);
+      status = ok_text;  
+    }
+#endif
+  }
+  switch (status) {
+    case ok_json:
+      httpServer.send(200, "application/json", info_str );
+    break;
+    case ok_text:
+      httpServer.send(200, "text/plain", info_str );
+    break;
+    case ok_html:
+      httpServer.send(200, "text/html", info_str );
+    break;
+    case epromchange:
+      if ( do_eepromchange ) {
+        EEPROM.put( 0, eepromdata );
+        EEPROM.commit(); 
+        httpServer.send(200, "text/plain", "EEPROM changed" );
+      } else {
+        httpServer.send(200, "text/plain", "Settings temporary changed" );
+      }
+    break;
+    case error:
+      httpServer.send(200, "text/plain", "ERROR" );
+    break;
+  }
+}
+
+#if defined(SWITCH1)
+void mqtt_send_swtch1() {
+  if (state_switch1) mqtt_val = val_on; else mqtt_val = val_off;
+  snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,SWITCH1MQTT);
+  mqttClient.publish(mytopic, mqtt_val);
+  if (eepromdata.log_mqtt) {
+    sprintf(info_str,"MQTT: %s : %s",mytopic, mqtt_val);
+    write2log(info_str);
+  }
+}
+
+void switchSwitch1(bool stat) {
+  if ( stat ) { 
+#if defined(SWITCH1PIN1)
+    digitalWrite(SWITCH1PIN1, SWITCH1ACTIVESTATE);
+#endif    
+#if defined(SWITCH1PIN2)
+    digitalWrite(SWITCH1PIN2, SWITCH1ACTIVESTATE);
+#endif
+#if defined(LEDMATRIX)
+    matrix.on();
+#endif
+#if defined(NEOPIXEL)
+     Serial.print(state_switch1);
+     Serial.println("  on");
+     set_neopixel(on);
+#endif
+  } else {
+#if defined(SWITCH1PIN1)
+    digitalWrite(SWITCH1PIN1, ! SWITCH1ACTIVESTATE);
+#endif    
+#if defined(SWITCH1PIN2)
+    digitalWrite(SWITCH1PIN2, ! SWITCH1ACTIVESTATE);
+#endif
+#if defined(LEDMATRIX)
+     matrix.off();
+#endif
+#if defined(NEOPIXEL)
+     Serial.print(state_switch1);
+     Serial.println("   off");
+     set_neopixel(off);
+#endif
+  }
+}
+
+void handleSwitch1(tristate_t stat) {
+  if ( stat == on || stat == off || stat == toggle ) {
+    if ( stat == on ) { 
+      state_switch1 = true;
+    }  
+    if ( stat == off ) {
+      state_switch1 = false;
+    } 
+    if ( stat == toggle ) {
+      state_switch1 = !state_switch1;
+    } 
+    switchSwitch1(state_switch1);
+#if defined(SWITCH1PIN1)
+    state_switch1 = (digitalRead(SWITCH1PIN1) == SWITCH1ACTIVESTATE);
+#endif
+    mqtt_send_swtch1();
+    if (eepromdata.log_sensor) {
+      sprintf(info_str, "Schalter1 %s", state_switch1 ? c_on : c_off);
+      write2log(info_str);
+    }
+  }
+  sprintf(info_str,"{\"state\":\"%s\",\"label\":\"%s\"}", state_switch1 ? c_on : c_off, SWITCH1TXT);
+}
+#endif
+
+#if defined(SWITCH2)
+void mqtt_send_swtch2() {
+  if (state_switch2) mqtt_val = val_on; else mqtt_val = val_off;
+  snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,SWITCH2MQTT);
+  mqttClient.publish(mytopic, mqtt_val);
+  if (eepromdata.log_mqtt) {
+    sprintf(info_str,"MQTT: %s : %s",mytopic, mqtt_val);
+    write2log(info_str);
+  }
+}
+
+void switchSwitch2(bool stat) {
+  if ( stat ) { 
+#if defined(SWITCH2PIN1)
+    digitalWrite(SWITCH2PIN1, SWITCH2ACTIVESTATE);
+#endif    
+#if defined(SWITCH2PIN2)
+    digitalWrite(SWITCH2PIN2, SWITCH2ACTIVESTATE);
+#endif
+  } else {
+#if defined(SWITCH2PIN1)
+    digitalWrite(SWITCH2PIN1, ! SWITCH2ACTIVESTATE);
+#endif    
+#if defined(SWITCH2PIN2)
+    digitalWrite(SWITCH2PIN2, ! SWITCH2ACTIVESTATE);
+#endif
+  }
+}
+
+void handleSwitch2(tristate_t stat) {
+  if ( stat == on || stat == off || stat == toggle ) {
+    if ( stat == on ) { 
+      state_switch2 = true;
+    }  
+    if ( stat == off ) {
+      state_switch2 = false;
+    } 
+    if ( stat == toggle ) {
+      state_switch2 = !state_switch2;
+    } 
+    switchSwitch2(state_switch2);
+#if defined(SWITCH2PIN1)
+    state_switch2 = (digitalRead(SWITCH2PIN1) == SWITCH2ACTIVESTATE);
+#endif
+    mqtt_send_swtch2();
+    if (eepromdata.log_sensor) {
+      sprintf(info_str, "Schalter2 %s", state_switch2 ? c_on : c_off);
+      write2log(info_str);
+    }
+  }
+  sprintf(info_str,"{\"state\":\"%s\",\"label\":\"%s\"}", state_switch2 ? c_on : c_off, SWITCH2TXT);
+}
+#endif
+
+#if defined(SWITCH3)
+void mqtt_send_swtch3() {
+  if (state_switch3) mqtt_val = val_on; else mqtt_val = val_off;
+  snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,SWITCH3MQTT);
+  mqttClient.publish(mytopic, mqtt_val);
+  if (eepromdata.log_mqtt) {
+    sprintf(info_str,"MQTT: %s : %s",mytopic, mqtt_val);
+    write2log(info_str);
+  }
+}
+
+void switchSwitch3(bool stat) {
+  if ( stat ) { 
+#if defined(SWITCH3PIN1)
+    digitalWrite(SWITCH3PIN1, SWITCH3ACTIVESTATE);
+#endif    
+#if defined(SWITCH3PIN2)
+    digitalWrite(SWITCH3PIN2, SWITCH3ACTIVESTATE);
+#endif
+  } else {
+#if defined(SWITCH3PIN1)
+    digitalWrite(SWITCH3PIN1, ! SWITCH3ACTIVESTATE);
+#endif    
+#if defined(SWITCH3PIN2)
+    digitalWrite(SWITCH3PIN2, ! SWITCH3ACTIVESTATE);
+#endif
+  }
+}
+
+void handleSwitch3(tristate_t stat) {
+  if ( stat == on || stat == off || stat == toggle ) {
+    if ( stat == on ) { 
+      state_switch3 = true;
+    }  
+    if ( stat == off ) {
+      state_switch3 = false;
+    } 
+    if ( stat == toggle ) {
+      state_switch3 = !state_switch3;
+    } 
+    switchSwitch3(state_switch3);
+#if defined(SWITCH3PIN1)
+    state_switch3 = (digitalRead(SWITCH3PIN1) == SWITCH3ACTIVESTATE);
+#endif
+    mqtt_send_swtch3();
+    if (eepromdata.log_sensor) {
+      sprintf(info_str, "Schalter3 %s", state_switch3 ? c_on : c_off);
+      write2log(info_str);
+    }
+  }
+  sprintf(info_str,"{\"state\":\"%s\",\"label\":\"%s\"}", state_switch3 ? c_on : c_off, SWITCH3TXT);
+}
+#endif
+
+#if defined(SWITCH4)
+void mqtt_send_swtch4() {
+  if (state_switch4) mqtt_val = val_on; else mqtt_val = val_off;
+  snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,SWITCH4MQTT);
+  mqttClient.publish(mytopic, mqtt_val);
+  if (eepromdata.log_mqtt) {
+    sprintf(info_str,"MQTT: %s : %s",mytopic, mqtt_val);
+    write2log(info_str);
+  }
+}
+
+void switchSwitch4(bool stat) {
+  if ( stat ) { 
+#if defined(SWITCH4PIN1)
+    digitalWrite(SWITCH4PIN1, SWITCH4ACTIVESTATE);
+#endif    
+#if defined(SWITCH4PIN2)
+    digitalWrite(SWITCH4PIN2, SWITCH4ACTIVESTATE);
+#endif
+  } else {
+#if defined(SWITCH4PIN1)
+    digitalWrite(SWITCH4PIN1, ! SWITCH4ACTIVESTATE);
+#endif    
+#if defined(SWITCH4PIN2)
+    digitalWrite(SWITCH4PIN2, ! SWITCH4ACTIVESTATE);
+#endif
+  }
+}
+
+void handleSwitch4(tristate_t stat) {
+  if ( stat == on || stat == off || stat == toggle ) {
+    if ( stat == on ) { 
+      state_switch4 = true;
+    }  
+    if ( stat == off ) {
+      state_switch4 = false;
+    } 
+    if ( stat == toggle ) {
+      state_switch4 = !state_switch4;
+    } 
+    switchSwitch4(state_switch4);
+#if defined(SWITCH4PIN1)
+    state_switch4 = (digitalRead(SWITCH4PIN1) == SWITCH4ACTIVESTATE);
+#endif
+    mqtt_send_swtch4();
+    if (eepromdata.log_sensor) {
+      sprintf(info_str, "Schalter4 %s", state_switch4 ? c_on : c_off);
+      write2log(info_str);
+    }
+  }
+  sprintf(info_str,"{\"state\":\"%s\",\"label\":\"%s\"}", state_switch4 ? c_on : c_off, SWITCH4TXT);
+}
+#endif
+
+#if defined(NEOPIXEL)
+void  set_neopixel(tristate_t mystate) {
+  uint32_t red;
+  uint32_t green;
+  uint32_t blue;
+  Serial.print("mystate ");
+  Serial.println(mystate);
+  if ( mystate == on ) {
+    red =  rgb & 0x0000FF;  
+    green = rgb & 0x00FF00;
+    green >>= 8;
+    blue = rgb & 0xFF0000;
+    blue >>= 16;
+    Serial.print(" On ");
+  } 
+  if ( mystate == off ) {
+    red = 0;
+    green = 0;
+    blue = 0;
+    Serial.print(" Off ");
+  }
+  Serial.print("R:");
+  Serial.print(red);
+  Serial.print(" G:");
+  Serial.print(green);
+  Serial.print(" B:");
+  Serial.println(blue);
+  for(int i=0; i<NEOPIXELNUM; i++) {
+    pixels.setPixelColor(i, pixels.Color(red, green, blue));
+  }
+  pixels.show();
+}
+#endif
+
+#if defined(RF24GW)
+void handlerf24gw(char* response) {
+  sprintf(response,"{\"gwno\":%d}", GW_NO);
+}
+#endif
+
+void handlestatus(char* myjson) {
+  char tmp[10];
+  sprintf(myjson,"%s","{ ");  
+#if defined(LEDMATRIX)
+  if (strlen(myjson) > 5) strcat(myjson,",");
+  strcat(myjson," \"intensity\":");
+  sprintf(tmp,"%u",matrix.getIntensity());
+  strcat(myjson,tmp);
+  strcat(myjson,", \"display\":");
+  sprintf(tmp,"\"%s\"",matrix.displayIsOn()? c_on:c_off);
+  strcat(myjson,tmp);
+#endif
+  strcat(myjson,"}");    
+}
+
+void handlesensor(char* myjson, call_t call) {
+#if defined(SENSOR_18B20)
+  uint8_t resolution = 0;
+  float tempC = -99;
+  uint8_t numDev = sensors.getDeviceCount();
+  if ( numDev > 0 ) {
+    resolution = sensors.getResolution();
+    sensors.requestTemperatures();
+    tempC = sensors.getTempCByIndex(0);
+  }
+  switch ( call ) {
+    case sensorinfo:
+      sprintf(myjson,"{\"Sensor\":\"18B20\", \"Temperatur\":%4.1f, \"Resolution\":%u }", tempC, resolution);
+    break;
+    default:
+      sprintf(myjson,"{\"msg1txt\":\"Temperatur %4.1f &deg;C\"}", tempC);
+  }
+#endif
+#if defined(SENSOR_ANALOG)
+  int myval = analogRead(A0);
+  switch ( call ) {
+    case sensorinfo:
+      sprintf(myjson,"{\"Sensor\":\"analog an A0\", \"Messwert\":%d }", myval);
+    break;
+    default:
+      sprintf(myjson,"{\"msg1txt\":\"%s %d\"}", SENSOR_TEXT, myval);
+  }  
+#endif
+#if defined(NOSENSOR)
+  switch ( call ) {
+    case sensorinfo:
+      sprintf(myjson,"{\"Sensor\":\"Kein Sensor angeschlossen\" }");
+    break;
+    default:
+      sprintf(myjson,"{\"msg1\":0}");
+  }  
+#endif
+}
+
+void handleWebRoot() {
+  File file = LittleFS.open("/index.html", "r");
+  if (file.available()) {
+    httpServer.send(200, "text/html", file.readString() );
+  } else {
+    httpServer.send(200, "text/plain", "Datei nicht vorhanden" );
+  }
+  file.close();
+}
+
+void setupFS() {                                                                       // Funktionsaufruf "setupFS();" muss im Setup eingebunden werden
+  LittleFS.begin();
+  httpServer.onNotFound([]() {
+    if (!handleFile(httpServer.urlDecode(httpServer.uri())))
+      httpServer.send(404, "text/plain", "FileNotFound");
+  });
+}
+
+bool handleFile(String &&path) {
+  if (path.endsWith("/")) path += "index.html";
+  return LittleFS.exists(path) ? ({File f = LittleFS.open(path, "r"); httpServer.streamFile(f, mime::getContentType(path)); f.close(); true;}) : false;
+}
+
+void fill_sysinfo1(char* mystr) {
+  int rssi = WiFi.RSSI();
+  int rssi_quality = 0;
+  if (rssi <= -100) { rssi_quality = 0; } else if (rssi >= -50) { rssi_quality = 100; } else { rssi_quality = 2 * (rssi + 100); }
+  sprintf (mystr, "{\"Hostname\":\"%s\", \"SSID\":\"%s (%ddBm / %d%%)\", \"IP\":\"%s\", \"Channel\":\"%d\", \"GW-IP\":\"%s\"}",
+             WiFi.hostname().c_str(), WiFi.SSID().c_str(), rssi, rssi_quality, WiFi.localIP().toString().c_str(), WiFi.channel(), WiFi.gatewayIP().toString().c_str());           
+}
+
+void fill_sysinfo2(char* mystr) {
+   sprintf (mystr, "{\"Freespace\":\"%0.2fMB\", \"Sketchsize\":\"%0.2fKB\", \"FlashSize\":\"%dMB\", \"FlashFreq\":\"%dMHz\", \"CpuFreq\":\"%dMHz\"}",
+           ESP.getFreeSketchSpace() / 1048576.0, ESP.getSketchSize() / 1024.0, (int)(ESP.getFlashChipSize() / 1024 / 1024), (int)(ESP.getFlashChipSpeed() / 1000000), (int)(F_CPU / 1000000)    );   
+}
+
+void fill_sysinfo3(char* mystr) {
+  uint32_t free;
+  uint16_t max;
+  uint8_t frag;
+  ESP.getHeapStats(&free, &max, &frag);
+  sprintf (mystr, "{\"MAC\":\"%s\",\"SubNetMask\":\"%s\",\"ResetReason\":\"%s\",\"Heap_max\":%u,\"Heap_free\":%u,\"Heap_frag\":%u}",
+           WiFi.macAddress().c_str(), WiFi.subnetMask().toString().c_str(), ESP.getResetReason().c_str(), max, free, frag);
+}
+
+void fill_sysinfo4(char* mystr) {
+  sprintf (mystr, "{\"DnsIP\":\"%s\", \"BSSID\":\"%s\", \"CoreVer\":\"%s\", \"IdeVer\":\"%u\", \"SdkVer\":\"%s\"}",
+          WiFi.dnsIP().toString().c_str(), WiFi.BSSIDstr().c_str(), ESP.getCoreVersion().c_str(), ARDUINO, ESP.getSdkVersion());  
+}
+
+void fill_sysinfo5(char* mystr) {
+  uptime::calculateUptime();
+  sprintf (mystr, "{\"MQTT-Hostname\":\"%s\", \"UpTime\":\"%uT%02u:%02u:%02u\", \"SW\":\"%s / %s\"}",
+          MQTT_NODENAME, uptime::getDays(), uptime::getHours(), uptime::getMinutes(), uptime::getSeconds(), SWVERSION_STR, SWDATUM );
+}
+
+void fill_webcfg1(char* mystr) {
+  sprintf(mystr, "{\"titel1\":\"");
+  strcat(mystr, TITEL1);
+  strcat(mystr, "\"");
+#if defined(TITEL2)  
+  strcat(mystr, ",\"titel2\":\"");
+  strcat(mystr, TITEL2);
+  strcat(mystr, "\"");
+#endif               
+#if defined(MESSAGE1)
+  strcat(mystr, ",\"msg1\":1 "); 
+#endif
+#if defined(MESSAGE2)
+  strcat(mystr, ",\"msg2\":1 ");
+#endif
+#if defined(SWITCH1)
+  strcat(mystr, ",\"sw1\":1 ");
+#endif
+#if defined(SWITCH2)
+  strcat(mystr, ",\"sw2\":1 ");
+#endif
+#if defined(SWITCH3)
+  strcat(mystr, ",\"sw3\":1 ");
+#endif
+#if defined(SWITCH4)
+  strcat(mystr, ",\"sw4\":1 ");
+#endif
+#if defined(RF24GW)
+  strcat(mystr, ",\"rf24\":1 ");
+#endif
+#if defined(LEDMATRIX)
+  strcat(mystr,", \"ledmatrix\":1 ");
+#endif
+#if defined(NEOPIXEL)
+  strcat(mystr,", \"neopixel\":1 ");
+#endif
+  strcat(mystr,"}");
+}
+
+void fill_webcfg2(char* mystr) {
+  sprintf(mystr, "{\"logfile\":\"%d\", \"logger\":\"%d\", \"log_sensor\":\"%d\", \"log_rf24\":\"%d\", \"log_startup\":\"%d\", \"log_mqtt\":\"%d\", \"log_webcmd\":\"%d\", \"log_sysinfo\":\"%d\"}",
+          eepromdata.logfile, eepromdata.logger, eepromdata.log_sensor, eepromdata.log_rf24, eepromdata.log_startup, eepromdata.log_mqtt, eepromdata.log_webcmd, eepromdata.log_sysinfo);
+}
+
+void fill_timeStr() {
+  time(&now);                       // read the current time
+  localtime_r(&now, &tm);           // update the structure tm with the current time
+  sprintf(timeStr,"%02d:%02d:%02d",tm.tm_hour,tm.tm_min,tm.tm_sec);
+}
+
+void write2log(char* text) {
+  fill_timeStr();
+  if (eepromdata.logfile) {
+    File f = LittleFS.open("/logfile.txt", "a");
+    if (f) {
+      f.print(timeStr);
+      f.print(": ");
+      f.print(text);
+      f.print("\n");
+      f.close();
+    }
+  }  
+  if (eepromdata.logger) {
+    logger.addLine(timeStr,text);
+  }
+}
+
+void mqtt_send_stat() {
+  char tmp[LOGGER_LINESIZE];
+  if (eepromdata.log_mqtt) {
+    sprintf(info_str,"%s",F("Sende MQTT stat Interval"));
+    write2log(info_str);
+  }
+#if defined(SWITCH1)
+  mqtt_send_swtch1();
+#endif
+#if defined(SWITCH2)
+  mqtt_send_swtch2();
+#endif
+#if defined(SWITCH3)
+  mqtt_send_swtch3();
+#endif
+#if defined(SWITCH4)
+  mqtt_send_swtch4();
+#endif
+#if defined(SENSOR_18B20) || defined(SENSOR_ANALOG)
+  handlesensor(info_str, sensorinfo);
+  snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,"sensordata");
+  mqttClient.publish(mytopic, info_str);
+  if (eepromdata.log_mqtt) {
+    sprintf(tmp,"MQTT: %s : %s",mytopic, info_str);
+    write2log(info_str);
+  }
+#endif
+  handlestatus(info_str);
+  snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,"devicestatus");
+  mqttClient.publish(mytopic, info_str);
+  if (eepromdata.log_mqtt) {
+    sprintf(tmp,"MQTT: %s : %s",mytopic, info_str);
+    write2log(info_str);
+  }
+}
+
+void mqtt_send_tele() {
+    if (eepromdata.log_mqtt) {
+      sprintf(info_str,"%s",F("Sende MQTT tele Interval"));
+      write2log(info_str);
+    }
+    fill_sysinfo1(info_str);
+    snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","tele",MQTT_NODENAME,"info1");
+    mqttClient.publish(mytopic, info_str);
+    if (eepromdata.log_mqtt) write2log(info_str);
+    fill_sysinfo2(info_str);
+    snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","tele",MQTT_NODENAME,"info2");
+    mqttClient.publish(mytopic, info_str);
+    if (eepromdata.log_mqtt) write2log(info_str);
+    fill_sysinfo3(info_str);
+    snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","tele",MQTT_NODENAME,"info3");
+    mqttClient.publish(mytopic, info_str);
+    if (eepromdata.log_mqtt) write2log(info_str);
+    fill_sysinfo4(info_str);
+    snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","tele",MQTT_NODENAME,"info4");
+    mqttClient.publish(mytopic, info_str);
+    if (eepromdata.log_mqtt) write2log(info_str);
+    fill_sysinfo5(info_str);
+    snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","tele",MQTT_NODENAME,"info5");
+    mqttClient.publish(mytopic, info_str);
+    if (eepromdata.log_mqtt) write2log(info_str);
+//    handlesensor(info_str, sensorinfo);
+}
+
+void callback(char* topic, byte* payload, unsigned int length) {
+  char delimiter[] = "/";
+  char *ptr;
+  char part1[TOPIC_PART1_SIZE];
+  char part2[TOPIC_PART2_SIZE];
+  char part3[TOPIC_PART3_SIZE];
+  char msg[10]; 
+  byte* p = (byte*)malloc(length);
+  memcpy(p, payload, length);
+  sprintf (info_str, "Callback Msg: T:%s l:%u c:", topic, length);
+  ptr = strtok(topic, delimiter);
+  if(ptr != NULL) snprintf(part1, TOPIC_PART1_SIZE, "%s", ptr);
+  ptr = strtok(NULL, delimiter);
+  if(ptr != NULL) snprintf(part2, TOPIC_PART2_SIZE, "%s", ptr);
+  ptr = strtok(NULL, delimiter);
+  if(ptr != NULL) snprintf(part3, TOPIC_PART3_SIZE, "%s", ptr);
+  if ( strncmp(part1,MQTT_CMD, sizeof MQTT_CMD) == 0 ) {
+    if ( strncmp(part2, MQTT_NODENAME, sizeof MQTT_NODENAME) == 0 ) {
+#if defined(SWITCH1)      
+      if ( strncmp(part3, SWITCH1MQTT, sizeof SWITCH1MQTT) == 0 ) {
+        if ( p[0] == '1' ) {
+          strcat(info_str, "on" ); 
+          handleSwitch1(on);
+        } else {
+          strcat(info_str, "off" ); 
+          handleSwitch1(off);
+        }          
+        snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,SWITCH1MQTT);
+        mqttClient.publish(mytopic, msg, strlen(msg) );
+      }
+#endif      
+#if defined(SWITCH2)      
+      if ( strncmp(part3, SWITCH2MQTT, sizeof SWITCH2MQTT) == 0 ) {
+        if ( p[0] == '1' ) {
+          strcat(info_str, "on" ); 
+          handleSwitch2("on", msg);
+        } else {
+          strcat(info_str, "off" ); 
+          handleSwitch2("off", msg);
+        }          
+        snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,SWITCH2MQTT);
+        mqttClient.publish(mytopic, msg, strlen(msg) );
+      }
+#endif      
+#if defined(SWITCH3)      
+      if ( strncmp(part3, SWITCH3MQTT, sizeof SWITCH3MQTT) == 0 ) {
+        if ( p[0] == '1' ) {
+          strcat(info_str, "on" ); 
+          handleSwitch3("on", msg);
+        } else {
+          strcat(info_str, "off" ); 
+          handleSwitch3("off", msg);
+        }          
+        snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,SWITCH3MQTT);
+        mqttClient.publish(mytopic, msg, strlen(msg) );
+      }
+#endif      
+#if defined(SWITCH4)      
+      if ( strncmp(part3, SWITCH4MQTT, sizeof SWITCH4MQTT) == 0 ) {
+        if ( p[0] == '1' ) {
+          strcat(info_str, "on" ); 
+          handleSwitch4("on", msg);
+        } else {
+          strcat(info_str, "off" ); 
+          handleSwitch4("off", msg);
+        }          
+        snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,SWITCH4MQTT);
+        mqttClient.publish(mytopic, msg, strlen(msg) );
+      }
+#endif      
+#if defined(LEDMATRIX)
+      if ( strncmp(part3, "graph", sizeof "graph") == 0 ) {
+        for(unsigned int pos=0; pos+5<=length; pos+=5){
+          unsigned int cur_x = (p[pos]-'0')*10 + (p[pos+1]-'0');
+          unsigned int cur_y = (p[pos+2]-'0')*10 + (p[pos+3]-'0');
+          matrix.setPixel(cur_x, cur_y, p[pos+4]-'0'); 
+        }
+        matrix.display();
+      }
+      if ( strncmp(part3, "intensity", sizeof "intensity") == 0 ) {
+        uint8_t intensity = (p[0]-'0');
+        if ( intensity == 1 && (p[1]-'0') >= 0 && (p[1]-'0') < 6 ) {
+          intensity = intensity*10+(p[1]-'0');
+        }
+        if ( intensity <16 ) {
+          matrix.setIntensity(intensity);
+          sprintf(info_str,"{ \"intensity\":%u }",matrix.getIntensity());
+          snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,"matrixdata");
+          mqttClient.publish(mytopic, info_str);
+          sprintf (info_str, "Callback Msg: T:%s l:%u c:", topic, length);
+          char tmp[3];
+          sprintf(tmp,"%u",intensity);
+          strcat(info_str, tmp ); 
+        }
+      }
+      if ( strncmp(part3, "line", sizeof "line") == 0 ) {
+        char myline[LINE_SIZE]; 
+        strncpy(myline, (char*)p, length);
+        strncat(info_str, myline, length);
+        myline[length]=0;
+        print_line(myline);
+      }
+      if ( strncmp(part3, "display", sizeof "display") == 0 ) {
+        char mystate[5];
+        snprintf(mystate,length+1,"%s",(char*)p);
+        if (strcmp(mystate, c_on) == 0) {
+          matrix.on();
+          state_switch1 = true;
+          sprintf(info_str,"%s",F("{ \"display\":\"on\" }"));
+          snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,"matrixdata");
+          mqttClient.publish(mytopic, info_str);
+          sprintf (info_str, "Callback Msg: T:%s l:%u c:%s", topic, length, mystate);
+          strcat(info_str, "on" );
+        }
+        if (strcmp(mystate, c_off) == 0) {
+          matrix.off();
+          state_switch1 = false;
+          sprintf(info_str,"%s",F("{ \"display\":\"off\" }"));
+          snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,"matrixdata");
+          mqttClient.publish(mytopic, info_str);
+          sprintf (info_str, "Callback Msg: T:%s l:%u c:%s", topic, length, mystate);
+          strcat(info_str, "off" );
+        }
+        sprintf (info_str, "Callback Msg: T:%s l:%u c:%s", topic, length, mystate);
+      }
+#endif
+    }
+  }
+  if (eepromdata.log_mqtt) {
+    write2log(info_str);
+  }
+  // Free the memory
+  free(p);  
+}
+
+void mqtt_reconnect() {
+  // Loop until we're reconnected
+  while (!mqttClient.connected()) {
+    // Attempt to connect
+    if (mqttClient.connect(MQTT_NODENAME)) {
+      // Once connected, publish an announcement...
+      mqtt_send_stat();
+      // ... and resubscribe
+      snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","cmnd",MQTT_NODENAME,"#");
+      mqttClient.subscribe(mytopic);  
+    } else {
+      // Wait 1 seconds before retrying
+      delay(1000);
+    }
+  }
+}
+
+#if defined(RF24GW)
+char* printPayload(char* prefix, payload_t *payload, char* placeholder) {
+  char buf1[10];
+  char buf2[10];
+  char buf3[10];
+  char buf4[10];
+  char buf5[10];
+  char buf6[10];
+  sprintf(placeholder,"%s: N:%u T:%u m:%u F:0x%02x O:%u H:%u (%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)", prefix
+                     ,payload->node_id, payload->msg_type, payload->msg_id, payload->msg_flags, payload->orderno, payload->heartbeatno
+                     ,getChannel(payload->data1), unpackTransportValue(payload->data1, buf1)
+                     ,getChannel(payload->data2), unpackTransportValue(payload->data2, buf2)
+                     ,getChannel(payload->data3), unpackTransportValue(payload->data3, buf3)
+                     ,getChannel(payload->data4), unpackTransportValue(payload->data4, buf4)
+                     ,getChannel(payload->data5), unpackTransportValue(payload->data5, buf5)
+                     ,getChannel(payload->data6), unpackTransportValue(payload->data6, buf6)
+                     );
+  return placeholder;
+}
+#endif
+
+void loop() {
+  unsigned long now = millis();
+//  Serial.print( now );
+  if ( ! mqttClient.connected()) {
+    if (eepromdata.log_mqtt) {
+      sprintf(info_str,"%s",F("MQTT reconnect"));
+      write2log(info_str);
+    }
+    mqtt_reconnect();
+  }
+  mqttClient.loop();
+
+#if defined(RF24GW)
+  while ( radio.available() ) {
+    radio.read(&payload, sizeof(payload));
+    if (eepromdata.log_rf24) write2log(printPayload("N>G", &payload, info_str));
+    udpdata.gw_no = GW_NO;
+    memcpy(&udpdata.payload, &payload, sizeof(payload));
+    udp.beginPacket(HUB_IP, HUB_UDP_PORTNO);
+    udp.write((char*)&udpdata, sizeof(udpdata));
+    udp.endPacket();
+  }
+  if (udp.parsePacket() > 0 ) {
+    udp.read((char*)&udpdata, sizeof(udpdata));
+    memcpy(&payload, &udpdata.payload, sizeof(payload));
+    if (eepromdata.log_rf24) write2log(printPayload("G>N", &payload, info_str));
+    radio.stopListening();
+    radio.write(&payload, sizeof(payload));
+    radio.startListening(); 
+  }
+#endif
+
+  if (now - lastMsg > STATINTERVAL || lastMsg == 0 || lastMsg > now) {
+    lastMsg = now;
+    mqtt_send_stat();
+  }
+  if (now - lastInfo > TELEINTERVAL || lastInfo == 0 || lastInfo > now) {
+    lastInfo = now;
+    mqtt_send_tele();
+  }
+  httpServer.handleClient();
+  MDNS.update();
+  ArduinoOTA.handle(); // Wait for OTA connection
+  yield();
+}

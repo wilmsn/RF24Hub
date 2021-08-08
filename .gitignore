@@ -33,3 +33,6 @@
 rf24hubd
 rf24gwd
 rf24hub.log
+
+#Others
+secrets.h

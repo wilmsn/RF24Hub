@@ -21,15 +21,16 @@ On Branch: master  !!!!!
 //#define TESTZIMMERTHERMOMETER
 //#define TESTZIMMER1THERMOMETER
 //#define BASTELZIMMERTHERMOMETER
-#define BASTELZIMMERTHERMOMETER_SW
-//#define KUECHETHERMOMETER
+//#define BASTELZIMMERTHERMOMETER_SW
+//#define KUECHETHERMOMETER // noch mit Bug in 205
 //#define WOHNZIMMERTHERMOMETER
-//#define ANKLEIDEZIMMERTHERMOMETER
+#define ANKLEIDEZIMMERTHERMOMETER
 //#define GAESTEZIMMERTHERMOMETER
+//#define FEUCHTESENSOR_170
 //#define UNOTESTNODE_AO
 //#define TERASSE
 //#define FLUR
-//#define TEST
+//#define TESTNODE
 //****************************************************
 // Default settings are in "default.h" now !!!!!
 #include "defaults.h"
@@ -70,12 +71,12 @@ On Branch: master  !!!!!
 #include "LCD5110.h"
 #endif
 
-#if defined(DALLAS_18B20)
+#if defined(SENSOR_18B20)
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #endif
 
-#if defined(BOSCH_SENSOR)
+#if defined(SENSOR_BOSCH)
 #include <BMX_sensor.h>
 #endif
 
@@ -97,13 +98,18 @@ LCD5110 lcd(N5110_RST,N5110_CE,N5110_DC,N5110_DIN,N5110_CLK);
 #endif
 #endif
 
-#if defined(DALLAS_18B20)
-OneWire oneWire(ONE_WIRE_BUS); 
-DallasTemperature sensor(&oneWire);
+#if defined(SENSOR_DUMMY)
 float temp;
 #endif
 
-#if defined(BOSCH_SENSOR)
+#if defined(SENSOR_18B20)
+OneWire oneWire(ONE_WIRE_BUS); 
+DallasTemperature sensor(&oneWire);
+DeviceAddress sensorAddress;
+float temp;
+#endif
+
+#if defined(SENSOR_BOSCH)
 BMX_SENSOR sensor;
 float temp, pres, humi;
 #endif
@@ -128,7 +134,7 @@ struct eeprom_t {
    float    low_volt_level;
    uint16_t lowVoltLoops;
    uint16_t sleeptime_sec;
-   int      sleeptime_adj;
+   uint16_t sleep4ms_fac;
    uint8_t  emptyloops;
    uint8_t  max_sendcount;
    uint8_t  max_stopcount;
@@ -186,11 +192,20 @@ void get_voltage(void) {
 }
 
 void get_sensordata(void) {
+// Sensor Dummy
+#if defined(SENSOR_DUMMY)
+    temp=DUMMY_TEMP;
+#if defined(DEBUG_SERIAL_SENSOR)
+    Serial.print("Temp: ");
+    Serial.print(temp);
+#endif
+#endif
+// ENDE: Sensor Dummy
+
 // Sensor Dallas 18B20
-#if defined(DALLAS_18B20)
+#if defined(SENSOR_18B20)
   sensor.requestTemperatures(); // Send the command to get temperatures
-  sleep4ms(800);
-  delay(10);
+  delay(DS18B20_DELAYTIME);
   temp=sensor.getTempCByIndex(0);
 #if defined(DEBUG_SERIAL_SENSOR)
     Serial.print("Temp: ");
@@ -200,7 +215,7 @@ void get_sensordata(void) {
 // ENDE: Sensor Dallas 18B20
 
 // Sensor Bosch BMP180; BMP280; BME280 
-#if defined(BOSCH_SENSOR)
+#if defined(SENSOR_BOSCH)
 #if defined(DEBUG_SERIAL_SENSOR)
   if (sensor.isBMP180()) Serial.println("BMP180");
   if (sensor.isBMP280()) Serial.println("BMP280");
@@ -241,16 +256,6 @@ uint32_t action_loop(uint32_t data) {
     Serial.println(getChannel(data));
 #endif  
     switch (channel) {
-      case 1:
-      {      
-#if defined(DALLAS_18B20)
-        sensor.requestTemperatures(); // Send the command to get temperatures
-        delay(800);
-        temp=sensor.getTempCByIndex(0);
-        data = calcTransportValue_f(1, temp);
-#endif
-      }
-      break;
 #if defined(HAS_DISPLAY)
       case 21:
       {
@@ -441,12 +446,12 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
-      case REG_SLEEPTIMEADJ: 
+      case REG_SLEEP4MS_FAC: 
       {
         // sleeptime adjust in sec!
         int16_t val = getValue_i(data);
-        if (val >= -1000 && val <= 1000) {
-          eeprom.sleeptime_adj = val;
+        if (val >= 500 && val <= 2000) {
+          eeprom.sleep4ms_fac = val;
           EEPROM.put(0, eeprom);
         }
       }
@@ -586,7 +591,7 @@ void setup(void) {
     eeprom.brightnes        = BRIGHTNES
     eeprom.contrast         = CONTRAST;
     eeprom.sleeptime_sec    = SLEEPTIME_SEC;
-    eeprom.sleeptime_adj    = SLEEPTIME_ADJ;
+    eeprom.sleep4ms_fac     = SLEEP4MS_FAC;
     eeprom.emptyloops       = EMPTYLOOPS;
     eeprom.senddelay        = SENDDELAY;
     eeprom.max_sendcount    = MAX_SENDCOUNT;
@@ -602,10 +607,16 @@ void setup(void) {
   printf_begin();
 #endif
   SPI.begin();
-#if defined(DALLAS_18B20)
+#if defined(SENSOR_18B20)
   sensor.begin(); 
+  for(byte i=0; i<sensor.getDeviceCount(); i++) {
+      if(sensor.getAddress(sensorAddress, i)) {
+        sensor.setResolution(sensorAddress, DS18B20_RESOLUTION);
+      }
+    }
+
 #endif
-#if defined(BOSCH_SENSOR)
+#if defined(SENSOR_BOSCH)
   sensor.begin(); 
 #endif
 #if defined(NEOPIXEL)
@@ -1026,7 +1037,7 @@ void sendRegister(void) {
   s_payload.data1 = calcTransportValue_f(REG_VOLTFAC, eeprom.volt_fac);
   s_payload.data2 = calcTransportValue_f(REG_VOLTOFF, eeprom.volt_off);
   s_payload.data3 = calcTransportValue_f(REG_LOWVOLTLEV, eeprom.low_volt_level);
-  s_payload.data4 = calcTransportValue_i(REG_SLEEPTIMEADJ, eeprom.sleeptime_adj);
+  s_payload.data4 = calcTransportValue_ui(REG_SLEEP4MS_FAC, eeprom.sleep4ms_fac);
   s_payload.data5 = calcTransportValue_ui(REG_LOWVOLTLOOPS, eeprom.lowVoltLoops);
   s_payload.data6 = calcTransportValue_ui(REG_SW, SWVERSION);
   do_transmit(3,PAYLOAD_TYPE_INIT,PAYLOAD_FLAG_EMPTY,0, 241);
@@ -1168,10 +1179,11 @@ void loop(void) {
     Serial.println("Radio WakeUp");
 #endif
     radio.powerUp();
+    delay(10);
     radio.startListening();
     radio.openReadingPipe(1,rf24_hub2node);
     delay(10);
-      
+
     // Empty FiFo Buffer from old transmissions
     while ( radio.available() ) {
       radio.read(&r_payload, sizeof(r_payload));
@@ -1179,10 +1191,13 @@ void loop(void) {
     }
 
     payload_data(1, 101, cur_voltage);
-#if defined(DALLAS_18B20)
+#if defined(SENSOR_DUMMY)
     payload_data(2, 1, temp);
 #endif
-#if defined(BOSCH_SENSOR)
+#if defined(SENSOR_18B20)
+    payload_data(2, 1, temp);
+#endif
+#if defined(SENSOR_BOSCH)
     if (sensor.hasTemperature() ) payload_data(2, 1, temp);
     if (sensor.hasPressure() )    payload_data(3, 2, pres);
     if (sensor.hasHumidity() )    payload_data(4, 3, humi);
@@ -1192,6 +1207,7 @@ void loop(void) {
     do_transmit(eeprom.max_sendcount, PAYLOAD_TYPE_HB, msg_flags, 0, 0);
     exec_jobs();
     radio.stopListening();
+    delay(10);
     radio.powerDown();
 #if defined(DEBUG_SERIAL_RADIO)
     Serial.println("Radio Sleep");
@@ -1207,8 +1223,7 @@ void loop(void) {
 //ToDo prüfen und ggf. überarbeiten
   long int tempsleeptime = eeprom.sleeptime_sec;  // regelmaessige Schlafzeit in Sek.
   tempsleeptime += sleeptime_kor;                 // einmalige Korrektur in Sek. (-1000 ... +1000)
-  tempsleeptime *= 1000;                          // Umrechnung in Millisek.
-  tempsleeptime += eeprom.sleeptime_adj;          // Feinjustierung in Millisek.
+  tempsleeptime *= eeprom.sleep4ms_fac;           // Umrechnung in Millisek.
   sleeptime_kor = 0;  
   sleep4ms(tempsleeptime);
   loopcount++;

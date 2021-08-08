@@ -9,8 +9,14 @@
 // Relais
 #define RELAIS_ON     HIGH
 #define RELAIS_OFF    LOW
+// A dummy temperature
+#define DUMMY_TEMP    33.3
 // One Wire Bus
 #define ONE_WIRE_BUS  8
+// Resolution for DS18B20 sensor
+#define DS18B20_RESOLUTION 9
+// Delaytime ffor 18B20 measurement
+#define DS18B20_DELAYTIME  100
 // Altitude above sealevel
 #define ALTITUDEABOVESEALEVEL   95.0
 // Neopixel
@@ -23,10 +29,9 @@
 // Sleeptime in Seconds !! 
 // (valid: 10 ... 32.400)
 #define SLEEPTIME_SEC   120
-// ##### brauche ich das ?????? ############
-// Sleeptime adjust (in ms) - will be added to sleeptime_sec
-// (valid: -1000 ... 1000)
-#define SLEEPTIME_ADJ   0
+// adjust the length of a second (aprox. in ms) - will be used as a factor to sleep4ms()
+// (valid: 500 ... 2000)
+#define SLEEP4MS_FAC   1000
 // number of empty loop after sending data
 // (valid: 0...20)
 #define EMPTYLOOPS      0
