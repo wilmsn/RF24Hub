@@ -8,6 +8,9 @@ var sw4_active = 0;
 var sw5_active = 0;
 var rf24_active = 0;
 var num_sw = 0;
+var red = 0;
+var green = 0;
+var blue = 0;
 var ledmatrix_active = 0;
 var neopixel_active = 0;
 var intervalperiode = 5000;
@@ -257,42 +260,19 @@ function prozessJS( key, val ) {
             $("#sw5").show().css("height","160px").css("padding-bottom","unset").css("padding-top","unset").css("font-size","smaller");
             $("#sw5cont").html("<label for='slider1' id='slider1label'></label><input type='range' name='slider1' id='slider1' min='0' max='255' value='0'><label for='slider2' id='slider2label'></label><input type='range' name='slider2' id='slider2' min='0' max='255' value='0'><label for='slider3' id='slider3label'></label><input type='range' name='slider3' id='slider3' min='0' max='255' value='0'>");	
             $("#sw5txt").hide();
-            $.get( "/cmd?getrgb", function( data ) {
-              var red   = data & 0x0000FF;
-              var green = data & 0x00FF00;
-              green >>= 8;
-              var blue  = data & 0xFF0000;
-              blue >>= 16;
-              $("#slider1label").html("Rot: "+red);
-              $("#slider1").val(red);
-              $("#slider2label").html("Grün: "+green);
-              $("#slider2").val(green);
-              $("#slider3label").html("Blau: "+blue);
-              $("#slider3").val(blue);
-            });
+            get_rgb();
+            do_sw1("state");
             $("#slider1").change(function() {
-               var wert = $(this).val(); 
-               //alert("Rot: "+wert);
-               //do_sw5($(this).val());
-               $("#slider1label").html("Rot: "+wert);
-               $.get( "/cmd?setrgbr="+wert, function( data ) {
-               });
+               red = parseInt($(this).val());
+               set_rgb();
             });
             $("#slider2").change(function() {
-               var wert = $(this).val(); 
-               //alert("Grün: "+wert);
-               //do_sw5($(this).val());
-               $("#slider2label").html("Grün: "+wert);
-               $.get( "/cmd?setrgbg="+wert, function( data ) {
-               });
+               green = parseInt($(this).val()); 
+               set_rgb();
             });
             $("#slider3").change(function() {
-               var wert = $(this).val(); 
-               //alert("Blau: "+wert);
-               //do_sw5($(this).val());
-               $("#slider3label").html("Blau: "+wert);
-               $.get( "/cmd?setrgbb="+wert, function( data ) {
-               });
+               blue = parseInt($(this).val()); 
+               set_rgb();
             });
           }
         break;  
@@ -519,6 +499,35 @@ function do_sw5( cmd ) {
   }
 }
 
+function set_rgb() {
+  $("#slider1label").html("Rot: "+red);
+  $("#slider2label").html("Grün: "+green);
+  $("#slider3label").html("Blau: "+blue);
+  var r = red;
+  var g = green << 8;
+  var b = blue << 16;
+  var rgb = r + g + b;
+  alert("rgb:"+rgb+" r:"+red+" g:"+green+" b:"+blue+" r*:"+r+" g*:"+g+" b*:"+b);
+  $.get( "/cmd?setrgb="+rgb, function( data ) {
+  });
+}
+
+function get_rgb() {
+  $.get( "/cmd?getrgb", function( data ) {
+    red   = data & 0x0000FF;
+    green = data & 0x00FF00;
+    green >>= 8;
+    blue  = data & 0xFF0000;
+    blue >>= 16;
+    $("#slider1label").html("Rot: "+red);
+    $("#slider1").val(red);
+    $("#slider2label").html("Grün: "+green);
+    $("#slider2").val(green);
+    $("#slider3label").html("Blau: "+blue);
+    $("#slider3").val(blue);
+  });    
+}
+
 function do_restart() {
   var r = confirm("Wirklich neustarten?");
   if (r == true) {
@@ -596,6 +605,10 @@ function intervalfunction() {
     if ( ledmatrix_active == 1 ) {
       fill_ledmatrix();
     } 
+    if ( neopixel_active == 1 ) {
+      do_sw1("state");
+      get_rgb();
+    }
     if ( ledmatrix_active == 0 && neopixel_active == 0 ) {
       if ( sw1_active == 1) do_sw1('state');
     }  
@@ -612,6 +625,9 @@ function intervalfunction() {
         prozessJS( key, val );
       });
     });
+    if ( neopixel_active == 1 ) {
+      get_rgb();
+    }
   }
   if ( page == "console" ) {
     $.get('console', function(data) {

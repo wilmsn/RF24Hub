@@ -81,6 +81,7 @@ optional:
 #define SWITCH1INITSTATE       false
 #define GW_NO                  103
 #define RF24GW
+#define SENSOR_18B20
 
 #endif
 //-----------------------------------------------------

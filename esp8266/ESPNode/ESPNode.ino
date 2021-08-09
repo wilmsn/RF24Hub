@@ -100,11 +100,8 @@ char mytopic[TOPIC_BUFFER_SIZE];
 char info_str[INFOSIZE];
 unsigned long lastMsg = 0;
 unsigned long lastInfo = 0;
-const char val_on[] = "1";
-const char val_off[] = "0";
 const char c_on[] =  "Ein";
 const char c_off[] = "Aus";
-const char* mqtt_val;
 #if defined(NEOPIXEL)
 uint32_t rgb = RGBINIT;
 #endif
@@ -546,18 +543,13 @@ void handleCmd() {
       status = ok_text;  
     }
     if ( httpServer.argName(argNo) == "intensity" ) {
-      char conv[3];
-      strncpy(conv,httpServer.arg(argNo).c_str(),2);
-      uint8_t wert = (conv[0]-'0');
-      if ( wert == 1 && ((conv[1]-'0') >=0) && ((conv[1]-'0') < 6) ) {
-        wert = 10*wert+(conv[1]-'0');
-      }
-      if ( wert >= 0 && wert < 16) {
-        matrix.setIntensity(wert);
+      uint8_t intensity = atoi(httpServer.arg(argNo).c_str());
+      if ( intensity < 16) {
+        matrix.setIntensity(intensity);
         snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,"intensity");
-        mqttClient.publish(mytopic, conv);
+        mqttClient.publish(mytopic, httpServer.arg(argNo).c_str());
         if (eepromdata.log_mqtt) {
-          sprintf(info_str,"MQTT: %s : %s",mytopic, mqtt_val);
+          sprintf(info_str,"MQTT: %s : %s",mytopic, httpServer.arg(argNo).c_str());
           write2log(info_str);
         }
       }
@@ -570,33 +562,11 @@ void handleCmd() {
       sprintf(info_str,"%u",rgb);
       status = ok_text;  
     }
-    if ( httpServer.argName(argNo) == "setrgbr" ) {
-      uint32_t red = httpServer.arg(argNo).toInt();
-      rgb &= 0xFFFF00;
-      rgb |= red & 0x0000FF;
-Serial.println(state_switch1);      
+    if ( httpServer.argName(argNo) == "setrgb" ) {
+      rgb = httpServer.arg(argNo).toInt();
+      snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,"RGB");
+      mqttClient.publish(mytopic, httpServer.arg(argNo).c_str());
       if (state_switch1) set_neopixel(on);
-      sprintf(info_str,"%u",rgb);
-      status = ok_text;  
-    }
-    if ( httpServer.argName(argNo) == "setrgbg" ) {
-      uint32_t green = httpServer.arg(argNo).toInt();
-      green <<= 8;
-      rgb &= 0xFF00FF;
-      rgb |= green & 0x00FF00;
-Serial.println(state_switch1);      
-      if (state_switch1) set_neopixel(on);
-      sprintf(info_str,"%u",rgb);
-      status = ok_text;  
-    }
-    if ( httpServer.argName(argNo) == "setrgbb" ) {
-      uint32_t blue = httpServer.arg(argNo).toInt();
-      blue <<= 16;
-      rgb &= 0x00FFFF;
-      rgb |= blue & 0xFF0000;
-Serial.println(state_switch1);      
-      if (state_switch1) set_neopixel(on);
-      sprintf(info_str,"%u",rgb);
       status = ok_text;  
     }
 #endif
@@ -628,11 +598,10 @@ Serial.println(state_switch1);
 
 #if defined(SWITCH1)
 void mqtt_send_swtch1() {
-  if (state_switch1) mqtt_val = val_on; else mqtt_val = val_off;
   snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,SWITCH1MQTT);
-  mqttClient.publish(mytopic, mqtt_val);
+  mqttClient.publish(mytopic, state_switch1? c_on: c_off);
   if (eepromdata.log_mqtt) {
-    sprintf(info_str,"MQTT: %s : %s",mytopic, mqtt_val);
+    sprintf(info_str,"MQTT: %s : %s",mytopic, state_switch1? c_on: c_off);
     write2log(info_str);
   }
 }
@@ -649,8 +618,6 @@ void switchSwitch1(bool stat) {
     matrix.on();
 #endif
 #if defined(NEOPIXEL)
-     Serial.print(state_switch1);
-     Serial.println("  on");
      set_neopixel(on);
 #endif
   } else {
@@ -664,8 +631,6 @@ void switchSwitch1(bool stat) {
      matrix.off();
 #endif
 #if defined(NEOPIXEL)
-     Serial.print(state_switch1);
-     Serial.println("   off");
      set_neopixel(off);
 #endif
   }
@@ -698,11 +663,10 @@ void handleSwitch1(tristate_t stat) {
 
 #if defined(SWITCH2)
 void mqtt_send_swtch2() {
-  if (state_switch2) mqtt_val = val_on; else mqtt_val = val_off;
   snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,SWITCH2MQTT);
-  mqttClient.publish(mytopic, mqtt_val);
+  mqttClient.publish(mytopic, state_switch2? c_on: c_off);
   if (eepromdata.log_mqtt) {
-    sprintf(info_str,"MQTT: %s : %s",mytopic, mqtt_val);
+    sprintf(info_str,"MQTT: %s : %s",mytopic, state_switch2? c_on: c_off);
     write2log(info_str);
   }
 }
@@ -752,11 +716,10 @@ void handleSwitch2(tristate_t stat) {
 
 #if defined(SWITCH3)
 void mqtt_send_swtch3() {
-  if (state_switch3) mqtt_val = val_on; else mqtt_val = val_off;
   snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,SWITCH3MQTT);
-  mqttClient.publish(mytopic, mqtt_val);
+  mqttClient.publish(mytopic, state_switch3? c_on: c_off);
   if (eepromdata.log_mqtt) {
-    sprintf(info_str,"MQTT: %s : %s",mytopic, mqtt_val);
+    sprintf(info_str,"MQTT: %s : %s",mytopic, state_switch3? c_on: c_off);
     write2log(info_str);
   }
 }
@@ -806,11 +769,10 @@ void handleSwitch3(tristate_t stat) {
 
 #if defined(SWITCH4)
 void mqtt_send_swtch4() {
-  if (state_switch4) mqtt_val = val_on; else mqtt_val = val_off;
   snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,SWITCH4MQTT);
-  mqttClient.publish(mytopic, mqtt_val);
+  mqttClient.publish(mytopic, state_switch4? c_on: c_off);
   if (eepromdata.log_mqtt) {
-    sprintf(info_str,"MQTT: %s : %s",mytopic, mqtt_val);
+    sprintf(info_str,"MQTT: %s : %s",mytopic, state_switch4? c_on: c_off);
     write2log(info_str);
   }
 }
@@ -1103,11 +1065,13 @@ void mqtt_send_stat() {
   }
 #endif
   handlestatus(info_str);
-  snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,"devicestatus");
-  mqttClient.publish(mytopic, info_str);
-  if (eepromdata.log_mqtt) {
-    sprintf(tmp,"MQTT: %s : %s",mytopic, info_str);
-    write2log(info_str);
+  if ( strlen(info_str) > 5 ) {
+    snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,"devicestatus");
+    mqttClient.publish(mytopic, info_str);
+    if (eepromdata.log_mqtt) {
+      sprintf(tmp,"MQTT: %s : %s",mytopic, info_str);
+      write2log(info_str);
+    }
   }
 }
 
@@ -1146,9 +1110,12 @@ void callback(char* topic, byte* payload, unsigned int length) {
   char part2[TOPIC_PART2_SIZE];
   char part3[TOPIC_PART3_SIZE];
   char msg[10]; 
-  byte* p = (byte*)malloc(length);
-  memcpy(p, payload, length);
-  sprintf (info_str, "Callback Msg: T:%s l:%u c:", topic, length);
+  char* cmd = (char*)malloc(length+2);
+  snprintf(cmd,length+1,"%s",(char*)payload);
+  sprintf (info_str, "Callback Msg: T:%s l:%u c:%s", topic, length, cmd);
+  if (eepromdata.log_mqtt) {
+    write2log(info_str);
+  }
   ptr = strtok(topic, delimiter);
   if(ptr != NULL) snprintf(part1, TOPIC_PART1_SIZE, "%s", ptr);
   ptr = strtok(NULL, delimiter);
@@ -1159,12 +1126,12 @@ void callback(char* topic, byte* payload, unsigned int length) {
     if ( strncmp(part2, MQTT_NODENAME, sizeof MQTT_NODENAME) == 0 ) {
 #if defined(SWITCH1)      
       if ( strncmp(part3, SWITCH1MQTT, sizeof SWITCH1MQTT) == 0 ) {
-        if ( p[0] == '1' ) {
-          strcat(info_str, "on" ); 
+        if ( strncmp(cmd, c_on, 3 ) == 0 ) {
           handleSwitch1(on);
+          sprintf(msg,"%s",c_on);
         } else {
-          strcat(info_str, "off" ); 
           handleSwitch1(off);
+          sprintf(msg,"%s",c_off);
         }          
         snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,SWITCH1MQTT);
         mqttClient.publish(mytopic, msg, strlen(msg) );
@@ -1172,12 +1139,12 @@ void callback(char* topic, byte* payload, unsigned int length) {
 #endif      
 #if defined(SWITCH2)      
       if ( strncmp(part3, SWITCH2MQTT, sizeof SWITCH2MQTT) == 0 ) {
-        if ( p[0] == '1' ) {
-          strcat(info_str, "on" ); 
-          handleSwitch2("on", msg);
+        if ( strncmp(cmd, c_on, 3 ) == 0 ) {
+          handleSwitch2(on);
+          sprintf(msg,"%s",c_on);
         } else {
-          strcat(info_str, "off" ); 
-          handleSwitch2("off", msg);
+          handleSwitch2(off);
+          sprintf(msg,"%s",c_off);
         }          
         snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,SWITCH2MQTT);
         mqttClient.publish(mytopic, msg, strlen(msg) );
@@ -1185,12 +1152,12 @@ void callback(char* topic, byte* payload, unsigned int length) {
 #endif      
 #if defined(SWITCH3)      
       if ( strncmp(part3, SWITCH3MQTT, sizeof SWITCH3MQTT) == 0 ) {
-        if ( p[0] == '1' ) {
-          strcat(info_str, "on" ); 
-          handleSwitch3("on", msg);
+        if ( strncmp(cmd, c_on, 3 ) == 0 ) {
+          handleSwitch3(on);
+          sprintf(msg,"%s",c_on);
         } else {
-          strcat(info_str, "off" ); 
-          handleSwitch3("off", msg);
+          handleSwitch3(off);
+          sprintf(msg,"%s",c_off);
         }          
         snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,SWITCH3MQTT);
         mqttClient.publish(mytopic, msg, strlen(msg) );
@@ -1198,13 +1165,13 @@ void callback(char* topic, byte* payload, unsigned int length) {
 #endif      
 #if defined(SWITCH4)      
       if ( strncmp(part3, SWITCH4MQTT, sizeof SWITCH4MQTT) == 0 ) {
-        if ( p[0] == '1' ) {
-          strcat(info_str, "on" ); 
-          handleSwitch4("on", msg);
+        if ( strncmp(cmd, c_on, 3 ) == 0 ) {
+          handleSwitch4(on);
+          sprintf(msg,"%s",c_on);
         } else {
-          strcat(info_str, "off" ); 
-          handleSwitch4("off", msg);
-        }          
+          handleSwitch4(off);
+          sprintf(msg,"%s",c_off);
+        }         
         snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,SWITCH4MQTT);
         mqttClient.publish(mytopic, msg, strlen(msg) );
       }
@@ -1212,66 +1179,39 @@ void callback(char* topic, byte* payload, unsigned int length) {
 #if defined(LEDMATRIX)
       if ( strncmp(part3, "graph", sizeof "graph") == 0 ) {
         for(unsigned int pos=0; pos+5<=length; pos+=5){
-          unsigned int cur_x = (p[pos]-'0')*10 + (p[pos+1]-'0');
-          unsigned int cur_y = (p[pos+2]-'0')*10 + (p[pos+3]-'0');
-          matrix.setPixel(cur_x, cur_y, p[pos+4]-'0'); 
+          unsigned int cur_x = (cmd[pos]-'0')*10 + (cmd[pos+1]-'0');
+          unsigned int cur_y = (cmd[pos+2]-'0')*10 + (cmd[pos+3]-'0');
+          matrix.setPixel(cur_x, cur_y, cmd[pos+4]-'0'); 
         }
         matrix.display();
       }
       if ( strncmp(part3, "intensity", sizeof "intensity") == 0 ) {
-        uint8_t intensity = (p[0]-'0');
-        if ( intensity == 1 && (p[1]-'0') >= 0 && (p[1]-'0') < 6 ) {
-          intensity = intensity*10+(p[1]-'0');
-        }
+        uint8_t intensity = atoi(cmd);
         if ( intensity <16 ) {
           matrix.setIntensity(intensity);
           sprintf(info_str,"{ \"intensity\":%u }",matrix.getIntensity());
           snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,"matrixdata");
           mqttClient.publish(mytopic, info_str);
-          sprintf (info_str, "Callback Msg: T:%s l:%u c:", topic, length);
-          char tmp[3];
-          sprintf(tmp,"%u",intensity);
-          strcat(info_str, tmp ); 
         }
       }
       if ( strncmp(part3, "line", sizeof "line") == 0 ) {
-        char myline[LINE_SIZE]; 
-        strncpy(myline, (char*)p, length);
-        strncat(info_str, myline, length);
-        myline[length]=0;
-        print_line(myline);
+        print_line(cmd);
       }
-      if ( strncmp(part3, "display", sizeof "display") == 0 ) {
-        char mystate[5];
-        snprintf(mystate,length+1,"%s",(char*)p);
-        if (strcmp(mystate, c_on) == 0) {
-          matrix.on();
-          state_switch1 = true;
-          sprintf(info_str,"%s",F("{ \"display\":\"on\" }"));
-          snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,"matrixdata");
-          mqttClient.publish(mytopic, info_str);
-          sprintf (info_str, "Callback Msg: T:%s l:%u c:%s", topic, length, mystate);
-          strcat(info_str, "on" );
-        }
-        if (strcmp(mystate, c_off) == 0) {
-          matrix.off();
-          state_switch1 = false;
-          sprintf(info_str,"%s",F("{ \"display\":\"off\" }"));
-          snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,"matrixdata");
-          mqttClient.publish(mytopic, info_str);
-          sprintf (info_str, "Callback Msg: T:%s l:%u c:%s", topic, length, mystate);
-          strcat(info_str, "off" );
-        }
-        sprintf (info_str, "Callback Msg: T:%s l:%u c:%s", topic, length, mystate);
+      }
+#endif
+#if defined(NEOPIXEL)
+      if ( strncmp(part3, "RGB", sizeof "RGB") == 0 ) {
+        char *eptr;
+        rgb = strtoul(cmd, &eptr, 10);
+        if (state_switch1) set_neopixel(on);
+        snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,"devicestatus");
+        mqttClient.publish(mytopic, cmd);
       }
 #endif
     }
   }
-  if (eepromdata.log_mqtt) {
-    write2log(info_str);
-  }
   // Free the memory
-  free(p);  
+  free(cmd);  
 }
 
 void mqtt_reconnect() {
