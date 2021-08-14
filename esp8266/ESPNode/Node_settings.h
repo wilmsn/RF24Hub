@@ -51,7 +51,28 @@ optional:
 #define SWITCH1MQTT            "relais"
 #endif
 //-----------------------------------------------------
-#if defined(WOHNZIMMERDISPLAY)
+#if defined(TERASSE)
+#define HOSTNAME               "terassennode"
+#define MQTT_NODENAME          "terassennode"
+#define TITEL1                 "TerassenNode"
+#define RF24GW
+#define GW_NO                  104
+#define SENSOR_18B20
+#define SWITCH1               
+#define SWITCH1PIN1            2
+#define SWITCH1TXT             "Terasse"
+#define SWITCH1INITSTATE       LOW
+#define SWITCH1ACTIVESTATE     LOW
+#define SWITCH1MQTT            "terasse"
+#define SWITCH2               
+#define SWITCH2PIN1            0
+#define SWITCH2TXT             "Balkon"
+#define SWITCH2INITSTATE       LOW
+#define SWITCH2ACTIVESTATE     LOW
+#define SWITCH2MQTT            "balkon"
+#endif
+//-----------------------------------------------------
+#if defined(WOHNZIMMERNODE)
 #define HOSTNAME               "wohnzimmernode"
 #define MQTT_NODENAME          "wohnzimmernode"
 #define TITEL1                 "Wohnzimmernode"

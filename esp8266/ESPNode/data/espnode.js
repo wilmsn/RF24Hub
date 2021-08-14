@@ -1,4 +1,4 @@
-var htmlversion = "2.06";
+var htmlversion = "2.08";
 var msg1_active = 0;
 var msg2_active = 0;
 var sw1_active = 0;
@@ -507,7 +507,7 @@ function set_rgb() {
   var g = green << 8;
   var b = blue << 16;
   var rgb = r + g + b;
-  alert("rgb:"+rgb+" r:"+red+" g:"+green+" b:"+blue+" r*:"+r+" g*:"+g+" b*:"+b);
+  //alert("rgb:"+rgb+" r:"+red+" g:"+green+" b:"+blue+" r*:"+r+" g*:"+g+" b*:"+b);
   $.get( "/cmd?setrgb="+rgb, function( data ) {
   });
 }

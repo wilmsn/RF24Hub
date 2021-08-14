@@ -17,14 +17,15 @@ On Branch: rf24hub@rpi2 => master  !!!!!
 // My definitions for my nodes based on this sketch
 // Select only one at one time !!!!
 //#define TEICHPUMPE
-#define FLURLICHT
-//#define WOHNZIMMERDISPLAY
+#define TERASSE
+//#define FLURLICHT
+//#define WOHNZIMMERNODE
 //#define TESTNODE
 //#define WITTYNODE
 //#define RF24GWTEST
 //#define ESPMINI
 //****************************************************
-// Default settings are in "default.h" now !!!!!
+// Default settings are in "default.h" !!!!!
 #include "defaults.h"
 // Default settings for the individual nodes are in "Node_settings.h"
 #include "Node_settings.h"
@@ -91,10 +92,10 @@ Adafruit_NeoPixel pixels(NEOPIXELNUM, NEOPIXELPIN, NEO_GRB + NEO_KHZ800);
 #endif
 
 typedef enum {message=0, sensorinfo} call_t;
-typedef enum {ok_json=0, ok_html, ok_text, error, epromchange} status_t;
-typedef enum {on=0, off, toggle, state} tristate_t;
-time_t now;                         // this is the epoch
-tm tm;                              // the structure tm holds time information in a more convient way
+typedef enum {ok_json=0, ok_html, ok_text, nochange, epromchange, error} status_t;
+typedef enum {on=0, off, toggle, state, unknown} tristate_t;
+time_t now;
+tm tm;
 char timeStr[9];
 char mytopic[TOPIC_BUFFER_SIZE];
 char info_str[INFOSIZE];
@@ -300,7 +301,7 @@ void setup() {
 #if defined(SWITCH2PIN2)
   pinMode(SWITCH2PIN2, OUTPUT);
 #endif
-  if (SWITCH2INITSTATE) { handleSwitch2("on"); } else { handleSwitch2("off"); }
+  if (SWITCH2INITSTATE) { handleSwitch2(on); } else { handleSwitch2(off); }
 #endif
 
 #if defined(SWITCH3)
@@ -310,7 +311,7 @@ void setup() {
 #if defined(SWITCH3PIN2)
   pinMode(SWITCH3PIN2, OUTPUT);
 #endif
-  if (SWITCH3INITSTATE) { handleSwitch3("on"); } else { handleSwitch3("off"); }
+  if (SWITCH3INITSTATE) { handleSwitch3(on); } else { handleSwitch3(off); }
 #endif
 
 #if defined(SWITCH4)
@@ -320,7 +321,7 @@ void setup() {
 #if defined(SWITCH4PIN2)
   pinMode(SWITCH4PIN2, OUTPUT);
 #endif
-  if (SWITCH4INITSTATE) { handleSwitch4("on"); } else { handleSwitch4("off"); }
+  if (SWITCH4INITSTATE) { handleSwitch4(on); } else { handleSwitch4(off); }
 #endif
 
 #if defined(VALUE1_PIN)
@@ -332,6 +333,21 @@ void setup() {
     write2log(info_str);
   }
   digitalWrite(BUILTIN_LED, HIGH);
+}
+
+tristate_t get_tristate(const char* mystate) {
+  tristate_t retval = unknown;
+  if (strncmp(mystate, "Ein", 3)==0 || strncmp(mystate, "ein", 3)==0 || strncmp(mystate, "on", 2)==0 || strncmp(mystate, "On", 2)==0 || strncmp(mystate, "1", 1)==0 )
+     retval = on;
+  if (strncmp(mystate, "Aus", 3)==0 || strncmp(mystate, "aus", 3)==0 || strncmp(mystate, "off", 3)==0 || strncmp(mystate, "Off", 3)==0 || strncmp(mystate, "0", 1)==0 )
+     retval = off;
+  // togg* oder Togg*     
+  if (strncmp(mystate, "toggle", 4)==0 || strncmp(mystate, "Toggle", 4)==0 )
+     retval = toggle;
+  // state, State, status oder Status   
+  if (strncmp(mystate, "state", 4)==0 || strncmp(mystate, "Stat", 3)==0 )
+     retval = state;     
+  return retval;
 }
 
 void handleCmd() {
@@ -351,6 +367,7 @@ void handleCmd() {
       }
     }
     if ( httpServer.argName(argNo) == F("logfile") ) {
+      if (status == error) status = nochange;
       if (httpServer.arg(argNo) == "1" ) {
         if ( ! eepromdata.logfile) {
            eepromdata.logfile = true;
@@ -364,6 +381,7 @@ void handleCmd() {
       }
     }
     if ( httpServer.argName(argNo) == F("logger") ) {
+      if (status == error) status = nochange;
       if (httpServer.arg(argNo) == "1" ) {
         if ( ! eepromdata.logger) {
            eepromdata.logger = true;
@@ -377,6 +395,7 @@ void handleCmd() {
       }
     }
     if ( httpServer.argName(argNo) == F("log_startup") ) {
+      if (status == error) status = nochange;
       if (httpServer.arg(argNo) == "1" ) {
         if ( ! eepromdata.log_startup) {
            eepromdata.log_startup = true;
@@ -390,6 +409,7 @@ void handleCmd() {
       }
     }
     if ( httpServer.argName(argNo) == F("log_rf24") ) {
+      if (status == error) status = nochange;
       if (httpServer.arg(argNo) == "1" ) {
         if ( ! eepromdata.log_rf24) {
            eepromdata.log_rf24 = true;
@@ -403,6 +423,7 @@ void handleCmd() {
       }
     }
     if ( httpServer.argName(argNo) == F("log_sensor") ) {
+      if (status == error) status = nochange;
       if (httpServer.arg(argNo) == "1" ) {
         if ( ! eepromdata.log_sensor) {
            eepromdata.log_sensor = true;
@@ -416,6 +437,7 @@ void handleCmd() {
       }
     }
     if ( httpServer.argName(argNo) == F("log_mqtt") ) {
+      if (status == error) status = nochange;
       if (httpServer.arg(argNo) == "1" ) {
         if ( ! eepromdata.log_mqtt) {
            eepromdata.log_mqtt = true;
@@ -429,6 +451,7 @@ void handleCmd() {
       }
     }
     if ( httpServer.argName(argNo) == F("log_webcmd") ) {
+      if (status == error) status = nochange;
       if (httpServer.arg(argNo) == "1" ) {
         if ( ! eepromdata.log_webcmd) {
            eepromdata.log_webcmd = true;
@@ -442,6 +465,7 @@ void handleCmd() {
       }
     }
     if ( httpServer.argName(argNo) == F("log_sysinfo") ) {
+      if (status == error) status = nochange;
       if (httpServer.arg(argNo) == "1" ) {
         if ( ! eepromdata.log_sysinfo) {
            eepromdata.log_sysinfo = true;
@@ -497,37 +521,25 @@ void handleCmd() {
     
 #if defined(SWITCH1)
     if ( httpServer.argName(argNo) == "sw1" ) {
-      if ( httpServer.arg(argNo) == "on" ) handleSwitch1(on);
-      if ( httpServer.arg(argNo) == "off" ) handleSwitch1(off);
-      if ( httpServer.arg(argNo) == "toggle" ) handleSwitch1(toggle);
-      if ( httpServer.arg(argNo) == "state" ) handleSwitch1(state);
+      handleSwitch1(get_tristate(httpServer.arg(argNo).c_str()));
       status = ok_json;
     }
 #endif  
 #if defined(SWITCH2)
     if ( httpServer.argName(argNo) == "sw2" ) {
-      if ( httpServer.arg(argNo) == "on" ) handleSwitch2(on);
-      if ( httpServer.arg(argNo) == "off" ) handleSwitch2(off);
-      if ( httpServer.arg(argNo) == "toggle" ) handleSwitch2(toggle);
-      if ( httpServer.arg(argNo) == "state" ) handleSwitch2(state);
+      handleSwitch2(get_tristate(httpServer.arg(argNo).c_str()));
       status = ok_json;
     }
 #endif  
 #if defined(SWITCH3)
     if ( httpServer.argName(argNo) == "sw3" ) {
-      if ( httpServer.arg(argNo) == "on" ) handleSwitch3(on);
-      if ( httpServer.arg(argNo) == "off" ) handleSwitch3(off);
-      if ( httpServer.arg(argNo) == "toggle" ) handleSwitch3(toggle);
-      if ( httpServer.arg(argNo) == "state" ) handleSwitch3(state);
+      handleSwitch3(get_tristate(httpServer.arg(argNo).c_str()));
       status = ok_json;
     }
 #endif  
 #if defined(SWITCH4)
     if ( httpServer.argName(argNo) == "sw4" ) {
-      if ( httpServer.arg(argNo) == "on" ) handleSwitch4(on);
-      if ( httpServer.arg(argNo) == "off" ) handleSwitch4(off);
-      if ( httpServer.arg(argNo) == "toggle" ) handleSwitch4(toggle);
-      if ( httpServer.arg(argNo) == "state" ) handleSwitch4(state);
+      handleSwitch4(get_tristate(httpServer.arg(argNo).c_str()));
       status = ok_json;
     }
 #endif  
@@ -589,6 +601,9 @@ void handleCmd() {
       } else {
         httpServer.send(200, "text/plain", "Settings temporary changed" );
       }
+    break;
+    case nochange:
+        httpServer.send(200, "text/plain", "No settings changed" );
     break;
     case error:
       httpServer.send(200, "text/plain", "ERROR" );
@@ -1106,6 +1121,7 @@ void mqtt_send_tele() {
 void callback(char* topic, byte* payload, unsigned int length) {
   char delimiter[] = "/";
   char *ptr;
+  tristate_t mystate;
   char part1[TOPIC_PART1_SIZE];
   char part2[TOPIC_PART2_SIZE];
   char part3[TOPIC_PART3_SIZE];
@@ -1126,52 +1142,36 @@ void callback(char* topic, byte* payload, unsigned int length) {
     if ( strncmp(part2, MQTT_NODENAME, sizeof MQTT_NODENAME) == 0 ) {
 #if defined(SWITCH1)      
       if ( strncmp(part3, SWITCH1MQTT, sizeof SWITCH1MQTT) == 0 ) {
-        if ( strncmp(cmd, c_on, 3 ) == 0 ) {
-          handleSwitch1(on);
-          sprintf(msg,"%s",c_on);
-        } else {
-          handleSwitch1(off);
-          sprintf(msg,"%s",c_off);
-        }          
+        mystate = get_tristate(cmd);
+        handleSwitch1(mystate);
+        sprintf(msg,"%s",mystate==on? c_on: c_off);
         snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,SWITCH1MQTT);
         mqttClient.publish(mytopic, msg, strlen(msg) );
       }
 #endif      
 #if defined(SWITCH2)      
       if ( strncmp(part3, SWITCH2MQTT, sizeof SWITCH2MQTT) == 0 ) {
-        if ( strncmp(cmd, c_on, 3 ) == 0 ) {
-          handleSwitch2(on);
-          sprintf(msg,"%s",c_on);
-        } else {
-          handleSwitch2(off);
-          sprintf(msg,"%s",c_off);
-        }          
+        mystate = get_tristate(cmd);
+        handleSwitch2(mystate);
+        sprintf(msg,"%s",mystate==on? c_on: c_off);
         snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,SWITCH2MQTT);
         mqttClient.publish(mytopic, msg, strlen(msg) );
       }
 #endif      
 #if defined(SWITCH3)      
       if ( strncmp(part3, SWITCH3MQTT, sizeof SWITCH3MQTT) == 0 ) {
-        if ( strncmp(cmd, c_on, 3 ) == 0 ) {
-          handleSwitch3(on);
-          sprintf(msg,"%s",c_on);
-        } else {
-          handleSwitch3(off);
-          sprintf(msg,"%s",c_off);
-        }          
+        mystate = get_tristate(cmd);
+        handleSwitch3(mystate);
+        sprintf(msg,"%s",mystate==on? c_on: c_off);
         snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,SWITCH3MQTT);
         mqttClient.publish(mytopic, msg, strlen(msg) );
       }
 #endif      
 #if defined(SWITCH4)      
       if ( strncmp(part3, SWITCH4MQTT, sizeof SWITCH4MQTT) == 0 ) {
-        if ( strncmp(cmd, c_on, 3 ) == 0 ) {
-          handleSwitch4(on);
-          sprintf(msg,"%s",c_on);
-        } else {
-          handleSwitch4(off);
-          sprintf(msg,"%s",c_off);
-        }         
+        mystate = get_tristate(cmd);
+        handleSwitch4(mystate);
+        sprintf(msg,"%s",mystate==on? c_on: c_off);
         snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,SWITCH4MQTT);
         mqttClient.publish(mytopic, msg, strlen(msg) );
       }
@@ -1196,7 +1196,6 @@ void callback(char* topic, byte* payload, unsigned int length) {
       }
       if ( strncmp(part3, "line", sizeof "line") == 0 ) {
         print_line(cmd);
-      }
       }
 #endif
 #if defined(NEOPIXEL)
