@@ -94,7 +94,7 @@ optional:
 #define TITEL1                 "Flurlicht"
 #define TITEL2                 "Neopixel Licht im Flur"
 #define NEOPIXEL
-#define NEOPIXELNUM            7
+#define NEOPIXELNUM            46
 #define RGBINIT                0xAAAAAA
 #define SWITCH1               
 #define SWITCH1TXT             "Neopixel"
@@ -158,6 +158,28 @@ optional:
 #define SWITCH1INITSTATE       LOW
 #define SWITCH1ACTIVESTATE     LOW
 #define SWITCH1MQTT            "intLED"
+#endif
+//-----------------------------------------------------
+#if defined(TESTNODE)
+#define HOSTNAME               "testnode"
+#define MQTT_NODENAME          "testnode"
+#define TITEL1                 "TestNode"
+#undef  MQTT
+//#define RF24GW
+#define GW_NO                  105
+//#define SENSOR_18B20
+#define SWITCH1               
+#define SWITCH1PIN1            2
+#define SWITCH1TXT             "Terasse"
+#define SWITCH1INITSTATE       LOW
+#define SWITCH1ACTIVESTATE     LOW
+#define SWITCH1MQTT            "terasse"
+#define SWITCH2               
+#define SWITCH2PIN1            0
+#define SWITCH2TXT             "Balkon"
+#define SWITCH2INITSTATE       LOW
+#define SWITCH2ACTIVESTATE     LOW
+#define SWITCH2MQTT            "balkon"
 #endif
 //-----------------------------------------------------
 

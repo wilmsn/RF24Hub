@@ -8,6 +8,7 @@
 #define LOGGER_LINESIZE         250
 
 // MQTT
+#define MQTT
 #define MQTT_SERVER             "rpi2.fritz.box"
 #define MQTT_NODENAME           "testnode"
 #define MQTT_CMD                "cmnd"

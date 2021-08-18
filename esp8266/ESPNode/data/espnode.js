@@ -1,4 +1,4 @@
-var htmlversion = "2.08";
+var htmlversion = "2.09";
 var msg1_active = 0;
 var msg2_active = 0;
 var sw1_active = 0;
@@ -302,9 +302,6 @@ function prozessJS( key, val ) {
         break;
         case "Hostname":
           $("#f_hostname").html(val);
-        break;
-        case "SketchSpace  ??????":
-          $("#f_skatchspace").html(val);
         break;
         case "ResetReason":
           $("#f_resetreason").html(val);
