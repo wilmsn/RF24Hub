@@ -638,6 +638,10 @@ int main(int argc, char* argv[]) {
                     }
                 }
                 break;    
+                case PAYLOAD_TYPE_ESP: { // Message from ESP Node - will not be answered
+                    process_payload(&payload);                    
+                }
+                break;
                 case PAYLOAD_TYPE_HB: { // heartbeat message!!
                     if ( node.isNewHB(payload.node_id, payload.heartbeatno) ) {  // Got a new Heaqrtbeat -> process it!
                         database.lowVoltage(payload.node_id, payload.msg_flags & PAYLOAD_FLAG_NEEDHELP);

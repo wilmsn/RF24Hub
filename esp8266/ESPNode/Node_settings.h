@@ -42,6 +42,8 @@ optional:
 #define RF24GW
 #define GW_NO                  101
 #define SENSOR_18B20
+#define SENSOR_NODE            1
+#define SENSOR_CHANNEL         11
 #define SWITCH1               
 #define SWITCH1PIN1            0        
 #define SWITCH1PIN2            2
@@ -51,13 +53,15 @@ optional:
 #define SWITCH1MQTT            "relais"
 #endif
 //-----------------------------------------------------
-#if defined(TERASSE)
+#if defined(TERASSENNODE)
 #define HOSTNAME               "terassennode"
 #define MQTT_NODENAME          "terassennode"
 #define TITEL1                 "TerassenNode"
 #define RF24GW
 #define GW_NO                  104
 #define SENSOR_18B20
+#define SENSOR_NODE            1
+#define SENSOR_CHANNEL         1
 #define SWITCH1               
 #define SWITCH1PIN1            2
 #define SWITCH1TXT             "Terasse"
@@ -76,11 +80,12 @@ optional:
 #define HOSTNAME               "wohnzimmernode"
 #define MQTT_NODENAME          "wohnzimmernode"
 #define TITEL1                 "Wohnzimmernode"
-#define STATINTERVAL           60000
 #define LINE_SIZE              15
 #define GW_NO                  102
 #define RF24GW
 #define SENSOR_18B20
+#define SENSOR_NODE            1
+#define SENSOR_CHANNEL         6
 #define LEDMATRIX
 #define SWITCH1               
 #define SWITCH1TXT             "Display"
@@ -103,6 +108,8 @@ optional:
 #define GW_NO                  103
 #define RF24GW
 #define SENSOR_18B20
+#define SENSOR_NODE            1
+#define SENSOR_CHANNEL         16
 
 #endif
 //-----------------------------------------------------

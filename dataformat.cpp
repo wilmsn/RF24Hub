@@ -52,7 +52,7 @@ char* unpackTransportValue(uint32_t data, char* buf) {
     return buf;
 }
 
-#if defined(__linux__)
+#if defined(__linux__) || defined(ESP8266)
 
 uint32_t packTransportValue(uint8_t channel, char* value) {
     uint32_t retval = 0;

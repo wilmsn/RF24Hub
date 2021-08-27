@@ -41,10 +41,10 @@ void Database::sync_sensor(void) {
 }
 
 void Database::sync_sensordata(void) {
-	sprintf (sql_stmt, "insert into sensordata(sensor_id, utime, value) select sensor_id, utime, value from sensordata_im where (sensor_id, utime) not in (select sensor_id, utime from sensordata)");
+/*	sprintf (sql_stmt, "insert into sensordata(sensor_id, utime, value) select sensor_id, utime, value from sensordata_im where (sensor_id, utime) not in (select sensor_id, utime from sensordata where utime > unix_timestamp() - 1100000) and utime > unix_timestamp() - 1000000");
     debugPrintSQL(sql_stmt);
     mysql_query(db, sql_stmt);
-	db_check_error();
+	db_check_error(); */
 }
 
 void Database::sync_sensordata_d(void) {
@@ -79,7 +79,7 @@ void Database::initSystem(void) {
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
-	sprintf (sql_stmt, "insert into sensordata_im(sensor_id, utime, value) select sensor_id, utime, value from sensordata");
+	sprintf (sql_stmt, "insert into sensordata_im(sensor_id, utime, value) select sensor_id, utime, value from sensordata where utime > unix_timestamp() - 50000000");
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
@@ -198,6 +198,8 @@ void Database::storeSensorValue(uint32_t sensor_id, uint32_t data, char* value) 
     sprintf(sql_stmt,"update sensor_im set last_data = %u, value = '%s', last_utime = UNIX_TIMESTAMP() where sensor_id = %u", data, value, sensor_id);
     do_sql(sql_stmt);
     sprintf(sql_stmt,"insert into sensordata_im (sensor_ID, utime, value) values (%u, UNIX_TIMESTAMP(), %s)", sensor_id, value);
+    do_sql(sql_stmt);
+    sprintf(sql_stmt,"insert into sensordata (sensor_ID, utime, value) values (%u, UNIX_TIMESTAMP(), %s)", sensor_id, value);
     do_sql(sql_stmt);
 }
 

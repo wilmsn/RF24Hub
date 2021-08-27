@@ -56,6 +56,12 @@
 // Ursprung: Node; Empfänger: Hub
 #define PAYLOAD_TYPE_INIT        1
 
+// Nachricht ist ein Messwert aus einem ESPNode
+// Datenformat: komprimiert Channel und float
+// Ursprung: ESPNode; Empfänger: Hub
+// Diese Nachricht wird nicht vom Hub beantwortet
+#define PAYLOAD_TYPE_ESP         41
+
 // Nachricht ist ein Heatbeat
 // Datenformat: komprimiert Channel und float
 // Ursprung: Node; Empfänger: Hub

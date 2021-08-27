@@ -45,7 +45,7 @@
  */
 char* unpackTransportValue(uint32_t data, char* buf);
 
-#if defined(__linux__)
+#if defined(__linux__) || defined(ESP8266)
 /**
  * Diese Funktion packt die Daten entsprechend des verwendeten Channels ein.
  * Grundlage ist die definierte Datenart je Channel.

@@ -17,8 +17,8 @@ On Branch: rf24hub@rpi2 => master  !!!!!
 // My definitions for my nodes based on this sketch
 // Select only one at one time !!!!
 //#define TEICHPUMPE
-#define TERASSE
-//#define FLURLICHT
+//#define TERASSENNODE
+#define FLURLICHT
 //#define WOHNZIMMERNODE
 //#define TESTNODE
 //#define WITTYNODE
@@ -96,7 +96,7 @@ LED_Matrix matrix(LEDMATRIX_DIN, LEDMATRIX_CLK, LEDMATRIX_CS, LEDMATRIX_DEVICES_
 Adafruit_NeoPixel pixels(NEOPIXELNUM, NEOPIXELPIN, NEO_GRB + NEO_KHZ800);
 #endif
 
-typedef enum {message=0, sensorinfo} call_t;
+typedef enum {message=0, sensorweb, sensormqtt} call_t;
 typedef enum {ok_json=0, ok_html, ok_text, nochange, epromchange, error} status_t;
 typedef enum {on=0, off, toggle, state, unknown} tristate_t;
 time_t now;
@@ -511,7 +511,7 @@ void handleCmd() {
       status = ok_json;
     }
     if ( httpServer.argName(argNo) == F("sensor1") ) {
-      handlesensor(info_str, sensorinfo);
+      handlesensor(info_str, sensorweb);
       status = ok_json;
     }
     if ( httpServer.argName(argNo) == F("message1") ) {
@@ -898,7 +898,27 @@ void handlestatus(char* myjson) {
   strcat(myjson,"}");    
 }
 
+void send_udp_msg(uint32_t data) {
+  udpdata.gw_no = GW_NO;
+  udpdata.payload.node_id = SENSOR_NODE;
+  udpdata.payload.msg_id = 0;
+  udpdata.payload.msg_type = PAYLOAD_TYPE_ESP;
+  udpdata.payload.msg_flags = PAYLOAD_FLAG_LASTMESSAGE;
+  udpdata.payload.orderno = 0;
+  udpdata.payload.data1 = data;
+  udpdata.payload.data2 = 0;
+  udpdata.payload.data3 = 0;
+  udpdata.payload.data4 = 0;
+  udpdata.payload.data5 = 0;
+  udpdata.payload.data6 = 0;
+  udp.beginPacket(HUB_IP, HUB_UDP_PORTNO);
+  udp.write((char*)&udpdata, sizeof(udpdata));
+  udp.endPacket();
+  if (eepromdata.log_rf24) write2log(printPayload("S>H", &udpdata.payload, info_str));
+}
+
 void handlesensor(char* myjson, call_t call) {
+  char tmp[10];
 #if defined(SENSOR_18B20)
   uint8_t resolution = 0;
   float tempC = -99;
@@ -909,7 +929,12 @@ void handlesensor(char* myjson, call_t call) {
     tempC = sensors.getTempCByIndex(0);
   }
   switch ( call ) {
-    case sensorinfo:
+    case sensormqtt:
+#if defined(SENSOR_CHANNEL)
+      snprintf(tmp,9,"%4.1f",tempC);
+      send_udp_msg(packTransportValue(SENSOR_CHANNEL,tmp));
+#endif
+    case sensorweb:
       sprintf(myjson,"{\"Sensor\":\"18B20\", \"Temperatur\":%4.1f, \"Resolution\":%u }", tempC, resolution);
     break;
     default:
@@ -969,8 +994,8 @@ void fill_sysinfo1(char* mystr) {
 }
 
 void fill_sysinfo2(char* mystr) {
-   snprintf (mystr,INFOSIZE, "{\"Freespace\":\"%0.2fMB\", \"Sketchsize\":\"%0.2fMB\", \"FlashSize\":\"%dMB\", \"FlashFreq\":\"%dMHz\", \"CpuFreq\":\"%dMHz\"}",
-           ESP.getFreeSketchSpace() / 1048576.0, ESP.getSketchSize() / 1024.0 /1024, (int)(ESP.getFlashChipSize() / 1024 / 1024), (int)(ESP.getFlashChipSpeed() / 1000000), (int)(F_CPU / 1000000)    );   
+   snprintf (mystr,INFOSIZE, "{\"Freespace\":\"%0.0fKB\", \"Sketchsize\":\"%0.0fKB\", \"FlashSize\":\"%dMB\", \"FlashFreq\":\"%dMHz\", \"CpuFreq\":\"%dMHz\"}",
+           ESP.getFreeSketchSpace() / 1024.0, ESP.getSketchSize() / 1024.0, (int)(ESP.getFlashChipSize() / 1024 / 1024), (int)(ESP.getFlashChipSpeed() / 1000000), (int)(F_CPU / 1000000)    );   
 }
 
 void fill_sysinfo3(char* mystr) {
@@ -978,8 +1003,8 @@ void fill_sysinfo3(char* mystr) {
   uint16_t max;
   uint8_t frag;
   ESP.getHeapStats(&free, &max, &frag);
-  snprintf (mystr,INFOSIZE, "{\"MAC\":\"%s\",\"SubNetMask\":\"%s\",\"ResetReason\":\"%s\",\"Heap_max\":%u,\"Heap_free\":%u,\"Heap_frag\":%u}",
-           WiFi.macAddress().c_str(), WiFi.subnetMask().toString().c_str(), ESP.getResetReason().c_str(), max, free, frag);
+  snprintf (mystr,INFOSIZE, "{\"MAC\":\"%s\",\"SubNetMask\":\"%s\",\"ResetReason\":\"%s\",\"Heap_max\":\"%0.2fKB\",\"Heap_free\":\"%0.2fKB\",\"Heap_frag\":\"%u\"}",
+           WiFi.macAddress().c_str(), WiFi.subnetMask().toString().c_str(), ESP.getResetReason().c_str(), (float)max/1024.0, (float)free/1024.0, frag);
 }
 
 void fill_sysinfo4(char* mystr) {
@@ -1080,7 +1105,7 @@ void mqtt_send_stat() {
   mqtt_send_swtch4();
 #endif
 #if defined(SENSOR_18B20) || defined(SENSOR_ANALOG)
-  handlesensor(info_str, sensorinfo);
+  handlesensor(info_str, sensormqtt);
   snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,"sensordata");
   mqttClient.publish(mytopic, info_str);
   if (eepromdata.log_mqtt) {
@@ -1227,7 +1252,7 @@ void mqtt_reconnect() {
     // Attempt to connect
     if (mqttClient.connect(MQTT_NODENAME)) {
       // Once connected, publish an announcement...
-      mqtt_send_stat();
+      // mqtt_send_stat();
       // ... and resubscribe
       snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","cmnd",MQTT_NODENAME,"#");
       mqttClient.subscribe(mytopic);  
@@ -1291,11 +1316,11 @@ void loop() {
   }
   mqttClient.loop();
   delay(0);
-  if ((millis() - lastMsg) > STATINTERVAL || lastMsg == 0) {
+  if ((millis() - lastMsg) > STATINTERVAL) {
     lastMsg = millis();
     mqtt_send_stat();
   }
-  if ((millis() - lastInfo) > TELEINTERVAL || lastInfo == 0) {
+  if ((millis() - lastInfo) > TELEINTERVAL) {
     lastInfo = millis();
     mqtt_send_tele();
   }
