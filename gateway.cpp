@@ -85,6 +85,8 @@ void Gateway::addGateway(char* gw_name, uint16_t gw_no, bool isActive) {
     p_new->gw_name = (char*)malloc(40);
     p_new->gw_no = gw_no;
     p_new->last_contact = 0;
+    p_new->gw_ip = (char*)malloc(40);
+    memset(p_new->gw_ip,0,40);
     sprintf(p_new->gw_name,"%s",gw_name);
     p_new->isActive = isActive;
     if (verboselevel & VERBOSESENSOR) printf("%sGateway.addGateway: Name:%s No:%u %s\n",ts(tsbuf), gw_name, gw_no, isActive? "aktiv":"nicht aktiv");

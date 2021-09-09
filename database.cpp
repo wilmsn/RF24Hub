@@ -117,7 +117,7 @@ void Database::initGateway(Gateway* gateway) {
 	while ((row = mysql_fetch_row(result))) {
 		if ( row[0] != NULL ) sprintf(gw_name,"%s",trim(row[0])); else sprintf(gw_name," ");
         if ( row[1] != NULL ) gw_no = strtoul(row[1], &pEnd, 10); else gw_no = 0;
-		if ( row[2] != NULL ) isactive = ( row[2][0] == 'y' || row[3][0] == 'j' ); else isactive = false;
+		if ( row[2] != NULL ) isactive = ( row[2][0] == 'y' || row[2][0] == 'j' || row[2][0] == '1'); else isactive = false;
         gateway->addGateway(gw_name, gw_no, isactive); 
 	}
 	mysql_free_result(result);    
@@ -140,7 +140,7 @@ unsigned long Database::getBeginOfDay(){
 }
 
 void Database::addGateway(char* gw_name, uint16_t gw_no){
-	sprintf (sql_stmt, "insert into gateway(gw_name, gw_no, isActive) values('%s', %u, true)", gw_name, gw_no);
+	sprintf (sql_stmt, "insert into gateway(gw_name, gw_no, isActive) values('%s', %u, 'j')", gw_name, gw_no);
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error(); 
