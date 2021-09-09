@@ -119,7 +119,7 @@ void Gateway::gw_contact(char* gw_ip, uint16_t gw_no){
     }
 }
 
-void* Gateway::getGW(void* p_rec, char* gw_ip, uint16_t *p_gw_no) {
+void* Gateway::getGateway(void* p_rec, char* gw_ip, uint16_t *p_gw_no) {
     gateway_t *p_search;
     void* retval = NULL;
     if (p_rec) {
@@ -140,12 +140,14 @@ void* Gateway::getGW(void* p_rec, char* gw_ip, uint16_t *p_gw_no) {
     return retval;
 }
 
-bool Gateway::isGateway(char* gw_ip) {
+bool Gateway::isGateway(uint16_t gw_no, char* gw_ip) {
     gateway_t *p_search;
     bool retval = false;
     p_search = p_initial;
     while (p_search) {
-        if (strcmp(p_search->gw_ip, gw_ip) == 0) {
+        if (p_search->gw_no == gw_no) {
+            sprintf(p_search->gw_ip,"%s",gw_ip);
+            p_search->last_contact = utime();
             if (verboselevel & VERBOSEORDER) 
                 printf("%sGateway.isGW: GW.Name:%s GW.IP: %s %s\n", ts(tsbuf), p_search->gw_name, p_search->gw_ip, p_search->isActive? "aktiv":"nicht aktiv");
             if (p_search->isActive) retval = true;

@@ -626,7 +626,7 @@ int main(int argc, char* argv[]) {
             sprintf(buf1,"G:%u>H ", udpdata.gw_no);
             printPayload(ts(tsbuf), buf1, &payload);
         }
-        if ( gateway.isGateway(inet_ntoa(udp_address_in.sin_addr)) ) {
+        if ( gateway.isGateway(udpdata.gw_no, gw_ip) ) {
             if (payload.msg_flags & PAYLOAD_FLAG_NEEDHELP ) {
                 char* tn_buf;
                 tn_buf = (char*)malloc(100);
@@ -736,7 +736,7 @@ int main(int argc, char* argv[]) {
 			while ( order.getOrderForTransmission(&payload, mymillis() ) ) {
                 // Hier UDP Sender
                 void* p_rec = NULL;
-                p_rec = gateway.getGW(p_rec, gw_ip, &gw_no);
+                p_rec = gateway.getGateway(p_rec, gw_ip, &gw_no);
                 while ( p_rec ) { 
                     if ( verboselevel & VERBOSERF24) {
                         sprintf(buf1,"H>G:%u ", gw_no);
@@ -745,7 +745,7 @@ int main(int argc, char* argv[]) {
                     udpdata.gw_no=0;
                     memcpy(&udpdata.payload, &payload, sizeof(payload) );
                     sendUdpMessage(gw_ip, cfg.gwUdpPortNo.c_str(), &udpdata); 
-                    p_rec = gateway.getGW(p_rec, gw_ip, &gw_no);
+                    p_rec = gateway.getGateway(p_rec, gw_ip, &gw_no);
                 }
             }
  			usleep(20000);

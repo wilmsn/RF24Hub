@@ -57,7 +57,7 @@ public:
  * Wenn ein NULL Pointer zurückgegeben wird, 
  * dann war es der letzte Record 
  *************************************************************/
-void* getGW( void* p_rec, char* p_gw_ip, uint16_t *p_gw_no );
+void* getGateway( void* p_rec, char* p_gw_ip, uint16_t *p_gw_no );
 /**************************************************************
  *  Setzt das Verboselevel
  *************************************************************/
@@ -89,7 +89,7 @@ void setGateway(uint16_t gw_no, bool isActive );
 /*************************************************************
  *  Prüft ob ein Gateway aktiv (= true) ist.
  ************************************************************/
-bool isGateway(char* gw_ip);
+bool isGateway(uint16_t gw_no, char* gw_ip);
 /*************************************************************
  * Druckt alle records im Buffer in den out_socket
  * out_socket ist dabei ein gültiger socket file descriptor
