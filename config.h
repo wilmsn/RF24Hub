@@ -24,11 +24,9 @@
 // Interval for deleting unanswered requests for order for Heartbeat nodes in millisec.
 // 1 Sec.
 #define DELETEINTERVAL_HB 500
-// Intervall to sync sensordata_im to sensordata 
-// In case of server crash you will loose data
-// in sensordata_im !!!!!!
-// Time in Seconds: 21600 = 6 Hours
-#define DBSYNCINTERVAL   21600
+// Intervall to sync sensordata_d to sensordata 
+// Time in Seconds: 86400 = 24 Hours
+#define DBSYNCINTERVAL   86400
 // array of char sizes
 #define DEBUGSTRINGSIZE 600
 #define FHEMDEVLENGTH 50

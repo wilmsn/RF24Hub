@@ -19,8 +19,9 @@ void Gateway::cleanup(void) {
     }
 }
 
-void Gateway::newEntry(gateway_t* p_new) {
+bool Gateway::newEntry(gateway_t* p_new) {
     gateway_t *p_search;
+    bool retval = false;
     p_new->p_next = NULL;
     if (p_initial) {
         p_search = p_initial;
@@ -28,20 +29,65 @@ void Gateway::newEntry(gateway_t* p_new) {
             p_search = p_search->p_next;
         }
         p_search->p_next = p_new;
+        retval = true;
     } else {
         p_initial = p_new;
+        retval = true;
+    }
+    return retval;
+}
+
+bool Gateway::delEntry(gateway_t* p_del) {
+    gateway_t *p_search, *p_tmp;
+    bool retval = false;
+    p_search = p_initial;
+    p_tmp = p_initial;
+    while (p_search) {
+        if (p_search == p_del ) {
+            if (p_search == p_initial) {
+                if (p_initial->p_next) { 
+                    p_tmp=p_initial->p_next;
+                    delete p_initial;
+                    p_initial=p_tmp;
+                    retval = true;
+                } else {
+                    delete p_initial;
+                    p_initial = NULL;
+                    retval = true;
+                }
+            } else            {
+                p_tmp->p_next=p_search->p_next;
+                delete p_search;
+                retval = true;
+            }
+            p_search = NULL;
+        } else {
+            p_tmp = p_search;
+            p_search=p_search->p_next;
+        }
+    }
+    return retval;
+}
+
+void Gateway::delGateway(uint16_t gw_no) {
+    gateway_t *p_search = p_initial;
+    while (p_search) {
+      if ( p_search->gw_no == gw_no ) {
+        if (delEntry(p_search)) p_search = NULL;
+      } else {
+        p_search = p_search->p_next;
+      }
     }
 }
 
-void Gateway::addGateway(char* gw_name, char* gw_ip, uint16_t gw_no, bool isActive) {
+void Gateway::addGateway(char* gw_name, uint16_t gw_no, bool isActive) {
     gateway_t *p_new = new gateway_t;
     p_new->gw_name = (char*)malloc(40);
     p_new->gw_no = gw_no;
-    p_new->gw_ip = (char*)malloc(40);
+    p_new->last_contact = 0;
     sprintf(p_new->gw_name,"%s",gw_name);
-    sprintf(p_new->gw_ip,"%s",gw_ip);
     p_new->isActive = isActive;
-    if (verboselevel & VERBOSESENSOR) printf("%sGateway.addGateway: Name:%s IP:%s %s\n",ts(tsbuf), gw_name, gw_ip, isActive? "aktiv":"nicht aktiv");
+    if (verboselevel & VERBOSESENSOR) printf("%sGateway.addGateway: Name:%s No:%u %s\n",ts(tsbuf), gw_name, gw_no, isActive? "aktiv":"nicht aktiv");
     newEntry(p_new);
 }
 
@@ -60,6 +106,19 @@ void Gateway::setGateway(uint16_t gw_no, bool isActive ) {
     }
 }
 
+void Gateway::gw_contact(char* gw_ip, uint16_t gw_no){
+    gateway_t *p_search;
+    p_search = p_initial;
+    while (p_search) {
+        if (p_search->gw_no == gw_no) {
+            sprintf(p_search->gw_ip, "%s", gw_ip);
+            p_search->last_contact = utime();
+            p_search = NULL;
+        }
+        if (p_search) p_search = p_search->p_next;
+    }
+}
+
 void* Gateway::getGW(void* p_rec, char* gw_ip, uint16_t *p_gw_no) {
     gateway_t *p_search;
     void* retval = NULL;
@@ -70,7 +129,7 @@ void* Gateway::getGW(void* p_rec, char* gw_ip, uint16_t *p_gw_no) {
         p_search = p_initial;
     }
     while (p_search) {
-        if (p_search->isActive) {
+        if (p_search->isActive && (p_search->last_contact > utime()-3600)) {
             sprintf(gw_ip, "%s", p_search->gw_ip);
             *p_gw_no = p_search->gw_no;
             retval = (void*)p_search;

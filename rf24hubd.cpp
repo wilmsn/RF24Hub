@@ -98,25 +98,17 @@ static void* receive_tn_in (void *arg) {
 bool process_tn_in( char* inbuffer, int tn_socket) {
 /* Messages can look like this:
        <word1		word2		word3		word4 				function>
-		init													Reinitialization of rf24hubd (reads actual values from database)
-		show		order										Lists open orders in textform
-                    sensor                                      Lists sensors and nodes
-                    radio       config                          Prints radio config to log
-		html 		order										Lists open orders in HTML form
 		set			sensor		<sensor#> 	<value>				Sets Sensor to Value (Store in Orderbuffer only)
-					node		<node#>		init				Initialize this Node (Send Initdata to the Node) 
-					verbose		<value>							Sets Verboselevel to new Value (1...9)
-		push		<node>      <channel>   <value>	            Pushes a value direct to a channel into a node 
-		setlast		sensor		<sensor#> 	<value>				Sets Sensor to Value and starts sending (Store in Orderbuffer and transfer all requests for this Node to Order)
-			
+      for all details have a look at "rf24hub_text.h" 
 */
 
 	char cmp_init[]="init", 
          cmp_on[]="on",
          cmp_off[]="off",
+         cmp_add[]="add",
+         cmp_delete[]="delete",
 		 cmp_sensor[]="sensor",
 		 cmp_set[]="set",
-		 cmp_setlast[]="setlast",
 		 cmp_html[]="html",
 		 cmp_order[]="order",	 
 		 cmp_verbose[]="verbose",	
@@ -165,10 +157,7 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
         wort4 = alloc_str(verboselevel,"process_tn_in wort4",1,ts(tsbuf));
         wort4[0] = '\0';
     }
-//printf("+++++Wort1..4: %s %s %s %s\n",wort1, wort2, wort3, wort4);
-    // set/setlast sensor <sensor> <value>
-	// sets a sensor to a value, setlast starts the request over air
-	if ( (( strcmp(wort1,cmp_set) == 0 ) || ( strcmp(wort1,cmp_setlast) == 0 )) && (strcmp(wort2,cmp_sensor) == 0) && (strlen(wort3) > 0) && (strlen(wort4) > 0) ) {
+	if ( (strcmp(wort1,cmp_set) == 0) && (strcmp(wort2,cmp_sensor) == 0) && (strlen(wort3) > 0) && (strlen(wort4) > 0) ) {
 		// In word3 we may have a) the number of the sensor b) the name of the sensor c) the fhem_dev of a sensor
 		// for the processing we need the number of the sensor ==> find it!
         NODE_DATTYPE node_id = 0;
@@ -186,13 +175,6 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
         }
         data = packTransportValue(channel, wort4); 
         orderbuffer.addOrderBuffer(mymillis(),node_id,channel,data);
-        //ToDo
-        
-        
-        
-        if ( tn_input_ok && strcmp(wort1,cmp_setlast) == 0 && ! node.isHBNode(node_id) ) {
-			make_order(node_id, PAYLOAD_TYPE_DAT);
-        } 
     }
 	// push <node> <channel> <value>
 	// Pushes a value direct to a channel into a node
@@ -238,6 +220,30 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 		tn_input_ok = true;
         gateway.printBuffer(tn_socket, false);
 	}
+    // add gateway
+	// adds a gateway in status active to database and system
+	if (( strcmp(wort1,cmp_add) == 0 ) && (strcmp(wort2,cmp_gateway) == 0) && (strlen(wort3) > 0) && (strlen(wort4) > 0) ) {
+        if ( wort3[0] >= 'A' && wort3[0] <= 'z' ) {
+          uint16_t gw_id = strtol(wort4, &pEnd, 10);
+          if ( gw_id > 0 ) {
+            tn_input_ok = true;
+            database.addGateway(wort3, gw_id);
+            gateway.addGateway(wort3, gw_id, true);
+            gateway.printBuffer(tn_socket, false);
+          }
+        }
+	}
+    // delete gateway
+	// deletes a gateway from database and system
+	if (( strcmp(wort1,cmp_delete) == 0 ) && (strcmp(wort2,cmp_gateway) == 0) && (strlen(wort3) > 0) && (strlen(wort4) == 0) ) {
+        uint16_t gw_id = strtol(wort3, &pEnd, 10);
+        if ( gw_id > 0 ) {
+          tn_input_ok = true;
+          database.delGateway(gw_id);
+          gateway.delGateway(gw_id);
+          gateway.printBuffer(tn_socket, false);
+        }
+	}
     // set gateway <GW_NO> on
 	// lists the current node- and sensorbuffer
 	if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_gateway) == 0) && (strlen(wort3) > 0) && (strcmp(wort4,cmp_on) == 0) ) {
@@ -270,7 +276,6 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 	if ( (strcmp(wort1,cmp_sync) == 0) && (strlen(wort2) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
 		tn_input_ok = true;
         database.sync_sensor();
-        database.sync_sensordata();
         database.sync_sensordata_d();
     }
     // init
@@ -357,7 +362,6 @@ void make_order(NODE_DATTYPE node_id, uint8_t msg_type) {
 
 void exit_system(void) {
     // Save data from sensordata_im and sensor_im to persistant tables
-    database.sync_sensordata();
     database.sync_sensor();
     database.sync_config();
 }
@@ -470,8 +474,8 @@ int main(int argc, char* argv[]) {
     int udp_sockfd_in, tcp_sockfd_in;
 	int msgID;
     TnMsg_t LogMsg;
-    time_t lastDBsync = time(0);
     ssize_t UdpMsgLen;
+    unsigned long lastDBsync = 0;
 
     tcp_addrlen = sizeof(tcp_address_in);
     udp_addrlen = sizeof(udp_address_in);
@@ -564,10 +568,10 @@ int main(int argc, char* argv[]) {
 
     // Main Loop
     while(1) {
-        // sync sensordata_im to sensordata
-        if ( time(0) - lastDBsync > DBSYNCINTERVAL ) {
-           database.sync_sensordata();   
-           lastDBsync = time(0);
+        // sync sensordata to sensordata_d every day
+        if ( utime() - lastDBsync > DBSYNCINTERVAL ) {
+           database.sync_sensordata_d();   
+           lastDBsync = database.getBeginOfDay();
         }
         /* Handling of incoming messages */
 		if ( cfg.hubTcpPortSet ) {
@@ -616,6 +620,7 @@ int main(int argc, char* argv[]) {
     UdpMsgLen = recvfrom ( udp_sockfd_in, &udpdata, sizeof(udpdata), 0, (struct sockaddr *) &udp_address_in, &udp_addrlen );
     if (UdpMsgLen > 0) {
         memcpy(&payload, &udpdata.payload, sizeof(payload) );
+        sprintf(gw_ip,"%s",inet_ntoa(udp_address_in.sin_addr));
         if ( verboselevel & VERBOSERF24 ) {
             printf ("%s UDP Message from: %s \n",ts(tsbuf), inet_ntoa(udp_address_in.sin_addr));
             sprintf(buf1,"G:%u>H ", udpdata.gw_no);

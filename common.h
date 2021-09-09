@@ -92,6 +92,11 @@ void free_str(uint16_t verboselevel, const char* msgTxt, char* str, char* timest
 uint64_t mymillis(void);
 
 /**
+ * Bildet den Unix Timestamp ab
+ */
+uint64_t utime(void);
+
+/**
  * Gibt das aktuelle Verboselevel aus
  * @param buf Hier muss ein gültiges CHAR Array übergeben werden
  * @param verboseLevel Der aktuelle Verboselevel

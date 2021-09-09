@@ -40,14 +40,30 @@ void Database::sync_sensor(void) {
 	db_check_error();
 }
 
-void Database::sync_sensordata(void) {
-/*	sprintf (sql_stmt, "insert into sensordata(sensor_id, utime, value) select sensor_id, utime, value from sensordata_im where (sensor_id, utime) not in (select sensor_id, utime from sensordata where utime > unix_timestamp() - 1100000) and utime > unix_timestamp() - 1000000");
+void Database::sync_sensordata_d(void) {
+    sprintf (sql_stmt, "%s", "create table sensordata_max engine = MEMORY as select UNIX_TIMESTAMP(FROM_UNIXTIME(max(utime),'%Y%m%d')) max_ts from sensordata_d");
     debugPrintSQL(sql_stmt);
-    mysql_query(db, sql_stmt);
-	db_check_error(); */
+	mysql_query(db, sql_stmt);
+	db_check_error();
+	sprintf (sql_stmt, "%s", "delete from sensordata_d where utime > (select max_ts from sensordata_max)" );
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+    sprintf (sql_stmt, "%s", "insert into sensordata_d(sensor_id, value, utime) select sensor_id as s_id, min(value) as min_val, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))+21600 as ts from sensordata where utime > (select max_ts from sensordata_max) group by sensor_id, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))" );
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+    sprintf (sql_stmt, "%s", "insert into sensordata_d(sensor_id, value, utime) select sensor_id as s_id, max(value) as max_val, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))+64800 as ts from sensordata where utime > (select max_ts from sensordata_max) group by sensor_id, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))" );
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+    sprintf (sql_stmt, "%s", "drop table sensordata_max" );
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
 }
 
-void Database::sync_sensordata_d(void) {
+void Database::rebuild_sensordata_d(void) {
     sprintf (sql_stmt, "truncate table sensordata_d");
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
@@ -56,7 +72,7 @@ void Database::sync_sensordata_d(void) {
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
-    sprintf (sql_stmt, "%s", "insert into sensordata_d(sensor_id, value, utime) select sensor_id, max(value) as min_val, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))+64800 from sensordata group by sensor_id, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))" );
+    sprintf (sql_stmt, "%s", "insert into sensordata_d(sensor_id, value, utime) select sensor_id, max(value) as max_val, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))+64800 from sensordata group by sensor_id, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))" );
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
@@ -65,7 +81,6 @@ void Database::sync_sensordata_d(void) {
 void Database::initSystem(void) {
     // Falls das letzte Programmende ein Chrash war sollen einige "*_im" Tabellen gesichert werden!
     sync_config();
-    sync_sensordata();
     sync_sensor();
 	sprintf (sql_stmt, "truncate table sensor_im");
     debugPrintSQL(sql_stmt);
@@ -75,14 +90,6 @@ void Database::initSystem(void) {
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
-//	sprintf (sql_stmt, "truncate table sensordata_im");
-//    debugPrintSQL(sql_stmt);
-//	mysql_query(db, sql_stmt);
-//	db_check_error();
-//	sprintf (sql_stmt, "insert into sensordata_im(sensor_id, utime, value) select sensor_id, utime, value from sensordata where utime > unix_timestamp() - 50000000");
-//   debugPrintSQL(sql_stmt);
-//	mysql_query(db, sql_stmt);
-//	db_check_error();
     sync_config();
 	sprintf (sql_stmt, "truncate table node_configdata_im");
     debugPrintSQL(sql_stmt);
@@ -99,10 +106,9 @@ void Database::initSystem(void) {
 void Database::initGateway(Gateway* gateway) {
 	MYSQL_ROW row;
     char gw_name[40];
-    char gw_ip[40];
     uint16_t gw_no;
     bool isactive;
-	sprintf (sql_stmt, "select gw_name, gw_ip, gw_no, isactive from gateway");
+	sprintf (sql_stmt, "select gw_name, gw_no, isactive from gateway");
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
@@ -110,14 +116,45 @@ void Database::initGateway(Gateway* gateway) {
 	db_check_error();
 	while ((row = mysql_fetch_row(result))) {
 		if ( row[0] != NULL ) sprintf(gw_name,"%s",trim(row[0])); else sprintf(gw_name," ");
-		if ( row[1] != NULL ) sprintf(gw_ip,"%s",trim(row[1])); else sprintf(gw_ip," ");
-        if ( row[2] != NULL ) gw_no = strtoul(row[2], &pEnd, 10); else gw_no = 0;
-		if ( row[3] != NULL ) isactive = ( row[3][0] == 'y' || row[3][0] == 'j' ); else isactive = false;
-        gateway->addGateway(gw_name, gw_ip, gw_no, isactive); 
+        if ( row[1] != NULL ) gw_no = strtoul(row[1], &pEnd, 10); else gw_no = 0;
+		if ( row[2] != NULL ) isactive = ( row[2][0] == 'y' || row[3][0] == 'j' ); else isactive = false;
+        gateway->addGateway(gw_name, gw_no, isactive); 
 	}
 	mysql_free_result(result);    
 }    
     
+unsigned long Database::getBeginOfDay(){
+	MYSQL_ROW row;
+    unsigned long retval;
+    sprintf (sql_stmt, "%s", "select UNIX_TIMESTAMP(FROM_UNIXTIME(UNIX_TIMESTAMP(),'%Y%m%d'))");
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();
+	MYSQL_RES *result = mysql_store_result(db);
+	db_check_error();
+	while ((row = mysql_fetch_row(result))) {
+        if ( row[0] != NULL ) retval = strtoul(row[0], &pEnd, 10); else retval = 0;
+	}
+	mysql_free_result(result);
+    return retval;    
+}
+
+void Database::addGateway(char* gw_name, uint16_t gw_no){
+	sprintf (sql_stmt, "insert into gateway(gw_name, gw_no, isActive) values('%s', %u, true)", gw_name, gw_no);
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error(); 
+    mysql_commit(db);
+}
+
+void Database::delGateway(uint16_t gw_no){
+	sprintf (sql_stmt, "delete from gateway where gw_no = %u", gw_no);
+    debugPrintSQL(sql_stmt);
+	mysql_query(db, sql_stmt);
+	db_check_error();    
+    mysql_commit(db);
+}
+
 void Database::initNode(Node* node) {
     NODE_DATTYPE node_id = 0;
     char node_name[NODENAMESIZE];
@@ -197,8 +234,8 @@ void Database::do_sql(char *sqlstmt) {
 void Database::storeSensorValue(uint32_t sensor_id, uint32_t data, char* value) {
     sprintf(sql_stmt,"update sensor_im set last_data = %u, value = '%s', last_utime = UNIX_TIMESTAMP() where sensor_id = %u", data, value, sensor_id);
     do_sql(sql_stmt);
-//    sprintf(sql_stmt,"insert into sensordata_im (sensor_ID, utime, value) values (%u, UNIX_TIMESTAMP(), %s)", sensor_id, value);
-//    do_sql(sql_stmt);
+    sprintf(sql_stmt,"insert into sensordata_im (sensor_ID, utime, value) values (%u, UNIX_TIMESTAMP(), %s)", sensor_id, value);
+    do_sql(sql_stmt);
     sprintf(sql_stmt,"insert into sensordata (sensor_ID, utime, value) values (%u, UNIX_TIMESTAMP(), %s)", sensor_id, value);
     do_sql(sql_stmt);
 }

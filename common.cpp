@@ -59,6 +59,12 @@ uint64_t mymillis(void) {
 	return timebuf;
 }
 
+uint64_t utime(void) {
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	return tv.tv_sec;
+}
+
 char* printVerbose(uint16_t verboseLevel, char* buf) {
     if (verboseLevel & VERBOSECRITICAL )   sprintf(buf,"critical");
     if (verboseLevel & VERBOSESTARTUP )    sprintf(buf,"%s startup",buf);

@@ -98,14 +98,25 @@ public:
  */
     void sync_sensor(void);
 /**
- * Stores/Syncs all the data from "sensordata_im"
- * to "sensordata" to make them persistent
- */
-    void sync_sensordata(void);
-/**
  * Refreshes the table sensordata_d from scratch
  */
+    void rebuild_sensordata_d(void);
+/**
+ * Refreshes the table sensordata_d 
+ */
     void sync_sensordata_d(void);
+/**
+ * Gets the begin of this day as unix time
+ */    
+    unsigned long getBeginOfDay();
+/**
+ * Adds a gateay to the database
+ */
+    void addGateway(char* gw_name, uint16_t gw_no);
+/**
+ * Deletes a gateay from the database
+ */
+    void delGateway(uint16_t gw_no);
 /**
  * The constructor
  */

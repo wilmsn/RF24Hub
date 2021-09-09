@@ -21,6 +21,7 @@ struct gateway_t {
         char*              gw_name;
         uint16_t           gw_no;
         char*              gw_ip;
+        unsigned long      last_contact;       
         bool               isActive;
         gateway_t*         p_next;
     };
@@ -40,7 +41,11 @@ uint16_t    verboselevel;
 /**************************************************************
  * fügt einen neuen record zum Buffer hinzu
  *************************************************************/
-void    newEntry(gateway_t*);
+bool    newEntry(gateway_t*);
+/**************************************************************
+ * löscht den übergebenen record aus dem Buffer
+ *************************************************************/
+bool    delEntry(gateway_t* p_del);
 
 public:
 
@@ -66,9 +71,17 @@ bool hasEntry(void);
  *************************************************************/
 void cleanup(void);
 /**************************************************************
+ * 
+ *************************************************************/
+void gw_contact(char* gw_ip, uint16_t gw_no);
+/**************************************************************
  *  Fügt einen neuen Gateway hinzu
  *************************************************************/
-void addGateway(char* gw_name, char* gw_ip, uint16_t gw_no, bool isActive );
+void addGateway(char* gw_name, uint16_t gw_no, bool isActive );
+/**************************************************************
+ *  Entfernt einen Gateway
+ *************************************************************/
+void delGateway(uint16_t gw_no);
 /**************************************************************
  *  Setzt einen Gateway in den übergebenen Status
  *************************************************************/
