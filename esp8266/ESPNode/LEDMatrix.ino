@@ -123,7 +123,17 @@ void print_line(char* rohtext ) {
       }
   }
   matrix.setFont(font);
-  cursor_y = (line-1)*8;
+  switch (line) {
+    case 1:
+      cursor_y = 0;
+    break;
+    case 2:
+      cursor_y = 8;
+    break;
+    case 3:
+      cursor_y = 17;
+    break;
+  }
   cursor_x = offset;
   if (textallign == 'L') {
     matrix.setCursor(cursor_x, cursor_y);

@@ -18,8 +18,8 @@ On Branch: rf24hub@rpi2 => master  !!!!!
 // Select only one at one time !!!!
 //#define TEICHPUMPE
 //#define TERASSENNODE
-#define FLURLICHT
-//#define WOHNZIMMERNODE
+//#define FLURLICHT
+#define WOHNZIMMERNODE
 //#define TESTNODE
 //#define WITTYNODE
 //#define RF24GWTEST
