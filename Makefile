@@ -30,6 +30,7 @@ DEBUGFLAGS=-ggdb3 -O0
 # make all
 all: rf24hubd rf24gwd
 debug: rf24hubd_debug
+simu: clean4simulator simulator
 
 # Make the rf24hub deamon in debug mode
 rf24hubd_debug: cfg.o dataformat.o database.o node.o sensor.o orderbuffer.o order.o common.o rf24hubd.cpp
@@ -43,6 +44,15 @@ rf24hubd: cfg.o gateway.o dataformat.o database.o node.o sensor.o orderbuffer.o 
 rf24gwd: cfg.o common.o dataformat.o rf24gwd.cpp
 	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -lrf24-bcm -lrf24 $^ -o $@
 
+	
+# Clean the needed *.o files
+clean4simulator:
+	rm -f dataformat.o common.o
+
+# Make the simulator
+simulator: dataformat.o common.o simulator.c
+	g++ -Wall -I ${INCLUDEDIR} $^ -o $@
+
 # Test of order object
 ordertest: sensor.o node.o orderbuffer.o common.o dataformat.o order.o order_test.cpp
 	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24network ${MYSQLLIBS} $^ -o $@
@@ -53,7 +63,7 @@ orderbuffertest: orderbuffer.o orderbuffer_test.cpp
 
 # clear build files
 clean:
-	rm *.o rf24hubd rf24gwd rf24hubd_debug
+	rm -f *.o rf24hubd rf24gwd rf24hubd_debug
 
 # Install the rf24hub and rf24gw
 install:  install_gw install_hub

@@ -166,7 +166,7 @@ void Order::addOrder(NODE_DATTYPE node_id, uint8_t msg_type, bool HB_order, uint
         p_new->msg_id = 1;
         p_new->msg_type = msg_type;
         p_new->msg_flags = PAYLOAD_FLAG_EMPTY;
-        p_new->HB_order = HB_order;
+//        p_new->HB_order = HB_order;
         p_new->data1 = data;
         p_new->data2 = 0;
         p_new->data3 = 0;
@@ -229,18 +229,18 @@ bool Order::getOrderForTransmission(payload_t* payload, uint64_t mytime){
     bool retval = false;
     order_t *p_delme = NULL;
     order_t *p_search;
-    uint64_t sendInterval;
-    uint64_t deleteInterval;
-    uint64_t stopmsg_deleteInterval;
+//    uint64_t sendInterval;
+//    uint64_t deleteInterval;
+//    uint64_t stopmsg_deleteInterval;
     p_search = p_initial;
     while (p_search) {
         if (verboselevel & VERBOSEORDEREXT) {
             printf("%sOrder::getOrderForTransmission N:%u O:%u Last send: %llu Now: %llu Entry: %llu\n",ts(tsbuf),p_search->node_id, p_search->orderno, p_search->last_send, mytime, p_search->entrytime);        
         }
         if (p_search->last_send > mytime) p_search->last_send = mytime;
-        p_search->HB_order? sendInterval=SENDINTERVAL_HB : sendInterval=SENDINTERVAL;
-        p_search->HB_order? deleteInterval=DELETEINTERVAL_HB : deleteInterval=DELETEINTERVAL;
-        if ( (p_search->last_send + sendInterval) < mytime) {
+//        p_search->HB_order? sendInterval=SENDINTERVAL_HB : sendInterval=SENDINTERVAL;
+//        p_search->HB_order? deleteInterval=DELETEINTERVAL_HB : deleteInterval=DELETEINTERVAL;
+        if ( (p_search->last_send + SENDINTERVAL) < mytime) {
             payload->node_id = p_search->node_id;
             payload->msg_id = p_search->msg_id++;
             payload->msg_type = p_search->msg_type;
@@ -255,13 +255,13 @@ bool Order::getOrderForTransmission(payload_t* payload, uint64_t mytime){
             payload->data6 = p_search->data6;
             p_search->last_send = mytime;
             if (verboselevel & VERBOSEORDER) {
-                printf("%sOrder::getOrderForTransmission <%p> O: %u (N:%u %s), TTL: %llu\n", ts(tsbuf), p_search, p_search->orderno, p_search->node_id, p_search->HB_order? "HB":"  ", p_search->entrytime + (uint64_t)deleteInterval - mytime ); 
+                printf("%sOrder::getOrderForTransmission <%p> O: %u (N:%u), TTL: %llu\n", ts(tsbuf), p_search, p_search->orderno, p_search->node_id, p_search->entrytime + DELETEINTERVAL - mytime ); 
             }
-            if ( (p_search->entrytime + (uint64_t)deleteInterval < mytime) || 
-                (p_search->msg_type == PAYLOAD_TYPE_DATSTOP && (p_search->entrytime + (SENDSTOPCOUNT * sendInterval)) < mytime) ) {
+            if ( (p_search->entrytime + (uint64_t)DELETEINTERVAL < mytime) || 
+                (p_search->msg_type == PAYLOAD_TYPE_DATSTOP && (p_search->entrytime + (SENDSTOPCOUNT * SENDINTERVAL)) < mytime) ) {
                 p_delme = p_search;
                 if (verboselevel & VERBOSEORDER) {
-                    printf("%sOrder::getOrderForTransmission Timeout - lösche <%p> O:%u (N:%u %s), entry:%llu last send: %llu Delinterv: %llu Sendinterv: %llu\n", ts(tsbuf), p_delme, p_delme->orderno, p_delme->node_id, p_search->HB_order? "HB":"  ", p_delme->entrytime, p_delme->last_send, (uint64_t)deleteInterval, (uint64_t)sendInterval ); 
+                    printf("%sOrder::getOrderForTransmission Timeout - lösche <%p> O:%u (N:%u), entry:%llu last send: %llu Delinterv: %llu Sendinterv: %llu\n", ts(tsbuf), p_delme, p_delme->orderno, p_delme->node_id, p_delme->entrytime, p_delme->last_send, (uint64_t)DELETEINTERVAL, (uint64_t)SENDINTERVAL ); 
                 }
                 delEntry(p_delme);
             }

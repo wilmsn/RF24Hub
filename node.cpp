@@ -78,20 +78,24 @@ bool Node::isNewHB(NODE_DATTYPE node_id, uint8_t heartbeatno) {
     node_t *p_search;
     bool retval = false;
     p_search = p_initial;
-    while (p_search) {
-        if (p_search->node_id == node_id) {
-            if (verboselevel & VERBOSEORDER) 
-                printf("%sNode.is_new_HB: Node:%u last HB %u this HB %u => ", ts(tsbuf), node_id, p_search->heartbeatno, heartbeatno );
-            if (p_search->heartbeatno != heartbeatno ) retval = true;
-            p_search->heartbeatno = heartbeatno;
-            p_search = NULL;
-        } else {
-            p_search = p_search->p_next;
+    if ( heartbeatno == 0 ) {
+        retval = true;
+    } else {
+        while (p_search) {
+            if (p_search->node_id == node_id) {
+                if (verboselevel & VERBOSEORDER)
+                    printf("%sNode.is_new_HB: Node:%u last HB %u this HB %u => ", ts(tsbuf), node_id, p_search->heartbeatno, heartbeatno );
+                if (p_search->heartbeatno != heartbeatno ) retval = true;
+                p_search->heartbeatno = heartbeatno;
+                p_search = NULL;
+            } else {
+                p_search = p_search->p_next;
+            }
         }
-    }    
+    }
     if (verboselevel & VERBOSEORDER) {
         if (retval) {
-            printf("New HeartBeat\n");;
+            printf("New HeartBeat or Heartbeatno == 0\n");;
         } else {
             printf("Old HeartBeat\n");
         }

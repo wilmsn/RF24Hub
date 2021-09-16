@@ -12,18 +12,12 @@
 #define MSGKEYHUB 3452
 // The Key for the Messagebuffer (GW)
 #define MSGKEYGW 3453
-// Interval to send a request to the regular node in millisec.
-#define SENDINTERVAL 500
-// Interval to send a request to the regular node in millisec.
-#define SENDINTERVAL_HB 100
+// Interval to send/repeat a request in millisec.
+#define SENDINTERVAL 100
 // Number of stopmessages to send
 #define SENDSTOPCOUNT 3
-// Interval for deleting unanswered requests for order for regular nodes in millisec.
-// 300 Sec = 5 Min.
-#define DELETEINTERVAL 300000
-// Interval for deleting unanswered requests for order for Heartbeat nodes in millisec.
-// 1 Sec.
-#define DELETEINTERVAL_HB 500
+// Interval for deleting unanswered requests in millisec.
+#define DELETEINTERVAL 500
 // Intervall to sync sensordata_d to sensordata 
 // Time in Seconds: 86400 = 24 Hours
 #define DBSYNCINTERVAL   86400

@@ -44,6 +44,7 @@ bool Gateway::delEntry(gateway_t* p_del) {
     p_tmp = p_initial;
     while (p_search) {
         if (p_search == p_del ) {
+            free(p_search->gw_ip);
             if (p_search == p_initial) {
                 if (p_initial->p_next) { 
                     p_tmp=p_initial->p_next;

@@ -635,14 +635,14 @@ int main(int argc, char* argv[]) {
                 free(tn_buf);
             }
             switch ( payload.msg_type ) {
-                case PAYLOAD_TYPE_INIT: { // Init message from a node!!
+/*                case PAYLOAD_TYPE_INIT: { // Init message from a node!!
                     if ( node.isNewHB(payload.node_id, payload.heartbeatno) ) {
                         process_payload(&payload);
                     } else {
                         // nothing to do here !!!   
                     }
                 }
-                break;    
+                break; */
                 case PAYLOAD_TYPE_ESP: { // Message from ESP Node - will not be answered
                     process_payload(&payload);                    
                 }
