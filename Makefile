@@ -38,11 +38,11 @@ rf24hubd_debug: cfg.o dataformat.o database.o node.o sensor.o orderbuffer.o orde
 
 # Make the rf24hub deamon
 rf24hubd: cfg.o gateway.o dataformat.o database.o node.o sensor.o orderbuffer.o order.o common.o rf24hubd.cpp
-	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24 ${MYSQLLIBS} $^ -o $@
+	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} $^ -o $@ ${MYSQLLIBS}
 
 # Make the rf24gw deamon
 rf24gwd: cfg.o common.o dataformat.o rf24gwd.cpp
-	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -lrf24-bcm -lrf24 $^ -o $@
+	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -lrf24 $^ -o $@ -lrf24-bcm
 
 	
 # Clean the needed *.o files
