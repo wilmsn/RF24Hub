@@ -16,10 +16,10 @@ On Branch: rf24hub@rpi2 => master  !!!!!
 //****************************************************
 // My definitions for my nodes based on this sketch
 // Select only one at one time !!!!
-//#define TEICHPUMPE
+#define TEICHPUMPE
 //#define TERASSENNODE
 //#define FLURLICHT
-#define WOHNZIMMERNODE
+//#define WOHNZIMMERNODE
 //#define TESTNODE
 //#define WITTYNODE
 //#define RF24GWTEST
@@ -146,6 +146,27 @@ struct eeprom_t {
 };
 eeprom_t eepromdata;
 
+void wifi_con(void) {
+  if (WiFi.status() != WL_CONNECTED) {
+    WiFi.persistent(false);
+    WiFi.mode(WIFI_STA);
+    WiFi.hostname(HOSTNAME);
+    WiFi.begin(ssid, password);
+
+    // ... Give ESP 10 seconds to connect to station.
+    unsigned int i=0;
+    while (WiFi.status() != WL_CONNECTED && i < 100) {
+      delay(200);
+      i++;
+    }
+    configTime(MY_TZ, MY_NTP_SERVER); 
+    while (WiFi.status() != WL_CONNECTED) {
+      delay(3000);
+      ESP.restart();
+    }
+  }
+}
+
 void setup() {
   pinMode(BUILTIN_LED, OUTPUT);
   digitalWrite(BUILTIN_LED, LOW);
@@ -181,22 +202,8 @@ void setup() {
     }
   }
 
-  WiFi.persistent(false);
-  WiFi.mode(WIFI_STA);
-  WiFi.hostname(HOSTNAME);
-  WiFi.begin(ssid, password);
-
-  // ... Give ESP 10 seconds to connect to station.
-  unsigned int i=0;
-  while (WiFi.status() != WL_CONNECTED && i < 100) {
-    delay(200);
-    i++;
-  }
-  configTime(MY_TZ, MY_NTP_SERVER); 
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(3000);
-    ESP.restart();
-  }
+  wifi_con();
+  
   if (eepromdata.log_startup) {
     snprintf(info_str,INFOSIZE,"%s %s %s %s", F("Connected to "), ssid, F(" IP address: "), WiFi.localIP().toString().c_str() );
     write2log(info_str);
@@ -1329,5 +1336,6 @@ void loop() {
   httpServer.handleClient();
   MDNS.update();
   ArduinoOTA.handle(); // Wait for OTA connection
+  wifi_con();
   delay(0);
 }
