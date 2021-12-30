@@ -89,9 +89,7 @@ On Branch: master  !!!!!
 
 Vcc vcc(1.0);
 
-#if defined(HBNODE)
 ISR(WDT_vect) { watchdogEvent(); }
-#endif
 
 #if defined(HAS_DISPLAY)
 bool displayIsSleeping = false;
