@@ -16,10 +16,10 @@ On Branch: rf24hub@rpi2 => master  !!!!!
 //****************************************************
 // My definitions for my nodes based on this sketch
 // Select only one at one time !!!!
-#define TEICHPUMPE
+//#define TEICHPUMPE
 //#define TERASSENNODE
 //#define FLURLICHT
-//#define WOHNZIMMERNODE
+#define WOHNZIMMERNODE
 //#define TESTNODE
 //#define WITTYNODE
 //#define RF24GWTEST
@@ -62,9 +62,9 @@ On Branch: rf24hub@rpi2 => master  !!!!!
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #endif
+#include "rf24_config.h"
 #if defined(RF24GW)
 #include <RF24.h>
-#include "rf24_config.h"
 #include "dataformat.h"
 #endif
 #if defined(LEDMATRIX)
@@ -85,9 +85,9 @@ Logger logger(LOGGER_NUMLINES,LOGGER_LINESIZE);
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 #endif
-#if defined(RF24GW)
 WiFiUDP udp;
-RF24 radio(RADIO_CE_PIN,RADIO_CSN_PIN);
+#if defined(RF24GW)
+RF24 radio(RF24_RADIO_CE_PIN,RF24_RADIO_CSN_PIN);
 #endif
 #if defined(LEDMATRIX)
 LED_Matrix matrix(LEDMATRIX_DIN, LEDMATRIX_CLK, LEDMATRIX_CS, LEDMATRIX_DEVICES_X, LEDMATRIX_DEVICES_Y);
@@ -127,10 +127,9 @@ bool state_switch4 = SWITCH4INITSTATE;
 #endif
 #if defined(RF24GW)
 payload_t payload;
-udpdata_t udpdata;
 uint8_t  rf24_node2hub[] = RF24_NODE2HUB;
 uint8_t  rf24_hub2node[] = RF24_HUB2NODE;
-uint16_t rf24_verboselevel = RF24GW_STARTUPVERBOSELEVEL;
+uint16_t rf24_verboselevel = RF24_GW_STARTUPVERBOSELEVEL;
 #endif
 
 struct eeprom_t {
@@ -145,6 +144,8 @@ struct eeprom_t {
    bool      log_sysinfo;
 };
 eeprom_t eepromdata;
+
+udpdata_t udpdata;
 
 void wifi_con(void) {
   if (WiFi.status() != WL_CONNECTED) {
@@ -210,9 +211,9 @@ void setup() {
   } 
   
 #if defined(RF24GW)
-  udp.begin(GW_UDP_PORTNO);
+  udp.begin(RF24_GW_UDP_PORTNO);
   if (eepromdata.log_startup) {
-    snprintf(info_str,INFOSIZE,"%s %u", F("Opened UDP Port: "), GW_UDP_PORTNO );
+    snprintf(info_str,INFOSIZE,"%s %u", F("Opened UDP Port: "), RF24_GW_UDP_PORTNO );
     write2log(info_str);
   } 
 #endif  
@@ -503,6 +504,10 @@ void handleCmd() {
     }
     if ( httpServer.argName(argNo) == F("sysinfo5") ) {
       fill_sysinfo5(info_str);
+      status = ok_json;
+    }
+    if ( httpServer.argName(argNo) == F("sysinfo6") ) {
+      fill_sysinfo6(info_str);
       status = ok_json;
     }
     if ( httpServer.argName(argNo) == F("webcfg1") ) {
@@ -886,7 +891,7 @@ void  set_neopixel(tristate_t mystate) {
 
 #if defined(RF24GW)
 void handlerf24gw(char* response) {
-  snprintf(response,INFOSIZE,"{\"gwno\":%d}", GW_NO);
+  snprintf(response,INFOSIZE,"{\"gwno\":%d}", RF24_GW_NO);
 }
 #endif
 
@@ -906,7 +911,7 @@ void handlestatus(char* myjson) {
 }
 
 void send_udp_msg(uint32_t data) {
-  udpdata.gw_no = GW_NO;
+  udpdata.gw_no = RF24_GW_NO;
   udpdata.payload.node_id = SENSOR_NODE;
   udpdata.payload.msg_id = 0;
   udpdata.payload.msg_type = PAYLOAD_TYPE_ESP;
@@ -918,10 +923,12 @@ void send_udp_msg(uint32_t data) {
   udpdata.payload.data4 = 0;
   udpdata.payload.data5 = 0;
   udpdata.payload.data6 = 0;
-  udp.beginPacket(HUB_IP, HUB_UDP_PORTNO);
+  udp.beginPacket(RF24_HUB_SERVER, RF24_HUB_UDP_PORTNO);
   udp.write((char*)&udpdata, sizeof(udpdata));
   udp.endPacket();
+#if defined(RF24GW)
   if (eepromdata.log_rf24) write2log(printPayload("S>H", &udpdata.payload, info_str));
+#endif
 }
 
 void handlesensor(char* myjson, call_t call) {
@@ -1021,8 +1028,14 @@ void fill_sysinfo4(char* mystr) {
 
 void fill_sysinfo5(char* mystr) {
   uptime::calculateUptime();
-  snprintf (mystr,INFOSIZE, "{\"MQTT-Hostname\":\"%s\", \"UpTime\":\"%uT%02u:%02u:%02u\", \"SW\":\"%s / %s\"}",
-          MQTT_NODENAME, uptime::getDays(), uptime::getHours(), uptime::getMinutes(), uptime::getSeconds(), SWVERSION_STR, SWDATUM );
+  snprintf (mystr,INFOSIZE, "{\"MQTT-Server\":\"%s\", \"MQTT-Hostname\":\"%s\", \"UpTime\":\"%uT%02u:%02u:%02u\", \"SW\":\"%s / %s\"}",
+          MQTT_SERVER, MQTT_NODENAME, uptime::getDays(), uptime::getHours(), uptime::getMinutes(), uptime::getSeconds(), SWVERSION_STR, SWDATUM );
+}
+
+void fill_sysinfo6(char* mystr) {
+  uptime::calculateUptime();
+  snprintf (mystr,INFOSIZE, "{\"RF24HUB-Server\":\"%s\", \"RF24HUB-Port\":%d, \"RF24GW-Port\":%d}",
+          RF24_HUB_SERVER, RF24_HUB_UDP_PORTNO, RF24_GW_UDP_PORTNO );
 }
 
 void fill_webcfg1(char* mystr) {
@@ -1298,9 +1311,9 @@ void loop() {
   while ( radio.available() ) {
     radio.read(&payload, sizeof(payload));
     if (eepromdata.log_rf24) write2log(printPayload("N>G", &payload, info_str));
-    udpdata.gw_no = GW_NO;
+    udpdata.gw_no = RF24_GW_NO;
     memcpy(&udpdata.payload, &payload, sizeof(payload));
-    udp.beginPacket(HUB_IP, HUB_UDP_PORTNO);
+    udp.beginPacket(RF24_HUB_SERVER, RF24_HUB_UDP_PORTNO);
     udp.write((char*)&udpdata, sizeof(udpdata));
     udp.endPacket();
   }

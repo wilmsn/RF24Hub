@@ -37,6 +37,7 @@
 #define REG_SNDCNTN         117
 #define REG_SNDCNTS         118
 #define REG_LOWVOLTLOOPS    119
+#define REG_SLEEP4MS_FAC    120
 #define REG_PALEVEL         124
 #define REG_SW              125
 /***********************************

@@ -73,9 +73,9 @@
 #define N5110_RST         2
 #define N5110_CE          4
 // Kontrast of the display
-#define CONTRAST 65;
+#define CONTRAST 65
 // Brightnes of the display - unused until now
-#define BRIGHTNES 0;
+#define BRIGHTNES 0
 //  012345678901234567890123456789012345678901234567890123456789012345678901234567890123
 // 0                                                                           BBBBBBBBB     B = Batterie
 // 1                                                                          BBBBBBBBBB
@@ -140,4 +140,6 @@
 #define HB_Y0 17
 //
 // END Definition Nokia 5110 Display
+//
+// Register of RF24 Nodes
 //

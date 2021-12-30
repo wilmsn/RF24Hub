@@ -46,15 +46,15 @@
 #define LED_MATRIX_ANIM_DELAY   100
 
 // for rf24gw
-#define HUB_IP                  "192.168.178.212"
-#define HUB_UDP_PORTNO          7004
-#define GW_UDP_PORTNO           7003
-#define RADIO_CE_PIN            15
-#define RADIO_CSN_PIN           16
-#define RF24GW_VERBOSECRITICAL          0b0000000000000001
-#define RF24GW_VERBOSESTARTUP           0b0000000000000010
-#define RF24GW_VERBOSERF24              0b0000000010000000
-#define RF24GW_STARTUPVERBOSELEVEL      0b0000000000000011 
+#define RF24_HUB_SERVER              "192.168.178.212"
+#define RF24_HUB_UDP_PORTNO          7004
+#define RF24_GW_UDP_PORTNO           7003
+#define RF24_RADIO_CE_PIN            15
+#define RF24_RADIO_CSN_PIN           16
+#define RF24_GW_VERBOSECRITICAL          0b0000000000000001
+#define RF24_GW_VERBOSESTARTUP           0b0000000000000010
+#define RF24_GW_VERBOSERF24              0b0000000010000000
+#define RF24_GW_STARTUPVERBOSELEVEL      0b0000000000000011 
 
 // for witty cloud
 #define WITTY_RGB_BL            13

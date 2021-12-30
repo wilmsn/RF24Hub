@@ -24,7 +24,9 @@ On Branch: master  !!!!!
 //#define BASTELZIMMERTHERMOMETER_SW
 //#define KUECHETHERMOMETER // noch mit Bug in 205
 //#define WOHNZIMMERTHERMOMETER
-#define ANKLEIDEZIMMERTHERMOMETER
+//#define ANKLEIDEZIMMERTHERMOMETER
+#define KUGELNODE1
+//#define KUGELNODE2
 //#define GAESTEZIMMERTHERMOMETER
 //#define FEUCHTESENSOR_170
 //#define UNOTESTNODE_AO
@@ -588,7 +590,7 @@ void setup(void) {
   EEPROM.get(0, eeprom);
   if (eeprom.versionnumber != EEPROM_VERSION && EEPROM_VERSION > 0) {
     eeprom.versionnumber    = EEPROM_VERSION;
-    eeprom.brightnes        = BRIGHTNES
+    eeprom.brightnes        = BRIGHTNES;
     eeprom.contrast         = CONTRAST;
     eeprom.sleeptime_sec    = SLEEPTIME_SEC;
     eeprom.sleep4ms_fac     = SLEEP4MS_FAC;
@@ -1140,7 +1142,6 @@ void exec_jobs(void) {
 }
 
 void loop(void) {
-#if defined(HBNODE)  
   delay(10);  
   payloadInitData();
   get_voltage();
@@ -1227,39 +1228,4 @@ void loop(void) {
   sleeptime_kor = 0;  
   sleep4ms(tempsleeptime);
   loopcount++;
-// Ende ToDo  
-/**************************************** 
- *  End Heartbeat Node
- ****************************************/
-#else
-/**************************************** 
- *  Start always on Node
- ****************************************/
-  if ( radio.available() ) {
-    radio.read(&r_payload, sizeof(r_payload));
-    if (r_payload.node_id == RF24NODE && r_payload.orderno != last_orderno) {
-#if defined(DEBUG_SERIAL_RADIO)
-      Serial.println(last_orderno);
-      Serial.print("RX: ");
-      printPayload(&r_payload);
-#endif
-      last_orderno = r_payload.orderno;
-      switch(r_payload.msg_type) {
-        case PAYLOAD_TYPE_DAT:
-          if (r_payload.data1 > 0) { s_payload.data1 = action_loop(r_payload.data1); } else { s_payload.data1 = 0; }
-          if (r_payload.data2 > 0) { s_payload.data2 = action_loop(r_payload.data2); } else { s_payload.data2 = 0; }
-          if (r_payload.data3 > 0) { s_payload.data3 = action_loop(r_payload.data3); } else { s_payload.data3 = 0; }
-          if (r_payload.data4 > 0) { s_payload.data4 = action_loop(r_payload.data4); } else { s_payload.data4 = 0; }
-          if (r_payload.data5 > 0) { s_payload.data5 = action_loop(r_payload.data5); } else { s_payload.data5 = 0; }
-          if (r_payload.data6 > 0) { s_payload.data6 = action_loop(r_payload.data6); } else { s_payload.data6 = 0; }
-          do_transmit(5, PAYLOAD_TYPE_DATRESP,/*PAYLOAD_FLAG_LASTMESSAGE*/99,r_payload.orderno, 0);
-        break;  
-      }
-    }
-  }
-  exec_jobs();
-  if ( loopcount > 1000 ) { get_voltage(); loopcount=0; }
-  loopcount++;
-  delay(500);
-#endif
 }

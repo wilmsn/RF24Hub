@@ -1,4 +1,4 @@
-var htmlversion = "2.09";
+var htmlversion = "2.16";
 var msg1_active = 0;
 var msg2_active = 0;
 var sw1_active = 0;
@@ -102,6 +102,11 @@ $(document).ready(function(){
       });
     });
     $.getJSON( "/cmd?sysinfo5", function( data ) {
+      $.each( data, function( key, val ) {
+        prozessJS( key, val );
+      });
+    });
+    $.getJSON( "/cmd?sysinfo6", function( data ) {
       $.each( data, function( key, val ) {
         prozessJS( key, val );
       });
@@ -338,6 +343,18 @@ function prozessJS( key, val ) {
         break;
         case "MQTT-Hostname":
           $("#f_mqtthostname").html(val);
+        break;
+        case "MQTT-Server":
+          $("#f_mqttserver").html(val);
+        break;
+        case "RF24HUB-Server":
+          $("#f_rf24hubserver").html(val);
+        break;
+        case "RF24HUB-Port":
+          $("#f_rf24hubport").html(val);
+        break;
+        case "RF24GW-Port":
+          $("#f_rf24gwport").html(val);
         break;
         case "SdkVer":
           $("#f_sdkversion").html(val);

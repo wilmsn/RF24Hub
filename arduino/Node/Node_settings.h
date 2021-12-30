@@ -4,8 +4,6 @@ mandatory:
 // #define RF24NODE        <NODE NUMBER>
 
 optional:
-- To mark a node as heartbeatnode use:
-// #define HBNODE
 - Select a sensor
 -- A Dummy for test purposes
 // #define SENSOR_DUMMY
@@ -48,7 +46,6 @@ debugging options:
 //    Individual settings
 //-----------------------------------------------------
 #if defined(AUSSENTHERMOMETER)
-#define HBNODE
 #define RF24NODE        200
 #define SENSOR_BOSCH
 #define STATUSLED       3
@@ -60,7 +57,6 @@ debugging options:
 #endif
 //-----------------------------------------------------
 #if defined(AUSSENTHERMOMETER2)
-#define HBNODE
 #define RF24NODE        201
 #define SENSOR_BOSCH
 #define STATUSLED       7
@@ -72,7 +68,6 @@ debugging options:
 #endif
 //-----------------------------------------------------
 #if defined(SCHLAFZIMMERTHERMOMETER)
-#define HBNODE
 #define RF24NODE             101
 #define SENSOR_18B20
 #define DISPLAY_5110
@@ -87,7 +82,6 @@ debugging options:
 #endif
 //-----------------------------------------------------
 #if defined(WOHNZIMMERTHERMOMETER)
-#define HBNODE
 #define RF24NODE             102
 #define SENSOR_BOSCH
 #define DISPLAY_5110
@@ -100,7 +94,6 @@ debugging options:
 #endif
 //-----------------------------------------------------
 #if defined(KUECHETHERMOMETER)
-#define HBNODE
 #define RF24NODE             103
 #define SENSOR_18B20
 #define DISPLAY_5110
@@ -114,7 +107,6 @@ debugging options:
 #endif
 //-----------------------------------------------------
 #if defined(GAESTEZIMMERTHERMOMETER)
-#define HBNODE
 #define RF24NODE             104
 #define SLEEPTIME_SEC        900
 #define STATUSLED            7
@@ -124,8 +116,31 @@ debugging options:
 #define LOW_VOLT_LEVEL       3.5
 #endif
 //-----------------------------------------------------
+#if defined(KUGELNODE1)
+#define RF24NODE             106
+#define SLEEPTIME_SEC        300
+#define SENSOR_BOSCH
+#define DISPLAY_5110
+#define EEPROM_VERSION       1
+#define EMPTYLOOPS           0
+#define LOW_VOLT_LEVEL       3.5
+#define VOLT_OFF             0.55
+#define CONTRAST             60
+#endif
+//-----------------------------------------------------
+#if defined(KUGELNODE2)
+#define RF24NODE             107
+#define SLEEPTIME_SEC        300
+#define SENSOR_BOSCH
+#define DISPLAY_5110
+#define EEPROM_VERSION       1
+#define EMPTYLOOPS           0
+#define LOW_VOLT_LEVEL       3.5
+#define VOLT_OFF             0.55
+#define CONTRAST             60
+#endif
+//-----------------------------------------------------
 #if defined(TESTNODE)
-#define HBNODE
 #define RF24NODE             169
 #define SENSOR_DUMMY
 #define DISPLAY_5110
@@ -135,7 +150,6 @@ debugging options:
 #endif
 //-----------------------------------------------------
 #if defined(BASTELZIMMERTHERMOMETER)
-#define HBNODE
 #define RF24NODE             100
 #define SENSOR_18B20
 #define DISPLAY_5110
@@ -149,7 +163,6 @@ debugging options:
 #endif
 //-----------------------------------------------------
 #if defined(BASTELZIMMERTHERMOMETER_SW)
-#define HBNODE
 #define RF24NODE             105
 #define SENSOR_18B20
 #define DISPLAY_5110
@@ -163,7 +176,6 @@ debugging options:
 #endif
 //-----------------------------------------------------
 #if defined(ANKLEIDEZIMMERTHERMOMETER)
-#define HBNODE
 #define RF24NODE             110
 #define SENSOR_18B20
 #define DISPLAY_5110
@@ -178,38 +190,10 @@ debugging options:
 #endif
 //-----------------------------------------------------
 #if defined(FEUCHTESENSOR_170)
-#define HBNODE
 #define RF24NODE             170
 #define EEPROM_VERSION       1
 #define LOW_VOLT_LEVEL       1.8
 #define EEPROM_VERSION       5
 #define SLEEPTIME_SEC        900
 #define EMPTYLOOPS           0
-#endif
-//-----------------------------------------------------
-#if defined(TERASSE)
-#define RF24NODE             160
-#define EEPROM_VERSION       3
-#define RELAIS_1             4
-#define RELAIS_2             5
-#define RELAIS_ON            LOW
-#define RELAIS_OFF           HIGH
-#define STATUSLED            A2
-#endif
-//-----------------------------------------------------
-#if defined(FLUR)
-#define RF24NODE             161
-#define EEPROM_VERSION       2
-#define NEOPIXEL             46
-#define SENSOR_18B20
-#define DEBUG_SERIAL_SENSOR
-#endif
-//-----------------------------------------------------
-#if defined(TEST)
-#define RF24NODE             169
-#define EEPROM_VERSION       2
-#define NEOPIXEL             7
-#define SENSOR_DUMMY
-#define DEBUG_SERIAL_RADIO
-#define DEBUG_SERIAL_PROC
 #endif

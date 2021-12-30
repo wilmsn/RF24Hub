@@ -40,7 +40,7 @@ optional:
 #define MQTT_NODENAME          "teichpumpe"
 #define TITEL1                 "Teichpumpe"
 #define RF24GW
-#define GW_NO                  101
+#define RF24_GW_NO             101
 #define SENSOR_18B20
 #define SENSOR_NODE            1
 #define SENSOR_CHANNEL         11
@@ -58,7 +58,7 @@ optional:
 #define MQTT_NODENAME          "terassennode"
 #define TITEL1                 "TerassenNode"
 #define RF24GW
-#define GW_NO                  104
+#define RF24_GW_NO             104
 #define SENSOR_18B20
 #define SENSOR_NODE            1
 #define SENSOR_CHANNEL         1
@@ -78,10 +78,12 @@ optional:
 //-----------------------------------------------------
 #if defined(WOHNZIMMERNODE)
 #define HOSTNAME               "wohnzimmernode"
+#define MQTT_SERVER            "rpi1.fritz.box"
 #define MQTT_NODENAME          "wohnzimmernode"
 #define TITEL1                 "Wohnzimmernode"
 #define LINE_SIZE              15
-#define GW_NO                  102
+#define RF24_GW_NO             102
+#define RF24_HUB_SERVER        "rpi1.fritz.box"
 #define RF24GW
 #define SENSOR_18B20
 #define SENSOR_NODE            1
@@ -105,7 +107,7 @@ optional:
 #define SWITCH1TXT             "Neopixel"
 #define SWITCH1MQTT            "neopixel"
 #define SWITCH1INITSTATE       false
-#define GW_NO                  103
+#define RF24_GW_NO             103
 #define RF24GW
 #define SENSOR_18B20
 #define SENSOR_NODE            1
@@ -145,7 +147,7 @@ optional:
 #define MQTT_NODENAME          "rf24gwtest"
 #define TITEL1                 "rf24gwtest"
 #define RF24GW
-#define GW_NO                  102
+#define RF24_GW_NO             102
 #define SENSOR_18B20
 #define SWITCH1
 #define SWITCH1TXT             "int. LED"
@@ -173,7 +175,7 @@ optional:
 #define TITEL1                 "TestNode"
 #undef  MQTT
 //#define RF24GW
-#define GW_NO                  105
+#define RF24_GW_NO             105
 //#define SENSOR_18B20
 #define SWITCH1               
 #define SWITCH1PIN1            2
