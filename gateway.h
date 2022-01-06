@@ -20,7 +20,6 @@ private:
 struct gateway_t {
         char*              gw_name;
         uint16_t           gw_no;
-        char*              gw_ip;
         unsigned long      last_contact;       
         bool               isActive;
         gateway_t*         p_next;
@@ -50,14 +49,14 @@ bool    delEntry(gateway_t* p_del);
 public:
 
 /**************************************************************
- * Gibt den Pointer auf eine GW_IP zurück
+ * Gibt den Pointer auf einen Gateway zurück
  * Mit einem NULL Pointer wird die erste IP
  * und ein Pointer auf den nächsten Record
  * zurückgegeben.
  * Wenn ein NULL Pointer zurückgegeben wird, 
  * dann war es der letzte Record 
  *************************************************************/
-void* getGateway( void* p_rec, char* p_gw_ip, uint16_t *p_gw_no );
+void* getGateway( void* p_rec, char* p_gw_name, uint16_t *p_gw_no );
 /**************************************************************
  *  Setzt das Verboselevel
  *************************************************************/
@@ -73,7 +72,7 @@ void cleanup(void);
 /**************************************************************
  * 
  *************************************************************/
-void gw_contact(char* gw_ip, uint16_t gw_no);
+void gw_contact(uint16_t gw_no);
 /**************************************************************
  *  Fügt einen neuen Gateway hinzu
  *************************************************************/
@@ -89,7 +88,7 @@ void setGateway(uint16_t gw_no, bool isActive );
 /*************************************************************
  *  Prüft ob ein Gateway aktiv (= true) ist.
  ************************************************************/
-bool isGateway(uint16_t gw_no, char* gw_ip);
+bool isGateway(uint16_t gw_no);
 /*************************************************************
  * Druckt alle records im Buffer in den out_socket
  * out_socket ist dabei ein gültiger socket file descriptor

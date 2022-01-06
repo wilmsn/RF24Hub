@@ -121,11 +121,11 @@ debugging options:
 #define SLEEPTIME_SEC        300
 #define SENSOR_BOSCH
 #define DISPLAY_5110
-#define EEPROM_VERSION       1
+#define EEPROM_VERSION       2
 #define EMPTYLOOPS           0
 #define LOW_VOLT_LEVEL       3.5
 #define VOLT_OFF             0.55
-#define CONTRAST             60
+#define CONTRAST             55
 #endif
 //-----------------------------------------------------
 #if defined(KUGELNODE2)
@@ -133,11 +133,26 @@ debugging options:
 #define SLEEPTIME_SEC        300
 #define SENSOR_BOSCH
 #define DISPLAY_5110
-#define EEPROM_VERSION       1
+#define EEPROM_VERSION       4
 #define EMPTYLOOPS           0
 #define LOW_VOLT_LEVEL       3.5
 #define VOLT_OFF             0.55
+#define CONTRAST             45
+#endif
+//-----------------------------------------------------
+#if defined(TESTNODE_UNO)
+#define RF24NODE             165
+#define SLEEPTIME_SEC        60
+#define EMPTYLOOPS           0
+#define SENSOR_BOSCH
+#define DISPLAY_5110
+#define EEPROM_VERSION       1
+#define LOW_VOLT_LEVEL       3.5
+#define VOLT_OFF             0.55
 #define CONTRAST             60
+#define DEBUG_SERIAL_SENSOR
+#define DEBUG_SERIAL_RADIO
+#define DEBUG_SERIAL_PROC
 #endif
 //-----------------------------------------------------
 #if defined(TESTNODE)
@@ -167,7 +182,7 @@ debugging options:
 #define SENSOR_18B20
 #define DISPLAY_5110
 //#define MONITOR
-#define EEPROM_VERSION       1
+#define EEPROM_VERSION       3
 #define VOLT_OFF             0.55
 #define EMPTYLOOPS           9
 #define LOW_VOLT_LEVEL       3.6

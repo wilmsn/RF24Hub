@@ -155,12 +155,12 @@ Order::order_t* Order::findNode(NODE_DATTYPE node_id) {
     return retval;
 }
 
-void Order::addOrder(NODE_DATTYPE node_id, uint8_t msg_type, bool HB_order, uint32_t data, uint64_t entrytime) {
+void Order::addOrder(NODE_DATTYPE node_id, uint8_t msg_type, uint32_t data, uint64_t entrytime) {
     order_t *p_new = new order_t;
     orderno++;
     if ( orderno == 0 ) orderno = 1;
     if ( p_new) {
-        if (verboselevel & VERBOSEORDER) printf("%sOrder: addOrder <%p> N:%u T:%u HB:%s D1:(%u/%s)\n", ts(tsbuf), p_new, node_id, msg_type, HB_order? "true":"false", getChannel(data), unpackTransportValue(data,buf) ); 
+        if (verboselevel & VERBOSEORDER) printf("%sOrder: addOrder <%p> N:%u T:%u D1:(%u/%s)\n", ts(tsbuf), p_new, node_id, msg_type, getChannel(data), unpackTransportValue(data,buf) ); 
         p_new->orderno = orderno;
         p_new->node_id = node_id;
         p_new->msg_id = 1;

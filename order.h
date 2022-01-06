@@ -32,7 +32,6 @@ struct order_t {
         uint32_t      	       data4;		    // The transportvalue for the Sensor 4 and Value 4
         uint32_t      	       data5;		    // The transportvalue for the Sensor 5 and Value 5
         uint32_t      	       data6;		    // The transportvalue for the Sensor 6 and Value 6
-//        bool                   HB_order;        // true if this node is a Heartbeat Node
         uint64_t		       entrytime;       // Timestamp for creating of this record
         uint64_t	  	       last_send;		// Timestamp for last sending of this record
         order_t*               p_next;
@@ -101,7 +100,7 @@ bool delByNode(NODE_DATTYPE node_id);
 /**
  * fügt einen neuen record zum Buffer hinzu
  */
-void addOrder(NODE_DATTYPE node_id, uint8_t msg_type, bool HB_order, uint32_t data, uint64_t entrytime);
+void addOrder(NODE_DATTYPE node_id, uint8_t msg_type, uint32_t data, uint64_t entrytime);
 /**
  * Füllt das data Feld an der Position pos 2..6 => data2..data6
  */

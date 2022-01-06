@@ -37,9 +37,11 @@ optional:
 //-----------------------------------------------------
 #if defined(TEICHPUMPE)
 #define HOSTNAME               "teichpumpe"
+#define MQTT_SERVER            "rpi1.fritz.box"
 #define MQTT_NODENAME          "teichpumpe"
 #define TITEL1                 "Teichpumpe"
 #define RF24GW
+#define RF24_HUB_SERVER        "rpi1.fritz.box"
 #define RF24_GW_NO             101
 #define SENSOR_18B20
 #define SENSOR_NODE            1
@@ -55,9 +57,11 @@ optional:
 //-----------------------------------------------------
 #if defined(TERASSENNODE)
 #define HOSTNAME               "terassennode"
+#define MQTT_SERVER            "rpi1.fritz.box"
 #define MQTT_NODENAME          "terassennode"
 #define TITEL1                 "TerassenNode"
 #define RF24GW
+#define RF24_HUB_SERVER        "rpi1.fritz.box"
 #define RF24_GW_NO             104
 #define SENSOR_18B20
 #define SENSOR_NODE            1

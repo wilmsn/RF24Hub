@@ -159,13 +159,13 @@ void Database::initNode(Node* node) {
     NODE_DATTYPE node_id = 0;
     char node_name[NODENAMESIZE];
     node_name[0] = 0;
-    bool myHBnode = false;
+    bool isMastered = false;
     uint32_t pa_utime;
     uint32_t pa_level;
     float u_batt;
     char cmp_y[]="y",cmp_j[]="j"; 
 	MYSQL_ROW row;
-	sprintf (sql_stmt, "select node_id, node_name, heartbeat, pa_utime, pa_level from node");
+	sprintf (sql_stmt, "select node_id, node_name, mastered, pa_utime, pa_level from node");
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
@@ -174,10 +174,10 @@ void Database::initNode(Node* node) {
 	while ((row = mysql_fetch_row(result))) {
 		if ( row[0] != NULL ) node_id = strtoul(row[0], &pEnd,10);
 		if ( row[1] != NULL ) sprintf(node_name, row[1]);
-        if ((strcmp(row[2],cmp_y) == 0) || (strcmp(row[1],cmp_j) == 0)) { myHBnode = true; } else { myHBnode = false; }
+        if ((strcmp(row[2],cmp_y) == 0) || (strcmp(row[1],cmp_j) == 0)) { isMastered = true; } else { isMastered = false; }
 		if ( row[3] != NULL ) pa_utime = strtoul(row[2], &pEnd, 10); else pa_utime = 1;
 		if ( row[4] != NULL ) pa_level = strtoul(row[3], &pEnd, 10); else pa_level = 9;
-        node->addNode(node_id, node_name, 0, myHBnode, pa_level, pa_utime); 
+        node->addNode(node_id, node_name, 0, isMastered, pa_level, pa_utime); 
 	}
 	mysql_free_result(result);    
 	sprintf (sql_stmt, "select node_id, last_data from sensor where channel = 101");
@@ -196,6 +196,7 @@ void Database::initNode(Node* node) {
 
 void Database::initSensor(Sensor* sensor) {
     char* fhem_dev = alloc_str(verboselevel,"Database::initSensor fhem_dev",FHEMDEVLENGTH, ts(tsbuf));
+    char* sensor_name = alloc_str(verboselevel,"Database::initSensor sensor_name",FHEMDEVLENGTH, ts(tsbuf));
     uint32_t     	mysensor;
     NODE_DATTYPE   	node_id;
     uint8_t     	mychannel;
@@ -203,7 +204,7 @@ void Database::initSensor(Sensor* sensor) {
     uint32_t        last_utime;
     uint32_t        last_data;
 	MYSQL_ROW row;
-	sprintf (sql_stmt, "select sensor_id, node_id, channel, fhem_dev, last_data, last_utime from sensor");
+	sprintf (sql_stmt, "select sensor_id, node_id, channel, fhem_dev, last_data, last_utime, sensor_name from sensor");
     debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
@@ -216,8 +217,9 @@ void Database::initSensor(Sensor* sensor) {
 		if ( row[3] != NULL ) sprintf(fhem_dev,"%s",trim(row[3])); else sprintf(fhem_dev,"not_set");
 		if ( row[4] != NULL ) last_data = strtoul(row[4], &pEnd, 10); else last_data = 0;
 		if ( row[5] != NULL ) last_utime = strtoul(row[5], &pEnd, 10); else last_utime = 1;
+		if ( row[6] != NULL ) sprintf(sensor_name,"%s",trim(row[6]));
         // ToDo
-        sensor->addSensor(mysensor, node_id, mychannel, fhem_dev, last_utime, last_data);
+        sensor->addSensor(mysensor, node_id, mychannel, fhem_dev, last_utime, last_data, sensor_name);
 	}
 	mysql_free_result(result);
     free_str(verboselevel,"Database::initSensor fhem_dev",fhem_dev, ts(tsbuf)); 

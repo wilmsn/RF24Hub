@@ -25,7 +25,7 @@ struct node_t {
         uint32_t        pa_utime;
         float			u_batt;	
         uint8_t         heartbeatno;
-        bool            is_HB_node;
+        bool            is_mastered;
         node_t*         p_next;
     };
 node_t*     p_initial;
@@ -63,7 +63,7 @@ void cleanup(void);
 /**
  *  Fügt einen neuen Node hinzu
  */
-void addNode(NODE_DATTYPE node_id, char* node_name, float u_batt, bool is_HB_node, uint8_t PALevel, uint32_t PAUtime );
+void addNode(NODE_DATTYPE node_id, char* node_name, float u_batt, bool is_mastered, uint8_t PALevel, uint32_t PAUtime );
 /**
  *  Gibt zur NodeID den Namen des Nodes zurück
  */
@@ -74,9 +74,9 @@ char* getNodeName(NODE_DATTYPE node_id);
  */
 bool isNewHB(NODE_DATTYPE node_id, uint8_t heartbeatno);
 /**
- *  Prüft ob ein Node ein Heartbeat Node ist oder nicht 
+ *  Prüft ob ein Node ein Node von diesem Hub gesteuert wird oder nicht 
  */
-bool isHBNode(NODE_DATTYPE node_id);
+bool isMasteredNode(NODE_DATTYPE node_id);
 /**
  * Setzt den letzten ermittelten PA Level für diesen Node
  * PA Level 0=unknown; 1=Min; 2=Low; 3=High; 4=Max

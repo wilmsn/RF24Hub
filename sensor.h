@@ -20,6 +20,7 @@ private:
 //char* buf;
 struct sensor_t {
         uint32_t     	sensor_id;
+        char			sensor_name[FHEMDEVLENGTH];
         NODE_DATTYPE   	node_id;   		
         uint8_t     	channel;
         char			fhem_dev[FHEMDEVLENGTH];
@@ -63,7 +64,7 @@ void cleanup(void);
 /**
  *  Fügt einen neuen Sensor hinzu
  */
-void addSensor(uint32_t sensor, NODE_DATTYPE node_id, uint8_t channel, char* fhem_dev, uint32_t last_utime, uint32_t last_data);
+void addSensor(uint32_t sensor, NODE_DATTYPE node_id, uint8_t channel, char* fhem_dev, uint32_t last_utime, uint32_t last_data, char* sensor_name);
 /**
  *  Setzt den letzten Wert dieses Sensors in der Form des TransportValues
  *  Rückgabewert: true wenn ein update erfolgt ist.
@@ -77,11 +78,15 @@ uint32_t getSensorByNodeChannel(NODE_DATTYPE node_id, uint8_t channel);
 /**
  *  TRUE wenn es sich um ein Systemregister handelt
  */
-bool isSystemRegister(bool isHBNode, uint8_t channel);
+bool isSystemRegister(uint8_t channel);
 /**
  *  Findet node_id und channel des Sensors durch die sensor_id
  */
 bool getNodeChannelBySensorID(NODE_DATTYPE* p_node_id, uint8_t* p_channel, uint32_t sensor_id);
+/**
+ *  Findet node_id und channel des Sensors durch FHEM Device
+ */
+bool getNodeChannelBySensorName(NODE_DATTYPE *p_node_id, uint8_t* p_channel, char* sensor_name);
 /**
  *  Findet node_id und channel des Sensors durch FHEM Device
  */

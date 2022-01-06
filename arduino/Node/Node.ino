@@ -21,11 +21,11 @@ On Branch: master  !!!!!
 //#define TESTZIMMERTHERMOMETER
 //#define TESTZIMMER1THERMOMETER
 //#define BASTELZIMMERTHERMOMETER
-//#define BASTELZIMMERTHERMOMETER_SW
+#define BASTELZIMMERTHERMOMETER_SW
 //#define KUECHETHERMOMETER // noch mit Bug in 205
 //#define WOHNZIMMERTHERMOMETER
 //#define ANKLEIDEZIMMERTHERMOMETER
-#define KUGELNODE1
+//#define KUGELNODE1
 //#define KUGELNODE2
 //#define GAESTEZIMMERTHERMOMETER
 //#define FEUCHTESENSOR_170
@@ -1078,19 +1078,31 @@ void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, 
     while ( tx_loopcount < max_tx_loopcount ) {
       s_payload.msg_id++;
       radio.stopListening();
+      delay(10);
 #if defined(DEBUG_SERIAL_RADIO)
       Serial.print("TX: ");
       printPayload(&s_payload);
 #endif
       radio.write(&s_payload, sizeof(s_payload));
+      delay(10);
       radio.startListening(); 
+      delay(10);
       start_ts = millis();
       doLoop = true;
+#if defined(DEBUG_SERIAL_RADIO)
+      Serial.print("RX: ");
+      Serial.println(start_ts);
+#endif
       while ( (millis() < (start_ts + eeprom.senddelay) ) && doLoop ) {
+#if defined(DEBUG_SERIAL_RADIO)
+        Serial.print(".");
+#endif
         if ( radio.available() ) {
-          radio.read(&r_payload, sizeof(r_payload));
 #if defined(DEBUG_SERIAL_RADIO)
           Serial.print("RX: ");
+#endif
+          radio.read(&r_payload, sizeof(r_payload));
+#if defined(DEBUG_SERIAL_RADIO)
           printPayload(&r_payload);
 #endif
           if (r_payload.node_id == RF24NODE && r_payload.orderno != last_orderno) {
@@ -1222,7 +1234,11 @@ void loop(void) {
 //ToDo prüfen und ggf. überarbeiten
   long int tempsleeptime = eeprom.sleeptime_sec;  // regelmaessige Schlafzeit in Sek.
   tempsleeptime += sleeptime_kor;                 // einmalige Korrektur in Sek. (-1000 ... +1000)
-  tempsleeptime *= eeprom.sleep4ms_fac;           // Umrechnung in Millisek.
+  if ( eeprom.sleep4ms_fac > 499 && eeprom.sleep4ms_fac < 2001 ) {
+    tempsleeptime *= eeprom.sleep4ms_fac;           // Umrechnung in Millisek.
+  } else {
+    tempsleeptime *= 1000;
+  }
   sleeptime_kor = 0;  
   sleep4ms(tempsleeptime);
   loopcount++;

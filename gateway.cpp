@@ -13,7 +13,6 @@ void Gateway::cleanup(void) {
     while ( p_search ) {
         p_initial = p_search->p_next;
         free(p_search->gw_name);
-        free(p_search->gw_ip);
         delete p_search;
         p_search = p_initial;
     }
@@ -44,7 +43,7 @@ bool Gateway::delEntry(gateway_t* p_del) {
     p_tmp = p_initial;
     while (p_search) {
         if (p_search == p_del ) {
-            free(p_search->gw_ip);
+            free(p_search->gw_name);
             if (p_search == p_initial) {
                 if (p_initial->p_next) { 
                     p_tmp=p_initial->p_next;
@@ -86,8 +85,6 @@ void Gateway::addGateway(char* gw_name, uint16_t gw_no, bool isActive) {
     p_new->gw_name = (char*)malloc(40);
     p_new->gw_no = gw_no;
     p_new->last_contact = 0;
-    p_new->gw_ip = (char*)malloc(40);
-    memset(p_new->gw_ip,0,40);
     sprintf(p_new->gw_name,"%s",gw_name);
     p_new->isActive = isActive;
     if (verboselevel & VERBOSESENSOR) printf("%sGateway.addGateway: Name:%s No:%u %s\n",ts(tsbuf), gw_name, gw_no, isActive? "aktiv":"nicht aktiv");
@@ -100,7 +97,7 @@ void Gateway::setGateway(uint16_t gw_no, bool isActive ) {
     while (p_search) {
         if (p_search->gw_no == gw_no) {
             if (verboselevel & VERBOSETELNET)
-                printf("%sGateway.isGW: GW.Name:%s GW.IP: %s %s\n", ts(tsbuf), p_search->gw_name, p_search->gw_ip, p_search->isActive? "aktiv":"nicht aktiv");
+                printf("%sGateway.isGW: GW.Name:%s %s\n", ts(tsbuf), p_search->gw_name, p_search->isActive? "aktiv":"nicht aktiv");
             p_search->isActive = isActive;
             p_search = NULL;
         } else {
@@ -109,12 +106,11 @@ void Gateway::setGateway(uint16_t gw_no, bool isActive ) {
     }
 }
 
-void Gateway::gw_contact(char* gw_ip, uint16_t gw_no){
+void Gateway::gw_contact(uint16_t gw_no){
     gateway_t *p_search;
     p_search = p_initial;
     while (p_search) {
         if (p_search->gw_no == gw_no) {
-            sprintf(p_search->gw_ip, "%s", gw_ip);
             p_search->last_contact = utime();
             p_search = NULL;
         }
@@ -122,7 +118,7 @@ void Gateway::gw_contact(char* gw_ip, uint16_t gw_no){
     }
 }
 
-void* Gateway::getGateway(void* p_rec, char* gw_ip, uint16_t *p_gw_no) {
+void* Gateway::getGateway(void* p_rec, char* gw_name, uint16_t *p_gw_no) {
     gateway_t *p_search;
     void* retval = NULL;
     if (p_rec) {
@@ -133,7 +129,7 @@ void* Gateway::getGateway(void* p_rec, char* gw_ip, uint16_t *p_gw_no) {
     }
     while (p_search) {
         if (p_search->isActive && (p_search->last_contact > utime()-3600)) {
-            sprintf(gw_ip, "%s", p_search->gw_ip);
+            sprintf(gw_name, "%s", p_search->gw_name);
             *p_gw_no = p_search->gw_no;
             retval = (void*)p_search;
             p_search = NULL;
@@ -143,16 +139,15 @@ void* Gateway::getGateway(void* p_rec, char* gw_ip, uint16_t *p_gw_no) {
     return retval;
 }
 
-bool Gateway::isGateway(uint16_t gw_no, char* gw_ip) {
+bool Gateway::isGateway(uint16_t gw_no) {
     gateway_t *p_search;
     bool retval = false;
     p_search = p_initial;
     while (p_search) {
         if (p_search->gw_no == gw_no) {
-            sprintf(p_search->gw_ip,"%s",gw_ip);
             p_search->last_contact = utime();
             if (verboselevel & VERBOSEORDER) 
-                printf("%sGateway.isGW: GW.Name:%s GW.IP: %s %s\n", ts(tsbuf), p_search->gw_name, p_search->gw_ip, p_search->isActive? "aktiv":"nicht aktiv");
+                printf("%sGateway.isGW: GW.Name:%s %s\n", ts(tsbuf), p_search->gw_name, p_search->isActive? "aktiv":"nicht aktiv");
             if (p_search->isActive) retval = true;
             p_search = NULL;
         } else {
@@ -169,7 +164,7 @@ void Gateway::printBuffer(int out_socket, bool htmlformat) {
     sprintf(client_message," ------ Gateways: ------\n"); 
     write(out_socket , client_message , strlen(client_message));
     while (p_search) {
-        sprintf(client_message,"GW.Name:%s GW.NO %u GW.IP: %s %s\n", p_search->gw_name, p_search->gw_no, p_search->gw_ip, p_search->isActive? "aktiv":"nicht aktiv" );    
+        sprintf(client_message,"GW.Name:%s GW.NO %u %s\n", p_search->gw_name, p_search->gw_no, p_search->isActive? "aktiv":"nicht aktiv" );    
 		write(out_socket , client_message , strlen(client_message));
         p_search=p_search->p_next;
 	}

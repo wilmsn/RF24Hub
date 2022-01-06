@@ -267,6 +267,14 @@ color( "#FF0011" )
           Platinenhalter2(5,2,usbPlatineY,2);
     
       }
+    // Halterung für den Temperatursensor
+    rotate(270,[0,1,0]) 
+      translate([36,5,radius-displayversatz-wandstaerke-7])
+        Schraubbolzen(7,6,2);
+    rotate(270,[0,1,0]) 
+      translate([36,-5,radius-displayversatz-wandstaerke-7])
+        Schraubbolzen(7,6,2);
+      
   }
 }
 

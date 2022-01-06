@@ -166,6 +166,10 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
         if ( wort3[0] >= 'A' && wort3[0] <= 'z' ) {
             if (sensor.getNodeChannelByFhemDev(&node_id, &channel, wort3) ) {
           		tn_input_ok = true;
+            } else {
+                if (sensor.getNodeChannelBySensorName(&node_id, &channel, wort3) ) {
+                    tn_input_ok = true;
+                }
             }
         } else {
             uint32_t sensor_id = strtol(wort3, &pEnd, 10);
@@ -173,17 +177,21 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
                 tn_input_ok = true;
             }
         }
-        data = packTransportValue(channel, wort4); 
-        orderbuffer.addOrderBuffer(mymillis(),node_id,channel,data);
+        if ( node_id > 0 &&  channel > 0 ) {
+            data = packTransportValue(channel, wort4); 
+            orderbuffer.addOrderBuffer(mymillis(),node_id,channel,data);
+        } else {
+            tn_input_ok = false;
+        }
     }
 	// push <node> <channel> <value>
 	// Pushes a value direct to a channel into a node
 	if (( strcmp(wort1,cmp_push) == 0 ) && (strlen(wort2) > 0) && (strlen(wort3) > 0) && (strlen(wort4) > 0) ) {
         NODE_DATTYPE node_id = strtol(wort2, &pEnd, 10);
         uint8_t channel = strtol(wort3, &pEnd, 10);
-        if ( node.isValidNode(node_id) && ( sensor.getSensorByNodeChannel(node_id, channel) > 0 || sensor.isSystemRegister(node.isHBNode(node_id), channel) ) ) {
+//        if ( node.isValidNode(node_id) && ( sensor.getSensorByNodeChannel(node_id, channel) > 0 || sensor.isSystemRegister(channel) ) ) {
+        if ( node.isValidNode(node_id) ) {
             orderbuffer.addOrderBuffer(mymillis(), node_id, channel, packTransportValue(channel, wort4) );
-            if ( ! node.isHBNode(node_id) ) make_order(node_id, PAYLOAD_TYPE_DAT);
             tn_input_ok = true;
         }
     }
@@ -317,46 +325,48 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 void make_order(NODE_DATTYPE node_id, uint8_t msg_type) {
     void* ret_ptr;
     uint32_t data;
-    order.delByNode(node_id);
-    ret_ptr = orderbuffer.findOrder4Node(node_id, NULL, &data);
-    if (ret_ptr) {
-        order.addOrder(node_id, msg_type, node.isHBNode(node_id), data, mymillis());
+    if ( node.isMasteredNode(node_id) ) {
+      order.delByNode(node_id);
+      ret_ptr = orderbuffer.findOrder4Node(node_id, NULL, &data);
+      if (ret_ptr) {
+        order.addOrder(node_id, msg_type, data, mymillis());
         ret_ptr = orderbuffer.findOrder4Node(node_id, ret_ptr, &data);
         if (ret_ptr) {
-            order.modifyOrder(node_id, 2, data);
+          order.modifyOrder(node_id, 2, data);
+          ret_ptr = orderbuffer.findOrder4Node(node_id, ret_ptr, &data);
+          if (ret_ptr) {
+            order.modifyOrder(node_id, 3, data);
             ret_ptr = orderbuffer.findOrder4Node(node_id, ret_ptr, &data);
             if (ret_ptr) {
-                order.modifyOrder(node_id, 3, data);
+              order.modifyOrder(node_id, 4, data);
+              ret_ptr = orderbuffer.findOrder4Node(node_id, ret_ptr, &data);
+              if (ret_ptr) {
+                order.modifyOrder(node_id, 5, data);
                 ret_ptr = orderbuffer.findOrder4Node(node_id, ret_ptr, &data);
                 if (ret_ptr) {
-                    order.modifyOrder(node_id, 4, data);
-                    ret_ptr = orderbuffer.findOrder4Node(node_id, ret_ptr, &data);
-                    if (ret_ptr) {
-                        order.modifyOrder(node_id, 5, data);
-                        ret_ptr = orderbuffer.findOrder4Node(node_id, ret_ptr, &data);
-                        if (ret_ptr) {
-                            order.modifyOrder(node_id, 6, data);
-                            ret_ptr = orderbuffer.findOrder4Node(node_id, ret_ptr, &data);
-                            if (ret_ptr) {
-                                order.modifyOrderFlags(node_id, PAYLOAD_FLAG_EMPTY );
-                            } else {
-                                order.modifyOrderFlags(node_id, PAYLOAD_FLAG_LASTMESSAGE );
-                            }                        
-                        } else {
-                            order.modifyOrderFlags(node_id, PAYLOAD_FLAG_LASTMESSAGE );
-                        }                        
-                    } else {
-                        order.modifyOrderFlags(node_id, PAYLOAD_FLAG_LASTMESSAGE );
-                    }                        
-                } else {
+                  order.modifyOrder(node_id, 6, data);
+                  ret_ptr = orderbuffer.findOrder4Node(node_id, ret_ptr, &data);
+                  if (ret_ptr) {
+                    order.modifyOrderFlags(node_id, PAYLOAD_FLAG_EMPTY );
+                  } else {
                     order.modifyOrderFlags(node_id, PAYLOAD_FLAG_LASTMESSAGE );
-                }                        
-            } else {
+                  }
+                } else {
+                  order.modifyOrderFlags(node_id, PAYLOAD_FLAG_LASTMESSAGE );
+                }
+              } else {
                 order.modifyOrderFlags(node_id, PAYLOAD_FLAG_LASTMESSAGE );
-            }                        
-        } else {
+              }
+            } else {
+              order.modifyOrderFlags(node_id, PAYLOAD_FLAG_LASTMESSAGE );
+            }
+          } else {
             order.modifyOrderFlags(node_id, PAYLOAD_FLAG_LASTMESSAGE );
-        }                        
+          }
+        } else {
+          order.modifyOrderFlags(node_id, PAYLOAD_FLAG_LASTMESSAGE );
+        }
+      }
     }
 }
 
@@ -626,7 +636,7 @@ int main(int argc, char* argv[]) {
             sprintf(buf1,"G:%u>H ", udpdata.gw_no);
             printPayload(ts(tsbuf), buf1, &payload);
         }
-        if ( gateway.isGateway(udpdata.gw_no, gw_ip) ) {
+        if ( gateway.isGateway(udpdata.gw_no) ) {
             if (payload.msg_flags & PAYLOAD_FLAG_NEEDHELP ) {
                 char* tn_buf;
                 tn_buf = (char*)malloc(100);
@@ -635,14 +645,14 @@ int main(int argc, char* argv[]) {
                 free(tn_buf);
             }
             switch ( payload.msg_type ) {
-/*                case PAYLOAD_TYPE_INIT: { // Init message from a node!!
+                case PAYLOAD_TYPE_INIT: { // Init message from a node!!
                     if ( node.isNewHB(payload.node_id, payload.heartbeatno) ) {
                         process_payload(&payload);
                     } else {
                         // nothing to do here !!!   
                     }
                 }
-                break; */
+                break;
                 case PAYLOAD_TYPE_ESP: { // Message from ESP Node - will not be answered
                     process_payload(&payload);                    
                 }
@@ -651,38 +661,45 @@ int main(int argc, char* argv[]) {
                     if ( node.isNewHB(payload.node_id, payload.heartbeatno) ) {  // Got a new Heaqrtbeat -> process it!
                         database.lowVoltage(payload.node_id, payload.msg_flags & PAYLOAD_FLAG_NEEDHELP);
                         process_payload(&payload);
-                        if ( orderbuffer.nodeHasEntry(payload.node_id) ) {  // WE have orders for this node
-                            make_order(payload.node_id, PAYLOAD_TYPE_DAT);                    
-                            if ( verboselevel & VERBOSEORDER ) {
-                                printf("%sEntries for Heartbeat Node found, sending them\n",ts(tsbuf));
+                        if ( node.isMasteredNode(payload.node_id) ) {
+                            if ( orderbuffer.nodeHasEntry(payload.node_id) ) {  // WE have orders for this node
+                                make_order(payload.node_id, PAYLOAD_TYPE_DAT);
+                                if ( verboselevel & VERBOSEORDER ) {
+                                    printf("%sEntries for Heartbeat Node found, sending them\n",ts(tsbuf));
+                                }
+                            } else {
+                                if ( node.isMasteredNode(payload.node_id) ) {
+                                    order.addOrder(payload.node_id, PAYLOAD_TYPE_HB_RESP, 0, mymillis());
+                                    order.modifyOrderFlags(payload.node_id, PAYLOAD_FLAG_LASTMESSAGE);
+                                }
                             }
-                        } else {
-                            order.addOrder(payload.node_id, PAYLOAD_TYPE_HB_RESP, node.isHBNode(payload.node_id), 0, mymillis());    
-                            order.modifyOrderFlags(payload.node_id, PAYLOAD_FLAG_LASTMESSAGE);
                         }
                     } else {
                         // reset stop counter (TTL) for message to send
-                        order.adjustEntryTime(payload.node_id, mymillis());
+                        if ( node.isMasteredNode(payload.node_id) ) order.adjustEntryTime(payload.node_id, mymillis());
                     }
                 }
                 break;    
                 case PAYLOAD_TYPE_DATRESP: { // Quittung für eine Nachricht vom Typ PAYLOAD_TYPE_DATNOR !!
-                    if ( order.isOrderNo(payload.orderno) ) {
-                        process_payload(&payload);
-                        order.delByOrderNo(payload.orderno);  // Nachricht ist angekommen => löschen
-                        if ( orderbuffer.nodeHasEntry(payload.node_id) ) {  // WE have orders for this node
-                            make_order(payload.node_id, PAYLOAD_TYPE_DAT);                    
-                            if ( verboselevel & VERBOSEORDER ) {
-                                printf("%sEntries for Heartbeat Node found, sending them\n",ts(tsbuf));
+                    if ( node.isMasteredNode(payload.node_id) ) {
+                        if ( order.isOrderNo(payload.orderno) ) {
+                            process_payload(&payload);
+                            order.delByOrderNo(payload.orderno);  // Nachricht ist angekommen => löschen
+                            if ( orderbuffer.nodeHasEntry(payload.node_id) ) {  // WE have orders for this node
+                                make_order(payload.node_id, PAYLOAD_TYPE_DAT);
+                                if ( verboselevel & VERBOSEORDER ) {
+                                    printf("%sEntries for Heartbeat Node found, sending them\n",ts(tsbuf));
+                                }
                             }
+                            order.addOrder(payload.node_id, PAYLOAD_TYPE_DATSTOP, 0, mymillis());
+                            order.modifyOrderFlags(payload.node_id, PAYLOAD_FLAG_LASTMESSAGE);
                         }
-                        order.addOrder(payload.node_id, PAYLOAD_TYPE_DATSTOP, node.isHBNode(payload.node_id), 0, mymillis());    
-                        order.modifyOrderFlags(payload.node_id, PAYLOAD_FLAG_LASTMESSAGE);
                     }
                 }
                 break;
                 case PAYLOAD_TYPE_DATSTOP: { // Quittung für einen Heatbeatresponse!!
-                    order.delByOrderNo(payload.orderno);  // Nachricht ist angekommen => löschen
+                    if ( node.isMasteredNode(payload.node_id) )
+                        order.delByOrderNo(payload.orderno);  // Nachricht ist angekommen => löschen
                 }
                 break;
                 case PAYLOAD_TYPE_PING_POW_MIN: {
@@ -711,16 +728,18 @@ int main(int argc, char* argv[]) {
                 }
                 break;
                 default: {	
-                    if ( verboselevel & VERBOSEORDER) {
-                        printf("%sProcessing Node:%u Type:%u Orderno: %u\n", ts(tsbuf), payload.node_id, payload.msg_type,          payload.orderno);
-                    }
-                    if ( order.isOrderNo(payload.orderno) ) {
-                        process_payload(&payload);
-                        order.delByOrderNo(payload.orderno);
-                        if ( orderbuffer.nodeHasEntry(payload.node_id) ) {  // WE have orders for this node
-                            make_order(payload.node_id, PAYLOAD_TYPE_DAT);                    
-                            if ( verboselevel & VERBOSEORDER ) {
-                                printf("%sEntries for Heartbeat Node found, sending them\n", ts(tsbuf));
+                    if ( node.isMasteredNode(payload.node_id) ) {
+                        if ( verboselevel & VERBOSEORDER) {
+                            printf("%sProcessing Node:%u Type:%u Orderno: %u\n", ts(tsbuf), payload.node_id, payload.msg_type, payload.orderno);
+                        }
+                        if ( order.isOrderNo(payload.orderno) ) {
+                            process_payload(&payload);
+                            order.delByOrderNo(payload.orderno);
+                            if ( orderbuffer.nodeHasEntry(payload.node_id) ) {  // WE have orders for this node
+                                make_order(payload.node_id, PAYLOAD_TYPE_DAT);
+                                if ( verboselevel & VERBOSEORDER ) {
+                                    printf("%sEntries for Heartbeat Node found, sending them\n", ts(tsbuf));
+                                }
                             }
                         }
                     }
@@ -737,14 +756,14 @@ int main(int argc, char* argv[]) {
                 // Hier UDP Sender
                 void* p_rec = NULL;
                 p_rec = gateway.getGateway(p_rec, gw_ip, &gw_no);
-                while ( p_rec ) { 
+                while ( p_rec ) {
                     if ( verboselevel & VERBOSERF24) {
                         sprintf(buf1,"H>G:%u ", gw_no);
                         printPayload(ts(tsbuf), buf1, &payload);
                     }
                     udpdata.gw_no=0;
                     memcpy(&udpdata.payload, &payload, sizeof(payload) );
-                    sendUdpMessage(gw_ip, cfg.gwUdpPortNo.c_str(), &udpdata); 
+                    sendUdpMessage(gw_ip, cfg.gwUdpPortNo.c_str(), &udpdata);
                     p_rec = gateway.getGateway(p_rec, gw_ip, &gw_no);
                 }
             }
