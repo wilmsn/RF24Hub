@@ -133,35 +133,13 @@ debugging options:
 #define SLEEPTIME_SEC        300
 #define SENSOR_BOSCH
 #define DISPLAY_5110
-#define EEPROM_VERSION       4
+#define EEPROM_VERSION       1
 #define EMPTYLOOPS           0
 #define LOW_VOLT_LEVEL       3.5
 #define VOLT_OFF             0.55
-#define CONTRAST             45
-#endif
-//-----------------------------------------------------
-#if defined(TESTNODE_UNO)
-#define RF24NODE             165
-#define SLEEPTIME_SEC        60
-#define EMPTYLOOPS           0
-#define SENSOR_BOSCH
-#define DISPLAY_5110
-#define EEPROM_VERSION       1
-#define LOW_VOLT_LEVEL       3.5
-#define VOLT_OFF             0.55
-#define CONTRAST             60
-#define DEBUG_SERIAL_SENSOR
-#define DEBUG_SERIAL_RADIO
-#define DEBUG_SERIAL_PROC
-#endif
-//-----------------------------------------------------
-#if defined(TESTNODE)
-#define RF24NODE             169
-#define SENSOR_DUMMY
-#define DISPLAY_5110
-#define EEPROM_VERSION       1
-#define VOLT_OFF             0.55
-#define LOWVOLTAGELEVEL      3.0
+//#define CONTRAST             45
+//#define RADIO_CE_PIN    9
+//#define RADIO_CSN_PIN   10
 #endif
 //-----------------------------------------------------
 #if defined(BASTELZIMMERTHERMOMETER)
@@ -204,6 +182,8 @@ debugging options:
 #define STATUSLED_OFF        HIGH
 #endif
 //-----------------------------------------------------
+//    Testnodes
+//-----------------------------------------------------
 #if defined(FEUCHTESENSOR_170)
 #define RF24NODE             170
 #define EEPROM_VERSION       1
@@ -211,4 +191,28 @@ debugging options:
 #define EEPROM_VERSION       5
 #define SLEEPTIME_SEC        900
 #define EMPTYLOOPS           0
+#endif
+//-----------------------------------------------------
+#if defined(TESTNODE_UNO)
+#define RF24NODE             165
+#define SLEEPTIME_SEC        60
+#define EMPTYLOOPS           0
+#define SENSOR_BOSCH
+#define DISPLAY_5110
+#define EEPROM_VERSION       1
+#define LOW_VOLT_LEVEL       3.5
+//#define VOLT_OFF             0.55
+#define CONTRAST             45
+#define DEBUG_SERIAL_SENSOR
+#define DEBUG_SERIAL_RADIO
+#define DEBUG_SERIAL_PROC
+#endif
+//-----------------------------------------------------
+#if defined(TESTNODE)
+#define RF24NODE             169
+#define SENSOR_DUMMY
+#define DISPLAY_5110
+#define EEPROM_VERSION       1
+#define VOLT_OFF             0.55
+#define LOWVOLTAGELEVEL      3.0
 #endif

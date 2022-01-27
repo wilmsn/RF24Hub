@@ -108,6 +108,9 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
          cmp_add[]="add",
          cmp_delete[]="delete",
 		 cmp_sensor[]="sensor",
+		 cmp_node[]="node",
+		 cmp_mastered[]="mastered",
+		 cmp_unmastered[]="unmastered",
 		 cmp_set[]="set",
 		 cmp_html[]="html",
 		 cmp_order[]="order",	 
@@ -266,6 +269,22 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
         gateway.setGateway((uint16_t)strtoul(wort3, &pEnd, 10), false);
         gateway.printBuffer(tn_socket, false);
 	}
+	// set node <node_id> <mastered/unmastered>
+	// syncronisation of all relevant tables of rf24hubd: stores in memory table data to database hard disk tables 
+	if ( (strcmp(wort1,cmp_set) == 0) && (strcmp(wort2,cmp_node) == 0) && (strlen(wort3) > 0) && (strlen(wort4) > 0) ) {
+        NODE_DATTYPE node_id = strtol(wort3, &pEnd, 10);
+    printf("%u\n", node_id);    
+        if (node_id > 0) {
+            if (strcmp(wort4,cmp_mastered) == 0) {
+                tn_input_ok = true;
+                database.updateNodeMastered(node_id, true);
+            }
+            if (strcmp(wort4,cmp_unmastered) == 0) {
+                tn_input_ok = true;
+                database.updateNodeMastered(node_id, false);
+            }
+        }
+    }
     // show verbose
 	if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
 		tn_input_ok = true;
@@ -476,7 +495,7 @@ int main(int argc, char* argv[]) {
     buf = (char*)malloc(TSBUFFERSIZE);
     char *buf1 = (char*)malloc(TSBUFFERSIZE);
     tsbuf = (char*)malloc(TSBUFFERSIZE);
-    char *gw_ip=(char*)malloc(40);
+    char *gw_name=(char*)malloc(40);
     uint16_t gw_no;
     int new_tn_in_socket = 0;
 	socklen_t tcp_addrlen, udp_addrlen;
@@ -630,10 +649,10 @@ int main(int argc, char* argv[]) {
     UdpMsgLen = recvfrom ( udp_sockfd_in, &udpdata, sizeof(udpdata), 0, (struct sockaddr *) &udp_address_in, &udp_addrlen );
     if (UdpMsgLen > 0) {
         memcpy(&payload, &udpdata.payload, sizeof(payload) );
-        sprintf(gw_ip,"%s",inet_ntoa(udp_address_in.sin_addr));
+        //sprintf(gw_,"%s",inet_ntoa(udp_address_in.sin_addr));
         if ( verboselevel & VERBOSERF24 ) {
-            printf ("%s UDP Message from: %s \n",ts(tsbuf), inet_ntoa(udp_address_in.sin_addr));
-            sprintf(buf1,"G:%u>H ", udpdata.gw_no);
+            printf ("%sUDP Message from: %s \n",ts(tsbuf), inet_ntoa(udp_address_in.sin_addr));
+            sprintf(buf1,"G:%u>H", udpdata.gw_no);
             printPayload(ts(tsbuf), buf1, &payload);
         }
         if ( gateway.isGateway(udpdata.gw_no) ) {
@@ -755,16 +774,16 @@ int main(int argc, char* argv[]) {
 			while ( order.getOrderForTransmission(&payload, mymillis() ) ) {
                 // Hier UDP Sender
                 void* p_rec = NULL;
-                p_rec = gateway.getGateway(p_rec, gw_ip, &gw_no);
+                p_rec = gateway.getGateway(p_rec, gw_name, &gw_no);
                 while ( p_rec ) {
                     if ( verboselevel & VERBOSERF24) {
-                        sprintf(buf1,"H>G:%u ", gw_no);
+                        sprintf(buf1,"H>G:%u", gw_no);
                         printPayload(ts(tsbuf), buf1, &payload);
                     }
                     udpdata.gw_no=0;
                     memcpy(&udpdata.payload, &payload, sizeof(payload) );
-                    sendUdpMessage(gw_ip, cfg.gwUdpPortNo.c_str(), &udpdata);
-                    p_rec = gateway.getGateway(p_rec, gw_ip, &gw_no);
+                    sendUdpMessage(gw_name, cfg.gwUdpPortNo.c_str(), &udpdata);
+                    p_rec = gateway.getGateway(p_rec, gw_name, &gw_no);
                 }
             }
  			usleep(20000);

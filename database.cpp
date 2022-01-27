@@ -8,7 +8,7 @@ Database::Database(void) {
 
 void Database::db_check_error(void) {
 	if (mysql_errno(db) != 0) {
-		printf("DB-Fehler: %s\n", mysql_error(db));
+		printf("%sDB-Fehler: %s\n", ts(tsbuf), mysql_error(db));
     }
 }
 
@@ -248,6 +248,15 @@ void Database::storeNodeConfig(NODE_DATTYPE node_id, uint8_t channel, char* valu
     sprintf(sql_stmt,"delete from node_configdata_im where node_id = %u and channel = %u ", node_id, channel, value);
     do_sql(sql_stmt);
     sprintf(sql_stmt,"insert into node_configdata_im (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %s ) ", node_id, channel, value);
+    do_sql(sql_stmt);
+}
+
+void Database::updateNodeMastered(NODE_DATTYPE node_id, bool ismastered) {
+    if (ismastered) {
+        sprintf(sql_stmt,"update node set mastered = 'y' where node_id = %u ", node_id);
+    } else {
+        sprintf(sql_stmt,"update node set mastered = 'n' where node_id = %u ", node_id);
+    }
     do_sql(sql_stmt);
 }
 

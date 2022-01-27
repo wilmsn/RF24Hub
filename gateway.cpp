@@ -111,7 +111,7 @@ void Gateway::gw_contact(uint16_t gw_no){
     p_search = p_initial;
     while (p_search) {
         if (p_search->gw_no == gw_no) {
-            p_search->last_contact = utime();
+            p_search->last_contact = time(NULL);
             p_search = NULL;
         }
         if (p_search) p_search = p_search->p_next;
@@ -128,7 +128,7 @@ void* Gateway::getGateway(void* p_rec, char* gw_name, uint16_t *p_gw_no) {
         p_search = p_initial;
     }
     while (p_search) {
-        if (p_search->isActive && (p_search->last_contact > utime()-3600)) {
+        if (p_search->isActive && (p_search->last_contact > time(NULL)-3600)) {
             sprintf(gw_name, "%s", p_search->gw_name);
             *p_gw_no = p_search->gw_no;
             retval = (void*)p_search;
@@ -145,7 +145,7 @@ bool Gateway::isGateway(uint16_t gw_no) {
     p_search = p_initial;
     while (p_search) {
         if (p_search->gw_no == gw_no) {
-            p_search->last_contact = utime();
+            p_search->last_contact = time(NULL);
             if (verboselevel & VERBOSEORDER) 
                 printf("%sGateway.isGW: GW.Name:%s %s\n", ts(tsbuf), p_search->gw_name, p_search->isActive? "aktiv":"nicht aktiv");
             if (p_search->isActive) retval = true;
@@ -159,12 +159,22 @@ bool Gateway::isGateway(uint16_t gw_no) {
 
 void Gateway::printBuffer(int out_socket, bool htmlformat) {
     char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
+    char date[20];
+    char ts[20];
     gateway_t *p_search;
     p_search = p_initial;
     sprintf(client_message," ------ Gateways: ------\n"); 
     write(out_socket , client_message , strlen(client_message));
     while (p_search) {
-        sprintf(client_message,"GW.Name:%s GW.NO %u %s\n", p_search->gw_name, p_search->gw_no, p_search->isActive? "aktiv":"nicht aktiv" );    
+        sprintf(ts,"%s","\t");
+        struct tm *tm = localtime(&p_search->last_contact);
+        strftime(date, sizeof(date), "%d.%m.%Y %H:%M", tm);
+        size_t nl = strlen(p_search->gw_name);
+        //if (nl < 30) sprintf(ts,"%s%s",ts,"\t");
+        if (nl < 24) sprintf(ts,"%s%s",ts,"\t");
+        if (nl < 18) sprintf(ts,"%s%s",ts,"\t");
+        if (nl < 12) sprintf(ts,"%s%s",ts,"\t");
+        sprintf(client_message,"GW.Name:%s%s\tGW.NO: %u\t %s  Last: %s\n", p_search->gw_name, ts, p_search->gw_no, p_search->isActive? "aktiv      ":"nicht aktiv", date );
 		write(out_socket , client_message , strlen(client_message));
         p_search=p_search->p_next;
 	}

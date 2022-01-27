@@ -6,7 +6,7 @@
  * Zahlenformat X * 10^Y
  * Format des Sensorwertes
  * Bitreihenfolge: Bit 1 (MSB) ... Bit 32 (LSB)
- * Bit 1..7:    Sensornummer (1..127)
+ * Bit 1..7:    Channel/Sensornummer (1..127)
  * Bit 8:       Vorzeichen (0=positiv; 1=negativ)
  * Bit 9:       Vorzeichen Exponent (0=10^X; 1=10^-X)
  * Bit 10..13   Exponent (0..15)
@@ -24,12 +24,24 @@ char* unpackTransportValue(uint32_t data, char* buf) {
         {
             float myval = getValue_f(data);
             if ( myval > 500 ) {
+#if defined(__linux__) || defined(ESP8266)
                 sprintf(buf,"%.1f", myval);
+#else
+                dtostrf(myval, 4, 0, buf);
+#endif
             } else {
                 if ( myval > 9.9 ) {
+#if defined(__linux__) || defined(ESP8266)
                     sprintf(buf,"%.2f", myval);
+#else
+                dtostrf(myval, 4, 1, buf);
+#endif
                 } else {
+#if defined(__linux__) || defined(ESP8266)
                     sprintf(buf,"%.3f", myval);
+#else
+                dtostrf(myval, 4, 2, buf);
+#endif
                 }   
             }
         }
@@ -189,7 +201,7 @@ uint16_t getValue_ui(uint32_t data) {
 /******************************************************
  * Verpackt die Sensornummer und den Messwert zu einem 
  * TransportWert des Datentyps uint32_t.
- * Sensor: gültige Werte zwischen 1..127
+ * Channel: gültige Werte zwischen 1..127
  * Value: gültige Werte: -1*10^19 .. 1*10^19
  ******************************************************/
 uint32_t calcTransportValue_f(uint8_t channel, float value) {  
@@ -205,7 +217,7 @@ uint32_t calcTransportValue_f(uint8_t channel, float value) {
       result |= ZF_ZAHL_NEGATIV;
       _val=abs(_val);
     }
-    while ( _val < 50000.0 ) {
+    while ( _val < 10000.0 ) {
       expo_negativ = true;
       exponent++;
       _val*=10.0;
@@ -213,7 +225,7 @@ uint32_t calcTransportValue_f(uint8_t channel, float value) {
     if ( expo_negativ ) {
       result |= ZF_EXPO_NEGATIV;
     }
-    while ( _val > 500000.0 ) {
+    while ( _val > 100000.0 ) {
       exponent++;
       _val/=10.0;
     }
@@ -227,7 +239,7 @@ uint32_t calcTransportValue_f(uint8_t channel, float value) {
 /******************************************************
  * Verpackt die Sensornummer und den Messwert zu einem 
  * TransportWert des Datentyps uint32_t.
- * Sensor: gültige Werte zwischen 1..127
+ * Channel: gültige Werte zwischen 1..127
  * Value: gültige Werte: 0 .. 65535
  ******************************************************/
 uint32_t calcTransportValue_ui(uint8_t channel, uint16_t value) {  
@@ -241,7 +253,7 @@ uint32_t calcTransportValue_ui(uint8_t channel, uint16_t value) {
 /******************************************************
  * Verpackt die Sensornummer und den Messwert zu einem 
  * TransportWert des Datentyps uint32_t.
- * Sensor: gültige Werte zwischen 1..127
+ * Channel: gültige Werte zwischen 1..127
  * Value: gültige Werte: 0 .. 65535
  ******************************************************/
 uint32_t calcTransportValue_i(uint8_t channel, int16_t value) {  
@@ -263,4 +275,3 @@ uint32_t calcTransportValue_c(uint8_t channel, char* value, uint16_t* pos) {
   result = result | c1 | c2 | c3;  
   return result;  
 }
-

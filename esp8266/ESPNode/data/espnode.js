@@ -8,11 +8,13 @@ var sw4_active = 0;
 var sw5_active = 0;
 var rf24_active = 0;
 var num_sw = 0;
+var ledpwm = 0;
 var red = 0;
 var green = 0;
 var blue = 0;
 var ledmatrix_active = 0;
 var neopixel_active = 0;
+var ledpwm_active = 0;
 var intervalperiode = 5000;
 
 $(document).ready(function(){
@@ -257,6 +259,21 @@ function prozessJS( key, val ) {
             });
           }
         break;
+        case "ledpwm":
+          if ( val == 1 ) {
+            num_sw++;
+            ledpwm_active = 1;
+            sw5_active = 1;
+            $("#sw5").show();
+            $("#sw5cont").html("<label for='slider1' id='slider1label'></label><input type='range' name='slider1' id='slider1' min='0' max='255' value='0'>");	
+            get_ledpwm();
+            do_sw1("state");
+            $("#slider1").change(function() {
+               ledpwm = parseInt($(this).val());
+               set_ledpwm();
+            });
+          }
+        break;  
         case "neopixel":
           if ( val == 1 ) {
             num_sw++;
@@ -521,7 +538,6 @@ function set_rgb() {
   var g = green << 8;
   var b = blue << 16;
   var rgb = r + g + b;
-  //alert("rgb:"+rgb+" r:"+red+" g:"+green+" b:"+blue+" r*:"+r+" g*:"+g+" b*:"+b);
   $.get( "/cmd?setrgb="+rgb, function( data ) {
   });
 }
@@ -539,6 +555,20 @@ function get_rgb() {
     $("#slider2").val(green);
     $("#slider3label").html("Blau: "+blue);
     $("#slider3").val(blue);
+  });    
+}
+
+function set_ledpwm() {
+  $("#slider1label").html("LED: "+ledpwm);
+  $.get( "/cmd?setledpwm="+ledpwm, function( data ) {
+  });
+}
+
+function get_ledpwm() {
+  $.get( "/cmd?getledpwm", function( data ) {
+    ledpwm   = data;
+    $("#slider1label").html("LED: "+ledpwm);
+    $("#slider1").val(ledpwm);
   });    
 }
 
@@ -623,7 +653,11 @@ function intervalfunction() {
       do_sw1("state");
       get_rgb();
     }
-    if ( ledmatrix_active == 0 && neopixel_active == 0 ) {
+    if ( ledpwm_active == 1 ) {
+      do_sw1("state");
+      get_ledpwm();
+    }
+    if ( ledmatrix_active == 0 && neopixel_active == 0 && ledpwm_active == 0) {
       if ( sw1_active == 1) do_sw1('state');
     }  
     if ( sw2_active == 1) do_sw2('state');
@@ -639,9 +673,6 @@ function intervalfunction() {
         prozessJS( key, val );
       });
     });
-    if ( neopixel_active == 1 ) {
-      get_rgb();
-    }
   }
   if ( page == "console" ) {
     $.get('console', function(data) {

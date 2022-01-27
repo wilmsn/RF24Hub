@@ -6,6 +6,7 @@
 #define _GATEWAY_H_
 #include <stdint.h>
 #include <unistd.h>
+#include <time.h>
 #include "rf24_config.h"
 #include "rf24hub_config.h"
 #include "common.h"
@@ -20,10 +21,11 @@ private:
 struct gateway_t {
         char*              gw_name;
         uint16_t           gw_no;
-        unsigned long      last_contact;       
+        time_t             last_contact;
         bool               isActive;
         gateway_t*         p_next;
     };
+
 gateway_t*     p_initial;
 /**************************************************************
  * char buffer zur generischen Verwendung

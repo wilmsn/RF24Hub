@@ -78,6 +78,10 @@ bool isNewHB(NODE_DATTYPE node_id, uint8_t heartbeatno);
  */
 bool isMasteredNode(NODE_DATTYPE node_id);
 /**
+ *  Setzt einen Node in den Zustand "mastered" = von diesem Hub gesteuert; oder nicht 
+ */
+void setMasteredNode(NODE_DATTYPE node_id, bool isMastered);
+/**
  * Setzt den letzten ermittelten PA Level für diesen Node
  * PA Level 0=unknown; 1=Min; 2=Low; 3=High; 4=Max
  */

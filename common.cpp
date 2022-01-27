@@ -213,36 +213,36 @@ void sendUdpMessage(const char* host, const char* port, udpdata_t * udpdata ) {
 	int numbytes;
 
 	memset(&hints, 0, sizeof hints);
-	hints.ai_family = AF_UNSPEC;
+	hints.ai_family = AF_INET;   //AF_UNSPEC;
 	hints.ai_socktype = SOCK_DGRAM;
 
-    rv = getaddrinfo(host, port, &hints, &servinfo);
+	rv = getaddrinfo(host, port, &hints, &servinfo);
 	if ( rv != 0 ) {
-        fprintf(stderr, "Host: %s Port: %p \n", host, port);
+	fprintf(stderr, "Host: %s Port: %p \n", host, port);
 		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
-		exit(1);
-	}
-
-	// loop through all the results and make a socket
-	for(p = servinfo; p != NULL; p = p->ai_next) {
-        sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
-		if ( sockfd == -1 ) {
-			perror("Error: socket");
-			continue;
+//		exit(1);
+	} else {
+		// loop through all the results and make a socket
+		for(p = servinfo; p != NULL; p = p->ai_next) {
+			sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
+			if ( sockfd == -1 ) {
+				perror("Error: socket");
+				continue;
+			}
+			break;
 		}
-		break;
-	}
-
-	if (p == NULL) {
-		fprintf(stderr, "Error: failed to bind socket\n");
-		exit(1);
-	}
-	if ((numbytes = sendto(sockfd, udpdata, sizeof(udpdata_t), 0, p->ai_addr, p->ai_addrlen)) == -1) {
-		perror("Error: sendto error");
-		exit(1);
-	}
-	if ( sockfd != -1 ) close(sockfd);
-    if ( rv == 0 ) freeaddrinfo(servinfo);
+		if (p == NULL) {
+			fprintf(stderr, "Error: failed to bind socket\n");
+			//exit(1);
+		} else {
+			if ((numbytes = sendto(sockfd, udpdata, sizeof(udpdata_t), 0, p->ai_addr, p->ai_addrlen)) == -1) {
+				perror("Error: sendto error");
+				//exit(1);
+			}
+		}
+		if ( sockfd != -1 ) close(sockfd);
+        }
+	if ( rv == 0 ) freeaddrinfo(servinfo);
 }
 
 bool openSocket(const char* port, struct sockaddr_in *address, int* handle, sockType_t sockType ) {
@@ -297,7 +297,7 @@ void printPayload(char* ts, const char* header, payload_t* payload) {
     buf[3]=unpackTransportValue(payload->data4, buf[3]);
     buf[4]=unpackTransportValue(payload->data5, buf[4]);
     buf[5]=unpackTransportValue(payload->data6, buf[5]);
-    printf("%s %s N:%u T:%u m:%u F:0x%02X O:%u H:%u (%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)\n", ts, header,
+    printf("%s%s N:%u T:%u m:%u F:0x%02X O:%u H:%u (%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)\n", ts, header,
                payload->node_id, payload->msg_type, payload->msg_id, payload->msg_flags, payload->orderno, payload->heartbeatno,
                getChannel(payload->data1), buf[0],
                getChannel(payload->data2), buf[1],

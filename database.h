@@ -118,6 +118,10 @@ public:
  */
     void delGateway(uint16_t gw_no);
 /**
+ * Update the mastered flag of a node
+ */
+    void updateNodeMastered(NODE_DATTYPE node_id, bool ismastered);
+/**
  * The constructor
  */
     Database(void);

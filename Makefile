@@ -53,6 +53,10 @@ clean4simulator:
 simulator: dataformat.o common.o simulator.c
 	g++ -Wall -I ${INCLUDEDIR} $^ -o $@
 
+# Make dataformattest
+dataformattest: dataformat.o dataformattest.c
+	g++ -Wall -I ${INCLUDEDIR} $^ -o $@
+
 # Test of order object
 ordertest: sensor.o node.o orderbuffer.o common.o dataformat.o order.o order_test.cpp
 	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24network ${MYSQLLIBS} $^ -o $@

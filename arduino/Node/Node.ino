@@ -18,20 +18,17 @@ On Branch: master  !!!!!
 //#define AUSSENTHERMOMETER
 //#define AUSSENTHERMOMETER2
 //#define SCHLAFZIMMERTHERMOMETER
-//#define TESTZIMMERTHERMOMETER
-//#define TESTZIMMER1THERMOMETER
 //#define BASTELZIMMERTHERMOMETER
-#define BASTELZIMMERTHERMOMETER_SW
+//#define BASTELZIMMERTHERMOMETER_SW
 //#define KUECHETHERMOMETER // noch mit Bug in 205
 //#define WOHNZIMMERTHERMOMETER
 //#define ANKLEIDEZIMMERTHERMOMETER
 //#define KUGELNODE1
 //#define KUGELNODE2
 //#define GAESTEZIMMERTHERMOMETER
+//----Testnodes-----
 //#define FEUCHTESENSOR_170
-//#define UNOTESTNODE_AO
-//#define TERASSE
-//#define FLUR
+#define TESTNODE_UNO
 //#define TESTNODE
 //****************************************************
 // Default settings are in "default.h" now !!!!!
@@ -691,6 +688,7 @@ void setup(void) {
   sendRegister();
 }
 
+// Start of HAS_DISPLAY Block
 #if defined(HAS_DISPLAY)
 void monitor(uint32_t delaytime) {
 #if defined(MONITOR)  
@@ -768,20 +766,20 @@ void display_sleep(boolean displayGotoSleep) {
     if ( displayGotoSleep ) { // Display go to sleep
 #if defined(DISPLAY_5110)
       lcd.off(); 
-      displayIsSleeping = true;
 #endif
+      displayIsSleeping = true;
     } else {
       if ( ! low_voltage_flag ) {  
 #if defined(DISPLAY_5110)
         lcd.on(); 
-        displayIsSleeping = false;
 #endif
+        displayIsSleeping = false;
 //        get_sensordata();
         draw_temp(temp);
-        print_field(field1_val,1);
-        print_field(field2_val,2);
-        print_field(field3_val,3);
-        print_field(field4_val,4);
+        if (field1_val != 0) print_field(field1_val,1);
+        if (field2_val != 0) print_field(field2_val,2);
+        if (field3_val != 0) print_field(field3_val,3);
+        if (field4_val != 0) print_field(field4_val,4);
       }
     }
   }  
@@ -848,15 +846,15 @@ void print_field(float val, int field) {
     lcd.drawRect(x0,y0,x1,y1,true,true,false);
     lcd.setFont(LCD5110::small);
     lcd.setCursor(x0+7,y0+2);
-    if ( val > 100 ) {
-      if (val+0.5 > 1000) { 
+    if ( val > 99.9 ) {
+      if (val > 999) { 
        lcd.print(val,0);
       } else {
        lcd.print(" "); 
        lcd.print(val,0);
       }    
     } else {
-      if (val >= 10) {
+      if (val > 9.999) {
         lcd.print(val,1);
       } else {
         lcd.print(val,2);
@@ -1073,6 +1071,9 @@ void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, 
     unsigned long start_ts;
     uint8_t tx_loopcount = 0;
     bool doLoop = true;
+#if defined(DEBUG_SERIAL_RADIO)
+    unsigned long temp_ts = 0;
+#endif
     start_ts = millis();
     prep_data(msg_type, msg_flags, orderno, myheartbeatno);
     while ( tx_loopcount < max_tx_loopcount ) {
@@ -1095,7 +1096,10 @@ void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, 
 #endif
       while ( (millis() < (start_ts + eeprom.senddelay) ) && doLoop ) {
 #if defined(DEBUG_SERIAL_RADIO)
-        Serial.print(".");
+        if ( temp_ts + 100 < millis() ) {
+          temp_ts = millis();
+          Serial.print(".");
+        }
 #endif
         if ( radio.available() ) {
 #if defined(DEBUG_SERIAL_RADIO)

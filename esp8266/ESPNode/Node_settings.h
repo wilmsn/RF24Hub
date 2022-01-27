@@ -103,16 +103,14 @@ optional:
 #define HOSTNAME               "flurlicht"
 #define MQTT_NODENAME          "flurlicht"
 #define TITEL1                 "Flurlicht"
-#define TITEL2                 "Neopixel Licht im Flur"
-#define NEOPIXEL
-#define NEOPIXELNUM            46
-#define RGBINIT                0xAAAAAA
+#define TITEL2                 "Licht im Flur"
+#define LEDPWM
+#define LEDPWMINIT             10
 #define SWITCH1               
-#define SWITCH1TXT             "Neopixel"
-#define SWITCH1MQTT            "neopixel"
+#define SWITCH1TXT             "Licht"
+#define SWITCH1MQTT            "licht"
 #define SWITCH1INITSTATE       false
 #define RF24_GW_NO             103
-#define RF24GW
 #define SENSOR_18B20
 #define SENSOR_NODE            1
 #define SENSOR_CHANNEL         16
@@ -205,5 +203,6 @@ optional:
 #define MESSAGE1
 #undef NOSENSOR
 #endif
-#if defined(RF24GW)
+#if defined(RF24_GW_NO)
+#define RF24GW
 #endif

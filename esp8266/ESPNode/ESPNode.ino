@@ -6,6 +6,7 @@ Build in Parts (selectable):
 Relais
 Matrix Display
 NeoPixel
+LEDPWM
 Dallas Temperature Sensor 18B20
 Rf24GW
 
@@ -16,10 +17,10 @@ On Branch: rf24hub@rpi2 => master  !!!!!
 //****************************************************
 // My definitions for my nodes based on this sketch
 // Select only one at one time !!!!
-//#define TEICHPUMPE
+#define TEICHPUMPE
 //#define TERASSENNODE
 //#define FLURLICHT
-#define WOHNZIMMERNODE
+//#define WOHNZIMMERNODE
 //#define TESTNODE
 //#define WITTYNODE
 //#define RF24GWTEST
@@ -111,6 +112,9 @@ const char c_on[] =  "Ein";
 const char c_off[] = "Aus";
 #if defined(NEOPIXEL)
 uint32_t rgb = RGBINIT;
+#endif
+#if defined(LEDPWM)
+uint8_t intensity = LEDPWMINIT;
 #endif
 //bool log_startup = false;
 #if defined(SWITCH1)
@@ -206,14 +210,14 @@ void setup() {
   wifi_con();
   
   if (eepromdata.log_startup) {
-    snprintf(info_str,INFOSIZE,"%s %s %s %s", F("Connected to "), ssid, F(" IP address: "), WiFi.localIP().toString().c_str() );
+    snprintf(info_str,INFOSIZE,"%s %s %s %s", F("WLAN: Connected to "), ssid, F(" IP address: "), WiFi.localIP().toString().c_str() );
     write2log(info_str);
   } 
   
 #if defined(RF24GW)
   udp.begin(RF24_GW_UDP_PORTNO);
   if (eepromdata.log_startup) {
-    snprintf(info_str,INFOSIZE,"%s %u", F("Opened UDP Port: "), RF24_GW_UDP_PORTNO );
+    snprintf(info_str,INFOSIZE,"%s %u", F("RF24: Opened UDP Port: "), RF24_GW_UDP_PORTNO );
     write2log(info_str);
   } 
 #endif  
@@ -286,6 +290,11 @@ void setup() {
 #if defined(NEOPIXEL)
   pixels.begin();
 #endif
+#if defined(LEDPWM)
+  pinMode(LEDPWM_PIN, OUTPUT);
+  //analogWriteFreq(10000);
+  //analogWrite(LEDPWM_PIN, 0);
+#endif
  
 // Init sensors
 #if defined(SENSOR_18B20)
@@ -340,7 +349,10 @@ void setup() {
     snprintf(info_str,INFOSIZE,"%s", F("-------------------Ende Startup-------------------------"));
     write2log(info_str);
   }
-  digitalWrite(BUILTIN_LED, HIGH);
+  digitalWrite(BUILTIN_LED, HIGH);  
+#if defined(LEDPWM)
+  analogWrite(LEDPWM_PIN, 0);
+#endif  
 }
 
 tristate_t get_tristate(const char* mystate) {
@@ -594,6 +606,34 @@ void handleCmd() {
       status = ok_text;  
     }
 #endif
+#if defined(LEDPWM)
+    if ( httpServer.argName(argNo) == "getledpwm" ) {
+      snprintf(info_str,INFOSIZE,"%u",intensity);
+      status = ok_text;  
+    }
+    if ( httpServer.argName(argNo) == "setledpwm" ) {
+      intensity = httpServer.arg(argNo).toInt();
+      snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,"intensity");
+      mqttClient.publish(mytopic, httpServer.arg(argNo).c_str());
+      if (eepromdata.log_mqtt) {
+        snprintf(info_str,INFOSIZE,"MQTT: %s : %s",mytopic, httpServer.arg(argNo).c_str());
+        write2log(info_str);
+      }
+      if (state_switch1) set_ledpwm(on);
+      status = ok_text;  
+    }
+/*    if ( httpServer.argName(argNo) == "intensity" ) {
+      intensity = httpServer.arg(argNo).toInt();
+      snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,"intensity");
+      mqttClient.publish(mytopic, httpServer.arg(argNo).c_str());
+      if (eepromdata.log_mqtt) {
+        snprintf(info_str,INFOSIZE,"MQTT: %s : %s",mytopic, httpServer.arg(argNo).c_str());
+        write2log(info_str);
+      }
+      snprintf(info_str,INFOSIZE,"%s",httpServer.arg(argNo).c_str());
+      status = ok_text;  
+    }*/
+#endif
   }
   switch (status) {
     case ok_json:
@@ -649,6 +689,9 @@ void switchSwitch1(bool stat) {
 #if defined(NEOPIXEL)
      set_neopixel(on);
 #endif
+#if defined(LEDPWM)
+     set_ledpwm(on);
+#endif
   } else {
 #if defined(SWITCH1PIN1)
     digitalWrite(SWITCH1PIN1, ! SWITCH1ACTIVESTATE);
@@ -661,6 +704,9 @@ void switchSwitch1(bool stat) {
 #endif
 #if defined(NEOPIXEL)
      set_neopixel(off);
+#endif
+#if defined(LEDPWM)
+     set_ledpwm(off);
 #endif
   }
 }
@@ -860,32 +906,35 @@ void  set_neopixel(tristate_t mystate) {
   uint32_t red;
   uint32_t green;
   uint32_t blue;
-  Serial.print("mystate ");
-  Serial.println(mystate);
   if ( mystate == on ) {
     red =  rgb & 0x0000FF;  
     green = rgb & 0x00FF00;
     green >>= 8;
     blue = rgb & 0xFF0000;
     blue >>= 16;
-    Serial.print(" On ");
   } 
   if ( mystate == off ) {
     red = 0;
     green = 0;
     blue = 0;
-    Serial.print(" Off ");
   }
-  Serial.print("R:");
-  Serial.print(red);
-  Serial.print(" G:");
-  Serial.print(green);
-  Serial.print(" B:");
-  Serial.println(blue);
   for(int i=0; i<NEOPIXELNUM; i++) {
     pixels.setPixelColor(i, pixels.Color(red, green, blue));
   }
   pixels.show();
+}
+#endif
+
+#if defined(LEDPWM)
+void  set_ledpwm(tristate_t mystate) {
+  uint8_t myintensity;
+  if ( mystate == on ) {
+    myintensity =  intensity;  
+  } 
+  if ( mystate == off ) {
+    myintensity = 0;
+  }
+  analogWrite(LEDPWM_PIN, myintensity);
 }
 #endif
 
@@ -1029,7 +1078,7 @@ void fill_sysinfo4(char* mystr) {
 void fill_sysinfo5(char* mystr) {
   uptime::calculateUptime();
   snprintf (mystr,INFOSIZE, "{\"MQTT-Server\":\"%s\", \"MQTT-Hostname\":\"%s\", \"UpTime\":\"%uT%02u:%02u:%02u\", \"SW\":\"%s / %s\"}",
-          MQTT_SERVER, MQTT_NODENAME, uptime::getDays(), uptime::getHours(), uptime::getMinutes(), uptime::getSeconds(), SWVERSION_STR, SWDATUM );
+          MQTT_SERVER, MQTT_NODENAME, uptime::getDays(), uptime::getHours(), uptime::getMinutes(), uptime::getSeconds(), SWVERSION_STR, __DATE__ );
 }
 
 void fill_sysinfo6(char* mystr) {
@@ -1073,6 +1122,9 @@ void fill_webcfg1(char* mystr) {
 #endif
 #if defined(NEOPIXEL)
   strcat(mystr,", \"neopixel\":1 ");
+#endif
+#if defined(LEDPWM)
+  strcat(mystr,", \"ledpwm\":1 ");
 #endif
   strcat(mystr,"}");
 }
@@ -1257,6 +1309,15 @@ void callback(char* topic, byte* payload, unsigned int length) {
         rgb = strtoul(cmd, &eptr, 10);
         if (state_switch1) set_neopixel(on);
         snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,"devicestatus");
+        mqttClient.publish(mytopic, cmd);
+      }
+#endif
+#if defined(LEDPWM)
+      if ( strncmp(part3, "intensity", sizeof "intensity") == 0 ) {
+        char *eptr;
+        intensity = strtoul(cmd, &eptr, 10);
+        if (state_switch1) set_ledpwm(on);
+        snprintf(mytopic,TOPIC_BUFFER_SIZE,"%s/%s/%s","stat",MQTT_NODENAME,"intensity");
         mqttClient.publish(mytopic, cmd);
       }
 #endif
