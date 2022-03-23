@@ -54,6 +54,8 @@ void Node::addNode(NODE_DATTYPE node_id, char* node_name, float u_batt, bool isM
     p_new->is_mastered = isMastered;
     p_new->pa_level = PALevel;
     p_new->pa_utime = PAUtime;
+    p_new->hb_no = 0;
+    p_new->hb_utime = 0;
     if (verboselevel & VERBOSESENSOR) printf("%sNode.addNode: N:%u U:%f HB:%s PA:%s(%s)\n",ts(tsbuf),node_id, u_batt, isMastered? "    Mastered":"Not Mastered",
                    PALevel==0? "??? ":PALevel==1? "Low ":PALevel==2? "Min ":PALevel==3? "High":"Max ", utime2str(PAUtime, buf, 1));
     newEntry(p_new);
@@ -74,19 +76,25 @@ char* Node::getNodeName(NODE_DATTYPE node_id) {
     return retval;
 }
 
-bool Node::isNewHB(NODE_DATTYPE node_id, uint8_t heartbeatno) {
+bool Node::isNewHB(NODE_DATTYPE node_id, uint8_t hb_no, uint32_t hb_utime) {
     node_t *p_search;
     bool retval = false;
-    p_search = p_initial;
-    if ( heartbeatno == 0 ) {
+    p_search = p_initial;    
+    if ( hb_no == 0 ) {
         retval = true;
     } else {
         while (p_search) {
             if (p_search->node_id == node_id) {
                 if (verboselevel & VERBOSEORDER)
-                    printf("%sNode.is_new_HB: Node:%u last HB %u this HB %u => ", ts(tsbuf), node_id, p_search->heartbeatno, heartbeatno );
-                if (p_search->heartbeatno != heartbeatno ) retval = true;
-                p_search->heartbeatno = heartbeatno;
+                    printf("%sNode.is_new_HB: Node:%u last HB %u (%u) this HB %u (%u) => ", ts(tsbuf), node_id, p_search->hb_no, p_search->hb_utime, hb_no, utime );
+                if ( hb_utime > p_search->hb_utime + 50 || 
+		     hb_no > p_search->hb_no || 
+		     (p_search->hb_no - hb_no > 50) || 
+		     (p_search->hb_no > 200 && p_search->hb_no != hb_no) ) {
+		    retval = true;
+                    p_search->hb_no = hb_no;
+		    p_search->hb_utime = hb_utime;
+		}
                 p_search = NULL;
             } else {
                 p_search = p_search->p_next;

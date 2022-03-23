@@ -23,9 +23,10 @@ struct node_t {
         char            node_name[NODENAMESIZE];
         uint8_t         pa_level;
         uint32_t        pa_utime;
-        float			u_batt;	
-        uint8_t         heartbeatno;
-        bool            is_mastered;
+        float		u_batt;	
+        uint8_t         hb_no;
+	uint32_t 	hb_utime;
+	bool            is_mastered;
         node_t*         p_next;
     };
 node_t*     p_initial;
@@ -72,7 +73,7 @@ char* getNodeName(NODE_DATTYPE node_id);
  *  Prüft ob ein Heartbeat neu (=neue heartbeatno)  
  *  oder alt ist.
  */
-bool isNewHB(NODE_DATTYPE node_id, uint8_t heartbeatno);
+bool isNewHB(NODE_DATTYPE node_id, uint8_t heartbeatno, uint32_t utime);
 /**
  *  Prüft ob ein Node ein Node von diesem Hub gesteuert wird oder nicht 
  */

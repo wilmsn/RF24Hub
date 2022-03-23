@@ -113,7 +113,7 @@ debugging options:
 #define SENSOR_18B20
 #define EEPROM_VERSION       1
 #define EMPTYLOOPS           0
-#define LOW_VOLT_LEVEL       3.5
+#define LOW_VOLT_LEVEL       3.6
 #endif
 //-----------------------------------------------------
 #if defined(KUGELNODE1)
@@ -123,7 +123,7 @@ debugging options:
 #define DISPLAY_5110
 #define EEPROM_VERSION       2
 #define EMPTYLOOPS           0
-#define LOW_VOLT_LEVEL       3.5
+#define LOW_VOLT_LEVEL       3
 #define VOLT_OFF             0.55
 #define CONTRAST             55
 #endif

@@ -45,17 +45,17 @@ radius=durchmesser/2;
 
 //druck_blende();
 
-druck_vorderseite();
+//druck_vorderseite();
 
-druck_rueckseite();
+//druck_rueckseite();
 
 //schnittbild();
 
-//gehaeuse();
+//rotate(25,[0,1,0]) translate([0,0,45]) gehaeuse();
 
 //vorderseite();
 
-//rueckseite();
+rueckseite();
 
 //kugelgeh();
 

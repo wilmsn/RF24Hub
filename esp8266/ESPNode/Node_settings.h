@@ -50,9 +50,11 @@ optional:
 #define SWITCH1PIN1            0        
 #define SWITCH1PIN2            2
 #define SWITCH1TXT             "Relais"
-#define SWITCH1INITSTATE       HIGH
+#define SWITCH1INITSTATE       false
 #define SWITCH1ACTIVESTATE     LOW
 #define SWITCH1MQTT            "relais"
+#define SWITCH1_NODE           1
+#define SWITCH1_CHANNEL        12
 #endif
 //-----------------------------------------------------
 #if defined(TERASSENNODE)
@@ -72,12 +74,16 @@ optional:
 #define SWITCH1INITSTATE       LOW
 #define SWITCH1ACTIVESTATE     LOW
 #define SWITCH1MQTT            "terasse"
+#define SWITCH1_NODE           1
+#define SWITCH1_CHANNEL        2
 #define SWITCH2               
 #define SWITCH2PIN1            0
 #define SWITCH2TXT             "Balkon"
 #define SWITCH2INITSTATE       LOW
 #define SWITCH2ACTIVESTATE     LOW
 #define SWITCH2MQTT            "balkon"
+#define SWITCH2_NODE           1
+#define SWITCH2_CHANNEL        3
 #endif
 //-----------------------------------------------------
 #if defined(WOHNZIMMERNODE)
@@ -110,6 +116,8 @@ optional:
 #define SWITCH1TXT             "Licht"
 #define SWITCH1MQTT            "licht"
 #define SWITCH1INITSTATE       false
+#define SWITCH1_NODE           1
+#define SWITCH1_CHANNEL        17
 #define RF24_GW_NO             103
 #define SENSOR_18B20
 #define SENSOR_NODE            1

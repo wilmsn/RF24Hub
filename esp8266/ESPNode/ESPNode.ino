@@ -17,9 +17,9 @@ On Branch: rf24hub@rpi2 => master  !!!!!
 //****************************************************
 // My definitions for my nodes based on this sketch
 // Select only one at one time !!!!
-#define TEICHPUMPE
+//#define TEICHPUMPE
 //#define TERASSENNODE
-//#define FLURLICHT
+#define FLURLICHT
 //#define WOHNZIMMERNODE
 //#define TESTNODE
 //#define WITTYNODE
@@ -299,6 +299,7 @@ void setup() {
 // Init sensors
 #if defined(SENSOR_18B20)
   sensors.begin();
+  sensors.setResolution(SENSOR_18B20_RESOLUTION);
 #endif
 
 #if defined(SWITCH1)
@@ -676,6 +677,11 @@ void mqtt_send_swtch1() {
 }
 
 void switchSwitch1(bool stat) {
+#if defined(SWITCH1_NODE)
+  char tmp[10];
+  snprintf(tmp,9,"%u",stat?1:0);
+  send_udp_msg(SWITCH1_NODE, packTransportValue(SWITCH1_CHANNEL, tmp ));   
+#endif  
   if ( stat ) { 
 #if defined(SWITCH1PIN1)
     digitalWrite(SWITCH1PIN1, SWITCH1ACTIVESTATE);
@@ -749,6 +755,11 @@ void mqtt_send_swtch2() {
 }
 
 void switchSwitch2(bool stat) {
+#if defined(SWITCH2_NODE)
+  char tmp[10];
+  snprintf(tmp,9,"%u",stat?1:0);
+  send_udp_msg(SWITCH2_NODE, packTransportValue(SWITCH2_CHANNEL, tmp ));   
+#endif  
   if ( stat ) { 
 #if defined(SWITCH2PIN1)
     digitalWrite(SWITCH2PIN1, SWITCH2ACTIVESTATE);
@@ -959,9 +970,9 @@ void handlestatus(char* myjson) {
   strcat(myjson,"}");    
 }
 
-void send_udp_msg(uint32_t data) {
+void send_udp_msg(NODE_DATTYPE node_id, uint32_t data) {
   udpdata.gw_no = RF24_GW_NO;
-  udpdata.payload.node_id = SENSOR_NODE;
+  udpdata.payload.node_id = node_id;
   udpdata.payload.msg_id = 0;
   udpdata.payload.msg_type = PAYLOAD_TYPE_ESP;
   udpdata.payload.msg_flags = PAYLOAD_FLAG_LASTMESSAGE;
@@ -995,7 +1006,7 @@ void handlesensor(char* myjson, call_t call) {
     case sensormqtt:
 #if defined(SENSOR_CHANNEL)
       snprintf(tmp,9,"%4.1f",tempC);
-      send_udp_msg(packTransportValue(SENSOR_CHANNEL,tmp));
+      send_udp_msg(SENSOR_NODE, packTransportValue(SENSOR_CHANNEL,tmp));
 #endif
     case sensorweb:
       sprintf(myjson,"{\"Sensor\":\"18B20\", \"Temperatur\":%4.1f, \"Resolution\":%u }", tempC, resolution);
@@ -1082,7 +1093,6 @@ void fill_sysinfo5(char* mystr) {
 }
 
 void fill_sysinfo6(char* mystr) {
-  uptime::calculateUptime();
   snprintf (mystr,INFOSIZE, "{\"RF24HUB-Server\":\"%s\", \"RF24HUB-Port\":%d, \"RF24GW-Port\":%d}",
           RF24_HUB_SERVER, RF24_HUB_UDP_PORTNO, RF24_GW_UDP_PORTNO );
 }

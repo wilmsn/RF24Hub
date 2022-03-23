@@ -76,7 +76,7 @@ Sensor          sensor;
 Node            node;
 Database        database;
 Gateway         gateway;
-Cfg             cfg(SWVERSION_STR,SWDATUM);
+Cfg             cfg(SWVERSION_STR,__DATE__);
 
 /**
  * @brief send a telnet comand to the fhem-host

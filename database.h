@@ -60,9 +60,9 @@ public:
  */
    void lowVoltage(NODE_DATTYPE node_id, bool lowVoltageFlag);
 /**
- * Stores the last data(Transportvalue) of a sensor into the table sensor_im and sensordata_im
+ * Stores the last data(Transportvalue) of a sensor into the table sensordata
  */
-    void storeSensorValue(uint32_t sensor_id, uint32_t data, char* value);
+    void storeSensorValue(uint32_t sensor_id, char* value);
 /**
  * Stores the config data of a node
  */
@@ -93,11 +93,6 @@ public:
  */
     void sync_config(void);
 /**
- * Stores/Syncs all the data from "sensor_im"
- * to "sensor" to make them persistent
- */
-    void sync_sensor(void);
-/**
  * Refreshes the table sensordata_d from scratch
  */
     void rebuild_sensordata_d(void);
@@ -117,6 +112,14 @@ public:
  * Deletes a gateay from the database
  */
     void delGateway(uint16_t gw_no);
+/**
+ * Enables a gateay in the database
+ */
+    void enableGateway(uint16_t gw_no);
+/**
+ * Disables a gateay in the database
+ */
+    void disableGateway(uint16_t gw_no);
 /**
  * Update the mastered flag of a node
  */

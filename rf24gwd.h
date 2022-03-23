@@ -56,7 +56,7 @@ char* tsbuf;
 RF24 radio(RPI_V2_GPIO_P1_22, BCM2835_SPI_CS0, BCM2835_SPI_CLOCK_DIVIDER_32768);
 //RF24 radio(22,0,BCM2835_SPI_SPEED_1MHZ);
 
-Cfg          cfg(SWVERSION_STR,SWDATUM);
+Cfg          cfg(SWVERSION_STR,__DATE__);
 
 static void* receive_tn_in (void *arg);
 bool process_tn_in( char* inbuffer, int tn_socket);

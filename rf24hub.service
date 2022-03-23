@@ -4,6 +4,7 @@ After=systemd-user-sessions.service mariadb.service
 [Service]
 Type=forking
 ExecStart=/usr/local/bin/rf24hubd -d
+ExecStopPost=/usr/bin/rm /run/rf24hub.pid
 [Install]
 WantedBy=appl.target
 

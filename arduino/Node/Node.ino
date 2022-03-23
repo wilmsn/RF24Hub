@@ -23,12 +23,12 @@ On Branch: master  !!!!!
 //#define KUECHETHERMOMETER // noch mit Bug in 205
 //#define WOHNZIMMERTHERMOMETER
 //#define ANKLEIDEZIMMERTHERMOMETER
-//#define KUGELNODE1
+#define KUGELNODE1
 //#define KUGELNODE2
 //#define GAESTEZIMMERTHERMOMETER
 //----Testnodes-----
 //#define FEUCHTESENSOR_170
-#define TESTNODE_UNO
+//#define TESTNODE_UNO
 //#define TESTNODE
 //****************************************************
 // Default settings are in "default.h" now !!!!!

@@ -30,7 +30,7 @@
 #define SWITCH3_DEFAULT         LOW
 #define SWITCH4_DEFAULT         LOW
 #define ONE_WIRE_BUS            4
-
+#define SENSOR_18B20_RESOLUTION 12
 
 
 // Part 2: individual defaults

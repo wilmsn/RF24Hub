@@ -102,73 +102,73 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
       for all details have a look at "rf24hub_text.h" 
 */
 
-	char cmp_init[]="init", 
+    char cmp_init[]="init",
          cmp_on[]="on",
          cmp_off[]="off",
          cmp_add[]="add",
          cmp_delete[]="delete",
-		 cmp_sensor[]="sensor",
-		 cmp_node[]="node",
-		 cmp_mastered[]="mastered",
-		 cmp_unmastered[]="unmastered",
-		 cmp_set[]="set",
-		 cmp_html[]="html",
-		 cmp_order[]="order",	 
-		 cmp_verbose[]="verbose",	
+	 cmp_sensor[]="sensor",
+	 cmp_node[]="node",
+	 cmp_mastered[]="mastered",
+	 cmp_unmastered[]="unmastered",
+	 cmp_set[]="set",
+	 cmp_html[]="html",
+	 cmp_order[]="order",
+	 cmp_verbose[]="verbose",
          cmp_push[]="push",
          cmp_show[]="show",
          cmp_sync[]="sync",
          cmp_gateway[]="gateway",
          cmp_truncate[]="truncate",
          cmp_logfile[]="logfile";
-	char *wort1a, *wort2a, *wort3a, *wort4a;
-	char *wort1, *wort2, *wort3, *wort4;
+    char *wort1a, *wort2a, *wort3a, *wort4a;
+    char *wort1, *wort2, *wort3, *wort4;
     char* message = alloc_str(verboselevel,"process_tn_in message",120,ts(tsbuf));
-	bool tn_input_ok = false;
-	char delimiter[] = " ";
+    bool tn_input_ok = false;
+    char delimiter[] = " ";
 	//trim(buffer);
-	wort1a = strtok(inbuffer, delimiter);
-	wort2a = strtok(NULL, delimiter);
-	wort3a = strtok(NULL, delimiter);
-	wort4a = strtok(NULL, delimiter);
+    wort1a = strtok(inbuffer, delimiter);
+    wort2a = strtok(NULL, delimiter);
+    wort3a = strtok(NULL, delimiter);
+    wort4a = strtok(NULL, delimiter);
     char* pEnd;
-    if (wort1a) { 
+    if (wort1a) {
         wort1 = alloc_str(verboselevel,"process_tn_in wort1",strlen(wort1a)+1,ts(tsbuf));
         strcpy(wort1, wort1a);
-    } else { 
+    } else {
         wort1 = alloc_str(verboselevel,"process_tn_in wort1",1,ts(tsbuf));
         wort1[0] = '\0';
     }
-    if (wort2a) { 
+    if (wort2a) {
         wort2 = alloc_str(verboselevel,"process_tn_in wort2",strlen(wort2a)+1,ts(tsbuf));
         strcpy(wort2, wort2a);
-    } else { 
+    } else {
         wort2 = alloc_str(verboselevel,"process_tn_in wort2",1,ts(tsbuf));
         wort2[0] = '\0';
     }
-    if (wort3a) { 
+    if (wort3a) {
         wort3 = alloc_str(verboselevel,"process_tn_in wort3",strlen(wort3a)+1,ts(tsbuf));
         strcpy(wort3, wort3a);
-    } else { 
+    } else {
         wort3 = alloc_str(verboselevel,"process_tn_in wort3",1,ts(tsbuf));
         wort3[0] = '\0';
     }
-    if (wort4a) { 
+    if (wort4a) {
         wort4 = alloc_str(verboselevel,"process_tn_in wort4",strlen(wort4a)+1,ts(tsbuf));
         strcpy(wort4, wort4a);
-    } else { 
+    } else {
         wort4 = alloc_str(verboselevel,"process_tn_in wort4",1,ts(tsbuf));
         wort4[0] = '\0';
     }
-	if ( (strcmp(wort1,cmp_set) == 0) && (strcmp(wort2,cmp_sensor) == 0) && (strlen(wort3) > 0) && (strlen(wort4) > 0) ) {
-		// In word3 we may have a) the number of the sensor b) the name of the sensor c) the fhem_dev of a sensor
-		// for the processing we need the number of the sensor ==> find it!
+    if ( (strcmp(wort1,cmp_set) == 0) && (strcmp(wort2,cmp_sensor) == 0) && (strlen(wort3) > 0) && (strlen(wort4) > 0) ) {
+    // In word3 we may have a) the number of the sensor b) the name of the sensor c) the fhem_dev of a sensor
+    // for the processing we need the number of the sensor ==> find it!
         NODE_DATTYPE node_id = 0;
         uint8_t   channel = 0;
         uint32_t  data = 0;
         if ( wort3[0] >= 'A' && wort3[0] <= 'z' ) {
             if (sensor.getNodeChannelByFhemDev(&node_id, &channel, wort3) ) {
-          		tn_input_ok = true;
+		tn_input_ok = true;
             } else {
                 if (sensor.getNodeChannelBySensorName(&node_id, &channel, wort3) ) {
                     tn_input_ok = true;
@@ -181,99 +181,100 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
             }
         }
         if ( node_id > 0 &&  channel > 0 ) {
-            data = packTransportValue(channel, wort4); 
+            data = packTransportValue(channel, wort4);
             orderbuffer.addOrderBuffer(mymillis(),node_id,channel,data);
         } else {
             tn_input_ok = false;
         }
     }
-	// push <node> <channel> <value>
-	// Pushes a value direct to a channel into a node
-	if (( strcmp(wort1,cmp_push) == 0 ) && (strlen(wort2) > 0) && (strlen(wort3) > 0) && (strlen(wort4) > 0) ) {
+    // push <node> <channel> <value>
+    // Pushes a value direct to a channel into a node
+    if (( strcmp(wort1,cmp_push) == 0 ) && (strlen(wort2) > 0) && (strlen(wort3) > 0) && (strlen(wort4) > 0) ) {
         NODE_DATTYPE node_id = strtol(wort2, &pEnd, 10);
         uint8_t channel = strtol(wort3, &pEnd, 10);
-//        if ( node.isValidNode(node_id) && ( sensor.getSensorByNodeChannel(node_id, channel) > 0 || sensor.isSystemRegister(channel) ) ) {
         if ( node.isValidNode(node_id) ) {
             orderbuffer.addOrderBuffer(mymillis(), node_id, channel, packTransportValue(channel, wort4) );
             tn_input_ok = true;
         }
     }
     // set verbose <new verboselevel>
-	// sets the new verboselevel
-	if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (strlen(wort3) > 0) && (strlen(wort4) == 0) ) {
-//        if ( wort3[0] > '0' && wort3[0] < '9' + 1 ) {
-			tn_input_ok = true;
-			verboselevel = decodeVerbose(verboselevel, wort3);
-            node.setVerbose(verboselevel);
-            sensor.setVerbose(verboselevel);
-            order.setVerbose(verboselevel);
-            orderbuffer.setVerbose(verboselevel);
-            database.setVerbose(verboselevel);
-//		}	
-	}
+    // sets the new verboselevel
+    if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (strlen(wort3) > 0) && (strlen(wort4) == 0) ) {
+	tn_input_ok = true;
+	verboselevel = decodeVerbose(verboselevel, wort3);
+	node.setVerbose(verboselevel);
+	sensor.setVerbose(verboselevel);
+	order.setVerbose(verboselevel);
+	orderbuffer.setVerbose(verboselevel);
+	database.setVerbose(verboselevel);
+    }
     // show order
-	// lists the current orderbuffer
-	if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
-		tn_input_ok = true;
+    // lists the current orderbuffer
+    if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
+	tn_input_ok = true;
         orderbuffer.printBuffer(tn_socket, false);
         order.printBuffer(tn_socket, false);
-	}
+    }
     // show sensor
-	// lists the current node- and sensorbuffer
-	if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_sensor) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
-		tn_input_ok = true;
+    // lists the current node- and sensorbuffer
+    if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_sensor) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
+	tn_input_ok = true;
         node.printBuffer(tn_socket, false);
         sensor.printBuffer(tn_socket, false);
-	}
+    }
     // show gateway
-	// lists the current gateway status
-	if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_gateway) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
-		tn_input_ok = true;
+    // lists the current gateway status
+    if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_gateway) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
+	tn_input_ok = true;
         gateway.printBuffer(tn_socket, false);
-	}
+    }
     // add gateway
-	// adds a gateway in status active to database and system
-	if (( strcmp(wort1,cmp_add) == 0 ) && (strcmp(wort2,cmp_gateway) == 0) && (strlen(wort3) > 0) && (strlen(wort4) > 0) ) {
+    // adds a gateway in status active to database and system
+    if (( strcmp(wort1,cmp_add) == 0 ) && (strcmp(wort2,cmp_gateway) == 0) && (strlen(wort3) > 0) && (strlen(wort4) > 0) ) {
         if ( wort3[0] >= 'A' && wort3[0] <= 'z' ) {
-          uint16_t gw_id = strtol(wort4, &pEnd, 10);
-          if ( gw_id > 0 ) {
-            tn_input_ok = true;
-            database.addGateway(wort3, gw_id);
-            gateway.addGateway(wort3, gw_id, true);
-            gateway.printBuffer(tn_socket, false);
-          }
+	    uint16_t gw_id = strtol(wort4, &pEnd, 10);
+	    if ( gw_id > 0 ) {
+		tn_input_ok = true;
+		database.addGateway(wort3, gw_id);
+		gateway.addGateway(wort3, gw_id, true);
+		gateway.printBuffer(tn_socket, false);
+	    }
         }
-	}
+    }
     // delete gateway
-	// deletes a gateway from database and system
-	if (( strcmp(wort1,cmp_delete) == 0 ) && (strcmp(wort2,cmp_gateway) == 0) && (strlen(wort3) > 0) && (strlen(wort4) == 0) ) {
+    // deletes a gateway from database and system
+    if (( strcmp(wort1,cmp_delete) == 0 ) && (strcmp(wort2,cmp_gateway) == 0) && (strlen(wort3) > 0) && (strlen(wort4) == 0) ) {
         uint16_t gw_id = strtol(wort3, &pEnd, 10);
         if ( gw_id > 0 ) {
-          tn_input_ok = true;
-          database.delGateway(gw_id);
-          gateway.delGateway(gw_id);
-          gateway.printBuffer(tn_socket, false);
+	    tn_input_ok = true;
+	    database.delGateway(gw_id);
+	    gateway.delGateway(gw_id);
+	    gateway.printBuffer(tn_socket, false);
         }
-	}
+    }
     // set gateway <GW_NO> on
-	// lists the current node- and sensorbuffer
-	if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_gateway) == 0) && (strlen(wort3) > 0) && (strcmp(wort4,cmp_on) == 0) ) {
-		tn_input_ok = true;
-        gateway.setGateway((uint16_t)strtoul(wort3, &pEnd, 10), true);
-        gateway.printBuffer(tn_socket, false);
-	}
+    // lists the current node- and sensorbuffer
+    if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_gateway) == 0) && (strlen(wort3) > 0) && (strcmp(wort4,cmp_on) == 0) ) {
+	tn_input_ok = true;
+	uint16_t gw_id = (uint16_t)strtoul(wort3, &pEnd, 10);
+	database.enableGateway(gw_id);
+	gateway.setGateway(gw_id, true);
+	gateway.printBuffer(tn_socket, false);
+    }
     // set gateway <GW_NO> off
-	// lists the current node- and sensorbuffer
-	if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_gateway) == 0) && (strlen(wort3) > 0) && (strcmp(wort4,cmp_off) == 0) ) {
-		tn_input_ok = true;
-        gateway.setGateway((uint16_t)strtoul(wort3, &pEnd, 10), false);
-        gateway.printBuffer(tn_socket, false);
-	}
-	// set node <node_id> <mastered/unmastered>
-	// syncronisation of all relevant tables of rf24hubd: stores in memory table data to database hard disk tables 
-	if ( (strcmp(wort1,cmp_set) == 0) && (strcmp(wort2,cmp_node) == 0) && (strlen(wort3) > 0) && (strlen(wort4) > 0) ) {
+    // lists the current node- and sensorbuffer
+    if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_gateway) == 0) && (strlen(wort3) > 0) && (strcmp(wort4,cmp_off) == 0) ) {
+	tn_input_ok = true;
+	uint16_t gw_id = (uint16_t)strtoul(wort3, &pEnd, 10);
+	database.disableGateway(gw_id);
+	gateway.setGateway(gw_id, false);
+	gateway.printBuffer(tn_socket, false);
+    }
+    // set node <node_id> <mastered/unmastered>
+    // syncronisation of all relevant tables of rf24hubd: stores in memory table data to database hard disk tables 
+    if ( (strcmp(wort1,cmp_set) == 0) && (strcmp(wort2,cmp_node) == 0) && (strlen(wort3) > 0) && (strlen(wort4) > 0) ) {
         NODE_DATTYPE node_id = strtol(wort3, &pEnd, 10);
-    printf("%u\n", node_id);    
+	printf("%u\n", node_id);    
         if (node_id > 0) {
             if (strcmp(wort4,cmp_mastered) == 0) {
                 tn_input_ok = true;
@@ -286,44 +287,42 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
         }
     }
     // show verbose
-	if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
-		tn_input_ok = true;
-		sprintf(message,"Active verboselevel: %s\n", printVerbose(verboselevel, buf));
-		write(tn_socket , message , strlen(message));
+    if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
+	tn_input_ok = true;
+	sprintf(message,"Active verboselevel: %s\n", printVerbose(verboselevel, buf));
+	write(tn_socket , message , strlen(message));
     }
-	// html order
-	// lists the current order/orderbuffer for html page
-	if (( strcmp(wort1,cmp_html) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
-		tn_input_ok = true;
+    // html order
+    // lists the current order/orderbuffer for html page
+    if (( strcmp(wort1,cmp_html) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
+	tn_input_ok = true;
         orderbuffer.printBuffer(tn_socket, true);
-        //order.printBuffer(tn_socket, true);
     }	
     // sync
-	// syncronisation of all relevant tables of rf24hubd: stores in memory table data to database hard disk tables 
-	if ( (strcmp(wort1,cmp_sync) == 0) && (strlen(wort2) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
-		tn_input_ok = true;
-        database.sync_sensor();
+    // syncronisation of all relevant tables of rf24hubd: stores in memory table data to database hard disk tables 
+    if ( (strcmp(wort1,cmp_sync) == 0) && (strlen(wort2) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
+	tn_input_ok = true;
         database.sync_sensordata_d();
     }
     // init
-	// initialisation of rf24hubd: reloads data from database
-	if ( (strcmp(wort1,cmp_init) == 0) && (strlen(wort2) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
-		tn_input_ok = true;
+    // initialisation of rf24hubd: reloads data from database
+    if ( (strcmp(wort1,cmp_init) == 0) && (strlen(wort2) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
+	tn_input_ok = true;
         exit_system();
         node.cleanup();
         sensor.cleanup();
         gateway.cleanup();
-		init_system();
+	init_system();
         node.printBuffer(tn_socket, false);
         sensor.printBuffer(tn_socket, false);
         gateway.printBuffer(tn_socket, false);
-	}
-	// truncate logfile
-	// truncation of the logfile for maintenance
-	if ( (strcmp(wort1,cmp_truncate) == 0) && (strcmp(wort2,cmp_logfile) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
+    }
+    // truncate logfile
+    // truncation of the logfile for maintenance
+    if ( (strcmp(wort1,cmp_truncate) == 0) && (strcmp(wort2,cmp_logfile) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
         truncate (cfg.hubLogFileName.c_str(), 0);
         printf(message, "Logfile: %s geleert", cfg.hubLogFileName.c_str());
-		tn_input_ok = true;
+	tn_input_ok = true;
     }
     if ( ! tn_input_ok) {
         for(unsigned int i=0; i<sizeof(tn_usage_txt)/ sizeof(int); i++) {
@@ -332,8 +331,8 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
         }
         sprintf(message,"%s version %s\n", PRGNAME, SWVERSION_STR);
         write(tn_socket , message , strlen(message));
-	}		
-	free_str(verboselevel,"process_tn_in wort1",wort1,ts(tsbuf));
+    }		
+    free_str(verboselevel,"process_tn_in wort1",wort1,ts(tsbuf));
     free_str(verboselevel,"process_tn_in wort2",wort2,ts(tsbuf));
     free_str(verboselevel,"process_tn_in wort3",wort3,ts(tsbuf));
     free_str(verboselevel,"process_tn_in wort4",wort4,ts(tsbuf));
@@ -391,7 +390,6 @@ void make_order(NODE_DATTYPE node_id, uint8_t msg_type) {
 
 void exit_system(void) {
     // Save data from sensordata_im and sensor_im to persistant tables
-    database.sync_sensor();
     database.sync_config();
 }
 
@@ -409,7 +407,7 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
     uint8_t channel = getChannel(mydata);
     switch (channel) {
         case 1 ... 60: {
-                // Sensor or Actor that gets or delivers a number
+	    // Sensor or Actor that gets or delivers a number
             uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
             if ( sensor_id > 0 ) { 
                 buf = unpackTransportValue(mydata, buf);
@@ -417,13 +415,13 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
                     printf("%sValue of Node: %u Data: %u ==> Channel: %u is %s\n", ts(tsbuf), node_id, mydata, channel, buf);
                 }
                 sensor.updateLastVal(sensor_id, mydata);
-                database.storeSensorValue(sensor_id, mydata, buf);
+                database.storeSensorValue(sensor_id, buf);
                 send_fhem_cmd(node_id, channel, buf);
             }
         }
         break; 
         case 61 ... 80: {
-                // Sensor or Actor that gets or delivers a character set
+	    // Sensor or Actor that gets or delivers a character set
             uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
             if ( sensor_id > 0 ) { 
                 buf = unpackTransportValue(mydata, buf);
@@ -437,7 +435,7 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
         }
         break; 
         case 101: {
-                // battery voltage
+	    // battery voltage
             uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
             if ( sensor_id > 0 ) { 
                 buf = unpackTransportValue(mydata, buf);
@@ -446,7 +444,7 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
                 }
                 sensor.updateLastVal(sensor_id, mydata);
                 node.setVoltage(node_id, strtof(unpackTransportValue(mydata,buf),NULL));
-                database.storeSensorValue(sensor_id, mydata, buf);
+                database.storeSensorValue(sensor_id, buf);
                 send_fhem_cmd(node_id, channel,buf);
             }
         }
@@ -455,7 +453,7 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
         case 108 ... 110: 
         case 112 ... 125: 
         {
-                // Node config register
+	    // Node config register
             buf = unpackTransportValue(mydata, buf);
             if ( verboselevel & VERBOSECONFIG) {    
                 printf("%sConfigregister of Node: %u Channel: %u is %s\n", ts(tsbuf), node_id, channel, buf);
@@ -464,7 +462,7 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
         }	
         break; 
     }
-	orderbuffer.delByNodeChannel(node_id, channel);
+    orderbuffer.delByNodeChannel(node_id, channel);
 }	
 
 /*******************************************************************************************
@@ -498,10 +496,10 @@ int main(int argc, char* argv[]) {
     char *gw_name=(char*)malloc(40);
     uint16_t gw_no;
     int new_tn_in_socket = 0;
-	socklen_t tcp_addrlen, udp_addrlen;
+    socklen_t tcp_addrlen, udp_addrlen;
     struct sockaddr_in udp_address_in, tcp_address_in;
     int udp_sockfd_in, tcp_sockfd_in;
-	int msgID;
+    int msgID;
     TnMsg_t LogMsg;
     ssize_t UdpMsgLen;
     unsigned long lastDBsync = 0;
@@ -650,7 +648,7 @@ int main(int argc, char* argv[]) {
     if (UdpMsgLen > 0) {
         memcpy(&payload, &udpdata.payload, sizeof(payload) );
         //sprintf(gw_,"%s",inet_ntoa(udp_address_in.sin_addr));
-        if ( verboselevel & VERBOSERF24 ) {
+        if ( verboselevel & VERBOSEORDER ) {
             printf ("%sUDP Message from: %s \n",ts(tsbuf), inet_ntoa(udp_address_in.sin_addr));
             sprintf(buf1,"G:%u>H", udpdata.gw_no);
             printPayload(ts(tsbuf), buf1, &payload);
@@ -665,7 +663,7 @@ int main(int argc, char* argv[]) {
             }
             switch ( payload.msg_type ) {
                 case PAYLOAD_TYPE_INIT: { // Init message from a node!!
-                    if ( node.isNewHB(payload.node_id, payload.heartbeatno) ) {
+                    if ( node.isNewHB(payload.node_id, payload.heartbeatno, time(0)) ) {
                         process_payload(&payload);
                     } else {
                         // nothing to do here !!!   
@@ -677,7 +675,7 @@ int main(int argc, char* argv[]) {
                 }
                 break;
                 case PAYLOAD_TYPE_HB: { // heartbeat message!!
-                    if ( node.isNewHB(payload.node_id, payload.heartbeatno) ) {  // Got a new Heaqrtbeat -> process it!
+                   if ( node.isNewHB(payload.node_id, payload.heartbeatno, time(0)) ) {  // Got a new Heaqrtbeat -> process it!
                         database.lowVoltage(payload.node_id, payload.msg_flags & PAYLOAD_FLAG_NEEDHELP);
                         process_payload(&payload);
                         if ( node.isMasteredNode(payload.node_id) ) {
@@ -738,7 +736,7 @@ int main(int argc, char* argv[]) {
                 }
                 break;
                 case PAYLOAD_TYPE_PING_END: {
-                    if ( node.isNewHB(payload.node_id, payload.heartbeatno) ) {  // Got a new Heaqrtbeat -> process it!
+                    if ( node.isNewHB(payload.node_id, payload.heartbeatno, time(0)) ) {  // Got a new Heaqrtbeat -> process it!
                         sprintf(buf,"%u",node.getPaLevel(payload.node_id));
                         database.storeNodeConfig(payload.node_id, REG_PALEVEL, buf);
                     } else {

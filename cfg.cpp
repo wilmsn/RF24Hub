@@ -218,7 +218,7 @@ void Cfg::printConfig_db (void) {
 }
 
 void Cfg::usage(const char* prgName) {
-    printf("%s Version %d vom %s\n",prgName, SWVERSION, SWDATUM);
+    printf("%s Version %d vom %s\n",prgName, SWVERSION, __DATE__);
     printf("Usage: %s <option>\n",prgName);
     printf("with options: \n");
     printf("   -h or -? or --help\n");
