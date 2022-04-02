@@ -27,6 +27,10 @@
 #include "node.h"
 #include "sensor.h"
 #include "gateway.h"
+#define DB_HOSTNAME_SIZE 30
+#define DB_USERNAME_SIZE 20
+#define DB_PASSWORD_SIZE 20
+#define DB_SCHEMA_SIZE 20
 
 using namespace std; 
 
@@ -34,17 +38,28 @@ class Database {
 
 private:
 
-    MYSQL       *db;
-    MYSQL_RES   *res;
+    MYSQL*      db;
+    MYSQL_RES*  res;
     MYSQL_ROW   row;
     char*       pEnd;
     char*       tsbuf;
     char*       sql_stmt;
     uint16_t    verboselevel;
+    char 	db_hostname[DB_HOSTNAME_SIZE+1];
+    char 	db_username[DB_USERNAME_SIZE+1];
+    char 	db_password[DB_PASSWORD_SIZE+1];
+    char 	db_schema[DB_SCHEMA_SIZE+1];
+    int  	db_port;
     void do_sql(char* stmt);
     void debugPrintSQL(char* sqlstmt);
     void db_check_error(void);
 
+/**
+ * connects to the database
+ */
+    bool connect(void);
+    bool disconnect(void);
+    
 public:
 
 /**

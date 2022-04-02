@@ -561,7 +561,9 @@ int main(int argc, char* argv[]) {
     cfg.setPidFile(cfg.hubPidFileName);
 
     // connect database
-    database.connect(cfg.dbHostName, cfg.dbUserName, cfg.dbPassWord, cfg.dbSchema, std::stoi(cfg.dbPortNo));
+    if ( ! database.connect(cfg.dbHostName, cfg.dbUserName, cfg.dbPassWord, cfg.dbSchema, std::stoi(cfg.dbPortNo)) ) {
+	exit(1);
+    }
 
     if ( cfg.fhemPortSet && cfg.fhemHostSet ) {
         printf("%stelnet session to FHEM started: Host: %s Port: %s\n",ts(tsbuf), cfg.fhemHostName.c_str(), cfg.fhemPortNo.c_str());
@@ -648,7 +650,7 @@ int main(int argc, char* argv[]) {
     if (UdpMsgLen > 0) {
         memcpy(&payload, &udpdata.payload, sizeof(payload) );
         //sprintf(gw_,"%s",inet_ntoa(udp_address_in.sin_addr));
-        if ( verboselevel & VERBOSEORDER ) {
+        if ( verboselevel & VERBOSERF24 ) {
             printf ("%sUDP Message from: %s \n",ts(tsbuf), inet_ntoa(udp_address_in.sin_addr));
             sprintf(buf1,"G:%u>H", udpdata.gw_no);
             printPayload(ts(tsbuf), buf1, &payload);

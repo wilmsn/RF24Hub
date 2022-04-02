@@ -1,5 +1,11 @@
 #include "dataformat.h"
 
+#if defined(ZF_NEUES_FORMAT)
+
+
+
+#else
+
 /************************************
  * Das Ergebnis wird mit einer Genauigkeit von 16 Bit 
  * (131072 max, genutzt 100000 = 5 Stellen = 0,01 Promille) gespeichert.
@@ -275,3 +281,5 @@ uint32_t calcTransportValue_c(uint8_t channel, char* value, uint16_t* pos) {
   result = result | c1 | c2 | c3;  
   return result;  
 }
+
+#endif

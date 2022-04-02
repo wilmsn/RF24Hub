@@ -1,2 +1,2 @@
-#define SWVERSION   219
-#define SWVERSION_STR   "2.19"
+#define SWVERSION   220
+#define SWVERSION_STR   "2.20"

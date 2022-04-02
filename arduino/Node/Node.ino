@@ -59,6 +59,7 @@ On Branch: master  !!!!!
 #include <EEPROM.h>
 #include "dataformat.h"
 #include "version.h"
+#include "config.h"
 #include "rf24_config.h"
 
 #if defined(DEBUG_SERIAL)

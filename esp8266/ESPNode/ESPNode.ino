@@ -54,6 +54,7 @@ On Branch: rf24hub@rpi2 => master  !!!!!
 #include <uptime.h>
 #include <strings.h>
 #include <logger.h>
+#include "config.h"
 #include "secrets.h"
 #include "version.h"
 #include "defaults.h"
