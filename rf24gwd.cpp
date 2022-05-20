@@ -460,7 +460,7 @@ int main(int argc, char* argv[]) {
 			radio.read(&payload,sizeof(payload));
             udpdata.gw_no = std::stoi(cfg.gwNo);
             memcpy(&udpdata.payload, &payload, sizeof(payload) );
-            if ( verboselevel & VERBOSERF24) printPayload(ts(tsbuf), "N>G", &udpdata.payload);
+            if ( verboselevel & VERBOSERF24) printPayload(mykey,ts(tsbuf), "N>G", &udpdata.payload);
 			sendUdpMessage(cfg.gwHubHostName.c_str(), cfg.hubUdpPortNo.c_str(), &udpdata); 
             busyIndicator = 0;
 		} // radio.available
@@ -476,7 +476,7 @@ int main(int argc, char* argv[]) {
         radio.write(&payload,sizeof(payload));
         radio.startListening();
         //sprintf(buf1,"Snd:");
-        if ( verboselevel & VERBOSERF24) printPayload(ts(tsbuf), "G>N", &payload);
+        if ( verboselevel & VERBOSERF24) printPayload(mykey,ts(tsbuf), "G>N", &payload);
         busyIndicator = 0;
     }
     if (busyIndicator > 10) loopSleepTime = LOOPSLEEPTIME_QUIET; else loopSleepTime = LOOPSLEEPTIME_BUSY;

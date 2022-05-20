@@ -19,8 +19,8 @@ On Branch: rf24hub@rpi2 => master  !!!!!
 // Select only one at one time !!!!
 //#define TEICHPUMPE
 //#define TERASSENNODE
-#define FLURLICHT
-//#define WOHNZIMMERNODE
+//#define FLURLICHT
+#define WOHNZIMMERNODE
 //#define TESTNODE
 //#define WITTYNODE
 //#define RF24GWTEST
@@ -41,13 +41,13 @@ On Branch: rf24hub@rpi2 => master  !!!!!
 // ------ End of configuration part ------------
 
 #include <ESP8266WiFi.h>
-#include <ESP8266mDNS.h>
+//#include <ESP8266mDNS.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266HTTPUpdateServer.h>
 #include <WiFiUdp.h>
-#include <ArduinoOTA.h>
+//#include <ArduinoOTA.h>
 #include <EEPROM.h>
-#include <FS.h>
+//#include <FS.h>
 #include <LittleFS.h>
 #include <PubSubClient.h>
 #include <time.h>
@@ -98,7 +98,7 @@ LED_Matrix matrix(LEDMATRIX_DIN, LEDMATRIX_CLK, LEDMATRIX_CS, LEDMATRIX_DEVICES_
 Adafruit_NeoPixel pixels(NEOPIXELNUM, NEOPIXELPIN, NEO_GRB + NEO_KHZ800);
 #endif
 
-typedef enum {message=0, sensorweb, sensormqtt} call_t;
+typedef enum {message=0, sensorweb, sensormqtt, sensorinfo} call_t;
 typedef enum {ok_json=0, ok_html, ok_text, nochange, epromchange, error} status_t;
 typedef enum {on=0, off, toggle, state, unknown} tristate_t;
 time_t now;
@@ -234,13 +234,13 @@ void setup() {
   }
 #endif
   // OTA
-  ArduinoOTA.setHostname(HOSTNAME);
-  ArduinoOTA.begin();
-  MDNS.begin(HOSTNAME);
+//  ArduinoOTA.setHostname(HOSTNAME);
+//  ArduinoOTA.begin();
+//  MDNS.begin(HOSTNAME);
   httpUpdater.setup(&httpServer);
-  httpServer.begin();
-  MDNS.addService("http", "tcp", 80);
-  setupFS();
+//  httpServer.begin();
+//  MDNS.addService("http", "tcp", 80);
+//  setupFS();
   httpServer.on("/", handleWebRoot);
   httpServer.on("/cmd", handleCmd);
   httpServer.on("/restart", []() { httpServer.send(304, "message/http"); ESP.restart(); });
@@ -679,9 +679,9 @@ void mqtt_send_swtch1() {
 
 void switchSwitch1(bool stat) {
 #if defined(SWITCH1_NODE)
-  char tmp[10];
-  snprintf(tmp,9,"%u",stat?1:0);
-  send_udp_msg(SWITCH1_NODE, packTransportValue(SWITCH1_CHANNEL, tmp ));   
+//  char tmp[10];
+//  snprintf(tmp,9,"%u",stat?1:0);
+  send_udp_msg(SWITCH1_NODE, calcTransportValue_ui(mykey,SWITCH1_CHANNEL, stat?1:0 ));   
 #endif  
   if ( stat ) { 
 #if defined(SWITCH1PIN1)
@@ -972,6 +972,7 @@ void handlestatus(char* myjson) {
 }
 
 void send_udp_msg(NODE_DATTYPE node_id, uint32_t data) {
+#if defined(RF24GW)
   udpdata.gw_no = RF24_GW_NO;
   udpdata.payload.node_id = node_id;
   udpdata.payload.msg_id = 0;
@@ -987,7 +988,6 @@ void send_udp_msg(NODE_DATTYPE node_id, uint32_t data) {
   udp.beginPacket(RF24_HUB_SERVER, RF24_HUB_UDP_PORTNO);
   udp.write((char*)&udpdata, sizeof(udpdata));
   udp.endPacket();
-#if defined(RF24GW)
   if (eepromdata.log_rf24) write2log(printPayload("S>H", &udpdata.payload, info_str));
 #endif
 }
@@ -1007,7 +1007,7 @@ void handlesensor(char* myjson, call_t call) {
     case sensormqtt:
 #if defined(SENSOR_CHANNEL)
       snprintf(tmp,9,"%4.1f",tempC);
-      send_udp_msg(SENSOR_NODE, packTransportValue(SENSOR_CHANNEL,tmp));
+      send_udp_msg(SENSOR_NODE, calcTransportValue_f(mykey,SENSOR_CHANNEL,tempC));
 #endif
     case sensorweb:
       sprintf(myjson,"{\"Sensor\":\"18B20\", \"Temperatur\":%4.1f, \"Resolution\":%u }", tempC, resolution);
@@ -1164,7 +1164,8 @@ void write2log(char* text) {
     }
   }  
   if (eepromdata.logger) {
-    logger.addLine(timeStr,text);
+    logger.print(timeStr);
+    logger.println(text);
   }
 }
 
@@ -1366,12 +1367,12 @@ char* printPayload(char* prefix, payload_t *payload, char* placeholder) {
   char buf6[10];
   snprintf(placeholder,INFOSIZE,"%s: N:%u T:%u m:%u F:0x%02x O:%u H:%u (%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)", prefix
                      ,payload->node_id, payload->msg_type, payload->msg_id, payload->msg_flags, payload->orderno, payload->heartbeatno
-                     ,getChannel(payload->data1), unpackTransportValue(payload->data1, buf1)
-                     ,getChannel(payload->data2), unpackTransportValue(payload->data2, buf2)
-                     ,getChannel(payload->data3), unpackTransportValue(payload->data3, buf3)
-                     ,getChannel(payload->data4), unpackTransportValue(payload->data4, buf4)
-                     ,getChannel(payload->data5), unpackTransportValue(payload->data5, buf5)
-                     ,getChannel(payload->data6), unpackTransportValue(payload->data6, buf6)
+                     ,getChannel(mykey,payload->data1), unpackTransportValue(mykey,payload->data1, buf1)
+                     ,getChannel(mykey,payload->data2), unpackTransportValue(mykey,payload->data2, buf2)
+                     ,getChannel(mykey,payload->data3), unpackTransportValue(mykey,payload->data3, buf3)
+                     ,getChannel(mykey,payload->data4), unpackTransportValue(mykey,payload->data4, buf4)
+                     ,getChannel(mykey,payload->data5), unpackTransportValue(mykey,payload->data5, buf5)
+                     ,getChannel(mykey,payload->data6), unpackTransportValue(mykey,payload->data6, buf6)
                      );
   return placeholder;
 }
@@ -1419,8 +1420,8 @@ void loop() {
 #endif  
   delay(0);
   httpServer.handleClient();
-  MDNS.update();
-  ArduinoOTA.handle(); // Wait for OTA connection
+//  MDNS.update();
+//  ArduinoOTA.handle(); // Wait for OTA connection
   wifi_con();
   delay(0);
 }

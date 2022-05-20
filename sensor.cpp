@@ -32,11 +32,12 @@ void Sensor::newEntry(Sensor::sensor_t* p_new) {
     }
 }
 
-void Sensor::addSensor(uint32_t sensor_id, NODE_DATTYPE node_id, uint8_t channel, char* fhem_dev, uint32_t last_utime, uint32_t last_data, char* sensor_name) {
+void Sensor::addSensor(uint32_t sensor_id, NODE_DATTYPE node_id, uint8_t channel, uint8_t datatype, char* fhem_dev, uint32_t last_utime, uint32_t last_data, char* sensor_name) {
     sensor_t* p_new = new Sensor::sensor_t;
     p_new->sensor_id = sensor_id;
     p_new->node_id = node_id;
     p_new->channel = channel;
+    p_new->datatype = datatype;
     p_new->last_utime = last_utime;
     p_new->last_data = last_data;
     sprintf(p_new->fhem_dev,"%s", fhem_dev);
@@ -46,7 +47,7 @@ void Sensor::addSensor(uint32_t sensor_id, NODE_DATTYPE node_id, uint8_t channel
    
 bool Sensor::updateLastVal(uint32_t sensor_id, uint32_t last_data) {
     bool retval = false;
-    uint8_t channel = getChannel(last_data);
+    uint8_t channel = getChannel(mykey, last_data);
     sensor_t *p_search = p_initial;
     //p_search=p_initial;
     while (p_search) {
@@ -54,7 +55,8 @@ bool Sensor::updateLastVal(uint32_t sensor_id, uint32_t last_data) {
             p_search->last_data = last_data;
             p_search->last_utime = time(0);
             if ( verboselevel & VERBOSESENSOR) 
-                printf("%ssensor.updateLastVal: S:%u N:%u C:%u V:%s\n", ts(tsbuf), p_search->sensor_id, p_search->node_id, p_search->channel, unpackTransportValue(last_data, buf) ); 
+                printf("%ssensor.updateLastVal: S:%u N:%u C:%u V:%s\n", ts(tsbuf), p_search->sensor_id, p_search->node_id
+                        , p_search->channel, unpackTransportValue(mykey, last_data, buf) ); 
             retval = true;
         }
         p_search=p_search->p_next;
@@ -159,6 +161,21 @@ bool Sensor::getNodeChannelBySensorName(NODE_DATTYPE *p_node_id, uint8_t* p_chan
     return retval;
 }
 
+int8_t Sensor::getDataTypeByNodeChannel(NODE_DATTYPE node_id, uint8_t channel) {
+    sensor_t *p_search;
+    int8_t retval = -1;
+    p_search=p_initial;
+    while (p_search) {
+        if ( p_search->node_id == node_id && p_search->channel == channel ) {
+            retval = p_search->datatype;
+            p_search = NULL;    
+        } else {
+            p_search=p_search->p_next;
+        }
+    }
+    return retval;
+}
+
 void Sensor::printBuffer(int tn_socket, bool html) {
     char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
     sensor_t *p_search;
@@ -173,8 +190,8 @@ void Sensor::printBuffer(int tn_socket, bool html) {
             p_search->channel, 
             p_search->fhem_dev, 
             strlen(p_search->fhem_dev)<10? "\t\t\t":strlen(p_search->fhem_dev)<18? "\t\t":strlen(p_search->fhem_dev)<26? "\t":"",
-            unpackTransportValue(p_search->last_data, buf), 
-            strlen(unpackTransportValue(p_search->last_data, buf))<5? "\t":"", 
+            unpackTransportValue(mykey, p_search->last_data, buf), 
+            strlen(unpackTransportValue(mykey, p_search->last_data, buf))<5? "\t":"", 
             utime2str(p_search->last_utime, buf1, 1) 
         );   
 	write(tn_socket , client_message , strlen(client_message));
@@ -185,4 +202,8 @@ void Sensor::printBuffer(int tn_socket, bool html) {
 
 void Sensor::setVerbose(uint16_t _verboselevel) {
     verboselevel = _verboselevel;
+}
+
+void Sensor::setKey(uint32_t _key) {
+    mykey = _key;
 }

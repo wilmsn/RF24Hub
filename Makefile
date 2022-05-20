@@ -67,7 +67,7 @@ orderbuffertest: orderbuffer.o orderbuffer_test.cpp
 
 # clear build files
 clean:
-	rm -f *.o rf24hubd rf24gwd rf24hubd_debug
+	rm -f *.o rf24hubd rf24gwd rf24hubd_debug dataformattest
 
 # Install the rf24hub and rf24gw
 install:  install_gw install_hub

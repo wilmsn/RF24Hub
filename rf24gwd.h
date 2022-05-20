@@ -37,6 +37,7 @@
 #include "rf24_config.h"
 #include "rf24gw_config.h"
 #include "rf24gw_text.h"
+#include "secrets.h"
 
 using namespace std;
 

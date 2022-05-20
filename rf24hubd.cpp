@@ -165,7 +165,6 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
     // for the processing we need the number of the sensor ==> find it!
         NODE_DATTYPE node_id = 0;
         uint8_t   channel = 0;
-        uint32_t  data = 0;
         if ( wort3[0] >= 'A' && wort3[0] <= 'z' ) {
             if (sensor.getNodeChannelByFhemDev(&node_id, &channel, wort3) ) {
 		tn_input_ok = true;
@@ -181,8 +180,29 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
             }
         }
         if ( node_id > 0 &&  channel > 0 ) {
-            data = packTransportValue(channel, wort4);
-            orderbuffer.addOrderBuffer(mymillis(),node_id,channel,data);
+	    switch ( sensor.getDataTypeByNodeChannel(node_id, channel) ) {
+		case 0: 
+		{
+		    float val_f = strtof(wort4, &pEnd);
+		    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue_f(mykey, channel, val_f) );
+		    tn_input_ok = true;
+		}
+		break;
+		case 1:
+		{
+		    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue_i(mykey, channel, 
+						(int16_t)strtol(wort4, &pEnd, 10)) );
+		    tn_input_ok = true;
+		}
+		break;
+		case 2:
+		    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue_ui(mykey, channel,
+						(uint16_t)strtoul(wort4, &pEnd, 10)) );
+		    tn_input_ok = true;
+		break;
+		default:
+		    tn_input_ok = false;
+	    }
         } else {
             tn_input_ok = false;
         }
@@ -193,8 +213,31 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
         NODE_DATTYPE node_id = strtol(wort2, &pEnd, 10);
         uint8_t channel = strtol(wort3, &pEnd, 10);
         if ( node.isValidNode(node_id) ) {
-            orderbuffer.addOrderBuffer(mymillis(), node_id, channel, packTransportValue(channel, wort4) );
-            tn_input_ok = true;
+	    switch ( sensor.getDataTypeByNodeChannel(node_id, channel) ) {
+		case 0:
+		{
+		    float val_f = strtof(wort4, &pEnd);
+		    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue_f(mykey, channel, val_f) );
+		    tn_input_ok = true;
+		}
+		break;
+		case 1:
+		{
+		    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue_i(mykey, channel, 
+						(int16_t)strtol(wort4, &pEnd, 10)) );
+		    tn_input_ok = true;
+		}
+		break;
+		case 2:
+		{
+		    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue_ui(mykey, channel,
+						(uint16_t)strtoul(wort4, &pEnd, 10)) );
+		    tn_input_ok = true;
+		}
+		break;
+		default:
+		    tn_input_ok = false;
+	    }
         }
     }
     // set verbose <new verboselevel>
@@ -404,13 +447,13 @@ void init_system(void) {
 }
 
 void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
-    uint8_t channel = getChannel(mydata);
+    uint8_t channel = getChannel(mykey, mydata);
     switch (channel) {
-        case 1 ... 60: {
+        case 1 ... 100: {
 	    // Sensor or Actor that gets or delivers a number
             uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
             if ( sensor_id > 0 ) { 
-                buf = unpackTransportValue(mydata, buf);
+                buf = unpackTransportValue(mykey, mydata, buf);
                 if ( verboselevel & VERBOSECONFIG) {    
                     printf("%sValue of Node: %u Data: %u ==> Channel: %u is %s\n", ts(tsbuf), node_id, mydata, channel, buf);
                 }
@@ -420,41 +463,25 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
             }
         }
         break; 
-        case 61 ... 80: {
-	    // Sensor or Actor that gets or delivers a character set
-            uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
-            if ( sensor_id > 0 ) { 
-                buf = unpackTransportValue(mydata, buf);
-                if ( verboselevel & VERBOSECONFIG) {    
-                    printf("%sValue of Node: %u Data: %u ==> Channel: %u is %s\n", ts(tsbuf), node_id, mydata, channel, buf);
-                }
-                sensor.updateLastVal(sensor_id, mydata);
-                //database.storeSensorValue(sensor_id, mydata); // No need to store this
-                //send_fhem_cmd(node_id, channel, buf);
-            }
-        }
-        break; 
         case 101: {
 	    // battery voltage
             uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
             if ( sensor_id > 0 ) { 
-                buf = unpackTransportValue(mydata, buf);
+                buf = unpackTransportValue(mykey, mydata, buf);
                 if ( verboselevel & VERBOSECONFIG) {    
                     printf("%sVoltage of Node: %u is %sV\n", ts(tsbuf), node_id, buf);
                 }
                 sensor.updateLastVal(sensor_id, mydata);
-                node.setVoltage(node_id, strtof(unpackTransportValue(mydata,buf),NULL));
+                node.setVoltage(node_id, strtof(unpackTransportValue(mykey,mydata,buf),NULL));
                 database.storeSensorValue(sensor_id, buf);
                 send_fhem_cmd(node_id, channel,buf);
             }
         }
         break; 
-        case 102 ... 106: 
-        case 108 ... 110: 
-        case 112 ... 125: 
+        case 102 ... 125: 
         {
 	    // Node config register
-            buf = unpackTransportValue(mydata, buf);
+            buf = unpackTransportValue(mykey, mydata, buf);
             if ( verboselevel & VERBOSECONFIG) {    
                 printf("%sConfigregister of Node: %u Channel: %u is %s\n", ts(tsbuf), node_id, channel, buf);
             }
@@ -587,10 +614,15 @@ int main(int argc, char* argv[]) {
     
     // Init Arrays
     node.setVerbose(verboselevel);
+//    node.setKey(mykey);
     sensor.setVerbose(verboselevel);
+    sensor.setKey(mykey);
     order.setVerbose(verboselevel);
+    order.setKey(mykey);
     orderbuffer.setVerbose(verboselevel);
+    orderbuffer.setKey(mykey);
     database.setVerbose(verboselevel);
+    database.setKey(mykey);
     gateway.setVerbose(verboselevel);
     init_system();
     printf("%s%s up and running\n", ts(tsbuf),PRGNAME); 
@@ -653,7 +685,7 @@ int main(int argc, char* argv[]) {
         if ( verboselevel & VERBOSERF24 ) {
             printf ("%sUDP Message from: %s \n",ts(tsbuf), inet_ntoa(udp_address_in.sin_addr));
             sprintf(buf1,"G:%u>H", udpdata.gw_no);
-            printPayload(ts(tsbuf), buf1, &payload);
+            printPayload(mykey, ts(tsbuf), buf1, &payload);
         }
         if ( gateway.isGateway(udpdata.gw_no) ) {
             if (payload.msg_flags & PAYLOAD_FLAG_NEEDHELP ) {
@@ -778,7 +810,7 @@ int main(int argc, char* argv[]) {
                 while ( p_rec ) {
                     if ( verboselevel & VERBOSERF24) {
                         sprintf(buf1,"H>G:%u", gw_no);
-                        printPayload(ts(tsbuf), buf1, &payload);
+                        printPayload(mykey, ts(tsbuf), buf1, &payload);
                     }
                     udpdata.gw_no=0;
                     memcpy(&udpdata.payload, &payload, sizeof(payload) );

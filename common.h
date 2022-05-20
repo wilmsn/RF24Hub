@@ -134,7 +134,7 @@ bool openSocket(const char* port, struct sockaddr_in *address, int* handle, sock
  * @param header Ein vor dem Payload zu druckener Text
  * @param payload der zu druckende Payload
  */ 
-void printPayload(char* ts, const char* header, payload_t* payload);
+void printPayload(uint32_t mykey, char* ts, const char* header, payload_t* payload);
 
 #endif // _RF24HUBD_COMMON_H_
 

@@ -160,7 +160,7 @@ void Order::addOrder(NODE_DATTYPE node_id, uint8_t msg_type, uint32_t data, uint
     orderno++;
     if ( orderno == 0 ) orderno = 1;
     if ( p_new) {
-        if (verboselevel & VERBOSEORDER) printf("%sOrder: addOrder <%p> N:%u T:%u D1:(%u/%s)\n", ts(tsbuf), p_new, node_id, msg_type, getChannel(data), unpackTransportValue(data,buf) ); 
+        if (verboselevel & VERBOSEORDER) printf("%sOrder: addOrder <%p> N:%u T:%u D1:(%u/%s)\n", ts(tsbuf), p_new, node_id, msg_type, getChannel(mykey, data), unpackTransportValue(mykey,data,buf) ); 
         p_new->orderno = orderno;
         p_new->node_id = node_id;
         p_new->msg_id = 1;
@@ -288,28 +288,28 @@ void Order::printBuffer(int out_socket, bool htmlFormat) {
         if (htmlFormat) {
             sprintf(client_message,"<tr><td>%u</td><td>%u</td><td>%u</td><td>%u</td><td>%u<br>%u<br>%u<br>%u<br>%u<br>%u</td><td>%s<br>%s<br>%s<br>%s<br>%s<br>%s</td></tr>\n", 
             p_search->orderno, p_search->node_id, 
-            getChannel(p_search->data1), 
-            getChannel(p_search->data2), 
-            getChannel(p_search->data3), 
-            getChannel(p_search->data4), 
-            getChannel(p_search->data5), 
-            getChannel(p_search->data6),  
-            unpackTransportValue(p_search->data1, buf1), 
-            unpackTransportValue(p_search->data2, buf2),
-            unpackTransportValue(p_search->data3, buf3),
-            unpackTransportValue(p_search->data4, buf4),
-            unpackTransportValue(p_search->data5, buf5),
-            unpackTransportValue(p_search->data6, buf6)  );
+            getChannel(mykey, p_search->data1), 
+            getChannel(mykey, p_search->data2), 
+            getChannel(mykey, p_search->data3), 
+            getChannel(mykey, p_search->data4), 
+            getChannel(mykey, p_search->data5), 
+            getChannel(mykey, p_search->data6),  
+            unpackTransportValue(mykey, p_search->data1, buf1), 
+            unpackTransportValue(mykey, p_search->data2, buf2),
+            unpackTransportValue(mykey, p_search->data3, buf3),
+            unpackTransportValue(mykey, p_search->data4, buf4),
+            unpackTransportValue(mykey, p_search->data5, buf5),
+            unpackTransportValue(mykey, p_search->data6, buf6)  );
         } else {
             if (writeTS) sprintf(client_message,"%s",ts(tsbuf));
             sprintf(client_message,"Order: <%p> O:%u N:%u T:%u F:%02x (%u/%s) (%u/%s) (%u/%s) (%u/%s) (%u/%s) (%u/%s) <%p>\n", 
                 p_search, p_search->orderno, p_search->node_id, p_search->msg_type, p_search->msg_flags 
-                ,getChannel(p_search->data1), unpackTransportValue(p_search->data1, buf1)
-                ,getChannel(p_search->data2), unpackTransportValue(p_search->data2, buf2)
-                ,getChannel(p_search->data3), unpackTransportValue(p_search->data3, buf3)
-                ,getChannel(p_search->data4), unpackTransportValue(p_search->data4, buf4)
-                ,getChannel(p_search->data5), unpackTransportValue(p_search->data5, buf5)
-                ,getChannel(p_search->data6), unpackTransportValue(p_search->data6, buf6)
+                ,getChannel(mykey, p_search->data1), unpackTransportValue(mykey, p_search->data1, buf1)
+                ,getChannel(mykey, p_search->data2), unpackTransportValue(mykey, p_search->data2, buf2)
+                ,getChannel(mykey, p_search->data3), unpackTransportValue(mykey, p_search->data3, buf3)
+                ,getChannel(mykey, p_search->data4), unpackTransportValue(mykey, p_search->data4, buf4)
+                ,getChannel(mykey, p_search->data5), unpackTransportValue(mykey, p_search->data5, buf5)
+                ,getChannel(mykey, p_search->data6), unpackTransportValue(mykey, p_search->data6, buf6)
                 ,p_search->p_next
                );
         }
@@ -325,4 +325,8 @@ void Order::printBuffer(int out_socket, bool htmlFormat) {
 
 void Order::setVerbose(uint16_t _verboselevel) {
     verboselevel = _verboselevel;
+}
+
+void Order::setKey(uint32_t _key) {
+    mykey = _key;
 }

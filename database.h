@@ -53,6 +53,8 @@ private:
     void do_sql(char* stmt);
     void debugPrintSQL(char* sqlstmt);
     void db_check_error(void);
+    uint32_t    mykey;
+    
 
 /**
  * connects to the database
@@ -66,6 +68,10 @@ public:
  *  Setzt das Verboselevel
  */
     void setVerbose(uint16_t _verboselevel);
+/**
+ *  Setzt den Key
+ */
+    void setKey(uint32_t _key);
 /**
  * connects to the database
  */

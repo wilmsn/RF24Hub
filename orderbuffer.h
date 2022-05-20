@@ -41,6 +41,7 @@ char*       tsbuf;
  * Bufferinterner Speicher für den verboselevel
  *************************************************************/
 uint16_t    verboselevel;
+uint32_t    mykey;
 /**************************************************************
  * fügt einen neuen record zum Buffer hibzu
  *************************************************************/
@@ -56,6 +57,10 @@ public:
  *  Setzt das Verboselevel
  */
 void setVerbose(uint16_t _verboselevel);
+/**
+ *  Setzt den Key
+ */
+void setKey(uint32_t _key);
 /**
  *  @note Ruft den nächsten Record für einen Node ab.
  *  Initialer Aufruf mit p_last = NULL.

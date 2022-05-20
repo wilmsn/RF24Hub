@@ -156,7 +156,7 @@ void Database::initNode(Node* node) {
 	db_check_error();
 	while ((row = mysql_fetch_row(result))) {
 	    if ( row[0] != NULL ) node_id = strtoul(row[0], &pEnd,10);
-	    if ( row[1] != NULL ) u_batt = strtof(unpackTransportValue(strtoul(row[1], &pEnd,10),tsbuf),&pEnd); else u_batt = 0;
+	    if ( row[1] != NULL ) u_batt = strtof(unpackTransportValue(mykey, strtoul(row[1], &pEnd,10),tsbuf),&pEnd); else u_batt = 0;
 	    node->setVoltage(node_id, u_batt); 
 	}
 	mysql_free_result(result);    
@@ -171,10 +171,11 @@ void Database::initSensor(Sensor* sensor) {
 	uint32_t     	mysensor;
 	NODE_DATTYPE   	node_id;
 	uint8_t     	mychannel;
-	uint32_t        	last_utime;
-	uint32_t        	last_data;
+	int8_t     	mydatatype;
+	uint32_t        last_utime;
+	uint32_t        last_data;
 	MYSQL_ROW row;
-	sprintf (sql_stmt, "select sensor_id, node_id, channel, fhem_dev, sensor_name from sensor");
+	sprintf (sql_stmt, "select sensor_id, node_id, channel, datatype, fhem_dev, sensor_name from sensor");
 	debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();
@@ -184,10 +185,11 @@ void Database::initSensor(Sensor* sensor) {
 	    if ( row[0] != NULL ) mysensor = strtoul(row[0], &pEnd,10); else mysensor = 0;
 	    if ( row[1] != NULL ) node_id = strtoul(row[1], &pEnd,10); else node_id = 0; 
 	    if ( row[2] != NULL ) mychannel = strtoul(row[2], &pEnd,10); else mychannel = 0;
-	    if ( row[3] != NULL ) sprintf(fhem_dev,"%s",trim(row[3])); else sprintf(fhem_dev,"not_set");
-	    if ( row[4] != NULL ) sprintf(sensor_name,"%s",trim(row[4]));
+	    if ( row[3] != NULL ) mydatatype = strtoul(row[3], &pEnd,10); else mydatatype = -1;
+	    if ( row[4] != NULL ) sprintf(fhem_dev,"%s",trim(row[4])); else sprintf(fhem_dev,"not_set");
+	    if ( row[5] != NULL ) sprintf(sensor_name,"%s",trim(row[5]));
 	    // ToDo
-	    sensor->addSensor(mysensor, node_id, mychannel, fhem_dev, last_utime, last_data, sensor_name);
+	    sensor->addSensor(mysensor, node_id, mychannel, mydatatype, fhem_dev, last_utime, last_data, sensor_name);
 	}
 	mysql_free_result(result);
 	free_str(verboselevel,"Database::initSensor fhem_dev",fhem_dev, ts(tsbuf)); 
@@ -287,4 +289,8 @@ void Database::debugPrintSQL(char* sqlstmt) {
 
 void Database::setVerbose(uint16_t _verboselevel) {
     verboselevel = _verboselevel;
+}
+
+void Database::setKey(uint32_t _key) {
+    mykey = _key;
 }

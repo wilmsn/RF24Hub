@@ -15,7 +15,7 @@ On Branch: master  !!!!!
 //****************************************************
 // My definitions for my nodes based on this sketch
 // Select only one at one time !!!!
-//#define AUSSENTHERMOMETER
+#define AUSSENTHERMOMETER
 //#define AUSSENTHERMOMETER2
 //#define SCHLAFZIMMERTHERMOMETER
 //#define BASTELZIMMERTHERMOMETER
@@ -23,7 +23,7 @@ On Branch: master  !!!!!
 //#define KUECHETHERMOMETER // noch mit Bug in 205
 //#define WOHNZIMMERTHERMOMETER
 //#define ANKLEIDEZIMMERTHERMOMETER
-#define KUGELNODE1
+//#define KUGELNODE1
 //#define KUGELNODE2
 //#define GAESTEZIMMERTHERMOMETER
 //----Testnodes-----
@@ -61,6 +61,7 @@ On Branch: master  !!!!!
 #include "version.h"
 #include "config.h"
 #include "rf24_config.h"
+#include "secrets.h"
 
 #if defined(DEBUG_SERIAL)
 #include "printf.h"
@@ -248,7 +249,7 @@ void get_sensordata(void) {
 uint32_t action_loop(uint32_t data) {
   uint32_t retval = 0;
   int      intval;
-  uint8_t  channel = getChannel(data);
+  uint8_t  channel = getChannel(mykey, data);
 #if defined(DEBUG_SERIAL_PROC)
     Serial.print("Processing: Channel: ");
     Serial.println(getChannel(data));
@@ -258,35 +259,35 @@ uint32_t action_loop(uint32_t data) {
       case 21:
       {
         // Set field 1
-        field1_val = getValue_f(data);;
+        field1_val = getValue_f(mykey,data);;
         print_field(field1_val,1);
       }
       break;
       case 22:
       {
         // Set field 2
-        field2_val = getValue_f(data);;
+        field2_val = getValue_f(mykey,data);;
         print_field(field2_val,2);
       }
       break;
       case 23:
       {
         // Set field 3
-        field3_val = getValue_f(data);;
+        field3_val = getValue_f(mykey,data);;
         print_field(field3_val,3);
       }
       break;
       case 24:
       {
         // Set field 4
-        field4_val = getValue_f(data);;
+        field4_val = getValue_f(mykey,data);;
         print_field(field4_val,4);
       }
       break;
       case 51:
       {
         // Displaylight ON <-> OFF
-        if ( getValue_ui(data) & 0x01 ) {
+        if ( getValue_ui(mykey,data) & 0x01 ) {
           digitalWrite(STATUSLED,STATUSLED_ON); 
         } else  {
           digitalWrite(STATUSLED,STATUSLED_OFF);
@@ -296,7 +297,7 @@ uint32_t action_loop(uint32_t data) {
       case 52:
       {
         // Display Sleepmode ON <-> OFF
-        display_sleep( getValue_ui(data) == 0x00 );
+        display_sleep( getValue_ui(mykey,data) == 0x00 );
       }
       break;
 #endif
@@ -407,7 +408,7 @@ uint32_t action_loop(uint32_t data) {
     Serial.print("Processing: Volt: ");
     Serial.println(cur_voltage);
 #endif  
-        data = calcTransportValue_f(REG_BATT, cur_voltage);
+        data = calcTransportValue_f(mykey,REG_BATT, cur_voltage);
       }
       break;      
       case REG_TRANSREG:
@@ -417,12 +418,12 @@ uint32_t action_loop(uint32_t data) {
       break;      
       case REG_MONITOR:
       {
-        monitormode = (getValue_ui(data) & 1);
+        monitormode = (getValue_ui(mykey,data) & 1);
       }
       break;
       case REG_DISPLAY: 
       {
-        uint16_t val = getValue_ui(data);
+        uint16_t val = getValue_ui(mykey,data);
         uint8_t contrast = (val & 0x00FF);
         uint8_t brightnes = (val>>8);
         if (contrast > 0 && contrast < 101) {
@@ -437,7 +438,7 @@ uint32_t action_loop(uint32_t data) {
       case REG_SLEEPTIME: 
       {
         // sleeptime in sec!
-        uint16_t val = getValue_ui(data);
+        uint16_t val = getValue_ui(mykey,data);
         if ( val > 9 && val < 32401) {
           eeprom.sleeptime_sec = val;
           EEPROM.put(0, eeprom);
@@ -447,7 +448,7 @@ uint32_t action_loop(uint32_t data) {
       case REG_SLEEP4MS_FAC: 
       {
         // sleeptime adjust in sec!
-        int16_t val = getValue_i(data);
+        int16_t val = getValue_i(mykey,data);
         if (val >= 500 && val <= 2000) {
           eeprom.sleep4ms_fac = val;
           EEPROM.put(0, eeprom);
@@ -457,7 +458,7 @@ uint32_t action_loop(uint32_t data) {
       case REG_EMPTYLOOPS: 
       {
         // emptyloops - number of loops without sending to hub / messure and display only!
-        uint8_t val = getValue_ui(data);
+        uint8_t val = getValue_ui(mykey,data);
         if (val < 21) {
           eeprom.emptyloops=val;
           EEPROM.put(0, eeprom);
@@ -467,7 +468,7 @@ uint32_t action_loop(uint32_t data) {
       case REG_SLEEPTIMEKOR: 
       {
         // sleeptime_kor: onetime adjust of sleeptime, will be reset to 0 after use 
-        int16_t val = getValue_i(data);
+        int16_t val = getValue_i(mykey,data);
         if (val > -1001 && val < 1001) {
           sleeptime_kor = val;
         }
@@ -476,7 +477,7 @@ uint32_t action_loop(uint32_t data) {
       case REG_SENDDELAY: 
       {
         // senddelay in millisec.
-        uint16_t val = getValue_ui(data);
+        uint16_t val = getValue_ui(mykey,data);
         if (val > 49 && val < 1001) {
           eeprom.senddelay = val;
           EEPROM.put(0, eeprom);
@@ -486,7 +487,7 @@ uint32_t action_loop(uint32_t data) {
       case REG_SNDCNTN: 
       {
         // max_sendcount: numbers of attempts to send for normal messages
-        uint16_t val = getValue_ui(data);
+        uint16_t val = getValue_ui(mykey,data);
         if (val > 0 && val < 21) {
           eeprom.max_sendcount = val;
           EEPROM.put(0, eeprom);
@@ -496,7 +497,7 @@ uint32_t action_loop(uint32_t data) {
       case REG_SNDCNTS: 
       {
       // max_stopcount: numbers of attempts to send for stop messages
-        uint16_t val = getValue_ui(data);
+        uint16_t val = getValue_ui(mykey,data);
         if (val > 0 && val < 21) {
           eeprom.max_stopcount = val;
           EEPROM.put(0, eeprom);
@@ -506,7 +507,7 @@ uint32_t action_loop(uint32_t data) {
       case REG_VOLTFAC: 
       {
         // Volt_fac - V = Vmess * Volt_fac
-        float val = getValue_f(data);
+        float val = getValue_f(mykey,data);
         if (val >= 0.1 && val <= 10) {
           eeprom.volt_fac = val;
           EEPROM.put(0, eeprom);
@@ -516,7 +517,7 @@ uint32_t action_loop(uint32_t data) {
       case REG_VOLTOFF: 
       {
         // Volt_off - V = (Vmess * Volt_fac) + Volt_off
-        float val = getValue_f(data);
+        float val = getValue_f(mykey,data);
         if (val >= -10 && val <= 10) {
           eeprom.volt_off = val;
           EEPROM.put(0, eeprom);
@@ -526,7 +527,7 @@ uint32_t action_loop(uint32_t data) {
       case REG_LOWVOLTLEV: 
       {
         // Low Voltage Level
-        float val = getValue_f(data);
+        float val = getValue_f(mykey,data);
         if (val >= 1 && val <= 5) {
           eeprom.low_volt_level = val;
           EEPROM.put(0, eeprom);
@@ -536,7 +537,7 @@ uint32_t action_loop(uint32_t data) {
       case REG_LOWVOLTLOOPS: 
       {
         // Low Voltage send interval
-        uint16_t val = getValue_ui(data);
+        uint16_t val = getValue_ui(mykey,data);
         if ( val < 1001) {
           eeprom.lowVoltLoops = val;
           EEPROM.put(0, eeprom);
@@ -546,7 +547,7 @@ uint32_t action_loop(uint32_t data) {
       case REG_PALEVEL: 
       {
         // PA Level
-        uint16_t val = getValue_ui(data);
+        uint16_t val = getValue_ui(mykey,data);
         if (val == 9) exec_pingTest = true;
         if (val > 0 && val < 5) {
           eeprom.pa_level = val;
@@ -556,7 +557,7 @@ uint32_t action_loop(uint32_t data) {
       break;
       case REG_SW:
       {
-        data = calcTransportValue_f(REG_SW, SWVERSION);
+        data = calcTransportValue_f(mykey,REG_SW, SWVERSION);
       }
       break;
     }  
@@ -991,22 +992,22 @@ void printPayload(payload_t* pl) {
 void payload_data(uint8_t pos, uint8_t channel, float value) {
   switch (pos) {
     case 1:
-      s_payload.data1 = calcTransportValue_f(channel, value);
+      s_payload.data1 = calcTransportValue_f(mykey,channel, value);
     break;
     case 2:
-      s_payload.data2 = calcTransportValue_f(channel, value);
+      s_payload.data2 = calcTransportValue_f(mykey,channel, value);
     break;
     case 3:
-      s_payload.data3 = calcTransportValue_f(channel, value);
+      s_payload.data3 = calcTransportValue_f(mykey,channel, value);
     break;
     case 4:
-      s_payload.data4 = calcTransportValue_f(channel, value);
+      s_payload.data4 = calcTransportValue_f(mykey,channel, value);
     break;
     case 5:
-      s_payload.data5 = calcTransportValue_f(channel, value);
+      s_payload.data5 = calcTransportValue_f(mykey,channel, value);
     break;
     case 6:
-      s_payload.data6 = calcTransportValue_f(channel, value);
+      s_payload.data6 = calcTransportValue_f(mykey,channel, value);
     break;    
   }
 }
@@ -1033,21 +1034,21 @@ void pingTest(void) {
 }
 
 void sendRegister(void) {
-  s_payload.data1 = calcTransportValue_f(REG_VOLTFAC, eeprom.volt_fac);
-  s_payload.data2 = calcTransportValue_f(REG_VOLTOFF, eeprom.volt_off);
-  s_payload.data3 = calcTransportValue_f(REG_LOWVOLTLEV, eeprom.low_volt_level);
-  s_payload.data4 = calcTransportValue_ui(REG_SLEEP4MS_FAC, eeprom.sleep4ms_fac);
-  s_payload.data5 = calcTransportValue_ui(REG_LOWVOLTLOOPS, eeprom.lowVoltLoops);
-  s_payload.data6 = calcTransportValue_ui(REG_SW, SWVERSION);
+  s_payload.data1 = calcTransportValue_f(mykey,REG_VOLTFAC, eeprom.volt_fac);
+  s_payload.data2 = calcTransportValue_f(mykey,REG_VOLTOFF, eeprom.volt_off);
+  s_payload.data3 = calcTransportValue_f(mykey,REG_LOWVOLTLEV, eeprom.low_volt_level);
+  s_payload.data4 = calcTransportValue_ui(mykey,REG_SLEEP4MS_FAC, eeprom.sleep4ms_fac);
+  s_payload.data5 = calcTransportValue_ui(mykey,REG_LOWVOLTLOOPS, eeprom.lowVoltLoops);
+  s_payload.data6 = calcTransportValue_ui(mykey,REG_SW, SWVERSION);
   do_transmit(3,PAYLOAD_TYPE_INIT,PAYLOAD_FLAG_EMPTY,0, 241);
 // Hub needs some time to prcess data !!!  
   delay(1000);
-  s_payload.data1 = calcTransportValue_ui(REG_DISPLAY, (eeprom.brightnes<<8 | eeprom.contrast) );
-  s_payload.data2 = calcTransportValue_ui(REG_SLEEPTIME, eeprom.sleeptime_sec);
-  s_payload.data3 = calcTransportValue_ui(REG_EMPTYLOOPS, eeprom.emptyloops);
-  s_payload.data4 = calcTransportValue_ui(REG_SENDDELAY, eeprom.senddelay);
-  s_payload.data5 = calcTransportValue_ui(REG_SNDCNTN, eeprom.max_sendcount);
-  s_payload.data6 = calcTransportValue_ui(REG_SNDCNTS, eeprom.max_stopcount);
+  s_payload.data1 = calcTransportValue_ui(mykey,REG_DISPLAY, (eeprom.brightnes<<8 | eeprom.contrast) );
+  s_payload.data2 = calcTransportValue_ui(mykey,REG_SLEEPTIME, eeprom.sleeptime_sec);
+  s_payload.data3 = calcTransportValue_ui(mykey,REG_EMPTYLOOPS, eeprom.emptyloops);
+  s_payload.data4 = calcTransportValue_ui(mykey,REG_SENDDELAY, eeprom.senddelay);
+  s_payload.data5 = calcTransportValue_ui(mykey,REG_SNDCNTN, eeprom.max_sendcount);
+  s_payload.data6 = calcTransportValue_ui(mykey,REG_SNDCNTS, eeprom.max_stopcount);
   do_transmit(3,PAYLOAD_TYPE_INIT,PAYLOAD_FLAG_LASTMESSAGE,0, 242);
   exec_RegTrans = false;
 }

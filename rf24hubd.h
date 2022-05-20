@@ -49,6 +49,7 @@ All information is stored in a MariaDB database.
 #include "rf24hub_text.h"
 #include "dataformat.h"
 #include "version.h"
+#include "secrets.h"
 
 #define BUF 1024
 
