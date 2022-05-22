@@ -148,7 +148,8 @@ void Database::initNode(Node* node) {
 	    node->addNode(node_id, node_name, 0, isMastered, pa_level, pa_utime); 
 	}
 	mysql_free_result(result);    
-	sprintf (sql_stmt, "select node_id, last_data from sensor where channel = 101");
+//	sprintf (sql_stmt, "select node_id, last_data from sensor where channel = 101");
+	sprintf (sql_stmt, "select node_id, value from sensor a, sensor_im b where a.sensor_id = b.sensor_id and channel = 101");
 	debugPrintSQL(sql_stmt);
 	mysql_query(db, sql_stmt);
 	db_check_error();

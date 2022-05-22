@@ -411,7 +411,7 @@ int main(int argc, char* argv[]) {
 
     // Main Loop
     while(1) {
-		if ( cfg.hubTcpPortSet ) {
+	if ( cfg.hubTcpPortSet ) {
             new_tn_in_socket = accept ( tcp_sockfd_in, (struct sockaddr *) &tcp_address_in, &tcp_addrlen );
             if (new_tn_in_socket > 0) {
                 pthread_t a_thread;
@@ -452,18 +452,18 @@ int main(int argc, char* argv[]) {
                     if (msgID >= 0) msgsnd(msgID, &LogMsg, sizeof(LogMsg), 0);
                 }
             }
-		}
-		if ( radio.available() ) {
+	}
+	if ( radio.available() ) {
 //
 // Receive loop: react on the message from the nodes
 //
-			radio.read(&payload,sizeof(payload));
+	    radio.read(&payload,sizeof(payload));
             udpdata.gw_no = std::stoi(cfg.gwNo);
             memcpy(&udpdata.payload, &payload, sizeof(payload) );
             if ( verboselevel & VERBOSERF24) printPayload(mykey,ts(tsbuf), "N>G", &udpdata.payload);
-			sendUdpMessage(cfg.gwHubHostName.c_str(), cfg.hubUdpPortNo.c_str(), &udpdata); 
+	    sendUdpMessage(cfg.gwHubHostName.c_str(), cfg.hubUdpPortNo.c_str(), &udpdata); 
             busyIndicator = 0;
-		} // radio.available
+	} // radio.available
 //
 // Orderloop: Tell the nodes what they have to do
 //

@@ -3,11 +3,11 @@
 
 /***********************************
  * Definition der RF24 Parameter
- * Diese Datei wird vom Hub und
+ * Diese Datei wird vom GW und
  * von den Nodes eingebunden !!!
  **********************************/
 
-#define RF24_CHANNEL        92
+#define RF24_CHANNEL        95
 #define RF24_SPEED          RF24_250KBPS
 #define RF24_HUB2NODE       { 0xf0, 0xcc, 0xfc, 0xcc, 0xcc}
 #define RF24_NODE2HUB       { 0x33, 0xcc, 0xfc, 0xcc, 0xcc}

@@ -39,7 +39,7 @@ void Sensor::addSensor(uint32_t sensor_id, NODE_DATTYPE node_id, uint8_t channel
     p_new->channel = channel;
     p_new->datatype = datatype;
     p_new->last_utime = last_utime;
-    p_new->last_data = last_data;
+    p_new->last_data = last_data ^ mykey;
     sprintf(p_new->fhem_dev,"%s", fhem_dev);
     sprintf(p_new->sensor_name,"%s", sensor_name);
     newEntry(p_new);

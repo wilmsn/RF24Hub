@@ -506,12 +506,12 @@ void sighandler(int signal) {
 }
 
 void process_payload(payload_t* mypayload) {
-    if ( mypayload->data1 > 0 ) process_sensor(mypayload->node_id, mypayload->data1);
-    if ( mypayload->data2 > 0 ) process_sensor(mypayload->node_id, mypayload->data2);
-    if ( mypayload->data3 > 0 ) process_sensor(mypayload->node_id, mypayload->data3);
-    if ( mypayload->data4 > 0 ) process_sensor(mypayload->node_id, mypayload->data4);
-    if ( mypayload->data5 > 0 ) process_sensor(mypayload->node_id, mypayload->data5);
-    if ( mypayload->data6 > 0 ) process_sensor(mypayload->node_id, mypayload->data6);
+    if ( mypayload->data1 != mykey ) process_sensor(mypayload->node_id, mypayload->data1);
+    if ( mypayload->data2 != mykey ) process_sensor(mypayload->node_id, mypayload->data2);
+    if ( mypayload->data3 != mykey ) process_sensor(mypayload->node_id, mypayload->data3);
+    if ( mypayload->data4 != mykey ) process_sensor(mypayload->node_id, mypayload->data4);
+    if ( mypayload->data5 != mykey ) process_sensor(mypayload->node_id, mypayload->data5);
+    if ( mypayload->data6 != mykey ) process_sensor(mypayload->node_id, mypayload->data6);
 }
 
 int main(int argc, char* argv[]) {
@@ -720,7 +720,7 @@ int main(int argc, char* argv[]) {
                                 }
                             } else {
                                 if ( node.isMasteredNode(payload.node_id) ) {
-                                    order.addOrder(payload.node_id, PAYLOAD_TYPE_HB_RESP, 0, mymillis());
+                                    order.addOrder(payload.node_id, PAYLOAD_TYPE_HB_RESP, 0 ^ mykey, mymillis());
                                     order.modifyOrderFlags(payload.node_id, PAYLOAD_FLAG_LASTMESSAGE);
                                 }
                             }

@@ -120,20 +120,20 @@ char* unpackTransportValue(uint32_t key, uint32_t data, char* buf) {
             float myval = getValue_f(key, data);
             if ( myval > 500 ) {
 #if defined(__linux__) || defined(ESP8266)
-                sprintf(buf,"%.1f", myval);
+                snprintf(buf,9,"%.1f", myval);
 #else
                 dtostrf(myval, 4, 0, buf);
 #endif
             } else {
                 if ( myval > 9.9 ) {
 #if defined(__linux__) || defined(ESP8266)
-                    sprintf(buf,"%.2f", myval);
+                    snprintf(buf,9,"%.2f", myval);
 #else
                 dtostrf(myval, 4, 1, buf);
 #endif
                 } else {
 #if defined(__linux__) || defined(ESP8266)
-                    sprintf(buf,"%.3f", myval);
+                    snprintf(buf,9,"%.3f", myval);
 #else
                 dtostrf(myval, 4, 2, buf);
 #endif

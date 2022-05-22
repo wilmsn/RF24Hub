@@ -8,14 +8,14 @@ Bosch Temperature/Pressure/Humidity Sensor like BMP085/BMP180/BMP280/BME280
 Dallas Temperature Sensor 18B20
 Display Nokia 5110
 
-On Branch: master  !!!!!
+On Branch: zahlenformat@rpi2  !!!!!
 
 
 */
 //****************************************************
 // My definitions for my nodes based on this sketch
 // Select only one at one time !!!!
-#define AUSSENTHERMOMETER
+//#define AUSSENTHERMOMETER
 //#define AUSSENTHERMOMETER2
 //#define SCHLAFZIMMERTHERMOMETER
 //#define BASTELZIMMERTHERMOMETER
@@ -28,7 +28,7 @@ On Branch: master  !!!!!
 //#define GAESTEZIMMERTHERMOMETER
 //----Testnodes-----
 //#define FEUCHTESENSOR_170
-//#define TESTNODE_UNO
+#define TESTNODE_UNO
 //#define TESTNODE
 //****************************************************
 // Default settings are in "default.h" now !!!!!
@@ -252,7 +252,7 @@ uint32_t action_loop(uint32_t data) {
   uint8_t  channel = getChannel(mykey, data);
 #if defined(DEBUG_SERIAL_PROC)
     Serial.print("Processing: Channel: ");
-    Serial.println(getChannel(data));
+    Serial.println(getChannel(mykey,data));
 #endif  
     switch (channel) {
 #if defined(HAS_DISPLAY)
@@ -951,21 +951,21 @@ void wipe_antenna(int x, int y) {
 // End of HAS_DISPLAY Block
 
 void payloadInitData(void) {
-  s_payload.data1 = 0;
-  s_payload.data2 = 0;
-  s_payload.data3 = 0;
-  s_payload.data4 = 0;
-  s_payload.data5 = 0;
-  s_payload.data6 = 0;
+  s_payload.data1 = 0 ^ mykey;
+  s_payload.data2 = 0 ^ mykey;
+  s_payload.data3 = 0 ^ mykey;
+  s_payload.data4 = 0 ^ mykey;
+  s_payload.data5 = 0 ^ mykey;
+  s_payload.data6 = 0 ^ mykey;
 }
 
 #if defined(DEBUG_SERIAL_RADIO)
 void printPayloadData(uint32_t pldata) {
     char buf[20];
     Serial.print("(");
-    Serial.print(getChannel(pldata));
+    Serial.print(getChannel(mykey,pldata));
     Serial.print("/");
-    Serial.print(unpackTransportValue(pldata,buf));
+    Serial.print(unpackTransportValue(mykey,pldata,buf));
     Serial.print(")");
 }
 
@@ -1018,6 +1018,7 @@ void payload_data(uint8_t pos, uint8_t channel, float value) {
  */
 
 void pingTest(void) {
+  payloadInitData();
   uint8_t PA_Level = radio.getPALevel();
   radio.setPALevel( RF24_PA_MAX) ;
   do_transmit(3, PAYLOAD_TYPE_PING_POW_MAX, PAYLOAD_FLAG_LASTMESSAGE, 0, 251);

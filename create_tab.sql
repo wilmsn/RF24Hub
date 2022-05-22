@@ -112,6 +112,7 @@ CREATE TABLE sensor
    add_info     VARCHAR(100)   DEFAULT NULL,
    node_id      INT UNSIGNED   DEFAULT NULL,
    channel      INT UNSIGNED   DEFAULT NULL,
+   datatype     TINYINT        DEFAULT 0 NOT NULL,
    store_days   INT            DEFAULT NULL,
    fhem_dev     VARCHAR(50)    DEFAULT NULL,
    html_show    CHAR(1)        DEFAULT NULL,

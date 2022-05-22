@@ -168,11 +168,11 @@ void Order::addOrder(NODE_DATTYPE node_id, uint8_t msg_type, uint32_t data, uint
         p_new->msg_flags = PAYLOAD_FLAG_EMPTY;
 //        p_new->HB_order = HB_order;
         p_new->data1 = data;
-        p_new->data2 = 0;
-        p_new->data3 = 0;
-        p_new->data4 = 0;
-        p_new->data5 = 0;
-        p_new->data6 = 0;
+        p_new->data2 = 0 ^ mykey;
+        p_new->data3 = 0 ^ mykey;
+        p_new->data4 = 0 ^ mykey;
+        p_new->data5 = 0 ^ mykey;
+        p_new->data6 = 0 ^ mykey;
         p_new->entrytime = entrytime;
         p_new->last_send = 0;
         p_new->p_next = NULL;
