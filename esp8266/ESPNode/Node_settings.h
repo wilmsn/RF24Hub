@@ -55,6 +55,7 @@ optional:
 #define SWITCH1MQTT            "relais"
 #define SWITCH1_NODE           1
 #define SWITCH1_CHANNEL        12
+#define FS_DEBUG
 #endif
 //-----------------------------------------------------
 #if defined(TERASSENNODE)

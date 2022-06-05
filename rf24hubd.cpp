@@ -655,7 +655,7 @@ int main(int argc, char* argv[]) {
             sprintf(buf1,"G:%u>H", udpdata.gw_no);
             printPayload(ts(tsbuf), buf1, &payload);
         }
-        if ( gateway.isGateway(udpdata.gw_no) ) {
+	if ( gateway.isGateway(inet_ntoa(udp_address_in.sin_addr), udpdata.gw_no) ) {
             if (payload.msg_flags & PAYLOAD_FLAG_NEEDHELP ) {
                 char* tn_buf;
                 tn_buf = (char*)malloc(100);

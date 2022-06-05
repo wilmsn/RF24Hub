@@ -10,16 +10,16 @@ LEDPWM
 Dallas Temperature Sensor 18B20
 Rf24GW
 
-On Branch: rf24hub@rpi2 => master  !!!!!
+On Branch: rf24hub@rpi1 => master  !!!!!
 
 
 */
 //****************************************************
 // My definitions for my nodes based on this sketch
 // Select only one at one time !!!!
-//#define TEICHPUMPE
+#define TEICHPUMPE
 //#define TERASSENNODE
-#define FLURLICHT
+//#define FLURLICHT
 //#define WOHNZIMMERNODE
 //#define TESTNODE
 //#define WITTYNODE
@@ -41,13 +41,13 @@ On Branch: rf24hub@rpi2 => master  !!!!!
 // ------ End of configuration part ------------
 
 #include <ESP8266WiFi.h>
-#include <ESP8266mDNS.h>
+//#include <ESP8266mDNS.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266HTTPUpdateServer.h>
 #include <WiFiUdp.h>
-#include <ArduinoOTA.h>
+//#include <ArduinoOTA.h>
 #include <EEPROM.h>
-#include <FS.h>
+//#include <FS.h>
 #include <LittleFS.h>
 #include <PubSubClient.h>
 #include <time.h>
@@ -98,7 +98,7 @@ LED_Matrix matrix(LEDMATRIX_DIN, LEDMATRIX_CLK, LEDMATRIX_CS, LEDMATRIX_DEVICES_
 Adafruit_NeoPixel pixels(NEOPIXELNUM, NEOPIXELPIN, NEO_GRB + NEO_KHZ800);
 #endif
 
-typedef enum {message=0, sensorweb, sensormqtt} call_t;
+typedef enum {message=0, sensorweb, sensormqtt, sensorinfo} call_t;
 typedef enum {ok_json=0, ok_html, ok_text, nochange, epromchange, error} status_t;
 typedef enum {on=0, off, toggle, state, unknown} tristate_t;
 time_t now;
@@ -106,9 +106,9 @@ tm tm;
 char timeStr[9];
 char mytopic[TOPIC_BUFFER_SIZE];
 char info_str[INFOSIZE];
-unsigned long lastDbg = 0;
 unsigned long lastMsg = 0;
 unsigned long lastInfo = 0;
+unsigned long lastDebug = 0;
 const char c_on[] =  "Ein";
 const char c_off[] = "Aus";
 #if defined(NEOPIXEL)
@@ -136,6 +136,7 @@ uint8_t  rf24_node2hub[] = RF24_NODE2HUB;
 uint8_t  rf24_hub2node[] = RF24_HUB2NODE;
 uint16_t rf24_verboselevel = RF24_GW_STARTUPVERBOSELEVEL;
 #endif
+ADC_MODE(ADC_VCC);
 
 struct eeprom_t {
    uint32_t  magicNo;
@@ -158,7 +159,6 @@ void wifi_con(void) {
     WiFi.mode(WIFI_STA);
     WiFi.hostname(HOSTNAME);
     WiFi.begin(ssid, password);
-
     // ... Give ESP 10 seconds to connect to station.
     unsigned int i=0;
     while (WiFi.status() != WL_CONNECTED && i < 100) {
@@ -166,7 +166,25 @@ void wifi_con(void) {
       i++;
     }
     configTime(MY_TZ, MY_NTP_SERVER); 
+#if defined(FS_DEBUG)
+    fill_timeStr();
+    File f = LittleFS.open("/debugfile.txt", "a");
+    if (f) {
+      f.print(timeStr);
+      f.print(": WiFi reconnect\n");
+      f.close();
+    }
+#endif
     while (WiFi.status() != WL_CONNECTED) {
+#if defined(FS_DEBUG)
+    fill_timeStr();
+    File f = LittleFS.open("/debugfile.txt", "a");
+    if (f) {
+      f.print(timeStr);
+      f.print(": WiFi give up - reboot\n");
+      f.close();
+    }
+#endif
       delay(3000);
       ESP.restart();
     }
@@ -210,6 +228,15 @@ void setup() {
 
   wifi_con();
   
+#if defined(FS_DEBUG)
+    fill_timeStr();
+    File f = LittleFS.open("/debugfile.txt", "a");
+    if (f) {
+      f.print(timeStr);
+      f.print(": Boot device\n");
+      f.close();
+    }
+#endif
   if (eepromdata.log_startup) {
     snprintf(info_str,INFOSIZE,"%s %s %s %s", F("WLAN: Connected to "), ssid, F(" IP address: "), WiFi.localIP().toString().c_str() );
     write2log(info_str);
@@ -234,13 +261,13 @@ void setup() {
   }
 #endif
   // OTA
-  ArduinoOTA.setHostname(HOSTNAME);
-  ArduinoOTA.begin();
-  MDNS.begin(HOSTNAME);
+//  ArduinoOTA.setHostname(HOSTNAME);
+//  ArduinoOTA.begin();
+//  MDNS.begin(HOSTNAME);
   httpUpdater.setup(&httpServer);
-  httpServer.begin();
-  MDNS.addService("http", "tcp", 80);
-  setupFS();
+//  httpServer.begin();
+//  MDNS.addService("http", "tcp", 80);
+//  setupFS();
   httpServer.on("/", handleWebRoot);
   httpServer.on("/cmd", handleCmd);
   httpServer.on("/restart", []() { httpServer.send(304, "message/http"); ESP.restart(); });
@@ -679,9 +706,9 @@ void mqtt_send_swtch1() {
 
 void switchSwitch1(bool stat) {
 #if defined(SWITCH1_NODE)
-  char tmp[10];
-  snprintf(tmp,9,"%u",stat?1:0);
-  send_udp_msg(SWITCH1_NODE, packTransportValue(SWITCH1_CHANNEL, tmp ));   
+//  char tmp[10];
+//  snprintf(tmp,9,"%u",stat?1:0);
+  send_udp_msg(SWITCH1_NODE, calcTransportValue_ui(SWITCH1_CHANNEL, stat?1:0 ));   
 #endif  
   if ( stat ) { 
 #if defined(SWITCH1PIN1)
@@ -757,9 +784,9 @@ void mqtt_send_swtch2() {
 
 void switchSwitch2(bool stat) {
 #if defined(SWITCH2_NODE)
-  char tmp[10];
-  snprintf(tmp,9,"%u",stat?1:0);
-  send_udp_msg(SWITCH2_NODE, packTransportValue(SWITCH2_CHANNEL, tmp ));   
+//  char tmp[10];
+//  snprintf(tmp,9,"%u",stat?1:0);
+  send_udp_msg(SWITCH1_NODE, calcTransportValue_ui(SWITCH2_CHANNEL, stat?1:0 ));   
 #endif  
   if ( stat ) { 
 #if defined(SWITCH2PIN1)
@@ -972,6 +999,7 @@ void handlestatus(char* myjson) {
 }
 
 void send_udp_msg(NODE_DATTYPE node_id, uint32_t data) {
+#if defined(RF24GW)
   udpdata.gw_no = RF24_GW_NO;
   udpdata.payload.node_id = node_id;
   udpdata.payload.msg_id = 0;
@@ -987,7 +1015,6 @@ void send_udp_msg(NODE_DATTYPE node_id, uint32_t data) {
   udp.beginPacket(RF24_HUB_SERVER, RF24_HUB_UDP_PORTNO);
   udp.write((char*)&udpdata, sizeof(udpdata));
   udp.endPacket();
-#if defined(RF24GW)
   if (eepromdata.log_rf24) write2log(printPayload("S>H", &udpdata.payload, info_str));
 #endif
 }
@@ -1007,7 +1034,7 @@ void handlesensor(char* myjson, call_t call) {
     case sensormqtt:
 #if defined(SENSOR_CHANNEL)
       snprintf(tmp,9,"%4.1f",tempC);
-      send_udp_msg(SENSOR_NODE, packTransportValue(SENSOR_CHANNEL,tmp));
+      send_udp_msg(SENSOR_NODE, calcTransportValue_f(SENSOR_CHANNEL,tempC));
 #endif
     case sensorweb:
       sprintf(myjson,"{\"Sensor\":\"18B20\", \"Temperatur\":%4.1f, \"Resolution\":%u }", tempC, resolution);
@@ -1069,8 +1096,9 @@ void fill_sysinfo1(char* mystr) {
 }
 
 void fill_sysinfo2(char* mystr) {
-   snprintf (mystr,INFOSIZE, "{\"Freespace\":\"%0.0fKB\", \"Sketchsize\":\"%0.0fKB\", \"FlashSize\":\"%dMB\", \"FlashFreq\":\"%dMHz\", \"CpuFreq\":\"%dMHz\"}",
-           ESP.getFreeSketchSpace() / 1024.0, ESP.getSketchSize() / 1024.0, (int)(ESP.getFlashChipSize() / 1024 / 1024), (int)(ESP.getFlashChipSpeed() / 1000000), (int)(F_CPU / 1000000)    );   
+   snprintf (mystr,INFOSIZE, "{\"Freespace\":\"%0.0fKB\", \"Sketchsize\":\"%0.0fKB\", \"FlashSize\":\"%dMB\", \"FlashFreq\":\"%dMHz\", \"CpuFreq\":\"%dMHz\", \"Vcc\":\"%.2fV\"}",
+           ESP.getFreeSketchSpace() / 1024.0, ESP.getSketchSize() / 1024.0, (int)(ESP.getFlashChipSize() / 1024 / 1024), (int)(ESP.getFlashChipSpeed() / 1000000), 
+           (int)(F_CPU / 1000000), (float)ESP.getVcc()/1000.0  );   
 }
 
 void fill_sysinfo3(char* mystr) {
@@ -1164,7 +1192,9 @@ void write2log(char* text) {
     }
   }  
   if (eepromdata.logger) {
-    logger.addLine(timeStr,text);
+    logger.print(timeStr);
+    logger.print(": ");
+    logger.println(text);
   }
 }
 
@@ -1419,8 +1449,22 @@ void loop() {
 #endif  
   delay(0);
   httpServer.handleClient();
-  MDNS.update();
-  ArduinoOTA.handle(); // Wait for OTA connection
+//  MDNS.update();
+//  ArduinoOTA.handle(); // Wait for OTA connection
   wifi_con();
   delay(0);
+#if defined(FS_DEBUG)
+  if ((millis() - lastDebug) > 3600000) {
+    lastDebug = millis();
+    fill_timeStr();
+    File f = LittleFS.open("/debugfile.txt", "a");
+    if (f) {
+      f.print(timeStr);
+      f.print(": alive Vcc:");
+      f.print(ESP.getVcc());
+      f.print("V\n");
+      f.close();
+    }
+  }
+#endif
 }
