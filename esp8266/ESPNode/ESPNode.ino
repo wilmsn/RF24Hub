@@ -40,10 +40,14 @@ On Branch: rf24hub@rpi1 => master  !!!!!
 //#define ATOMIC_FS_UPDATE
 // ------ End of configuration part ------------
 
+#ifdef ESP32
+#include <WiFi.h>
+#else
 #include <ESP8266WiFi.h>
-//#include <ESP8266mDNS.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266HTTPUpdateServer.h>
+#endif
+//#include <ESP8266mDNS.h>
 #include <WiFiUdp.h>
 //#include <ArduinoOTA.h>
 #include <EEPROM.h>
@@ -104,6 +108,7 @@ typedef enum {on=0, off, toggle, state, unknown} tristate_t;
 time_t now;
 tm tm;
 char timeStr[9];
+char datetimeStr[15];
 char mytopic[TOPIC_BUFFER_SIZE];
 char info_str[INFOSIZE];
 unsigned long lastMsg = 0;
@@ -170,7 +175,7 @@ void wifi_con(void) {
     fill_timeStr();
     File f = LittleFS.open("/debugfile.txt", "a");
     if (f) {
-      f.print(timeStr);
+      f.print(datetimeStr);
       f.print(": WiFi reconnect\n");
       f.close();
     }
@@ -180,7 +185,7 @@ void wifi_con(void) {
     fill_timeStr();
     File f = LittleFS.open("/debugfile.txt", "a");
     if (f) {
-      f.print(timeStr);
+      f.print(datetimeStr);
       f.print(": WiFi give up - reboot\n");
       f.close();
     }
@@ -232,7 +237,7 @@ void setup() {
     fill_timeStr();
     File f = LittleFS.open("/debugfile.txt", "a");
     if (f) {
-      f.print(timeStr);
+      f.print(datetimeStr);
       f.print(": Boot device\n");
       f.close();
     }
@@ -1177,6 +1182,7 @@ void fill_timeStr() {
   time(&now);                       // read the current time
   localtime_r(&now, &tm);           // update the structure tm with the current time
   snprintf(timeStr,9,"%02d:%02d:%02d",tm.tm_hour,tm.tm_min,tm.tm_sec);
+  snprintf(datetimeStr,15,"%02d.%02d %02d:%02d:%02d",tm.tm_mon,tm.tm_mday,tm.tm_hour,tm.tm_min,tm.tm_sec);
 }
 
 void write2log(char* text) {
@@ -1184,7 +1190,7 @@ void write2log(char* text) {
   if (eepromdata.logfile) {
     File f = LittleFS.open("/logfile.txt", "a");
     if (f) {
-      f.print(timeStr);
+      f.print(datetimeStr);
       f.print(": ");
       f.print(text);
       f.print("\n");
@@ -1459,7 +1465,7 @@ void loop() {
     fill_timeStr();
     File f = LittleFS.open("/debugfile.txt", "a");
     if (f) {
-      f.print(timeStr);
+      f.print(datetimeStr);
       f.print(": alive Vcc:");
       f.print(ESP.getVcc());
       f.print("V\n");
