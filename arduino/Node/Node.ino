@@ -15,6 +15,7 @@ On Branch: master  !!!!!
 //****************************************************
 // My definitions for my nodes based on this sketch
 // Select only one at one time !!!!
+#define SOLARNODE
 //#define AUSSENTHERMOMETER
 //#define AUSSENTHERMOMETER2
 //#define SCHLAFZIMMERTHERMOMETER
@@ -23,7 +24,7 @@ On Branch: master  !!!!!
 //#define KUECHETHERMOMETER // noch mit Bug in 205
 //#define WOHNZIMMERTHERMOMETER
 //#define ANKLEIDEZIMMERTHERMOMETER
-#define KUGELNODE1
+//#define KUGELNODE1
 //#define KUGELNODE2
 //#define GAESTEZIMMERTHERMOMETER
 //----Testnodes-----
@@ -39,16 +40,6 @@ On Branch: master  !!!!!
 //*****************************************************
 // ------ End of configuration part ------------
 
-//define constrains for debugging
-#if defined(DEBUG_SERIAL_SENSOR)
-#define DEBUG_SERIAL
-#endif
-#if defined(DEBUG_SERIAL_RADIO)
-#define DEBUG_SERIAL
-#endif
-#if defined(DEBUG_SERIAL_PROC)
-#define DEBUG_SERIAL
-#endif
 
 #include <avr/pgmspace.h>
 #include <nRF24L01.h>
@@ -119,6 +110,17 @@ uint8_t neopixel_g;
 uint8_t neopixel_b;
 #endif
 
+#if defined(SOLARZELLE)
+float    u_sol;
+float    pow_sol;
+uint8_t  batt_mod1;
+uint8_t  batt_mod2;
+#endif
+
+#if defined(LOAD_BALANCER)
+float u_batt1;
+#endif
+
 payload_t r_payload, s_payload;    
 
 uint8_t  rf24_node2hub[] = RF24_NODE2HUB;
@@ -146,6 +148,7 @@ boolean             low_voltage_flag = false;
 boolean             exec_pingTest = false;
 boolean             exec_RegTrans = false;
 float               cur_voltage;
+float               vcc_mess;
 uint16_t            loopcount;
 uint16_t            max_loopcount;
 int                 sleeptime_kor;
@@ -169,11 +172,12 @@ void pingTest(void);
 void sendRegister(void);
 
 void get_voltage(void) {
-  cur_voltage = (vcc.Read_Volts()*eeprom.volt_fac)+eeprom.volt_off;
+  vcc_mess = vcc.Read_Volts();
+  cur_voltage = (vcc_mess*eeprom.volt_fac)+eeprom.volt_off;
   low_voltage_flag = (eeprom.low_volt_level > 1.5) && (cur_voltage <= eeprom.low_volt_level);
 #if defined(DEBUG_SERIAL_SENSOR)
    Serial.print("Volt (gemessen): ");
-   Serial.println(vcc.Read_Volts());
+   Serial.println(vcc_mess);
    Serial.print("Volt Faktor: ");
    Serial.println(eeprom.volt_fac);
    Serial.print("Volt Offset: ");
@@ -242,7 +246,18 @@ void get_sensordata(void) {
 #endif
   }
 #endif
-// ENDE: Sensor Bosch BMP180; BMP280; BME280 
+// ENDE: Sensor Bosch BMP180; BMP280; BME280
+#if defined(SOLARZELLE)
+  u_sol = (float)analogRead(SOLARZELLE) / 1024.0 * vcc_mess;
+  pow_sol += u_sol / R_SOLAR * u_sol / 60.0 / 60.0 * (float)eeprom.sleeptime_sec;   // In WStd
+#if defined(DEBUG_SERIAL_SENSOR)
+    Serial.print("U_sol: ");
+    Serial.println(u_sol);
+#endif
+#endif
+#if defined(LOAD_BALANCER)
+  u_batt1 = (float)analogRead(LOAD_BALANCER_BATT) / 1024.0 * vcc_mess;
+#endif
 }
 
 uint32_t action_loop(uint32_t data) {
@@ -297,6 +312,32 @@ uint32_t action_loop(uint32_t data) {
       {
         // Display Sleepmode ON <-> OFF
         display_sleep( getValue_ui(data) == 0x00 );
+      }
+      break;
+#endif
+#if defined(LOAD_BALANCER)
+      case 41:
+      {
+        if ( getValue_i(data) == 0 ) {
+          pinMode(LOAD_BALANCER_BATT, INPUT);
+        }
+        if ( getValue_i(data) == 1 ) {
+          pinMode(LOAD_BALANCER_BATT, OUTPUT);
+          digitalWrite(LOAD_BALANCER_BATT, HIGH);
+        } 
+        if ( getValue_i(data) == 2 ) {
+          pinMode(LOAD_BALANCER_BATT, OUTPUT);
+          digitalWrite(LOAD_BALANCER_BATT, LOW);
+        } 
+      }
+      break;
+#endif
+#if defined(SOLARZELLE)
+      case 42:
+      {
+        if ( getValue_i(data) == 0 ) {
+          pow_sol = 0;;
+        }
       }
       break;
 #endif
@@ -582,6 +623,18 @@ void setup(void) {
 #if defined(RELAIS_4)
   pinMode(RELAIS_4, OUTPUT);     
   digitalWrite(RELAIS_4,RELAIS_ON); 
+#endif
+#if defined(SOLARZELLE)
+  pinMode(SOLARZELLE, INPUT);
+  batt_mod1 = 0;
+  batt_mod2 = 0;
+#endif
+#if defined(LOAD_BALANCER)
+  pinMode(LOAD_BALANCER_BATT, INPUT);
+#endif
+#if defined(DISCHARGE_PIN)
+  pinMode(DISCHARGE_PIN, OUTPUT);
+  digitalWrite(DISCHARGE_PIN, HIGH); 
 #endif
   EEPROM.get(0, eeprom);
   if (eeprom.versionnumber != EEPROM_VERSION && EEPROM_VERSION > 0) {
@@ -1109,6 +1162,12 @@ void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, 
           radio.read(&r_payload, sizeof(r_payload));
 #if defined(DEBUG_SERIAL_RADIO)
           printPayload(&r_payload);
+          if (r_payload.node_id != RF24NODE) {
+            Serial.println("Wrong Node, Message dropped!");
+          }
+          if (r_payload.orderno == last_orderno) {
+            Serial.println("Ordernumber already processed!");
+          }
 #endif
           if (r_payload.node_id == RF24NODE && r_payload.orderno != last_orderno) {
             last_orderno = r_payload.orderno;
@@ -1205,23 +1264,62 @@ void loop(void) {
       radio.read(&r_payload, sizeof(r_payload));
       delay(10);
     }
-
-    payload_data(1, 101, cur_voltage);
+    uint8_t pos=1;
+    payload_data(pos, 101, cur_voltage);
+    pos++;
 #if defined(SENSOR_DUMMY)
-    payload_data(2, 1, temp);
+    payload_data(pos, 1, temp);
+    pos++;
 #endif
 #if defined(SENSOR_18B20)
-    payload_data(2, 1, temp);
+    payload_data(pos, 1, temp);
+    pos++;
 #endif
 #if defined(SENSOR_BOSCH)
-    if (sensor.hasTemperature() ) payload_data(2, 1, temp);
-    if (sensor.hasPressure() )    payload_data(3, 2, pres);
-    if (sensor.hasHumidity() )    payload_data(4, 3, humi);
+    if (sensor.hasTemperature() ) payload_data(pos, 1, temp);
+    pos++;
+    if (sensor.hasPressure() )    payload_data(pos, 2, pres);
+    pos++
+    if (sensor.hasHumidity() )    payload_data(pos, 3, humi);
+    pos++;
+#endif
+#if defined(SOLARZELLE)
+    payload_data(pos,5,u_sol);
+    pos++;
+#if defined(DEBUG_SERIAL_RADIO)
+    Serial.print("U_sol: ");
+    Serial.println(u_sol);
+#endif
+    payload_data(pos,6,pow_sol);
+    pos++;
+#if defined(DEBUG_SERIAL_RADIO)
+    Serial.print("Pow_sol: ");
+    Serial.println(pow_sol);
+#endif
+    payload_data(pos,8,batt_mod1+batt_mod2);
+    pos++;
+#if defined(DEBUG_SERIAL_RADIO)
+    Serial.print("Batterie Modus: ");
+    Serial.println(batt_mod1+batt_mod2);
+#endif
+#endif
+#if defined(LOAD_BALANCER)
+    payload_data(pos,7,u_batt1);
+    pos++;
+#if defined(DEBUG_SERIAL_RADIO)
+    Serial.print("U_batt1: ");
+    Serial.println(u_batt1);
+#endif
 #endif
     uint8_t msg_flags = PAYLOAD_FLAG_LASTMESSAGE;
     if ( low_voltage_flag ) msg_flags |= PAYLOAD_FLAG_NEEDHELP; 
     do_transmit(eeprom.max_sendcount, PAYLOAD_TYPE_HB, msg_flags, 0, 0);
     exec_jobs();
+/*
+#if defined(USE_BATTERIE)
+    if (vcc_mess < USE_BATTERIE) {
+#endif
+*/
     radio.stopListening();
     delay(10);
     radio.powerDown();
@@ -1229,14 +1327,18 @@ void loop(void) {
     Serial.println("Radio Sleep");
     delay(100);
 #endif
+/*
+#if defined(USE_BATTERIE)
+    }
+#endif
+*/
 #if defined(HAS_DISPLAY)
     wipe_antenna(ANT_X0, ANT_Y0);
 #endif
-  }  
+  }
 #if defined(DISPLAY_5110)
   lcd.draw();
 #endif
-//ToDo prüfen und ggf. überarbeiten
   long int tempsleeptime = eeprom.sleeptime_sec;  // regelmaessige Schlafzeit in Sek.
   tempsleeptime += sleeptime_kor;                 // einmalige Korrektur in Sek. (-1000 ... +1000)
   if ( eeprom.sleep4ms_fac > 499 && eeprom.sleep4ms_fac < 2001 ) {
@@ -1245,6 +1347,29 @@ void loop(void) {
     tempsleeptime *= 1000;
   }
   sleeptime_kor = 0;  
-  sleep4ms(tempsleeptime);
+/*
+#if defined(USE_BATTERIE)
+  if (vcc_mess < USE_BATTERIE) {
+    batt_mod1 = 0;
+#endif
+*/
+    sleep4ms(tempsleeptime);
+/*
+#if defined(USE_BATTERIE)
+  } else {
+    batt_mod1 = 1;
+    delay(tempsleeptime);
+  }
+#endif
+#if defined(DISCHARGE_PIN)
+  if ( vcc_mess > DISCHARGE_U ) {
+    digitalWrite(DISCHARGE_PIN, LOW);
+    batt_mod2 = 2;
+  } else {
+    digitalWrite(DISCHARGE_PIN, HIGH);
+    batt_mod2 = 0;
+  }
+#endif
+*/
   loopcount++;
 }
