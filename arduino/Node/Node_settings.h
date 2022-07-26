@@ -48,7 +48,7 @@ debugging options:
 #if defined(SOLARNODE)
 #define RF24NODE               202
 #define LOW_VOLT_LEVEL         2.2
-#define EEPROM_VERSION         3
+#define EEPROM_VERSION         4
 #define STATUSLED              A2
 #define SLEEPTIME_SEC          30
 #define EMPTYLOOPS             9
@@ -56,10 +56,10 @@ debugging options:
 #define R_SOLAR                340.0
 #define LOAD_BALANCER_BATT     A1
 // Ist die Batteriespannung groesser als USE_BATTERIE wird der Tiefschlaf von MC und Radio abgeschaltet
-#define USE_BATTERIE           2.7
-#define DISCHARGE_U            2,8
+//#define USE_BATTERIE           2.7
+//#define DISCHARGE_U            2,8
 // Am DISCHARGE_PIN liegt ein Widerstand von 340 Ohm gegen Vcc 
-#define DISCHARGE_PIN          5
+//#define DISCHARGE_PIN          5
 #define MAX_SENDCOUNT          5
 #define LOW_VOLT_LOOPS         90
 

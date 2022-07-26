@@ -113,8 +113,8 @@ uint8_t neopixel_b;
 #if defined(SOLARZELLE)
 float    u_sol;
 float    pow_sol;
-uint8_t  batt_mod1;
-uint8_t  batt_mod2;
+//uint8_t  batt_mod1;
+//uint8_t  batt_mod2;
 #endif
 
 #if defined(LOAD_BALANCER)
@@ -626,8 +626,8 @@ void setup(void) {
 #endif
 #if defined(SOLARZELLE)
   pinMode(SOLARZELLE, INPUT);
-  batt_mod1 = 0;
-  batt_mod2 = 0;
+//  batt_mod1 = 0;
+//  batt_mod2 = 0;
 #endif
 #if defined(LOAD_BALANCER)
   pinMode(LOAD_BALANCER_BATT, INPUT);
@@ -1296,12 +1296,14 @@ void loop(void) {
     Serial.print("Pow_sol: ");
     Serial.println(pow_sol);
 #endif
+/*
     payload_data(pos,8,batt_mod1+batt_mod2);
     pos++;
 #if defined(DEBUG_SERIAL_RADIO)
     Serial.print("Batterie Modus: ");
     Serial.println(batt_mod1+batt_mod2);
 #endif
+*/
 #endif
 #if defined(LOAD_BALANCER)
     payload_data(pos,7,u_batt1);

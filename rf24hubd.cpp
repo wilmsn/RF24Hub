@@ -603,7 +603,7 @@ int main(int argc, char* argv[]) {
            lastDBsync = database.getBeginOfDay();
         }
         /* Handling of incoming messages */
-		if ( cfg.hubTcpPortSet ) {
+	if ( cfg.hubTcpPortSet ) {
             new_tn_in_socket = accept ( tcp_sockfd_in, (struct sockaddr *) &tcp_address_in, &tcp_addrlen );
             if (new_tn_in_socket > 0) {
                 pthread_t a_thread;
@@ -644,156 +644,157 @@ int main(int argc, char* argv[]) {
                     if (msgID >= 0) msgsnd(msgID, &LogMsg, sizeof(LogMsg), 0);
                 }
             }
-		}
+	}
 // Verarbeitung von UDP Daten Eingang
-    UdpMsgLen = recvfrom ( udp_sockfd_in, &udpdata, sizeof(udpdata), 0, (struct sockaddr *) &udp_address_in, &udp_addrlen );
-    if (UdpMsgLen > 0) {
-        memcpy(&payload, &udpdata.payload, sizeof(payload) );
-        //sprintf(gw_,"%s",inet_ntoa(udp_address_in.sin_addr));
-        if ( verboselevel & VERBOSERF24 ) {
-            printf ("%sUDP Message from: %s \n",ts(tsbuf), inet_ntoa(udp_address_in.sin_addr));
-            sprintf(buf1,"G:%u>H", udpdata.gw_no);
-            printPayload(ts(tsbuf), buf1, &payload);
-        }
-	if ( gateway.isGateway(inet_ntoa(udp_address_in.sin_addr), udpdata.gw_no) ) {
-            if (payload.msg_flags & PAYLOAD_FLAG_NEEDHELP ) {
-                char* tn_buf;
-                tn_buf = (char*)malloc(100);
-                sprintf(tn_buf,"set %s_Status 1", node.getNodeName(payload.node_id));
-                send_fhem_tn(tn_buf);
-                free(tn_buf);
-            }
-            switch ( payload.msg_type ) {
-                case PAYLOAD_TYPE_INIT: { // Init message from a node!!
-                    if ( node.isNewHB(payload.node_id, payload.heartbeatno, time(0)) ) {
-                        process_payload(&payload);
-                    } else {
-                        // nothing to do here !!!   
-                    }
-                }
-                break;
-                case PAYLOAD_TYPE_ESP: { // Message from ESP Node - will not be answered
-                    process_payload(&payload);                    
-                }
-                break;
-                case PAYLOAD_TYPE_HB: { // heartbeat message!!
-                   if ( node.isNewHB(payload.node_id, payload.heartbeatno, time(0)) ) {  // Got a new Heaqrtbeat -> process it!
-                        database.lowVoltage(payload.node_id, payload.msg_flags & PAYLOAD_FLAG_NEEDHELP);
-                        process_payload(&payload);
-                        if ( node.isMasteredNode(payload.node_id) ) {
-                            if ( orderbuffer.nodeHasEntry(payload.node_id) ) {  // WE have orders for this node
-                                make_order(payload.node_id, PAYLOAD_TYPE_DAT);
-                                if ( verboselevel & VERBOSEORDER ) {
-                                    printf("%sEntries for Heartbeat Node found, sending them\n",ts(tsbuf));
-                                }
-                            } else {
-                                if ( node.isMasteredNode(payload.node_id) ) {
-                                    order.addOrder(payload.node_id, PAYLOAD_TYPE_HB_RESP, 0, mymillis());
-                                    order.modifyOrderFlags(payload.node_id, PAYLOAD_FLAG_LASTMESSAGE);
-                                }
-                            }
-                        }
-                    } else {
-                        // reset stop counter (TTL) for message to send
-                        if ( node.isMasteredNode(payload.node_id) ) order.adjustEntryTime(payload.node_id, mymillis());
-                    }
-                }
-                break;    
-                case PAYLOAD_TYPE_DATRESP: { // Quittung für eine Nachricht vom Typ PAYLOAD_TYPE_DATNOR !!
-                    if ( node.isMasteredNode(payload.node_id) ) {
-                        if ( order.isOrderNo(payload.orderno) ) {
-                            process_payload(&payload);
-                            order.delByOrderNo(payload.orderno);  // Nachricht ist angekommen => löschen
-                            if ( orderbuffer.nodeHasEntry(payload.node_id) ) {  // WE have orders for this node
-                                make_order(payload.node_id, PAYLOAD_TYPE_DAT);
-                                if ( verboselevel & VERBOSEORDER ) {
-                                    printf("%sEntries for Heartbeat Node found, sending them\n",ts(tsbuf));
-                                }
-                            }
-                            order.addOrder(payload.node_id, PAYLOAD_TYPE_DATSTOP, 0, mymillis());
-                            order.modifyOrderFlags(payload.node_id, PAYLOAD_FLAG_LASTMESSAGE);
-                        }
-                    }
-                }
-                break;
-                case PAYLOAD_TYPE_DATSTOP: { // Quittung für einen Heatbeatresponse!!
-                    if ( node.isMasteredNode(payload.node_id) )
-                        order.delByOrderNo(payload.orderno);  // Nachricht ist angekommen => löschen
-                }
-                break;
-                case PAYLOAD_TYPE_PING_POW_MIN: {
-                    node.setPaLevel(payload.node_id, 1);
-                }
-                break;
-                case PAYLOAD_TYPE_PING_POW_LOW: {
-                    node.setPaLevel(payload.node_id, 2);
-                }
-                break;
-                case PAYLOAD_TYPE_PING_POW_HIGH: {
-                    node.setPaLevel(payload.node_id, 3);
-                }
-                break;
-                case PAYLOAD_TYPE_PING_POW_MAX: {
-                    node.setPaLevel(payload.node_id, 4);
-                }
-                break;
-                case PAYLOAD_TYPE_PING_END: {
-                    if ( node.isNewHB(payload.node_id, payload.heartbeatno, time(0)) ) {  // Got a new Heaqrtbeat -> process it!
-                        sprintf(buf,"%u",node.getPaLevel(payload.node_id));
-                        database.storeNodeConfig(payload.node_id, REG_PALEVEL, buf);
-                    } else {
-                     // nothing to do here !!!   
-                    }
-                }
-                break;
-                default: {	
-                    if ( node.isMasteredNode(payload.node_id) ) {
-                        if ( verboselevel & VERBOSEORDER) {
-                            printf("%sProcessing Node:%u Type:%u Orderno: %u\n", ts(tsbuf), payload.node_id, payload.msg_type, payload.orderno);
-                        }
-                        if ( order.isOrderNo(payload.orderno) ) {
-                            process_payload(&payload);
-                            order.delByOrderNo(payload.orderno);
-                            if ( orderbuffer.nodeHasEntry(payload.node_id) ) {  // WE have orders for this node
-                                make_order(payload.node_id, PAYLOAD_TYPE_DAT);
-                                if ( verboselevel & VERBOSEORDER ) {
-                                    printf("%sEntries for Heartbeat Node found, sending them\n", ts(tsbuf));
-                                }
-                            }
-                        }
-                    }
-                }
+	UdpMsgLen = recvfrom ( udp_sockfd_in, &udpdata, sizeof(udpdata), 0, (struct sockaddr *) &udp_address_in, &udp_addrlen );
+	if (UdpMsgLen > 0) {
+	    memcpy(&payload, &udpdata.payload, sizeof(payload) );
+	    //sprintf(gw_,"%s",inet_ntoa(udp_address_in.sin_addr));
+	    if ( verboselevel & VERBOSERF24 ) {
+		printf ("%sUDP Message from: %s \n",ts(tsbuf), inet_ntoa(udp_address_in.sin_addr));
+		sprintf(buf1,"G:%u>H", udpdata.gw_no);
+		printPayload(ts(tsbuf), buf1, &payload);
+	    }
+	    if ( gateway.isGateway(inet_ntoa(udp_address_in.sin_addr), udpdata.gw_no) ) {
+		if (payload.msg_flags & PAYLOAD_FLAG_NEEDHELP ) {
+		    char* tn_buf;
+		    tn_buf = (char*)malloc(100);
+		    sprintf(tn_buf,"set %s_Status 1", node.getNodeName(payload.node_id));
+		    send_fhem_tn(tn_buf);
+		    free(tn_buf);
+		}
+		switch ( payload.msg_type ) {
+		    case PAYLOAD_TYPE_INIT: { // Init message from a node!!
+			if ( node.isNewHB(payload.node_id, payload.heartbeatno, time(0)) ) {
+			    process_payload(&payload);
+			} else {
+			    // nothing to do here !!!   
 			}
-        }  // gateway.isGateway
-    } // UDP Message > 0
+		    }
+		    break;
+		    case PAYLOAD_TYPE_ESP: { // Message from ESP Node - will not be answered
+			process_payload(&payload);                    
+		    }
+		    break;
+		    case PAYLOAD_TYPE_HB: { // heartbeat message!!
+			if ( node.isNewHB(payload.node_id, payload.heartbeatno, time(0)) ) {  // Got a new Heaqrtbeat -> process it!
+			    database.lowVoltage(payload.node_id, payload.msg_flags & PAYLOAD_FLAG_NEEDHELP);
+			    process_payload(&payload);
+			    if ( node.isMasteredNode(payload.node_id) ) {
+				if ( orderbuffer.nodeHasEntry(payload.node_id) ) {  // WE have orders for this node
+				    make_order(payload.node_id, PAYLOAD_TYPE_DAT);
+				    if ( verboselevel & VERBOSEORDER ) {
+					printf("%sEntries for Heartbeat Node found, sending them\n",ts(tsbuf));
+				    }
+				} else {
+				    if ( node.isMasteredNode(payload.node_id) ) {
+					order.addOrder(payload.node_id, PAYLOAD_TYPE_HB_RESP, 0, mymillis());
+					order.modifyOrderFlags(payload.node_id, PAYLOAD_FLAG_LASTMESSAGE);
+				    }
+				}
+			    }
+			} else {
+			    // reset stop counter (TTL) for message to send
+			    if ( node.isMasteredNode(payload.node_id) ) order.adjustEntryTime(payload.node_id, mymillis());
+			}
+		    }
+		    break;    
+		    case PAYLOAD_TYPE_DATRESP: { // Quittung für eine Nachricht vom Typ PAYLOAD_TYPE_DATNOR !!
+			if ( node.isMasteredNode(payload.node_id) ) {
+			    if ( order.isOrderNo(payload.orderno) ) {
+				process_payload(&payload);
+				order.delByOrderNo(payload.orderno);  // Nachricht ist angekommen => löschen
+				if ( orderbuffer.nodeHasEntry(payload.node_id) ) {  // WE have orders for this node
+				    make_order(payload.node_id, PAYLOAD_TYPE_DAT);
+				    if ( verboselevel & VERBOSEORDER ) {
+					printf("%sEntries for Heartbeat Node found, sending them\n",ts(tsbuf));
+				    }
+				}
+				order.addOrder(payload.node_id, PAYLOAD_TYPE_DATSTOP, 0, mymillis());
+				order.modifyOrderFlags(payload.node_id, PAYLOAD_FLAG_LASTMESSAGE);
+			    }
+			}
+		    }
+		    break;
+		    case PAYLOAD_TYPE_DATSTOP: { // Quittung für einen Heatbeatresponse!!
+			if ( node.isMasteredNode(payload.node_id) )
+			    order.delByOrderNo(payload.orderno);  // Nachricht ist angekommen => löschen
+		    }
+		    break;
+		    case PAYLOAD_TYPE_PING_POW_MIN: {
+			node.setPaLevel(payload.node_id, 1);
+		    }
+		    break;
+		    case PAYLOAD_TYPE_PING_POW_LOW: {
+			node.setPaLevel(payload.node_id, 2);
+		    }
+		    break;
+		    case PAYLOAD_TYPE_PING_POW_HIGH: {
+			node.setPaLevel(payload.node_id, 3);
+		    }
+		    break;
+		    case PAYLOAD_TYPE_PING_POW_MAX: {
+			node.setPaLevel(payload.node_id, 4);
+		    }
+		    break;
+		    case PAYLOAD_TYPE_PING_END: {
+			if ( node.isNewHB(payload.node_id, payload.heartbeatno, time(0)) ) {  // Got a new Heaqrtbeat -> process it!
+			    sprintf(buf,"%u",node.getPaLevel(payload.node_id));
+			    database.storeNodeConfig(payload.node_id, REG_PALEVEL, buf);
+			} else {
+			    // nothing to do here !!!   
+			}
+		    }
+		    break;
+		    default: {	
+			if ( node.isMasteredNode(payload.node_id) ) {
+			    if ( verboselevel & VERBOSEORDER) {
+				printf("%sProcessing Node:%u Type:%u Orderno: %u\n", ts(tsbuf), payload.node_id, payload.msg_type, payload.orderno);
+			    }
+			    if ( order.isOrderNo(payload.orderno) ) {
+				process_payload(&payload);
+				order.delByOrderNo(payload.orderno);
+				if ( orderbuffer.nodeHasEntry(payload.node_id) ) {  // WE have orders for this node
+				    make_order(payload.node_id, PAYLOAD_TYPE_DAT);
+				    if ( verboselevel & VERBOSEORDER ) {
+					printf("%sEntries for Heartbeat Node found, sending them\n", ts(tsbuf));
+				    }
+				}
+			    }
+			}
+		    }
+		}
+	    }  // gateway.isGateway
+	} // UDP Message > 0
 //
 // Orderloop: Tell the nodes what they have to do
 //
-		if ( order.hasEntry() ) {  // go transmitting if its time to do ..
-			// Look if we have something to send
-			while ( order.getOrderForTransmission(&payload, mymillis() ) ) {
-                // Hier UDP Sender
-                void* p_rec = NULL;
-                p_rec = gateway.getGateway(p_rec, gw_name, &gw_no);
-                while ( p_rec ) {
-                    if ( verboselevel & VERBOSERF24) {
-                        sprintf(buf1,"H>G:%u", gw_no);
-                        printPayload(ts(tsbuf), buf1, &payload);
-                    }
-                    udpdata.gw_no=0;
-                    memcpy(&udpdata.payload, &payload, sizeof(payload) );
-                    sendUdpMessage(gw_name, cfg.gwUdpPortNo.c_str(), &udpdata);
-                    p_rec = gateway.getGateway(p_rec, gw_name, &gw_no);
-                }
-            }
- 			usleep(20000);
-        } else {
-            usleep(200000);
-        }
+	if ( order.hasEntry() ) {  // go transmitting if its time to do ..
+	    // Look if we have something to send
+	    while ( order.getOrderForTransmission(&payload, mymillis() ) ) {
+		// Hier UDP Sender
+		void* p_rec = NULL;
+		p_rec = gateway.getGateway(p_rec, gw_name, &gw_no);
+		while ( p_rec ) {
+		    if ( verboselevel & VERBOSERF24) {
+			sprintf(buf1,"H>G:%u", gw_no);
+			printPayload(ts(tsbuf), buf1, &payload);
+		    }
+		    udpdata.gw_no=0;
+		    memcpy(&udpdata.payload, &payload, sizeof(payload) );
+		    sendUdpMessage(gw_name, cfg.gwUdpPortNo.c_str(), &udpdata);
+		    p_rec = gateway.getGateway(p_rec, gw_name, &gw_no);
+		}
+		usleep(20000);
+	    }
+	    usleep(20000);
+	} else {
+	    usleep(200000);
+	}
 //
 //  end orderloop
 //
-	} // while(1)
-	return 0;
+    } // while(1)
+    return 0;
 }
 
