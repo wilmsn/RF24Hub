@@ -13,13 +13,15 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include "config.h"
+#include <string.h>
+#include "rf24_config.h"
+//#include "config.h"
 
-#define ZF_UNKNOWN          0
-#define ZF_FLOAT            1
-#define ZF_INT              2
-#define ZF_UINT             3
-#define ZF_CHAR             4
+#define ZF_UNKNOWN          9
+#define ZF_FLOAT            0
+#define ZF_INT              1
+#define ZF_UINT             2
+#define ZF_CHAR             3
 
 #define ZF_SHIFT_CHANNEL    23
 #define ZF_SHIFT_EXPO       17
@@ -83,7 +85,7 @@
  * @param value: gültige Werte: -1*10^19 .. 1*10^19
  * @return Den Transportwert
  */
-uint32_t calcTransportValue_f(uint32_t key, uint8_t channel, float value);
+uint32_t calcTransportValue(uint8_t channel, float value);
 
 /**
  * Verpackt die Sensornummer und den Messwert zu einem 
@@ -92,7 +94,7 @@ uint32_t calcTransportValue_f(uint32_t key, uint8_t channel, float value);
  * @param value: Der Wert, gültige Werte: 0 .. 65535
  * @return Den Transportwert
  */
-uint32_t calcTransportValue_ui(uint32_t key, uint8_t channel, uint16_t value);  
+uint32_t calcTransportValue(uint8_t channel, uint16_t value);  
 
 /**
  * Verpackt die Sensornummer und den Messwert zu einem 
@@ -101,7 +103,7 @@ uint32_t calcTransportValue_ui(uint32_t key, uint8_t channel, uint16_t value);
  * @param value: gültige Werte: -32,768 to 32,767
  * @return Den Transportwert
  */
-uint32_t calcTransportValue_i(uint32_t key, uint8_t channel, int16_t value);
+uint32_t calcTransportValue(uint8_t channel, int16_t value);
 
 /******************************************************
  * Verpackt die Sensornummer und die ersten 3 Zeichen
@@ -113,7 +115,7 @@ uint32_t calcTransportValue_i(uint32_t key, uint8_t channel, int16_t value);
  *      bei Rückgabe Position des ersten 
  *                   nicht verarbeteten Zeichens
  ******************************************************/
-uint32_t calcTransportValue_c(uint8_t channel, char* value, uint16_t* pos);
+uint32_t calcTransportValue(uint8_t channel, char* value1, char* value2);
 
 
 
@@ -130,18 +132,29 @@ uint32_t calcTransportValue_c(uint8_t channel, char* value, uint16_t* pos);
  * @note Der übergebene **buf** muss gross genug sein um den Rückgabewert aufzunehmen
  * 
  */
-char* unpackTransportValue(uint32_t key, uint32_t data, char* buf);
+char* unpackTransportValue(uint32_t data, char* buf);
 
 /**
- * Diese Funktion packt die Daten entsprechend des verwendeten Channels ein.
- * Grundlage ist die definierte Datenart je Channel.
+ * Diese Funktion packt die Daten entsprechend des übergebenen Datatypes ein.
  * @note Diese Funktion läuft wegen den verwendetetn C Funktionen nur auf Linux Systemen
- * @param key Der geheime Schlüssel als 32 Bit Wert
  * @param channel Der Channel
  * @param value Der Wert als String
+ * @param dataType Der Datentyp
  * @return Den gepackten Transportwert
  */
-//uint32_t packTransportValue(uint32_t key, uint8_t format, uint8_t channel, char* value);
+uint32_t packTransportValue(uint8_t channel, char* value, uint8_t dataType);
+
+/**
+ * Diese Funktion packt die Daten ein.
+ * Ist der Value eine Fließkommazahl (enthält einen "." als Dezimaltrenner) wird der Datatype FLOAT verwendet,
+ * sonst int16.
+ * @note Diese Funktion läuft wegen den verwendetetn C Funktionen nur auf Linux Systemen
+ * @param channel Der Channel
+ * @param value Der Wert als String
+ * @param dataType Der Datentyp
+ * @return Den gepackten Transportwert
+ */
+uint32_t packTransportValue(uint8_t channel, char* value);
 
 //uint32_t packTransportValue(uint32_t key, uint8_t channel, float value);
 //uint32_t packTransportValue(uint32_t key, uint8_t channel, int16_t value);
@@ -156,30 +169,29 @@ char* unpackTransportValue(uint32_t key, uint32_t data, char* buf);
  * 3 => unsigned int Value
  * 4 => Character
  */
-uint8_t getDataType(uint32_t key, uint32_t data);
+uint8_t getDataType(uint32_t data);
 
 /**
  * Extrahiert die Channel aus dem Transportwert
  */
-uint8_t getChannel(uint32_t key, uint32_t data);
+uint8_t getChannel(uint32_t data);
 
 /**
  * Extrahiert den Sensorwert aus dem Transportwert
  * Hier: Float
  */
-float getValue_f(uint32_t key, uint32_t data);
+bool getValue(uint32_t data, float* zahl);
 
 /**
  * Extrahiert den Sensorwert aus dem Transportwert
  * Hier: Integer (15 Bit + Vorzeichen)
  */
-int16_t getValue_i(uint32_t key, uint32_t data);
+bool getValue(uint32_t data, int16_t* zahl);
 
 /**
  * Extrahiert den Sensorwert aus dem Transportwert
  * Hier: unsigned int (16 Bit)
  */
-uint16_t getValue_ui(uint32_t key, uint32_t data);
-
+bool getValue(uint32_t data, uint16_t* zahl);
 
 #endif

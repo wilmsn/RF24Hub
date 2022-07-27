@@ -39,7 +39,7 @@ void Sensor::addSensor(uint32_t sensor_id, NODE_DATTYPE node_id, uint8_t channel
     p_new->channel = channel;
     p_new->datatype = datatype;
     p_new->last_utime = last_utime;
-    p_new->last_data = last_data ^ mykey;
+    p_new->last_data = last_data;
     sprintf(p_new->fhem_dev,"%s", fhem_dev);
     sprintf(p_new->sensor_name,"%s", sensor_name);
     newEntry(p_new);
@@ -47,7 +47,7 @@ void Sensor::addSensor(uint32_t sensor_id, NODE_DATTYPE node_id, uint8_t channel
    
 bool Sensor::updateLastVal(uint32_t sensor_id, uint32_t last_data) {
     bool retval = false;
-    uint8_t channel = getChannel(mykey, last_data);
+    uint8_t channel = getChannel(last_data);
     sensor_t *p_search = p_initial;
     //p_search=p_initial;
     while (p_search) {
@@ -56,7 +56,7 @@ bool Sensor::updateLastVal(uint32_t sensor_id, uint32_t last_data) {
             p_search->last_utime = time(0);
             if ( verboselevel & VERBOSESENSOR) 
                 printf("%ssensor.updateLastVal: S:%u N:%u C:%u V:%s\n", ts(tsbuf), p_search->sensor_id, p_search->node_id
-                        , p_search->channel, unpackTransportValue(mykey, last_data, buf) ); 
+                        , p_search->channel, unpackTransportValue(last_data, buf) ); 
             retval = true;
         }
         p_search=p_search->p_next;
@@ -190,8 +190,8 @@ void Sensor::printBuffer(int tn_socket, bool html) {
             p_search->channel, 
             p_search->fhem_dev, 
             strlen(p_search->fhem_dev)<10? "\t\t\t":strlen(p_search->fhem_dev)<18? "\t\t":strlen(p_search->fhem_dev)<26? "\t":"",
-            unpackTransportValue(mykey, p_search->last_data, buf), 
-            strlen(unpackTransportValue(mykey, p_search->last_data, buf))<5? "\t":"", 
+            unpackTransportValue(p_search->last_data, buf), 
+            strlen(unpackTransportValue(p_search->last_data, buf))<5? "\t":"", 
             utime2str(p_search->last_utime, buf1, 1) 
         );   
 	write(tn_socket , client_message , strlen(client_message));
@@ -204,6 +204,3 @@ void Sensor::setVerbose(uint16_t _verboselevel) {
     verboselevel = _verboselevel;
 }
 
-void Sensor::setKey(uint32_t _key) {
-    mykey = _key;
-}

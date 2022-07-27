@@ -184,19 +184,19 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 		case 0: 
 		{
 		    float val_f = strtof(wort4, &pEnd);
-		    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue_f(mykey, channel, val_f) );
+		    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue(channel, val_f) );
 		    tn_input_ok = true;
 		}
 		break;
 		case 1:
 		{
-		    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue_i(mykey, channel, 
+		    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue(channel, 
 						(int16_t)strtol(wort4, &pEnd, 10)) );
 		    tn_input_ok = true;
 		}
 		break;
 		case 2:
-		    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue_ui(mykey, channel,
+		    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue(channel,
 						(uint16_t)strtoul(wort4, &pEnd, 10)) );
 		    tn_input_ok = true;
 		break;
@@ -217,20 +217,20 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 		case 0:
 		{
 		    float val_f = strtof(wort4, &pEnd);
-		    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue_f(mykey, channel, val_f) );
+		    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue(channel, val_f) );
 		    tn_input_ok = true;
 		}
 		break;
 		case 1:
 		{
-		    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue_i(mykey, channel, 
+		    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue(channel, 
 						(int16_t)strtol(wort4, &pEnd, 10)) );
 		    tn_input_ok = true;
 		}
 		break;
 		case 2:
 		{
-		    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue_ui(mykey, channel,
+		    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue(channel,
 						(uint16_t)strtoul(wort4, &pEnd, 10)) );
 		    tn_input_ok = true;
 		}
@@ -447,13 +447,13 @@ void init_system(void) {
 }
 
 void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
-    uint8_t channel = getChannel(mykey, mydata);
+    uint8_t channel = getChannel(mydata);
     switch (channel) {
         case 1 ... 100: {
 	    // Sensor or Actor that gets or delivers a number
             uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
             if ( sensor_id > 0 ) { 
-                buf = unpackTransportValue(mykey, mydata, buf);
+                buf = unpackTransportValue(mydata, buf);
                 if ( verboselevel & VERBOSECONFIG) {    
                     printf("%sValue of Node: %u Data: %u ==> Channel: %u is %s\n", ts(tsbuf), node_id, mydata, channel, buf);
                 }
@@ -467,12 +467,12 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
 	    // battery voltage
             uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
             if ( sensor_id > 0 ) { 
-                buf = unpackTransportValue(mykey, mydata, buf);
+                buf = unpackTransportValue(mydata, buf);
                 if ( verboselevel & VERBOSECONFIG) {    
                     printf("%sVoltage of Node: %u is %sV\n", ts(tsbuf), node_id, buf);
                 }
                 sensor.updateLastVal(sensor_id, mydata);
-                node.setVoltage(node_id, strtof(unpackTransportValue(mykey,mydata,buf),NULL));
+                node.setVoltage(node_id, strtof(unpackTransportValue(mydata,buf),NULL));
                 database.storeSensorValue(sensor_id, buf);
                 send_fhem_cmd(node_id, channel,buf);
             }
@@ -481,7 +481,7 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
         case 102 ... 125: 
         {
 	    // Node config register
-            buf = unpackTransportValue(mykey, mydata, buf);
+            buf = unpackTransportValue(mydata, buf);
             if ( verboselevel & VERBOSECONFIG) {    
                 printf("%sConfigregister of Node: %u Channel: %u is %s\n", ts(tsbuf), node_id, channel, buf);
             }
@@ -506,12 +506,12 @@ void sighandler(int signal) {
 }
 
 void process_payload(payload_t* mypayload) {
-    if ( mypayload->data1 != mykey ) process_sensor(mypayload->node_id, mypayload->data1);
-    if ( mypayload->data2 != mykey ) process_sensor(mypayload->node_id, mypayload->data2);
-    if ( mypayload->data3 != mykey ) process_sensor(mypayload->node_id, mypayload->data3);
-    if ( mypayload->data4 != mykey ) process_sensor(mypayload->node_id, mypayload->data4);
-    if ( mypayload->data5 != mykey ) process_sensor(mypayload->node_id, mypayload->data5);
-    if ( mypayload->data6 != mykey ) process_sensor(mypayload->node_id, mypayload->data6);
+    process_sensor(mypayload->node_id, mypayload->data1);
+    process_sensor(mypayload->node_id, mypayload->data2);
+    process_sensor(mypayload->node_id, mypayload->data3);
+    process_sensor(mypayload->node_id, mypayload->data4);
+    process_sensor(mypayload->node_id, mypayload->data5);
+    process_sensor(mypayload->node_id, mypayload->data6);
 }
 
 int main(int argc, char* argv[]) {
@@ -614,15 +614,10 @@ int main(int argc, char* argv[]) {
     
     // Init Arrays
     node.setVerbose(verboselevel);
-//    node.setKey(mykey);
     sensor.setVerbose(verboselevel);
-    sensor.setKey(mykey);
     order.setVerbose(verboselevel);
-    order.setKey(mykey);
     orderbuffer.setVerbose(verboselevel);
-    orderbuffer.setKey(mykey);
     database.setVerbose(verboselevel);
-    database.setKey(mykey);
     gateway.setVerbose(verboselevel);
     init_system();
     printf("%s%s up and running\n", ts(tsbuf),PRGNAME); 
@@ -685,7 +680,7 @@ int main(int argc, char* argv[]) {
         if ( verboselevel & VERBOSERF24 ) {
             printf ("%sUDP Message from: %s \n",ts(tsbuf), inet_ntoa(udp_address_in.sin_addr));
             sprintf(buf1,"G:%u>H", udpdata.gw_no);
-            printPayload(mykey, ts(tsbuf), buf1, &payload);
+            printPayload(ts(tsbuf), buf1, &payload);
         }
         if ( gateway.isGateway(udpdata.gw_no) ) {
             if (payload.msg_flags & PAYLOAD_FLAG_NEEDHELP ) {
@@ -720,7 +715,7 @@ int main(int argc, char* argv[]) {
                                 }
                             } else {
                                 if ( node.isMasteredNode(payload.node_id) ) {
-                                    order.addOrder(payload.node_id, PAYLOAD_TYPE_HB_RESP, 0 ^ mykey, mymillis());
+                                    order.addOrder(payload.node_id, PAYLOAD_TYPE_HB_RESP, 0, mymillis());
                                     order.modifyOrderFlags(payload.node_id, PAYLOAD_FLAG_LASTMESSAGE);
                                 }
                             }
@@ -810,7 +805,7 @@ int main(int argc, char* argv[]) {
                 while ( p_rec ) {
                     if ( verboselevel & VERBOSERF24) {
                         sprintf(buf1,"H>G:%u", gw_no);
-                        printPayload(mykey, ts(tsbuf), buf1, &payload);
+                        printPayload(ts(tsbuf), buf1, &payload);
                     }
                     udpdata.gw_no=0;
                     memcpy(&udpdata.payload, &payload, sizeof(payload) );

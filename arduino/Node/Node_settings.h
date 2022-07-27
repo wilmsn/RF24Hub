@@ -45,6 +45,28 @@ debugging options:
 //*****************************************************
 //    Individual settings
 //-----------------------------------------------------
+#if defined(SOLARNODE)
+#define RF24NODE               202
+#define LOW_VOLT_LEVEL         2.2
+#define EEPROM_VERSION         5
+#define STATUSLED              A2
+#define SLEEPTIME_SEC          30
+#define EMPTYLOOPS             9
+#define SOLARZELLE             A0
+#define R_SOLAR                340.0
+#define LOAD_BALANCER_BATT     A1
+// Ist die Batteriespannung groesser als USE_BATTERIE wird der Tiefschlaf von MC und Radio abgeschaltet
+//#define USE_BATTERIE           2.7
+//#define DISCHARGE_U            2,8
+// Am DISCHARGE_PIN liegt ein Widerstand von 340 Ohm gegen Vcc 
+//#define DISCHARGE_PIN          5
+// geaenderte Sendeparameter zum Test
+#define MAX_SENDCOUNT          3
+#define SENDDELAY              500
+#define LOW_VOLT_LOOPS         90
+
+#endif
+//-----------------------------------------------------
 #if defined(AUSSENTHERMOMETER)
 #define RF24NODE        200
 #define SENSOR_BOSCH
@@ -199,7 +221,7 @@ debugging options:
 #define EMPTYLOOPS           0
 #define SENSOR_BOSCH
 #define DISPLAY_5110
-#define EEPROM_VERSION       2
+#define EEPROM_VERSION       1
 #define LOW_VOLT_LEVEL       3.5
 //#define VOLT_OFF             0.55
 #define CONTRAST             45
@@ -215,4 +237,23 @@ debugging options:
 #define EEPROM_VERSION       1
 #define VOLT_OFF             0.55
 #define LOWVOLTAGELEVEL      3.0
+#endif
+
+
+// ------ End of configuration part ------------
+
+//define constrains
+#if defined(LOAD_BALANCER_BATT)
+#define LOAD_BALANCER          
+#endif
+
+//define constrains for debugging
+#if defined(DEBUG_SERIAL_SENSOR)
+#define DEBUG_SERIAL
+#endif
+#if defined(DEBUG_SERIAL_RADIO)
+#define DEBUG_SERIAL
+#endif
+#if defined(DEBUG_SERIAL_PROC)
+#define DEBUG_SERIAL
 #endif

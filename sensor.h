@@ -44,11 +44,6 @@ char*       tsbuf;
  *************************************************************/
 uint16_t    verboselevel;
 /**************************************************************
- * Variable für den Schlüssel zur Ver-/Entschlüsselung der
- * Transportdaten
- *************************************************************/
-uint32_t    mykey;
-/**************************************************************
  * fügt einen neuen record zum Buffer hinzu
  *************************************************************/
 void    newEntry(sensor_t*);
@@ -63,10 +58,6 @@ public:
  *  Setzt das Verboselevel
  */
 void setVerbose(uint16_t _verboselevel);
-/**
- *  Setzt den Key
- */
-void setKey(uint32_t _key);
 /**
  *  Löscht den kompletten Inhalt und leert den Buffer
  */

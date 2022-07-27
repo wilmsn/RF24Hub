@@ -172,11 +172,11 @@ void OrderBuffer::printBuffer(int out_socket, bool htmlFormat) {
     while (p_search) {
         if ( htmlFormat ) {
             sprintf(client_message,"<tr><td>%u</td><td>%u</td><td>%s</td><td>%s</td></tr>\n", 
-            p_search->node_id, p_search->channel, unpackTransportValue(mykey, p_search->data, buf1), utime2str(p_search->utime, buf, 1) );
+            p_search->node_id, p_search->channel, unpackTransportValue(p_search->data, buf1), utime2str(p_search->utime, buf, 1) );
         } else {
             if (writeTS) sprintf(client_message,"%s",ts(tsbuf));
             sprintf(client_message,"Node:%u Channel:%u Value:%s Entry:%s\n", 
-            p_search->node_id, p_search->channel, unpackTransportValue(mykey, p_search->data, buf1), utime2str(p_search->utime, buf, 1) );
+            p_search->node_id, p_search->channel, unpackTransportValue(p_search->data, buf1), utime2str(p_search->utime, buf, 1) );
         }
         write(out_socket , client_message , strlen(client_message));
         p_search=p_search->p_next;

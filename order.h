@@ -54,11 +54,6 @@ char*       buf6;
  *************************************************************/
 uint16_t    verboselevel;
 /**************************************************************
- * Variable für den Schlüssel zur Ver-/Entschlüsselung der
- * Transportdaten
- *************************************************************/
-uint32_t    mykey;
-/**************************************************************
  * Binärer Speicher der anzeigt ob mind. 1 Datensatz 
  * im Speicher ist.
  *************************************************************/
@@ -134,10 +129,6 @@ bool getOrderForTransmission(payload_t* payload, uint64_t mytime);
  * true => HTML Format; false => Textformat
  */
 void printBuffer(int out_socket, bool htmlFormat);
-/**
- *  Setzt den Key
- */
-void setKey(uint32_t _key);
 
 Order(void);
 

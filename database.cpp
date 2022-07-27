@@ -157,7 +157,7 @@ void Database::initNode(Node* node) {
 	db_check_error();
 	while ((row = mysql_fetch_row(result))) {
 	    if ( row[0] != NULL ) node_id = strtoul(row[0], &pEnd,10);
-	    if ( row[1] != NULL ) u_batt = strtof(unpackTransportValue(mykey, strtoul(row[1], &pEnd,10),tsbuf),&pEnd); else u_batt = 0;
+	    if ( row[1] != NULL ) u_batt = strtof(row[1],&pEnd); else u_batt = 0;
 	    node->setVoltage(node_id, u_batt); 
 	}
 	mysql_free_result(result);    
