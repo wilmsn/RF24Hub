@@ -21,7 +21,7 @@ On Branch: master  !!!!!
 //#define SCHLAFZIMMERTHERMOMETER
 //#define BASTELZIMMERTHERMOMETER
 //#define BASTELZIMMERTHERMOMETER_SW
-//#define KUECHETHERMOMETER // noch mit Bug in 205
+//#define KUECHETHERMOMETER
 //#define WOHNZIMMERTHERMOMETER
 //#define ANKLEIDEZIMMERTHERMOMETER
 //#define KUGELNODE1
@@ -111,14 +111,20 @@ uint8_t neopixel_b;
 #endif
 
 #if defined(SOLARZELLE)
-float    u_sol;
-float    pow_sol;
-//uint8_t  batt_mod1;
-//uint8_t  batt_mod2;
-#endif
-
-#if defined(LOAD_BALANCER)
-float u_batt1;
+float    u_sol1;
+float    u_sol1_avg;
+float    u_sol2;
+float    u_batt1;
+float    u_batt2;
+float    u_delta;
+uint8_t  batt_mod1;
+uint8_t  batt_mod2;
+uint8_t  batt_mod3;
+uint8_t  batt_mod4;
+uint8_t  batt_mod1_s;
+uint8_t  batt_mod2_s;
+uint8_t  batt_mod3_s;
+uint8_t  batt_mod4_s;
 #endif
 
 payload_t r_payload, s_payload;    
@@ -248,15 +254,24 @@ void get_sensordata(void) {
 #endif
 // ENDE: Sensor Bosch BMP180; BMP280; BME280
 #if defined(SOLARZELLE)
-  u_sol = (float)analogRead(SOLARZELLE) / 1024.0 * vcc_mess;
-  pow_sol += u_sol / R_SOLAR * u_sol / 60.0 / 60.0 * (float)eeprom.sleeptime_sec;   // In WStd
+  u_sol1 = (float)analogRead(SOLARZELLE) / 1024.0 * vcc_mess;
 #if defined(DEBUG_SERIAL_SENSOR)
     Serial.print("U_sol: ");
     Serial.println(u_sol);
 #endif
 #endif
-#if defined(LOAD_BALANCER)
-  u_batt1 = (float)analogRead(LOAD_BALANCER_BATT) / 1024.0 * vcc_mess;
+#if defined(SOLARZELLE2)
+  u_sol2 = (float)analogRead(SOLARZELLE2) / 1024.0 * vcc_mess;
+#if defined(DEBUG_SERIAL_SENSOR)
+    Serial.print("U_sol2: ");
+    Serial.println(u_sol2);
+#endif
+#endif
+#if defined(LOAD_BALLANCER_PIN)
+  pinMode(LOAD_BALLANCER_PIN, INPUT);
+  delay(10);
+  u_batt1 = (float)analogRead(LOAD_BALLANCER_PIN) / 1024.0 * vcc_mess;
+  u_batt2 = vcc_mess - u_batt1;
 #endif
 }
 
@@ -315,29 +330,20 @@ uint32_t action_loop(uint32_t data) {
       }
       break;
 #endif
-#if defined(LOAD_BALANCER)
+#if defined(LOAD_BALLANCER)
       case 41:
       {
         if ( getValue_i(data) == 0 ) {
-          pinMode(LOAD_BALANCER_BATT, INPUT);
+          pinMode(LOAD_BALLANCER_PIN, INPUT);
         }
         if ( getValue_i(data) == 1 ) {
-          pinMode(LOAD_BALANCER_BATT, OUTPUT);
-          digitalWrite(LOAD_BALANCER_BATT, HIGH);
+          pinMode(LOAD_BALLANCER_PIN, OUTPUT);
+          digitalWrite(LOAD_BALLANCER_PIN, HIGH);
         } 
         if ( getValue_i(data) == 2 ) {
-          pinMode(LOAD_BALANCER_BATT, OUTPUT);
-          digitalWrite(LOAD_BALANCER_BATT, LOW);
+          pinMode(LOAD_BALLANCER_PIN, OUTPUT);
+          digitalWrite(LOAD_BALLANCER_PIN, LOW);
         } 
-      }
-      break;
-#endif
-#if defined(SOLARZELLE)
-      case 42:
-      {
-        if ( getValue_i(data) == 0 ) {
-          pow_sol = 0;;
-        }
       }
       break;
 #endif
@@ -600,6 +606,14 @@ uint32_t action_loop(uint32_t data) {
         data = calcTransportValue_f(REG_SW, SWVERSION);
       }
       break;
+#if defined(LOAD_BALLANCER)
+      case LOAD_BALLANCER_REG:
+      {
+        u_delta = getValue_f(data);
+        data = calcTransportValue_f(LOAD_BALLANCER_REG, u_delta);
+      }
+      break;
+#endif
     }  
     return data; 
 }  
@@ -629,12 +643,13 @@ void setup(void) {
 //  batt_mod1 = 0;
 //  batt_mod2 = 0;
 #endif
-#if defined(LOAD_BALANCER)
-  pinMode(LOAD_BALANCER_BATT, INPUT);
+#if defined(LOAD_BALLANCER)
+  pinMode(LOAD_BALLANCER_PIN, INPUT);
+  u_delta = LOAD_BALLANCER_U;
 #endif
 #if defined(DISCHARGE_PIN)
-  pinMode(DISCHARGE_PIN, OUTPUT);
-  digitalWrite(DISCHARGE_PIN, HIGH); 
+    pinMode(DISCHARGE_PIN, OUTPUT);
+    digitalWrite(DISCHARGE_PIN, HIGH);
 #endif
   EEPROM.get(0, eeprom);
   if (eeprom.versionnumber != EEPROM_VERSION && EEPROM_VERSION > 0) {
@@ -1229,6 +1244,7 @@ void loop(void) {
     }
     if ( loopcount == 0 ) get_sensordata();
   } else { // regular Voltage Handling
+
 #if defined(HAS_DISPLAY)
     display_sleep(false);
 #endif
@@ -1247,6 +1263,48 @@ void loop(void) {
     draw_temp(temp);
     wipe_therm(THERM_X0, THERM_Y0);
 #endif
+#if defined(SOLARZELLE)
+    u_sol1_avg += u_sol1;
+#if defined(USE_BATTERIE)
+  if (vcc_mess > USE_BATTERIE) {
+    batt_mod1 = 1;
+    batt_mod1_s = 1;
+  } else {
+    batt_mod1 = 0;
+  }
+#endif
+#if defined(DISCHARGE_PIN)
+  if ( vcc_mess > DISCHARGE_U ) {
+    digitalWrite(DISCHARGE_PIN, LOW);
+    batt_mod2 = 2;
+    batt_mod2_s = 2;
+  } else {
+    digitalWrite(DISCHARGE_PIN, HIGH);
+    batt_mod2 = 0;
+  }
+#endif
+#if defined(LOAD_BALLANCER)
+  if ( (u_batt2 - u_batt1) > u_delta ) {
+    pinMode(LOAD_BALLANCER_PIN, OUTPUT);
+    delay(10);
+    digitalWrite(LOAD_BALLANCER_PIN, HIGH);
+    batt_mod3 = 4;
+    batt_mod3_s = 4;
+  } else {
+    batt_mod3 = 0;
+  }
+  if ( (u_batt1 - u_batt2) > u_delta ) {
+    pinMode(LOAD_BALLANCER_PIN, OUTPUT);
+    delay(10);
+    digitalWrite(LOAD_BALLANCER_PIN, LOW);
+    batt_mod4 = 8;
+    batt_mod4_s = 8;
+  } else {
+    batt_mod4 = 0;
+  }
+#endif
+#endif
+
   } // END regular Voltage Handling
   if ( loopcount == 0) {
 #if defined(DEBUG_SERIAL_RADIO)
@@ -1284,28 +1342,22 @@ void loop(void) {
     pos++;
 #endif
 #if defined(SOLARZELLE)
-    payload_data(pos,5,u_sol);
+    payload_data(pos,5,u_sol1_avg/(float)(eeprom.emptyloops+1));
+    u_sol1_avg = 0;
     pos++;
 #if defined(DEBUG_SERIAL_RADIO)
     Serial.print("U_sol: ");
     Serial.println(u_sol);
 #endif
-    payload_data(pos,6,pow_sol);
+#if defined(SOLARZELLE2)
+    payload_data(pos,6,u_sol2);
     pos++;
 #if defined(DEBUG_SERIAL_RADIO)
-    Serial.print("Pow_sol: ");
-    Serial.println(pow_sol);
+    Serial.print("U_sol2: ");
+    Serial.println(u_sol2);
 #endif
-/*
-    payload_data(pos,8,batt_mod1+batt_mod2);
-    pos++;
-#if defined(DEBUG_SERIAL_RADIO)
-    Serial.print("Batterie Modus: ");
-    Serial.println(batt_mod1+batt_mod2);
 #endif
-*/
-#endif
-#if defined(LOAD_BALANCER)
+#if defined(LOAD_BALLANCER)
     payload_data(pos,7,u_batt1);
     pos++;
 #if defined(DEBUG_SERIAL_RADIO)
@@ -1313,15 +1365,19 @@ void loop(void) {
     Serial.println(u_batt1);
 #endif
 #endif
+    uint16_t batt_mod = 0;
+    batt_mod = batt_mod1_s | batt_mod2_s | batt_mod3_s | batt_mod4_s;
+    payload_data(pos,8, batt_mod);
+    batt_mod1_s = 0;
+    batt_mod2_s = 0;
+    batt_mod3_s = 0;
+    batt_mod4_s = 0;    
+    pos++;
+#endif    
     uint8_t msg_flags = PAYLOAD_FLAG_LASTMESSAGE;
     if ( low_voltage_flag ) msg_flags |= PAYLOAD_FLAG_NEEDHELP; 
     do_transmit(eeprom.max_sendcount, PAYLOAD_TYPE_HB, msg_flags, 0, 0);
     exec_jobs();
-/*
-#if defined(USE_BATTERIE)
-    if (vcc_mess < USE_BATTERIE) {
-#endif
-*/
     radio.stopListening();
     delay(10);
     radio.powerDown();
@@ -1329,11 +1385,6 @@ void loop(void) {
     Serial.println("Radio Sleep");
     delay(100);
 #endif
-/*
-#if defined(USE_BATTERIE)
-    }
-#endif
-*/
 #if defined(HAS_DISPLAY)
     wipe_antenna(ANT_X0, ANT_Y0);
 #endif
@@ -1349,29 +1400,14 @@ void loop(void) {
     tempsleeptime *= 1000;
   }
   sleeptime_kor = 0;  
-/*
 #if defined(USE_BATTERIE)
-  if (vcc_mess < USE_BATTERIE) {
-    batt_mod1 = 0;
-#endif
-*/
-    sleep4ms(tempsleeptime);
-/*
-#if defined(USE_BATTERIE)
-  } else {
-    batt_mod1 = 1;
+  if (batt_mod1 == 1) {
     delay(tempsleeptime);
-  }
-#endif
-#if defined(DISCHARGE_PIN)
-  if ( vcc_mess > DISCHARGE_U ) {
-    digitalWrite(DISCHARGE_PIN, LOW);
-    batt_mod2 = 2;
   } else {
-    digitalWrite(DISCHARGE_PIN, HIGH);
-    batt_mod2 = 0;
+#endif
+    sleep4ms(tempsleeptime);
+#if defined(USE_BATTERIE)
   }
 #endif
-*/
   loopcount++;
 }

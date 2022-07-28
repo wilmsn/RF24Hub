@@ -52,14 +52,29 @@ debugging options:
 #define STATUSLED              A2
 #define SLEEPTIME_SEC          30
 #define EMPTYLOOPS             9
+// Mist die Spannung an der Referenzzelle die NUR mit einem Widerstand abgeschlossen ist
 #define SOLARZELLE             A0
-#define R_SOLAR                340.0
-#define LOAD_BALANCER_BATT     A1
+// Mist die Spannung an der Versorgungssolarzelle vor dem Step-Up Wandler
+#define SOLARZELLE2            A3
+// Messung der Spannung an Batterie1 = Spannung zwischen den Batterien
+#define UBATT1                 A1
 // Ist die Batteriespannung groesser als USE_BATTERIE wird der Tiefschlaf von MC und Radio abgeschaltet
-//#define USE_BATTERIE           2.7
-//#define DISCHARGE_U            2,8
+#define USE_BATTERIE           2.6
 // Am DISCHARGE_PIN liegt ein Widerstand von 340 Ohm gegen Vcc 
-//#define DISCHARGE_PIN          5
+#define DISCHARGE_PIN          5
+// Spannungen oberhalb von DISCHARGE_U schalten den DISCHARGE_PIN ein = HIGH
+#define DISCHARGE_U            2.7
+// Load Ballancer
+#define LOAD_BALLANCER
+// Maximale Differenzspannung zwischen den Zellen
+#define LOAD_BALLANCER_U       0.2
+// Internes Register zur Speicherung
+#define LOAD_BALLANCER_REG     105
+// Port zur Steuerung, angeschlossen zwischen den Batterien mit einen
+// Widerstand von 220 Ohm, Dient gleichzeitig der Spannungsmessung
+#define LOAD_BALLANCER_PIN     A1
+
+
 #define MAX_SENDCOUNT          5
 #define LOW_VOLT_LOOPS         90
 
