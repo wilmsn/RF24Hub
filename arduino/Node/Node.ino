@@ -22,6 +22,7 @@ On Branch: zahlenformat  !!!!!
 //#define BASTELZIMMERTHERMOMETER
 //#define BASTELZIMMERTHERMOMETER_SW
 //#define KUECHETHERMOMETER
+//#define WOHNZIMMERTHERMOMETER
 //#define ANKLEIDEZIMMERTHERMOMETER
 //#define KUGELNODE1
 //#define KUGELNODE2
@@ -110,14 +111,20 @@ uint8_t neopixel_b;
 #endif
 
 #if defined(SOLARZELLE)
-float    u_sol;
-float    pow_sol;
-//uint8_t  batt_mod1;
-//uint8_t  batt_mod2;
-#endif
-
-#if defined(LOAD_BALANCER)
-float u_batt1;
+float    u_sol1;
+float    u_sol1_avg;
+float    u_sol2;
+float    u_batt1;
+float    u_batt2;
+float    u_delta;
+uint8_t  batt_mod1;
+uint8_t  batt_mod2;
+uint8_t  batt_mod3;
+uint8_t  batt_mod4;
+uint8_t  batt_mod1_s;
+uint8_t  batt_mod2_s;
+uint8_t  batt_mod3_s;
+uint8_t  batt_mod4_s;
 #endif
 
 payload_t r_payload, s_payload;    
@@ -247,15 +254,24 @@ void get_sensordata(void) {
 #endif
 // ENDE: Sensor Bosch BMP180; BMP280; BME280
 #if defined(SOLARZELLE)
-  u_sol = (float)analogRead(SOLARZELLE) / 1024.0 * vcc_mess;
-  pow_sol += u_sol / R_SOLAR * u_sol / 60.0 / 60.0 * (float)eeprom.sleeptime_sec;   // In WStd
+  u_sol1 = (float)analogRead(SOLARZELLE) / 1024.0 * vcc_mess;
 #if defined(DEBUG_SERIAL_SENSOR)
     Serial.print("U_sol: ");
     Serial.println(u_sol);
 #endif
 #endif
-#if defined(LOAD_BALANCER)
-  u_batt1 = (float)analogRead(LOAD_BALANCER_BATT) / 1024.0 * vcc_mess;
+#if defined(SOLARZELLE2)
+  u_sol2 = (float)analogRead(SOLARZELLE2) / 1024.0 * vcc_mess;
+#if defined(DEBUG_SERIAL_SENSOR)
+    Serial.print("U_sol2: ");
+    Serial.println(u_sol2);
+#endif
+#endif
+#if defined(LOAD_BALLANCER_PIN)
+  pinMode(LOAD_BALLANCER_PIN, INPUT);
+  delay(10);
+  u_batt1 = (float)analogRead(LOAD_BALLANCER_PIN) / 1024.0 * vcc_mess;
+  u_batt2 = vcc_mess - u_batt1;
 #endif
 }
 
@@ -272,35 +288,39 @@ uint32_t action_loop(uint32_t data) {
       case 21:
       {
         // Set field 1
-        getValue(data, &field1_val);
-        print_field(field1_val,1);
+        float val;
+        getValue(data, &val);;
+        print_field(val,1);
       }
       break;
       case 22:
       {
         // Set field 2
-        getValue(data, &field2_val);
-        print_field(field2_val,2);
+        float val;
+        getValue_f(data, &val);
+        print_field(val,2);
       }
       break;
       case 23:
       {
         // Set field 3
-        getValue(data, &field3_val);
-        print_field(field3_val,3);
+        float val;
+        getValue_f(data, &val);
+        print_field(val,3);
       }
       break;
       case 24:
       {
         // Set field 4
-        getValue(data, &field4_val);
-        print_field(field4_val,4);
+        float val;
+        getValue(data, &val);
+        print_field(val,4);
       }
       break;
       case 51:
       {
         uint16_t val;
-        getValue(data, &val);
+        getValue(data, &val)
         // Displaylight ON <-> OFF
         if ( val & 0x01 ) {
           digitalWrite(STATUSLED,STATUSLED_ON); 
@@ -311,40 +331,27 @@ uint32_t action_loop(uint32_t data) {
       break;
       case 52:
       {
-        uint16_t val;
-        getValue(data, &val);
         // Display Sleepmode ON <-> OFF
-        display_sleep( val == 0x00 );
+        display_sleep( getValue_ui(data) == 0x00 );
       }
       break;
 #endif
-#if defined(LOAD_BALANCER)
+#if defined(LOAD_BALLANCER)
       case 41:
       {
         uint16_t val;
-        getValue(data, &val);
-        if ( val == 0 ) {
-          pinMode(LOAD_BALANCER_BATT, INPUT);
+        getValue(data, &val)
+        if ( val  == 0 ) {
+          pinMode(LOAD_BALLANCER_PIN, INPUT);
         }
         if ( val == 1 ) {
-          pinMode(LOAD_BALANCER_BATT, OUTPUT);
-          digitalWrite(LOAD_BALANCER_BATT, HIGH);
+          pinMode(LOAD_BALLANCER_PIN, OUTPUT);
+          digitalWrite(LOAD_BALLANCER_PIN, HIGH);
         } 
         if ( val == 2 ) {
-          pinMode(LOAD_BALANCER_BATT, OUTPUT);
-          digitalWrite(LOAD_BALANCER_BATT, LOW);
+          pinMode(LOAD_BALLANCER_PIN, OUTPUT);
+          digitalWrite(LOAD_BALLANCER_PIN, LOW);
         } 
-      }
-      break;
-#endif
-#if defined(SOLARZELLE)
-      case 42:
-      {
-        uint16_t val;
-        getValue(data, &val);
-        if ( val == 0 ) {
-          pow_sol = 0;;
-        }
       }
       break;
 #endif
@@ -352,7 +359,7 @@ uint32_t action_loop(uint32_t data) {
       case 51:
       {
         uint16_t val;
-        getValue(data, &val);
+        getValue(data, &val)
         // Relais_1 ON <-> OFF
         if ( val & 0x01 ) {
 #if defined (DEBUG_SERIAL_SENSOR)
@@ -372,9 +379,9 @@ uint32_t action_loop(uint32_t data) {
       case 52:
       {
         uint16_t val;
-        getValue(data, &val);
+        getValue(data, &val)
         // Relais_2 ON <-> OFF
-        if ( val > 0x01 ) {
+        if ( val & 0x01 ) {
 #if defined (DEBUG_SERIAL_SENSOR)
           Serial.println("Relais 2 ein");
 #endif               
@@ -392,7 +399,7 @@ uint32_t action_loop(uint32_t data) {
       case 53:
       {
         uint16_t val;
-        getValue(data, &val);
+        getValue(data, &val)
         // Relais_3 ON <-> OFF
         if ( val & 0x01 ) {
 #if defined (DEBUG_SERIAL_SENSOR)
@@ -412,7 +419,7 @@ uint32_t action_loop(uint32_t data) {
       case 54:
       {
         uint16_t val;
-        getValue(data, &val);
+        getValue(data, &val)
         // Relais_4 ON <-> OFF
         if ( val & 0x01 ) {
 #if defined (DEBUG_SERIAL_SENSOR)
@@ -432,7 +439,7 @@ uint32_t action_loop(uint32_t data) {
       case 51:
       {
         uint16_t pixeldata;
-        getValue_ui(data, &pixeldata);
+        getValue(data, &pixeldata);
         uint8_t pixelcount = 0;
         neopixel_b = (uint8_t)((pixeldata & 0b0000000000011111)<<3);
         neopixel_g = (uint8_t)((pixeldata & 0b0000001111100000)>>2);
@@ -472,21 +479,6 @@ uint32_t action_loop(uint32_t data) {
         exec_RegTrans = true;
       }
       break;      
-      case REG_DISPLAY: 
-      {
-        uint16_t val;
-        getValue(data, &val);
-        uint8_t contrast = (val & 0x00FF);
-        uint8_t brightnes = (val>>8);
-        if (contrast > 0 && contrast < 101) {
-#if defined(DISPLAY_5110)
-          lcd.setContrast(eeprom.contrast);
-#endif
-          eeprom.contrast = contrast;
-          EEPROM.put(0, eeprom);
-        }
-      }
-      break;
       case REG_SLEEPTIME: 
       {
         // sleeptime in sec!
@@ -524,10 +516,9 @@ uint32_t action_loop(uint32_t data) {
       {
         // sleeptime_kor: onetime adjust of sleeptime, will be reset to 0 after use 
         int16_t val;
-        if ( getValue(data, &val) ) {
-          if (val > -1001 && val < 1001) {
-            sleeptime_kor = val;
-          }
+        getValue(data, &val);
+        if (val > -1001 && val < 1001) {
+          sleeptime_kor = val;
         }
       }
       break;
@@ -558,7 +549,7 @@ uint32_t action_loop(uint32_t data) {
       // max_stopcount: numbers of attempts to send for stop messages
         uint16_t val;
         getValue(data, &val);
-          if (val > 0 && val < 21) {
+        if (val > 0 && val < 21) {
           eeprom.max_stopcount = val;
           EEPROM.put(0, eeprom);
         }
@@ -568,11 +559,10 @@ uint32_t action_loop(uint32_t data) {
       {
         // Volt_fac - V = Vmess * Volt_fac
         float val;
-        if ( getValue(data, &val) ) {
-          if (val >= 0.1 && val <= 10) {
-            eeprom.volt_fac = val;
-            EEPROM.put(0, eeprom);
-          }
+        getValue(data, &val);
+        if (val >= 0.1 && val <= 10) {
+          eeprom.volt_fac = val;
+          EEPROM.put(0, eeprom);
         }
       }
       break;
@@ -580,11 +570,10 @@ uint32_t action_loop(uint32_t data) {
       {
         // Volt_off - V = (Vmess * Volt_fac) + Volt_off
         float val;
-        if ( getValue(data, &val) ) {
-          if (val >= -10 && val <= 10) {
-            eeprom.volt_off = val;
-            EEPROM.put(0, eeprom);
-          }
+        getValue(data, &val);
+        if (val >= -10 && val <= 10) {
+          eeprom.volt_off = val;
+          EEPROM.put(0, eeprom);
         }
       }
       break;
@@ -627,6 +616,14 @@ uint32_t action_loop(uint32_t data) {
         data = calcTransportValue(REG_SW, SWVERSION);
       }
       break;
+#if defined(LOAD_BALLANCER)
+      case LOAD_BALLANCER_REG:
+      {
+        u_delta = getValue_f(data);
+        data = calcTransportValue(LOAD_BALLANCER_REG, u_delta);
+      }
+      break;
+#endif
     }  
     return data; 
 }  
@@ -656,12 +653,13 @@ void setup(void) {
 //  batt_mod1 = 0;
 //  batt_mod2 = 0;
 #endif
-#if defined(LOAD_BALANCER)
-  pinMode(LOAD_BALANCER_BATT, INPUT);
+#if defined(LOAD_BALLANCER)
+  pinMode(LOAD_BALLANCER_PIN, INPUT);
+  u_delta = LOAD_BALLANCER_U;
 #endif
 #if defined(DISCHARGE_PIN)
-  pinMode(DISCHARGE_PIN, OUTPUT);
-  digitalWrite(DISCHARGE_PIN, HIGH); 
+    pinMode(DISCHARGE_PIN, OUTPUT);
+    digitalWrite(DISCHARGE_PIN, HIGH);
 #endif
   EEPROM.get(0, eeprom);
   if (eeprom.versionnumber != EEPROM_VERSION && EEPROM_VERSION > 0) {
@@ -1157,9 +1155,6 @@ void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, 
 #endif
     start_ts = millis();
     prep_data(msg_type, msg_flags, orderno, myheartbeatno);
-//-------------------------
-// Send message in a loop
-//-------------------------
     while ( tx_loopcount < max_tx_loopcount ) {
       s_payload.msg_id++;
       radio.stopListening();
@@ -1170,7 +1165,6 @@ void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, 
 #endif
       radio.write(&s_payload, sizeof(s_payload));
       delay(10);
-      // message sent listen for incoming
       radio.startListening(); 
       delay(10);
       start_ts = millis();
@@ -1179,10 +1173,6 @@ void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, 
       Serial.print("RX: ");
       Serial.println(start_ts);
 #endif
-//------------------------------------------
-// we stay in a receive loop until timeout
-//    or we got a message from hub
-//------------------------------------------
       while ( (millis() < (start_ts + eeprom.senddelay) ) && doLoop ) {
 #if defined(DEBUG_SERIAL_RADIO)
         if ( temp_ts + 100 < millis() ) {
@@ -1204,9 +1194,6 @@ void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, 
             Serial.println("Ordernumber already processed!");
           }
 #endif
-//----------------------------------------------------------------------------------
-//         Is the message for us and is it new?
-//----------------------------------------------------------------------------------
           if (r_payload.node_id == RF24NODE && r_payload.orderno != last_orderno) {
             last_orderno = r_payload.orderno;
             switch(r_payload.msg_type) {
@@ -1238,7 +1225,7 @@ void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, 
         }  //radio.available
       }
       tx_loopcount++;
-    } // End transmission loop
+    }
 }
 
 void exec_jobs(void) {
@@ -1257,19 +1244,17 @@ void loop(void) {
   delay(10);  
   payloadInitData();
   get_voltage();
-  //----------------------
-  // Low Voltage handling
-  //----------------------
-  if (low_voltage_flag) {
+
+  if (low_voltage_flag) {   // Low Voltage Handling
 #if defined(HAS_DISPLAY)
     display_sleep(true);
 #endif
-    if ( loopcount > eeprom.lowVoltLoops ) loopcount = 0;
+    if ( loopcount > eeprom.lowVoltLoops ) {
+      loopcount = 0;
+    }
     if ( loopcount == 0 ) get_sensordata();
-  } else {
-  //----------------------
-  // Regular Voltage handling
-  //----------------------
+  } else { // regular Voltage Handling
+
 #if defined(HAS_DISPLAY)
     display_sleep(false);
 #endif
@@ -1288,10 +1273,49 @@ void loop(void) {
     draw_temp(temp);
     wipe_therm(THERM_X0, THERM_Y0);
 #endif
-  //----------------------
-  // END: Regular Voltage handling
-  //----------------------
+#if defined(SOLARZELLE)
+    u_sol1_avg += u_sol1;
+#if defined(USE_BATTERIE)
+  if (vcc_mess > USE_BATTERIE) {
+    batt_mod1 = 1;
+    batt_mod1_s = 1;
+  } else {
+    batt_mod1 = 0;
   }
+#endif
+#if defined(DISCHARGE_PIN)
+  if ( vcc_mess > DISCHARGE_U ) {
+    digitalWrite(DISCHARGE_PIN, LOW);
+    batt_mod2 = 2;
+    batt_mod2_s = 2;
+  } else {
+    digitalWrite(DISCHARGE_PIN, HIGH);
+    batt_mod2 = 0;
+  }
+#endif
+#if defined(LOAD_BALLANCER)
+  if ( (u_batt2 - u_batt1) > u_delta ) {
+    pinMode(LOAD_BALLANCER_PIN, OUTPUT);
+    delay(10);
+    digitalWrite(LOAD_BALLANCER_PIN, HIGH);
+    batt_mod3 = 4;
+    batt_mod3_s = 4;
+  } else {
+    batt_mod3 = 0;
+  }
+  if ( (u_batt1 - u_batt2) > u_delta ) {
+    pinMode(LOAD_BALLANCER_PIN, OUTPUT);
+    delay(10);
+    digitalWrite(LOAD_BALLANCER_PIN, LOW);
+    batt_mod4 = 8;
+    batt_mod4_s = 8;
+  } else {
+    batt_mod4 = 0;
+  }
+#endif
+#endif
+
+  } // END regular Voltage Handling
   if ( loopcount == 0) {
 #if defined(DEBUG_SERIAL_RADIO)
     delay(100);
@@ -1308,9 +1332,6 @@ void loop(void) {
       radio.read(&r_payload, sizeof(r_payload));
       delay(10);
     }
-//-------------------
-// Fill payload    
-//-------------------
     uint8_t pos=1;
     payload_data(pos, 101, cur_voltage);
     pos++;
@@ -1326,25 +1347,27 @@ void loop(void) {
     if (sensor.hasTemperature() ) payload_data(pos, 1, temp);
     pos++;
     if (sensor.hasPressure() )    payload_data(pos, 2, pres);
-    pos++;
+    pos++
     if (sensor.hasHumidity() )    payload_data(pos, 3, humi);
     pos++;
 #endif
 #if defined(SOLARZELLE)
-    payload_data(pos,5,u_sol);
+    payload_data(pos,5,u_sol1_avg/(float)(eeprom.emptyloops+1));
+    u_sol1_avg = 0;
     pos++;
 #if defined(DEBUG_SERIAL_RADIO)
     Serial.print("U_sol: ");
     Serial.println(u_sol);
 #endif
-    payload_data(pos,6,pow_sol);
+#if defined(SOLARZELLE2)
+    payload_data(pos,6,u_sol2);
     pos++;
 #if defined(DEBUG_SERIAL_RADIO)
-    Serial.print("Pow_sol: ");
-    Serial.println(pow_sol);
+    Serial.print("U_sol2: ");
+    Serial.println(u_sol2);
 #endif
 #endif
-#if defined(LOAD_BALANCER)
+#if defined(LOAD_BALLANCER)
     payload_data(pos,7,u_batt1);
     pos++;
 #if defined(DEBUG_SERIAL_RADIO)
@@ -1352,18 +1375,19 @@ void loop(void) {
     Serial.println(u_batt1);
 #endif
 #endif
+    uint16_t batt_mod = 0;
+    batt_mod = batt_mod1_s | batt_mod2_s | batt_mod3_s | batt_mod4_s;
+    payload_data(pos,8, batt_mod);
+    batt_mod1_s = 0;
+    batt_mod2_s = 0;
+    batt_mod3_s = 0;
+    batt_mod4_s = 0;    
+    pos++;
+#endif    
     uint8_t msg_flags = PAYLOAD_FLAG_LASTMESSAGE;
     if ( low_voltage_flag ) msg_flags |= PAYLOAD_FLAG_NEEDHELP; 
-//-------------------
-// END: Fill payload    
-//-------------------
-// Transmit it
-//-------------------
     do_transmit(eeprom.max_sendcount, PAYLOAD_TYPE_HB, msg_flags, 0, 0);
     exec_jobs();
-//-------------------
-// Goto sleep again
-//-------------------
     radio.stopListening();
     delay(10);
     radio.powerDown();
@@ -1386,6 +1410,14 @@ void loop(void) {
     tempsleeptime *= 1000;
   }
   sleeptime_kor = 0;  
-  sleep4ms(tempsleeptime);
+#if defined(USE_BATTERIE)
+  if (batt_mod1 == 1) {
+    delay(tempsleeptime);
+  } else {
+#endif
+    sleep4ms(tempsleeptime);
+#if defined(USE_BATTERIE)
+  }
+#endif
   loopcount++;
 }

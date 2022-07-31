@@ -17,11 +17,11 @@
 #include "rf24_config.h"
 //#include "config.h"
 
-#define ZF_UNKNOWN          9
 #define ZF_FLOAT            0
 #define ZF_INT              1
 #define ZF_UINT             2
 #define ZF_CHAR             3
+#define ZF_UNKNOWN          9
 
 #define ZF_SHIFT_CHANNEL    23
 #define ZF_SHIFT_EXPO       17
@@ -37,7 +37,7 @@
 #define ZF_ZAHL_NEGATIV     0b00000000010000000000000000000000
 #define ZF_EXPO_NEGATIV     0b00000000001000000000000000000000
 #define ZF_EXPO_WERT        0b00000000000111100000000000000000
-#define ZF_ZAHL_WERT_FLOAT  0b00000000000000011111111111111111
+#define ZF_ZAHL_WERT_FLOAT  0b00000000000000001111111111111111
 #define ZF_ZAHL_WERT_INT    0b00000000000000001111111111111111
 #define ZF_ZAHL_WERT_UINT   0b00000000000000001111111111111111
 
@@ -77,6 +77,8 @@
  * Bit 17..32   2*8 bit Char
  *
  */
+
+void printBits(size_t const size, void const * const ptr);
 
 /**
  * Verpackt die Sensornummer und den Messwert zu einem 
@@ -142,7 +144,7 @@ char* unpackTransportValue(uint32_t data, char* buf);
  * @param dataType Der Datentyp
  * @return Den gepackten Transportwert
  */
-uint32_t packTransportValue(uint8_t channel, char* value, uint8_t dataType);
+uint32_t calcTransportValue(uint8_t channel, char* value, uint8_t dataType);
 
 /**
  * Diese Funktion packt die Daten ein.
@@ -154,7 +156,7 @@ uint32_t packTransportValue(uint8_t channel, char* value, uint8_t dataType);
  * @param dataType Der Datentyp
  * @return Den gepackten Transportwert
  */
-uint32_t packTransportValue(uint8_t channel, char* value);
+uint32_t calcTransportValue(uint8_t channel, char* value);
 
 //uint32_t packTransportValue(uint32_t key, uint8_t channel, float value);
 //uint32_t packTransportValue(uint32_t key, uint8_t channel, int16_t value);

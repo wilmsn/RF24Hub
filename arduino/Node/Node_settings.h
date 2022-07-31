@@ -221,7 +221,7 @@ debugging options:
 #define EMPTYLOOPS           0
 #define SENSOR_BOSCH
 #define DISPLAY_5110
-#define EEPROM_VERSION       1
+#define EEPROM_VERSION       2
 #define LOW_VOLT_LEVEL       3.5
 //#define VOLT_OFF             0.55
 #define CONTRAST             45
@@ -231,12 +231,12 @@ debugging options:
 #endif
 //-----------------------------------------------------
 #if defined(TESTNODE)
-#define RF24NODE             169
-#define SENSOR_DUMMY
-#define DISPLAY_5110
+#define RF24NODE             101
+#define SENSOR_18B20         8
 #define EEPROM_VERSION       1
 #define VOLT_OFF             0.55
-#define LOWVOLTAGELEVEL      3.0
+#define LOWVOLTAGELEVEL      2.0
+#define EEPROM_VERSION       17
 #endif
 
 

@@ -213,6 +213,11 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
         NODE_DATTYPE node_id = strtol(wort2, &pEnd, 10);
         uint8_t channel = strtol(wort3, &pEnd, 10);
         if ( node.isValidNode(node_id) ) {
+	    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue(channel, wort4) );
+	    tn_input_ok = true;
+/*	    
+	    
+	    
 	    switch ( sensor.getDataTypeByNodeChannel(node_id, channel) ) {
 		case 0:
 		{
@@ -238,6 +243,7 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 		default:
 		    tn_input_ok = false;
 	    }
+*/	    
         }
     }
     // set verbose <new verboselevel>
@@ -813,7 +819,7 @@ int main(int argc, char* argv[]) {
                     p_rec = gateway.getGateway(p_rec, gw_name, &gw_no);
                 }
             }
- 			usleep(20000);
+	    usleep(20000);
         } else {
             usleep(200000);
         }

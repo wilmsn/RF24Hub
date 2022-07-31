@@ -38,7 +38,7 @@ int main (int argc, char **argv) {
 
   /* Kommandozeile auswerten */
   if (argc != 7 && argc != 9 && argc != 11 && argc != 13 && argc != 15 && argc != 17 ) {
-    printf ("Usage:(%d) %s <server> <gw_no> <Type> <node_id> <channel1> <value1> [<channel2> <value2> [ ... [<channel6> <value6>]]] \n",
+    printf ("Usage:(%d) %s <server> <gw_no> <ESP|RF24> <node_id> <channel1> <value1> [<channel2> <value2> [ ... [<channel6> <value6>]]] \n",
        argc, argv[0] );
     exit (EXIT_FAILURE);
   }
@@ -68,12 +68,12 @@ int main (int argc, char **argv) {
   udpdata.payload.node_id = atoi(argv[4]);
   if ( strcmp(argv[3],"RF24") == 0 ) udpdata.payload.msg_type = PAYLOAD_TYPE_HB;
   if ( strcmp(argv[3],"ESP") == 0 ) udpdata.payload.msg_type = PAYLOAD_TYPE_ESP;
-  udpdata.payload.data1 = packTransportValue(atoi(argv[5]),argv[6]);
-  if (argc > 8) udpdata.payload.data2 = packTransportValue(atoi(argv[7]),argv[8]); 
-  if (argc > 10) udpdata.payload.data3 = packTransportValue(atoi(argv[9]),argv[10]);
-  if (argc > 12) udpdata.payload.data4 = packTransportValue(atoi(argv[11]),argv[12]);
-  if (argc > 14) udpdata.payload.data5 = packTransportValue(atoi(argv[13]),argv[14]);
-  if (argc > 16) udpdata.payload.data6 = packTransportValue(atoi(argv[15]),argv[16]);
+  udpdata.payload.data1 = calcTransportValue(atoi(argv[5]),argv[6]);
+  if (argc > 8) udpdata.payload.data2 = calcTransportValue(atoi(argv[7]),argv[8]); 
+  if (argc > 10) udpdata.payload.data3 = calcTransportValue(atoi(argv[9]),argv[10]);
+  if (argc > 12) udpdata.payload.data4 = calcTransportValue(atoi(argv[11]),argv[12]);
+  if (argc > 14) udpdata.payload.data5 = calcTransportValue(atoi(argv[13]),argv[14]);
+  if (argc > 16) udpdata.payload.data6 = calcTransportValue(atoi(argv[15]),argv[16]);
 
   /* Daten senden */
   printf("%s Sende Daten an: %s (%s:%s)\n",ts(tsbuf), argv[1], hostaddr, HUB_UDP_PORT);
