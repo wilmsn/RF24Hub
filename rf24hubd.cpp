@@ -215,35 +215,6 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
         if ( node.isValidNode(node_id) ) {
 	    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue(channel, wort4) );
 	    tn_input_ok = true;
-/*	    
-	    
-	    
-	    switch ( sensor.getDataTypeByNodeChannel(node_id, channel) ) {
-		case 0:
-		{
-		    float val_f = strtof(wort4, &pEnd);
-		    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue(channel, val_f) );
-		    tn_input_ok = true;
-		}
-		break;
-		case 1:
-		{
-		    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue(channel, 
-						(int16_t)strtol(wort4, &pEnd, 10)) );
-		    tn_input_ok = true;
-		}
-		break;
-		case 2:
-		{
-		    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue(channel,
-						(uint16_t)strtoul(wort4, &pEnd, 10)) );
-		    tn_input_ok = true;
-		}
-		break;
-		default:
-		    tn_input_ok = false;
-	    }
-*/	    
         }
     }
     // set verbose <new verboselevel>
@@ -455,7 +426,7 @@ void init_system(void) {
 void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
     uint8_t channel = getChannel(mydata);
     switch (channel) {
-        case 1 ... 100: {
+        case SENSOR_FIRST_CHANNEL ... SENSOR_LAST_CHANNEL: {
 	    // Sensor or Actor that gets or delivers a number
             uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
             if ( sensor_id > 0 ) { 
@@ -469,30 +440,35 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
             }
         }
         break; 
-        case 101: {
+// Register mit Sonderbedandlung: Durchlaufen erst die Sonderbedandlung dann die normale Registerbehandlung
+	case REG_NOSTORE_FIRST ... REG_NOSTORE_LAST:
+	    // do nothing
+	break;
+	case REG_BATT:
+	{
 	    // battery voltage
-            uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
-            if ( sensor_id > 0 ) { 
-                buf = unpackTransportValue(mydata, buf);
-                if ( verboselevel & VERBOSECONFIG) {    
-                    printf("%sVoltage of Node: %u is %sV\n", ts(tsbuf), node_id, buf);
-                }
-                sensor.updateLastVal(sensor_id, mydata);
-                node.setVoltage(node_id, strtof(unpackTransportValue(mydata,buf),NULL));
-                database.storeSensorValue(sensor_id, buf);
-                send_fhem_cmd(node_id, channel,buf);
-            }
-        }
-        break; 
-        case 102 ... 125: 
+	    uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
+            buf = unpackTransportValue(mydata, buf);
+	    if ( sensor_id > 0 ) {
+		if ( verboselevel & VERBOSECONFIG) {
+		    printf("%sVoltage of Node: %u is %sV\n", ts(tsbuf), node_id, buf);
+		}
+		sensor.updateLastVal(sensor_id, mydata);
+		node.setVoltage(node_id, strtof(unpackTransportValue(mydata,buf),NULL));
+		database.storeSensorValue(sensor_id, buf);
+		send_fhem_cmd(node_id, channel,buf);
+	    }
+	}
+// HIER KEIN break !!!!
+        case REG_FIRST_REG ... REG_LAST_REG: 
         {
 	    // Node config register
             buf = unpackTransportValue(mydata, buf);
-            if ( verboselevel & VERBOSECONFIG) {    
+            if ( verboselevel & VERBOSECONFIG) {
                 printf("%sConfigregister of Node: %u Channel: %u is %s\n", ts(tsbuf), node_id, channel, buf);
             }
             database.storeNodeConfig(node_id, channel, buf);
-        }	
+	}
         break; 
     }
     orderbuffer.delByNodeChannel(node_id, channel);

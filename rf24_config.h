@@ -15,31 +15,54 @@
 #define ONR_DATTYPE         uint8_t
 
 /***********************************
- * Definition der Kontrollregister
+ * Definition der Channel Verteilung
+ *    (generische Definitionen
+ *     und Sonderbehandlung)
+ * Achtung: Bereiche müssen streng getrennt sein
+ *          und dürfen sich nicht überschneiden 
  **********************************/
-
+#define SENSOR_FIRST_CHANNEL    1
+#define SENSOR_LAST_CHANNEL     79
+// Für folgende Register wird die Antwort des Nodes vom Hub verworfen
+// z.B. einmalige Aktionen im Node => einm. Sleeptimeverlängerung
+#define REG_NOSTORE_FIRST       80
+#define REG_NOSTORE_LAST        89
+// Für folgende Register wird zusätzlich zur normalen
+// Registerbehandlung eine Sonderbehandlung durchgeführt
+#define	REG_BATT		90
+// Für folgende Register gilt die normale Behandlung
+#define REG_FIRST_REG           91
+#define REG_LAST_REG            127
 
 /***********************************
- * Definition der Register
+ * Definition der Kontrollregister
+ *    (nur ausgewählte Nodes)
  **********************************/
-#define REG_BATT            101
-#define REG_VOLTFAC         102
-#define REG_VOLTOFF         103
-#define REG_LOWVOLTLEV      104
-#define REG_SLEEPTIMEADJ    106
-#define REG_SLEEPTIMEKOR    107
-#define REG_TRANSREG        111
-#define REG_MONITOR         112
-#define REG_DISPLAY         113
-#define REG_SLEEPTIME       114
-#define REG_EMPTYLOOPS      115
-#define REG_SENDDELAY       116
-#define REG_SNDCNTN         117
-#define REG_SNDCNTS         118
-#define REG_LOWVOLTLOOPS    119
-#define REG_SLEEP4MS_FAC    120
-#define REG_PALEVEL         124
-#define REG_SW              125
+#define	REG_DISPLAY		91
+#define REG_LOAD_BALLANCER      92
+#define REG_DISCHARGE_LEV1      93
+#define REG_DISCHARGE_LEV2      94
+
+/***********************************
+ * Definition der Kontrollregister
+ *       (alle Nodes)
+ **********************************/
+#define	REG_SLEEPTIME_KOR	80
+
+#define	REG_VOLT_FAC		115
+#define	REG_VOLT_OFF		116
+#define	REG_VOLT_LV		117
+#define	REG_SLEEPTIME_LV	118
+#define	REG_SLEEPTIME		119
+#define	REG_SLEEP4MS_FAC	120
+#define	REG_SENDDELAY		121
+#define	REG_MAX_SENDCOUNT	122
+#define	REG_MAX_STOPCOUNT	123
+#define	REG_EMPTYLOOPS		124
+#define	REG_SW			125
+#define	REG_TRANSREG		126
+#define	REG_PALEVEL		127
+
 /***********************************
  * Definition der Nachrichtenarten
  **********************************/
