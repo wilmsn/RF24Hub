@@ -77,23 +77,6 @@ CREATE TABLE node_configdata_im
 )
 ENGINE=MEMORY;
 
---DROP TABLE IF EXISTS node_configitem;
-
-CREATE TABLE node_configitem
-(
-   channel     INT UNSIGNED   NOT NULL,
-   itemname    VARCHAR(200)   NOT NULL,
-   min         FLOAT          NOT NULL,
-   max         FLOAT          NOT NULL,
-   readonly    CHAR(1)        DEFAULT 'n' NOT NULL,
-   html_show   CHAR(1)        DEFAULT 'y' NOT NULL,
-   html_order  INT UNSIGNED   DEFAULT NULL,
-   HB_use      CHAR(1)        DEFAULT 'y' NOT NULL,
-   AO_use      CHAR(1)        DEFAULT 'y' NOT NULL,
-   CONSTRAINT `PRIMARY` PRIMARY KEY (channel)
-)
-ENGINE=InnoDB;
-
 --DROP TABLE IF EXISTS numbers;
 
 CREATE TABLE numbers
@@ -178,25 +161,42 @@ VALUES
   (2,'2 NMH Akkus 2,4V',2.0,2.4,'2 NiMH 2,4V'),
   (3,'1 LiIo Zelle 3,7V',3.0,3.7,'1 LiIo 3,7V'),
   (9,'Netzspannung',3.0,3.7,'Netzspannung');
+  
+CREATE TABLE node_configitem
+(
+   channel     INTEGER UNSIGNED   NOT NULL,
+   itemname    VARCHAR(200)       NOT NULL,
+   min         FLOAT              NOT NULL,
+   max         FLOAT              NOT NULL,
+   readonly    CHAR(1)            NOT NULL,
+   html_show   CHAR(1)            NOT NULL,
+   html_order  INTEGER UNSIGNED,
+   CONSTRAINT `PRIMARY` PRIMARY KEY (channel)
+);
 
-INSERT INTO node_configitem (channel,itemname,min,max,readonly,html_show,html_order,HB_use,AO_use) 
+
+INSERT INTO node_configitem (channel,itemname,min,max,readonly,html_show,html_order) 
 VALUES
-  (102,'Spannungsfaktor',0.1,10.0,'n','y',2,'y','y'),
-  (103,'Spannungsoffset',-10.0,10.0,'n','y',3,'y','y'),
-  (104,'Kritischer Spannungswert',1.0,5.0,'n','y',4,'y','n'),
-  (107,'Verschiebung Schlafzeit (einmalig in Sek.)',-1000.0,1000.0,'n','y',6,'y','n'),
-  (111,'Register auslesen (beliebiger Wert startet)',0.0,10.0,'n','y',7,'y','y'),
-  (112,'Monitormode (0=aus; 1=ein)',0.0,1.0,'n','y',8,'y','y'),
-  (113,'Display (Bit 15..8 => Helligkeit; Bit 7..0 Kontrast)',0.0,65536.0,'n','y',9,'y','n'),
-  (114,'Schlafzeit in Sekunden',10.0,32400.0,'n','y',10,'y','n'),
-  (115,'Schleifen ohne Sendung',0.0,20.0,'n','y',11,'y','n'),
-  (116,'Wartezeit zwischen 2 Sendungen in ms',50.0,1000.0,'n','y',12,'y','y'),
-  (117,'Maximale Anzahl für normale Sendungen',1.0,20.0,'n','y',13,'y','y'),
-  (118,'Maximale Anzahl für Stopp Sendungen',1.0,2.0,'n','y',14,'y','y'),
-  (119,'Schleifen ohne Sendung (krit. Spannung)',60.0,1440.0,'n','y',15,'y','n'),
-  (120,'Sekundenjustierung (aprox. millisec)',500.0,2000.0,'n','y',16,'y','n'),
-  (124,'Gemessene Sendestärke (1=Min 2=Low 3=High 4=Max 9=Messung starten)',0.0,9.0,'n','y',17,'y','y'),
-  (125,'Softwareversion',0.0,0.0,'y','y',18,'y','y');
+  (80,'Schlafzeitkorrektur (einmalig) in Sekunden',-1000.0,1000.0,'n','y',900),
+  (81,'Register auslesen',0.0,10.0,'n','n',0),
+  (90,'Batteriespannung',0.0,9.0,'y','y',18),
+  (91,'Entladespannung 1',1.0,20.0,'y','y',19),
+  (92,'Entladespannung 2',1.0,20.0,'y','y',20),
+  (93,'Load Ballancer diff. U',0.01,1.0,'y','y',21),
+  (94,'Display Kontrast',0.0,100.0,'y','y',22),
+  (95,'Display Helligkeit',0.0,100.0,'y','y',23),
+  (115,'Spannungsfaktor',0.1,10.0,'n','y',2),
+  (116,'Spannungsoffset',-10.0,10.0,'n','y',3),
+  (117,'Low Voltage Spannungswert',1.0,5.0,'n','y',4),
+  (118,'Schlafzeit in Sekunden (Low Voltage)',10.0,32400.0,'n','y',6),
+  (119,'Schlafzeit in Sekunden',10.0,32400.0,'n','y',10),
+  (120,'Sekundenjustierung (aprox. millisec)',500.0,2000.0,'n','y',16),
+  (121,'Wartezeit zwischen 2 Sendungen in ms',50.0,1000.0,'n','y',12),
+  (122,'Maximale Anzahl für normale Sendungen',1.0,20.0,'n','y',13),
+  (123,'Maximale Anzahl für Stopp Sendungen',1.0,2.0,'n','y',14),
+  (124,'Schleifen ohne Sendung',0.0,20.0,'n','y',11),
+  (125,'Softwareversion',0.0,0.0,'y','y',901),
+  (127,'Gemessene Sendestärke am Hub (1=Min 2=Low 3=High 4=Max',0.0,9.0,'y','y',17);
   
 INSERT INTO numbers (number) 
 VALUES

@@ -33,22 +33,28 @@
 // Für folgende Register gilt die normale Behandlung
 #define REG_FIRST_REG           91
 #define REG_LAST_REG            127
+/***********************************
+ * Definition der NoStore-Register
+ *    (Node: Bei Bedarf)
+ **********************************/
+#define	REG_SLEEPTIME_KOR	80
+#define	REG_TRANSREG		81
 
 /***********************************
  * Definition der Kontrollregister
  *    (nur ausgewählte Nodes)
  **********************************/
-#define	REG_DISPLAY		91
-#define REG_LOAD_BALLANCER      92
-#define REG_DISCHARGE_LEV1      93
-#define REG_DISCHARGE_LEV2      94
+#define	REG_BATT		90
+#define	REG_DISCHARGE_LEV1	91
+#define	REG_DISCHARGE_LEV2	92
+#define	REG_LOAD_BALLANCER	93
+#define	REG_CONTRAST		94
+#define	REG_BRIGHTNES		95
 
 /***********************************
  * Definition der Kontrollregister
  *       (alle Nodes)
  **********************************/
-#define	REG_SLEEPTIME_KOR	80
-
 #define	REG_VOLT_FAC		115
 #define	REG_VOLT_OFF		116
 #define	REG_VOLT_LV		117
@@ -60,7 +66,6 @@
 #define	REG_MAX_STOPCOUNT	123
 #define	REG_EMPTYLOOPS		124
 #define	REG_SW			125
-#define	REG_TRANSREG		126
 #define	REG_PALEVEL		127
 
 /***********************************

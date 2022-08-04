@@ -32,6 +32,7 @@
 *.app
 rf24hubd
 rf24gwd
+simulator
 rf24hub.log
 
 #Others
