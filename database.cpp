@@ -18,9 +18,7 @@ void Database::lowVoltage(NODE_DATTYPE node_id, bool lowVoltageFlag) {
 }
 
 void Database::sync_config(void) {
-    sprintf (sql_stmt, "delete from node_configdata where (node_id, channel) in ( select node_id, channel from  node_configdata_im)");
-    do_sql(sql_stmt);
-    sprintf (sql_stmt, "insert into node_configdata(node_id, channel, value, utime) select node_id, channel, value, utime from node_configdata_im");
+    sprintf (sql_stmt, "insert into node_configdata(node_id, channel, value, utime) select node_id, channel, value, utime from node_configdata_im a ON DUPLICATE KEY UPDATE value = a.value, utime = a.utime");
     do_sql(sql_stmt);
 }
 

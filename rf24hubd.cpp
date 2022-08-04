@@ -323,6 +323,7 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
     if ( (strcmp(wort1,cmp_sync) == 0) && (strlen(wort2) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
 	tn_input_ok = true;
         database.sync_sensordata_d();
+	database.sync_config();
     }
     // init
     // initialisation of rf24hubd: reloads data from database
@@ -409,7 +410,7 @@ void make_order(NODE_DATTYPE node_id, uint8_t msg_type) {
 }
 
 void exit_system(void) {
-    // Save data from sensordata_im and sensor_im to persistant tables
+    // Save data from node_configdata_im to persistant tables
     database.sync_config();
 }
 
