@@ -99,7 +99,7 @@ public:
  */
     void initNode(Node* node);
 /**
- * Reads the data to initializise the node array 
+ * Reads the data to initializise the gateway array 
  * from the Database
  */
     void initGateway(Gateway* gateway);
