@@ -24,9 +24,9 @@
 #include "rf24_config.h"
 #include "rf24hub_config.h"
 #include "common.h"
-#include "node.h"
-#include "sensor.h"
-#include "gateway.h"
+#include "nodeclass.h"
+#include "sensorclass.h"
+#include "gatewayclass.h"
 #define DB_HOSTNAME_SIZE 30
 #define DB_USERNAME_SIZE 20
 #define DB_PASSWORD_SIZE 20
@@ -107,21 +107,21 @@ public:
  * from the Database
  * @param sensor Ein Pointer auf das Sensor Objekt
  */
-    void initSensor(Sensor* sensor);
+    void initSensor(SensorClass* sensorClass);
     
 /**
  * Reads the data to initializise the node array 
  * from the Database
  * @param node Ein Pointer auf das Node Objekt
  */
-    void initNode(Node* node);
+    void initNode(NodeClass* nodeClass);
     
 /**
  * Reads the data to initializise the gateway array 
  * from the Database
  * @param gateway Ein Pointer auf das gateway Objekt
  */
-    void initGateway(Gateway* gateway);
+    void initGateway(GatewayClass* gatewayClass);
     
 /**
  * Initializise the system 

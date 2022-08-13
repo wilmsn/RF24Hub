@@ -35,11 +35,11 @@
 #include <fcntl.h>
 #include <pthread.h>
 #include <errno.h>
-#include "node.h"
-#include "sensor.h"
+#include "nodeclass.h"
+#include "sensorclass.h"
 #include "order.h"
 #include "orderbuffer.h"
-#include "gateway.h"
+#include "gatewayclass.h"
 #include "common.h"
 #include "config.h"
 #include "cfg.h"
@@ -84,13 +84,13 @@ Order           order;
 /// Eine Instanz der Klasse OrderBuffer
 OrderBuffer     orderbuffer;
 /// Eine Instanz der Klasse Sensor
-Sensor          sensor;
+SensorClass     sensorClass;
 /// Eine Instanz der Klasse Node
-Node            node;
+NodeClass       nodeClass;
 /// Eine Instanz der Klasse Database
 Database        database;
 /// Eine Instanz der Klasse Gateway
-Gateway         gateway;
+GatewayClass    gatewayClass;
 /// Eine Instanz der Klasse Cfg
 Cfg             cfg(SWVERSION_STR,__DATE__);
 
@@ -149,6 +149,7 @@ void sighandler(int signal);
 
 /**
  * Verarbeitet die empfangenen Daten einer Funksendung
+ * @param payload Der Payload
  */
 void process_payload(payload_t* payload);
 

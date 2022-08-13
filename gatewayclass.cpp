@@ -1,13 +1,13 @@
-#include "gateway.h"
+#include "gatewayclass.h"
 
-Gateway::Gateway(void) {
+GatewayClass::GatewayClass(void) {
     p_initial = NULL;
     verboseLevel = 0;
     buf = (char*)malloc(TSBUFFERSIZE);
     tsbuf = (char*)malloc(TSBUFFERSIZE);
 }
 
-void Gateway::cleanup(void) {
+void GatewayClass::cleanup(void) {
     gateway_t *p_search;
     p_search = p_initial;
     while ( p_search ) {
@@ -18,7 +18,7 @@ void Gateway::cleanup(void) {
     }
 }
 
-bool Gateway::newEntry(gateway_t* p_new) {
+bool GatewayClass::newEntry(gateway_t* p_new) {
     gateway_t *p_search;
     bool retval = false;
     p_new->p_next = NULL;
@@ -36,7 +36,7 @@ bool Gateway::newEntry(gateway_t* p_new) {
     return retval;
 }
 
-bool Gateway::delEntry(gateway_t* p_del) {
+bool GatewayClass::delEntry(gateway_t* p_del) {
     gateway_t *p_search, *p_tmp;
     bool retval = false;
     p_search = p_initial;
@@ -69,7 +69,7 @@ bool Gateway::delEntry(gateway_t* p_del) {
     return retval;
 }
 
-void Gateway::delGateway(uint16_t gw_no) {
+void GatewayClass::delGateway(uint16_t gw_no) {
     gateway_t *p_search = p_initial;
     while (p_search) {
       if ( p_search->gw_no == gw_no ) {
@@ -80,7 +80,7 @@ void Gateway::delGateway(uint16_t gw_no) {
     }
 }
 
-void Gateway::addGateway(char* gw_hostname, uint16_t gw_no, bool isActive) {
+void GatewayClass::addGateway(char* gw_hostname, uint16_t gw_no, bool isActive) {
     gateway_t *p_new = new gateway_t;
     p_new->gw_hostname = (char*)malloc(40);
     p_new->gw_no = gw_no;
@@ -91,7 +91,7 @@ void Gateway::addGateway(char* gw_hostname, uint16_t gw_no, bool isActive) {
     newEntry(p_new);
 }
 
-void Gateway::setGateway(uint16_t gw_no, bool isActive ) {
+void GatewayClass::setGateway(uint16_t gw_no, bool isActive ) {
     gateway_t *p_search;
     p_search = p_initial;
     while (p_search) {
@@ -106,7 +106,7 @@ void Gateway::setGateway(uint16_t gw_no, bool isActive ) {
     }
 }
 
-void Gateway::gw_contact(uint16_t gw_no){
+void GatewayClass::gw_contact(uint16_t gw_no){
     gateway_t *p_search;
     p_search = p_initial;
     while (p_search) {
@@ -118,7 +118,7 @@ void Gateway::gw_contact(uint16_t gw_no){
     }
 }
 
-void* Gateway::getGateway(void* p_rec, char* gw_hostname, uint16_t *p_gw_no) {
+void* GatewayClass::getGateway(void* p_rec, char* gw_hostname, uint16_t *p_gw_no) {
     gateway_t *p_search;
     void* retval = NULL;
     if (p_rec) {
@@ -139,7 +139,7 @@ void* Gateway::getGateway(void* p_rec, char* gw_hostname, uint16_t *p_gw_no) {
     return retval;
 }
 
-bool Gateway::isGateway(uint16_t gw_no) {
+bool GatewayClass::isGateway(uint16_t gw_no) {
     gateway_t *p_search;
     bool retval = false;
     p_search = p_initial;
@@ -157,7 +157,7 @@ bool Gateway::isGateway(uint16_t gw_no) {
     return retval;
 }
 
-void Gateway::printBuffer(int out_socket, bool htmlformat) {
+void GatewayClass::printBuffer(int out_socket, bool htmlformat) {
     char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
     char date[20];
 //    char ts[20];
@@ -183,6 +183,6 @@ void Gateway::printBuffer(int out_socket, bool htmlformat) {
     free(client_message);
 }
 
-void Gateway::setVerbose(uint16_t _verboseLevel) {
+void GatewayClass::setVerbose(uint16_t _verboseLevel) {
     verboseLevel = _verboseLevel;
 }

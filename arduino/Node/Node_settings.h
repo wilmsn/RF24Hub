@@ -1,9 +1,10 @@
-/******************************************************
+/**
+ * @file Node_settimgs.h
+ * @brief This file is used to define your Nodes
+ * 
+ * For selectable parts and documentation see "Parts.h"
+ */
 
-       For selectable parts and documentation
-                see "Parts.h"
-
-******************************************************/
 //*****************************************************
 //    Individual settings
 //-----------------------------------------------------

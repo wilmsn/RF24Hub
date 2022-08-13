@@ -58,7 +58,7 @@ void Database::initSystem(void) {
     sync_sensordata_d();
 }
 
-void Database::initGateway(Gateway* gateway) {
+void Database::initGateway(GatewayClass* gatewayClass) {
     if ( connect() ) {
 	MYSQL_ROW row;
 	char gw_name[40];
@@ -74,7 +74,7 @@ void Database::initGateway(Gateway* gateway) {
 	    if ( row[0] != NULL ) sprintf(gw_name,"%s",trim(row[0])); else sprintf(gw_name," ");
 	    if ( row[1] != NULL ) gw_no = strtoul(row[1], &pEnd, 10); else gw_no = 0;
 	    if ( row[2] != NULL ) isactive = ( row[2][0] == 'y' || row[2][0] == 'j' || row[2][0] == '1'); else isactive = false;
-	    gateway->addGateway(gw_name, gw_no, isactive); 
+	    gatewayClass->addGateway(gw_name, gw_no, isactive); 
 	}
 	mysql_free_result(result);    
 	disconnect();
@@ -120,7 +120,7 @@ void Database::disableGateway(uint16_t gw_no){
     do_sql(sql_stmt);
 }
 
-void Database::initNode(Node* node) {
+void Database::initNode(NodeClass* nodeClass) {
     if ( connect() ) {
 	NODE_DATTYPE node_id = 0;
 	char node_name[NODENAMESIZE];
@@ -143,7 +143,7 @@ void Database::initNode(Node* node) {
 	    if ((strcmp(row[2],cmp_y) == 0) || (strcmp(row[1],cmp_j) == 0)) { isMastered = true; } else { isMastered = false; }
 	    if ( row[3] != NULL ) pa_utime = strtoul(row[2], &pEnd, 10); else pa_utime = 1;
 	    if ( row[4] != NULL ) pa_level = strtoul(row[3], &pEnd, 10); else pa_level = 9;
-	    node->addNode(node_id, node_name, 0, isMastered, pa_level, pa_utime); 
+	    nodeClass->addNode(node_id, node_name, 0, isMastered, pa_level, pa_utime); 
 	}
 	mysql_free_result(result);    
 //	sprintf (sql_stmt, "select node_id, last_data from sensor where channel = 101");
@@ -156,14 +156,14 @@ void Database::initNode(Node* node) {
 	while ((row = mysql_fetch_row(result))) {
 	    if ( row[0] != NULL ) node_id = strtoul(row[0], &pEnd,10);
 	    if ( row[1] != NULL ) u_batt = strtof(row[1],&pEnd); else u_batt = 0;
-	    node->setVoltage(node_id, u_batt); 
+	    nodeClass->setVoltage(node_id, u_batt); 
 	}
 	mysql_free_result(result);    
 	disconnect();
     }
 }
 
-void Database::initSensor(Sensor* sensor) {
+void Database::initSensor(SensorClass* sensorClass) {
     if ( connect() ) {
 	char* fhem_dev = alloc_str(verboseLevel,"Database::initSensor fhem_dev",FHEMDEVLENGTH, ts(tsbuf));
 	char* sensor_name = alloc_str(verboseLevel,"Database::initSensor sensor_name",FHEMDEVLENGTH, ts(tsbuf));
@@ -188,7 +188,7 @@ void Database::initSensor(Sensor* sensor) {
 	    if ( row[4] != NULL ) sprintf(fhem_dev,"%s",trim(row[4])); else sprintf(fhem_dev,"not_set");
 	    if ( row[5] != NULL ) sprintf(sensor_name,"%s",trim(row[5]));
 	    // ToDo
-	    sensor->addSensor(mysensor, node_id, mychannel, mydatatype, fhem_dev, last_utime, last_data, sensor_name);
+	    sensorClass->addSensor(mysensor, node_id, mychannel, mydatatype, fhem_dev, last_utime, last_data, sensor_name);
 	}
 	mysql_free_result(result);
 	free_str(verboseLevel,"Database::initSensor fhem_dev",fhem_dev, ts(tsbuf)); 

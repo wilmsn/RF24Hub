@@ -50,7 +50,7 @@ rf24hubd_debug: cfg.o dataformat.o database.o node.o sensor.o orderbuffer.o orde
 	g++ ${CCFLAGS} ${DEBUGFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24 ${MYSQLLIBS} $^ -o $@
 
 # Make the rf24hub deamon
-rf24hubd: cfg.o gateway.o dataformat.o database.o node.o sensor.o orderbuffer.o order.o common.o rf24hubd.cpp
+rf24hubd: cfg.o gatewayclass.o dataformat.o database.o nodeclass.o sensorclass.o orderbuffer.o order.o common.o rf24hubd.cpp
 	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} $^ -o $@ ${MYSQLLIBS}
 
 # Make the rf24gw deamon

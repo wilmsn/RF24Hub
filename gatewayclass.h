@@ -18,7 +18,7 @@
 
 using namespace std;
 
-class Gateway {
+class GatewayClass {
 
     
 private:
@@ -134,7 +134,7 @@ void printBuffer(int tn_socket, bool htmlformat);
 /**
  * Construktor des Buffers
  */
-Gateway(void);
+GatewayClass(void);
 
 };
 

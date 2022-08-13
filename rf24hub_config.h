@@ -25,6 +25,8 @@ rf24hub_config.h ==> all global definitions go here
 #define TSBUFFERSIZE 30
 #define SQLSTRINGSIZE 500
 #define TSBUFFERSTRING "                               "
+#define LOOPSLEEPTIME_QUIET  200000
+#define LOOPSLEEPTIME_BUSY   20000
 
 
 #endif // _RF24HUB_CONFIG_H_

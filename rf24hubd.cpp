@@ -3,7 +3,7 @@
 void send_fhem_cmd(NODE_DATTYPE node_id, uint8_t channel, char* value) {
     char* tn_cmd = alloc_str(verboseLevel,"send_fhem_cmd tn_cmd",TELNETBUFFERSIZE,ts(tsbuf));
     char* fhem_dev;
-    fhem_dev = sensor.getFhemDevByNodeChannel(node_id, channel); 
+    fhem_dev = sensorClass.getFhemDevByNodeChannel(node_id, channel); 
 	sprintf(tn_cmd,"set %s %s", fhem_dev, value);
     send_fhem_tn(tn_cmd);
     free_str(verboseLevel, "send_fhem_cmd tn_cmd", tn_cmd,ts(tsbuf));
@@ -172,21 +172,21 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
         NODE_DATTYPE node_id = 0;
         uint8_t   channel = 0;
         if ( wort3[0] >= 'A' && wort3[0] <= 'z' ) {
-            if (sensor.getNodeChannelByFhemDev(&node_id, &channel, wort3) ) {
+            if (sensorClass.getNodeChannelByFhemDev(&node_id, &channel, wort3) ) {
 		tn_input_ok = true;
             } else {
-                if (sensor.getNodeChannelBySensorName(&node_id, &channel, wort3) ) {
+                if (sensorClass.getNodeChannelBySensorName(&node_id, &channel, wort3) ) {
                     tn_input_ok = true;
                 }
             }
         } else {
             uint32_t sensor_id = strtol(wort3, &pEnd, 10);
-            if ( sensor.getNodeChannelBySensorID(&node_id, &channel, sensor_id ) ) {
+            if ( sensorClass.getNodeChannelBySensorID(&node_id, &channel, sensor_id ) ) {
                 tn_input_ok = true;
             }
         }
         if ( node_id > 0 &&  channel > 0 ) {
-	    switch ( sensor.getDataTypeByNodeChannel(node_id, channel) ) {
+	    switch ( sensorClass.getDataTypeByNodeChannel(node_id, channel) ) {
 		case 0: 
 		{
 		    float val_f = strtof(wort4, &pEnd);
@@ -218,7 +218,7 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
     if (( strcmp(wort1,cmp_push) == 0 ) && (strlen(wort2) > 0) && (strlen(wort3) > 0) && (strlen(wort4) > 0) ) {
         NODE_DATTYPE node_id = strtol(wort2, &pEnd, 10);
         uint8_t channel = strtol(wort3, &pEnd, 10);
-        if ( node.isValidNode(node_id) ) {
+        if ( nodeClass.isValidNode(node_id) ) {
 	    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue(channel, wort4) );
 	    tn_input_ok = true;
         }
@@ -228,8 +228,8 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
     if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (strlen(wort3) > 0) && (strlen(wort4) == 0) ) {
 	tn_input_ok = true;
 	verboseLevel = decodeVerbose(verboseLevel, wort3);
-	node.setVerbose(verboseLevel);
-	sensor.setVerbose(verboseLevel);
+	nodeClass.setVerbose(verboseLevel);
+	sensorClass.setVerbose(verboseLevel);
 	order.setVerbose(verboseLevel);
 	orderbuffer.setVerbose(verboseLevel);
 	database.setVerbose(verboseLevel);
@@ -245,14 +245,14 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
     // lists the current node- and sensorbuffer
     if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_sensor) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
 	tn_input_ok = true;
-        node.printBuffer(tn_socket, false);
-        sensor.printBuffer(tn_socket, false);
+        nodeClass.printBuffer(tn_socket, false);
+        sensorClass.printBuffer(tn_socket, false);
     }
     // show gateway
     // lists the current gateway status
     if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_gateway) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
 	tn_input_ok = true;
-        gateway.printBuffer(tn_socket, false);
+        gatewayClass.printBuffer(tn_socket, false);
     }
     // add gateway
     // adds a gateway in status active to database and system
@@ -262,8 +262,8 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 	    if ( gw_id > 0 ) {
 		tn_input_ok = true;
 		database.addGateway(wort3, gw_id);
-		gateway.addGateway(wort3, gw_id, true);
-		gateway.printBuffer(tn_socket, false);
+		gatewayClass.addGateway(wort3, gw_id, true);
+		gatewayClass.printBuffer(tn_socket, false);
 	    }
         }
     }
@@ -274,8 +274,8 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
         if ( gw_id > 0 ) {
 	    tn_input_ok = true;
 	    database.delGateway(gw_id);
-	    gateway.delGateway(gw_id);
-	    gateway.printBuffer(tn_socket, false);
+	    gatewayClass.delGateway(gw_id);
+	    gatewayClass.printBuffer(tn_socket, false);
         }
     }
     // set gateway <GW_NO> on
@@ -284,8 +284,8 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 	tn_input_ok = true;
 	uint16_t gw_id = (uint16_t)strtoul(wort3, &pEnd, 10);
 	database.enableGateway(gw_id);
-	gateway.setGateway(gw_id, true);
-	gateway.printBuffer(tn_socket, false);
+	gatewayClass.setGateway(gw_id, true);
+	gatewayClass.printBuffer(tn_socket, false);
     }
     // set gateway <GW_NO> off
     // lists the current node- and sensorbuffer
@@ -293,8 +293,8 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 	tn_input_ok = true;
 	uint16_t gw_id = (uint16_t)strtoul(wort3, &pEnd, 10);
 	database.disableGateway(gw_id);
-	gateway.setGateway(gw_id, false);
-	gateway.printBuffer(tn_socket, false);
+	gatewayClass.setGateway(gw_id, false);
+	gatewayClass.printBuffer(tn_socket, false);
     }
     // set node <node_id> <mastered/unmastered>
     // syncronisation of all relevant tables of rf24hubd: stores in memory table data to database hard disk tables 
@@ -338,13 +338,13 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
     if ( (strcmp(wort1,cmp_init) == 0) && (strlen(wort2) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
         tn_input_ok = true;
         exit_system();
-        node.cleanup();
-        sensor.cleanup();
-        gateway.cleanup();
+        nodeClass.cleanup();
+        sensorClass.cleanup();
+        gatewayClass.cleanup();
         init_system();
-        node.printBuffer(tn_socket, false);
-        sensor.printBuffer(tn_socket, false);
-        gateway.printBuffer(tn_socket, false);
+        nodeClass.printBuffer(tn_socket, false);
+        sensorClass.printBuffer(tn_socket, false);
+        gatewayClass.printBuffer(tn_socket, false);
     }
     // truncate logfile
     // truncation of the logfile for maintenance
@@ -376,7 +376,7 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 void make_order(NODE_DATTYPE node_id, uint8_t msg_type) {
     void* ret_ptr;
     uint32_t data;
-    if ( node.isMasteredNode(node_id) ) {
+    if ( nodeClass.isMasteredNode(node_id) ) {
       order.delByNode(node_id);
       ret_ptr = orderbuffer.findOrder4Node(node_id, NULL, &data);
       if (ret_ptr) {
@@ -428,12 +428,12 @@ void exit_system(void) {
 
 void init_system(void) {
     database.initSystem();
-    database.initSensor(&sensor);
-    database.initNode(&node);
-    database.initGateway(&gateway);
-    node.printBuffer(fileno(stdout), false);
-    sensor.printBuffer(fileno(stdout), false);
-    gateway.printBuffer(fileno(stdout), false);
+    database.initSensor(&sensorClass);
+    database.initNode(&nodeClass);
+    database.initGateway(&gatewayClass);
+    nodeClass.printBuffer(fileno(stdout), false);
+    sensorClass.printBuffer(fileno(stdout), false);
+    gatewayClass.printBuffer(fileno(stdout), false);
 }
 
 void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
@@ -441,13 +441,13 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
     switch (channel) {
         case SENSOR_CHANNEL_FIRST ... SENSOR_CHANNEL_LAST: {
 	    // Sensor or Actor that gets or delivers a number
-            uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
+            uint32_t sensor_id = sensorClass.getSensorByNodeChannel(node_id, channel);
             if ( sensor_id > 0 ) { 
                 buf = unpackTransportValue(mydata, buf);
                 if ( verboseLevel & VERBOSECONFIG) {    
                     printf("%sValue of Node: %u Data: %u ==> Channel: %u is %s\n", ts(tsbuf), node_id, mydata, channel, buf);
                 }
-                sensor.updateLastVal(sensor_id, mydata);
+                sensorClass.updateLastVal(sensor_id, mydata);
                 database.storeSensorValue(sensor_id, buf);
                 send_fhem_cmd(node_id, channel, buf);
             }
@@ -460,14 +460,14 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
         case REG_BATT:
         {
 	    // battery voltage
-            uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
+            uint32_t sensor_id = sensorClass.getSensorByNodeChannel(node_id, channel);
             buf = unpackTransportValue(mydata, buf);
             if ( sensor_id > 0 ) {
                 if ( verboseLevel & VERBOSECONFIG) {
                     printf("%sVoltage of Node: %u is %sV\n", ts(tsbuf), node_id, buf);
                 }
-                sensor.updateLastVal(sensor_id, mydata);
-                node.setVoltage(node_id, strtof(unpackTransportValue(mydata,buf),NULL));
+                sensorClass.updateLastVal(sensor_id, mydata);
+                nodeClass.setVoltage(node_id, strtof(unpackTransportValue(mydata,buf),NULL));
                 database.storeSensorValue(sensor_id, buf);
                 send_fhem_cmd(node_id, channel,buf);
             }
@@ -608,12 +608,12 @@ int main(int argc, char* argv[]) {
     }
     
     // Init Arrays
-    node.setVerbose(verboseLevel);
-    sensor.setVerbose(verboseLevel);
+    nodeClass.setVerbose(verboseLevel);
+    sensorClass.setVerbose(verboseLevel);
     order.setVerbose(verboseLevel);
     orderbuffer.setVerbose(verboseLevel);
     database.setVerbose(verboseLevel);
-    gateway.setVerbose(verboseLevel);
+    gatewayClass.setVerbose(verboseLevel);
     init_system();
     printf("%s%s up and running\n", ts(tsbuf),PRGNAME); 
 
@@ -677,17 +677,17 @@ int main(int argc, char* argv[]) {
             sprintf(buf1,"G:%u>H", udpdata.gw_no);
             printPayload(ts(tsbuf), buf1, &payload);
         }
-        if ( gateway.isGateway(udpdata.gw_no) ) {
+        if ( gatewayClass.isGateway(udpdata.gw_no) ) {
             if (payload.msg_flags & PAYLOAD_FLAG_NEEDHELP ) {
                 char* tn_buf;
                 tn_buf = (char*)malloc(100);
-                sprintf(tn_buf,"set %s_Status 1", node.getNodeName(payload.node_id));
+                sprintf(tn_buf,"set %s_Status 1", nodeClass.getNodeName(payload.node_id));
                 send_fhem_tn(tn_buf);
                 free(tn_buf);
             }
             switch ( payload.msg_type ) {
                 case PAYLOAD_TYPE_INIT: { // Init message from a node!!
-                    if ( node.isNewHB(payload.node_id, payload.heartbeatno, time(0)) ) {
+                    if ( nodeClass.isNewHB(payload.node_id, payload.heartbeatno, time(0)) ) {
                         process_payload(&payload);
                     } else {
                         // nothing to do here !!!   
@@ -699,17 +699,17 @@ int main(int argc, char* argv[]) {
                 }
                 break;
                 case PAYLOAD_TYPE_HB: { // heartbeat message!!
-                   if ( node.isNewHB(payload.node_id, payload.heartbeatno, time(0)) ) {  // Got a new Heaqrtbeat -> process it!
+                   if ( nodeClass.isNewHB(payload.node_id, payload.heartbeatno, time(0)) ) {  // Got a new Heaqrtbeat -> process it!
                         database.lowVoltage(payload.node_id, payload.msg_flags & PAYLOAD_FLAG_NEEDHELP);
                         process_payload(&payload);
-                        if ( node.isMasteredNode(payload.node_id) ) {
+                        if ( nodeClass.isMasteredNode(payload.node_id) ) {
                             if ( orderbuffer.nodeHasEntry(payload.node_id) ) {  // WE have orders for this node
                                 make_order(payload.node_id, PAYLOAD_TYPE_DAT);
                                 if ( verboseLevel & VERBOSEORDER ) {
                                     printf("%sEntries for Heartbeat Node found, sending them\n",ts(tsbuf));
                                 }
                             } else {
-                                if ( node.isMasteredNode(payload.node_id) ) {
+                                if ( nodeClass.isMasteredNode(payload.node_id) ) {
                                     order.addOrder(payload.node_id, PAYLOAD_TYPE_HB_RESP, 0, mymillis());
                                     order.modifyOrderFlags(payload.node_id, PAYLOAD_FLAG_LASTMESSAGE);
                                 }
@@ -717,12 +717,12 @@ int main(int argc, char* argv[]) {
                         }
                     } else {
                         // reset stop counter (TTL) for message to send
-                        if ( node.isMasteredNode(payload.node_id) ) order.adjustEntryTime(payload.node_id, mymillis());
+                        if ( nodeClass.isMasteredNode(payload.node_id) ) order.adjustEntryTime(payload.node_id, mymillis());
                     }
                 }
                 break;    
                 case PAYLOAD_TYPE_DATRESP: { // Quittung für eine Nachricht vom Typ PAYLOAD_TYPE_DATNOR !!
-                    if ( node.isMasteredNode(payload.node_id) ) {
+                    if ( nodeClass.isMasteredNode(payload.node_id) ) {
                         if ( order.isOrderNo(payload.orderno) ) {
                             process_payload(&payload);
                             order.delByOrderNo(payload.orderno);  // Nachricht ist angekommen => löschen
@@ -739,29 +739,29 @@ int main(int argc, char* argv[]) {
                 }
                 break;
                 case PAYLOAD_TYPE_DATSTOP: { // Quittung für einen Heatbeatresponse!!
-                    if ( node.isMasteredNode(payload.node_id) )
+                    if ( nodeClass.isMasteredNode(payload.node_id) )
                         order.delByOrderNo(payload.orderno);  // Nachricht ist angekommen => löschen
                 }
                 break;
                 case PAYLOAD_TYPE_PING_POW_MIN: {
-                    node.setPaLevel(payload.node_id, 1);
+                    nodeClass.setPaLevel(payload.node_id, 1);
                 }
                 break;
                 case PAYLOAD_TYPE_PING_POW_LOW: {
-                    node.setPaLevel(payload.node_id, 2);
+                    nodeClass.setPaLevel(payload.node_id, 2);
                 }
                 break;
                 case PAYLOAD_TYPE_PING_POW_HIGH: {
-                    node.setPaLevel(payload.node_id, 3);
+                    nodeClass.setPaLevel(payload.node_id, 3);
                 }
                 break;
                 case PAYLOAD_TYPE_PING_POW_MAX: {
-                    node.setPaLevel(payload.node_id, 4);
+                    nodeClass.setPaLevel(payload.node_id, 4);
                 }
                 break;
                 case PAYLOAD_TYPE_PING_END: {
-                    if ( node.isNewHB(payload.node_id, payload.heartbeatno, time(0)) ) {  // Got a new Heaqrtbeat -> process it!
-                        sprintf(buf,"%u",node.getPaLevel(payload.node_id));
+                    if ( nodeClass.isNewHB(payload.node_id, payload.heartbeatno, time(0)) ) {  // Got a new Heaqrtbeat -> process it!
+                        sprintf(buf,"%u",nodeClass.getPaLevel(payload.node_id));
                         database.storeNodeConfig(payload.node_id, REG_PALEVEL, buf);
                     } else {
                      // nothing to do here !!!   
@@ -769,7 +769,7 @@ int main(int argc, char* argv[]) {
                 }
                 break;
                 default: {	
-                    if ( node.isMasteredNode(payload.node_id) ) {
+                    if ( nodeClass.isMasteredNode(payload.node_id) ) {
                         if ( verboseLevel & VERBOSEORDER) {
                             printf("%sProcessing Node:%u Type:%u Orderno: %u\n", ts(tsbuf), payload.node_id, payload.msg_type, payload.orderno);
                         }
@@ -786,7 +786,7 @@ int main(int argc, char* argv[]) {
                     }
                 }
 			}
-        }  // gateway.isGateway
+        }  // gatewayClass.isGateway
     } // UDP Message > 0
 //
 // Orderloop: Tell the nodes what they have to do
@@ -796,7 +796,7 @@ int main(int argc, char* argv[]) {
 			while ( order.getOrderForTransmission(&payload, mymillis() ) ) {
                 // Hier UDP Sender
                 void* p_rec = NULL;
-                p_rec = gateway.getGateway(p_rec, gw_name, &gw_no);
+                p_rec = gatewayClass.getGateway(p_rec, gw_name, &gw_no);
                 while ( p_rec ) {
                     if ( verboseLevel & VERBOSERF24) {
                         sprintf(buf1,"H>G:%u", gw_no);
@@ -805,7 +805,7 @@ int main(int argc, char* argv[]) {
                     udpdata.gw_no=0;
                     memcpy(&udpdata.payload, &payload, sizeof(payload) );
                     sendUdpMessage(gw_name, cfg.gwUdpPortNo.c_str(), &udpdata);
-                    p_rec = gateway.getGateway(p_rec, gw_name, &gw_no);
+                    p_rec = gatewayClass.getGateway(p_rec, gw_name, &gw_no);
                 }
             }
 	    usleep(20000);

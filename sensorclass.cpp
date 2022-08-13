@@ -1,6 +1,6 @@
-#include "sensor.h"
+#include "sensorclass.h"
 
-Sensor::Sensor(void) {
+SensorClass::SensorClass(void) {
     p_initial = NULL;
     verboseLevel = 0;
     buf = (char*)malloc(TSBUFFERSIZE);
@@ -8,7 +8,7 @@ Sensor::Sensor(void) {
     tsbuf = (char*)malloc(TSBUFFERSIZE);
 }
 
-void Sensor::cleanup(void) {
+void SensorClass::cleanup(void) {
     sensor_t *p_search;
     p_search = p_initial;
     while ( p_search ) {
@@ -18,7 +18,7 @@ void Sensor::cleanup(void) {
     }
 }
 
-void Sensor::newEntry(Sensor::sensor_t* p_new) {
+void SensorClass::newEntry(SensorClass::sensor_t* p_new) {
     sensor_t *p_search;
     p_new->p_next = NULL;
     if (p_initial) {
@@ -32,8 +32,8 @@ void Sensor::newEntry(Sensor::sensor_t* p_new) {
     }
 }
 
-void Sensor::addSensor(uint32_t sensor_id, NODE_DATTYPE node_id, uint8_t channel, uint8_t datatype, char* fhem_dev, uint32_t last_utime, uint32_t last_data, char* sensor_name) {
-    sensor_t* p_new = new Sensor::sensor_t;
+void SensorClass::addSensor(uint32_t sensor_id, NODE_DATTYPE node_id, uint8_t channel, uint8_t datatype, char* fhem_dev, uint32_t last_utime, uint32_t last_data, char* sensor_name) {
+    sensor_t* p_new = new SensorClass::sensor_t;
     p_new->sensor_id = sensor_id;
     p_new->node_id = node_id;
     p_new->channel = channel;
@@ -45,7 +45,7 @@ void Sensor::addSensor(uint32_t sensor_id, NODE_DATTYPE node_id, uint8_t channel
     newEntry(p_new);
 }
    
-bool Sensor::updateLastVal(uint32_t sensor_id, uint32_t last_data) {
+bool SensorClass::updateLastVal(uint32_t sensor_id, uint32_t last_data) {
     bool retval = false;
     uint8_t channel = getChannel(last_data);
     sensor_t *p_search = p_initial;
@@ -64,7 +64,7 @@ bool Sensor::updateLastVal(uint32_t sensor_id, uint32_t last_data) {
     return retval;
 }
 
-uint32_t Sensor::getSensorByNodeChannel(NODE_DATTYPE node_id, uint8_t channel) {
+uint32_t SensorClass::getSensorByNodeChannel(NODE_DATTYPE node_id, uint8_t channel) {
     uint32_t retval = 0;
     sensor_t *p_search;
     p_search=p_initial;
@@ -77,7 +77,7 @@ uint32_t Sensor::getSensorByNodeChannel(NODE_DATTYPE node_id, uint8_t channel) {
     return retval;
 }
 
-char* Sensor::getFhemDevByNodeChannel(NODE_DATTYPE node_id, uint8_t channel) {
+char* SensorClass::getFhemDevByNodeChannel(NODE_DATTYPE node_id, uint8_t channel) {
     char* retval = NULL;
     sensor_t *p_search;
     p_search=p_initial;
@@ -92,7 +92,7 @@ char* Sensor::getFhemDevByNodeChannel(NODE_DATTYPE node_id, uint8_t channel) {
     return retval;
 }
 
-bool Sensor::getNodeChannelBySensorID(NODE_DATTYPE* p_node_id, uint8_t* p_channel, uint32_t sensor_id) {
+bool SensorClass::getNodeChannelBySensorID(NODE_DATTYPE* p_node_id, uint8_t* p_channel, uint32_t sensor_id) {
     sensor_t *p_search;
     bool retval = false;
     p_search=p_initial;
@@ -110,7 +110,7 @@ bool Sensor::getNodeChannelBySensorID(NODE_DATTYPE* p_node_id, uint8_t* p_channe
     return retval;
 }
 
-bool Sensor::getNodeChannelByFhemDev(NODE_DATTYPE *p_node_id, uint8_t* p_channel, char* fhem_dev) {
+bool SensorClass::getNodeChannelByFhemDev(NODE_DATTYPE *p_node_id, uint8_t* p_channel, char* fhem_dev) {
     sensor_t *p_search;
     bool retval = false;
     p_search=p_initial;
@@ -128,7 +128,7 @@ bool Sensor::getNodeChannelByFhemDev(NODE_DATTYPE *p_node_id, uint8_t* p_channel
     return retval;
 }
 
-bool Sensor::getNodeChannelBySensorName(NODE_DATTYPE *p_node_id, uint8_t* p_channel, char* sensor_name) {
+bool SensorClass::getNodeChannelBySensorName(NODE_DATTYPE *p_node_id, uint8_t* p_channel, char* sensor_name) {
     sensor_t *p_search;
     bool retval = false;
     p_search=p_initial;
@@ -146,7 +146,7 @@ bool Sensor::getNodeChannelBySensorName(NODE_DATTYPE *p_node_id, uint8_t* p_chan
     return retval;
 }
 
-int8_t Sensor::getDataTypeByNodeChannel(NODE_DATTYPE node_id, uint8_t channel) {
+int8_t SensorClass::getDataTypeByNodeChannel(NODE_DATTYPE node_id, uint8_t channel) {
     sensor_t *p_search;
     int8_t retval = -1;
     p_search=p_initial;
@@ -161,7 +161,7 @@ int8_t Sensor::getDataTypeByNodeChannel(NODE_DATTYPE node_id, uint8_t channel) {
     return retval;
 }
 
-void Sensor::printBuffer(int tn_socket, bool html) {
+void SensorClass::printBuffer(int tn_socket, bool html) {
     char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
     sensor_t *p_search;
     p_search = p_initial;
@@ -185,7 +185,7 @@ void Sensor::printBuffer(int tn_socket, bool html) {
     free(client_message);
 }
 
-void Sensor::setVerbose(uint16_t _verboseLevel) {
+void SensorClass::setVerbose(uint16_t _verboseLevel) {
     verboseLevel = _verboseLevel;
 }
 

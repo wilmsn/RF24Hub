@@ -1,14 +1,14 @@
 /**
- * @file node.h
- * @brief Der Node wird als Objekt innerhalb der Klasse Node verwaltet.
+ * @file nodeclass.h
+ * @brief Der Node wird als Objekt innerhalb der Klasse NodeClass verwaltet.
  * 
  * Zum Programmstart werden alle relevanten Informationen zum Node aus der Datenbank geladen um dann im weiteren Programmablauf
  * hier verwaltet zu werden.
  * Wichtig: Wird ein Node innerhalb der Datenbank neu angelegt, ist dieser zunächst für das Programm unbekannt.
  * Zur Synkronisation ist per telnet der Befehl "init" abzusetzen.
 */
-#ifndef _NODE_H_   
-#define _NODE_H_
+#ifndef _NODECLASS_H_   
+#define _NODECLASS_H_
 #include <stdint.h>
 #include <unistd.h>
 #include "rf24_config.h"
@@ -17,13 +17,13 @@
 
 using namespace std;
 
-class Node {
+class NodeClass {
 
     
 private:
 
 //char* buf;
-struct node_t {
+struct nodeClass_t {
         NODE_DATTYPE   	node_id;
         char            node_name[NODENAMESIZE];
         uint8_t         pa_level;
@@ -32,9 +32,9 @@ struct node_t {
         uint8_t         hb_no;
         uint32_t        hb_utime;
         bool            is_mastered;
-        node_t*         p_next;
+        nodeClass_t*         p_next;
     };
-node_t*     p_initial;
+nodeClass_t*     p_initial;
 /**************************************************************
  * char buffer zur generischen Verwendung
  *************************************************************/
@@ -50,7 +50,7 @@ uint16_t    _verboseLevel;
 /**************************************************************
  * fügt einen neuen record zum Buffer hibzu
  *************************************************************/
-void        newEntry(node_t*);
+void        newEntry(nodeClass_t*);
 
 public:
 
@@ -152,8 +152,8 @@ void printBuffer(int tn_socket, bool htmlformat);
 /**
  * Construktor des Buffers
  */
-Node(void);
+NodeClass(void);
 
 };
 
-#endif // _NODE_H_
+#endif // _NODECLASS_H_

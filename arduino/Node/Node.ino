@@ -1,16 +1,18 @@
 
 /**
-A Node for the rf24hub.
-Can be configurated to you needs
-
-Build in Parts (cut and pasteable): see page Parts.txt
-
-On Branch: zahlenformat  !!!!!
-
-
-*/
+ * @file Node.ino
+ * @brief A generic Arduino Program / Template to build the Software für ATMega Nodes
+ * 
+ * A Node for the rf24hub.
+ * Can be configurated to you needs
+ * 
+ * Build in Parts (cut and pasteable): see page Parts.txt
+ * 
+ * On Branch: zahlenformat  !!!!!
+ * 
+ */
 //****************************************************
-// My definitions for my nodes based on this sketch
+// Select / enable your in "Node_settings" defined Nodes here
 // Select only one at one time !!!!
 //#define SOLARNODE
 //#define AUSSENTHERMOMETER2

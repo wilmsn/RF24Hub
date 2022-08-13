@@ -17,7 +17,7 @@
 #include "rf24hub_config.h"
 #include "common.h"
 
-class Sensor {
+class SensorClass {
 
     
 private:
@@ -152,7 +152,7 @@ int8_t getDataTypeByNodeChannel(NODE_DATTYPE node_id, uint8_t channel);
  */
 void printBuffer(int new_tn_in_socket, bool html);
 
-Sensor(void);
+SensorClass(void);
 
 };
 

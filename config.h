@@ -6,6 +6,11 @@
 #ifndef _CONFIG_H_   /* Include guard */
 #define _CONFIG_H_
 
+/**
+ * @defgroup cfgprm "Config Parameter"
+ * @{
+ */
+/// Hier wird der Name des übergreifenden Config-Files festgelegt
 #define DEFAULT_CONFIG_FILE "/etc/rf24hub/rf24hub.cfg"
 #define PARAM_MAXLEN 80
 // The Key for the Messagebuffer (Hub)
@@ -51,6 +56,6 @@
 #define STARTUPVERBOSELEVEL      0b0000000000000011 
 //#define STARTUPVERBOSELEVEL      0b0011111111111111 
 
-
+/// @}
 #endif // _CONFIG_H_
 
