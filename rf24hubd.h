@@ -1,8 +1,8 @@
 /**
-rf24hub.cpp
-A unix-deamon to handle and store the information from/to all connected sensornodes. 
-All information is stored in a MariaDB database.
-*/
+ * @file rf24hub.cpp
+ * A unix-deamon to handle and store the information from/to all connected sensornodes. 
+ * All information is stored in a MariaDB database.
+ */
 
 #ifndef _RF24HUBD_H_   /* Include guard */
 #define _RF24HUBD_H_
@@ -55,28 +55,43 @@ All information is stored in a MariaDB database.
 
 using namespace std;
 
+/// Ein handler für den UDP Socket
 int sockfd;
 struct sockaddr_in serv_addr;
 struct hostent *server;
+/// Ein Pointer für das PID File. Ist dieses angelegt, kann der rf24gwd nicht (nochmal) gestartet werden.
 FILE * pidfile_ptr;
+/// Ein Pointer für das Log File.
 FILE * logfile_ptr;
+/// Die Udpdatastruktur als Variable
 udpdata_t udpdata;
 
-uint16_t verboselevel = STARTUPVERBOSELEVEL;
+/// Eine Variable für das aktuelle Verboselevel
+uint16_t verboseLevel = STARTUPVERBOSELEVEL;
+/// Ein generischer Buffer
 char* buf;
+/// Ein Buffer zur Aufnahme des Zeitstrings
 char* tsbuf;
+
 
 struct thread_db_data {
    uint32_t     sensor_id;
    char         buf[20];
 };
 
+/// Eine Instanz der Klasse Order
 Order           order;
+/// Eine Instanz der Klasse OrderBuffer
 OrderBuffer     orderbuffer;
+/// Eine Instanz der Klasse Sensor
 Sensor          sensor;
+/// Eine Instanz der Klasse Node
 Node            node;
+/// Eine Instanz der Klasse Database
 Database        database;
+/// Eine Instanz der Klasse Gateway
 Gateway         gateway;
+/// Eine Instanz der Klasse Cfg
 Cfg             cfg(SWVERSION_STR,__DATE__);
 
 /**

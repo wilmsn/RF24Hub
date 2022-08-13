@@ -54,7 +54,7 @@ void Cfg::processParams(const char* prgName, int argc, char* argv[]) {
                       break;
             case 'v':
                       if (optarg[0]) {
-                          verboselevel = decodeVerbose(verboselevel, optarg);
+                          verboseLevel = decodeVerbose(verboseLevel, optarg);
                       } else {
                           usage(prgName);
                       }
@@ -130,7 +130,7 @@ void Cfg::processParams(const char* prgName, int argc, char* argv[]) {
     else if (strcmp(name, "db_schema")==0)   dbSchema = value;
     else if (strcmp(name, "db_username")==0) dbUserName = value;
     else if (strcmp(name, "db_password")==0) dbPassWord = value;
-//    else if (strcmp(name, "rf24hub_verboselevel")==0) {
+//    else if (strcmp(name, "rf24hub_verboseLevel")==0) {
 //            if (! verboseLevel) verboseLevel = atoi(value);
 //		}
     else if (strcmp(name, "fhem_hostname")==0) {
@@ -225,8 +225,8 @@ void Cfg::usage(const char* prgName) {
     printf("           Print help\n");
     printf("   -d or --daemon\n");
     printf("         Starts as daemon\n");
-    printf("   -v or --verbose +<verboselevel>\n");
-    printf("         Sets the verboselevel, can be repeated\n");
+    printf("   -v or --verbose +<verboseLevel>\n");
+    printf("         Sets the verboseLevel, can be repeated\n");
     printf("         Verboselevels are: sql, telnet, rf24, order, orderext,\n");
     printf("                            obuffer, obufferext, pointer, other\n");
     printf("   -c or --configfilename <filename>\n");

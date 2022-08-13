@@ -3,7 +3,7 @@
 Database::Database(void) {
     tsbuf = (char*) malloc (TSBUFFERSIZE);
     sql_stmt = (char*) malloc(SQLSTRINGSIZE);
-    verboselevel = 0;
+    verboseLevel = 0;
 }
 
 void Database::db_check_error(void) {
@@ -100,8 +100,8 @@ unsigned long Database::getBeginOfDay(){
     return retval;    
 }
 
-void Database::addGateway(char* gw_name, uint16_t gw_no){
-    sprintf (sql_stmt, "insert into gateway(gw_name, gw_no, isActive) values('%s', %u, 'j')", gw_name, gw_no);
+void Database::addGateway(char* gw_hostname, uint16_t gw_no){
+    sprintf (sql_stmt, "insert into gateway(gw_name, gw_no, isActive) values('%s', %u, 'j')", gw_hostname, gw_no);
     do_sql(sql_stmt);
 }
 
@@ -165,8 +165,8 @@ void Database::initNode(Node* node) {
 
 void Database::initSensor(Sensor* sensor) {
     if ( connect() ) {
-	char* fhem_dev = alloc_str(verboselevel,"Database::initSensor fhem_dev",FHEMDEVLENGTH, ts(tsbuf));
-	char* sensor_name = alloc_str(verboselevel,"Database::initSensor sensor_name",FHEMDEVLENGTH, ts(tsbuf));
+	char* fhem_dev = alloc_str(verboseLevel,"Database::initSensor fhem_dev",FHEMDEVLENGTH, ts(tsbuf));
+	char* sensor_name = alloc_str(verboseLevel,"Database::initSensor sensor_name",FHEMDEVLENGTH, ts(tsbuf));
 	uint32_t     	mysensor;
 	NODE_DATTYPE   	node_id;
 	uint8_t     	mychannel;
@@ -191,7 +191,7 @@ void Database::initSensor(Sensor* sensor) {
 	    sensor->addSensor(mysensor, node_id, mychannel, mydatatype, fhem_dev, last_utime, last_data, sensor_name);
 	}
 	mysql_free_result(result);
-	free_str(verboselevel,"Database::initSensor fhem_dev",fhem_dev, ts(tsbuf)); 
+	free_str(verboseLevel,"Database::initSensor fhem_dev",fhem_dev, ts(tsbuf)); 
 	disconnect();
     }
 }
@@ -224,8 +224,8 @@ void Database::storeNodeConfig(NODE_DATTYPE node_id, uint8_t channel, char* valu
     do_sql(sql_stmt);
 }
 
-void Database::updateNodeMastered(NODE_DATTYPE node_id, bool ismastered) {
-    if (ismastered) {
+void Database::updateNodeMastered(NODE_DATTYPE node_id, bool isMastered) {
+    if (isMastered) {
         sprintf(sql_stmt,"update node set mastered = 'y' where node_id = %u ", node_id);
     } else {
         sprintf(sql_stmt,"update node set mastered = 'n' where node_id = %u ", node_id);
@@ -239,7 +239,7 @@ bool Database::connect(string _db_hostname, string _db_username, string _db_pass
     snprintf(db_password, DB_PASSWORD_SIZE, "%s", _db_password.c_str());
     snprintf(db_schema, DB_SCHEMA_SIZE, "%s", _db_schema.c_str());
     db_port = _db_port;
-    if ( verboselevel & VERBOSESTARTUP) {
+    if ( verboseLevel & VERBOSESTARTUP) {
         printf("%sMaria-DB client version: %s\n", ts(tsbuf), mysql_get_client_info());
     }
     bool retval = connect();
@@ -281,11 +281,11 @@ bool Database::disconnect() {
 }
 
 void Database::debugPrintSQL(char* sqlstmt) {
-    if ( verboselevel & VERBOSESQL) {    
+    if ( verboseLevel & VERBOSESQL) {    
         printf("%sSQL: %s\n", ts(tsbuf), sqlstmt);
     }
 }
 
-void Database::setVerbose(uint16_t _verboselevel) {
-    verboselevel = _verboselevel;
+void Database::setVerbose(uint16_t _verboseLevel) {
+    verboseLevel = _verboseLevel;
 }

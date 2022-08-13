@@ -1,6 +1,5 @@
-/*
-rf24hub_config.h ==> all global definitions go here
-
+/**
+ * @file rf24gw_config.h Definitions for rf24gwd
 */
 #ifndef _RF24GW_CONFIG_H_   
 #define _RF24GW_CONFIG_H_

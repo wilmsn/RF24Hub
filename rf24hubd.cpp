@@ -1,12 +1,12 @@
 #include "rf24hubd.h" 
 
 void send_fhem_cmd(NODE_DATTYPE node_id, uint8_t channel, char* value) {
-    char* tn_cmd = alloc_str(verboselevel,"send_fhem_cmd tn_cmd",TELNETBUFFERSIZE,ts(tsbuf));
+    char* tn_cmd = alloc_str(verboseLevel,"send_fhem_cmd tn_cmd",TELNETBUFFERSIZE,ts(tsbuf));
     char* fhem_dev;
     fhem_dev = sensor.getFhemDevByNodeChannel(node_id, channel); 
 	sprintf(tn_cmd,"set %s %s", fhem_dev, value);
     send_fhem_tn(tn_cmd);
-    free_str(verboselevel, "send_fhem_cmd tn_cmd", tn_cmd,ts(tsbuf));
+    free_str(verboseLevel, "send_fhem_cmd tn_cmd", tn_cmd,ts(tsbuf));
 }
 
 // send_fhem_tn ==> send a telnet comand to the fhem-host
@@ -17,7 +17,7 @@ void send_fhem_tn(char* tn_cmd) {
     int sockfd, portno, n;
     struct sockaddr_in serv_addr;
     struct hostent *server;
-    if ( verboselevel & VERBOSETELNET) {    
+    if ( verboseLevel & VERBOSETELNET) {    
         printf("%ssend_fhem_cmd: %s\n", ts(tsbuf), tn_cmd );
     }
     portno = std::stoi(cfg.fhemPortNo);
@@ -36,7 +36,7 @@ void send_fhem_tn(char* tn_cmd) {
                 if (n < 0) {
                     printf("%sERROR: send_fhem_cmd: error writing to socket\n", ts(tsbuf));
                 } else {
-                    if ( verboselevel & VERBOSETELNET) {
+                    if ( verboseLevel & VERBOSETELNET) {
                         printf("%ssend_fhem_cmd: Telnet to %s Port %u successfull Command: %s\n", ts(tsbuf), cfg.fhemHostName.c_str(), portno, tn_cmd);
                     }
                 }
@@ -56,8 +56,8 @@ void send_fhem_tn(char* tn_cmd) {
 /* Die Thread-Funktion fuer den Empfang von telnet Daten*/
 static void* receive_tn_in (void *arg) {
     struct thread_tn_data *f = (struct thread_tn_data *)arg;
-    char* buffer = alloc_str(verboselevel,"receive_tn_in buffer",TELNETBUFFERSIZE,ts(tsbuf));
-    char* client_message = alloc_str(verboselevel,"receive_tn_in client_message",DEBUGSTRINGSIZE,ts(tsbuf));
+    char* buffer = alloc_str(verboseLevel,"receive_tn_in buffer",TELNETBUFFERSIZE,ts(tsbuf));
+    char* client_message = alloc_str(verboseLevel,"receive_tn_in client_message",DEBUGSTRINGSIZE,ts(tsbuf));
     ssize_t MsgLen;
     TnMsg_t TnMsg;
     int ret;
@@ -94,8 +94,8 @@ static void* receive_tn_in (void *arg) {
     sleep(1);
     close (f->tnsocket);
     free(f);
-    free_str(verboselevel,"receive_tn_in buffer",buffer,ts(tsbuf));
-    free_str(verboselevel,"receive_tn_in client_message",client_message,ts(tsbuf));
+    free_str(verboseLevel,"receive_tn_in buffer",buffer,ts(tsbuf));
+    free_str(verboseLevel,"receive_tn_in client_message",client_message,ts(tsbuf));
     pthread_exit((void *)pthread_self());
 }
 	
@@ -129,7 +129,7 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
          cmp_logfile[]="logfile";
     char *wort1a, *wort2a, *wort3a, *wort4a;
     char *wort1, *wort2, *wort3, *wort4;
-    char* message = alloc_str(verboselevel,"process_tn_in message",120,ts(tsbuf));
+    char* message = alloc_str(verboseLevel,"process_tn_in message",120,ts(tsbuf));
     bool tn_input_ok = false;
     char delimiter[] = " ";
 	//trim(buffer);
@@ -139,31 +139,31 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
     wort4a = strtok(NULL, delimiter);
     char* pEnd;
     if (wort1a) {
-        wort1 = alloc_str(verboselevel,"process_tn_in wort1",strlen(wort1a)+1,ts(tsbuf));
+        wort1 = alloc_str(verboseLevel,"process_tn_in wort1",strlen(wort1a)+1,ts(tsbuf));
         strcpy(wort1, wort1a);
     } else {
-        wort1 = alloc_str(verboselevel,"process_tn_in wort1",1,ts(tsbuf));
+        wort1 = alloc_str(verboseLevel,"process_tn_in wort1",1,ts(tsbuf));
         wort1[0] = '\0';
     }
     if (wort2a) {
-        wort2 = alloc_str(verboselevel,"process_tn_in wort2",strlen(wort2a)+1,ts(tsbuf));
+        wort2 = alloc_str(verboseLevel,"process_tn_in wort2",strlen(wort2a)+1,ts(tsbuf));
         strcpy(wort2, wort2a);
     } else {
-        wort2 = alloc_str(verboselevel,"process_tn_in wort2",1,ts(tsbuf));
+        wort2 = alloc_str(verboseLevel,"process_tn_in wort2",1,ts(tsbuf));
         wort2[0] = '\0';
     }
     if (wort3a) {
-        wort3 = alloc_str(verboselevel,"process_tn_in wort3",strlen(wort3a)+1,ts(tsbuf));
+        wort3 = alloc_str(verboseLevel,"process_tn_in wort3",strlen(wort3a)+1,ts(tsbuf));
         strcpy(wort3, wort3a);
     } else {
-        wort3 = alloc_str(verboselevel,"process_tn_in wort3",1,ts(tsbuf));
+        wort3 = alloc_str(verboseLevel,"process_tn_in wort3",1,ts(tsbuf));
         wort3[0] = '\0';
     }
     if (wort4a) {
-        wort4 = alloc_str(verboselevel,"process_tn_in wort4",strlen(wort4a)+1,ts(tsbuf));
+        wort4 = alloc_str(verboseLevel,"process_tn_in wort4",strlen(wort4a)+1,ts(tsbuf));
         strcpy(wort4, wort4a);
     } else {
-        wort4 = alloc_str(verboselevel,"process_tn_in wort4",1,ts(tsbuf));
+        wort4 = alloc_str(verboseLevel,"process_tn_in wort4",1,ts(tsbuf));
         wort4[0] = '\0';
     }
     if ( (strcmp(wort1,cmp_set) == 0) && (strcmp(wort2,cmp_sensor) == 0) && (strlen(wort3) > 0) && (strlen(wort4) > 0) ) {
@@ -223,16 +223,16 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 	    tn_input_ok = true;
         }
     }
-    // set verbose <new verboselevel>
-    // sets the new verboselevel
+    // set verbose <new verboseLevel>
+    // sets the new verboseLevel
     if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (strlen(wort3) > 0) && (strlen(wort4) == 0) ) {
 	tn_input_ok = true;
-	verboselevel = decodeVerbose(verboselevel, wort3);
-	node.setVerbose(verboselevel);
-	sensor.setVerbose(verboselevel);
-	order.setVerbose(verboselevel);
-	orderbuffer.setVerbose(verboselevel);
-	database.setVerbose(verboselevel);
+	verboseLevel = decodeVerbose(verboseLevel, wort3);
+	node.setVerbose(verboseLevel);
+	sensor.setVerbose(verboseLevel);
+	order.setVerbose(verboseLevel);
+	orderbuffer.setVerbose(verboseLevel);
+	database.setVerbose(verboseLevel);
     }
     // show order
     // lists the current orderbuffer
@@ -315,7 +315,7 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
     // show verbose
     if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
         tn_input_ok = true;
-        sprintf(message,"Active verboselevel: %s\n", printVerbose(verboselevel, buf));
+        sprintf(message,"Active verboseLevel: %s\n", printVerbose(verboseLevel, buf));
         if ( write(tn_socket , message , strlen(message)) < 1 ) {
             // TODO: Need a message here?
         }
@@ -365,11 +365,11 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
             // TODO
         }
     }		
-    free_str(verboselevel,"process_tn_in wort1",wort1,ts(tsbuf));
-    free_str(verboselevel,"process_tn_in wort2",wort2,ts(tsbuf));
-    free_str(verboselevel,"process_tn_in wort3",wort3,ts(tsbuf));
-    free_str(verboselevel,"process_tn_in wort4",wort4,ts(tsbuf));
-    free_str(verboselevel,"process_tn_in message", message,ts(tsbuf));
+    free_str(verboseLevel,"process_tn_in wort1",wort1,ts(tsbuf));
+    free_str(verboseLevel,"process_tn_in wort2",wort2,ts(tsbuf));
+    free_str(verboseLevel,"process_tn_in wort3",wort3,ts(tsbuf));
+    free_str(verboseLevel,"process_tn_in wort4",wort4,ts(tsbuf));
+    free_str(verboseLevel,"process_tn_in message", message,ts(tsbuf));
     return tn_input_ok;
 }
 
@@ -444,7 +444,7 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
             uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
             if ( sensor_id > 0 ) { 
                 buf = unpackTransportValue(mydata, buf);
-                if ( verboselevel & VERBOSECONFIG) {    
+                if ( verboseLevel & VERBOSECONFIG) {    
                     printf("%sValue of Node: %u Data: %u ==> Channel: %u is %s\n", ts(tsbuf), node_id, mydata, channel, buf);
                 }
                 sensor.updateLastVal(sensor_id, mydata);
@@ -463,7 +463,7 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
             uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
             buf = unpackTransportValue(mydata, buf);
             if ( sensor_id > 0 ) {
-                if ( verboselevel & VERBOSECONFIG) {
+                if ( verboseLevel & VERBOSECONFIG) {
                     printf("%sVoltage of Node: %u is %sV\n", ts(tsbuf), node_id, buf);
                 }
                 sensor.updateLastVal(sensor_id, mydata);
@@ -477,7 +477,7 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
         {
         // Node config register
             buf = unpackTransportValue(mydata, buf);
-            if ( verboselevel & VERBOSECONFIG) {
+            if ( verboseLevel & VERBOSECONFIG) {
                 printf("%sConfigregister of Node: %u Channel: %u is %s\n", ts(tsbuf), node_id, channel, buf);
             }
             database.storeNodeConfig(node_id, channel, buf);
@@ -608,12 +608,12 @@ int main(int argc, char* argv[]) {
     }
     
     // Init Arrays
-    node.setVerbose(verboselevel);
-    sensor.setVerbose(verboselevel);
-    order.setVerbose(verboselevel);
-    orderbuffer.setVerbose(verboselevel);
-    database.setVerbose(verboselevel);
-    gateway.setVerbose(verboselevel);
+    node.setVerbose(verboseLevel);
+    sensor.setVerbose(verboseLevel);
+    order.setVerbose(verboseLevel);
+    orderbuffer.setVerbose(verboseLevel);
+    database.setVerbose(verboseLevel);
+    gateway.setVerbose(verboseLevel);
     init_system();
     printf("%s%s up and running\n", ts(tsbuf),PRGNAME); 
 
@@ -644,19 +644,19 @@ int main(int argc, char* argv[]) {
                 int ret;
                 // Logmessages
                 ret=msgrcv(msgID, &LogMsg, sizeof(LogMsg), 1, IPC_NOWAIT);
-                if ( (ret > 5) && (verboselevel & VERBOSETELNET)) {
+                if ( (ret > 5) && (verboseLevel & VERBOSETELNET)) {
                     printf("%s%s\n", ts(tsbuf), LogMsg.TnData.tntext);
                 }
                 // store into orderbuffer and make order
                 ret=msgrcv(msgID, &LogMsg, sizeof(LogMsg), 2, IPC_NOWAIT);
                 if ( ret > 5 ) {
-                    if ( verboselevel & VERBOSETELNET ) {
+                    if ( verboseLevel & VERBOSETELNET ) {
                         printf("%s%s\n", ts(tsbuf), LogMsg.TnData.tntext);
                     }
-                    char* tnstr = alloc_str(verboselevel,"main tnstr",DEBUGSTRINGSIZE,ts(tsbuf));
+                    char* tnstr = alloc_str(verboseLevel,"main tnstr",DEBUGSTRINGSIZE,ts(tsbuf));
                     strcpy(tnstr, LogMsg.TnData.tntext);
                     bool result = process_tn_in(tnstr,LogMsg.TnData.tn_socket);
-                    free_str(verboselevel,"main tnstr",tnstr,ts(tsbuf));
+                    free_str(verboseLevel,"main tnstr",tnstr,ts(tsbuf));
                     LogMsg.mtype = 9;
                     if ( result ) {
                         sprintf(LogMsg.TnData.tntext,"Command received => OK\n");
@@ -672,7 +672,7 @@ int main(int argc, char* argv[]) {
     if (UdpMsgLen > 0) {
         memcpy(&payload, &udpdata.payload, sizeof(payload) );
         //sprintf(gw_,"%s",inet_ntoa(udp_address_in.sin_addr));
-        if ( verboselevel & VERBOSERF24 ) {
+        if ( verboseLevel & VERBOSERF24 ) {
             printf ("%sUDP Message from: %s \n",ts(tsbuf), inet_ntoa(udp_address_in.sin_addr));
             sprintf(buf1,"G:%u>H", udpdata.gw_no);
             printPayload(ts(tsbuf), buf1, &payload);
@@ -705,7 +705,7 @@ int main(int argc, char* argv[]) {
                         if ( node.isMasteredNode(payload.node_id) ) {
                             if ( orderbuffer.nodeHasEntry(payload.node_id) ) {  // WE have orders for this node
                                 make_order(payload.node_id, PAYLOAD_TYPE_DAT);
-                                if ( verboselevel & VERBOSEORDER ) {
+                                if ( verboseLevel & VERBOSEORDER ) {
                                     printf("%sEntries for Heartbeat Node found, sending them\n",ts(tsbuf));
                                 }
                             } else {
@@ -728,7 +728,7 @@ int main(int argc, char* argv[]) {
                             order.delByOrderNo(payload.orderno);  // Nachricht ist angekommen => löschen
                             if ( orderbuffer.nodeHasEntry(payload.node_id) ) {  // WE have orders for this node
                                 make_order(payload.node_id, PAYLOAD_TYPE_DAT);
-                                if ( verboselevel & VERBOSEORDER ) {
+                                if ( verboseLevel & VERBOSEORDER ) {
                                     printf("%sEntries for Heartbeat Node found, sending them\n",ts(tsbuf));
                                 }
                             }
@@ -770,7 +770,7 @@ int main(int argc, char* argv[]) {
                 break;
                 default: {	
                     if ( node.isMasteredNode(payload.node_id) ) {
-                        if ( verboselevel & VERBOSEORDER) {
+                        if ( verboseLevel & VERBOSEORDER) {
                             printf("%sProcessing Node:%u Type:%u Orderno: %u\n", ts(tsbuf), payload.node_id, payload.msg_type, payload.orderno);
                         }
                         if ( order.isOrderNo(payload.orderno) ) {
@@ -778,7 +778,7 @@ int main(int argc, char* argv[]) {
                             order.delByOrderNo(payload.orderno);
                             if ( orderbuffer.nodeHasEntry(payload.node_id) ) {  // WE have orders for this node
                                 make_order(payload.node_id, PAYLOAD_TYPE_DAT);
-                                if ( verboselevel & VERBOSEORDER ) {
+                                if ( verboseLevel & VERBOSEORDER ) {
                                     printf("%sEntries for Heartbeat Node found, sending them\n", ts(tsbuf));
                                 }
                             }
@@ -798,7 +798,7 @@ int main(int argc, char* argv[]) {
                 void* p_rec = NULL;
                 p_rec = gateway.getGateway(p_rec, gw_name, &gw_no);
                 while ( p_rec ) {
-                    if ( verboselevel & VERBOSERF24) {
+                    if ( verboseLevel & VERBOSERF24) {
                         sprintf(buf1,"H>G:%u", gw_no);
                         printPayload(ts(tsbuf), buf1, &payload);
                     }

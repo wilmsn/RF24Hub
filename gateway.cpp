@@ -2,7 +2,7 @@
 
 Gateway::Gateway(void) {
     p_initial = NULL;
-    verboselevel = 0;
+    verboseLevel = 0;
     buf = (char*)malloc(TSBUFFERSIZE);
     tsbuf = (char*)malloc(TSBUFFERSIZE);
 }
@@ -12,7 +12,7 @@ void Gateway::cleanup(void) {
     p_search = p_initial;
     while ( p_search ) {
         p_initial = p_search->p_next;
-        free(p_search->gw_name);
+        free(p_search->gw_hostname);
         delete p_search;
         p_search = p_initial;
     }
@@ -43,7 +43,7 @@ bool Gateway::delEntry(gateway_t* p_del) {
     p_tmp = p_initial;
     while (p_search) {
         if (p_search == p_del ) {
-            free(p_search->gw_name);
+            free(p_search->gw_hostname);
             if (p_search == p_initial) {
                 if (p_initial->p_next) { 
                     p_tmp=p_initial->p_next;
@@ -80,14 +80,14 @@ void Gateway::delGateway(uint16_t gw_no) {
     }
 }
 
-void Gateway::addGateway(char* gw_name, uint16_t gw_no, bool isActive) {
+void Gateway::addGateway(char* gw_hostname, uint16_t gw_no, bool isActive) {
     gateway_t *p_new = new gateway_t;
-    p_new->gw_name = (char*)malloc(40);
+    p_new->gw_hostname = (char*)malloc(40);
     p_new->gw_no = gw_no;
     p_new->last_contact = 0;
-    sprintf(p_new->gw_name,"%s",gw_name);
+    sprintf(p_new->gw_hostname,"%s",gw_hostname);
     p_new->isActive = isActive;
-    if (verboselevel & VERBOSESENSOR) printf("%sGateway.addGateway: Name:%s No:%u %s\n",ts(tsbuf), gw_name, gw_no, isActive? "aktiv":"nicht aktiv");
+    if (verboseLevel & VERBOSESENSOR) printf("%sGateway.addGateway: Name:%s No:%u %s\n",ts(tsbuf), gw_hostname, gw_no, isActive? "aktiv":"nicht aktiv");
     newEntry(p_new);
 }
 
@@ -96,8 +96,8 @@ void Gateway::setGateway(uint16_t gw_no, bool isActive ) {
     p_search = p_initial;
     while (p_search) {
         if (p_search->gw_no == gw_no) {
-            if (verboselevel & VERBOSETELNET)
-                printf("%sGateway.isGW: GW.Name:%s %s\n", ts(tsbuf), p_search->gw_name, p_search->isActive? "aktiv":"nicht aktiv");
+            if (verboseLevel & VERBOSETELNET)
+                printf("%sGateway.isGW: GW.Name:%s %s\n", ts(tsbuf), p_search->gw_hostname, p_search->isActive? "aktiv":"nicht aktiv");
             p_search->isActive = isActive;
             p_search = NULL;
         } else {
@@ -118,7 +118,7 @@ void Gateway::gw_contact(uint16_t gw_no){
     }
 }
 
-void* Gateway::getGateway(void* p_rec, char* gw_name, uint16_t *p_gw_no) {
+void* Gateway::getGateway(void* p_rec, char* gw_hostname, uint16_t *p_gw_no) {
     gateway_t *p_search;
     void* retval = NULL;
     if (p_rec) {
@@ -129,7 +129,7 @@ void* Gateway::getGateway(void* p_rec, char* gw_name, uint16_t *p_gw_no) {
     }
     while (p_search) {
         if (p_search->isActive && (p_search->last_contact > time(NULL)-3600)) {
-            sprintf(gw_name, "%s", p_search->gw_name);
+            sprintf(gw_hostname, "%s", p_search->gw_hostname);
             *p_gw_no = p_search->gw_no;
             retval = (void*)p_search;
             p_search = NULL;
@@ -146,8 +146,8 @@ bool Gateway::isGateway(uint16_t gw_no) {
     while (p_search) {
         if (p_search->gw_no == gw_no) {
             p_search->last_contact = time(NULL);
-            if (verboselevel & VERBOSEORDER) 
-                printf("%sGateway.isGW: GW.Name:%s %s\n", ts(tsbuf), p_search->gw_name, p_search->isActive? "aktiv":"nicht aktiv");
+            if (verboseLevel & VERBOSEORDER) 
+                printf("%sGateway.isGW: GW.Name:%s %s\n", ts(tsbuf), p_search->gw_hostname, p_search->isActive? "aktiv":"nicht aktiv");
             if (p_search->isActive) retval = true;
             p_search = NULL;
         } else {
@@ -171,18 +171,18 @@ void Gateway::printBuffer(int out_socket, bool htmlformat) {
         sprintf(tb,"%s","\t");
         struct tm *tm = localtime(&p_search->last_contact);
         strftime(date, sizeof(date), "%d.%m.%Y %H:%M", tm);
-        size_t nl = strlen(p_search->gw_name);
+        size_t nl = strlen(p_search->gw_hostname);
         //if (nl < 30) sprintf(ts,"%s%s",ts,"\t");
         if (nl < 24) snprintf(tb,4,"%s","\t");
         if (nl < 18) snprintf(tb,4,"%s","\t\t");
         if (nl < 12) snprintf(tb,4,"%s","\t\t\t");
-        sprintf(client_message,"GW.Name:%s%s\tGW.NO: %u\t %s  Last: %s\n", p_search->gw_name, tb, p_search->gw_no, p_search->isActive? "aktiv      ":"nicht aktiv", date );
+        sprintf(client_message,"GW.Name:%s%s\tGW.NO: %u\t %s  Last: %s\n", p_search->gw_hostname, tb, p_search->gw_no, p_search->isActive? "aktiv      ":"nicht aktiv", date );
 		write(out_socket , client_message , strlen(client_message));
         p_search=p_search->p_next;
 	}
     free(client_message);
 }
 
-void Gateway::setVerbose(uint16_t _verboselevel) {
-    verboselevel = _verboselevel;
+void Gateway::setVerbose(uint16_t _verboseLevel) {
+    verboseLevel = _verboseLevel;
 }

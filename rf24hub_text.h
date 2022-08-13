@@ -1,6 +1,5 @@
-/*
-rf24hub_text.h ==> all text goes here => Easy to translate!
-
+/**
+ * @file rf24hub_text.h all text messages for rf24hubd goes here => Easy to translate!
 */
 #ifndef _RF24HUB_TEXT_H_   
 #define _RF24HUB_TEXT_H_
@@ -10,10 +9,10 @@ const char tn_usage02[]  = "set sensor <sensornumber> <sensorvalue>";
 const char tn_usage03[]  = "   Sets the sensor <sensornumber> to the value <sensorvalue>";
 const char tn_usage04[]  = "push <node> <channel> <sensorvalue>";
 const char tn_usage05[]  = "   Pushes a value direct to a channel inside a node";
-const char tn_usage06[]  = "set verbose <+/-><verboselevel>";
-const char tn_usage07[]  = "   adds or deletes a verboselevel. Valid levels are:";
+const char tn_usage06[]  = "set verbose <+/-><verboseLevel>";
+const char tn_usage07[]  = "   adds or deletes a verboseLevel. Valid levels are:";
 const char tn_usage08[]  = "   config; telnet; rf24; sql; sensor; order; orderext; obuffer; obufferext; other; pointer";
-const char tn_usage09[]  = "   set verbose all: adds all verboselevel; set verbose none: deletes all";
+const char tn_usage09[]  = "   set verbose all: adds all verboseLevel; set verbose none: deletes all";
 const char tn_usage10[]  = "set node <node_no> <mastered/unmastered>";
 const char tn_usage11[]  = "   sets a node to mastered (gets commands from this Hub) or unmastered";
 const char tn_usage12[]  = "set gateway <gateway_no> <on/off>";

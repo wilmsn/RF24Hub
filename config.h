@@ -1,6 +1,6 @@
 /**
- * 
- * 
+ * @file config.h 
+ * @brief Headerdatei mit Configurationen für Hub und Gateway
  * */
 
 #ifndef _CONFIG_H_   /* Include guard */

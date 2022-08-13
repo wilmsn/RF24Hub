@@ -1,3 +1,18 @@
+/**
+ * @file cfg.h 
+ * @brief Headerfile für das Cfg Objekt 
+ * 
+ * Grundsätzliches zum Ablauf einer Initialisierung:
+ * * Übergebene Parameter überschreiben Einträge im Config File
+ * * In den Config-Variablen werden die letztgültigen Werte abgelegt
+ *
+ * Folgende Parameter des Config Files können durch 
+ * übergebene Parameter überschrieben werden:
+ * 1. Logfile
+ * 2. Verbosemode
+ * 
+ */
+
 #ifndef CFG_H   
 #define CFG_H
 
@@ -16,19 +31,8 @@
 
 using namespace std; 
 
-/* 
- * Grundsätzliches zum Ablauf einer Initialisierung:
- * * Übergebene Parameter überschreiben Einträge im Config File
- * * In den Config-Variablen werden die letztgültigen Werte abgelegt
- *
- * Folgende Parameter des Config Files können durch 
- * übergebene Parameter überschrieben werden:
- * 1. Logfile
- * 2. Verbosemode
- * 
- */
-
-extern uint16_t verboselevel;
+/// Die Variable verboseLevel wird extern mitbenutzt
+extern uint16_t verboseLevel;
 
 class Cfg {
     

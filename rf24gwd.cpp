@@ -6,10 +6,10 @@ static void* receive_tn_in (void *arg) {
     struct thread_tn_data *f = (struct thread_tn_data *)arg;
     char *buffer =  (char*) malloc (TELNETBUFFERSIZE);
     memset(buffer, 0, TELNETBUFFERSIZE);
-    //char* buffer = alloc_str(verboselevel,"receive_tn_in buffer",TELNETBUFFERSIZE,ts(tsbuf));
+    //char* buffer = alloc_str(verboseLevel,"receive_tn_in buffer",TELNETBUFFERSIZE,ts(tsbuf));
     char *client_message =  (char*) malloc (DEBUGSTRINGSIZE);
     memset(client_message, 0, DEBUGSTRINGSIZE);
-    //char* client_message = alloc_str(verboselevel,"receive_tn_in client_message",DEBUGSTRINGSIZE,ts(tsbuf));
+    //char* client_message = alloc_str(verboseLevel,"receive_tn_in client_message",DEBUGSTRINGSIZE,ts(tsbuf));
     ssize_t MsgLen;
     TnMsg_t TnMsg;
     int ret;
@@ -41,9 +41,9 @@ static void* receive_tn_in (void *arg) {
     close (f->tnsocket);
     free(f);
     free(buffer);
-    //free_str(verboselevel,"receive_tn_in buffer",buffer,ts(tsbuf));
+    //free_str(verboseLevel,"receive_tn_in buffer",buffer,ts(tsbuf));
     free(client_message);
-    //free_str(verboselevel,"receive_tn_in client_message",client_message,ts(tsbuf));
+    //free_str(verboseLevel,"receive_tn_in client_message",client_message,ts(tsbuf));
     pthread_exit((void *)pthread_self());
 }
 
@@ -73,7 +73,7 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
          cmp_logfile[]="logfile";
 	char *wort1a, *wort2a, *wort3a, *wort4a;
 	char *wort1, *wort2, *wort3, *wort4;
-    char* message = alloc_str(verboselevel,"process_tn_in message",120,ts(tsbuf));
+    char* message = alloc_str(verboseLevel,"process_tn_in message",120,ts(tsbuf));
 	bool tn_input_ok = false;
 	char delimiter[] = " ";
 	//trim(buffer);
@@ -83,39 +83,39 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 	wort4a = strtok(NULL, delimiter);
     //char* pEnd;
     if (wort1a) { 
-        wort1 = alloc_str(verboselevel,"process_tn_in wort1",strlen(wort1a)+1,ts(tsbuf));
+        wort1 = alloc_str(verboseLevel,"process_tn_in wort1",strlen(wort1a)+1,ts(tsbuf));
         strcpy(wort1, wort1a);
     } else { 
-        wort1 = alloc_str(verboselevel,"process_tn_in wort1",1,ts(tsbuf));
+        wort1 = alloc_str(verboseLevel,"process_tn_in wort1",1,ts(tsbuf));
         wort1[0] = '\0';
     }
     if (wort2a) { 
-        wort2 = alloc_str(verboselevel,"process_tn_in wort2",strlen(wort2a)+1,ts(tsbuf));
+        wort2 = alloc_str(verboseLevel,"process_tn_in wort2",strlen(wort2a)+1,ts(tsbuf));
         strcpy(wort2, wort2a);
     } else { 
-        wort2 = alloc_str(verboselevel,"process_tn_in wort2",1,ts(tsbuf));
+        wort2 = alloc_str(verboseLevel,"process_tn_in wort2",1,ts(tsbuf));
         wort2[0] = '\0';
     }
     if (wort3a) { 
-        wort3 = alloc_str(verboselevel,"process_tn_in wort3",strlen(wort3a)+1,ts(tsbuf));
+        wort3 = alloc_str(verboseLevel,"process_tn_in wort3",strlen(wort3a)+1,ts(tsbuf));
         strcpy(wort3, wort3a);
     } else { 
-        wort3 = alloc_str(verboselevel,"process_tn_in wort3",1,ts(tsbuf));
+        wort3 = alloc_str(verboseLevel,"process_tn_in wort3",1,ts(tsbuf));
         wort3[0] = '\0';
     }
     if (wort4a) { 
-        wort4 = alloc_str(verboselevel,"process_tn_in wort4",strlen(wort4a)+1,ts(tsbuf));
+        wort4 = alloc_str(verboseLevel,"process_tn_in wort4",strlen(wort4a)+1,ts(tsbuf));
         strcpy(wort4, wort4a);
     } else { 
-        wort4 = alloc_str(verboselevel,"process_tn_in wort4",1,ts(tsbuf));
+        wort4 = alloc_str(verboseLevel,"process_tn_in wort4",1,ts(tsbuf));
         wort4[0] = '\0';
     }
-    // set verbose <new verboselevel>
-	// sets the new verboselevel
+    // set verbose <new verboseLevel>
+	// sets the new verboseLevel
 	if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (strlen(wort3) > 0) && (strlen(wort4) == 0) ) {
 //        if ( wort3[0] > '0' && wort3[0] < '9' + 1 ) {
 			tn_input_ok = true;
-			verboselevel = decodeVerbose(verboselevel, wort3);
+			verboseLevel = decodeVerbose(verboseLevel, wort3);
 //		}	
 	}
     // show radio config
@@ -126,7 +126,7 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
     // show verbose
 	if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
 		tn_input_ok = true;
-		sprintf(message,"Active verboselevel: %s\n",printVerbose(verboselevel, buf));
+		sprintf(message,"Active verboseLevel: %s\n",printVerbose(verboseLevel, buf));
 		write(tn_socket , message , strlen(message));
     }
 	// truncate logfile
@@ -145,11 +145,11 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
         sprintf(message,"%s version %s\n", PRGNAME, SWVERSION_STR);
         write(tn_socket , message , strlen(message));
 	}		
-	free_str(verboselevel,"process_tn_in wort1",wort1,ts(tsbuf));
-    free_str(verboselevel,"process_tn_in wort2",wort2,ts(tsbuf));
-    free_str(verboselevel,"process_tn_in wort3",wort3,ts(tsbuf));
-    free_str(verboselevel,"process_tn_in wort4",wort4,ts(tsbuf));
-    free_str(verboselevel,"process_tn_in message", message,ts(tsbuf));
+	free_str(verboseLevel,"process_tn_in wort1",wort1,ts(tsbuf));
+    free_str(verboseLevel,"process_tn_in wort2",wort2,ts(tsbuf));
+    free_str(verboseLevel,"process_tn_in wort3",wort3,ts(tsbuf));
+    free_str(verboseLevel,"process_tn_in wort4",wort4,ts(tsbuf));
+    free_str(verboseLevel,"process_tn_in message", message,ts(tsbuf));
     return tn_input_ok;
 }
 
@@ -430,19 +430,19 @@ int main(int argc, char* argv[]) {
                 int ret;
                 // Logmessages
                 ret=msgrcv(msgID, &LogMsg, sizeof(LogMsg), 1, IPC_NOWAIT);
-                if ( (ret > 5) && (verboselevel & VERBOSETELNET)) {
+                if ( (ret > 5) && (verboseLevel & VERBOSETELNET)) {
                     printf("%s%s\n", ts(tsbuf), LogMsg.TnData.tntext);
                 }
                 // store into orderbuffer and make order
                 ret=msgrcv(msgID, &LogMsg, sizeof(LogMsg), 2, IPC_NOWAIT);
                 if ( ret > 5 ) {
-                    if ( verboselevel & VERBOSETELNET ) {
+                    if ( verboseLevel & VERBOSETELNET ) {
                         printf("%s%s\n", ts(tsbuf), LogMsg.TnData.tntext);
                     }
-                    char* tnstr = alloc_str(verboselevel,"main tnstr",DEBUGSTRINGSIZE,ts(tsbuf));
+                    char* tnstr = alloc_str(verboseLevel,"main tnstr",DEBUGSTRINGSIZE,ts(tsbuf));
                     strcpy(tnstr, LogMsg.TnData.tntext);
                     bool result = process_tn_in(tnstr,LogMsg.TnData.tn_socket);
-                    free_str(verboselevel,"main tnstr",tnstr,ts(tsbuf));
+                    free_str(verboseLevel,"main tnstr",tnstr,ts(tsbuf));
                     LogMsg.mtype = 9;
                     if ( result ) {
                         sprintf(LogMsg.TnData.tntext,"Command received => OK\n");
@@ -460,7 +460,7 @@ int main(int argc, char* argv[]) {
 	    radio.read(&payload,sizeof(payload));
             udpdata.gw_no = std::stoi(cfg.gwNo);
             memcpy(&udpdata.payload, &payload, sizeof(payload) );
-            if ( verboselevel & VERBOSERF24) printPayload(ts(tsbuf), "N>G", &udpdata.payload);
+            if ( verboseLevel & VERBOSERF24) printPayload(ts(tsbuf), "N>G", &udpdata.payload);
 	    sendUdpMessage(cfg.gwHubHostName.c_str(), cfg.hubUdpPortNo.c_str(), &udpdata); 
             busyIndicator = 0;
 	} // radio.available
@@ -476,7 +476,7 @@ int main(int argc, char* argv[]) {
         radio.write(&payload,sizeof(payload));
         radio.startListening();
         //sprintf(buf1,"Snd:");
-        if ( verboselevel & VERBOSERF24) printPayload(ts(tsbuf), "G>N", &payload);
+        if ( verboseLevel & VERBOSERF24) printPayload(ts(tsbuf), "G>N", &payload);
         busyIndicator = 0;
     }
     if (busyIndicator > 10) loopSleepTime = LOOPSLEEPTIME_QUIET; else loopSleepTime = LOOPSLEEPTIME_BUSY;

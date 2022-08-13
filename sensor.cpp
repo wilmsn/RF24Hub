@@ -2,7 +2,7 @@
 
 Sensor::Sensor(void) {
     p_initial = NULL;
-    verboselevel = 0;
+    verboseLevel = 0;
     buf = (char*)malloc(TSBUFFERSIZE);
     buf1 = (char*)malloc(TSBUFFERSIZE);
     tsbuf = (char*)malloc(TSBUFFERSIZE);
@@ -54,7 +54,7 @@ bool Sensor::updateLastVal(uint32_t sensor_id, uint32_t last_data) {
         if ( p_search->sensor_id == sensor_id) {
             p_search->last_data = last_data;
             p_search->last_utime = time(0);
-            if ( verboselevel & VERBOSESENSOR) 
+            if ( verboseLevel & VERBOSESENSOR) 
                 printf("%ssensor.updateLastVal: S:%u N:%u C:%u V:%s\n", ts(tsbuf), p_search->sensor_id, p_search->node_id
                         , p_search->channel, unpackTransportValue(last_data, buf) ); 
             retval = true;
@@ -62,21 +62,6 @@ bool Sensor::updateLastVal(uint32_t sensor_id, uint32_t last_data) {
         p_search=p_search->p_next;
     }
     return retval;
-}
-
-bool::Sensor::isSystemRegister(uint8_t channel) {
-  bool retval=false;
-  switch (channel) {
-    case 102 ... 104:
-    case 106 ... 107:
-    case 111 ... 119:
-    case 124:
-        retval = true;
-        break;
-    default:
-        retval = false;
-    }
-  return retval;
 }
 
 uint32_t Sensor::getSensorByNodeChannel(NODE_DATTYPE node_id, uint8_t channel) {
@@ -113,7 +98,7 @@ bool Sensor::getNodeChannelBySensorID(NODE_DATTYPE* p_node_id, uint8_t* p_channe
     p_search=p_initial;
     while (p_search) {
         if ( p_search->sensor_id == sensor_id ) {
-            if (verboselevel & VERBOSESENSOR) printf("%ssensor.getNodeChannelBySensorID: S:%u N:%u C:%u\n", ts(tsbuf), p_search->sensor_id, p_search->node_id, p_search->channel); 
+            if (verboseLevel & VERBOSESENSOR) printf("%ssensor.getNodeChannelBySensorID: S:%u N:%u C:%u\n", ts(tsbuf), p_search->sensor_id, p_search->node_id, p_search->channel); 
             *p_node_id = p_search->node_id;
             *p_channel = p_search->channel;
             p_search = NULL;
@@ -131,7 +116,7 @@ bool Sensor::getNodeChannelByFhemDev(NODE_DATTYPE *p_node_id, uint8_t* p_channel
     p_search=p_initial;
     while (p_search) {
         if ( strcmp(p_search->fhem_dev,fhem_dev) == 0 ) {
-            if (verboselevel & VERBOSESENSOR) printf("%ssensor.getNodeChannelByFhemDev: FHEM:%s N:%u C:%u\n", ts(tsbuf), p_search->fhem_dev, p_search->node_id, p_search->channel); 
+            if (verboseLevel & VERBOSESENSOR) printf("%ssensor.getNodeChannelByFhemDev: FHEM:%s N:%u C:%u\n", ts(tsbuf), p_search->fhem_dev, p_search->node_id, p_search->channel); 
             *p_node_id = p_search->node_id;
             *p_channel = p_search->channel;
             p_search = NULL;
@@ -149,7 +134,7 @@ bool Sensor::getNodeChannelBySensorName(NODE_DATTYPE *p_node_id, uint8_t* p_chan
     p_search=p_initial;
     while (p_search) {
         if ( strcmp(p_search->sensor_name,sensor_name) == 0 ) {
-            if (verboselevel & VERBOSESENSOR) printf("%ssensor.getNodeChannelBySensorName: SensorName:%s N:%u C:%u\n", ts(tsbuf), p_search->sensor_name, p_search->node_id, p_search->channel); 
+            if (verboseLevel & VERBOSESENSOR) printf("%ssensor.getNodeChannelBySensorName: SensorName:%s N:%u C:%u\n", ts(tsbuf), p_search->sensor_name, p_search->node_id, p_search->channel); 
             *p_node_id = p_search->node_id;
             *p_channel = p_search->channel;
             p_search = NULL;
@@ -200,7 +185,7 @@ void Sensor::printBuffer(int tn_socket, bool html) {
     free(client_message);
 }
 
-void Sensor::setVerbose(uint16_t _verboselevel) {
-    verboselevel = _verboselevel;
+void Sensor::setVerbose(uint16_t _verboseLevel) {
+    verboseLevel = _verboseLevel;
 }
 

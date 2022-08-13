@@ -2,7 +2,7 @@
 
 OrderBuffer::OrderBuffer(void) {
     p_initial = NULL;
-    verboselevel = 0;
+    verboseLevel = 0;
     buf = (char*)malloc(TSBUFFERSIZE);
     buf1 = (char*)malloc(TSBUFFERSIZE);
     tsbuf = (char*)malloc(TSBUFFERSIZE);
@@ -11,9 +11,9 @@ OrderBuffer::OrderBuffer(void) {
 void OrderBuffer::newEntry(OrderBuffer::orderbuffer_t* p_new) {
     orderbuffer_t *p_search;
     p_new->p_next = NULL;
-    if (verboselevel & VERBOSEOBUFFER) 
+    if (verboseLevel & VERBOSEOBUFFER) 
         printf("%sOrderBuffer: newEntry <%p> N:%u C:%u\n", ts(tsbuf), p_new, p_new->node_id, p_new->channel); 
-    if (verboselevel & VERBOSEOBUFFEREXT) {
+    if (verboseLevel & VERBOSEOBUFFEREXT) {
         printf("%sBestand vorher:\n", ts(tsbuf)); 
         printBuffer(fileno(stdout), false);
     }
@@ -26,7 +26,7 @@ void OrderBuffer::newEntry(OrderBuffer::orderbuffer_t* p_new) {
     } else {
         p_initial = p_new;
     }
-    if (verboselevel & VERBOSEOBUFFEREXT) {
+    if (verboseLevel & VERBOSEOBUFFEREXT) {
         printf("%sBestand nachher\n", ts(tsbuf)); 
         printBuffer(fileno(stdout), false);
     }
@@ -65,8 +65,8 @@ bool OrderBuffer::delEntry(orderbuffer_t* p_del) {
 bool OrderBuffer::delByNodeChannel(NODE_DATTYPE node_id, uint8_t channel) {
     int retval = false;
     orderbuffer_t *p_search;
-    if (verboselevel & VERBOSEOBUFFER) printf("%sOrderBuffer:delByNodeChannel N:%u C:%u\n", ts(tsbuf), node_id, channel); 
-    if (verboselevel & VERBOSEOBUFFEREXT) {
+    if (verboseLevel & VERBOSEOBUFFER) printf("%sOrderBuffer:delByNodeChannel N:%u C:%u\n", ts(tsbuf), node_id, channel); 
+    if (verboseLevel & VERBOSEOBUFFEREXT) {
         printf("%sBestand vorher\n", ts(tsbuf)); 
         printBuffer(fileno(stdout), false);
     }
@@ -79,7 +79,7 @@ bool OrderBuffer::delByNodeChannel(NODE_DATTYPE node_id, uint8_t channel) {
             p_search=p_search->p_next;
         }
     }
-    if (verboselevel & VERBOSEOBUFFEREXT) {
+    if (verboseLevel & VERBOSEOBUFFEREXT) {
         printf("%sBestand nachher\n", ts(tsbuf)); 
         printBuffer(fileno(stdout), false);
     }
@@ -89,8 +89,8 @@ bool OrderBuffer::delByNodeChannel(NODE_DATTYPE node_id, uint8_t channel) {
 bool OrderBuffer::delByNode(NODE_DATTYPE node_id) {
     int retval = false;
     orderbuffer_t *p_search;
-    if (verboselevel & VERBOSEOBUFFER) printf("%sOrderBuffer: delByNode N:%u\n", ts(tsbuf), node_id); 
-    if (verboselevel & VERBOSEOBUFFEREXT) {
+    if (verboseLevel & VERBOSEOBUFFER) printf("%sOrderBuffer: delByNode N:%u\n", ts(tsbuf), node_id); 
+    if (verboseLevel & VERBOSEOBUFFEREXT) {
         printf("%sBestand vorher\n", ts(tsbuf)); 
         printBuffer(fileno(stdout), false);
     }
@@ -101,7 +101,7 @@ bool OrderBuffer::delByNode(NODE_DATTYPE node_id) {
         }
         p_search=p_search->p_next;
     }
-    if (verboselevel & VERBOSEOBUFFEREXT) {
+    if (verboseLevel & VERBOSEOBUFFEREXT) {
         printf("%sBestand nachher\n", ts(tsbuf)); 
         printBuffer(fileno(stdout), false);
     }
@@ -188,10 +188,6 @@ void OrderBuffer::printBuffer(int out_socket, bool htmlFormat) {
     free(client_message);
 }
 
-void OrderBuffer::setVerbose(uint16_t _verboselevel) {
-    verboselevel = _verboselevel;
-}
-
-void OrderBuffer::setKey(uint32_t _key) {
-    mykey = _key;
+void OrderBuffer::setVerbose(uint16_t _verboseLevel) {
+    verboseLevel = _verboseLevel;
 }

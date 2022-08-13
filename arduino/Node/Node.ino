@@ -1,5 +1,5 @@
 
-/*
+/**
 A Node for the rf24hub.
 Can be configurated to you needs
 

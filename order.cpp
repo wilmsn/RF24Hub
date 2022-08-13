@@ -4,7 +4,7 @@ Order::Order(void) {
     p_initial = NULL;
     has_order = false;
     orderno = 1;
-    verboselevel = 0;
+    verboseLevel = 0;
     buf = (char*)malloc(TSBUFFERSIZE);
     tsbuf = (char*)malloc(TSBUFFERSIZE);
     buf1 = (char*)malloc(20);
@@ -22,8 +22,8 @@ bool Order::hasEntry(void) {
 void Order::newEntry(order_t* p_new) {
     order_t *p_search;
     p_new->p_next = NULL;
-    if (verboselevel & VERBOSEORDER) printf("%sOrder: newEntry <%p>\n", ts(tsbuf), p_new); 
-    if (verboselevel & VERBOSEORDEREXT) {
+    if (verboseLevel & VERBOSEORDER) printf("%sOrder: newEntry <%p>\n", ts(tsbuf), p_new); 
+    if (verboseLevel & VERBOSEORDEREXT) {
         printf("%sBestand vorher\n",ts(tsbuf)); 
         printBuffer(fileno(stdout), false);
     }
@@ -36,7 +36,7 @@ void Order::newEntry(order_t* p_new) {
     } else {
         p_initial = p_new;
     }
-    if (verboselevel & VERBOSEORDEREXT) {
+    if (verboseLevel & VERBOSEORDEREXT) {
         printf("%sBestand nachher\n",ts(tsbuf)); 
         printBuffer(fileno(stdout), false);
     }
@@ -49,7 +49,7 @@ bool Order::delEntry(order_t* p_del) {
     p_search = p_initial;
     
     p_tmp = p_initial;
-    if (verboselevel & VERBOSEORDEREXT) {
+    if (verboseLevel & VERBOSEORDEREXT) {
         printf("%sBestand vorher\n",ts(tsbuf)); 
         printBuffer(fileno(stdout), false);
     }
@@ -76,8 +76,8 @@ bool Order::delEntry(order_t* p_del) {
         }
     }
     if ( ! p_initial) has_order = false;
-    if (verboselevel & VERBOSEORDER) printf("%sOrder: delEntry <%p> %s\n", ts(tsbuf), p_del, retval? "true":"false"); 
-    if (verboselevel & VERBOSEORDEREXT) {
+    if (verboseLevel & VERBOSEORDER) printf("%sOrder: delEntry <%p> %s\n", ts(tsbuf), p_del, retval? "true":"false"); 
+    if (verboseLevel & VERBOSEORDEREXT) {
         printf("%sBestand nachher\n",ts(tsbuf)); 
         printBuffer(fileno(stdout), false);
     }
@@ -87,8 +87,8 @@ bool Order::delEntry(order_t* p_del) {
 bool Order::delByOrderNo(ONR_DATTYPE orderno) {
     bool retval = false;
     order_t *p_search;
-    if (verboselevel & VERBOSEORDER) printf("%sOrder: del_orderno %u\n", ts(tsbuf), orderno); 
-    if (verboselevel & VERBOSEORDEREXT) {
+    if (verboseLevel & VERBOSEORDER) printf("%sOrder: del_orderno %u\n", ts(tsbuf), orderno); 
+    if (verboseLevel & VERBOSEORDEREXT) {
         printf("%sBestand vorher\n", ts(tsbuf)); 
         printBuffer(fileno(stdout), false);
     }
@@ -99,7 +99,7 @@ bool Order::delByOrderNo(ONR_DATTYPE orderno) {
         }
         p_search=p_search->p_next;
     }
-    if (verboselevel & VERBOSEORDEREXT) {
+    if (verboseLevel & VERBOSEORDEREXT) {
         printf("%sBestand nachher\n", ts(tsbuf)); 
         printBuffer(fileno(stdout), false);
     }
@@ -109,8 +109,8 @@ bool Order::delByOrderNo(ONR_DATTYPE orderno) {
 bool Order::delByNode(NODE_DATTYPE node_id) {
     bool retval = false;
     order_t *p_search;
-    if (verboselevel & VERBOSEORDER) printf("%sOrder: del_node N:%u\n", ts(tsbuf), node_id); 
-    if (verboselevel & VERBOSEORDEREXT) {
+    if (verboseLevel & VERBOSEORDER) printf("%sOrder: del_node N:%u\n", ts(tsbuf), node_id); 
+    if (verboseLevel & VERBOSEORDEREXT) {
         printf("%sBestand vorher\n", ts(tsbuf)); 
         printBuffer(fileno(stdout), false);
     }
@@ -122,7 +122,7 @@ bool Order::delByNode(NODE_DATTYPE node_id) {
         }
         p_search=p_search->p_next;
     }
-    if (verboselevel & VERBOSEORDEREXT) {
+    if (verboseLevel & VERBOSEORDEREXT) {
         printf("%sBestand nachher\n", ts(tsbuf)); 
         printBuffer(fileno(stdout), false);
     }
@@ -160,7 +160,7 @@ void Order::addOrder(NODE_DATTYPE node_id, uint8_t msg_type, uint32_t data, uint
     orderno++;
     if ( orderno == 0 ) orderno = 1;
     if ( p_new) {
-        if (verboselevel & VERBOSEORDER) printf("%sOrder: addOrder <%p> N:%u T:%u D1:(%u/%s)\n", ts(tsbuf), p_new, node_id, msg_type, getChannel(data), unpackTransportValue(data,buf) ); 
+        if (verboseLevel & VERBOSEORDER) printf("%sOrder: addOrder <%p> N:%u T:%u D1:(%u/%s)\n", ts(tsbuf), p_new, node_id, msg_type, getChannel(data), unpackTransportValue(data,buf) ); 
         p_new->orderno = orderno;
         p_new->node_id = node_id;
         p_new->msg_id = 1;
@@ -202,7 +202,7 @@ void Order::modifyOrder(NODE_DATTYPE node, uint8_t pos, uint32_t data) {
             break;
         }
     }
-    if (verboselevel & VERBOSEORDEREXT) printBuffer(fileno(stdout), false);
+    if (verboseLevel & VERBOSEORDEREXT) printBuffer(fileno(stdout), false);
 }
 
 void Order::modifyOrderFlags(NODE_DATTYPE node_id, uint8_t msg_flags) {
@@ -211,7 +211,7 @@ void Order::modifyOrderFlags(NODE_DATTYPE node_id, uint8_t msg_flags) {
     if (p_mod) {
         p_mod->msg_flags = msg_flags;
     }
-    if (verboselevel & VERBOSEORDEREXT) printBuffer(fileno(stdout), false);
+    if (verboseLevel & VERBOSEORDEREXT) printBuffer(fileno(stdout), false);
 }
 
 void Order::adjustEntryTime(NODE_DATTYPE node_id, uint64_t newEntrytime) {
@@ -231,7 +231,7 @@ bool Order::getOrderForTransmission(payload_t* payload, uint64_t mytime){
     order_t *p_search;
     p_search = p_initial;
     while (p_search) {
-        if (verboselevel & VERBOSEORDEREXT) {
+        if (verboseLevel & VERBOSEORDEREXT) {
 #if __x86_64__
             printf("%sOrder::getOrderForTransmission N:%u O:%u Last send: %lu Now: %lu Entry: %lu\n",ts(tsbuf),p_search->node_id, p_search->orderno, p_search->last_send, mytime, p_search->entrytime);        
 #else
@@ -253,7 +253,7 @@ bool Order::getOrderForTransmission(payload_t* payload, uint64_t mytime){
             payload->data5 = p_search->data5;
             payload->data6 = p_search->data6;
             p_search->last_send = mytime;
-            if (verboselevel & VERBOSEORDER) {
+            if (verboseLevel & VERBOSEORDER) {
 #if __x86_64__
                 printf("%sOrder::getOrderForTransmission <%p> O: %u (N:%u), TTL: %lu\n", ts(tsbuf), p_search, p_search->orderno, p_search->node_id, p_search->entrytime + DELETEINTERVAL - mytime ); 
 #else
@@ -263,7 +263,7 @@ bool Order::getOrderForTransmission(payload_t* payload, uint64_t mytime){
             if ( (p_search->entrytime + (uint64_t)DELETEINTERVAL < mytime) || 
                 (p_search->msg_type == PAYLOAD_TYPE_DATSTOP && (p_search->entrytime + (SENDSTOPCOUNT * SENDINTERVAL)) < mytime) ) {
                 p_delme = p_search;
-                if (verboselevel & VERBOSEORDER) {
+                if (verboseLevel & VERBOSEORDER) {
 #if __x86_64__
                     printf("%sOrder::getOrderForTransmission Timeout - lösche <%p> O:%u (N:%u), entry:%lu last send: %lu Delinterv: %lu Sendinterv: %lu\n", ts(tsbuf), p_delme, p_delme->orderno, p_delme->node_id, p_delme->entrytime, p_delme->last_send, (uint64_t)DELETEINTERVAL, (uint64_t)SENDINTERVAL ); 
 #else
@@ -330,6 +330,6 @@ void Order::printBuffer(int out_socket, bool htmlFormat) {
     free(client_message);
 }
 
-void Order::setVerbose(uint16_t _verboselevel) {
-    verboselevel = _verboselevel;
+void Order::setVerbose(uint16_t _verboseLevel) {
+    verboseLevel = _verboseLevel;
 }

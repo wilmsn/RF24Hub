@@ -43,10 +43,9 @@ char*       buf1;
  *************************************************************/
 char*       tsbuf;
 /**************************************************************
- * Bufferinterner Speicher für den verboselevel
+ * Bufferinterner Speicher für den verboseLevel
  *************************************************************/
-uint16_t    verboselevel;
-uint32_t    mykey;
+uint16_t    verboseLevel;
 /**************************************************************
  * fügt einen neuen record zum Buffer hibzu
  *************************************************************/
@@ -60,9 +59,9 @@ public:
     
 /**
  * Setzt den Verboselevel. Mögliche Level sind in den Makros VERBOSE* in config.h definiert.
- * @param verboselevel Der aktuelle Verboselevel
+ * @param verboseLevel Der aktuelle Verboselevel
  */
-void setVerbose(uint16_t _verboselevel);
+void setVerbose(uint16_t _verboseLevel);
 
 /**
  * @note Ruft den nächsten Record für einen Node ab.

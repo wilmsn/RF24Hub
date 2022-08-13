@@ -44,9 +44,9 @@ char*       buf1;
  *************************************************************/
 char*       tsbuf;
 /**************************************************************
- * Bufferinterner Speicher für den verboselevel
+ * Bufferinterner Speicher für den verboseLevel
  *************************************************************/
-uint16_t    verboselevel;
+uint16_t    verboseLevel;
 /**************************************************************
  * fügt einen neuen record zum Buffer hinzu
  *************************************************************/
@@ -60,9 +60,9 @@ public:
     
 /**
  * Setzt den Verboselevel. Mögliche Level sind in den Makros VERBOSE* in config.h definiert.
- * @param verboselevel Der aktuelle Verboselevel
+ * @param verboseLevel Der aktuelle Verboselevel
  */
-void setVerbose(uint16_t _verboselevel);
+void setVerbose(uint16_t _verboseLevel);
 
 /**
  * Löscht den kompletten Inhalt und leert den Buffer

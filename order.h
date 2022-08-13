@@ -54,9 +54,9 @@ char*       buf4;
 char*       buf5;
 char*       buf6;
 /**************************************************************
- * Bufferinterner Speicher für den verboselevel
+ * Bufferinterner Speicher für den verboseLevel
  *************************************************************/
-uint16_t    verboselevel;
+uint16_t    verboseLevel;
 /**************************************************************
  * Binärer Speicher der anzeigt ob mind. 1 Datensatz 
  * im Speicher ist.
@@ -83,9 +83,9 @@ public:
     
 /**
  * Setzt den Verboselevel. Mögliche Level sind in den Makros VERBOSE* in config.h definiert.
- * @param verboselevel Der aktuelle Verboselevel
+ * @param verboseLevel Der aktuelle Verboselevel
  */
-void setVerbose(uint16_t _verboselevel);
+void setVerbose(uint16_t _verboseLevel);
 
 /**
  * Fragt die Orderstruktur ab ob mind. ein Eintrag vorhanden ist

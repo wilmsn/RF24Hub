@@ -17,19 +17,19 @@ char * trim (char * s) {
 
 char* utime2str(time_t utime, char* buf, uint8_t format) {
     struct tm lt;
-    const char* format;
+    const char* myformat;
     char res[22];
     if (utime == 0) utime = time(0);
     localtime_r(&utime, &lt);
-    switch (form) {
+    switch (format) {
         case 1:
-            format = date_format1;
+            myformat = date_format1;
             break;
         case 2:
-            format = date_format2;
+            myformat = date_format2;
             break;
     }            
-    if (strftime(res, sizeof(res), format, &lt) == 0) {
+    if (strftime(res, sizeof(res), myformat, &lt) == 0) {
         sprintf(buf,"Error");
     } else {
         sprintf(buf,"%s",res);
@@ -178,13 +178,13 @@ uint16_t decodeVerbose(uint16_t verboseLevel, char* verboseSet) {
 }
 
 
-char* alloc_str(uint16_t verboselevel, const char* msgTxt, size_t size, char* timestamp) {
-    if (verboselevel & VERBOSEPOINTER) {
+char* alloc_str(uint16_t verboseLevel, const char* msgTxt, size_t size, char* timestamp) {
+    if (verboseLevel & VERBOSEPOINTER) {
         printf("%sMalloc %s P:", timestamp, msgTxt);
     }    
     char *retval =  (char*) malloc (size);
     memset(retval, 0, size);
-    if (verboselevel & VERBOSEPOINTER) {
+    if (verboseLevel & VERBOSEPOINTER) {
         printf("<%p> OK\n", retval);
     }    
     return retval;
