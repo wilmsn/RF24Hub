@@ -12,7 +12,7 @@ void OrderBuffer::newEntry(OrderBuffer::orderbuffer_t* p_new) {
     orderbuffer_t *p_search;
     p_new->p_next = NULL;
     if (verboselevel & VERBOSEOBUFFER) 
-        printf("%sOrderBuffer: newEntry <%p> N:%u C:%u V:%f\n", ts(tsbuf), p_new, p_new->node_id, p_new->channel, p_new->data); 
+        printf("%sOrderBuffer: newEntry <%p> N:%u C:%u\n", ts(tsbuf), p_new, p_new->node_id, p_new->channel); 
     if (verboselevel & VERBOSEOBUFFEREXT) {
         printf("%sBestand vorher:\n", ts(tsbuf)); 
         printBuffer(fileno(stdout), false);

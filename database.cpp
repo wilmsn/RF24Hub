@@ -139,7 +139,7 @@ void Database::initNode(Node* node) {
 	db_check_error();
 	while ((row = mysql_fetch_row(result))) {
 	    if ( row[0] != NULL ) node_id = strtoul(row[0], &pEnd,10);
-	    if ( row[1] != NULL ) sprintf(node_name, row[1]);
+	    if ( row[1] != NULL ) sprintf(node_name, "%s", row[1]);
 	    if ((strcmp(row[2],cmp_y) == 0) || (strcmp(row[1],cmp_j) == 0)) { isMastered = true; } else { isMastered = false; }
 	    if ( row[3] != NULL ) pa_utime = strtoul(row[2], &pEnd, 10); else pa_utime = 1;
 	    if ( row[4] != NULL ) pa_level = strtoul(row[3], &pEnd, 10); else pa_level = 9;
@@ -218,7 +218,7 @@ void Database::storeNodeConfig(NODE_DATTYPE node_id, uint8_t channel, char* valu
         sprintf(sql_stmt,"update node set pa_level = %s, pa_utime = UNIX_TIMESTAMP() where node_id = %u ", value, node_id);
         do_sql(sql_stmt);
     }
-    sprintf(sql_stmt,"delete from node_configdata_im where node_id = %u and channel = %u ", node_id, channel, value);
+    sprintf(sql_stmt,"delete from node_configdata_im where node_id = %u and channel = %u ", node_id, channel);
     do_sql(sql_stmt);
     sprintf(sql_stmt,"insert into node_configdata_im (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %s ) ", node_id, channel, value);
     do_sql(sql_stmt);
@@ -234,10 +234,10 @@ void Database::updateNodeMastered(NODE_DATTYPE node_id, bool ismastered) {
 }
 
 bool Database::connect(string _db_hostname, string _db_username, string _db_password, string _db_schema, int _db_port) {
-    snprintf(db_hostname, DB_HOSTNAME_SIZE, _db_hostname.c_str());
-    snprintf(db_username, DB_USERNAME_SIZE, _db_username.c_str());
-    snprintf(db_password, DB_PASSWORD_SIZE, _db_password.c_str());
-    snprintf(db_schema, DB_SCHEMA_SIZE, _db_schema.c_str());
+    snprintf(db_hostname, DB_HOSTNAME_SIZE, "%s", _db_hostname.c_str());
+    snprintf(db_username, DB_USERNAME_SIZE, "%s", _db_username.c_str());
+    snprintf(db_password, DB_PASSWORD_SIZE, "%s", _db_password.c_str());
+    snprintf(db_schema, DB_SCHEMA_SIZE, "%s", _db_schema.c_str());
     db_port = _db_port;
     if ( verboselevel & VERBOSESTARTUP) {
         printf("%sMaria-DB client version: %s\n", ts(tsbuf), mysql_get_client_info());
@@ -288,8 +288,4 @@ void Database::debugPrintSQL(char* sqlstmt) {
 
 void Database::setVerbose(uint16_t _verboselevel) {
     verboselevel = _verboselevel;
-}
-
-void Database::setKey(uint32_t _key) {
-    mykey = _key;
 }

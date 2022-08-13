@@ -160,21 +160,23 @@ bool Gateway::isGateway(uint16_t gw_no) {
 void Gateway::printBuffer(int out_socket, bool htmlformat) {
     char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
     char date[20];
-    char ts[20];
+//    char ts[20];
+    char tb[5];
+    char buf[30];
     gateway_t *p_search;
     p_search = p_initial;
     sprintf(client_message," ------ Gateways: ------\n"); 
     write(out_socket , client_message , strlen(client_message));
     while (p_search) {
-        sprintf(ts,"%s","\t");
+        sprintf(tb,"%s","\t");
         struct tm *tm = localtime(&p_search->last_contact);
         strftime(date, sizeof(date), "%d.%m.%Y %H:%M", tm);
         size_t nl = strlen(p_search->gw_name);
         //if (nl < 30) sprintf(ts,"%s%s",ts,"\t");
-        if (nl < 24) sprintf(ts,"%s%s",ts,"\t");
-        if (nl < 18) sprintf(ts,"%s%s",ts,"\t");
-        if (nl < 12) sprintf(ts,"%s%s",ts,"\t");
-        sprintf(client_message,"GW.Name:%s%s\tGW.NO: %u\t %s  Last: %s\n", p_search->gw_name, ts, p_search->gw_no, p_search->isActive? "aktiv      ":"nicht aktiv", date );
+        if (nl < 24) snprintf(tb,4,"%s","\t");
+        if (nl < 18) snprintf(tb,4,"%s","\t\t");
+        if (nl < 12) snprintf(tb,4,"%s","\t\t\t");
+        sprintf(client_message,"GW.Name:%s%s\tGW.NO: %u\t %s  Last: %s\n", p_search->gw_name, tb, p_search->gw_no, p_search->isActive? "aktiv      ":"nicht aktiv", date );
 		write(out_socket , client_message , strlen(client_message));
         p_search=p_search->p_next;
 	}

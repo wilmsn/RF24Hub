@@ -88,7 +88,6 @@ uint32_t calcTransportValue(uint8_t channel, char value1, char value2) {
 }
 
 #if defined(__linux__) || defined(ESP8266)
-
 uint32_t calcTransportValue(uint8_t channel, char* value, uint8_t dataType) {
     uint32_t retval = 0;
     char* pEnd; 

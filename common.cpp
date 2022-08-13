@@ -15,7 +15,7 @@ char * trim (char * s) {
   return s;
 }
 
-char* utime2str(time_t utime, char* buf, uint8_t form) {
+char* utime2str(time_t utime, char* buf, uint8_t format) {
     struct tm lt;
     const char* format;
     char res[22];
@@ -57,12 +57,6 @@ uint64_t mymillis(void) {
 	gettimeofday(&tv, NULL);
 	timebuf = (((tv.tv_sec & 0x000FFFFFFFFFFFFF) * 1000) + (tv.tv_usec / 1000));
 	return timebuf;
-}
-
-uint64_t utime(void) {
-	struct timeval tv;
-	gettimeofday(&tv, NULL);
-	return tv.tv_sec;
 }
 
 char* printVerbose(uint16_t verboseLevel, char* buf) {

@@ -9,19 +9,19 @@ Main features:
  - can send telnet commands to a third party controler (i use FHEM)
  - configuration via config file
 
-![alt text](https://raw.githubusercontent.com/wilmsn/RF24Hub/master/doc/overview.png "RF24Hub overview")
+![alt text](/home/norbert/projekte/RF24Hub/doc/overview.png "RF24Hub overview")
 
 More details (german only): http://wilmsn.github.io/rf24hub
 
 Environment:
 ============
 - Server: Raspberry PI
-- Gateway: Raspberry Pi or ESP8266
-- Nodes: "Arduino" like build with minimal cost based on ATmega328P
+- Gateway(s): Raspberry Pi and/or ESP8266
+- Node(s): "Arduino" like build with minimal cost based on ATmega328P
 
 Aim of the project:
 ===================
-Build up a network of sensors and store and process the data on a server.
+Build up a network of sensors, store and process the data on a server.
 With:
 - minimal hardware cost
 - only free software
@@ -87,4 +87,9 @@ Now its up to you:
 ==================
 Feel free to fork, use or modify it.
 =======
+Further Details:<br>
+* [Building Node's from the Template](NODE_HOWTO.md)
+* [Building ESP-Node's from the Template](ESP_HOWTO.md)
+
+All the other stuff will be in German or German and English mixed.
 

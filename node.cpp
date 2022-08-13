@@ -2,7 +2,7 @@
 
 Node::Node(void) {
     p_initial = NULL;
-    verboselevel = 0;
+    _verboselevel = 0;
     buf = (char*)malloc(TSBUFFERSIZE);
     tsbuf = (char*)malloc(TSBUFFERSIZE);
 }
@@ -49,14 +49,14 @@ void Node::newEntry(node_t* p_new) {
 void Node::addNode(NODE_DATTYPE node_id, char* node_name, float u_batt, bool isMastered, uint8_t PALevel, uint32_t PAUtime ) {
     node_t *p_new = new node_t;
     p_new->node_id = node_id;
-    sprintf(p_new->node_name, node_name);
+    sprintf(p_new->node_name, "%s", node_name);
     p_new->u_batt = u_batt;
     p_new->is_mastered = isMastered;
     p_new->pa_level = PALevel;
     p_new->pa_utime = PAUtime;
     p_new->hb_no = 0;
     p_new->hb_utime = 0;
-    if (verboselevel & VERBOSESENSOR) printf("%sNode.addNode: N:%u U:%f HB:%s PA:%s(%s)\n",ts(tsbuf),node_id, u_batt, isMastered? "    Mastered":"Not Mastered",
+    if (_verboselevel & VERBOSESENSOR) printf("%sNode.addNode: N:%u U:%f HB:%s PA:%s(%s)\n",ts(tsbuf),node_id, u_batt, isMastered? "    Mastered":"Not Mastered",
                    PALevel==0? "??? ":PALevel==1? "Low ":PALevel==2? "Min ":PALevel==3? "High":"Max ", utime2str(PAUtime, buf, 1));
     newEntry(p_new);
 }
@@ -85,8 +85,8 @@ bool Node::isNewHB(NODE_DATTYPE node_id, uint8_t hb_no, uint32_t hb_utime) {
     } else {
         while (p_search) {
             if (p_search->node_id == node_id) {
-                if (verboselevel & VERBOSEORDER)
-                    printf("%sNode.is_new_HB: Node:%u last HB %u (%u) this HB %u (%u) => ", ts(tsbuf), node_id, p_search->hb_no, p_search->hb_utime, hb_no, utime );
+                if (_verboselevel & VERBOSEORDER)
+                    printf("%sNode.is_new_HB: Node:%u last HB %u (%u) this HB %u => ", ts(tsbuf), node_id, p_search->hb_no, p_search->hb_utime, hb_no );
                 if ( hb_utime > p_search->hb_utime + 50 || 
 		     hb_no > p_search->hb_no || 
 		     (p_search->hb_no - hb_no > 50) || 
@@ -101,7 +101,7 @@ bool Node::isNewHB(NODE_DATTYPE node_id, uint8_t hb_no, uint32_t hb_utime) {
             }
         }
     }
-    if (verboselevel & VERBOSEORDER) {
+    if (_verboselevel & VERBOSEORDER) {
         if (retval) {
             printf("New HeartBeat or Heartbeatno == 0\n");;
         } else {
@@ -114,7 +114,7 @@ bool Node::isNewHB(NODE_DATTYPE node_id, uint8_t hb_no, uint32_t hb_utime) {
 void Node::setPaLevel(NODE_DATTYPE node_id, uint8_t PALevel) {
     node_t *p_search;
     p_search=p_initial;
-    if (verboselevel & VERBOSESENSOR) printf("%sNode.setPaLevel: N:%u PA:%s\n",ts(tsbuf),node_id, PALevel==0? "??? ":PALevel==1? "Min ":PALevel==2? "Low ":PALevel==3? "High":"Max ");
+    if (_verboselevel & VERBOSESENSOR) printf("%sNode.setPaLevel: N:%u PA:%s\n",ts(tsbuf),node_id, PALevel==0? "??? ":PALevel==1? "Min ":PALevel==2? "Low ":PALevel==3? "High":"Max ");
     while (p_search) {
 		if (p_search->node_id == node_id) {
 			p_search->pa_level = PALevel;
@@ -144,7 +144,7 @@ uint8_t Node::getPaLevel(NODE_DATTYPE node_id) {
 void Node::setVoltage(NODE_DATTYPE node_id, float u_batt) {
     node_t *p_search;
     p_search=p_initial;
-    if (verboselevel & VERBOSESENSOR) printf("%sNode.setVoltage: N:%u U:%f\n",ts(tsbuf),node_id, u_batt);
+    if (_verboselevel & VERBOSESENSOR) printf("%sNode.setVoltage: N:%u U:%f\n",ts(tsbuf),node_id, u_batt);
     while (p_search) {
 		if (p_search->node_id == node_id) {
 			p_search->u_batt = u_batt;
@@ -167,7 +167,7 @@ bool Node::isMasteredNode(NODE_DATTYPE node_id) {
             p_search=p_search->p_next;
         }
 	}
-    if (verboselevel & VERBOSESENSOR) printf("%sNode.isMasteredNode: N:%u is %s\n", ts(tsbuf), node_id, retval? "Mastered":"Not Mastered");
+    if (_verboselevel & VERBOSESENSOR) printf("%sNode.isMasteredNode: N:%u is %s\n", ts(tsbuf), node_id, retval? "Mastered":"Not Mastered");
 	return retval;
 }
 
@@ -182,7 +182,7 @@ void Node::setMasteredNode(NODE_DATTYPE node_id, bool isMastered){
             p_search=p_search->p_next;
         }
 	}
-    if (verboselevel & VERBOSESENSOR) printf("%sNode.setMasteredNode: N:%u is %s\n", ts(tsbuf), node_id, isMastered? "Mastered":"Not Mastered");
+    if (_verboselevel & VERBOSESENSOR) printf("%sNode.setMasteredNode: N:%u is %s\n", ts(tsbuf), node_id, isMastered? "Mastered":"Not Mastered");
 }
 
 void Node::printBuffer(int out_socket, bool htmlformat) {
@@ -207,6 +207,6 @@ void Node::printBuffer(int out_socket, bool htmlformat) {
     free(client_message);
 }
 
-void Node::setVerbose(uint16_t _verboselevel) {
-    verboselevel = _verboselevel;
+void Node::setVerbose(uint16_t verboselevel) {
+    _verboselevel = verboselevel;
 }

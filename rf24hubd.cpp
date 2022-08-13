@@ -40,7 +40,9 @@ void send_fhem_tn(char* tn_cmd) {
                         printf("%ssend_fhem_cmd: Telnet to %s Port %u successfull Command: %s\n", ts(tsbuf), cfg.fhemHostName.c_str(), portno, tn_cmd);
                     }
                 }
-                write(sockfd,tn_quit,strlen(tn_quit));
+                if (write(sockfd,tn_quit,strlen(tn_quit)) < 1) {
+                // TODO: Need a message here?
+                }
             }
             close(sockfd);
         } else { // server == NULL
@@ -62,7 +64,9 @@ static void* receive_tn_in (void *arg) {
     // send something like a prompt. perl telnet is waiting for it otherwise we get error
     // use this in perl: my $t = new Net::Telnet (Timeout => 2, Port => 7001, Prompt => '/rf24hub>/');
     sprintf(client_message,"rf24hub> ");
-    write(f->tnsocket , client_message , strlen(client_message));
+    if (write(f->tnsocket , client_message , strlen(client_message)) < 1 ) {
+       // TODO: Need a message here?
+    }
     MsgLen = recv(f->tnsocket, buffer, TELNETBUFFERSIZE, 0);
     if (MsgLen>0) {
         int msgID = msgget(MSGKEYHUB, IPC_CREAT | 0600);
@@ -79,7 +83,9 @@ static void* receive_tn_in (void *arg) {
         // Wait for a message with processing result            
         ret=msgrcv(msgID, &TnMsg, sizeof(TnMsg), 9, 0);
         if ( ret > 5 ) {
-            write(f->tnsocket, TnMsg.TnData.tntext, strlen(TnMsg.TnData.tntext));
+            if (write(f->tnsocket, TnMsg.TnData.tntext, strlen(TnMsg.TnData.tntext)) < 1) {
+                // TODO: Need a message here?
+            }
         }
         
     }
@@ -308,32 +314,34 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
     }
     // show verbose
     if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
-	tn_input_ok = true;
-	sprintf(message,"Active verboselevel: %s\n", printVerbose(verboselevel, buf));
-	write(tn_socket , message , strlen(message));
+        tn_input_ok = true;
+        sprintf(message,"Active verboselevel: %s\n", printVerbose(verboselevel, buf));
+        if ( write(tn_socket , message , strlen(message)) < 1 ) {
+            // TODO: Need a message here?
+        }
     }
     // html order
     // lists the current order/orderbuffer for html page
     if (( strcmp(wort1,cmp_html) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
-	tn_input_ok = true;
+        tn_input_ok = true;
         orderbuffer.printBuffer(tn_socket, true);
     }	
     // sync
     // syncronisation of all relevant tables of rf24hubd: stores in memory table data to database hard disk tables 
     if ( (strcmp(wort1,cmp_sync) == 0) && (strlen(wort2) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
-	tn_input_ok = true;
+        tn_input_ok = true;
         database.sync_sensordata_d();
-	database.sync_config();
+        database.sync_config();
     }
     // init
     // initialisation of rf24hubd: reloads data from database
     if ( (strcmp(wort1,cmp_init) == 0) && (strlen(wort2) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
-	tn_input_ok = true;
+        tn_input_ok = true;
         exit_system();
         node.cleanup();
         sensor.cleanup();
         gateway.cleanup();
-	init_system();
+        init_system();
         node.printBuffer(tn_socket, false);
         sensor.printBuffer(tn_socket, false);
         gateway.printBuffer(tn_socket, false);
@@ -341,17 +349,21 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
     // truncate logfile
     // truncation of the logfile for maintenance
     if ( (strcmp(wort1,cmp_truncate) == 0) && (strcmp(wort2,cmp_logfile) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
-        truncate (cfg.hubLogFileName.c_str(), 0);
-        printf(message, "Logfile: %s geleert", cfg.hubLogFileName.c_str());
-	tn_input_ok = true;
+       if( truncate (cfg.hubLogFileName.c_str(), 0))
+            printf(message, "Logfile: %s geleert", cfg.hubLogFileName.c_str());
+        tn_input_ok = true;
     }
     if ( ! tn_input_ok) {
-        for(unsigned int i=0; i<sizeof(tn_usage_txt)/ sizeof(int); i++) {
+        for(unsigned int i=0; i < sizeof(tn_usage_txt); i++) {
             sprintf(message,"%s\n",tn_usage_txt[i]);
-            write(tn_socket , message , strlen(message));
+            if (write(tn_socket , message , strlen(message)) < 1) {
+                //TODO 
+            }
         }
         sprintf(message,"%s version %s\n", PRGNAME, SWVERSION_STR);
-        write(tn_socket , message , strlen(message));
+        if (write(tn_socket , message , strlen(message)) < 1) {
+            // TODO
+        }
     }		
     free_str(verboselevel,"process_tn_in wort1",wort1,ts(tsbuf));
     free_str(verboselevel,"process_tn_in wort2",wort2,ts(tsbuf));
@@ -427,7 +439,7 @@ void init_system(void) {
 void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
     uint8_t channel = getChannel(mydata);
     switch (channel) {
-        case SENSOR_FIRST_CHANNEL ... SENSOR_LAST_CHANNEL: {
+        case SENSOR_CHANNEL_FIRST ... SENSOR_CHANNEL_LAST: {
 	    // Sensor or Actor that gets or delivers a number
             uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
             if ( sensor_id > 0 ) { 
@@ -442,34 +454,34 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
         }
         break; 
 // Register mit Sonderbedandlung: Durchlaufen erst die Sonderbedandlung dann die normale Registerbehandlung
-	case REG_NOSTORE_FIRST ... REG_NOSTORE_LAST:
+        case REG_NOSTORE_FIRST ... REG_NOSTORE_LAST:
 	    // do nothing
-	break;
-	case REG_BATT:
-	{
-	    // battery voltage
-	    uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
-            buf = unpackTransportValue(mydata, buf);
-	    if ( sensor_id > 0 ) {
-		if ( verboselevel & VERBOSECONFIG) {
-		    printf("%sVoltage of Node: %u is %sV\n", ts(tsbuf), node_id, buf);
-		}
-		sensor.updateLastVal(sensor_id, mydata);
-		node.setVoltage(node_id, strtof(unpackTransportValue(mydata,buf),NULL));
-		database.storeSensorValue(sensor_id, buf);
-		send_fhem_cmd(node_id, channel,buf);
-	    }
-	}
-// HIER KEIN break !!!!
-        case REG_FIRST_REG ... REG_LAST_REG: 
+        break;
+        case REG_BATT:
         {
-	    // Node config register
+	    // battery voltage
+            uint32_t sensor_id = sensor.getSensorByNodeChannel(node_id, channel);
+            buf = unpackTransportValue(mydata, buf);
+            if ( sensor_id > 0 ) {
+                if ( verboselevel & VERBOSECONFIG) {
+                    printf("%sVoltage of Node: %u is %sV\n", ts(tsbuf), node_id, buf);
+                }
+                sensor.updateLastVal(sensor_id, mydata);
+                node.setVoltage(node_id, strtof(unpackTransportValue(mydata,buf),NULL));
+                database.storeSensorValue(sensor_id, buf);
+                send_fhem_cmd(node_id, channel,buf);
+            }
+        }
+// HIER KEIN break !!!!
+        case REG_NORMAL_FIRST ... REG_NORMAL_LAST: 
+        {
+        // Node config register
             buf = unpackTransportValue(mydata, buf);
             if ( verboselevel & VERBOSECONFIG) {
                 printf("%sConfigregister of Node: %u Channel: %u is %s\n", ts(tsbuf), node_id, channel, buf);
             }
             database.storeNodeConfig(node_id, channel, buf);
-	}
+        }
         break; 
     }
     orderbuffer.delByNodeChannel(node_id, channel);
@@ -550,7 +562,7 @@ int main(int argc, char* argv[]) {
         pid = fork ();
         if (pid == 0) {
         // Child prozess
-            chdir ("/");
+            if (chdir ("/"));
             umask (0);
         } else if (pid > 0) {
             // Parentprozess -> exit and return to shell
@@ -564,8 +576,8 @@ int main(int argc, char* argv[]) {
             exit(1);
         }
 
-        freopen(cfg.hubLogFileName.c_str(), "a+", stdout); 
-        freopen(cfg.hubLogFileName.c_str(), "a+", stderr); 
+        if(freopen(cfg.hubLogFileName.c_str(), "a+", stdout)); 
+        if(freopen(cfg.hubLogFileName.c_str(), "a+", stderr)); 
     }
     
     cfg.setPidFile(cfg.hubPidFileName);
@@ -608,7 +620,7 @@ int main(int argc, char* argv[]) {
     // Main Loop
     while(1) {
         // sync sensordata to sensordata_d every day
-        if ( utime() - lastDBsync > DBSYNCINTERVAL ) {
+        if ( time(NULL) - lastDBsync > DBSYNCINTERVAL ) {
            database.sync_sensordata_d();   
            lastDBsync = database.getBeginOfDay();
         }

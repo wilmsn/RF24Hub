@@ -3,14 +3,18 @@
  * @image html overview.png
  * Components: 
  *- ATMEL/Arduino based Nodes
- *- Gateway based on ESP8266 or Raspberry PI (ervery Linux System with useable GPIO Pins can be used)
+ *- Gateway based on ESP8266/ESP32 or Raspberry PI (ervery Linux System with useable GPIO Pins can be used)
  *- Hub as the cental Component based on any Linux System
+ *- Further Details: 
+ *- [Quick Install Guide and System Overview](README.md)
+ *- [Configure and Build a Arduino-Node from the Template](NODE_HOWTO.md)
+ *- [Configure and Build a ESP-Node from the Template](NODE_HOWTO.md)
+ *
  */
-/**************************************************
- * Common functions
- * used in rf24gwd and rf24hubd
- * 
- **************************************************/
+
+/**
+ * @brief Common functions used in rf24gwd and rf24hubd
+*/
 
 #ifndef _COMMON_H_   /* Include guard */
 #define _COMMON_H_
@@ -63,38 +67,55 @@ static const char date_format2[] = "%Y.%m.%d %H:%M:%S";
  * 2 => 2020.04.20 18:38:17
  * Wichtig: Es muss ein Speicherplatz buf zur Aufnahme 
  * des Strings ( Grösse 20 Byte ) übergeben werden!
+ * @param utime Unix Timestamp
+ * @param buf Ein Puffer zur Aufnahme des Ausgabestrings. Muss groß genug sein um den Ausgabestring komplett aufnehem zu können.
+ * @param format Bestimmt das Ausgabeformat des Zeitstrings: "1" => "Tag.Monat.Jahr Stunde:Minute:Sekunde"; "2" => "Jahr.Monat.Tag Stunde:Minute:Sekunde"
+ * @return Der Zeitstring
  */
-char* utime2str(time_t utime, char* buf, uint8_t form);
+char* utime2str(time_t utime, char* buf, uint8_t format);
 
+/**
+ * Erzeugt einen aktuellen Zeitstempel zur Verwendung in Log-Ausgaben.
+ * Wichtig: Es muss ein Buffer übergeben werden, der diesen Zeitstempel komplett aufnehmen kann!
+ * @param Der Buffer zur Aufnahme des Zeitstempels
+ * @return Der Zeitstempel als String
+ */
 char* ts(char* buf);
 
 /**
  * trim: get rid of trailing and leading whitespace...
  *       ...including the annoying "\n" from fgets()
+ * @param s Eingabestring (schmutzig)
+ * @return Ausgabestring (gereinigt)
  */
 char * trim (char * s);
 
 /**
  * Ein Wrapper für malloc() mit folgenden Erweiterungen:
- * Je nach Verboselevel erfolgen Ausgaben
+ * Je nach aktuell gesetztem Verboselevel erfolgen Ausgaben
+ * @param verboseLevel Der aktuell gesetzte Verboselevel
+ * @param msgTxt Der Ausgabetext für Verbosemeldungen
+ * @param size Die mittels malloc() zu allokierende Speichergröße
+ * @param timestring Der aktuelle Timestring z.B. durch ts(buf) erzeugt
+ * @return Ein leerer String mit der Größe <size> 
  */
 char* alloc_str(uint16_t verboseLevel, const char* msgTxt, size_t size, char* timestring);
 
 /**
  * Ein Wrapper für free() mit folgenden Erweiterungen:
- * Je nach Verboselevel erfolgen Ausgaben
+ * Je nach aktuell gesetztem Verboselevel erfolgen Ausgaben
+ * @param verboseLevel Der aktuell gesetzte Verboselevel
+ * @param msgTxt Der Ausgabetext für Verbosemeldungen
+ * @param str Ein zuvor mit alloc_str reservierter String(Speicherbereich)
+ * @param timestring Der aktuelle Timestring z.B. durch ts(buf) erzeugt
  */
-void free_str(uint16_t verboselevel, const char* msgTxt, char* str, char* timestring);
+void free_str(uint16_t verboseLevel, const char* msgTxt, char* str, char* timestring);
 
 /**
  * Bildet den Unix Timestamp erweitert um Millisekunden ab
+ * @return Der erweiterte Timestamp
  */
 uint64_t mymillis(void);
-
-/**
- * Bildet den Unix Timestamp ab
- */
-uint64_t utime(void);
 
 /**
  * Gibt das aktuelle Verboselevel aus

@@ -384,7 +384,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Eingehendes Socket für UDP Messages öffnen
-    printf("%sSocket für eingehende UDP Messages vom Gateway auf Port %s angelegt\n", ts(tsbuf), cfg.gwUdpPortNo.c_str());
+    printf("%sSocket für eingehende UDP Messages vom Hub auf Port %s angelegt\n", ts(tsbuf), cfg.gwUdpPortNo.c_str());
     if ( ! openSocket(cfg.gwUdpPortNo.c_str(), &udp_address_in, &udp_sockfd_in, UDP) ) {
         printf("Error: Open socket !!!!!! \n");
         cfg.removePidFile(cfg.gwPidFileName);

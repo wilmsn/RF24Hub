@@ -1,13 +1,13 @@
 /**
+ * @file database.h
+ * @brief Covers all database stuff
  * 
- * This module covers all 
- * the communication to the database.
+ * This module covers all the communication to the database.
  * Here we use MariaDB
  * 
  * If you want to use a diffent database or even flatfiles
  * to store the data, just replace this module.
- * Make sure that functions and parameters remain
- * unchanged !!!
+ * Make sure that functions and parameters remain unchanged !!!
  * 
  */
 
@@ -68,10 +68,6 @@ public:
  *  Setzt das Verboselevel
  */
     void setVerbose(uint16_t _verboselevel);
-/**
- *  Setzt den Key
- */
-    void setKey(uint32_t _key);
 /**
  * connects to the database
  */

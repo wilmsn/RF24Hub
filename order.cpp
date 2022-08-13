@@ -229,17 +229,16 @@ bool Order::getOrderForTransmission(payload_t* payload, uint64_t mytime){
     bool retval = false;
     order_t *p_delme = NULL;
     order_t *p_search;
-//    uint64_t sendInterval;
-//    uint64_t deleteInterval;
-//    uint64_t stopmsg_deleteInterval;
     p_search = p_initial;
     while (p_search) {
         if (verboselevel & VERBOSEORDEREXT) {
+#if __x86_64__
+            printf("%sOrder::getOrderForTransmission N:%u O:%u Last send: %lu Now: %lu Entry: %lu\n",ts(tsbuf),p_search->node_id, p_search->orderno, p_search->last_send, mytime, p_search->entrytime);        
+#else
             printf("%sOrder::getOrderForTransmission N:%u O:%u Last send: %llu Now: %llu Entry: %llu\n",ts(tsbuf),p_search->node_id, p_search->orderno, p_search->last_send, mytime, p_search->entrytime);        
+#endif
         }
         if (p_search->last_send > mytime) p_search->last_send = mytime;
-//        p_search->HB_order? sendInterval=SENDINTERVAL_HB : sendInterval=SENDINTERVAL;
-//        p_search->HB_order? deleteInterval=DELETEINTERVAL_HB : deleteInterval=DELETEINTERVAL;
         if ( (p_search->last_send + SENDINTERVAL) < mytime) {
             payload->node_id = p_search->node_id;
             payload->msg_id = p_search->msg_id++;
@@ -255,13 +254,21 @@ bool Order::getOrderForTransmission(payload_t* payload, uint64_t mytime){
             payload->data6 = p_search->data6;
             p_search->last_send = mytime;
             if (verboselevel & VERBOSEORDER) {
+#if __x86_64__
+                printf("%sOrder::getOrderForTransmission <%p> O: %u (N:%u), TTL: %lu\n", ts(tsbuf), p_search, p_search->orderno, p_search->node_id, p_search->entrytime + DELETEINTERVAL - mytime ); 
+#else
                 printf("%sOrder::getOrderForTransmission <%p> O: %u (N:%u), TTL: %llu\n", ts(tsbuf), p_search, p_search->orderno, p_search->node_id, p_search->entrytime + DELETEINTERVAL - mytime ); 
+#endif
             }
             if ( (p_search->entrytime + (uint64_t)DELETEINTERVAL < mytime) || 
                 (p_search->msg_type == PAYLOAD_TYPE_DATSTOP && (p_search->entrytime + (SENDSTOPCOUNT * SENDINTERVAL)) < mytime) ) {
                 p_delme = p_search;
                 if (verboselevel & VERBOSEORDER) {
+#if __x86_64__
+                    printf("%sOrder::getOrderForTransmission Timeout - lösche <%p> O:%u (N:%u), entry:%lu last send: %lu Delinterv: %lu Sendinterv: %lu\n", ts(tsbuf), p_delme, p_delme->orderno, p_delme->node_id, p_delme->entrytime, p_delme->last_send, (uint64_t)DELETEINTERVAL, (uint64_t)SENDINTERVAL ); 
+#else
                     printf("%sOrder::getOrderForTransmission Timeout - lösche <%p> O:%u (N:%u), entry:%llu last send: %llu Delinterv: %llu Sendinterv: %llu\n", ts(tsbuf), p_delme, p_delme->orderno, p_delme->node_id, p_delme->entrytime, p_delme->last_send, (uint64_t)DELETEINTERVAL, (uint64_t)SENDINTERVAL ); 
+#endif
                 }
                 delEntry(p_delme);
             }
@@ -286,7 +293,7 @@ void Order::printBuffer(int out_socket, bool htmlFormat) {
     write(out_socket , client_message , strlen(client_message));
     while (p_search) {
         if (htmlFormat) {
-            sprintf(client_message,"<tr><td>%u</td><td>%u</td><td>%u</td><td>%u</td><td>%u<br>%u<br>%u<br>%u<br>%u<br>%u</td><td>%s<br>%s<br>%s<br>%s<br>%s<br>%s</td></tr>\n", 
+            sprintf(client_message,"<tr><td>%u</td><td>%u</td><td>%u<br>%u<br>%u<br>%u<br>%u<br>%u</td><td>%s<br>%s<br>%s<br>%s<br>%s<br>%s</td></tr>\n", 
             p_search->orderno, p_search->node_id, 
             getChannel(p_search->data1), 
             getChannel(p_search->data2), 

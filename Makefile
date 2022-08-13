@@ -20,17 +20,30 @@ MYSQLLIBS := $(shell mariadb_config --libs)
 ARCH=armv6zk
 ifeq "$(shell uname -m)" "armv7l"
 ARCH=armv7-a
+MARCH=arm
+CCFLAGS=-Ofast -mfpu=vfp -mfloat-abi=hard -march=$(ARCH) -mtune=arm1176jzf-s -std=c++0x -pthread
+all: rf24hubd rf24gwd
+debug: rf24hubd_debug
+simu: clean4simulator simulator
+endif
+
+
+ifeq "$(shell uname -m)" "x86_64"
+ARCH=x86-64
+MARCH=x86
+CCFLAGS=-Ofast -march=$(ARCH) -std=c++0x -pthread
+all: rf24hubd
 endif
 
 # The recommended compiler flags for the Raspberry Pi
 #CCFLAGS=-Ofast -mfpu=vfp -mfloat-abi=hard -march=armv6zk -mtune=arm1176jzf-s
-CCFLAGS=-Ofast -mfpu=vfp -mfloat-abi=hard -march=$(ARCH) -mtune=arm1176jzf-s -std=c++0x -pthread
+#CCFLAGS=-Ofast -mfpu=vfp -mfloat-abi=hard -march=$(ARCH) -mtune=arm1176jzf-s -std=c++0x -pthread
 DEBUGFLAGS=-ggdb3 -O0
 
 # make all
-all: rf24hubd rf24gwd
-debug: rf24hubd_debug
-simu: clean4simulator simulator
+#all: rf24hubd rf24gwd
+#debug: rf24hubd_debug
+#simu: clean4simulator simulator
 
 # Make the rf24hub deamon in debug mode
 rf24hubd_debug: cfg.o dataformat.o database.o node.o sensor.o orderbuffer.o order.o common.o rf24hubd.cpp
@@ -67,7 +80,7 @@ orderbuffertest: orderbuffer.o orderbuffer_test.cpp
 
 # clear build files
 clean:
-	rm -f *.o rf24hubd rf24gwd rf24hubd_debug dataformattest
+	rm -f *.o rf24hubd rf24gwd rf24hubd_debug
 
 # Install the rf24hub and rf24gw
 install:  install_gw install_hub
