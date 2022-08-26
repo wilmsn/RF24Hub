@@ -10,7 +10,7 @@
 #define RF24NODE        17
 #endif
 
-// Thats the bare Minimum
+// Thats the bare minimum
 // You can add everything from below
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -52,25 +52,26 @@
 // Set the limit voltage for it, low voltage handling is below
 #define VOLT_LV         2
 // In Low Power State we use a different sleeptime 
-#define SLEEPTIME_LV  90
+#define SLEEPTIME_LV    90
 
 // Battery Management
 // If the akku is loaded by solarcell we have 2 methods to consume power
 // that the akku will not be overcharged
 // 1. Step: The ATMega will NOT be send to low power mode if the voltage is above
-#define DISCHARGE1          2.6
-// 2. Step: The battery will be discharged through an external resistor if the voltage is above
-#define DISCHARGE2          2.7
-// From a discharge_pin there is a resistor (340 Ohm or to your needs) to Vcc
-#define DISCHARGE2_PIN      5
+#define DISCHARGE1          2.7
+// 2. Step: The battery will additionly be discharged through the status LED (swiched on) if the voltage is above
+#define DISCHARGE2          2.75
+// 3. Step: The battery will additionly be discharged through a resistor on port DISCHARGE3_PIN against GND
+#define DISCHARGE3          2.8
+#define DISCHARGE3_PIN      5
 
 // Load Ballancing
 // If the node uses 2 battery cells in series the charging voltage of both batteries should not differ to much
 // The load ballancer pin will be connected to a resistor ( eg. 470 Ohm ) and the resistor goes between the battery cells
-// The load ballancer needs a analog input
-#define LOAD_BALLANCER         A3
+// The load ballancer needs a analog input and will only work above the DISCHARGE1 voltage
+#define LOAD_BALLANCER_PIN   A3
 // The maximun difference voltage between the cells will be defined here
-#define LOAD_BALLANCER_U       0.2
+#define LOAD_BALLANCER       0.2
 
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

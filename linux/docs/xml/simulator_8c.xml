@@ -1,0 +1,332 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="simulator_8c" kind="file" language="C++">
+    <compoundname>simulator.c</compoundname>
+    <includes local="no">sys/types.h</includes>
+    <includes local="no">sys/socket.h</includes>
+    <includes local="no">netinet/in.h</includes>
+    <includes local="no">arpa/inet.h</includes>
+    <includes local="no">netdb.h</includes>
+    <includes local="no">stdio.h</includes>
+    <includes local="no">unistd.h</includes>
+    <includes local="no">string.h</includes>
+    <includes local="no">stdlib.h</includes>
+    <includes local="no">sys/time.h</includes>
+    <includes local="no">errno.h</includes>
+    <includes refid="common_8h" local="yes">common.h</includes>
+    <includes refid="dataformat_8h" local="yes">dataformat.h</includes>
+    <includes refid="config_8h" local="yes">config.h</includes>
+    <includes refid="rf24__config_8h" local="yes">rf24_config.h</includes>
+    <incdepgraph>
+      <node id="13">
+        <label>common.h</label>
+        <link refid="common_8h"/>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+      </node>
+      <node id="21">
+        <label>config.h</label>
+        <link refid="config_8h"/>
+      </node>
+      <node id="22">
+        <label>dataformat.h</label>
+        <link refid="dataformat_8h"/>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="23">
+        <label>rf24_config.h</label>
+        <link refid="rf24__config_8h"/>
+      </node>
+      <node id="1">
+        <label>simulator.c</label>
+        <link refid="simulator_8c"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="24">
+        <label>version.h</label>
+        <link refid="version_8h"/>
+      </node>
+      <node id="5">
+        <label>arpa/inet.h</label>
+      </node>
+      <node id="19">
+        <label>cstdio</label>
+      </node>
+      <node id="15">
+        <label>cstring</label>
+      </node>
+      <node id="16">
+        <label>ctype.h</label>
+      </node>
+      <node id="12">
+        <label>errno.h</label>
+      </node>
+      <node id="20">
+        <label>fcntl.h</label>
+      </node>
+      <node id="6">
+        <label>netdb.h</label>
+      </node>
+      <node id="4">
+        <label>netinet/in.h</label>
+      </node>
+      <node id="18">
+        <label>stdbool.h</label>
+      </node>
+      <node id="14">
+        <label>stdint.h</label>
+      </node>
+      <node id="7">
+        <label>stdio.h</label>
+      </node>
+      <node id="10">
+        <label>stdlib.h</label>
+      </node>
+      <node id="9">
+        <label>string.h</label>
+      </node>
+      <node id="3">
+        <label>sys/socket.h</label>
+      </node>
+      <node id="11">
+        <label>sys/time.h</label>
+      </node>
+      <node id="2">
+        <label>sys/types.h</label>
+      </node>
+      <node id="17">
+        <label>time.h</label>
+      </node>
+      <node id="8">
+        <label>unistd.h</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="simulator_8c_1a5ecbdce31e2fc8acc2d1a85c24ab7e31" prot="public" static="no">
+        <name>HUB_UDP_PORT</name>
+        <initializer>&quot;7004&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/simulator.c" line="22" column="24" bodyfile="/stick/netz/projekte/RF24Hub/linux/simulator.c" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="simulator_8c_1a016cdf96ec24b62effb7d8f87698eab6" prot="public" static="no">
+        <name>GW_UDP_PORT</name>
+        <initializer>&quot;7003&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/simulator.c" line="23" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/simulator.c" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="simulator_8c_1a3c04138a5bfe5d72780bb7e82a18e627" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int main</definition>
+        <argsstring>(int argc, char **argv)</argsstring>
+        <name>main</name>
+        <param>
+          <type>int</type>
+          <declname>argc</declname>
+        </param>
+        <param>
+          <type>char **</type>
+          <declname>argv</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/simulator.c" line="26" column="5" bodyfile="/stick/netz/projekte/RF24Hub/linux/simulator.c" bodystart="26" bodyend="97"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*<sp/>simulator.c</highlight></codeline>
+<codeline lineno="2"><highlight class="comment">*</highlight></codeline>
+<codeline lineno="3"><highlight class="comment">*<sp/>A<sp/>simulator<sp/>for</highlight></codeline>
+<codeline lineno="4"><highlight class="comment">*<sp/>a)<sp/>an<sp/>ESP<sp/>node</highlight></codeline>
+<codeline lineno="5"><highlight class="comment">*<sp/>b)<sp/>a<sp/>combination<sp/>of<sp/>rf24-node<sp/>and<sp/>gateway</highlight></codeline>
+<codeline lineno="6"><highlight class="comment">*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/types.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/socket.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;netinet/in.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;arpa/inet.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;netdb.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdio.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdlib.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/time.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="common_8h" kindref="compound">common.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="dataformat_8h" kindref="compound">dataformat.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="config_8h" kindref="compound">config.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="rf24__config_8h" kindref="compound">rf24_config.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>HUB_UDP_PORT<sp/>&quot;7004&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>GW_UDP_PORT<sp/><sp/>&quot;7003&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="simulator_8c_1a3c04138a5bfe5d72780bb7e82a18e627" kindref="member">main</ref><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>argc,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>**argv)<sp/>{</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><ref refid="structudpdata__t" kindref="compound">udpdata_t</ref><sp/><ref refid="rf24gwd_8h_1aed24fc049dc5a6c8b3fd89e20c79be34" kindref="member">udpdata</ref>;</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>starttime;</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/>ssize_t<sp/>UdpMsgLen;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/>socklen_t<sp/>udp_addrlen;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">sockaddr_in<sp/>udp_address_in;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">hostent<sp/>*h;</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>udp_sockfd_in;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><ref refid="structpayload__t" kindref="compound">payload_t</ref><sp/><ref refid="rf24gwd_8h_1a9ab81a7ae17f3497b23bbccb020c3308" kindref="member">payload</ref>;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24gwd_8h_1aa5a00c1b8970dc4fbaabfa7b8a4aa021" kindref="member">tsbuf</ref>[30];</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>buf1[15];</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>hostaddr[64];</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>Kommandozeile<sp/>auswerten<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(argc<sp/>!=<sp/>7<sp/>&amp;&amp;<sp/>argc<sp/>!=<sp/>9<sp/>&amp;&amp;<sp/>argc<sp/>!=<sp/>11<sp/>&amp;&amp;<sp/>argc<sp/>!=<sp/>13<sp/>&amp;&amp;<sp/>argc<sp/>!=<sp/>15<sp/>&amp;&amp;<sp/>argc<sp/>!=<sp/>17<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/>printf<sp/>(</highlight><highlight class="stringliteral">&quot;Usage:(%d)<sp/>%s<sp/>&lt;server&gt;<sp/>&lt;gw_no&gt;<sp/>&lt;ESP|RF24&gt;<sp/>&lt;node_id&gt;<sp/>&lt;channel1&gt;<sp/>&lt;value1&gt;<sp/>[&lt;channel2&gt;<sp/>&lt;value2&gt;<sp/>[<sp/>...<sp/>[&lt;channel6&gt;<sp/>&lt;value6&gt;]]]<sp/>\n&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/>argc,<sp/>argv[0]<sp/>);</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/>exit<sp/>(EXIT_FAILURE);</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>IP-Adresse<sp/>vom<sp/>Server<sp/>überprüfen<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/>h<sp/>=<sp/>gethostbyname<sp/>(argv[1]);</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(h<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/>printf<sp/>(</highlight><highlight class="stringliteral">&quot;%s:<sp/>unbekannter<sp/>Host<sp/>&apos;%s&apos;<sp/>\n&quot;</highlight><highlight class="normal">,<sp/>argv[0],<sp/>argv[1]<sp/>);</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/>exit<sp/>(EXIT_FAILURE);</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i=0;</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(<sp/>h<sp/>-&gt;<sp/>h_addr_list[i]<sp/>!=<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/>sprintf(hostaddr,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal">,<sp/>inet_ntoa(<sp/>*(<sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>in_addr*)(<sp/>h<sp/>-&gt;<sp/>h_addr_list[i])));</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/>i++;</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>Socket<sp/>erzeugen<sp/>=&gt;<sp/>incoming*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>!<sp/><ref refid="common_8cpp_1a7d5dae7e3622aa0e69d8531af6430829" kindref="member">openSocket</ref>(<ref refid="simulator_8c_1a016cdf96ec24b62effb7d8f87698eab6" kindref="member">GW_UDP_PORT</ref>,<sp/>&amp;udp_address_in,<sp/>&amp;udp_sockfd_in,<sp/><ref refid="common_8h_1a32b5c6c372c524c9144fd368d586d4bbadb542475cf9d0636e4225e216cee9ae6" kindref="member">UDP</ref>)<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Error<sp/>opening<sp/>port:<sp/>%s<sp/>!!!!\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="simulator_8c_1a016cdf96ec24b62effb7d8f87698eab6" kindref="member">GW_UDP_PORT</ref>);</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>exit<sp/>(0);</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;%s<sp/>Socket<sp/>für<sp/>eingehende<sp/>UDP<sp/>Messages<sp/>auf<sp/>Port<sp/>%s<sp/>angelegt\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="common_8cpp_1a83eaed94816137f9fe9521a7946efff0" kindref="member">ts</ref>(<ref refid="rf24gwd_8h_1aa5a00c1b8970dc4fbaabfa7b8a4aa021" kindref="member">tsbuf</ref>),<sp/><ref refid="simulator_8c_1a016cdf96ec24b62effb7d8f87698eab6" kindref="member">GW_UDP_PORT</ref>);</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>Daten<sp/>fuellen<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/>memset(&amp;<ref refid="rf24gwd_8h_1aed24fc049dc5a6c8b3fd89e20c79be34" kindref="member">udpdata</ref>,0,</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="structudpdata__t" kindref="compound">udpdata_t</ref>));</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><ref refid="rf24gwd_8h_1aed24fc049dc5a6c8b3fd89e20c79be34" kindref="member">udpdata</ref>.<ref refid="structudpdata__t_1a01bf50b0c47eadbef0e1bc814b75630a" kindref="member">gw_no</ref><sp/>=<sp/>atoi(argv[2]);</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><ref refid="rf24gwd_8h_1aed24fc049dc5a6c8b3fd89e20c79be34" kindref="member">udpdata</ref>.<ref refid="structudpdata__t_1a1b63064045b272e47bf86c111e502394" kindref="member">payload</ref>.<ref refid="structpayload__t_1a3afa33b39f6de1877e858f9fb0b5f87a" kindref="member">node_id</ref><sp/>=<sp/>atoi(argv[4]);</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>strcmp(argv[3],</highlight><highlight class="stringliteral">&quot;RF24&quot;</highlight><highlight class="normal">)<sp/>==<sp/>0<sp/>)<sp/><ref refid="rf24gwd_8h_1aed24fc049dc5a6c8b3fd89e20c79be34" kindref="member">udpdata</ref>.<ref refid="structudpdata__t_1a1b63064045b272e47bf86c111e502394" kindref="member">payload</ref>.<ref refid="structpayload__t_1a332fd1884f12dc0307317907cf57d4ea" kindref="member">msg_type</ref><sp/>=<sp/><ref refid="group__msgtyp_1gafddf6f34f055d5d9f09e75ffa2ae9892" kindref="member">PAYLOAD_TYPE_HB</ref>;</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>strcmp(argv[3],</highlight><highlight class="stringliteral">&quot;ESP&quot;</highlight><highlight class="normal">)<sp/>==<sp/>0<sp/>)<sp/><ref refid="rf24gwd_8h_1aed24fc049dc5a6c8b3fd89e20c79be34" kindref="member">udpdata</ref>.<ref refid="structudpdata__t_1a1b63064045b272e47bf86c111e502394" kindref="member">payload</ref>.<ref refid="structpayload__t_1a332fd1884f12dc0307317907cf57d4ea" kindref="member">msg_type</ref><sp/>=<sp/><ref refid="group__msgtyp_1gad54e4cbc3efebbb4cb3321c41fd8df64" kindref="member">PAYLOAD_TYPE_ESP</ref>;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><ref refid="rf24gwd_8h_1aed24fc049dc5a6c8b3fd89e20c79be34" kindref="member">udpdata</ref>.<ref refid="structudpdata__t_1a1b63064045b272e47bf86c111e502394" kindref="member">payload</ref>.<ref refid="structpayload__t_1a18f328fa1c71e87663b30ed1fde701bb" kindref="member">data1</ref><sp/>=<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(atoi(argv[5]),argv[6]);</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(argc<sp/>&gt;<sp/>8)<sp/><ref refid="rf24gwd_8h_1aed24fc049dc5a6c8b3fd89e20c79be34" kindref="member">udpdata</ref>.<ref refid="structudpdata__t_1a1b63064045b272e47bf86c111e502394" kindref="member">payload</ref>.<ref refid="structpayload__t_1a6a3bdd422de558f0762911297b8d6dfa" kindref="member">data2</ref><sp/>=<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(atoi(argv[7]),argv[8]);<sp/></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(argc<sp/>&gt;<sp/>10)<sp/><ref refid="rf24gwd_8h_1aed24fc049dc5a6c8b3fd89e20c79be34" kindref="member">udpdata</ref>.<ref refid="structudpdata__t_1a1b63064045b272e47bf86c111e502394" kindref="member">payload</ref>.<ref refid="structpayload__t_1acf0a2b00de74d3cb536bf51a7ed05e57" kindref="member">data3</ref><sp/>=<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(atoi(argv[9]),argv[10]);</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(argc<sp/>&gt;<sp/>12)<sp/><ref refid="rf24gwd_8h_1aed24fc049dc5a6c8b3fd89e20c79be34" kindref="member">udpdata</ref>.<ref refid="structudpdata__t_1a1b63064045b272e47bf86c111e502394" kindref="member">payload</ref>.<ref refid="structpayload__t_1a994342c5f4f30ab8e2219b5dabbcb4ac" kindref="member">data4</ref><sp/>=<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(atoi(argv[11]),argv[12]);</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(argc<sp/>&gt;<sp/>14)<sp/><ref refid="rf24gwd_8h_1aed24fc049dc5a6c8b3fd89e20c79be34" kindref="member">udpdata</ref>.<ref refid="structudpdata__t_1a1b63064045b272e47bf86c111e502394" kindref="member">payload</ref>.<ref refid="structpayload__t_1a92f6a3267ceb4b5cd05018d407d58afc" kindref="member">data5</ref><sp/>=<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(atoi(argv[13]),argv[14]);</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(argc<sp/>&gt;<sp/>16)<sp/><ref refid="rf24gwd_8h_1aed24fc049dc5a6c8b3fd89e20c79be34" kindref="member">udpdata</ref>.<ref refid="structudpdata__t_1a1b63064045b272e47bf86c111e502394" kindref="member">payload</ref>.<ref refid="structpayload__t_1a123b9a41dc6fbff0b0c8aeed9e03a7d6" kindref="member">data6</ref><sp/>=<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(atoi(argv[15]),argv[16]);</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>Daten<sp/>senden<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;%s<sp/>Sende<sp/>Daten<sp/>an:<sp/>%s<sp/>(%s:%s)\n&quot;</highlight><highlight class="normal">,<ref refid="common_8cpp_1a83eaed94816137f9fe9521a7946efff0" kindref="member">ts</ref>(<ref refid="rf24gwd_8h_1aa5a00c1b8970dc4fbaabfa7b8a4aa021" kindref="member">tsbuf</ref>),<sp/>argv[1],<sp/>hostaddr,<sp/><ref refid="simulator_8c_1a5ecbdce31e2fc8acc2d1a85c24ab7e31" kindref="member">HUB_UDP_PORT</ref>);</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/>sprintf(buf1,</highlight><highlight class="stringliteral">&quot;G:%u&gt;H<sp/>&quot;</highlight><highlight class="normal">,<sp/><ref refid="rf24gwd_8h_1aed24fc049dc5a6c8b3fd89e20c79be34" kindref="member">udpdata</ref>.<ref refid="structudpdata__t_1a01bf50b0c47eadbef0e1bc814b75630a" kindref="member">gw_no</ref>);</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><ref refid="common_8cpp_1a78264021b512e588dbd4f8dfc393881c" kindref="member">printPayload</ref>(<ref refid="common_8cpp_1a83eaed94816137f9fe9521a7946efff0" kindref="member">ts</ref>(<ref refid="rf24gwd_8h_1aa5a00c1b8970dc4fbaabfa7b8a4aa021" kindref="member">tsbuf</ref>),<sp/>buf1,<sp/>&amp;<ref refid="rf24gwd_8h_1aed24fc049dc5a6c8b3fd89e20c79be34" kindref="member">udpdata</ref>.<ref refid="structudpdata__t_1a1b63064045b272e47bf86c111e502394" kindref="member">payload</ref>);</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><ref refid="common_8cpp_1ac858321bf90c9e4a48b93c1cf636fa4d" kindref="member">sendUdpMessage</ref>(argv[1],<sp/><ref refid="simulator_8c_1a5ecbdce31e2fc8acc2d1a85c24ab7e31" kindref="member">HUB_UDP_PORT</ref>,<sp/>&amp;<ref refid="rf24gwd_8h_1aed24fc049dc5a6c8b3fd89e20c79be34" kindref="member">udpdata</ref>);</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>Reaktion<sp/>abwarten<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/>starttime<sp/>=<sp/><ref refid="common_8cpp_1afab512e15911b8554463ad51246fe9d0" kindref="member">mymillis</ref>();</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(starttime<sp/>&gt;<sp/><ref refid="common_8cpp_1afab512e15911b8554463ad51246fe9d0" kindref="member">mymillis</ref>()<sp/>-<sp/>1000)<sp/>{</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/>UdpMsgLen<sp/>=<sp/>recvfrom<sp/>(<sp/>udp_sockfd_in,<sp/>&amp;<ref refid="rf24gwd_8h_1aed24fc049dc5a6c8b3fd89e20c79be34" kindref="member">udpdata</ref>,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="structudpdata__t" kindref="compound">udpdata_t</ref>),<sp/>0,<sp/>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>sockaddr<sp/>*)<sp/>&amp;udp_address_in,<sp/>&amp;udp_addrlen<sp/>);</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(UdpMsgLen<sp/>&gt;<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>memset(&amp;buf1,0,</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(buf1));</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>memcpy(&amp;<ref refid="rf24gwd_8h_1a9ab81a7ae17f3497b23bbccb020c3308" kindref="member">payload</ref>,<sp/>&amp;<ref refid="rf24gwd_8h_1aed24fc049dc5a6c8b3fd89e20c79be34" kindref="member">udpdata</ref>.<ref refid="structudpdata__t_1a1b63064045b272e47bf86c111e502394" kindref="member">payload</ref>,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="rf24gwd_8h_1a9ab81a7ae17f3497b23bbccb020c3308" kindref="member">payload</ref>)<sp/>);</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf<sp/>(</highlight><highlight class="stringliteral">&quot;%s<sp/>UDP<sp/>Message<sp/>from:<sp/>%s<sp/>\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="common_8cpp_1a83eaed94816137f9fe9521a7946efff0" kindref="member">ts</ref>(<ref refid="rf24gwd_8h_1aa5a00c1b8970dc4fbaabfa7b8a4aa021" kindref="member">tsbuf</ref>),<sp/>inet_ntoa(udp_address_in.sin_addr));</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="common_8cpp_1a78264021b512e588dbd4f8dfc393881c" kindref="member">printPayload</ref>(<ref refid="common_8cpp_1a83eaed94816137f9fe9521a7946efff0" kindref="member">ts</ref>(<ref refid="rf24gwd_8h_1aa5a00c1b8970dc4fbaabfa7b8a4aa021" kindref="member">tsbuf</ref>),<sp/></highlight><highlight class="stringliteral">&quot;H&gt;G<sp/>&quot;</highlight><highlight class="normal">,<sp/>&amp;<ref refid="rf24gwd_8h_1a9ab81a7ae17f3497b23bbccb020c3308" kindref="member">payload</ref>);</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Programmende<sp/>\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>EXIT_SUCCESS;</highlight></codeline>
+<codeline lineno="97"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/stick/netz/projekte/RF24Hub/linux/simulator.c"/>
+  </compounddef>
+</doxygen>

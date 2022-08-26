@@ -1,0 +1,484 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classGatewayClass" kind="class" language="C++" prot="public">
+    <compoundname>GatewayClass</compoundname>
+    <includes refid="gatewayclass_8h" local="no">gatewayclass.h</includes>
+    <innerclass refid="structGatewayClass_1_1gateway__t" prot="private">GatewayClass::gateway_t</innerclass>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classGatewayClass_1a7a294edb5b56157401a980837cee2bd8" prot="private" static="no" mutable="no">
+        <type>gateway_t *</type>
+        <definition>gateway_t* GatewayClass::p_initial</definition>
+        <argsstring></argsstring>
+        <name>p_initial</name>
+        <qualifiedname>GatewayClass::p_initial</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" line="34" column="15" bodyfile="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGatewayClass_1a1ac512f6c07b872978cf961e7030e915" prot="private" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* GatewayClass::buf</definition>
+        <argsstring></argsstring>
+        <name>buf</name>
+        <qualifiedname>GatewayClass::buf</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" line="38" column="15" bodyfile="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGatewayClass_1ae485fbc555164466b35592938b0ef11d" prot="private" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* GatewayClass::tsbuf</definition>
+        <argsstring></argsstring>
+        <name>tsbuf</name>
+        <qualifiedname>GatewayClass::tsbuf</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" line="42" column="15" bodyfile="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGatewayClass_1aa4203a5a07831e5ac5433b0056874f00" prot="private" static="no" mutable="no">
+        <type>uint16_t</type>
+        <definition>uint16_t GatewayClass::verboseLevel</definition>
+        <argsstring></argsstring>
+        <name>verboseLevel</name>
+        <qualifiedname>GatewayClass::verboseLevel</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" line="46" column="16" bodyfile="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classGatewayClass_1ad172fdf736861f5e26fd96a9540e3353" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool GatewayClass::newEntry</definition>
+        <argsstring>(gateway_t *)</argsstring>
+        <name>newEntry</name>
+        <qualifiedname>GatewayClass::newEntry</qualifiedname>
+        <param>
+          <type>gateway_t *</type>
+          <defname>p_new</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" line="50" column="16" bodyfile="/stick/netz/projekte/RF24Hub/linux/gatewayclass.cpp" bodystart="21" bodyend="37"/>
+      </memberdef>
+      <memberdef kind="function" id="classGatewayClass_1ac47d385ce28ba54f9f6153c2d8c7ae8c" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool GatewayClass::delEntry</definition>
+        <argsstring>(gateway_t *p_del)</argsstring>
+        <name>delEntry</name>
+        <qualifiedname>GatewayClass::delEntry</qualifiedname>
+        <param>
+          <type>gateway_t *</type>
+          <declname>p_del</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" line="54" column="16" bodyfile="/stick/netz/projekte/RF24Hub/linux/gatewayclass.cpp" bodystart="39" bodyend="70"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classGatewayClass_1a2fdfc5f5e6b91d13c29f9d4b278c8377" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void *</type>
+        <definition>void * GatewayClass::getGateway</definition>
+        <argsstring>(void *p_rec, char *gw_hostname, uint16_t *p_gw_no)</argsstring>
+        <name>getGateway</name>
+        <qualifiedname>GatewayClass::getGateway</qualifiedname>
+        <param>
+          <type>void *</type>
+          <declname>p_rec</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>gw_hostname</declname>
+        </param>
+        <param>
+          <type>uint16_t *</type>
+          <declname>p_gw_no</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Gibt den Pointer auf einen Gateway zurück Mit einem NULL Pointer wird die erste IP und ein Pointer auf den nächsten Record zurückgegeben. Wenn ein NULL Pointer zurückgegeben wird, dann war es der letzte Record <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>p_rec</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Pointer auf die Gatewaystruktur </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>gw_hostname</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Pointer zur Aufnahme des Hostnames des Gateways (Wird von der Prozedur gefüllt) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>p_gw_no</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Pointer zur Aufnahme der Gatewaynummer (Wird von der Prozedur gefüllt) </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" line="69" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/gatewayclass.cpp" bodystart="121" bodyend="140"/>
+      </memberdef>
+      <memberdef kind="function" id="classGatewayClass_1aadf30dc0ff1c8a84347712dc70f31f01" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void GatewayClass::setVerbose</definition>
+        <argsstring>(uint16_t _verboseLevel)</argsstring>
+        <name>setVerbose</name>
+        <qualifiedname>GatewayClass::setVerbose</qualifiedname>
+        <param>
+          <type>uint16_t</type>
+          <declname>_verboseLevel</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Setzt den Verboselevel. Mögliche Level sind in den Makros VERBOSE* in <ref refid="config_8h" kindref="compound">config.h</ref> definiert. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>verboseLevel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der aktuelle Verboselevel </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" line="75" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/gatewayclass.cpp" bodystart="186" bodyend="188"/>
+      </memberdef>
+      <memberdef kind="function" id="classGatewayClass_1acbabdfc75f98783038e00e5359a168b3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool GatewayClass::hasEntry</definition>
+        <argsstring>(void)</argsstring>
+        <name>hasEntry</name>
+        <qualifiedname>GatewayClass::hasEntry</qualifiedname>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Gibt an ob mind. ein Datensatz vorhanden ist <simplesect kind="return"><para>&quot;true&quot; wenn mind. 1 Gateway im System vorhanden ist, sonst &quot;false&quot; </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" line="81" column="6"/>
+      </memberdef>
+      <memberdef kind="function" id="classGatewayClass_1a45ff71f99c461140613be7fbac5ed535" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void GatewayClass::cleanup</definition>
+        <argsstring>(void)</argsstring>
+        <name>cleanup</name>
+        <qualifiedname>GatewayClass::cleanup</qualifiedname>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Löscht den kompletten Inhalt und leert den Buffer </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" line="86" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/gatewayclass.cpp" bodystart="10" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="function" id="classGatewayClass_1ae0030f1970133ce2b1fe8f758fd2639e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void GatewayClass::gw_contact</definition>
+        <argsstring>(uint16_t gw_no)</argsstring>
+        <name>gw_contact</name>
+        <qualifiedname>GatewayClass::gw_contact</qualifiedname>
+        <param>
+          <type>uint16_t</type>
+          <declname>gw_no</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Setzt ein Update auf den Zeitstempel des letzten Kontaktes zu diesem Gateway <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>gw_no</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Gatewaynummer </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" line="92" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/gatewayclass.cpp" bodystart="109" bodyend="119"/>
+      </memberdef>
+      <memberdef kind="function" id="classGatewayClass_1a071bfc650e553ed979b138a020b5adc5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void GatewayClass::addGateway</definition>
+        <argsstring>(char *gw_hostname, uint16_t gw_no, bool isActive)</argsstring>
+        <name>addGateway</name>
+        <qualifiedname>GatewayClass::addGateway</qualifiedname>
+        <param>
+          <type>char *</type>
+          <declname>gw_hostname</declname>
+        </param>
+        <param>
+          <type>uint16_t</type>
+          <declname>gw_no</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>isActive</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Fügt einen neuen Gateway hinzu <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>gw_hostname</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Hostname mit Domaine des Gateways </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>gw_no</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Nummer des Gateways </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>isActive</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Statusflag ob dieser Gateway aktiv (=true) ist oder inaktiv (=false) </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" line="100" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/gatewayclass.cpp" bodystart="83" bodyend="92"/>
+      </memberdef>
+      <memberdef kind="function" id="classGatewayClass_1a98ff39cc2f3954ddc664375080389233" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void GatewayClass::delGateway</definition>
+        <argsstring>(uint16_t gw_no)</argsstring>
+        <name>delGateway</name>
+        <qualifiedname>GatewayClass::delGateway</qualifiedname>
+        <param>
+          <type>uint16_t</type>
+          <declname>gw_no</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Entfernt einen Gateway <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>gw_no</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Nummer des Gateways </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" line="106" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/gatewayclass.cpp" bodystart="72" bodyend="81"/>
+      </memberdef>
+      <memberdef kind="function" id="classGatewayClass_1af100d0a602c77a2d7b4be5fc59ac07de" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void GatewayClass::setGateway</definition>
+        <argsstring>(uint16_t gw_no, bool isActive)</argsstring>
+        <name>setGateway</name>
+        <qualifiedname>GatewayClass::setGateway</qualifiedname>
+        <param>
+          <type>uint16_t</type>
+          <declname>gw_no</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>isActive</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Setzt einen Gateway in den übergebenen Status <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>gw_no</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Nummer des Gateways </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>isActive</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Statusflag ob dieser Gateway aktiv (=true) ist oder inaktiv (=false) </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" line="113" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/gatewayclass.cpp" bodystart="94" bodyend="107"/>
+      </memberdef>
+      <memberdef kind="function" id="classGatewayClass_1abf334658a2bf4be83592dcfcba3b99e1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool GatewayClass::isGateway</definition>
+        <argsstring>(uint16_t gw_no)</argsstring>
+        <name>isGateway</name>
+        <qualifiedname>GatewayClass::isGateway</qualifiedname>
+        <param>
+          <type>uint16_t</type>
+          <declname>gw_no</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Prüft ob ein Gateway aktiv (= true) ist. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>gw_no</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Nummer des Gateways </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>&quot;true&quot; wenn der Gateway im System als aktiv gekennzeichnet ist, sonst &quot;false&quot; </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" line="120" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/gatewayclass.cpp" bodystart="142" bodyend="158"/>
+      </memberdef>
+      <memberdef kind="function" id="classGatewayClass_1a1f72467b42d2835f3f39c12b34b116a8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void GatewayClass::printBuffer</definition>
+        <argsstring>(int tn_socket, bool htmlformat)</argsstring>
+        <name>printBuffer</name>
+        <qualifiedname>GatewayClass::printBuffer</qualifiedname>
+        <param>
+          <type>int</type>
+          <declname>tn_socket</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>htmlformat</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Druckt alle records im Buffer in den out_socket out_socket ist dabei ein gültiger socket file descriptor entweder aus accept für einen socket oder mittels fileno(stdout) für den stdout Der zweite Parameter bestimmt das Format, true =&gt; HTML Format; false =&gt; Textformat <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>tn_socket</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Das aktuelle Socket zur Ausgabe </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>htmlformat</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>&quot;true&quot; liefert die Ausgabe im HTML Format, &quot;false&quot; im Textformat </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" line="132" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/gatewayclass.cpp" bodystart="160" bodyend="184"/>
+      </memberdef>
+      <memberdef kind="function" id="classGatewayClass_1ac5d9184f20247ca917c19f51b1b20a55" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>GatewayClass::GatewayClass</definition>
+        <argsstring>(void)</argsstring>
+        <name>GatewayClass</name>
+        <qualifiedname>GatewayClass::GatewayClass</qualifiedname>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Construktor des Buffers </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" line="137" column="1" bodyfile="/stick/netz/projekte/RF24Hub/linux/gatewayclass.cpp" bodystart="3" bodyend="8"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" line="21" column="1" bodyfile="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" bodystart="21" bodyend="139"/>
+    <listofallmembers>
+      <member refid="classGatewayClass_1a071bfc650e553ed979b138a020b5adc5" prot="public" virt="non-virtual"><scope>GatewayClass</scope><name>addGateway</name></member>
+      <member refid="classGatewayClass_1a1ac512f6c07b872978cf961e7030e915" prot="private" virt="non-virtual"><scope>GatewayClass</scope><name>buf</name></member>
+      <member refid="classGatewayClass_1a45ff71f99c461140613be7fbac5ed535" prot="public" virt="non-virtual"><scope>GatewayClass</scope><name>cleanup</name></member>
+      <member refid="classGatewayClass_1ac47d385ce28ba54f9f6153c2d8c7ae8c" prot="private" virt="non-virtual"><scope>GatewayClass</scope><name>delEntry</name></member>
+      <member refid="classGatewayClass_1a98ff39cc2f3954ddc664375080389233" prot="public" virt="non-virtual"><scope>GatewayClass</scope><name>delGateway</name></member>
+      <member refid="classGatewayClass_1ac5d9184f20247ca917c19f51b1b20a55" prot="public" virt="non-virtual"><scope>GatewayClass</scope><name>GatewayClass</name></member>
+      <member refid="classGatewayClass_1a2fdfc5f5e6b91d13c29f9d4b278c8377" prot="public" virt="non-virtual"><scope>GatewayClass</scope><name>getGateway</name></member>
+      <member refid="classGatewayClass_1ae0030f1970133ce2b1fe8f758fd2639e" prot="public" virt="non-virtual"><scope>GatewayClass</scope><name>gw_contact</name></member>
+      <member refid="classGatewayClass_1acbabdfc75f98783038e00e5359a168b3" prot="public" virt="non-virtual"><scope>GatewayClass</scope><name>hasEntry</name></member>
+      <member refid="classGatewayClass_1abf334658a2bf4be83592dcfcba3b99e1" prot="public" virt="non-virtual"><scope>GatewayClass</scope><name>isGateway</name></member>
+      <member refid="classGatewayClass_1ad172fdf736861f5e26fd96a9540e3353" prot="private" virt="non-virtual"><scope>GatewayClass</scope><name>newEntry</name></member>
+      <member refid="classGatewayClass_1a7a294edb5b56157401a980837cee2bd8" prot="private" virt="non-virtual"><scope>GatewayClass</scope><name>p_initial</name></member>
+      <member refid="classGatewayClass_1a1f72467b42d2835f3f39c12b34b116a8" prot="public" virt="non-virtual"><scope>GatewayClass</scope><name>printBuffer</name></member>
+      <member refid="classGatewayClass_1af100d0a602c77a2d7b4be5fc59ac07de" prot="public" virt="non-virtual"><scope>GatewayClass</scope><name>setGateway</name></member>
+      <member refid="classGatewayClass_1aadf30dc0ff1c8a84347712dc70f31f01" prot="public" virt="non-virtual"><scope>GatewayClass</scope><name>setVerbose</name></member>
+      <member refid="classGatewayClass_1ae485fbc555164466b35592938b0ef11d" prot="private" virt="non-virtual"><scope>GatewayClass</scope><name>tsbuf</name></member>
+      <member refid="classGatewayClass_1aa4203a5a07831e5ac5433b0056874f00" prot="private" virt="non-virtual"><scope>GatewayClass</scope><name>verboseLevel</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

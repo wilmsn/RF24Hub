@@ -1,0 +1,1072 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="dataformat_8h" kind="file" language="C++">
+    <compoundname>dataformat.h</compoundname>
+    <includes local="no">stdint.h</includes>
+    <includes local="no">stdlib.h</includes>
+    <includes local="no">stdbool.h</includes>
+    <includes local="no">stdio.h</includes>
+    <includes local="no">string.h</includes>
+    <includes refid="rf24__config_8h" local="yes">rf24_config.h</includes>
+    <includedby refid="common_8h" local="yes">common.h</includedby>
+    <includedby refid="dataformat_8cpp" local="yes">dataformat.cpp</includedby>
+    <includedby refid="dataformattest_8c" local="yes">dataformattest.c</includedby>
+    <includedby refid="order_8h" local="yes">order.h</includedby>
+    <includedby refid="orderbuffer_8h" local="yes">orderbuffer.h</includedby>
+    <includedby refid="rf24hubd_8h" local="yes">rf24hubd.h</includedby>
+    <includedby refid="simulator_8c" local="yes">simulator.c</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>dataformat.h</label>
+        <link refid="dataformat_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>rf24_config.h</label>
+        <link refid="rf24__config_8h"/>
+      </node>
+      <node id="4">
+        <label>stdbool.h</label>
+      </node>
+      <node id="2">
+        <label>stdint.h</label>
+      </node>
+      <node id="5">
+        <label>stdio.h</label>
+      </node>
+      <node id="3">
+        <label>stdlib.h</label>
+      </node>
+      <node id="6">
+        <label>string.h</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="4">
+        <label>cfg.cpp</label>
+        <link refid="cfg_8cpp"/>
+      </node>
+      <node id="3">
+        <label>cfg.h</label>
+        <link refid="cfg_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>common.cpp</label>
+        <link refid="common_8cpp"/>
+      </node>
+      <node id="2">
+        <label>common.h</label>
+        <link refid="common_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>database.cpp</label>
+        <link refid="database_8cpp"/>
+      </node>
+      <node id="10">
+        <label>database.h</label>
+        <link refid="database_8h"/>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="23">
+        <label>dataformat.cpp</label>
+        <link refid="dataformat_8cpp"/>
+      </node>
+      <node id="1">
+        <label>dataformat.h</label>
+        <link refid="dataformat_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="24">
+        <label>dataformattest.c</label>
+        <link refid="dataformattest_8c"/>
+      </node>
+      <node id="13">
+        <label>gatewayclass.cpp</label>
+        <link refid="gatewayclass_8cpp"/>
+      </node>
+      <node id="12">
+        <label>gatewayclass.h</label>
+        <link refid="gatewayclass_8h"/>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="15">
+        <label>nodeclass.cpp</label>
+        <link refid="nodeclass_8cpp"/>
+      </node>
+      <node id="14">
+        <label>nodeclass.h</label>
+        <link refid="nodeclass_8h"/>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="17">
+        <label>order.cpp</label>
+        <link refid="order_8cpp"/>
+      </node>
+      <node id="16">
+        <label>order.h</label>
+        <link refid="order_8h"/>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="19">
+        <label>orderbuffer.cpp</label>
+        <link refid="orderbuffer_8cpp"/>
+      </node>
+      <node id="18">
+        <label>orderbuffer.h</label>
+        <link refid="orderbuffer_8h"/>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>rf24gwd.cpp</label>
+        <link refid="rf24gwd_8cpp"/>
+      </node>
+      <node id="5">
+        <label>rf24gwd.h</label>
+        <link refid="rf24gwd_8h"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>rf24hubd.cpp</label>
+        <link refid="rf24hubd_8cpp"/>
+      </node>
+      <node id="7">
+        <label>rf24hubd.h</label>
+        <link refid="rf24hubd_8h"/>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="21">
+        <label>sensorclass.cpp</label>
+        <link refid="sensorclass_8cpp"/>
+      </node>
+      <node id="20">
+        <label>sensorclass.h</label>
+        <link refid="sensorclass_8h"/>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+      </node>
+      <node id="22">
+        <label>simulator.c</label>
+        <link refid="simulator_8c"/>
+      </node>
+    </invincdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="group__datafmt_1gaad934efedb3f55d7626d8da28246ec64" prot="public" static="no">
+        <name>ZF_FLOAT</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Rückgabewerte der Funktion getDataType(data) Hier: float </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="32" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__datafmt_1ga821199c6b4b78b02c5d54aab71d1d5d3" prot="public" static="no">
+        <name>ZF_INT</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Rückgabewerte der Funktion getDataType(data) Hier: Signed Integer 16 bit </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="36" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__datafmt_1ga26bb16a78b9acd9959eddb35ac08fec5" prot="public" static="no">
+        <name>ZF_UINT</name>
+        <initializer>2</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Rückgabewerte der Funktion getDataType(data) Hier: Unsigned Integer 16 bit </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="40" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__datafmt_1ga64dd970c125f6a2aff5b941a8bb812ed" prot="public" static="no">
+        <name>ZF_CHAR</name>
+        <initializer>3</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Rückgabewerte der Funktion getDataType(data) Hier: Char </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="44" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__datafmt_1ga69e9fff4a15910eeb1a71dd60f23e69f" prot="public" static="no">
+        <name>ZF_UNKNOWN</name>
+        <initializer>9</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Rückgabewerte der Funktion getDataType(data) Hier: Unbekannt </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="48" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__datafmt_1ga609cbe477a2c1fb108e0ff7d1e843cba" prot="public" static="no">
+        <name>ZF_SHIFT_CHANNEL</name>
+        <initializer>23</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Anzahl der Rechtsschiebungen um den Channel als normale Zahl darzustellen channel = (data &amp; ZF_CHANNEL) &gt;&gt; ZF_SHIFT_CHANNEL </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="52" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" bodystart="52" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__datafmt_1ga038229ffb138634b959d5162301733fe" prot="public" static="no">
+        <name>ZF_SHIFT_EXPO</name>
+        <initializer>17</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Anzahl der Rechtsschiebungen um den Exponenten (bei float) als normale Zahl darzustellen exponent = (data &amp; ZF_EXPO_WERT) &gt;&gt; ZF_SHIFT_EXPO </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="56" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" bodystart="56" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__datafmt_1ga6a43886b9442c8937b7e8a945ea746f6" prot="public" static="no">
+        <name>ZF_SHIFT_FORMAT</name>
+        <initializer>30</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Anzahl der Rechtsschiebungen um den Channel als normale Zahl darzustellen dataformat = (data &amp; ZF_FORMAT) &gt;&gt; ZF_FORMAT </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="60" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" bodystart="60" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__datafmt_1ga623273d4fd3132434a3a48ec0d30c754" prot="public" static="no">
+        <name>ZF_FORMAT_FLOAT</name>
+        <initializer>0b00000000000000000000000000000000</initializer>
+        <briefdescription>
+<para>Datenformat float zur Bildung von data im eigenen Format. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="63" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" bodystart="63" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__datafmt_1ga6b708445b514622694ba428e7fd8fcbc" prot="public" static="no">
+        <name>ZF_FORMAT_INT</name>
+        <initializer>0b01000000000000000000000000000000</initializer>
+        <briefdescription>
+<para>Datenformat integer zur Bildung von data im eigenen Format. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="66" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" bodystart="66" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__datafmt_1ga8cd44f5c3321c7bf29985a55835343c9" prot="public" static="no">
+        <name>ZF_FORMAT_UINT</name>
+        <initializer>0b10000000000000000000000000000000</initializer>
+        <briefdescription>
+<para>Datenformat unsigned integer zur Bildung von data im eigenen Format. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="69" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" bodystart="69" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__datafmt_1ga7512197e1d94493ecab02587e70fb799" prot="public" static="no">
+        <name>ZF_FORMAT_CHAR</name>
+        <initializer>0b11000000000000000000000000000000</initializer>
+        <briefdescription>
+<para>Datenformat char zur Bildung von data im eigenen Format. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="72" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__datafmt_1ga01cfcdafb2f084038e46f33cd67cbb6d" prot="public" static="no">
+        <name>ZF_FORMAT</name>
+        <initializer>0b11000000000000000000000000000000</initializer>
+        <briefdescription>
+<para>Digits in denen beim eigenen Zahlenformat der Datentyp gespeichert wird. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="75" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" bodystart="75" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__datafmt_1gafc1d779c3223302bc38f03f4134ecab2" prot="public" static="no">
+        <name>ZF_CHANNEL</name>
+        <initializer>0b00111111100000000000000000000000</initializer>
+        <briefdescription>
+<para>Digits in denen beim eigenen Zahlenformat der Channel gespeichert wird. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="78" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" bodystart="78" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__datafmt_1gae475064281ce57140b56f6964a0d91bb" prot="public" static="no">
+        <name>ZF_ZAHL_NEGATIV</name>
+        <initializer>0b00000000010000000000000000000000</initializer>
+        <briefdescription>
+<para>Digit in dem beim eigenen Zahlenformat das Vorzeichen der Zahl (1 = negativ) gespeichert wird. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="81" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" bodystart="81" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__datafmt_1ga29a9b055debb9d9f832bd4f2b8d59eae" prot="public" static="no">
+        <name>ZF_EXPO_NEGATIV</name>
+        <initializer>0b00000000001000000000000000000000</initializer>
+        <briefdescription>
+<para>Digit in dem beim eigenen Zahlenformat das Vorzeichen des Exponenten (1 = negativ) gespeichert wird. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="84" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" bodystart="84" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__datafmt_1gad954db99f0df7447832a14beb665dc7b" prot="public" static="no">
+        <name>ZF_EXPO_WERT</name>
+        <initializer>0b00000000000111100000000000000000</initializer>
+        <briefdescription>
+<para>Digits in denen beim eigenen Zahlenformat der Betrag des Exponenten gespeichert wird. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="87" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" bodystart="87" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__datafmt_1ga4f710eda1e9718288fca1ab96bdbc645" prot="public" static="no">
+        <name>ZF_ZAHL_WERT_FLOAT</name>
+        <initializer>0b00000000000000001111111111111111</initializer>
+        <briefdescription>
+<para>Digits in denen beim eigenen Zahlenformat für den Datentyp Float der Betrag der Mantisse gespeichert wird. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="90" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" bodystart="90" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__datafmt_1ga946f2bd156088c36f49dca32bccf3074" prot="public" static="no">
+        <name>ZF_ZAHL_WERT_INT</name>
+        <initializer>0b00000000000000000111111111111111</initializer>
+        <briefdescription>
+<para>Digits in denen beim eigenen Zahlenformat für den Datentyp Integer der Betrag der Zahl gespeichert wird. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="93" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" bodystart="93" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__datafmt_1ga57d2710d3bb4c20e209ee83e39ab2a83" prot="public" static="no">
+        <name>ZF_ZAHL_WERT_UINT</name>
+        <initializer>0b00000000000000001111111111111111</initializer>
+        <briefdescription>
+<para>Digits in denen beim eigenen Zahlenformat für den Datentyp Unsigned Integer der Betrag der Zahl gespeichert wird. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="96" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" bodystart="96" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="group__datafmt_1ga553dc49f84a0874f09d55f9e84fb31d2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void printBits</definition>
+        <argsstring>(size_t const size, void const *const ptr)</argsstring>
+        <name>printBits</name>
+        <param>
+          <type>size_t const</type>
+          <declname>size</declname>
+        </param>
+        <param>
+          <type>void const *const</type>
+          <declname>ptr</declname>
+        </param>
+        <briefdescription>
+<para>Beschreibung des verwendeten Zahlenformates zur Übertragung (TransportWert) Es handelt sich um ein 32 Bit unsigned Integer Format. Der Sensorwert wird mit einer Genauigkeit von 17 Bit (131072 max, genutzt 100000 = 5 Stellen = 0,01 Promille) gespeichert. Zahlenformat X * 10^Y Format des Sensorwertes Bitreihenfolge: Bit 1 (MSB) ... Bit 32 (LSB) </para>
+        </briefdescription>
+        <detaileddescription>
+<para>1) FLOAT Bit 1..2: Verwendetes Zahlenformat (0b00) Bit 3..9: Sensornummer (1..127) Bit 10: Vorzeichen (0=positiv; 1=negativ) Bit 11: Vorzeichen Exponent (0=10^X; 1=10^-X) Bit 12..15 Exponent (0..15) Bit 16..32 Mantisse (0..100000)</para>
+<para>2) INTEGER Bit 1..2: Verwendetes Zahlenformat (0b01) Bit 3..9: Sensornummer (1..127) Bit 10: Vorzeichen (0=positiv; 1=negativ) Bit 11..17: ungenutzt Bit 18..32 15 bit unsigned Integer (0..32767)</para>
+<para>3) UNSIGNED INTEGER Bit 1..2: Verwendetes Zahlenformat (0b10) Bit 3..9: Sensornummer (1..127) Bit 11..16: ungenutzt Bit 17..32 16 bit unsigned Integer (0..65536)</para>
+<para>4) CHARACTER (2 Characters) Bit 1..2: Verwendetes Zahlenformat (0b11) Bit 3..9: Sensornummer (1..127) Bit 11..16: ungenutzt Bit 17..32 2*8 bit Char Diese Funktion ist nur für das Debugging des Zahlenformates bestimmt !!!!! </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="139" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" bodystart="10" bodyend="22" declfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" declline="139" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uint32_t</type>
+        <definition>uint32_t calcTransportValue</definition>
+        <argsstring>(uint8_t channel, float value)</argsstring>
+        <name>calcTransportValue</name>
+        <param>
+          <type>uint8_t</type>
+          <declname>channel</declname>
+        </param>
+        <param>
+          <type>float</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Verpackt die Sensornummer und den Messwert zu einem TransportWert des Datentyps uint32_t. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Channel, gültige Werte zwischen 1..127 </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>value</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>gültige Werte: -1*10^19 .. 1*10^19 </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Der Transportwert </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="148" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" bodystart="26" bodyend="59" declfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" declline="148" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="group__datafmt_1gadb9719633356f80394982b89ee66f213" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uint32_t</type>
+        <definition>uint32_t calcTransportValue</definition>
+        <argsstring>(uint8_t channel, uint16_t value)</argsstring>
+        <name>calcTransportValue</name>
+        <param>
+          <type>uint8_t</type>
+          <declname>channel</declname>
+        </param>
+        <param>
+          <type>uint16_t</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Verpackt die Sensornummer und den Messwert zu einem TransportWert des Datentyps uint32_t. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Channel, gültige Werte zwischen 1..127 </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>value</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Wert, gültige Werte: 0 .. 65535 </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Der Transportwert </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="157" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" bodystart="61" bodyend="68" declfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" declline="157" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="group__datafmt_1gae53a08e10db33776546054e9a2111ac0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uint32_t</type>
+        <definition>uint32_t calcTransportValue</definition>
+        <argsstring>(uint8_t channel, int16_t value)</argsstring>
+        <name>calcTransportValue</name>
+        <param>
+          <type>uint8_t</type>
+          <declname>channel</declname>
+        </param>
+        <param>
+          <type>int16_t</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Verpackt die Sensornummer und den Messwert zu einem TransportWert des Datentyps uint32_t. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>gültige Werte zwischen 1..127 </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>value</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>gültige Werte: -32,768 to 32,767 </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Der Transportwert </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="166" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" bodystart="70" bodyend="77" declfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" declline="166" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="group__datafmt_1ga2f720afb6babf71d52d0b3954f67f68f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uint32_t</type>
+        <definition>uint32_t calcTransportValue</definition>
+        <argsstring>(uint8_t channel, char *value1, char *value2)</argsstring>
+        <name>calcTransportValue</name>
+        <param>
+          <type>uint8_t</type>
+          <declname>channel</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>value1</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>value2</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Verpackt die Sensornummer und 2 Zeichen zu einem TransportWert des Datentyps uint32_t. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>gültige Werte zwischen 1..127 </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>value1</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein beliebiger Character (8bit) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>value2</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein beliebiger Character (8bit) </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Der Transportwert </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="176" column="10" declfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" declline="176" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="group__datafmt_1ga02342d8c3916c9953de9d5edce69869e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>char *</type>
+        <definition>char * unpackTransportValue</definition>
+        <argsstring>(uint32_t data, char *buf)</argsstring>
+        <name>unpackTransportValue</name>
+        <param>
+          <type>uint32_t</type>
+          <declname>data</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>buf</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Entpackt die übertragenen Daten <simplesect kind="note"><para>Der übergebene <bold>buf</bold> muss gross genug sein um den Rückgabewert aufzunehmen </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="183" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" bodystart="209" bodyend="259" declfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" declline="183" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group__datafmt_1ga051c0bbd575e4728ad37be7be7d7db31" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uint32_t</type>
+        <definition>uint32_t calcTransportValue</definition>
+        <argsstring>(uint8_t channel, char *value, uint8_t dataType)</argsstring>
+        <name>calcTransportValue</name>
+        <param>
+          <type>uint8_t</type>
+          <declname>channel</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type>uint8_t</type>
+          <declname>dataType</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Diese Funktion packt die Daten entsprechend des übergebenen Datatypes ein. <simplesect kind="note"><para>Diese Funktion läuft wegen den verwendetetn C Funktionen nur auf Linux Systemen </para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Channel </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>value</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Wert als String </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>dataType</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Datentyp </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Den gepackten Transportwert </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="195" column="10" declfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" declline="195" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="group__datafmt_1ga79ee08ecee3c20d37672ceb9d959c200" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uint32_t</type>
+        <definition>uint32_t calcTransportValue</definition>
+        <argsstring>(uint8_t channel, char *value)</argsstring>
+        <name>calcTransportValue</name>
+        <param>
+          <type>uint8_t</type>
+          <declname>channel</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Diese Funktion packt die Daten ein. Ist der Value eine Fließkommazahl (enthält einen &quot;.&quot; als Dezimaltrenner) wird der Datatype FLOAT verwendet, sonst int16. <simplesect kind="note"><para>Diese Funktion läuft wegen den verwendetetn C Funktionen nur auf Linux Systemen </para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Channel </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>value</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Wert als String </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Den gepackten Transportwert </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="206" column="10" declfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" declline="206" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="group__datafmt_1ga2ecd9323066a3bcae374c8471d69c074" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uint8_t</type>
+        <definition>uint8_t getDataType</definition>
+        <argsstring>(uint32_t data)</argsstring>
+        <name>getDataType</name>
+        <param>
+          <type>uint32_t</type>
+          <declname>data</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Extrahiert den Datentyp aus den Transportdaten Dabei gilt folgende Zuordnung: 0 =&gt; float Value 1 =&gt; integer Value 2 =&gt; unsigned int Value 3 =&gt; Character <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Transportwert </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Der verwendete Datentyp </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="220" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" bodystart="197" bodyend="201" declfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" declline="220" declcolumn="9"/>
+      </memberdef>
+      <memberdef kind="function" id="group__datafmt_1ga1bc47883133ecf3ccab0bc5e94946f0b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uint8_t</type>
+        <definition>uint8_t getChannel</definition>
+        <argsstring>(uint32_t data)</argsstring>
+        <name>getChannel</name>
+        <param>
+          <type>uint32_t</type>
+          <declname>data</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Extrahiert die Channel aus dem Transportwert <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Transportwert </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Der verwendete Channel </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="227" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" bodystart="203" bodyend="207" declfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" declline="227" declcolumn="9"/>
+      </memberdef>
+      <memberdef kind="function" id="group__datafmt_1ga87fd32ad4e05f024d6feaa6302a17595" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool getValue</definition>
+        <argsstring>(uint32_t data, float *zahl)</argsstring>
+        <name>getValue</name>
+        <param>
+          <type>uint32_t</type>
+          <declname>data</declname>
+        </param>
+        <param>
+          <type>float *</type>
+          <declname>zahl</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Extrahiert den Sensorwert aus dem Transportwert Hier: Float <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Transportwert </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>zahl</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Zeiger auf eine FLOAT Variable, hier wird das Ergebnis hinterlegt. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>&quot;true&quot; wenn im Transportwert ein float eingepackt war, wurde eine Konvertierung durchgeführt wird ein &quot;false&quot; zurückgegeben. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="236" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" bodystart="146" bodyend="161" declfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" declline="236" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group__datafmt_1gab7502bc515a7f09a16515f3817229461" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool getValue</definition>
+        <argsstring>(uint32_t data, int16_t *zahl)</argsstring>
+        <name>getValue</name>
+        <param>
+          <type>uint32_t</type>
+          <declname>data</declname>
+        </param>
+        <param>
+          <type>int16_t *</type>
+          <declname>zahl</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Extrahiert den Sensorwert aus dem Transportwert Hier: Integer (15 Bit + Vorzeichen) <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Transportwert </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>zahl</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Zeiger auf eine int16_t Variable, hier wird das Ergebnis hinterlegt. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>&quot;true&quot; wenn im Transportwert ein int16_t eingepackt war, wurde eine Konvertierung durchgeführt wird ein &quot;false&quot; zurückgegeben. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="245" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" bodystart="163" bodyend="178" declfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" declline="245" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group__datafmt_1gae7d45dd22998aa8968195df1e05401d1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool getValue</definition>
+        <argsstring>(uint32_t data, uint16_t *zahl)</argsstring>
+        <name>getValue</name>
+        <param>
+          <type>uint32_t</type>
+          <declname>data</declname>
+        </param>
+        <param>
+          <type>uint16_t *</type>
+          <declname>zahl</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Extrahiert den Sensorwert aus dem Transportwert Hier: unsigned int (16 Bit) <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Transportwert </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>zahl</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Zeiger auf eine uint16_t Variable, hier wird das Ergebnis hinterlegt. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>&quot;true&quot; wenn im Transportwert ein uint16_t eingepackt war, wurde eine Konvertierung durchgeführt wird ein &quot;false&quot; zurückgegeben. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h" line="254" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" bodystart="180" bodyend="195" declfile="/stick/netz/projekte/RF24Hub/linux/dataformat.h" declline="254" declcolumn="6"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>As we use our own dataformat it is defined here. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>Stellt die Funktionen bereit um das Zahlenformat für die Übertragung aufzubereiten und nach der Übertragung wieder zu dekodieren</para>
+<para>Genauigkeit: 1 von 100.000 = 0,01 Promille </para>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>_DATAFORMAT_H_<sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Include<sp/>guard<sp/>*/</highlight><highlight class="preprocessor"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_DATAFORMAT_H_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdlib.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdbool.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdio.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="rf24__config_8h" kindref="compound">rf24_config.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="comment">//#include<sp/>&quot;config.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32" refid="group__datafmt_1gaad934efedb3f55d7626d8da28246ec64" refkind="member"><highlight class="preprocessor">#define<sp/>ZF_FLOAT<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36" refid="group__datafmt_1ga821199c6b4b78b02c5d54aab71d1d5d3" refkind="member"><highlight class="preprocessor">#define<sp/>ZF_INT<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40" refid="group__datafmt_1ga26bb16a78b9acd9959eddb35ac08fec5" refkind="member"><highlight class="preprocessor">#define<sp/>ZF_UINT<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44" refid="group__datafmt_1ga64dd970c125f6a2aff5b941a8bb812ed" refkind="member"><highlight class="preprocessor">#define<sp/>ZF_CHAR<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>3</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48" refid="group__datafmt_1ga69e9fff4a15910eeb1a71dd60f23e69f" refkind="member"><highlight class="preprocessor">#define<sp/>ZF_UNKNOWN<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>9</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52" refid="group__datafmt_1ga609cbe477a2c1fb108e0ff7d1e843cba" refkind="member"><highlight class="preprocessor">#define<sp/>ZF_SHIFT_CHANNEL<sp/><sp/><sp/><sp/>23</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56" refid="group__datafmt_1ga038229ffb138634b959d5162301733fe" refkind="member"><highlight class="preprocessor">#define<sp/>ZF_SHIFT_EXPO<sp/><sp/><sp/><sp/><sp/><sp/><sp/>17</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60" refid="group__datafmt_1ga6a43886b9442c8937b7e8a945ea746f6" refkind="member"><highlight class="preprocessor">#define<sp/>ZF_SHIFT_FORMAT<sp/><sp/><sp/><sp/><sp/>30</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="63" refid="group__datafmt_1ga623273d4fd3132434a3a48ec0d30c754" refkind="member"><highlight class="preprocessor">#define<sp/>ZF_FORMAT_FLOAT<sp/><sp/><sp/><sp/><sp/>0b00000000000000000000000000000000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight></codeline>
+<codeline lineno="66" refid="group__datafmt_1ga6b708445b514622694ba428e7fd8fcbc" refkind="member"><highlight class="preprocessor">#define<sp/>ZF_FORMAT_INT<sp/><sp/><sp/><sp/><sp/><sp/><sp/>0b01000000000000000000000000000000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69" refid="group__datafmt_1ga8cd44f5c3321c7bf29985a55835343c9" refkind="member"><highlight class="preprocessor">#define<sp/>ZF_FORMAT_UINT<sp/><sp/><sp/><sp/><sp/><sp/>0b10000000000000000000000000000000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight></codeline>
+<codeline lineno="72" refid="group__datafmt_1ga7512197e1d94493ecab02587e70fb799" refkind="member"><highlight class="preprocessor">#define<sp/>ZF_FORMAT_CHAR<sp/><sp/><sp/><sp/><sp/><sp/>0b11000000000000000000000000000000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="75" refid="group__datafmt_1ga01cfcdafb2f084038e46f33cd67cbb6d" refkind="member"><highlight class="preprocessor">#define<sp/>ZF_FORMAT<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0b11000000000000000000000000000000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight></codeline>
+<codeline lineno="78" refid="group__datafmt_1gafc1d779c3223302bc38f03f4134ecab2" refkind="member"><highlight class="preprocessor">#define<sp/>ZF_CHANNEL<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0b00111111100000000000000000000000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"></highlight></codeline>
+<codeline lineno="81" refid="group__datafmt_1gae475064281ce57140b56f6964a0d91bb" refkind="member"><highlight class="preprocessor">#define<sp/>ZF_ZAHL_NEGATIV<sp/><sp/><sp/><sp/><sp/>0b00000000010000000000000000000000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight></codeline>
+<codeline lineno="84" refid="group__datafmt_1ga29a9b055debb9d9f832bd4f2b8d59eae" refkind="member"><highlight class="preprocessor">#define<sp/>ZF_EXPO_NEGATIV<sp/><sp/><sp/><sp/><sp/>0b00000000001000000000000000000000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"></highlight></codeline>
+<codeline lineno="87" refid="group__datafmt_1gad954db99f0df7447832a14beb665dc7b" refkind="member"><highlight class="preprocessor">#define<sp/>ZF_EXPO_WERT<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0b00000000000111100000000000000000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight></codeline>
+<codeline lineno="90" refid="group__datafmt_1ga4f710eda1e9718288fca1ab96bdbc645" refkind="member"><highlight class="preprocessor">#define<sp/>ZF_ZAHL_WERT_FLOAT<sp/><sp/>0b00000000000000001111111111111111</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight></codeline>
+<codeline lineno="93" refid="group__datafmt_1ga946f2bd156088c36f49dca32bccf3074" refkind="member"><highlight class="preprocessor">#define<sp/>ZF_ZAHL_WERT_INT<sp/><sp/><sp/><sp/>0b00000000000000000111111111111111</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"></highlight></codeline>
+<codeline lineno="96" refid="group__datafmt_1ga57d2710d3bb4c20e209ee83e39ab2a83" refkind="member"><highlight class="preprocessor">#define<sp/>ZF_ZAHL_WERT_UINT<sp/><sp/><sp/>0b00000000000000001111111111111111</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"></highlight></codeline>
+<codeline lineno="139"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="group__datafmt_1ga553dc49f84a0874f09d55f9e84fb31d2" kindref="member">printBits</ref>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>size,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>*<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>ptr);</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"></highlight></codeline>
+<codeline lineno="148"><highlight class="normal">uint32_t<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(uint8_t<sp/>channel,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>value);</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"></highlight></codeline>
+<codeline lineno="157"><highlight class="normal">uint32_t<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(uint8_t<sp/>channel,<sp/>uint16_t<sp/>value);<sp/><sp/></highlight></codeline>
+<codeline lineno="158"><highlight class="normal"></highlight></codeline>
+<codeline lineno="166"><highlight class="normal">uint32_t<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(uint8_t<sp/>channel,<sp/>int16_t<sp/>value);</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"></highlight></codeline>
+<codeline lineno="176" refid="group__datafmt_1ga2f720afb6babf71d52d0b3954f67f68f" refkind="member"><highlight class="normal">uint32_t<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(uint8_t<sp/>channel,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>value1,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>value2);</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"></highlight></codeline>
+<codeline lineno="183"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="group__datafmt_1ga02342d8c3916c9953de9d5edce69869e" kindref="member">unpackTransportValue</ref>(uint32_t<sp/>data,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>);</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"></highlight></codeline>
+<codeline lineno="185"><highlight class="normal"></highlight><highlight class="comment">//#if<sp/>defined(__linux__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="186"><highlight class="normal"></highlight></codeline>
+<codeline lineno="195" refid="group__datafmt_1ga051c0bbd575e4728ad37be7be7d7db31" refkind="member"><highlight class="normal">uint32_t<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(uint8_t<sp/>channel,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>value,<sp/>uint8_t<sp/>dataType);</highlight></codeline>
+<codeline lineno="196"><highlight class="normal"></highlight></codeline>
+<codeline lineno="206" refid="group__datafmt_1ga79ee08ecee3c20d37672ceb9d959c200" refkind="member"><highlight class="normal">uint32_t<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(uint8_t<sp/>channel,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>value);</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"></highlight></codeline>
+<codeline lineno="208"><highlight class="normal"></highlight><highlight class="comment">//#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="209"><highlight class="normal"></highlight></codeline>
+<codeline lineno="220"><highlight class="normal">uint8_t<sp/><ref refid="group__datafmt_1ga2ecd9323066a3bcae374c8471d69c074" kindref="member">getDataType</ref>(uint32_t<sp/>data);</highlight></codeline>
+<codeline lineno="221"><highlight class="normal"></highlight></codeline>
+<codeline lineno="227"><highlight class="normal">uint8_t<sp/><ref refid="group__datafmt_1ga1bc47883133ecf3ccab0bc5e94946f0b" kindref="member">getChannel</ref>(uint32_t<sp/>data);</highlight></codeline>
+<codeline lineno="228"><highlight class="normal"></highlight></codeline>
+<codeline lineno="236"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="group__datafmt_1ga87fd32ad4e05f024d6feaa6302a17595" kindref="member">getValue</ref>(uint32_t<sp/>data,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal">*<sp/>zahl);</highlight></codeline>
+<codeline lineno="237"><highlight class="normal"></highlight></codeline>
+<codeline lineno="245"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="group__datafmt_1ga87fd32ad4e05f024d6feaa6302a17595" kindref="member">getValue</ref>(uint32_t<sp/>data,<sp/>int16_t*<sp/>zahl);</highlight></codeline>
+<codeline lineno="246"><highlight class="normal"></highlight></codeline>
+<codeline lineno="254"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="group__datafmt_1ga87fd32ad4e05f024d6feaa6302a17595" kindref="member">getValue</ref>(uint32_t<sp/>data,<sp/>uint16_t*<sp/>zahl);</highlight></codeline>
+<codeline lineno="255"><highlight class="normal"></highlight></codeline>
+<codeline lineno="256"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.h"/>
+  </compounddef>
+</doxygen>

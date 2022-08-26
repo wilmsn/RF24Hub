@@ -1,0 +1,79 @@
+\hypertarget{gatewayclass_8h_source}{}\doxysection{gatewayclass.\+h}
+\mbox{\hyperlink{gatewayclass_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#ifndef \_GATEWAY\_H\_   }}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#define \_GATEWAY\_H\_}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include <unistd.h>}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include <time.h>}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{rf24__config_8h}{rf24\_config.h}}"{}}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{rf24hub__config_8h}{rf24hub\_config.h}}"{}}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{common_8h}{common.h}}"{}}}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19 \textcolor{keyword}{using namespace }std;}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{21 \textcolor{keyword}{class }\mbox{\hyperlink{classGatewayClass}{GatewayClass}} \{}
+\DoxyCodeLine{22 }
+\DoxyCodeLine{23     }
+\DoxyCodeLine{24 \textcolor{keyword}{private}:}
+\DoxyCodeLine{25 }
+\DoxyCodeLine{26 \textcolor{keyword}{struct }gateway\_t \{}
+\DoxyCodeLine{27         \textcolor{keywordtype}{char}*              gw\_hostname;}
+\DoxyCodeLine{28         uint16\_t           gw\_no;}
+\DoxyCodeLine{29         time\_t             last\_contact;}
+\DoxyCodeLine{30         \textcolor{keywordtype}{bool}               isActive;}
+\DoxyCodeLine{31         gateway\_t*         p\_next;}
+\DoxyCodeLine{32     \};}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34 gateway\_t*     p\_initial;}
+\DoxyCodeLine{35 \textcolor{comment}{/**************************************************************}}
+\DoxyCodeLine{36 \textcolor{comment}{ * char buffer zur generischen Verwendung}}
+\DoxyCodeLine{37 \textcolor{comment}{ *************************************************************/}}
+\DoxyCodeLine{38 \textcolor{keywordtype}{char}*          buf;}
+\DoxyCodeLine{39 \textcolor{comment}{/**************************************************************}}
+\DoxyCodeLine{40 \textcolor{comment}{ * char buffer zur Ausgabe des timestrings ==> ts(tsbuf)}}
+\DoxyCodeLine{41 \textcolor{comment}{ *************************************************************/}}
+\DoxyCodeLine{42 \textcolor{keywordtype}{char}*          tsbuf;}
+\DoxyCodeLine{43 \textcolor{comment}{/**************************************************************}}
+\DoxyCodeLine{44 \textcolor{comment}{ * Bufferinterner Speicher für den verboseLevel}}
+\DoxyCodeLine{45 \textcolor{comment}{ *************************************************************/}}
+\DoxyCodeLine{46 uint16\_t       verboseLevel;}
+\DoxyCodeLine{47 \textcolor{comment}{/**************************************************************}}
+\DoxyCodeLine{48 \textcolor{comment}{ * fügt einen neuen record zum Buffer hinzu}}
+\DoxyCodeLine{49 \textcolor{comment}{ *************************************************************/}}
+\DoxyCodeLine{50 \textcolor{keywordtype}{bool}           newEntry(gateway\_t*);}
+\DoxyCodeLine{51 \textcolor{comment}{/**************************************************************}}
+\DoxyCodeLine{52 \textcolor{comment}{ * löscht den übergebenen record aus dem Buffer}}
+\DoxyCodeLine{53 \textcolor{comment}{ *************************************************************/}}
+\DoxyCodeLine{54 \textcolor{keywordtype}{bool}           delEntry(gateway\_t* p\_del);}
+\DoxyCodeLine{55 }
+\DoxyCodeLine{56 \textcolor{keyword}{public}:}
+\DoxyCodeLine{57 }
+\DoxyCodeLine{69 \textcolor{keywordtype}{void}* \mbox{\hyperlink{classGatewayClass_a2fdfc5f5e6b91d13c29f9d4b278c8377}{getGateway}}( \textcolor{keywordtype}{void}* p\_rec, \textcolor{keywordtype}{char}* gw\_hostname, uint16\_t *p\_gw\_no );}
+\DoxyCodeLine{70 }
+\DoxyCodeLine{75 \textcolor{keywordtype}{void} \mbox{\hyperlink{classGatewayClass_aadf30dc0ff1c8a84347712dc70f31f01}{setVerbose}}(uint16\_t \_verboseLevel);}
+\DoxyCodeLine{76 }
+\DoxyCodeLine{81 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classGatewayClass_acbabdfc75f98783038e00e5359a168b3}{hasEntry}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{82 }
+\DoxyCodeLine{86 \textcolor{keywordtype}{void} \mbox{\hyperlink{classGatewayClass_a45ff71f99c461140613be7fbac5ed535}{cleanup}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{87 }
+\DoxyCodeLine{92 \textcolor{keywordtype}{void} \mbox{\hyperlink{classGatewayClass_ae0030f1970133ce2b1fe8f758fd2639e}{gw\_contact}}(uint16\_t gw\_no);}
+\DoxyCodeLine{93 }
+\DoxyCodeLine{100 \textcolor{keywordtype}{void} \mbox{\hyperlink{classGatewayClass_a071bfc650e553ed979b138a020b5adc5}{addGateway}}(\textcolor{keywordtype}{char}* gw\_hostname, uint16\_t gw\_no, \textcolor{keywordtype}{bool} isActive );}
+\DoxyCodeLine{101 }
+\DoxyCodeLine{106 \textcolor{keywordtype}{void} \mbox{\hyperlink{classGatewayClass_a98ff39cc2f3954ddc664375080389233}{delGateway}}(uint16\_t gw\_no);}
+\DoxyCodeLine{107 }
+\DoxyCodeLine{113 \textcolor{keywordtype}{void} \mbox{\hyperlink{classGatewayClass_af100d0a602c77a2d7b4be5fc59ac07de}{setGateway}}(uint16\_t gw\_no, \textcolor{keywordtype}{bool} isActive );}
+\DoxyCodeLine{114 }
+\DoxyCodeLine{120 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classGatewayClass_abf334658a2bf4be83592dcfcba3b99e1}{isGateway}}(uint16\_t gw\_no);}
+\DoxyCodeLine{121 }
+\DoxyCodeLine{132 \textcolor{keywordtype}{void} \mbox{\hyperlink{classGatewayClass_a1f72467b42d2835f3f39c12b34b116a8}{printBuffer}}(\textcolor{keywordtype}{int} tn\_socket, \textcolor{keywordtype}{bool} htmlformat);}
+\DoxyCodeLine{133 }
+\DoxyCodeLine{137 \mbox{\hyperlink{classGatewayClass_ac5d9184f20247ca917c19f51b1b20a55}{GatewayClass}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{138 }
+\DoxyCodeLine{139 \};}
+\DoxyCodeLine{140 }
+\DoxyCodeLine{141 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// \_GATEWAY\_H\_}}
+
+\end{DoxyCode}

@@ -1,0 +1,56 @@
+\hypertarget{config_8h_source}{}\doxysection{config.\+h}
+\mbox{\hyperlink{config_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#ifndef \_CONFIG\_H\_   }\textcolor{comment}{/* Include guard */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#define \_CONFIG\_H\_}}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#define DEFAULT\_CONFIG\_FILE "{}/etc/rf24hub/rf24hub.cfg"{}}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#define PARAM\_MAXLEN 80}}
+\DoxyCodeLine{16 \textcolor{comment}{// The Key for the Messagebuffer (Hub)}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#define MSGKEYHUB 3452}}
+\DoxyCodeLine{18 \textcolor{comment}{// The Key for the Messagebuffer (GW)}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#define MSGKEYGW 3453}}
+\DoxyCodeLine{20 \textcolor{comment}{// Interval to send/repeat a request in millisec.}}
+\DoxyCodeLine{21 \textcolor{preprocessor}{\#define SENDINTERVAL 100}}
+\DoxyCodeLine{22 \textcolor{comment}{// Number of stopmessages to send}}
+\DoxyCodeLine{23 \textcolor{preprocessor}{\#define SENDSTOPCOUNT 3}}
+\DoxyCodeLine{24 \textcolor{comment}{// Interval for deleting unanswered requests in millisec.}}
+\DoxyCodeLine{25 \textcolor{preprocessor}{\#define DELETEINTERVAL 500}}
+\DoxyCodeLine{26 \textcolor{comment}{// Intervall to sync sensordata\_d to sensordata }}
+\DoxyCodeLine{27 \textcolor{comment}{// Time in Seconds: 86400 = 24 Hours}}
+\DoxyCodeLine{28 \textcolor{preprocessor}{\#define DBSYNCINTERVAL   86400}}
+\DoxyCodeLine{29 \textcolor{comment}{// array of char sizes}}
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#define DEBUGSTRINGSIZE 600}}
+\DoxyCodeLine{31 \textcolor{preprocessor}{\#define FHEMDEVLENGTH 50}}
+\DoxyCodeLine{32 \textcolor{preprocessor}{\#define TELNETBUFFERSIZE 200}}
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#define TSBUFFERSIZE 30}}
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#define SQLSTRINGSIZE 500}}
+\DoxyCodeLine{35 \textcolor{preprocessor}{\#define TSBUFFERSTRING "{}                               "{}}}
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#define NODENAMESIZE 50}}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38 \textcolor{comment}{// Verboselevel}}
+\DoxyCodeLine{39 \textcolor{preprocessor}{\#define VERBOSECRITICAL          0b0000000000000001}}
+\DoxyCodeLine{40 \textcolor{preprocessor}{\#define VERBOSESTARTUP           0b0000000000000010}}
+\DoxyCodeLine{41 \textcolor{preprocessor}{\#define VERBOSECONFIG            0b0000000000000100}}
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#define VERBOSEORDER             0b0000000000001000}}
+\DoxyCodeLine{43 \textcolor{preprocessor}{\#define VERBOSEOBUFFER           0b0000000000010000}}
+\DoxyCodeLine{44 \textcolor{preprocessor}{\#define VERBOSETELNET            0b0000000000100000}}
+\DoxyCodeLine{45 \textcolor{preprocessor}{\#define VERBOSESQL               0b0000000001000000}}
+\DoxyCodeLine{46 \textcolor{preprocessor}{\#define VERBOSERF24              0b0000000010000000}}
+\DoxyCodeLine{47 \textcolor{preprocessor}{\#define VERBOSEOTHER             0b0000000100000000}}
+\DoxyCodeLine{48 \textcolor{preprocessor}{\#define VERBOSEORDEREXT          0b0000001000000000}}
+\DoxyCodeLine{49 \textcolor{preprocessor}{\#define VERBOSEBUFFERPOINTER     0b0000010000000000}}
+\DoxyCodeLine{50 \textcolor{preprocessor}{\#define VERBOSEOBUFFEREXT        0b0000100000000000}}
+\DoxyCodeLine{51 \textcolor{preprocessor}{\#define VERBOSEPOINTER           0b0001000000000000}}
+\DoxyCodeLine{52 \textcolor{preprocessor}{\#define VERBOSESENSOR            0b0010000000000000}}
+\DoxyCodeLine{53 \textcolor{preprocessor}{\#define VERBOSEALL               0b0011111111111111}}
+\DoxyCodeLine{54 \textcolor{preprocessor}{\#define VERBOSENONE              0b0000000000000011}}
+\DoxyCodeLine{55 }
+\DoxyCodeLine{56 \textcolor{preprocessor}{\#define STARTUPVERBOSELEVEL      0b0000000000000011 }}
+\DoxyCodeLine{57 \textcolor{comment}{//\#define STARTUPVERBOSELEVEL      0b0011111111111111 }}
+\DoxyCodeLine{58 }
+\DoxyCodeLine{60 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// \_CONFIG\_H\_}}
+\DoxyCodeLine{61 }
+
+\end{DoxyCode}

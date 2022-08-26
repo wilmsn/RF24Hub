@@ -1,0 +1,443 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="cfg_8cpp" kind="file" language="C++">
+    <compoundname>cfg.cpp</compoundname>
+    <includes refid="cfg_8h" local="yes">cfg.h</includes>
+    <incdepgraph>
+      <node id="1">
+        <label>cfg.cpp</label>
+        <link refid="cfg_8cpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>cfg.h</label>
+        <link refid="cfg_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+      </node>
+      <node id="13">
+        <label>common.h</label>
+        <link refid="common_8h"/>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+      </node>
+      <node id="12">
+        <label>config.h</label>
+        <link refid="config_8h"/>
+      </node>
+      <node id="24">
+        <label>dataformat.h</label>
+        <link refid="dataformat_8h"/>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="25">
+        <label>rf24_config.h</label>
+        <link refid="rf24__config_8h"/>
+      </node>
+      <node id="26">
+        <label>version.h</label>
+        <link refid="version_8h"/>
+      </node>
+      <node id="19">
+        <label>arpa/inet.h</label>
+      </node>
+      <node id="21">
+        <label>cstdio</label>
+      </node>
+      <node id="14">
+        <label>cstring</label>
+      </node>
+      <node id="7">
+        <label>ctype.h</label>
+      </node>
+      <node id="23">
+        <label>fcntl.h</label>
+      </node>
+      <node id="10">
+        <label>getopt.h</label>
+      </node>
+      <node id="20">
+        <label>netdb.h</label>
+      </node>
+      <node id="22">
+        <label>netinet/in.h</label>
+      </node>
+      <node id="16">
+        <label>stdbool.h</label>
+      </node>
+      <node id="11">
+        <label>stdint.h</label>
+      </node>
+      <node id="3">
+        <label>stdio.h</label>
+      </node>
+      <node id="4">
+        <label>stdlib.h</label>
+      </node>
+      <node id="5">
+        <label>string</label>
+      </node>
+      <node id="6">
+        <label>string.h</label>
+      </node>
+      <node id="18">
+        <label>sys/socket.h</label>
+      </node>
+      <node id="15">
+        <label>sys/time.h</label>
+      </node>
+      <node id="17">
+        <label>sys/types.h</label>
+      </node>
+      <node id="8">
+        <label>time.h</label>
+      </node>
+      <node id="9">
+        <label>unistd.h</label>
+      </node>
+    </incdepgraph>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&quot;<ref refid="cfg_8h" kindref="compound">cfg.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"><ref refid="classCfg_1aac9284b09ac6aa86a892dc8ab09989ec" kindref="member">Cfg::Cfg</ref>(</highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>_prgName,<sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>_prgVersion)<sp/>{</highlight></codeline>
+<codeline lineno="4"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>prgName<sp/>=<sp/>_prgName;</highlight></codeline>
+<codeline lineno="5"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>prgVersion<sp/>=<sp/>_prgVersion;</highlight></codeline>
+<codeline lineno="6"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="comment">//Cfg::~Cfg()<sp/>{</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="comment">//}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="comment">//Cfg::Cfg()<sp/>{</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="comment">//}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classCfg_1a962963a6c34ac9851259ccf5ab165db1" kindref="member">Cfg::processParams</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>prgName,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>argc,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>argv[])<sp/>{</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/>configFile<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;x&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>c;</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>processing<sp/>argc<sp/>and<sp/>argv[]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(1)<sp/>{</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">option<sp/>long_options[]<sp/>=<sp/>{<sp/></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight><highlight class="stringliteral">&quot;daemon&quot;</highlight><highlight class="normal">,<sp/><sp/>no_argument,<sp/>0,<sp/></highlight><highlight class="charliteral">&apos;d&apos;</highlight><highlight class="normal">},</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight><highlight class="stringliteral">&quot;sniffer&quot;</highlight><highlight class="normal">,<sp/><sp/>no_argument,<sp/>0,<sp/></highlight><highlight class="charliteral">&apos;S&apos;</highlight><highlight class="normal">},</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight><highlight class="stringliteral">&quot;configfile&quot;</highlight><highlight class="normal">,<sp/><sp/><sp/><sp/>required_argument,<sp/>0,<sp/></highlight><highlight class="charliteral">&apos;c&apos;</highlight><highlight class="normal">},</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight><highlight class="stringliteral">&quot;verbose&quot;</highlight><highlight class="normal">,<sp/>required_argument,<sp/>0,<sp/></highlight><highlight class="charliteral">&apos;v&apos;</highlight><highlight class="normal">},</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight><highlight class="stringliteral">&quot;scanner&quot;</highlight><highlight class="normal">,<sp/>required_argument,<sp/>0,<sp/></highlight><highlight class="charliteral">&apos;s&apos;</highlight><highlight class="normal">},</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight><highlight class="stringliteral">&quot;scannchannel&quot;</highlight><highlight class="normal">,<sp/>required_argument,<sp/>0,<sp/></highlight><highlight class="charliteral">&apos;t&apos;</highlight><highlight class="normal">},</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight><highlight class="stringliteral">&quot;help&quot;</highlight><highlight class="normal">,<sp/>no_argument,<sp/>0,<sp/></highlight><highlight class="charliteral">&apos;h&apos;</highlight><highlight class="normal">},</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{0,<sp/>0,<sp/>0,<sp/>0}<sp/></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>getopt_long<sp/>stores<sp/>the<sp/>option<sp/>index<sp/>here.<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>option_index<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>c<sp/>=<sp/>getopt_long<sp/>(argc,<sp/>argv,<sp/></highlight><highlight class="stringliteral">&quot;?dhSt:s:c:v:&quot;</highlight><highlight class="normal">,long_options,<sp/>&amp;option_index);</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Detect<sp/>the<sp/>end<sp/>of<sp/>the<sp/>options.<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(c<sp/>==<sp/>-1)<sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">switch</highlight><highlight class="normal"><sp/>(c)<sp/>{</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/></highlight><highlight class="charliteral">&apos;t&apos;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/>channel;</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>optarg[0]<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>channel=optarg[0]-</highlight><highlight class="charliteral">&apos;0&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>optarg[1]<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>channel=channel*10+optarg[1]-</highlight><highlight class="charliteral">&apos;0&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>optarg[2]<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>channel=channel*10+optarg[2]-</highlight><highlight class="charliteral">&apos;0&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(channel<sp/>&lt;<sp/>126)<sp/>{</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1ae5b09f245e8241e22339aa61a21a2fe3" kindref="member">channelScanner_Channel</ref>=channel;<sp/></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Error<sp/>Channel<sp/>must<sp/>be<sp/>in<sp/>0<sp/>...<sp/>125\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Error<sp/>Channel<sp/>required\n&quot;</highlight><highlight class="normal">);;</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/></highlight><highlight class="charliteral">&apos;v&apos;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(optarg[0])<sp/>{</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>=<sp/><ref refid="common_8cpp_1a938ac03956edbe8f3fb790224413be8f" kindref="member">decodeVerbose</ref>(<ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref>,<sp/>optarg);</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1ac7f6954d45eef4c17ef652b2ed7b1c6b" kindref="member">usage</ref>(prgName);</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/></highlight><highlight class="charliteral">&apos;s&apos;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(optarg[0]<sp/>&amp;&amp;<sp/>!<sp/>optarg[1])<sp/>{</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1a65e582daf11d5dcbd222ad1501d33ff8" kindref="member">startScanner</ref><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1aa310020b99a2cfe3900b724a400344eb" kindref="member">setScanLevel</ref><sp/>=<sp/>(int)<sp/>optarg[0]-</highlight><highlight class="charliteral">&apos;0&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1ac7f6954d45eef4c17ef652b2ed7b1c6b" kindref="member">usage</ref>(prgName);</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/></highlight><highlight class="charliteral">&apos;S&apos;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1a029cac532a52c6716be2f0a8f4c4b3cc" kindref="member">startSniffer</ref><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/></highlight><highlight class="charliteral">&apos;d&apos;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1a9eefce31b95beb80f66eff2f9ba9294c" kindref="member">startDaemon</ref><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/></highlight><highlight class="charliteral">&apos;c&apos;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//std::string<sp/>s;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>configFile<sp/>=<sp/>optarg;</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/></highlight><highlight class="charliteral">&apos;h&apos;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/></highlight><highlight class="charliteral">&apos;?&apos;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>usage();</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>exit<sp/>(0);</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>break;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">default</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1ac7f6954d45eef4c17ef652b2ed7b1c6b" kindref="member">usage</ref><sp/>(prgName);</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>exit<sp/>(0);</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Print<sp/>any<sp/>remaining<sp/>command<sp/>line<sp/>arguments<sp/>(not<sp/>options).<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(optind<sp/>&lt;<sp/>argc)<sp/>{</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;non-option<sp/>ARGV-elements:<sp/>\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(optind<sp/>&lt;<sp/>argc)<sp/>printf(</highlight><highlight class="stringliteral">&quot;%s\n&quot;</highlight><highlight class="normal">,argv[optind++]);</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>END<sp/>processing<sp/>argc<sp/>and<sp/>argv[]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>check<sp/>if<sp/>config<sp/>file<sp/>is<sp/>readable</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>configFile<sp/>==<sp/></highlight><highlight class="stringliteral">&quot;x&quot;</highlight><highlight class="normal"><sp/>)<sp/>configFile<sp/>=<sp/><ref refid="group__cfgprm_1ga33cca38c576ada1ba69225b47cd975a4" kindref="member">DEFAULT_CONFIG_FILE</ref>;</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Reading<sp/>and<sp/>processing<sp/>and<sp/>printing<sp/>config<sp/>file</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/>printf(&quot;%s\n&quot;,configFile.c_str());</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/>FILE<sp/>*fp<sp/>=<sp/>fopen<sp/>(configFile.c_str(),<sp/></highlight><highlight class="stringliteral">&quot;r&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(fp<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>fprintf(stderr,</highlight><highlight class="stringliteral">&quot;Configfile:<sp/>%s<sp/>nicht<sp/>gefunden!\n&quot;</highlight><highlight class="normal">,<sp/>configFile.c_str()<sp/>);</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>exit(1);</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Reading<sp/>configuration<sp/>from<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/>configFile.c_str()<sp/>);</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Processing<sp/>config<sp/>file</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*s,<sp/>buff[256];</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>((s<sp/>=<sp/>fgets<sp/>(buff,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal"><sp/>buff,<sp/>fp))<sp/>!=<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Skip<sp/>blank<sp/>lines<sp/>and<sp/>comments<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="common_8cpp_1ae5bb0c43f76b886197ee48679f0e8dbc" kindref="member">trim</ref>(buff);</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(buff[0]<sp/>==<sp/></highlight><highlight class="charliteral">&apos;\n&apos;</highlight><highlight class="normal"><sp/>||<sp/>buff[0]<sp/>==<sp/></highlight><highlight class="charliteral">&apos;#&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Parse<sp/>name/value<sp/>pair<sp/>from<sp/>line<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>name[<ref refid="group__cfgprm_1ga21c446d2b1203b1e20c3eeafe122e65a" kindref="member">PARAM_MAXLEN</ref>],<sp/>value[<ref refid="group__cfgprm_1ga21c446d2b1203b1e20c3eeafe122e65a" kindref="member">PARAM_MAXLEN</ref>];</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>s<sp/>=<sp/>strtok<sp/>(buff,<sp/></highlight><highlight class="stringliteral">&quot;=&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(s==NULL)</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>strncpy<sp/>(name,<sp/>s,<sp/><ref refid="group__cfgprm_1ga21c446d2b1203b1e20c3eeafe122e65a" kindref="member">PARAM_MAXLEN</ref>);</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>s<sp/>=<sp/>strtok<sp/>(NULL,<sp/></highlight><highlight class="stringliteral">&quot;=&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(s==NULL)</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>strncpy<sp/>(value,<sp/>s,<sp/><ref refid="group__cfgprm_1ga21c446d2b1203b1e20c3eeafe122e65a" kindref="member">PARAM_MAXLEN</ref>);</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="common_8cpp_1ae5bb0c43f76b886197ee48679f0e8dbc" kindref="member">trim</ref><sp/>(value);</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Copy<sp/>into<sp/>correct<sp/>entry<sp/>in<sp/>parameters<sp/>struct<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>(strcmp(name,<sp/></highlight><highlight class="stringliteral">&quot;db_hostname&quot;</highlight><highlight class="normal">)==0)<sp/><ref refid="classCfg_1ae1e7f239b800f0104dcc73157004caeb" kindref="member">dbHostName</ref><sp/>=<sp/>value;</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(name,<sp/></highlight><highlight class="stringliteral">&quot;db_port&quot;</highlight><highlight class="normal">)==0)<sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1aabb83b325c0f808fcc7401677e317302" kindref="member">dbPortNo</ref><sp/>=<sp/>value;</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(name,<sp/></highlight><highlight class="stringliteral">&quot;db_schema&quot;</highlight><highlight class="normal">)==0)<sp/><sp/><sp/><ref refid="classCfg_1a37997fdb4da8fbe674ff617a1ac00679" kindref="member">dbSchema</ref><sp/>=<sp/>value;</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(name,<sp/></highlight><highlight class="stringliteral">&quot;db_username&quot;</highlight><highlight class="normal">)==0)<sp/><ref refid="classCfg_1ab96f7a9e239ea73732644835532d918b" kindref="member">dbUserName</ref><sp/>=<sp/>value;</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(name,<sp/></highlight><highlight class="stringliteral">&quot;db_password&quot;</highlight><highlight class="normal">)==0)<sp/><ref refid="classCfg_1ad1436b8fe2ea5d64a531bb25424d8384" kindref="member">dbPassWord</ref><sp/>=<sp/>value;</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/>else<sp/>if<sp/>(strcmp(name,<sp/>&quot;rf24hub_verboseLevel&quot;)==0)<sp/>{</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="134"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>if<sp/>(!<sp/>verboseLevel)<sp/>verboseLevel<sp/>=<sp/>atoi(value);</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="135"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/>}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(name,<sp/></highlight><highlight class="stringliteral">&quot;fhem_hostname&quot;</highlight><highlight class="normal">)==0)<sp/>{</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1a1b5fdfaf2ee6ae30d7f229ed26d088a6" kindref="member">fhemHostName</ref><sp/>=<sp/>value;</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1ac7abf5aed3b16e826c70840b48716b14" kindref="member">fhemHostSet</ref>=</highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(name,<sp/></highlight><highlight class="stringliteral">&quot;fhem_port&quot;</highlight><highlight class="normal">)==0)<sp/>{</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1a7283a114baa582d592c3aea559a6efe5" kindref="member">fhemPortNo</ref><sp/>=<sp/>value;</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1a93959e7a9564ffeb208eca45685a8c97" kindref="member">fhemPortSet</ref><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(name,<sp/></highlight><highlight class="stringliteral">&quot;hub_tcp_port&quot;</highlight><highlight class="normal">)==0)<sp/>{</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1a49753408815026a15f56b7cd4247d06b" kindref="member">hubTcpPortNo</ref><sp/>=<sp/>value;</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1a0ce03c7bc0c0b5a6f75b0276ba1cf42a" kindref="member">hubTcpPortSet</ref><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(name,<sp/></highlight><highlight class="stringliteral">&quot;gw_tcp_port&quot;</highlight><highlight class="normal">)==0)<sp/>{</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1ac4df10edefafe41ec1b0251d80ff2de5" kindref="member">gwTcpPortNo</ref><sp/>=<sp/>value;</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1ac82059ea3ea0ef7f44231408da29de3b" kindref="member">gwTcpPortSet</ref><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(name,<sp/></highlight><highlight class="stringliteral">&quot;hub_logfile&quot;</highlight><highlight class="normal">)==0)<sp/>{</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1a6b3bf6aaf8b2faf63fbaff815e65c14f" kindref="member">hubLogFileName</ref><sp/>=<sp/>value;</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(name,<sp/></highlight><highlight class="stringliteral">&quot;hub_pidfile&quot;</highlight><highlight class="normal">)==0)<sp/>{</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1aab6d96f28a3284c1272ce3836a58c3f4" kindref="member">hubPidFileName</ref><sp/>=<sp/>value;</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(name,<sp/></highlight><highlight class="stringliteral">&quot;gw_logfile&quot;</highlight><highlight class="normal">)==0)<sp/>{</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1ab6a3c443f9adc2c71b6d75c20e9df8fc" kindref="member">gwLogFileName</ref><sp/>=<sp/>value;</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(name,<sp/></highlight><highlight class="stringliteral">&quot;gw_pidfile&quot;</highlight><highlight class="normal">)==0)<sp/>{</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1a5beacd3f7187e23a3a166190b5fb6bb3" kindref="member">gwPidFileName</ref><sp/>=<sp/>value;</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(name,<sp/></highlight><highlight class="stringliteral">&quot;gw_hubhostname&quot;</highlight><highlight class="normal">)==0)<sp/>{</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1a4943a808300c155b874e7e716326aa56" kindref="member">gwHubHostName</ref><sp/>=<sp/>value;</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(name,<sp/></highlight><highlight class="stringliteral">&quot;hub_udp_portno&quot;</highlight><highlight class="normal">)==0)<sp/>{</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1a4b2a65134693dce7d66f955c3389b8f5" kindref="member">hubUdpPortNo</ref><sp/>=<sp/>value;</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1ad250bf11fc3d0a13e3bb37c9517849e0" kindref="member">hubUdpPortSet</ref><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(name,<sp/></highlight><highlight class="stringliteral">&quot;gw_udp_portno&quot;</highlight><highlight class="normal">)==0)<sp/>{</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1a6df600ac075fa021caa9c45efa9f0601" kindref="member">gwUdpPortNo</ref><sp/>=<sp/>value;</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1a40e5f1fbec69c36732d808e05363e024" kindref="member">gwUdpPortSet</ref><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(name,<sp/></highlight><highlight class="stringliteral">&quot;gw_no&quot;</highlight><highlight class="normal">)==0)<sp/>{</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classCfg_1a5ec995cf894c4b957de9bc3e5c881424" kindref="member">gwNo</ref><sp/>=<sp/>value;</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;WARNING:<sp/>%s<sp/>=<sp/>%s<sp/>Unknown<sp/>name=value<sp/>pair!\n&quot;</highlight><highlight class="normal">,<sp/>name,<sp/>value<sp/>);</highlight></codeline>
+<codeline lineno="180"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="181"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>Close<sp/>file<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/>fclose<sp/>(fp);</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"></highlight><highlight class="comment">/*<sp/><sp/><sp/><sp/>if<sp/>(<sp/>startDaemon<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="184"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>logfile_ptr<sp/>=<sp/>fopen<sp/>(logFileName.c_str(),&quot;a&quot;);</highlight></codeline>
+<codeline lineno="185"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>if<sp/>(<sp/>!<sp/>logfile_ptr<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="186"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>fprintf(stderr,&quot;LOGFILE:<sp/>%s<sp/>can&apos;t<sp/>open<sp/>logfile,<sp/>terminating<sp/>!!!\n&quot;,<sp/>logFileName.c_str());</highlight></codeline>
+<codeline lineno="187"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>exit(1);</highlight></codeline>
+<codeline lineno="188"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="189"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>fclose(<sp/>logfile_ptr<sp/>);</highlight></codeline>
+<codeline lineno="190"><highlight class="comment"><sp/><sp/><sp/><sp/>}<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="191"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="192"><highlight class="normal"></highlight></codeline>
+<codeline lineno="193"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classCfg_1a12a56a77125fa182718e2164a23eed48" kindref="member">Cfg::printConfig_hub</ref><sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Hub<sp/>Logfile:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="classCfg_1a6b3bf6aaf8b2faf63fbaff815e65c14f" kindref="member">hubLogFileName</ref>.c_str()<sp/>);</highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Hub<sp/>PIDfile:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="classCfg_1aab6d96f28a3284c1272ce3836a58c3f4" kindref="member">hubPidFileName</ref>.c_str()<sp/>);</highlight></codeline>
+<codeline lineno="196"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Hub-UDP<sp/>Port:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="classCfg_1a4b2a65134693dce7d66f955c3389b8f5" kindref="member">hubUdpPortNo</ref>.c_str()<sp/>);</highlight></codeline>
+<codeline lineno="197"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Gateway<sp/>UDP<sp/>Port:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="classCfg_1a6df600ac075fa021caa9c45efa9f0601" kindref="member">gwUdpPortNo</ref>.c_str()<sp/>);</highlight></codeline>
+<codeline lineno="198"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;FHEM-Hostname:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="classCfg_1a1b5fdfaf2ee6ae30d7f229ed26d088a6" kindref="member">fhemHostName</ref>.c_str()<sp/>);</highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;FHEM-Port:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="classCfg_1a7283a114baa582d592c3aea559a6efe5" kindref="member">fhemPortNo</ref>.c_str()<sp/>);</highlight></codeline>
+<codeline lineno="200"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;incoming<sp/>Telnet<sp/>Port:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="classCfg_1a49753408815026a15f56b7cd4247d06b" kindref="member">hubTcpPortNo</ref>.c_str()<sp/>);</highlight></codeline>
+<codeline lineno="201"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"></highlight></codeline>
+<codeline lineno="203"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classCfg_1a059563d535a096471410e5a76d4a5c96" kindref="member">Cfg::printConfig_gw</ref><sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="204"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Gw<sp/>Logfile:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="classCfg_1ab6a3c443f9adc2c71b6d75c20e9df8fc" kindref="member">gwLogFileName</ref>.c_str()<sp/>);</highlight></codeline>
+<codeline lineno="205"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Gw<sp/>PIDfile:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="classCfg_1a5beacd3f7187e23a3a166190b5fb6bb3" kindref="member">gwPidFileName</ref>.c_str()<sp/>);</highlight></codeline>
+<codeline lineno="206"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Hub-Hostname:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="classCfg_1a4943a808300c155b874e7e716326aa56" kindref="member">gwHubHostName</ref>.c_str()<sp/>);</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Hub-UDP<sp/>Port:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="classCfg_1a4b2a65134693dce7d66f955c3389b8f5" kindref="member">hubUdpPortNo</ref>.c_str()<sp/>);</highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Gateway<sp/>UDP<sp/>Port:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="classCfg_1a6df600ac075fa021caa9c45efa9f0601" kindref="member">gwUdpPortNo</ref>.c_str()<sp/>);</highlight></codeline>
+<codeline lineno="209"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Gw<sp/>ID:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="classCfg_1a5ec995cf894c4b957de9bc3e5c881424" kindref="member">gwNo</ref>.c_str()<sp/>);</highlight></codeline>
+<codeline lineno="210"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="211"><highlight class="normal"></highlight></codeline>
+<codeline lineno="212"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classCfg_1ab785421eee0353b1b5a6443d9f97efaf" kindref="member">Cfg::printConfig_db</ref><sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="213"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;DB-Hostname:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="classCfg_1ae1e7f239b800f0104dcc73157004caeb" kindref="member">dbHostName</ref>.c_str()<sp/>);</highlight></codeline>
+<codeline lineno="214"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;DB-Port:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="classCfg_1aabb83b325c0f808fcc7401677e317302" kindref="member">dbPortNo</ref>.c_str()<sp/>);</highlight></codeline>
+<codeline lineno="215"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;DB-Schema:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="classCfg_1a37997fdb4da8fbe674ff617a1ac00679" kindref="member">dbSchema</ref>.c_str()<sp/>);</highlight></codeline>
+<codeline lineno="216"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;DB-Username:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="classCfg_1ab96f7a9e239ea73732644835532d918b" kindref="member">dbUserName</ref>.c_str()<sp/>);</highlight></codeline>
+<codeline lineno="217"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;DB-Password:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="classCfg_1ad1436b8fe2ea5d64a531bb25424d8384" kindref="member">dbPassWord</ref>.c_str()<sp/>);</highlight></codeline>
+<codeline lineno="218"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="219"><highlight class="normal"></highlight></codeline>
+<codeline lineno="220"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classCfg_1ac7f6954d45eef4c17ef652b2ed7b1c6b" kindref="member">Cfg::usage</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>prgName)<sp/>{</highlight></codeline>
+<codeline lineno="221"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;%s<sp/>Version<sp/>%d<sp/>vom<sp/>%s\n&quot;</highlight><highlight class="normal">,prgName,<sp/><ref refid="version_8h_1a1c6b0e0bdbb8d14a494a629fdf871511" kindref="member">SWVERSION</ref>,<sp/>__DATE__);</highlight></codeline>
+<codeline lineno="222"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Usage:<sp/>%s<sp/>&lt;option&gt;\n&quot;</highlight><highlight class="normal">,prgName);</highlight></codeline>
+<codeline lineno="223"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;with<sp/>options:<sp/>\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/>-h<sp/>or<sp/>-?<sp/>or<sp/>--help\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Print<sp/>help\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="226"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/>-d<sp/>or<sp/>--daemon\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Starts<sp/>as<sp/>daemon\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="228"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/>-v<sp/>or<sp/>--verbose<sp/>+&lt;verboseLevel&gt;\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="229"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Sets<sp/>the<sp/>verboseLevel,<sp/>can<sp/>be<sp/>repeated\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="230"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Verboselevels<sp/>are:<sp/>sql,<sp/>telnet,<sp/>rf24,<sp/>order,<sp/>orderext,\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="231"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>obuffer,<sp/>obufferext,<sp/>pointer,<sp/>other\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="232"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/>-c<sp/>or<sp/>--configfilename<sp/>&lt;filename&gt;\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="233"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Set<sp/>configfilename\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="234"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/>-s<sp/>or<sp/>--scanner<sp/>&lt;scanlevel&gt;\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="235"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Set<sp/>scannlevel<sp/>(0...9)<sp/>and<sp/>scan<sp/>all<sp/>channels\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="236"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/>-S<sp/>or<sp/>--sniffer\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="237"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Starts<sp/>a<sp/>sniffer<sp/>and<sp/>prints<sp/>out<sp/>all<sp/>catched<sp/>payloads\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="238"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/>-t<sp/>or<sp/>--scannchannel<sp/>&lt;channel&gt;\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="239"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Scanns<sp/>the<sp/>single<sp/>channel<sp/>&lt;channel&gt;\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="240"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;For<sp/>clean<sp/>exit<sp/>use<sp/>\&quot;CTRL-C\&quot;<sp/>or<sp/>\&quot;kill<sp/>-15<sp/>&lt;pid&gt;\&quot;\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="241"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="242"><highlight class="normal"></highlight></codeline>
+<codeline lineno="243"><highlight class="normal"></highlight></codeline>
+<codeline lineno="244"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classCfg_1acfcbf6a7e35c893ad13e41713a5b51a9" kindref="member">Cfg::setPidFile</ref>(</highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>pidFileName)<sp/>{</highlight></codeline>
+<codeline lineno="245"><highlight class="normal"><sp/><sp/><sp/><sp/>pid_t<sp/>pid;</highlight></codeline>
+<codeline lineno="246"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>retval<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="247"><highlight class="normal"><sp/><sp/><sp/><sp/>pid=getpid();</highlight></codeline>
+<codeline lineno="248"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="rf24gwd_8h_1a74cdc67e1a2355a8a3857dd631c2e20d" kindref="member">pidfile_ptr</ref><sp/>=<sp/>fopen<sp/>(pidFileName.c_str(),</highlight><highlight class="stringliteral">&quot;w&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="249"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/><ref refid="rf24gwd_8h_1a74cdc67e1a2355a8a3857dd631c2e20d" kindref="member">pidfile_ptr</ref><sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="250"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>fprintf(<ref refid="rf24gwd_8h_1a74cdc67e1a2355a8a3857dd631c2e20d" kindref="member">pidfile_ptr</ref>,</highlight><highlight class="stringliteral">&quot;%d&quot;</highlight><highlight class="normal">,pid);</highlight></codeline>
+<codeline lineno="251"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>fclose(<ref refid="rf24gwd_8h_1a74cdc67e1a2355a8a3857dd631c2e20d" kindref="member">pidfile_ptr</ref>);</highlight></codeline>
+<codeline lineno="252"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="253"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="254"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>retval;</highlight></codeline>
+<codeline lineno="255"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="256"><highlight class="normal"></highlight></codeline>
+<codeline lineno="257"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classCfg_1a28651b7c3cb08d57921e53340ef5e933" kindref="member">Cfg::checkPidFileSet</ref>(</highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>pidFileName)<sp/>{</highlight></codeline>
+<codeline lineno="258"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<sp/>access(<sp/>pidFileName.c_str(),<sp/>F_OK<sp/>)<sp/>!=<sp/>-1<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="259"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>fprintf(stderr,</highlight><highlight class="stringliteral">&quot;PIDFILE:<sp/>%s<sp/>exists\n&quot;</highlight><highlight class="normal">,<sp/>pidFileName.c_str()<sp/>);</highlight></codeline>
+<codeline lineno="260"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="261"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="262"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="263"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="264"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="265"><highlight class="normal"></highlight></codeline>
+<codeline lineno="266"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classCfg_1acf0cea642cbaafbd61860629a8076b15" kindref="member">Cfg::removePidFile</ref>(</highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>pidFileName)<sp/>{</highlight></codeline>
+<codeline lineno="267"><highlight class="normal"><sp/><sp/><sp/><sp/>unlink(pidFileName.c_str());</highlight></codeline>
+<codeline lineno="268"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/stick/netz/projekte/RF24Hub/linux/cfg.cpp"/>
+  </compounddef>
+</doxygen>

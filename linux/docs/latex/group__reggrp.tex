@@ -1,0 +1,113 @@
+\hypertarget{group__reggrp}{}\doxysection{Definition der Registergruppen}
+\label{group__reggrp}\index{Definition der Registergruppen@{Definition der Registergruppen}}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{group__reggrp_ga31d58e874d25ee6246bcc06be3d3a998}{SENSOR\+\_\+\+CHANNEL\+\_\+\+FIRST}}~1
+\begin{DoxyCompactList}\small\item\em Erster normaler Sensorchannel. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__reggrp_ga94e5d80ab3baa99e428caa332b38ef9a}{SENSOR\+\_\+\+CHANNEL\+\_\+\+LAST}}~78
+\begin{DoxyCompactList}\small\item\em Letzter normaler Sensorchannel. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__reggrp_ga30f797b8cac9d272e126b59f51695681}{REG\+\_\+\+NOSTORE\+\_\+\+FIRST}}~80
+\begin{DoxyCompactList}\small\item\em Erstes Register, das vom Hub nicht gespeichert wird. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__reggrp_gab198067fdc3e91a388fa77af4cb373c6}{REG\+\_\+\+NOSTORE\+\_\+\+LAST}}~89
+\begin{DoxyCompactList}\small\item\em Letztes Register, das vom Hub nicht gespeichert wird. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__reggrp_ga83e5e44bcbe1269a61ada5065ad98ec3}{REG\+\_\+\+NORMAL\+\_\+\+FIRST}}~90
+\begin{DoxyCompactList}\small\item\em Erstes Register gilt die normale Behandlung. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__reggrp_ga8c54eed0c49bca83dbf10b633c410d3f}{REG\+\_\+\+NORMAL\+\_\+\+LAST}}~120
+\begin{DoxyCompactList}\small\item\em Letztes Register gilt die normale Behandlung. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__reggrp_ga7411746d54207b437c25d550f7759388}{REG\+\_\+\+READONLY\+\_\+\+FIRST}}~121
+\begin{DoxyCompactList}\small\item\em Erstes Read only Register. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__reggrp_ga7ea9ed0acad4c34176051285608b5580}{REG\+\_\+\+READONLY\+\_\+\+LAST}}~127
+\begin{DoxyCompactList}\small\item\em Letztes Read only Register. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Definition der Channel Verteilung (generische Definitionen und Sonderbehandlung) Achtung\+: Bereiche müssen streng getrennt sein und dürfen sich nicht überschneiden Es werden folgende Bereiche unterschieden\+:~\newline
+ SENSOR\+\_\+\+CHANNEL\+: In diesem Bereich sind die normalen Sensoren und Aktoren angesiedelt.~\newline
+ REG\+\_\+\+NOSTORE\+: Hier sind die Register angesiedelt deren Inhalte (im Node) einmal verarbeitet und dann vergessen werden.~\newline
+ REG\+\_\+\+BATT\+: Ein Register mit Sonderbehandlung für die Batterie~\newline
+ REG\+\_\+\+NORMAL\+: Normale Register, die geschrieben, gelesen und wieder überschrieben werden können.~\newline
+ REG\+\_\+\+READONLY\+: Register, die nur gelesen werden können.~\newline
+ 
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{group__reggrp_ga83e5e44bcbe1269a61ada5065ad98ec3}\label{group__reggrp_ga83e5e44bcbe1269a61ada5065ad98ec3}} 
+\index{Definition der Registergruppen@{Definition der Registergruppen}!REG\_NORMAL\_FIRST@{REG\_NORMAL\_FIRST}}
+\index{REG\_NORMAL\_FIRST@{REG\_NORMAL\_FIRST}!Definition der Registergruppen@{Definition der Registergruppen}}
+\doxysubsubsection{\texorpdfstring{REG\_NORMAL\_FIRST}{REG\_NORMAL\_FIRST}}
+{\footnotesize\ttfamily \#define REG\+\_\+\+NORMAL\+\_\+\+FIRST~90}
+
+
+
+Erstes Register gilt die normale Behandlung. 
+
+\mbox{\Hypertarget{group__reggrp_ga8c54eed0c49bca83dbf10b633c410d3f}\label{group__reggrp_ga8c54eed0c49bca83dbf10b633c410d3f}} 
+\index{Definition der Registergruppen@{Definition der Registergruppen}!REG\_NORMAL\_LAST@{REG\_NORMAL\_LAST}}
+\index{REG\_NORMAL\_LAST@{REG\_NORMAL\_LAST}!Definition der Registergruppen@{Definition der Registergruppen}}
+\doxysubsubsection{\texorpdfstring{REG\_NORMAL\_LAST}{REG\_NORMAL\_LAST}}
+{\footnotesize\ttfamily \#define REG\+\_\+\+NORMAL\+\_\+\+LAST~120}
+
+
+
+Letztes Register gilt die normale Behandlung. 
+
+\mbox{\Hypertarget{group__reggrp_ga30f797b8cac9d272e126b59f51695681}\label{group__reggrp_ga30f797b8cac9d272e126b59f51695681}} 
+\index{Definition der Registergruppen@{Definition der Registergruppen}!REG\_NOSTORE\_FIRST@{REG\_NOSTORE\_FIRST}}
+\index{REG\_NOSTORE\_FIRST@{REG\_NOSTORE\_FIRST}!Definition der Registergruppen@{Definition der Registergruppen}}
+\doxysubsubsection{\texorpdfstring{REG\_NOSTORE\_FIRST}{REG\_NOSTORE\_FIRST}}
+{\footnotesize\ttfamily \#define REG\+\_\+\+NOSTORE\+\_\+\+FIRST~80}
+
+
+
+Erstes Register, das vom Hub nicht gespeichert wird. 
+
+\mbox{\Hypertarget{group__reggrp_gab198067fdc3e91a388fa77af4cb373c6}\label{group__reggrp_gab198067fdc3e91a388fa77af4cb373c6}} 
+\index{Definition der Registergruppen@{Definition der Registergruppen}!REG\_NOSTORE\_LAST@{REG\_NOSTORE\_LAST}}
+\index{REG\_NOSTORE\_LAST@{REG\_NOSTORE\_LAST}!Definition der Registergruppen@{Definition der Registergruppen}}
+\doxysubsubsection{\texorpdfstring{REG\_NOSTORE\_LAST}{REG\_NOSTORE\_LAST}}
+{\footnotesize\ttfamily \#define REG\+\_\+\+NOSTORE\+\_\+\+LAST~89}
+
+
+
+Letztes Register, das vom Hub nicht gespeichert wird. 
+
+\mbox{\Hypertarget{group__reggrp_ga7411746d54207b437c25d550f7759388}\label{group__reggrp_ga7411746d54207b437c25d550f7759388}} 
+\index{Definition der Registergruppen@{Definition der Registergruppen}!REG\_READONLY\_FIRST@{REG\_READONLY\_FIRST}}
+\index{REG\_READONLY\_FIRST@{REG\_READONLY\_FIRST}!Definition der Registergruppen@{Definition der Registergruppen}}
+\doxysubsubsection{\texorpdfstring{REG\_READONLY\_FIRST}{REG\_READONLY\_FIRST}}
+{\footnotesize\ttfamily \#define REG\+\_\+\+READONLY\+\_\+\+FIRST~121}
+
+
+
+Erstes Read only Register. 
+
+\mbox{\Hypertarget{group__reggrp_ga7ea9ed0acad4c34176051285608b5580}\label{group__reggrp_ga7ea9ed0acad4c34176051285608b5580}} 
+\index{Definition der Registergruppen@{Definition der Registergruppen}!REG\_READONLY\_LAST@{REG\_READONLY\_LAST}}
+\index{REG\_READONLY\_LAST@{REG\_READONLY\_LAST}!Definition der Registergruppen@{Definition der Registergruppen}}
+\doxysubsubsection{\texorpdfstring{REG\_READONLY\_LAST}{REG\_READONLY\_LAST}}
+{\footnotesize\ttfamily \#define REG\+\_\+\+READONLY\+\_\+\+LAST~127}
+
+
+
+Letztes Read only Register. 
+
+\mbox{\Hypertarget{group__reggrp_ga31d58e874d25ee6246bcc06be3d3a998}\label{group__reggrp_ga31d58e874d25ee6246bcc06be3d3a998}} 
+\index{Definition der Registergruppen@{Definition der Registergruppen}!SENSOR\_CHANNEL\_FIRST@{SENSOR\_CHANNEL\_FIRST}}
+\index{SENSOR\_CHANNEL\_FIRST@{SENSOR\_CHANNEL\_FIRST}!Definition der Registergruppen@{Definition der Registergruppen}}
+\doxysubsubsection{\texorpdfstring{SENSOR\_CHANNEL\_FIRST}{SENSOR\_CHANNEL\_FIRST}}
+{\footnotesize\ttfamily \#define SENSOR\+\_\+\+CHANNEL\+\_\+\+FIRST~1}
+
+
+
+Erster normaler Sensorchannel. 
+
+\mbox{\Hypertarget{group__reggrp_ga94e5d80ab3baa99e428caa332b38ef9a}\label{group__reggrp_ga94e5d80ab3baa99e428caa332b38ef9a}} 
+\index{Definition der Registergruppen@{Definition der Registergruppen}!SENSOR\_CHANNEL\_LAST@{SENSOR\_CHANNEL\_LAST}}
+\index{SENSOR\_CHANNEL\_LAST@{SENSOR\_CHANNEL\_LAST}!Definition der Registergruppen@{Definition der Registergruppen}}
+\doxysubsubsection{\texorpdfstring{SENSOR\_CHANNEL\_LAST}{SENSOR\_CHANNEL\_LAST}}
+{\footnotesize\ttfamily \#define SENSOR\+\_\+\+CHANNEL\+\_\+\+LAST~78}
+
+
+
+Letzter normaler Sensorchannel. 
+

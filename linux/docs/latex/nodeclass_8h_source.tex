@@ -1,0 +1,84 @@
+\hypertarget{nodeclass_8h_source}{}\doxysection{nodeclass.\+h}
+\mbox{\hyperlink{nodeclass_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#ifndef \_NODECLASS\_H\_   }}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#define \_NODECLASS\_H\_}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include <unistd.h>}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{rf24__config_8h}{rf24\_config.h}}"{}}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{rf24hub__config_8h}{rf24hub\_config.h}}"{}}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{common_8h}{common.h}}"{}}}
+\DoxyCodeLine{17 }
+\DoxyCodeLine{18 \textcolor{keyword}{using namespace }std;}
+\DoxyCodeLine{19 }
+\DoxyCodeLine{20 \textcolor{keyword}{class }\mbox{\hyperlink{classNodeClass}{NodeClass}} \{}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22     }
+\DoxyCodeLine{23 \textcolor{keyword}{private}:}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25 \textcolor{comment}{//char* buf;}}
+\DoxyCodeLine{26 \textcolor{keyword}{struct }nodeClass\_t \{}
+\DoxyCodeLine{27         \mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}}    node\_id;}
+\DoxyCodeLine{28         \textcolor{keywordtype}{char}            node\_name[\mbox{\hyperlink{group__cfgprm_ga76912cbcc5d1508936264c32cbbc1273}{NODENAMESIZE}}];}
+\DoxyCodeLine{29         uint8\_t         pa\_level;}
+\DoxyCodeLine{30         uint8\_t         rec\_level;}
+\DoxyCodeLine{31         \textcolor{keywordtype}{float}           u\_batt; }
+\DoxyCodeLine{32         uint8\_t         hb\_no;}
+\DoxyCodeLine{33         uint32\_t        hb\_utime;}
+\DoxyCodeLine{34         \textcolor{keywordtype}{bool}            is\_mastered;}
+\DoxyCodeLine{35         nodeClass\_t*         p\_next;}
+\DoxyCodeLine{36     \};}
+\DoxyCodeLine{37 nodeClass\_t*     p\_initial;}
+\DoxyCodeLine{38 \textcolor{comment}{/**************************************************************}}
+\DoxyCodeLine{39 \textcolor{comment}{ * char buffer zur generischen Verwendung}}
+\DoxyCodeLine{40 \textcolor{comment}{ *************************************************************/}}
+\DoxyCodeLine{41 \textcolor{keywordtype}{char}*       buf;}
+\DoxyCodeLine{42 \textcolor{comment}{/**************************************************************}}
+\DoxyCodeLine{43 \textcolor{comment}{ * char buffer zur Ausgabe des timestrings ==> ts(tsbuf)}}
+\DoxyCodeLine{44 \textcolor{comment}{ *************************************************************/}}
+\DoxyCodeLine{45 \textcolor{keywordtype}{char}*       tsbuf;}
+\DoxyCodeLine{46 \textcolor{comment}{/**************************************************************}}
+\DoxyCodeLine{47 \textcolor{comment}{ * Bufferinterner Speicher für den verboseLevel}}
+\DoxyCodeLine{48 \textcolor{comment}{ *************************************************************/}}
+\DoxyCodeLine{49 uint16\_t    \_verboseLevel;}
+\DoxyCodeLine{50 \textcolor{comment}{/**************************************************************}}
+\DoxyCodeLine{51 \textcolor{comment}{ * fügt einen neuen record zum Buffer hibzu}}
+\DoxyCodeLine{52 \textcolor{comment}{ *************************************************************/}}
+\DoxyCodeLine{53 \textcolor{keywordtype}{void}        newEntry(nodeClass\_t*);}
+\DoxyCodeLine{54 }
+\DoxyCodeLine{55 \textcolor{keyword}{public}:}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{61 \textcolor{keywordtype}{void} \mbox{\hyperlink{classNodeClass_aab2d021eab042764ce711d612bddcdfb}{setVerbose}}(uint16\_t \mbox{\hyperlink{cfg_8h_a2ac10a3f1b8393a2208b7dc7f6672704}{verboseLevel}});}
+\DoxyCodeLine{62 }
+\DoxyCodeLine{68 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classNodeClass_a83714f63c522c0204d64409636e21df5}{isValidNode}}(\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}} node\_id);}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{73 \textcolor{keywordtype}{void} \mbox{\hyperlink{classNodeClass_a3ee0b4ebf2f323e162118926930d5aba}{cleanup}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{74 }
+\DoxyCodeLine{83 \textcolor{keywordtype}{void} \mbox{\hyperlink{classNodeClass_ab127025de949d5afa5a288dacd81a6bc}{addNode}}(\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}} node\_id, \textcolor{keywordtype}{char}* node\_name, \textcolor{keywordtype}{float} u\_batt, \textcolor{keywordtype}{bool} is\_mastered, uint8\_t PALevel );}
+\DoxyCodeLine{84 }
+\DoxyCodeLine{90 \textcolor{keywordtype}{char}* \mbox{\hyperlink{classNodeClass_aa9a89a27bef5e048e0a0bc77110599fc}{getNodeName}}(\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}} node\_id);}
+\DoxyCodeLine{91 }
+\DoxyCodeLine{100 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classNodeClass_a5c8f294ac1cc473fa4fa9496b4e4e0cd}{isNewHB}}(\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}} node\_id, uint8\_t heartbeatno, uint32\_t utime);}
+\DoxyCodeLine{101 }
+\DoxyCodeLine{107 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classNodeClass_a3f4609d7e76738f48f79b01390346b07}{isMasteredNode}}(\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}} node\_id);}
+\DoxyCodeLine{108 }
+\DoxyCodeLine{114 \textcolor{keywordtype}{void} \mbox{\hyperlink{classNodeClass_ab6d5ef2c4cba3b430c2aaf4ab2ad6eae}{setMasteredNode}}(\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}} node\_id, \textcolor{keywordtype}{bool} isMastered);}
+\DoxyCodeLine{115 }
+\DoxyCodeLine{122 \textcolor{keywordtype}{void} \mbox{\hyperlink{classNodeClass_ad20259b5d0b26161b3b413cf888850cb}{setRecLevel}}(\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}} node\_id, uint8\_t pa\_level);}
+\DoxyCodeLine{123 }
+\DoxyCodeLine{130 \textcolor{keywordtype}{void} \mbox{\hyperlink{classNodeClass_ad2c13bbc7342720f9a7b2a6cb9234af2}{setPaLevel}}(\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}} node\_id, uint8\_t pa\_level);}
+\DoxyCodeLine{131 }
+\DoxyCodeLine{138 uint8\_t \mbox{\hyperlink{classNodeClass_a1ae3f15bc57186191cbf5f3b5b379fae}{getPaLevel}}(\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}} node\_id);}
+\DoxyCodeLine{139 }
+\DoxyCodeLine{145 \textcolor{keywordtype}{void} \mbox{\hyperlink{classNodeClass_a7ec14e4aa2e923b6d021ac5bf40bb291}{setVoltage}}(\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}} node\_id, \textcolor{keywordtype}{float} u\_batt);}
+\DoxyCodeLine{146 }
+\DoxyCodeLine{157 \textcolor{keywordtype}{void} \mbox{\hyperlink{classNodeClass_a804319206db034ece2d5e9a2a5e8a03d}{printBuffer}}(\textcolor{keywordtype}{int} tn\_socket, \textcolor{keywordtype}{bool} htmlformat);}
+\DoxyCodeLine{158 }
+\DoxyCodeLine{162 \mbox{\hyperlink{classNodeClass_ae8a245ced682781f86feeb6569c9119a}{NodeClass}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{163 }
+\DoxyCodeLine{164 \};}
+\DoxyCodeLine{165 }
+\DoxyCodeLine{166 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// \_NODECLASS\_H\_}}
+
+\end{DoxyCode}

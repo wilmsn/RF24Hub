@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="group__reggrp" kind="group">
+    <compoundname>reggrp</compoundname>
+    <title>Definition der Registergruppen</title>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="group__reggrp_1ga31d58e874d25ee6246bcc06be3d3a998" prot="public" static="no">
+        <name>SENSOR_CHANNEL_FIRST</name>
+        <initializer>1</initializer>
+        <briefdescription>
+<para>Erster normaler Sensorchannel. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="46" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reggrp_1ga94e5d80ab3baa99e428caa332b38ef9a" prot="public" static="no">
+        <name>SENSOR_CHANNEL_LAST</name>
+        <initializer>78</initializer>
+        <briefdescription>
+<para>Letzter normaler Sensorchannel. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="48" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reggrp_1ga30f797b8cac9d272e126b59f51695681" prot="public" static="no">
+        <name>REG_NOSTORE_FIRST</name>
+        <initializer>80</initializer>
+        <briefdescription>
+<para>Erstes Register, das vom Hub nicht gespeichert wird. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="51" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="51" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reggrp_1gab198067fdc3e91a388fa77af4cb373c6" prot="public" static="no">
+        <name>REG_NOSTORE_LAST</name>
+        <initializer>89</initializer>
+        <briefdescription>
+<para>Letztes Register, das vom Hub nicht gespeichert wird. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="53" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reggrp_1ga83e5e44bcbe1269a61ada5065ad98ec3" prot="public" static="no">
+        <name>REG_NORMAL_FIRST</name>
+        <initializer>90</initializer>
+        <briefdescription>
+<para>Erstes Register gilt die normale Behandlung. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="55" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reggrp_1ga8c54eed0c49bca83dbf10b633c410d3f" prot="public" static="no">
+        <name>REG_NORMAL_LAST</name>
+        <initializer>120</initializer>
+        <briefdescription>
+<para>Letztes Register gilt die normale Behandlung. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="57" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="57" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reggrp_1ga7411746d54207b437c25d550f7759388" prot="public" static="no">
+        <name>REG_READONLY_FIRST</name>
+        <initializer>121</initializer>
+        <briefdescription>
+<para>Erstes Read only Register. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="59" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reggrp_1ga7ea9ed0acad4c34176051285608b5580" prot="public" static="no">
+        <name>REG_READONLY_LAST</name>
+        <initializer>127</initializer>
+        <briefdescription>
+<para>Letztes Read only Register. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="61" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="61" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Definition der Channel Verteilung (generische Definitionen und Sonderbehandlung) Achtung: Bereiche müssen streng getrennt sein und dürfen sich nicht überschneiden Es werden folgende Bereiche unterschieden:<linebreak/>
+ SENSOR_CHANNEL: In diesem Bereich sind die normalen Sensoren und Aktoren angesiedelt.<linebreak/>
+ REG_NOSTORE: Hier sind die Register angesiedelt deren Inhalte (im Node) einmal verarbeitet und dann vergessen werden.<linebreak/>
+ REG_BATT: Ein Register mit Sonderbehandlung für die Batterie<linebreak/>
+ REG_NORMAL: Normale Register, die geschrieben, gelesen und wieder überschrieben werden können.<linebreak/>
+ REG_READONLY: Register, die nur gelesen werden können.<linebreak/>
+ </para>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

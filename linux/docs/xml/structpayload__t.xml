@@ -1,0 +1,242 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structpayload__t" kind="struct" language="C++" prot="public">
+    <compoundname>payload_t</compoundname>
+    <includes refid="rf24__config_8h" local="no">rf24_config.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structpayload__t_1a3afa33b39f6de1877e858f9fb0b5f87a" prot="public" static="no" mutable="no">
+        <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+        <definition>NODE_DATTYPE payload_t::node_id</definition>
+        <argsstring></argsstring>
+        <name>node_id</name>
+        <qualifiedname>payload_t::node_id</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Die Node_ID ist der eindeutige Identifizierer für einen Node. Aktuell können hier die Nodes 1..255 genutzt werden (8 Bit Begrenzung) Damit der Datentyp einfach gewechselt werden kann ist er nur indirekt festgelegt. <linebreak/>
+ </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="233" column="21" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="233" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpayload__t_1a6ea24ed09a51f607a1e2a1b0f2ade2cb" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t payload_t::msg_id</definition>
+        <argsstring></argsstring>
+        <name>msg_id</name>
+        <qualifiedname>payload_t::msg_id</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Die MSG_ID ist der eindeutige Identifizierer einer Nachricht. Muss einen Nachricht wiederholt werden, wird sie hochgezählt. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="236" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="236" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpayload__t_1a332fd1884f12dc0307317907cf57d4ea" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t payload_t::msg_type</definition>
+        <argsstring></argsstring>
+        <name>msg_type</name>
+        <qualifiedname>payload_t::msg_type</qualifiedname>
+        <briefdescription>
+<para>Art der Nachricht, Definition siehe Nachrichtentyp. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="238" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="238" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpayload__t_1a1a9dfd6db5d1c123d2dccecceb14112e" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t payload_t::msg_flags</definition>
+        <argsstring></argsstring>
+        <name>msg_flags</name>
+        <qualifiedname>payload_t::msg_flags</qualifiedname>
+        <briefdescription>
+<para>Nachrichtenflag, Definition siehe Nachrichtenflags. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="240" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="240" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpayload__t_1a5c24bc8a9f0e51a910baa9f8c4110fbc" prot="public" static="no" mutable="no">
+        <type><ref refid="group__rf24makros_1gac284fce722a0be7bec73e511dc3f2bbd" kindref="member">ONR_DATTYPE</ref></type>
+        <definition>ONR_DATTYPE payload_t::orderno</definition>
+        <argsstring></argsstring>
+        <name>orderno</name>
+        <qualifiedname>payload_t::orderno</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Ordernummern werden im Hub verwaltet und dort nach jederOrder hochgezählt. Auf eine Anfrage vom Hub wird immer mit der selben ORDER_NO geantwortet Nachrichten, die ihren Ursprung im Node haben ( z.B. Heatbeatmessages ) erhalten die ORDER_NO &quot;0&quot;, Ordernummern größer 250 diesen zur Messung des PA Levels. <linebreak/>
+ </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="245" column="21" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="245" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpayload__t_1a6097a5427f09fe70856fb44f916da240" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t payload_t::heartbeatno</definition>
+        <argsstring></argsstring>
+        <name>heartbeatno</name>
+        <qualifiedname>payload_t::heartbeatno</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Die heartbeatno wird bei jedem neuen Heartbeat hochgezählt Da es sich um eine 8 Bit Zahl handelt wird der gültige Bereich für normale Heartbeats von 1...200 festgelegt Der Bereich 201...255 gilt für besondere Nachrichten (z.B. Initialisierung ) </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="249" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="249" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpayload__t_1a637f46e37304fb9a195ebb15091daf08" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t payload_t::reserved2</definition>
+        <argsstring></argsstring>
+        <name>reserved2</name>
+        <qualifiedname>payload_t::reserved2</qualifiedname>
+        <briefdescription>
+<para>noch nicht genutzt </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="251" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="251" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpayload__t_1a50b1e3c3f3965249b76f3b3c5b8d8d21" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t payload_t::reserved3</definition>
+        <argsstring></argsstring>
+        <name>reserved3</name>
+        <qualifiedname>payload_t::reserved3</qualifiedname>
+        <briefdescription>
+<para>noch nicht genutzt </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="253" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="253" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpayload__t_1a18f328fa1c71e87663b30ed1fde701bb" prot="public" static="no" mutable="no">
+        <type>uint32_t</type>
+        <definition>uint32_t payload_t::data1</definition>
+        <argsstring></argsstring>
+        <name>data1</name>
+        <qualifiedname>payload_t::data1</qualifiedname>
+        <briefdescription>
+<para>Datenpaket 1 (32Bit) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="255" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="255" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpayload__t_1a6a3bdd422de558f0762911297b8d6dfa" prot="public" static="no" mutable="no">
+        <type>uint32_t</type>
+        <definition>uint32_t payload_t::data2</definition>
+        <argsstring></argsstring>
+        <name>data2</name>
+        <qualifiedname>payload_t::data2</qualifiedname>
+        <briefdescription>
+<para>Datenpaket 2 (32Bit) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="257" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="257" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpayload__t_1acf0a2b00de74d3cb536bf51a7ed05e57" prot="public" static="no" mutable="no">
+        <type>uint32_t</type>
+        <definition>uint32_t payload_t::data3</definition>
+        <argsstring></argsstring>
+        <name>data3</name>
+        <qualifiedname>payload_t::data3</qualifiedname>
+        <briefdescription>
+<para>Datenpaket 3 (32Bit) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="259" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="259" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpayload__t_1a994342c5f4f30ab8e2219b5dabbcb4ac" prot="public" static="no" mutable="no">
+        <type>uint32_t</type>
+        <definition>uint32_t payload_t::data4</definition>
+        <argsstring></argsstring>
+        <name>data4</name>
+        <qualifiedname>payload_t::data4</qualifiedname>
+        <briefdescription>
+<para>Datenpaket 4 (32Bit) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="261" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="261" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpayload__t_1a92f6a3267ceb4b5cd05018d407d58afc" prot="public" static="no" mutable="no">
+        <type>uint32_t</type>
+        <definition>uint32_t payload_t::data5</definition>
+        <argsstring></argsstring>
+        <name>data5</name>
+        <qualifiedname>payload_t::data5</qualifiedname>
+        <briefdescription>
+<para>Datenpaket 5 (32Bit) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="263" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="263" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpayload__t_1a123b9a41dc6fbff0b0c8aeed9e03a7d6" prot="public" static="no" mutable="no">
+        <type>uint32_t</type>
+        <definition>uint32_t payload_t::data6</definition>
+        <argsstring></argsstring>
+        <name>data6</name>
+        <qualifiedname>payload_t::data6</qualifiedname>
+        <briefdescription>
+<para>Datenpaket 6 (32Bit) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="265" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="265" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="229" column="1" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="229" bodyend="266"/>
+    <listofallmembers>
+      <member refid="structpayload__t_1a18f328fa1c71e87663b30ed1fde701bb" prot="public" virt="non-virtual"><scope>payload_t</scope><name>data1</name></member>
+      <member refid="structpayload__t_1a6a3bdd422de558f0762911297b8d6dfa" prot="public" virt="non-virtual"><scope>payload_t</scope><name>data2</name></member>
+      <member refid="structpayload__t_1acf0a2b00de74d3cb536bf51a7ed05e57" prot="public" virt="non-virtual"><scope>payload_t</scope><name>data3</name></member>
+      <member refid="structpayload__t_1a994342c5f4f30ab8e2219b5dabbcb4ac" prot="public" virt="non-virtual"><scope>payload_t</scope><name>data4</name></member>
+      <member refid="structpayload__t_1a92f6a3267ceb4b5cd05018d407d58afc" prot="public" virt="non-virtual"><scope>payload_t</scope><name>data5</name></member>
+      <member refid="structpayload__t_1a123b9a41dc6fbff0b0c8aeed9e03a7d6" prot="public" virt="non-virtual"><scope>payload_t</scope><name>data6</name></member>
+      <member refid="structpayload__t_1a6097a5427f09fe70856fb44f916da240" prot="public" virt="non-virtual"><scope>payload_t</scope><name>heartbeatno</name></member>
+      <member refid="structpayload__t_1a1a9dfd6db5d1c123d2dccecceb14112e" prot="public" virt="non-virtual"><scope>payload_t</scope><name>msg_flags</name></member>
+      <member refid="structpayload__t_1a6ea24ed09a51f607a1e2a1b0f2ade2cb" prot="public" virt="non-virtual"><scope>payload_t</scope><name>msg_id</name></member>
+      <member refid="structpayload__t_1a332fd1884f12dc0307317907cf57d4ea" prot="public" virt="non-virtual"><scope>payload_t</scope><name>msg_type</name></member>
+      <member refid="structpayload__t_1a3afa33b39f6de1877e858f9fb0b5f87a" prot="public" virt="non-virtual"><scope>payload_t</scope><name>node_id</name></member>
+      <member refid="structpayload__t_1a5c24bc8a9f0e51a910baa9f8c4110fbc" prot="public" virt="non-virtual"><scope>payload_t</scope><name>orderno</name></member>
+      <member refid="structpayload__t_1a637f46e37304fb9a195ebb15091daf08" prot="public" virt="non-virtual"><scope>payload_t</scope><name>reserved2</name></member>
+      <member refid="structpayload__t_1a50b1e3c3f3965249b76f3b3c5b8d8d21" prot="public" virt="non-virtual"><scope>payload_t</scope><name>reserved3</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

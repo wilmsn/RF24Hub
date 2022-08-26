@@ -1,0 +1,233 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structOrder_1_1order__t" kind="struct" language="C++" prot="private">
+    <compoundname>Order::order_t</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structOrder_1_1order__t_1a2c39be4497c2c29ce9cd3222dec41a7f" prot="public" static="no" mutable="no">
+        <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+        <definition>NODE_DATTYPE Order::order_t::node_id</definition>
+        <argsstring></argsstring>
+        <name>node_id</name>
+        <qualifiedname>Order::order_t::node_id</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/order.h" line="28" column="32" bodyfile="/stick/netz/projekte/RF24Hub/linux/order.h" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structOrder_1_1order__t_1a7fcad4191f12d6ea3b16332554ab270d" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t Order::order_t::msg_id</definition>
+        <argsstring></argsstring>
+        <name>msg_id</name>
+        <qualifiedname>Order::order_t::msg_id</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/order.h" line="29" column="32" bodyfile="/stick/netz/projekte/RF24Hub/linux/order.h" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structOrder_1_1order__t_1a2296e8fbade11e24199c1d67fc62ca7d" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t Order::order_t::msg_type</definition>
+        <argsstring></argsstring>
+        <name>msg_type</name>
+        <qualifiedname>Order::order_t::msg_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/order.h" line="30" column="32" bodyfile="/stick/netz/projekte/RF24Hub/linux/order.h" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structOrder_1_1order__t_1a8166bdae6789d2397b653e3521f37f92" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t Order::order_t::msg_flags</definition>
+        <argsstring></argsstring>
+        <name>msg_flags</name>
+        <qualifiedname>Order::order_t::msg_flags</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/order.h" line="31" column="30" bodyfile="/stick/netz/projekte/RF24Hub/linux/order.h" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structOrder_1_1order__t_1a4cc642493f32a0cac2fbb33527f42875" prot="public" static="no" mutable="no">
+        <type><ref refid="group__rf24makros_1gac284fce722a0be7bec73e511dc3f2bbd" kindref="member">ONR_DATTYPE</ref></type>
+        <definition>ONR_DATTYPE Order::order_t::orderno</definition>
+        <argsstring></argsstring>
+        <name>orderno</name>
+        <qualifiedname>Order::order_t::orderno</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/order.h" line="32" column="31" bodyfile="/stick/netz/projekte/RF24Hub/linux/order.h" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structOrder_1_1order__t_1a0854d2d846b6dd852d5ae9417d08c8eb" prot="public" static="no" mutable="no">
+        <type>uint32_t</type>
+        <definition>uint32_t Order::order_t::data1</definition>
+        <argsstring></argsstring>
+        <name>data1</name>
+        <qualifiedname>Order::order_t::data1</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/order.h" line="33" column="30" bodyfile="/stick/netz/projekte/RF24Hub/linux/order.h" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structOrder_1_1order__t_1ab7b4a5ea668d9c398fc9b9aef09e46f0" prot="public" static="no" mutable="no">
+        <type>uint32_t</type>
+        <definition>uint32_t Order::order_t::data2</definition>
+        <argsstring></argsstring>
+        <name>data2</name>
+        <qualifiedname>Order::order_t::data2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/order.h" line="34" column="30" bodyfile="/stick/netz/projekte/RF24Hub/linux/order.h" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structOrder_1_1order__t_1a2c8994293aadd5660dd6b96ca0d08ee1" prot="public" static="no" mutable="no">
+        <type>uint32_t</type>
+        <definition>uint32_t Order::order_t::data3</definition>
+        <argsstring></argsstring>
+        <name>data3</name>
+        <qualifiedname>Order::order_t::data3</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/order.h" line="35" column="30" bodyfile="/stick/netz/projekte/RF24Hub/linux/order.h" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structOrder_1_1order__t_1a4357861db8d65df0a5da06f871a6f619" prot="public" static="no" mutable="no">
+        <type>uint32_t</type>
+        <definition>uint32_t Order::order_t::data4</definition>
+        <argsstring></argsstring>
+        <name>data4</name>
+        <qualifiedname>Order::order_t::data4</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/order.h" line="36" column="30" bodyfile="/stick/netz/projekte/RF24Hub/linux/order.h" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structOrder_1_1order__t_1aa98bc151d8f1348dce58cb18dbd739f7" prot="public" static="no" mutable="no">
+        <type>uint32_t</type>
+        <definition>uint32_t Order::order_t::data5</definition>
+        <argsstring></argsstring>
+        <name>data5</name>
+        <qualifiedname>Order::order_t::data5</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/order.h" line="37" column="30" bodyfile="/stick/netz/projekte/RF24Hub/linux/order.h" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structOrder_1_1order__t_1aab43d030ad159107f66acbb04559ea76" prot="public" static="no" mutable="no">
+        <type>uint32_t</type>
+        <definition>uint32_t Order::order_t::data6</definition>
+        <argsstring></argsstring>
+        <name>data6</name>
+        <qualifiedname>Order::order_t::data6</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/order.h" line="38" column="30" bodyfile="/stick/netz/projekte/RF24Hub/linux/order.h" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structOrder_1_1order__t_1a3cafe33617b8fb0ca22a1e2775d867cc" prot="public" static="no" mutable="no">
+        <type>uint64_t</type>
+        <definition>uint64_t Order::order_t::entrytime</definition>
+        <argsstring></argsstring>
+        <name>entrytime</name>
+        <qualifiedname>Order::order_t::entrytime</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/order.h" line="39" column="24" bodyfile="/stick/netz/projekte/RF24Hub/linux/order.h" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structOrder_1_1order__t_1aa7169588cb8e3313d483c85464215065" prot="public" static="no" mutable="no">
+        <type>uint64_t</type>
+        <definition>uint64_t Order::order_t::last_send</definition>
+        <argsstring></argsstring>
+        <name>last_send</name>
+        <qualifiedname>Order::order_t::last_send</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/order.h" line="40" column="26" bodyfile="/stick/netz/projekte/RF24Hub/linux/order.h" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structOrder_1_1order__t_1ab2b2545ad6d9a9c268d34ccff4e09a98" prot="public" static="no" mutable="no">
+        <type>order_t *</type>
+        <definition>order_t* Order::order_t::p_next</definition>
+        <argsstring></argsstring>
+        <name>p_next</name>
+        <qualifiedname>Order::order_t::p_next</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/order.h" line="41" column="31" bodyfile="/stick/netz/projekte/RF24Hub/linux/order.h" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>Order::order_t</label>
+        <childnode refid="1" relation="usage">
+          <edgelabel>p_next</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/stick/netz/projekte/RF24Hub/linux/order.h" line="27" column="1" bodyfile="/stick/netz/projekte/RF24Hub/linux/order.h" bodystart="27" bodyend="42"/>
+    <listofallmembers>
+      <member refid="structOrder_1_1order__t_1a0854d2d846b6dd852d5ae9417d08c8eb" prot="public" virt="non-virtual"><scope>Order::order_t</scope><name>data1</name></member>
+      <member refid="structOrder_1_1order__t_1ab7b4a5ea668d9c398fc9b9aef09e46f0" prot="public" virt="non-virtual"><scope>Order::order_t</scope><name>data2</name></member>
+      <member refid="structOrder_1_1order__t_1a2c8994293aadd5660dd6b96ca0d08ee1" prot="public" virt="non-virtual"><scope>Order::order_t</scope><name>data3</name></member>
+      <member refid="structOrder_1_1order__t_1a4357861db8d65df0a5da06f871a6f619" prot="public" virt="non-virtual"><scope>Order::order_t</scope><name>data4</name></member>
+      <member refid="structOrder_1_1order__t_1aa98bc151d8f1348dce58cb18dbd739f7" prot="public" virt="non-virtual"><scope>Order::order_t</scope><name>data5</name></member>
+      <member refid="structOrder_1_1order__t_1aab43d030ad159107f66acbb04559ea76" prot="public" virt="non-virtual"><scope>Order::order_t</scope><name>data6</name></member>
+      <member refid="structOrder_1_1order__t_1a3cafe33617b8fb0ca22a1e2775d867cc" prot="public" virt="non-virtual"><scope>Order::order_t</scope><name>entrytime</name></member>
+      <member refid="structOrder_1_1order__t_1aa7169588cb8e3313d483c85464215065" prot="public" virt="non-virtual"><scope>Order::order_t</scope><name>last_send</name></member>
+      <member refid="structOrder_1_1order__t_1a8166bdae6789d2397b653e3521f37f92" prot="public" virt="non-virtual"><scope>Order::order_t</scope><name>msg_flags</name></member>
+      <member refid="structOrder_1_1order__t_1a7fcad4191f12d6ea3b16332554ab270d" prot="public" virt="non-virtual"><scope>Order::order_t</scope><name>msg_id</name></member>
+      <member refid="structOrder_1_1order__t_1a2296e8fbade11e24199c1d67fc62ca7d" prot="public" virt="non-virtual"><scope>Order::order_t</scope><name>msg_type</name></member>
+      <member refid="structOrder_1_1order__t_1a2c39be4497c2c29ce9cd3222dec41a7f" prot="public" virt="non-virtual"><scope>Order::order_t</scope><name>node_id</name></member>
+      <member refid="structOrder_1_1order__t_1a4cc642493f32a0cac2fbb33527f42875" prot="public" virt="non-virtual"><scope>Order::order_t</scope><name>orderno</name></member>
+      <member refid="structOrder_1_1order__t_1ab2b2545ad6d9a9c268d34ccff4e09a98" prot="public" virt="non-virtual"><scope>Order::order_t</scope><name>p_next</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,157 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="group__msgtyp" kind="group">
+    <compoundname>msgtyp</compoundname>
+    <title>Definition der Messagetypen</title>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="group__msgtyp_1ga8ed9c5c04291e0672a6d1f39bf1978fa" prot="public" static="no">
+        <name>PAYLOAD_TYPE_INIT</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Nachricht ist ein Init Ursprung: Node; Empfänger: Hub </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="177" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="177" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__msgtyp_1gad54e4cbc3efebbb4cb3321c41fd8df64" prot="public" static="no">
+        <name>PAYLOAD_TYPE_ESP</name>
+        <initializer>41</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Nachricht ist ein Messwert aus einem ESPNode Ursprung: ESPNode; Empfänger: Hub Diese Nachricht wird nicht vom Hub beantwortet </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="182" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="182" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__msgtyp_1gafddf6f34f055d5d9f09e75ffa2ae9892" prot="public" static="no">
+        <name>PAYLOAD_TYPE_HB</name>
+        <initializer>51</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Nachricht ist ein Heatbeat Ursprung: Node; Empfänger: Hub </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="186" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="186" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__msgtyp_1ga74268dc65a0cc32f9195e4bb0cf204ef" prot="public" static="no">
+        <name>PAYLOAD_TYPE_HB_RESP</name>
+        <initializer>52</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Nachricht ist eine Quittung für einen Heatbeat, Alle 6 data Felder sind leer (0) Ursprung: Hub; Empfänger: Node </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="191" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="191" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__msgtyp_1ga1d003667cb94fd56dd9eab06a2a1af15" prot="public" static="no">
+        <name>PAYLOAD_TYPE_DAT</name>
+        <initializer>61</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Daten Nachricht, erfolgt als Antwort auf einen Heartbeat wenn der Hub dem Node etwas mitteilen möchte. Ursprung: Hub; Empfänger: Node </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="195" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="195" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__msgtyp_1ga61bcd8adef5b203b5d7fbc98931dbcc6" prot="public" static="no">
+        <name>PAYLOAD_TYPE_DATRESP</name>
+        <initializer>62</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Antwort auf Daten Nachricht verarbeitete Daten werden unverändert zurückgesand Ursprung: Node; Empfänger: Hub </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="200" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="200" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__msgtyp_1ga92669cdab68ff3e107fb427994ccd8a2" prot="public" static="no">
+        <name>PAYLOAD_TYPE_DATSTOP</name>
+        <initializer>63</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="205" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="205" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__msgtyp_1ga8db0468027a4128b2b9379b2f2924c3c" prot="public" static="no">
+        <name>PAYLOAD_TYPE_PING_POW_MIN</name>
+        <initializer>101</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Nachricht ist ein Ping. Sendeleistung ist Minimal (-18 dBm) </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="209" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="209" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__msgtyp_1ga7ca9b155447f464c8fb5be7820bab18c" prot="public" static="no">
+        <name>PAYLOAD_TYPE_PING_POW_LOW</name>
+        <initializer>102</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Nachricht ist ein Ping. Sendeleistung ist Low (-12 dBm) </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="212" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="212" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__msgtyp_1gad57d6606e11d197b130a79f5d2d4dac4" prot="public" static="no">
+        <name>PAYLOAD_TYPE_PING_POW_HIGH</name>
+        <initializer>103</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Nachricht ist ein Ping. Sendeleistung ist High (-6 dBm) </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="215" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="215" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__msgtyp_1gaca1e0957550707c027e2fe45dd387463" prot="public" static="no">
+        <name>PAYLOAD_TYPE_PING_POW_MAX</name>
+        <initializer>104</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Nachricht ist ein Ping. Sendeleistung ist Max ( 0 dBm) </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="218" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="218" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__msgtyp_1ga9649cc4d662d6db2dad415a6f70dff4b" prot="public" static="no">
+        <name>PAYLOAD_TYPE_PING_END</name>
+        <initializer>105</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Nachricht ist ein Ping. Ende des Tests Sendeleistung ist Max ( 0 dBm) </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="221" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="221" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Nachrichten werden in abhängigkeit von ihrem Nachrichtentyp im Hub unterschiedlich behandelt. <bold>Sonderfall Ping zur Feldstärkenmessung:</bold> Ein Ping geht immer vom Node aus. Durch die unterschiedlichen Sendeleistungen kann die Qualität der Funkverbindung beurteilt werden. </para>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

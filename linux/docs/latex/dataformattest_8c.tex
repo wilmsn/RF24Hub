@@ -1,0 +1,92 @@
+\hypertarget{dataformattest_8c}{}\doxysection{dataformattest.\+c File Reference}
+\label{dataformattest_8c}\index{dataformattest.c@{dataformattest.c}}
+{\ttfamily \#include $<$sys/types.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$errno.\+h$>$}\newline
+{\ttfamily \#include $<$getopt.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}dataformat.\+h\char`\"{}}\newline
+Include dependency graph for dataformattest.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dataformattest_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{dataformattest_8c_a102d43d6c2f3ecbab5813d3d103dbf55}{FEHLERTOLLERANZ}}~0.\+01
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{dataformattest_8c_a40f1184df6fe01e6a066d1c005e6f6de}{help}} (char $\ast$prgname)
+\item 
+void \mbox{\hyperlink{dataformattest_8c_a701f1ea3b2f08f7741cc9c134a74fcce}{test\+\_\+uint}} (uint16\+\_\+t zahl)
+\item 
+void \mbox{\hyperlink{dataformattest_8c_ab52977b51522723f8406244879a4fef5}{test\+\_\+int}} (int16\+\_\+t zahl)
+\item 
+void \mbox{\hyperlink{dataformattest_8c_acef42b788ddf4cd72c12e7cae052a890}{test\+\_\+float}} (float zahl)
+\item 
+int \mbox{\hyperlink{dataformattest_8c_a3c04138a5bfe5d72780bb7e82a18e627}{main}} (int argc, char $\ast$$\ast$argv)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{dataformattest_8c_a372d0cd018310f3a79a4e89a78a7b59d}{verbose\+\_\+set}} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{dataformattest_8c_a102d43d6c2f3ecbab5813d3d103dbf55}\label{dataformattest_8c_a102d43d6c2f3ecbab5813d3d103dbf55}} 
+\index{dataformattest.c@{dataformattest.c}!FEHLERTOLLERANZ@{FEHLERTOLLERANZ}}
+\index{FEHLERTOLLERANZ@{FEHLERTOLLERANZ}!dataformattest.c@{dataformattest.c}}
+\doxysubsubsection{\texorpdfstring{FEHLERTOLLERANZ}{FEHLERTOLLERANZ}}
+{\footnotesize\ttfamily \#define FEHLERTOLLERANZ~0.\+01}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{dataformattest_8c_a40f1184df6fe01e6a066d1c005e6f6de}\label{dataformattest_8c_a40f1184df6fe01e6a066d1c005e6f6de}} 
+\index{dataformattest.c@{dataformattest.c}!help@{help}}
+\index{help@{help}!dataformattest.c@{dataformattest.c}}
+\doxysubsubsection{\texorpdfstring{help()}{help()}}
+{\footnotesize\ttfamily void help (\begin{DoxyParamCaption}\item[{char $\ast$}]{prgname }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{dataformattest_8c_a3c04138a5bfe5d72780bb7e82a18e627}\label{dataformattest_8c_a3c04138a5bfe5d72780bb7e82a18e627}} 
+\index{dataformattest.c@{dataformattest.c}!main@{main}}
+\index{main@{main}!dataformattest.c@{dataformattest.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$$\ast$}]{argv }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{dataformattest_8c_acef42b788ddf4cd72c12e7cae052a890}\label{dataformattest_8c_acef42b788ddf4cd72c12e7cae052a890}} 
+\index{dataformattest.c@{dataformattest.c}!test\_float@{test\_float}}
+\index{test\_float@{test\_float}!dataformattest.c@{dataformattest.c}}
+\doxysubsubsection{\texorpdfstring{test\_float()}{test\_float()}}
+{\footnotesize\ttfamily void test\+\_\+float (\begin{DoxyParamCaption}\item[{float}]{zahl }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{dataformattest_8c_ab52977b51522723f8406244879a4fef5}\label{dataformattest_8c_ab52977b51522723f8406244879a4fef5}} 
+\index{dataformattest.c@{dataformattest.c}!test\_int@{test\_int}}
+\index{test\_int@{test\_int}!dataformattest.c@{dataformattest.c}}
+\doxysubsubsection{\texorpdfstring{test\_int()}{test\_int()}}
+{\footnotesize\ttfamily void test\+\_\+int (\begin{DoxyParamCaption}\item[{int16\+\_\+t}]{zahl }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{dataformattest_8c_a701f1ea3b2f08f7741cc9c134a74fcce}\label{dataformattest_8c_a701f1ea3b2f08f7741cc9c134a74fcce}} 
+\index{dataformattest.c@{dataformattest.c}!test\_uint@{test\_uint}}
+\index{test\_uint@{test\_uint}!dataformattest.c@{dataformattest.c}}
+\doxysubsubsection{\texorpdfstring{test\_uint()}{test\_uint()}}
+{\footnotesize\ttfamily void test\+\_\+uint (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{zahl }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{dataformattest_8c_a372d0cd018310f3a79a4e89a78a7b59d}\label{dataformattest_8c_a372d0cd018310f3a79a4e89a78a7b59d}} 
+\index{dataformattest.c@{dataformattest.c}!verbose\_set@{verbose\_set}}
+\index{verbose\_set@{verbose\_set}!dataformattest.c@{dataformattest.c}}
+\doxysubsubsection{\texorpdfstring{verbose\_set}{verbose\_set}}
+{\footnotesize\ttfamily bool verbose\+\_\+set = false}
+

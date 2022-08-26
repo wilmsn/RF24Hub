@@ -1,0 +1,231 @@
+\hypertarget{classNodeClass}{}\doxysection{Node\+Class Class Reference}
+\label{classNodeClass}\index{NodeClass@{NodeClass}}
+
+
+{\ttfamily \#include $<$nodeclass.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classNodeClass_aab2d021eab042764ce711d612bddcdfb}{set\+Verbose}} (uint16\+\_\+t \mbox{\hyperlink{rf24hubd_8h_a2ac10a3f1b8393a2208b7dc7f6672704}{verbose\+Level}})
+\item 
+bool \mbox{\hyperlink{classNodeClass_a83714f63c522c0204d64409636e21df5}{is\+Valid\+Node}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id)
+\item 
+void \mbox{\hyperlink{classNodeClass_a3ee0b4ebf2f323e162118926930d5aba}{cleanup}} (void)
+\item 
+void \mbox{\hyperlink{classNodeClass_ab127025de949d5afa5a288dacd81a6bc}{add\+Node}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id, char $\ast$node\+\_\+name, float u\+\_\+batt, bool is\+\_\+mastered, uint8\+\_\+t PALevel)
+\item 
+char $\ast$ \mbox{\hyperlink{classNodeClass_aa9a89a27bef5e048e0a0bc77110599fc}{get\+Node\+Name}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id)
+\item 
+bool \mbox{\hyperlink{classNodeClass_a5c8f294ac1cc473fa4fa9496b4e4e0cd}{is\+New\+HB}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id, uint8\+\_\+t heartbeatno, uint32\+\_\+t utime)
+\item 
+bool \mbox{\hyperlink{classNodeClass_a3f4609d7e76738f48f79b01390346b07}{is\+Mastered\+Node}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id)
+\item 
+void \mbox{\hyperlink{classNodeClass_ab6d5ef2c4cba3b430c2aaf4ab2ad6eae}{set\+Mastered\+Node}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id, bool is\+Mastered)
+\item 
+void \mbox{\hyperlink{classNodeClass_ad20259b5d0b26161b3b413cf888850cb}{set\+Rec\+Level}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id, uint8\+\_\+t pa\+\_\+level)
+\item 
+void \mbox{\hyperlink{classNodeClass_ad2c13bbc7342720f9a7b2a6cb9234af2}{set\+Pa\+Level}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id, uint8\+\_\+t pa\+\_\+level)
+\item 
+uint8\+\_\+t \mbox{\hyperlink{classNodeClass_a1ae3f15bc57186191cbf5f3b5b379fae}{get\+Pa\+Level}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id)
+\item 
+void \mbox{\hyperlink{classNodeClass_a7ec14e4aa2e923b6d021ac5bf40bb291}{set\+Voltage}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id, float u\+\_\+batt)
+\item 
+void \mbox{\hyperlink{classNodeClass_a804319206db034ece2d5e9a2a5e8a03d}{print\+Buffer}} (int tn\+\_\+socket, bool htmlformat)
+\item 
+\mbox{\hyperlink{classNodeClass_ae8a245ced682781f86feeb6569c9119a}{Node\+Class}} (void)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classNodeClass_ae8a245ced682781f86feeb6569c9119a}\label{classNodeClass_ae8a245ced682781f86feeb6569c9119a}} 
+\index{NodeClass@{NodeClass}!NodeClass@{NodeClass}}
+\index{NodeClass@{NodeClass}!NodeClass@{NodeClass}}
+\doxysubsubsection{\texorpdfstring{NodeClass()}{NodeClass()}}
+{\footnotesize\ttfamily Node\+Class\+::\+Node\+Class (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Construktor des Buffers 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classNodeClass_ab127025de949d5afa5a288dacd81a6bc}\label{classNodeClass_ab127025de949d5afa5a288dacd81a6bc}} 
+\index{NodeClass@{NodeClass}!addNode@{addNode}}
+\index{addNode@{addNode}!NodeClass@{NodeClass}}
+\doxysubsubsection{\texorpdfstring{addNode()}{addNode()}}
+{\footnotesize\ttfamily void Node\+Class\+::add\+Node (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id,  }\item[{char $\ast$}]{node\+\_\+name,  }\item[{float}]{u\+\_\+batt,  }\item[{bool}]{is\+\_\+mastered,  }\item[{uint8\+\_\+t}]{PALevel }\end{DoxyParamCaption})}
+
+Fügt einen neuen Node hinzu 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Die Node-\/\+ID \\
+\hline
+{\em node\+\_\+name} & Der Name des Node \\
+\hline
+{\em u\+\_\+batt} & Die aktuelle Batteriespannung \\
+\hline
+{\em is\+\_\+mastered} & \char`\"{}true\char`\"{} wenn dieser Hub diesen Node verwaltet, sonst \char`\"{}false\char`\"{} \\
+\hline
+{\em PALevel} & Das gemessene PALevel \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classNodeClass_a3ee0b4ebf2f323e162118926930d5aba}\label{classNodeClass_a3ee0b4ebf2f323e162118926930d5aba}} 
+\index{NodeClass@{NodeClass}!cleanup@{cleanup}}
+\index{cleanup@{cleanup}!NodeClass@{NodeClass}}
+\doxysubsubsection{\texorpdfstring{cleanup()}{cleanup()}}
+{\footnotesize\ttfamily void Node\+Class\+::cleanup (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Löscht den kompletten Inhalt und leert den Buffer \mbox{\Hypertarget{classNodeClass_aa9a89a27bef5e048e0a0bc77110599fc}\label{classNodeClass_aa9a89a27bef5e048e0a0bc77110599fc}} 
+\index{NodeClass@{NodeClass}!getNodeName@{getNodeName}}
+\index{getNodeName@{getNodeName}!NodeClass@{NodeClass}}
+\doxysubsubsection{\texorpdfstring{getNodeName()}{getNodeName()}}
+{\footnotesize\ttfamily char $\ast$ Node\+Class\+::get\+Node\+Name (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id }\end{DoxyParamCaption})}
+
+Gibt zur Node\+ID den Namen des Nodes zurück 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Die Node-\/\+ID \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Der Name des Nodes als Zeiger auf einen String 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNodeClass_a1ae3f15bc57186191cbf5f3b5b379fae}\label{classNodeClass_a1ae3f15bc57186191cbf5f3b5b379fae}} 
+\index{NodeClass@{NodeClass}!getPaLevel@{getPaLevel}}
+\index{getPaLevel@{getPaLevel}!NodeClass@{NodeClass}}
+\doxysubsubsection{\texorpdfstring{getPaLevel()}{getPaLevel()}}
+{\footnotesize\ttfamily uint8\+\_\+t Node\+Class\+::get\+Pa\+Level (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id }\end{DoxyParamCaption})}
+
+Liest den letzten ermittelten PA Level für diesen Node aus PA Level 0=unknown; 1=Min; 2=Low; 3=High; 4=Max 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Die Node-\/\+ID \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Das gespeicherte PA Level 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNodeClass_a3f4609d7e76738f48f79b01390346b07}\label{classNodeClass_a3f4609d7e76738f48f79b01390346b07}} 
+\index{NodeClass@{NodeClass}!isMasteredNode@{isMasteredNode}}
+\index{isMasteredNode@{isMasteredNode}!NodeClass@{NodeClass}}
+\doxysubsubsection{\texorpdfstring{isMasteredNode()}{isMasteredNode()}}
+{\footnotesize\ttfamily bool Node\+Class\+::is\+Mastered\+Node (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id }\end{DoxyParamCaption})}
+
+Prüft ob ein Node ein Node von diesem Hub gesteuert wird oder nicht 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Die Node-\/\+ID \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\char`\"{}true\char`\"{} wenn der Node durch diesen Hub verwaltet wird, sonst \char`\"{}false\char`\"{} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNodeClass_a5c8f294ac1cc473fa4fa9496b4e4e0cd}\label{classNodeClass_a5c8f294ac1cc473fa4fa9496b4e4e0cd}} 
+\index{NodeClass@{NodeClass}!isNewHB@{isNewHB}}
+\index{isNewHB@{isNewHB}!NodeClass@{NodeClass}}
+\doxysubsubsection{\texorpdfstring{isNewHB()}{isNewHB()}}
+{\footnotesize\ttfamily bool Node\+Class\+::is\+New\+HB (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id,  }\item[{uint8\+\_\+t}]{heartbeatno,  }\item[{uint32\+\_\+t}]{utime }\end{DoxyParamCaption})}
+
+Prüft ob ein Heartbeat neu (=neue heartbeatno) ~\newline
+ oder alt ist. 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Die Node-\/\+ID \\
+\hline
+{\em heartbeatno} & Die vom Node übermittelte Heartbeat-\/\+Nummer \\
+\hline
+{\em utime} & Die aktuelle Unix-\/times \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\char`\"{}true\char`\"{} wenn es sich um einen neuen Heartbeat handelt, sonst \char`\"{}false\char`\"{} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNodeClass_a83714f63c522c0204d64409636e21df5}\label{classNodeClass_a83714f63c522c0204d64409636e21df5}} 
+\index{NodeClass@{NodeClass}!isValidNode@{isValidNode}}
+\index{isValidNode@{isValidNode}!NodeClass@{NodeClass}}
+\doxysubsubsection{\texorpdfstring{isValidNode()}{isValidNode()}}
+{\footnotesize\ttfamily bool Node\+Class\+::is\+Valid\+Node (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id }\end{DoxyParamCaption})}
+
+Gibt an ob ein Node als Datensatz vorhanden ist 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Die Node-\/\+ID \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\char`\"{}true\char`\"{} wenn dieser Node bekannt ist, \char`\"{}false\char`\"{} wenn nicht. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNodeClass_a804319206db034ece2d5e9a2a5e8a03d}\label{classNodeClass_a804319206db034ece2d5e9a2a5e8a03d}} 
+\index{NodeClass@{NodeClass}!printBuffer@{printBuffer}}
+\index{printBuffer@{printBuffer}!NodeClass@{NodeClass}}
+\doxysubsubsection{\texorpdfstring{printBuffer()}{printBuffer()}}
+{\footnotesize\ttfamily void Node\+Class\+::print\+Buffer (\begin{DoxyParamCaption}\item[{int}]{tn\+\_\+socket,  }\item[{bool}]{htmlformat }\end{DoxyParamCaption})}
+
+Druckt alle records im Buffer in den out\+\_\+socket out\+\_\+socket ist dabei ein gültiger socket file descriptor entweder aus accept für einen socket oder mittels fileno(stdout) für den stdout Der zweite Parameter bestimmt das Format, true =\texorpdfstring{$>$}{>} HTML Format; false =\texorpdfstring{$>$}{>} Textformat 
+\begin{DoxyParams}{Parameters}
+{\em tn\+\_\+socket} & Das aktuelle Socket zur Ausgabe \\
+\hline
+{\em htmlformat} & \char`\"{}true\char`\"{} liefert die Ausgabe im HTML Format, \char`\"{}false\char`\"{} im Textformat \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classNodeClass_ab6d5ef2c4cba3b430c2aaf4ab2ad6eae}\label{classNodeClass_ab6d5ef2c4cba3b430c2aaf4ab2ad6eae}} 
+\index{NodeClass@{NodeClass}!setMasteredNode@{setMasteredNode}}
+\index{setMasteredNode@{setMasteredNode}!NodeClass@{NodeClass}}
+\doxysubsubsection{\texorpdfstring{setMasteredNode()}{setMasteredNode()}}
+{\footnotesize\ttfamily void Node\+Class\+::set\+Mastered\+Node (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id,  }\item[{bool}]{is\+Mastered }\end{DoxyParamCaption})}
+
+Setzt einen Node in den Zustand \char`\"{}mastered\char`\"{} = von diesem Hub gesteuert; oder nicht 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Die Node-\/\+ID \\
+\hline
+{\em is\+Mastered} & \char`\"{}true\char`\"{} wenn der Node durch diesen Hub verwaltet wird, sonst \char`\"{}false\char`\"{} \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classNodeClass_ad2c13bbc7342720f9a7b2a6cb9234af2}\label{classNodeClass_ad2c13bbc7342720f9a7b2a6cb9234af2}} 
+\index{NodeClass@{NodeClass}!setPaLevel@{setPaLevel}}
+\index{setPaLevel@{setPaLevel}!NodeClass@{NodeClass}}
+\doxysubsubsection{\texorpdfstring{setPaLevel()}{setPaLevel()}}
+{\footnotesize\ttfamily void Node\+Class\+::set\+Pa\+Level (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id,  }\item[{uint8\+\_\+t}]{pa\+\_\+level }\end{DoxyParamCaption})}
+
+Setzt die aktuelle Sendefeldstärke für diesen Node PA Level 9=unknown; 0=Min; 1=Low; 2=High; 3=Max 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Die Node-\/\+ID \\
+\hline
+{\em pa\+\_\+level} & Die aktuelle Sendefeldstärke \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classNodeClass_ad20259b5d0b26161b3b413cf888850cb}\label{classNodeClass_ad20259b5d0b26161b3b413cf888850cb}} 
+\index{NodeClass@{NodeClass}!setRecLevel@{setRecLevel}}
+\index{setRecLevel@{setRecLevel}!NodeClass@{NodeClass}}
+\doxysubsubsection{\texorpdfstring{setRecLevel()}{setRecLevel()}}
+{\footnotesize\ttfamily void Node\+Class\+::set\+Rec\+Level (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id,  }\item[{uint8\+\_\+t}]{pa\+\_\+level }\end{DoxyParamCaption})}
+
+Setzt den letzten ermittelten PA Level für diesen Node PA Level 9=unknown; 0=Min; 1=Low; 2=High; 3=Max 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Die Node-\/\+ID \\
+\hline
+{\em pa\+\_\+level} & Das ermittelte Empfangsfeldstärke \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classNodeClass_aab2d021eab042764ce711d612bddcdfb}\label{classNodeClass_aab2d021eab042764ce711d612bddcdfb}} 
+\index{NodeClass@{NodeClass}!setVerbose@{setVerbose}}
+\index{setVerbose@{setVerbose}!NodeClass@{NodeClass}}
+\doxysubsubsection{\texorpdfstring{setVerbose()}{setVerbose()}}
+{\footnotesize\ttfamily void Node\+Class\+::set\+Verbose (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{verbose\+Level }\end{DoxyParamCaption})}
+
+Setzt den Verboselevel. Mögliche Level sind in den Makros VERBOSE$\ast$ in \mbox{\hyperlink{config_8h}{config.\+h}} definiert. 
+\begin{DoxyParams}{Parameters}
+{\em verbose\+Level} & Der aktuelle Verboselevel \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classNodeClass_a7ec14e4aa2e923b6d021ac5bf40bb291}\label{classNodeClass_a7ec14e4aa2e923b6d021ac5bf40bb291}} 
+\index{NodeClass@{NodeClass}!setVoltage@{setVoltage}}
+\index{setVoltage@{setVoltage}!NodeClass@{NodeClass}}
+\doxysubsubsection{\texorpdfstring{setVoltage()}{setVoltage()}}
+{\footnotesize\ttfamily void Node\+Class\+::set\+Voltage (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id,  }\item[{float}]{u\+\_\+batt }\end{DoxyParamCaption})}
+
+Setzt die letzte gemessene Spannung des Nodes 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Die Node-\/\+ID \\
+\hline
+{\em u\+\_\+batt} & Die aktuelle Batteriespannung \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{nodeclass_8h}{nodeclass.\+h}}\item 
+\mbox{\hyperlink{nodeclass_8cpp}{nodeclass.\+cpp}}\end{DoxyCompactItemize}

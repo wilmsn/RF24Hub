@@ -1,0 +1,69 @@
+\hypertarget{dataformat_8cpp}{}\doxysection{dataformat.\+cpp File Reference}
+\label{dataformat_8cpp}\index{dataformat.cpp@{dataformat.cpp}}
+{\ttfamily \#include \char`\"{}dataformat.\+h\char`\"{}}\newline
+Include dependency graph for dataformat.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dataformat_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+float \mbox{\hyperlink{dataformat_8cpp_a3a0f50ef57dd9b1aa1974e867358cf82}{get\+Value\+\_\+f}} (uint32\+\_\+t data)
+\item 
+int16\+\_\+t \mbox{\hyperlink{dataformat_8cpp_a45c553970e8e1c2f86a4abbd3c536b55}{get\+Value\+\_\+i}} (uint32\+\_\+t data)
+\item 
+uint16\+\_\+t \mbox{\hyperlink{dataformat_8cpp_af890ea464785cefcdf4becec9f4a5c87}{get\+Value\+\_\+ui}} (uint32\+\_\+t data)
+\item 
+void \mbox{\hyperlink{group__datafmt_ga553dc49f84a0874f09d55f9e84fb31d2}{print\+Bits}} (size\+\_\+t const size, void const $\ast$const ptr)
+\begin{DoxyCompactList}\small\item\em Beschreibung des verwendeten Zahlenformates zur Übertragung (Transport\+Wert) Es handelt sich um ein 32 Bit unsigned Integer Format. Der Sensorwert wird mit einer Genauigkeit von 17 Bit (131072 max, genutzt 100000 = 5 Stellen = 0,01 Promille) gespeichert. Zahlenformat X $\ast$ 10$^\wedge$Y Format des Sensorwertes Bitreihenfolge\+: Bit 1 (MSB) ... Bit 32 (LSB) \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{group__datafmt_ga12f15e8310418544b966ce75d8c23e92}{calc\+Transport\+Value}} (uint8\+\_\+t channel, float value)
+\item 
+uint32\+\_\+t \mbox{\hyperlink{group__datafmt_gadb9719633356f80394982b89ee66f213}{calc\+Transport\+Value}} (uint8\+\_\+t channel, uint16\+\_\+t value)
+\item 
+uint32\+\_\+t \mbox{\hyperlink{group__datafmt_gae53a08e10db33776546054e9a2111ac0}{calc\+Transport\+Value}} (uint8\+\_\+t channel, int16\+\_\+t value)
+\item 
+uint32\+\_\+t \mbox{\hyperlink{dataformat_8cpp_a34354887a71db79b29c863c72a362746}{calc\+Transport\+Value}} (uint8\+\_\+t channel, char value1, char value2)
+\item 
+bool \mbox{\hyperlink{group__datafmt_ga87fd32ad4e05f024d6feaa6302a17595}{get\+Value}} (uint32\+\_\+t data, float $\ast$zahl)
+\item 
+bool \mbox{\hyperlink{group__datafmt_gab7502bc515a7f09a16515f3817229461}{get\+Value}} (uint32\+\_\+t data, int16\+\_\+t $\ast$zahl)
+\item 
+bool \mbox{\hyperlink{group__datafmt_gae7d45dd22998aa8968195df1e05401d1}{get\+Value}} (uint32\+\_\+t data, uint16\+\_\+t $\ast$zahl)
+\item 
+uint8\+\_\+t \mbox{\hyperlink{group__datafmt_ga2ecd9323066a3bcae374c8471d69c074}{get\+Data\+Type}} (uint32\+\_\+t data)
+\item 
+uint8\+\_\+t \mbox{\hyperlink{group__datafmt_ga1bc47883133ecf3ccab0bc5e94946f0b}{get\+Channel}} (uint32\+\_\+t data)
+\item 
+char $\ast$ \mbox{\hyperlink{group__datafmt_ga02342d8c3916c9953de9d5edce69869e}{unpack\+Transport\+Value}} (uint32\+\_\+t data, char $\ast$\mbox{\hyperlink{rf24hubd_8h_a1fe855c208bc17a51a4d34fefdb2d5b1}{buf}})
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{dataformat_8cpp_a34354887a71db79b29c863c72a362746}\label{dataformat_8cpp_a34354887a71db79b29c863c72a362746}} 
+\index{dataformat.cpp@{dataformat.cpp}!calcTransportValue@{calcTransportValue}}
+\index{calcTransportValue@{calcTransportValue}!dataformat.cpp@{dataformat.cpp}}
+\doxysubsubsection{\texorpdfstring{calcTransportValue()}{calcTransportValue()}}
+{\footnotesize\ttfamily uint32\+\_\+t calc\+Transport\+Value (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{channel,  }\item[{char}]{value1,  }\item[{char}]{value2 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{dataformat_8cpp_a3a0f50ef57dd9b1aa1974e867358cf82}\label{dataformat_8cpp_a3a0f50ef57dd9b1aa1974e867358cf82}} 
+\index{dataformat.cpp@{dataformat.cpp}!getValue\_f@{getValue\_f}}
+\index{getValue\_f@{getValue\_f}!dataformat.cpp@{dataformat.cpp}}
+\doxysubsubsection{\texorpdfstring{getValue\_f()}{getValue\_f()}}
+{\footnotesize\ttfamily float get\+Value\+\_\+f (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{data }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{dataformat_8cpp_a45c553970e8e1c2f86a4abbd3c536b55}\label{dataformat_8cpp_a45c553970e8e1c2f86a4abbd3c536b55}} 
+\index{dataformat.cpp@{dataformat.cpp}!getValue\_i@{getValue\_i}}
+\index{getValue\_i@{getValue\_i}!dataformat.cpp@{dataformat.cpp}}
+\doxysubsubsection{\texorpdfstring{getValue\_i()}{getValue\_i()}}
+{\footnotesize\ttfamily int16\+\_\+t get\+Value\+\_\+i (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{data }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{dataformat_8cpp_af890ea464785cefcdf4becec9f4a5c87}\label{dataformat_8cpp_af890ea464785cefcdf4becec9f4a5c87}} 
+\index{dataformat.cpp@{dataformat.cpp}!getValue\_ui@{getValue\_ui}}
+\index{getValue\_ui@{getValue\_ui}!dataformat.cpp@{dataformat.cpp}}
+\doxysubsubsection{\texorpdfstring{getValue\_ui()}{getValue\_ui()}}
+{\footnotesize\ttfamily uint16\+\_\+t get\+Value\+\_\+ui (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{data }\end{DoxyParamCaption})}
+

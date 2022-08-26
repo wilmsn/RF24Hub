@@ -1,0 +1,587 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="config_8h" kind="file" language="C++">
+    <compoundname>config.h</compoundname>
+    <includedby refid="cfg_8h" local="yes">cfg.h</includedby>
+    <includedby refid="common_8h" local="yes">common.h</includedby>
+    <includedby refid="rf24gwd_8h" local="yes">rf24gwd.h</includedby>
+    <includedby refid="rf24hubd_8h" local="yes">rf24hubd.h</includedby>
+    <includedby refid="simulator_8c" local="yes">simulator.c</includedby>
+    <invincdepgraph>
+      <node id="3">
+        <label>cfg.cpp</label>
+        <link refid="cfg_8cpp"/>
+      </node>
+      <node id="2">
+        <label>cfg.h</label>
+        <link refid="cfg_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>common.cpp</label>
+        <link refid="common_8cpp"/>
+      </node>
+      <node id="8">
+        <label>common.h</label>
+        <link refid="common_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>config.h</label>
+        <link refid="config_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>database.cpp</label>
+        <link refid="database_8cpp"/>
+      </node>
+      <node id="10">
+        <label>database.h</label>
+        <link refid="database_8h"/>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="13">
+        <label>gatewayclass.cpp</label>
+        <link refid="gatewayclass_8cpp"/>
+      </node>
+      <node id="12">
+        <label>gatewayclass.h</label>
+        <link refid="gatewayclass_8h"/>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="15">
+        <label>nodeclass.cpp</label>
+        <link refid="nodeclass_8cpp"/>
+      </node>
+      <node id="14">
+        <label>nodeclass.h</label>
+        <link refid="nodeclass_8h"/>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="17">
+        <label>order.cpp</label>
+        <link refid="order_8cpp"/>
+      </node>
+      <node id="16">
+        <label>order.h</label>
+        <link refid="order_8h"/>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="19">
+        <label>orderbuffer.cpp</label>
+        <link refid="orderbuffer_8cpp"/>
+      </node>
+      <node id="18">
+        <label>orderbuffer.h</label>
+        <link refid="orderbuffer_8h"/>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>rf24gwd.cpp</label>
+        <link refid="rf24gwd_8cpp"/>
+      </node>
+      <node id="4">
+        <label>rf24gwd.h</label>
+        <link refid="rf24gwd_8h"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>rf24hubd.cpp</label>
+        <link refid="rf24hubd_8cpp"/>
+      </node>
+      <node id="6">
+        <label>rf24hubd.h</label>
+        <link refid="rf24hubd_8h"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="21">
+        <label>sensorclass.cpp</label>
+        <link refid="sensorclass_8cpp"/>
+      </node>
+      <node id="20">
+        <label>sensorclass.h</label>
+        <link refid="sensorclass_8h"/>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+      </node>
+      <node id="22">
+        <label>simulator.c</label>
+        <link refid="simulator_8c"/>
+      </node>
+    </invincdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="group__cfgprm_1ga33cca38c576ada1ba69225b47cd975a4" prot="public" static="no">
+        <name>DEFAULT_CONFIG_FILE</name>
+        <initializer>&quot;/etc/rf24hub/<ref refid="rf24hubd_8h_1a6a559eb4e518378c7c552d2fdc1769af" kindref="member">rf24hub.cfg</ref>&quot;</initializer>
+        <briefdescription>
+<para>Hier wird der Name des übergreifenden Config-Files festgelegt. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="14" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1ga21c446d2b1203b1e20c3eeafe122e65a" prot="public" static="no">
+        <name>PARAM_MAXLEN</name>
+        <initializer>80</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="15" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="15" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1ga986d8be5603602bd5f440d521213f718" prot="public" static="no">
+        <name>MSGKEYHUB</name>
+        <initializer>3452</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="17" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1ga6312608b248a657fb67505d867a8e803" prot="public" static="no">
+        <name>MSGKEYGW</name>
+        <initializer>3453</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="19" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1ga67553d2953df3c27a32c3f3cdafdd729" prot="public" static="no">
+        <name>SENDINTERVAL</name>
+        <initializer>100</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="21" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1gaf703b63309487d7fb565d6daf0004919" prot="public" static="no">
+        <name>SENDSTOPCOUNT</name>
+        <initializer>3</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="23" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1gae575151f763b5abd179f04cf191d6004" prot="public" static="no">
+        <name>DELETEINTERVAL</name>
+        <initializer>500</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="25" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="25" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1gab6b354df2880d681367a25f34a33d33f" prot="public" static="no">
+        <name>DBSYNCINTERVAL</name>
+        <initializer>86400</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="28" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1ga62ddb5fa1007795fbfbf34dbfce0779c" prot="public" static="no">
+        <name>DEBUGSTRINGSIZE</name>
+        <initializer>600</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="30" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1ga59a900dc73429083f9aa8d06c504e493" prot="public" static="no">
+        <name>FHEMDEVLENGTH</name>
+        <initializer>50</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="31" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1gafe65396ba401039d794467a1ebe78a12" prot="public" static="no">
+        <name>TELNETBUFFERSIZE</name>
+        <initializer>200</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="32" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1gaa1800aa17cfe587014ff0f8387e4eace" prot="public" static="no">
+        <name>TSBUFFERSIZE</name>
+        <initializer>30</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="33" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1gabbb73c35faea3bdd0661dc217b75bc99" prot="public" static="no">
+        <name>SQLSTRINGSIZE</name>
+        <initializer>500</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="34" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1ga7b717190e48d3cfa41f1df0729dfecab" prot="public" static="no">
+        <name>TSBUFFERSTRING</name>
+        <initializer>&quot;                               &quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="35" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1ga76912cbcc5d1508936264c32cbbc1273" prot="public" static="no">
+        <name>NODENAMESIZE</name>
+        <initializer>50</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="36" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1ga46283355b48cf2906c0d24f96eed3120" prot="public" static="no">
+        <name>VERBOSECRITICAL</name>
+        <initializer>0b0000000000000001</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="39" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1ga0da648731e92ae0cf3620a696dd7583f" prot="public" static="no">
+        <name>VERBOSESTARTUP</name>
+        <initializer>0b0000000000000010</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="40" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1ga2437ad466ce2b951ed1071d6811b5f10" prot="public" static="no">
+        <name>VERBOSECONFIG</name>
+        <initializer>0b0000000000000100</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="41" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1ga1bfbdf34c4d8bce71fc8bfdf3557594c" prot="public" static="no">
+        <name>VERBOSEORDER</name>
+        <initializer>0b0000000000001000</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="42" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1gac3cd2647e712226e16b8083de6a08459" prot="public" static="no">
+        <name>VERBOSEOBUFFER</name>
+        <initializer>0b0000000000010000</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="43" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="43" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1gab9c8f36115ea5ab5fb358f5accda33f5" prot="public" static="no">
+        <name>VERBOSETELNET</name>
+        <initializer>0b0000000000100000</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="44" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1ga6fcb419ffbd4d4e80fd2bf5aa447b9a9" prot="public" static="no">
+        <name>VERBOSESQL</name>
+        <initializer>0b0000000001000000</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="45" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1gaf4a50ebee9ce3c5005e6d774b084247e" prot="public" static="no">
+        <name>VERBOSERF24</name>
+        <initializer>0b0000000010000000</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="46" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1ga419620cb0de1aad093f1c0846571074b" prot="public" static="no">
+        <name>VERBOSEOTHER</name>
+        <initializer>0b0000000100000000</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="47" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1gae547067a76fb78acbdd81d85415bc463" prot="public" static="no">
+        <name>VERBOSEORDEREXT</name>
+        <initializer>0b0000001000000000</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="48" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1ga60ab0ba4ca23ea48ade9d0d8ba0ee7ba" prot="public" static="no">
+        <name>VERBOSEBUFFERPOINTER</name>
+        <initializer>0b0000010000000000</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="49" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1gae9a37ad6afb8852590ec12eb38479742" prot="public" static="no">
+        <name>VERBOSEOBUFFEREXT</name>
+        <initializer>0b0000100000000000</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="50" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1gacd7ea6f3d6cce9b2aacc73bfda026205" prot="public" static="no">
+        <name>VERBOSEPOINTER</name>
+        <initializer>0b0001000000000000</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="51" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="51" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1gabbebd88be435a6d071042f8251429af3" prot="public" static="no">
+        <name>VERBOSESENSOR</name>
+        <initializer>0b0010000000000000</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="52" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="52" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1ga0043044e81b112295b7f4348ac52d4fc" prot="public" static="no">
+        <name>VERBOSEALL</name>
+        <initializer>0b0011111111111111</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="53" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1gab1f896fd840b20eb078c4dab7e752c88" prot="public" static="no">
+        <name>VERBOSENONE</name>
+        <initializer>0b0000000000000011</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="54" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cfgprm_1ga6c4340ca162dd39191fb258fe86f573a" prot="public" static="no">
+        <name>STARTUPVERBOSELEVEL</name>
+        <initializer>0b0000000000000011</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/config.h" line="56" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/config.h" bodystart="56" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Headerdatei mit Configurationen für Hub und Gateway. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>_CONFIG_H_<sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Include<sp/>guard<sp/>*/</highlight><highlight class="preprocessor"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_CONFIG_H_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14" refid="group__cfgprm_1ga33cca38c576ada1ba69225b47cd975a4" refkind="member"><highlight class="preprocessor">#define<sp/>DEFAULT_CONFIG_FILE<sp/>&quot;/etc/rf24hub/rf24hub.cfg&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15" refid="group__cfgprm_1ga21c446d2b1203b1e20c3eeafe122e65a" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PARAM_MAXLEN<sp/>80</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="comment">//<sp/>The<sp/>Key<sp/>for<sp/>the<sp/>Messagebuffer<sp/>(Hub)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17" refid="group__cfgprm_1ga986d8be5603602bd5f440d521213f718" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>MSGKEYHUB<sp/>3452</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="comment">//<sp/>The<sp/>Key<sp/>for<sp/>the<sp/>Messagebuffer<sp/>(GW)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19" refid="group__cfgprm_1ga6312608b248a657fb67505d867a8e803" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>MSGKEYGW<sp/>3453</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Interval<sp/>to<sp/>send/repeat<sp/>a<sp/>request<sp/>in<sp/>millisec.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21" refid="group__cfgprm_1ga67553d2953df3c27a32c3f3cdafdd729" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SENDINTERVAL<sp/>100</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Number<sp/>of<sp/>stopmessages<sp/>to<sp/>send</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23" refid="group__cfgprm_1gaf703b63309487d7fb565d6daf0004919" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SENDSTOPCOUNT<sp/>3</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Interval<sp/>for<sp/>deleting<sp/>unanswered<sp/>requests<sp/>in<sp/>millisec.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25" refid="group__cfgprm_1gae575151f763b5abd179f04cf191d6004" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>DELETEINTERVAL<sp/>500</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Intervall<sp/>to<sp/>sync<sp/>sensordata_d<sp/>to<sp/>sensordata<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Time<sp/>in<sp/>Seconds:<sp/>86400<sp/>=<sp/>24<sp/>Hours</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28" refid="group__cfgprm_1gab6b354df2880d681367a25f34a33d33f" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>DBSYNCINTERVAL<sp/><sp/><sp/>86400</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="comment">//<sp/>array<sp/>of<sp/>char<sp/>sizes</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30" refid="group__cfgprm_1ga62ddb5fa1007795fbfbf34dbfce0779c" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>DEBUGSTRINGSIZE<sp/>600</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31" refid="group__cfgprm_1ga59a900dc73429083f9aa8d06c504e493" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>FHEMDEVLENGTH<sp/>50</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32" refid="group__cfgprm_1gafe65396ba401039d794467a1ebe78a12" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>TELNETBUFFERSIZE<sp/>200</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33" refid="group__cfgprm_1gaa1800aa17cfe587014ff0f8387e4eace" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>TSBUFFERSIZE<sp/>30</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34" refid="group__cfgprm_1gabbb73c35faea3bdd0661dc217b75bc99" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SQLSTRINGSIZE<sp/>500</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35" refid="group__cfgprm_1ga7b717190e48d3cfa41f1df0729dfecab" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>TSBUFFERSTRING<sp/>&quot;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36" refid="group__cfgprm_1ga76912cbcc5d1508936264c32cbbc1273" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>NODENAMESIZE<sp/>50</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Verboselevel</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39" refid="group__cfgprm_1ga46283355b48cf2906c0d24f96eed3120" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VERBOSECRITICAL<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0b0000000000000001</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40" refid="group__cfgprm_1ga0da648731e92ae0cf3620a696dd7583f" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VERBOSESTARTUP<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0b0000000000000010</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41" refid="group__cfgprm_1ga2437ad466ce2b951ed1071d6811b5f10" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VERBOSECONFIG<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0b0000000000000100</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42" refid="group__cfgprm_1ga1bfbdf34c4d8bce71fc8bfdf3557594c" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VERBOSEORDER<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0b0000000000001000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43" refid="group__cfgprm_1gac3cd2647e712226e16b8083de6a08459" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VERBOSEOBUFFER<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0b0000000000010000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44" refid="group__cfgprm_1gab9c8f36115ea5ab5fb358f5accda33f5" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VERBOSETELNET<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0b0000000000100000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="45" refid="group__cfgprm_1ga6fcb419ffbd4d4e80fd2bf5aa447b9a9" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VERBOSESQL<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0b0000000001000000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="46" refid="group__cfgprm_1gaf4a50ebee9ce3c5005e6d774b084247e" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VERBOSERF24<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0b0000000010000000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47" refid="group__cfgprm_1ga419620cb0de1aad093f1c0846571074b" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VERBOSEOTHER<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0b0000000100000000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48" refid="group__cfgprm_1gae547067a76fb78acbdd81d85415bc463" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VERBOSEORDEREXT<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0b0000001000000000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49" refid="group__cfgprm_1ga60ab0ba4ca23ea48ade9d0d8ba0ee7ba" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VERBOSEBUFFERPOINTER<sp/><sp/><sp/><sp/><sp/>0b0000010000000000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="50" refid="group__cfgprm_1gae9a37ad6afb8852590ec12eb38479742" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VERBOSEOBUFFEREXT<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0b0000100000000000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="51" refid="group__cfgprm_1gacd7ea6f3d6cce9b2aacc73bfda026205" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VERBOSEPOINTER<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0b0001000000000000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="52" refid="group__cfgprm_1gabbebd88be435a6d071042f8251429af3" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VERBOSESENSOR<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0b0010000000000000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53" refid="group__cfgprm_1ga0043044e81b112295b7f4348ac52d4fc" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VERBOSEALL<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0b0011111111111111</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="54" refid="group__cfgprm_1gab1f896fd840b20eb078c4dab7e752c88" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VERBOSENONE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0b0000000000000011</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56" refid="group__cfgprm_1ga6c4340ca162dd39191fb258fe86f573a" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>STARTUPVERBOSELEVEL<sp/><sp/><sp/><sp/><sp/><sp/>0b0000000000000011<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight><highlight class="comment">//#define<sp/>STARTUPVERBOSELEVEL<sp/><sp/><sp/><sp/><sp/><sp/>0b0011111111111111<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//<sp/>_CONFIG_H_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/stick/netz/projekte/RF24Hub/linux/config.h"/>
+  </compounddef>
+</doxygen>

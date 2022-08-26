@@ -1,0 +1,957 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="common_8cpp" kind="file" language="C++">
+    <compoundname>common.cpp</compoundname>
+    <includes refid="common_8h" local="yes">common.h</includes>
+    <incdepgraph>
+      <node id="1">
+        <label>common.cpp</label>
+        <link refid="common_8cpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>common.h</label>
+        <link refid="common_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="18">
+        <label>config.h</label>
+        <link refid="config_8h"/>
+      </node>
+      <node id="19">
+        <label>dataformat.h</label>
+        <link refid="dataformat_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="22">
+        <label>rf24_config.h</label>
+        <link refid="rf24__config_8h"/>
+      </node>
+      <node id="23">
+        <label>version.h</label>
+        <link refid="version_8h"/>
+      </node>
+      <node id="12">
+        <label>arpa/inet.h</label>
+      </node>
+      <node id="15">
+        <label>cstdio</label>
+      </node>
+      <node id="4">
+        <label>cstring</label>
+      </node>
+      <node id="5">
+        <label>ctype.h</label>
+      </node>
+      <node id="17">
+        <label>fcntl.h</label>
+      </node>
+      <node id="14">
+        <label>netdb.h</label>
+      </node>
+      <node id="16">
+        <label>netinet/in.h</label>
+      </node>
+      <node id="9">
+        <label>stdbool.h</label>
+      </node>
+      <node id="3">
+        <label>stdint.h</label>
+      </node>
+      <node id="20">
+        <label>stdio.h</label>
+      </node>
+      <node id="8">
+        <label>stdlib.h</label>
+      </node>
+      <node id="21">
+        <label>string.h</label>
+      </node>
+      <node id="11">
+        <label>sys/socket.h</label>
+      </node>
+      <node id="7">
+        <label>sys/time.h</label>
+      </node>
+      <node id="10">
+        <label>sys/types.h</label>
+      </node>
+      <node id="6">
+        <label>time.h</label>
+      </node>
+      <node id="13">
+        <label>unistd.h</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="common_8cpp_1ae5bb0c43f76b886197ee48679f0e8dbc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>char *</type>
+        <definition>char * trim</definition>
+        <argsstring>(char *s)</argsstring>
+        <name>trim</name>
+        <param>
+          <type>char *</type>
+          <declname>s</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>trim: get rid of trailing and leading whitespace... ...including the annoying &quot;\n&quot; from fgets() <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>s</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Eingabestring (schmutzig) </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Ausgabestring (gereinigt) </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.cpp" line="3" column="7" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.cpp" bodystart="3" bodyend="16"/>
+      </memberdef>
+      <memberdef kind="function" id="common_8cpp_1a3492d22004148ae3319a0760867b0b02" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>char *</type>
+        <definition>char * utime2str</definition>
+        <argsstring>(time_t utime, char *buf, uint8_t format)</argsstring>
+        <name>utime2str</name>
+        <param>
+          <type>time_t</type>
+          <declname>utime</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>buf</declname>
+        </param>
+        <param>
+          <type>uint8_t</type>
+          <declname>format</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>utime2str: konvertiert den übergebenen Unix Zeitstempel utime in einen String Ist utime = 0 wird die aktuelle Zeit genommen. Für form gilt: 1 =&gt; 20.04.2020 18:38:17 2 =&gt; 2020.04.20 18:38:17 Wichtig: Es muss ein Speicherplatz buf zur Aufnahme des Strings ( Grösse 20 Byte ) übergeben werden! <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>utime</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Unix Timestamp </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>buf</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Puffer zur Aufnahme des Ausgabestrings. Muss groß genug sein um den Ausgabestring komplett aufnehem zu können. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>format</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Bestimmt das Ausgabeformat des Zeitstrings: &quot;1&quot; =&gt; &quot;Tag.Monat.Jahr Stunde:Minute:Sekunde&quot;; &quot;2&quot; =&gt; &quot;Jahr.Monat.Tag Stunde:Minute:Sekunde&quot; </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Der Zeitstring </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.cpp" line="18" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.cpp" bodystart="18" bodyend="38"/>
+      </memberdef>
+      <memberdef kind="function" id="common_8cpp_1a83eaed94816137f9fe9521a7946efff0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>char *</type>
+        <definition>char * ts</definition>
+        <argsstring>(char *buf)</argsstring>
+        <name>ts</name>
+        <param>
+          <type>char *</type>
+          <declname>buf</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Erzeugt einen aktuellen Zeitstempel zur Verwendung in Log-Ausgaben. Wichtig: Es muss ein Buffer übergeben werden, der diesen Zeitstempel komplett aufnehmen kann! <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>Der</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Buffer zur Aufnahme des Zeitstempels </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Der Zeitstempel als String </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.cpp" line="40" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.cpp" bodystart="40" bodyend="52"/>
+      </memberdef>
+      <memberdef kind="function" id="common_8cpp_1afab512e15911b8554463ad51246fe9d0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uint64_t</type>
+        <definition>uint64_t mymillis</definition>
+        <argsstring>(void)</argsstring>
+        <name>mymillis</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Bildet den Unix Timestamp erweitert um Millisekunden ab <simplesect kind="return"><para>Der erweiterte Timestamp </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.cpp" line="54" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.cpp" bodystart="54" bodyend="60"/>
+      </memberdef>
+      <memberdef kind="function" id="common_8cpp_1afafa6fc1062835acb394ed23d75713aa" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>char *</type>
+        <definition>char * printVerbose</definition>
+        <argsstring>(uint16_t verboseLevel, char *buf)</argsstring>
+        <name>printVerbose</name>
+        <param>
+          <type>uint16_t</type>
+          <declname>verboseLevel</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>buf</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Gibt das aktuelle Verboselevel aus <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>buf</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Hier muss ein gültiges CHAR Array übergeben werden </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>verboseLevel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der aktuelle Verboselevel </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.cpp" line="62" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.cpp" bodystart="62" bodyend="77"/>
+      </memberdef>
+      <memberdef kind="function" id="common_8cpp_1a938ac03956edbe8f3fb790224413be8f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uint16_t</type>
+        <definition>uint16_t decodeVerbose</definition>
+        <argsstring>(uint16_t verboseLevel, char *verboseSet)</argsstring>
+        <name>decodeVerbose</name>
+        <param>
+          <type>uint16_t</type>
+          <declname>verboseLevel</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>verboseSet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Ermittelt den Binärwert eines neuen Verboselevels <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>verboseLevel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der alte Verboselevel als binärwert </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>verboseSet</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der neue Verboselevel als String, z.B. rf24 </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Der neu Verboselevel als binärwert </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.cpp" line="79" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.cpp" bodystart="79" bodyend="178"/>
+      </memberdef>
+      <memberdef kind="function" id="common_8cpp_1a28b2e361d35373f385ce446654913342" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>char *</type>
+        <definition>char * alloc_str</definition>
+        <argsstring>(uint16_t verboseLevel, const char *msgTxt, size_t size, char *timestamp)</argsstring>
+        <name>alloc_str</name>
+        <param>
+          <type>uint16_t</type>
+          <declname>verboseLevel</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>msgTxt</declname>
+        </param>
+        <param>
+          <type>size_t</type>
+          <declname>size</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>timestring</declname>
+          <defname>timestamp</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Ein Wrapper für malloc() mit folgenden Erweiterungen: Je nach aktuell gesetztem Verboselevel erfolgen Ausgaben <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>verboseLevel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der aktuell gesetzte Verboselevel </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>msgTxt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Ausgabetext für Verbosemeldungen </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>size</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die mittels malloc() zu allokierende Speichergröße </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>timestring</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der aktuelle Timestring z.B. durch ts(buf) erzeugt </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Ein leerer String mit der Größe &lt;size&gt; </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.cpp" line="181" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.cpp" bodystart="181" bodyend="191"/>
+      </memberdef>
+      <memberdef kind="function" id="common_8cpp_1a9d50abf17c3111a72781f13ef54d9c3d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void free_str</definition>
+        <argsstring>(uint16_t verboseLevel, const char *msgTxt, char *str, char *timestamp)</argsstring>
+        <name>free_str</name>
+        <param>
+          <type>uint16_t</type>
+          <declname>verboseLevel</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>msgTxt</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>str</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>timestring</declname>
+          <defname>timestamp</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Ein Wrapper für free() mit folgenden Erweiterungen: Je nach aktuell gesetztem Verboselevel erfolgen Ausgaben <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>verboseLevel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der aktuell gesetzte Verboselevel </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>msgTxt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Ausgabetext für Verbosemeldungen </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>str</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein zuvor mit alloc_str reservierter String(Speicherbereich) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>timestring</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der aktuelle Timestring z.B. durch ts(buf) erzeugt </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.cpp" line="193" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.cpp" bodystart="193" bodyend="201"/>
+      </memberdef>
+      <memberdef kind="function" id="common_8cpp_1ac858321bf90c9e4a48b93c1cf636fa4d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void sendUdpMessage</definition>
+        <argsstring>(const char *host, const char *port, udpdata_t *udpdata)</argsstring>
+        <name>sendUdpMessage</name>
+        <param>
+          <type>const char *</type>
+          <declname>host</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>port</declname>
+        </param>
+        <param>
+          <type><ref refid="structudpdata__t" kindref="compound">udpdata_t</ref> *</type>
+          <declname>udpdata</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Verschickt eine UDP Nachricht <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>host</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Empfängerhost </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>port</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der UDP Port auf dem Empfängerhost </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>udpdata</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die zu übertragenen Daten als Datentyp <ref refid="structudpdata__t" kindref="compound">udpdata_t</ref> </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.cpp" line="203" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.cpp" bodystart="203" bodyend="240"/>
+      </memberdef>
+      <memberdef kind="function" id="common_8cpp_1a7d5dae7e3622aa0e69d8531af6430829" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool openSocket</definition>
+        <argsstring>(const char *port, struct sockaddr_in *address, int *handle, sockType_t sockType)</argsstring>
+        <name>openSocket</name>
+        <param>
+          <type>const char *</type>
+          <declname>port</declname>
+        </param>
+        <param>
+          <type>struct sockaddr_in *</type>
+          <declname>address</declname>
+        </param>
+        <param>
+          <type>int *</type>
+          <declname>handle</declname>
+        </param>
+        <param>
+          <type><ref refid="common_8h_1a32b5c6c372c524c9144fd368d586d4bb" kindref="member">sockType_t</ref></type>
+          <declname>sockType</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Öffnet ein Socket auf dem localen Host <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>port</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der zu öffnede Port </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>address</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Eine leere Varaible vom Typ </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>handle</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Pointer auf eine INT Variable - Der Filehandler für dieses Socket </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sockType</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Typ des Sockets: UDP oder TCP </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.cpp" line="242" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.cpp" bodystart="242" bodyend="283"/>
+      </memberdef>
+      <memberdef kind="function" id="common_8cpp_1a78264021b512e588dbd4f8dfc393881c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void printPayload</definition>
+        <argsstring>(char *ts, const char *header, payload_t *payload)</argsstring>
+        <name>printPayload</name>
+        <param>
+          <type>char *</type>
+          <declname>ts</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>header</declname>
+        </param>
+        <param>
+          <type><ref refid="structpayload__t" kindref="compound">payload_t</ref> *</type>
+          <declname>payload</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Druckt den übergebenen payload in den STDIO <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>ts</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein gültiges array of char mit dem Timestamp </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>header</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein vor dem Payload zu druckener Text </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>payload</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>der zu druckende Payload </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.cpp" line="285" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.cpp" bodystart="285" bodyend="303"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&quot;<ref refid="common_8h" kindref="compound">common.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*<sp/><ref refid="common_8cpp_1ae5bb0c43f76b886197ee48679f0e8dbc" kindref="member">trim</ref><sp/>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*<sp/>s)<sp/>{</highlight></codeline>
+<codeline lineno="4"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>Initialize<sp/>start,<sp/>end<sp/>pointers<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*s1<sp/>=<sp/>s,<sp/>*s2<sp/>=<sp/>&amp;s[strlen<sp/>(s)<sp/>-<sp/>1];</highlight></codeline>
+<codeline lineno="6"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>Trim<sp/>and<sp/>delimit<sp/>right<sp/>side<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(<sp/>(isspace<sp/>(*s2))<sp/>&amp;&amp;<sp/>(s2<sp/>&gt;=<sp/>s1)<sp/>)</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"><sp/><sp/><sp/><sp/>s2--;</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"><sp/><sp/>*(s2+1)<sp/>=<sp/></highlight><highlight class="charliteral">&apos;\0&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>Trim<sp/>left<sp/>side<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(<sp/>(isspace<sp/>(*s1))<sp/>&amp;&amp;<sp/>(s1<sp/>&lt;<sp/>s2)<sp/>)</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/>s1++;</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>Copy<sp/>finished<sp/>string<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/>strcpy<sp/>(s,<sp/>s1);</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>s;</highlight></codeline>
+<codeline lineno="16"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="common_8cpp_1a3492d22004148ae3319a0760867b0b02" kindref="member">utime2str</ref>(time_t<sp/>utime,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>,<sp/>uint8_t<sp/>format)<sp/>{</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">tm<sp/>lt;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>myformat;</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>res[22];</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(utime<sp/>==<sp/>0)<sp/>utime<sp/>=<sp/>time(0);</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/>localtime_r(&amp;utime,<sp/>&amp;lt);</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">switch</highlight><highlight class="normal"><sp/>(format)<sp/>{</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/>1:</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>myformat<sp/>=<sp/>date_format1;</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/>2:</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>myformat<sp/>=<sp/>date_format2;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strftime(res,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(res),<sp/>myformat,<sp/>&amp;lt)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sprintf(<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>,</highlight><highlight class="stringliteral">&quot;Error&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sprintf(<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>,</highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal">,res);</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>;</highlight></codeline>
+<codeline lineno="38"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="common_8cpp_1a83eaed94816137f9fe9521a7946efff0" kindref="member">ts</ref>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/>time_t<sp/>now<sp/>=<sp/>time(0);</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/>tm<sp/>*ltm<sp/>=<sp/>localtime(&amp;now);</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">timeval<sp/>tv;</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/>gettimeofday(&amp;tv,<sp/>NULL);</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>msec=tv.tv_usec<sp/>/<sp/>1000;</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/>sprintf(<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>,</highlight><highlight class="stringliteral">&quot;[%d.%s%d.%s%d<sp/>%s%d:%s%d:%s%d.%s%u]<sp/>&quot;</highlight><highlight class="normal">,ltm-&gt;tm_year<sp/>+<sp/>1900,<sp/></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ltm-&gt;tm_mon&lt;9?<sp/></highlight><highlight class="stringliteral">&quot;0&quot;</highlight><highlight class="normal">:</highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">,<sp/>ltm-&gt;tm_mon+1,<sp/>ltm-&gt;tm_mday&lt;10?<sp/></highlight><highlight class="stringliteral">&quot;0&quot;</highlight><highlight class="normal">:</highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">,<sp/>ltm-&gt;tm_mday,</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ltm-&gt;tm_hour&lt;10?<sp/></highlight><highlight class="stringliteral">&quot;<sp/>&quot;</highlight><highlight class="normal">:</highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">,<sp/>ltm-&gt;tm_hour,<sp/>ltm-&gt;tm_min&lt;10?<sp/></highlight><highlight class="stringliteral">&quot;0&quot;</highlight><highlight class="normal">:</highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">,<sp/>ltm-&gt;tm_min,</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ltm-&gt;tm_sec&lt;10?<sp/></highlight><highlight class="stringliteral">&quot;0&quot;</highlight><highlight class="normal">:</highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">,<sp/>ltm-&gt;tm_sec,</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>msec&lt;10?<sp/></highlight><highlight class="stringliteral">&quot;00&quot;</highlight><highlight class="normal">:msec&lt;100?<sp/></highlight><highlight class="stringliteral">&quot;0&quot;</highlight><highlight class="normal">:</highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">,<sp/>msec<sp/>);</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal">uint64_t<sp/><ref refid="common_8cpp_1afab512e15911b8554463ad51246fe9d0" kindref="member">mymillis</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">timeval<sp/>tv;</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/>uint64_t<sp/>timebuf;</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/>gettimeofday(&amp;tv,<sp/>NULL);</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/>timebuf<sp/>=<sp/>(((tv.tv_sec<sp/>&amp;<sp/>0x000FFFFFFFFFFFFF)<sp/>*<sp/>1000)<sp/>+<sp/>(tv.tv_usec<sp/>/<sp/>1000));</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>timebuf;</highlight></codeline>
+<codeline lineno="60"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="common_8cpp_1afafa6fc1062835acb394ed23d75713aa" kindref="member">printVerbose</ref>(uint16_t<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref>,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>&amp;<sp/><ref refid="group__cfgprm_1ga46283355b48cf2906c0d24f96eed3120" kindref="member">VERBOSECRITICAL</ref><sp/>)<sp/><sp/><sp/>sprintf(<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>,</highlight><highlight class="stringliteral">&quot;critical&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>&amp;<sp/><ref refid="group__cfgprm_1ga0da648731e92ae0cf3620a696dd7583f" kindref="member">VERBOSESTARTUP</ref><sp/>)<sp/><sp/><sp/><sp/>sprintf(<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>,</highlight><highlight class="stringliteral">&quot;%s<sp/>startup&quot;</highlight><highlight class="normal">,<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>);</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>&amp;<sp/><ref refid="group__cfgprm_1ga2437ad466ce2b951ed1071d6811b5f10" kindref="member">VERBOSECONFIG</ref><sp/>)<sp/><sp/><sp/><sp/><sp/>sprintf(<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>,</highlight><highlight class="stringliteral">&quot;%s<sp/>config&quot;</highlight><highlight class="normal">,<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>);</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>&amp;<sp/><ref refid="group__cfgprm_1gab9c8f36115ea5ab5fb358f5accda33f5" kindref="member">VERBOSETELNET</ref><sp/>)<sp/><sp/><sp/><sp/><sp/>sprintf(<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>,</highlight><highlight class="stringliteral">&quot;%s<sp/>telnet&quot;</highlight><highlight class="normal">,<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>);</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>&amp;<sp/><ref refid="group__cfgprm_1gaf4a50ebee9ce3c5005e6d774b084247e" kindref="member">VERBOSERF24</ref><sp/>)<sp/><sp/><sp/><sp/><sp/><sp/><sp/>sprintf(<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>,</highlight><highlight class="stringliteral">&quot;%s<sp/>rf24&quot;</highlight><highlight class="normal">,<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>);</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>&amp;<sp/><ref refid="group__cfgprm_1gabbebd88be435a6d071042f8251429af3" kindref="member">VERBOSESENSOR</ref><sp/>)<sp/><sp/><sp/><sp/><sp/>sprintf(<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>,</highlight><highlight class="stringliteral">&quot;%s<sp/>sensor&quot;</highlight><highlight class="normal">,<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>);</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>&amp;<sp/><ref refid="group__cfgprm_1gac3cd2647e712226e16b8083de6a08459" kindref="member">VERBOSEOBUFFER</ref><sp/>)<sp/><sp/><sp/><sp/>sprintf(<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>,</highlight><highlight class="stringliteral">&quot;%s<sp/>obuffer&quot;</highlight><highlight class="normal">,<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>);</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>&amp;<sp/><ref refid="group__cfgprm_1gae9a37ad6afb8852590ec12eb38479742" kindref="member">VERBOSEOBUFFEREXT</ref><sp/>)<sp/>sprintf(<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>,</highlight><highlight class="stringliteral">&quot;%s<sp/>obufferext&quot;</highlight><highlight class="normal">,<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>);</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>&amp;<sp/><ref refid="group__cfgprm_1ga1bfbdf34c4d8bce71fc8bfdf3557594c" kindref="member">VERBOSEORDER</ref><sp/>)<sp/><sp/><sp/><sp/><sp/><sp/>sprintf(<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>,</highlight><highlight class="stringliteral">&quot;%s<sp/>order&quot;</highlight><highlight class="normal">,<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>);</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>&amp;<sp/><ref refid="group__cfgprm_1gae547067a76fb78acbdd81d85415bc463" kindref="member">VERBOSEORDEREXT</ref><sp/>)<sp/><sp/><sp/>sprintf(<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>,</highlight><highlight class="stringliteral">&quot;%s<sp/>orderext&quot;</highlight><highlight class="normal">,<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>);</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>&amp;<sp/><ref refid="group__cfgprm_1ga6fcb419ffbd4d4e80fd2bf5aa447b9a9" kindref="member">VERBOSESQL</ref><sp/>)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sprintf(<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>,</highlight><highlight class="stringliteral">&quot;%s<sp/>sql&quot;</highlight><highlight class="normal">,<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>);</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>&amp;<sp/><ref refid="group__cfgprm_1ga419620cb0de1aad093f1c0846571074b" kindref="member">VERBOSEOTHER</ref><sp/>)<sp/><sp/><sp/><sp/><sp/><sp/>sprintf(<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>,</highlight><highlight class="stringliteral">&quot;%s<sp/>other&quot;</highlight><highlight class="normal">,<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>);</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>&amp;<sp/><ref refid="group__cfgprm_1gacd7ea6f3d6cce9b2aacc73bfda026205" kindref="member">VERBOSEPOINTER</ref><sp/>)<sp/><sp/><sp/><sp/>sprintf(<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>,</highlight><highlight class="stringliteral">&quot;%s<sp/>pointer&quot;</highlight><highlight class="normal">,<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>);</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>;</highlight></codeline>
+<codeline lineno="77"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal">uint16_t<sp/><ref refid="common_8cpp_1a938ac03956edbe8f3fb790224413be8f" kindref="member">decodeVerbose</ref>(uint16_t<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref>,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>verboseSet)<sp/>{</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/>uint16_t<sp/>retval<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>cmp_VBall[]=</highlight><highlight class="stringliteral">&quot;all&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cmp_VBnone[]=</highlight><highlight class="stringliteral">&quot;none&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cmp_addVBconf[]=</highlight><highlight class="stringliteral">&quot;+config&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cmp_rmVBconf[]=</highlight><highlight class="stringliteral">&quot;-config&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cmp_addVBtn[]=</highlight><highlight class="stringliteral">&quot;+telnet&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cmp_rmVBtn[]=</highlight><highlight class="stringliteral">&quot;-telnet&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cmp_addVBrf24[]=</highlight><highlight class="stringliteral">&quot;+rf24&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cmp_rmVBrf24[]=</highlight><highlight class="stringliteral">&quot;-rf24&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cmp_addVBsens[]=</highlight><highlight class="stringliteral">&quot;+sensor&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cmp_rmVBsens[]=</highlight><highlight class="stringliteral">&quot;-sensor&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cmp_addVBob[]=</highlight><highlight class="stringliteral">&quot;+obuffer&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cmp_rmVBob[]=</highlight><highlight class="stringliteral">&quot;-obuffer&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cmp_addVBobex[]=</highlight><highlight class="stringliteral">&quot;+obufferext&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cmp_rmVBobex[]=</highlight><highlight class="stringliteral">&quot;-obufferext&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cmp_addVBorder[]=</highlight><highlight class="stringliteral">&quot;+order&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cmp_rmVBorder[]=</highlight><highlight class="stringliteral">&quot;-order&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cmp_addVBorderex[]=</highlight><highlight class="stringliteral">&quot;+orderext&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cmp_rmVBorderex[]=</highlight><highlight class="stringliteral">&quot;-orderext&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cmp_addVBsql[]=</highlight><highlight class="stringliteral">&quot;+sql&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cmp_rmVBsql[]=</highlight><highlight class="stringliteral">&quot;-sql&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cmp_addVBother[]=</highlight><highlight class="stringliteral">&quot;+other&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cmp_rmVBother[]=</highlight><highlight class="stringliteral">&quot;-other&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cmp_addVBpnt[]=</highlight><highlight class="stringliteral">&quot;+pointer&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cmp_rmVBpnt[]=</highlight><highlight class="stringliteral">&quot;-pointer&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(verboseSet,cmp_VBall)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="group__cfgprm_1ga0043044e81b112295b7f4348ac52d4fc" kindref="member">VERBOSEALL</ref>;</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(verboseSet,cmp_VBnone)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="group__cfgprm_1gab1f896fd840b20eb078c4dab7e752c88" kindref="member">VERBOSENONE</ref>;</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(verboseSet,cmp_addVBconf)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>|<sp/><ref refid="group__cfgprm_1ga2437ad466ce2b951ed1071d6811b5f10" kindref="member">VERBOSECONFIG</ref>;</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(verboseSet,cmp_rmVBconf)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>^<sp/><ref refid="group__cfgprm_1ga2437ad466ce2b951ed1071d6811b5f10" kindref="member">VERBOSECONFIG</ref>;</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(verboseSet,cmp_addVBtn)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>|<sp/><ref refid="group__cfgprm_1gab9c8f36115ea5ab5fb358f5accda33f5" kindref="member">VERBOSETELNET</ref>;</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(verboseSet,cmp_rmVBtn)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>^<sp/><ref refid="group__cfgprm_1gab9c8f36115ea5ab5fb358f5accda33f5" kindref="member">VERBOSETELNET</ref>;</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(verboseSet,cmp_addVBrf24)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>|<sp/><ref refid="group__cfgprm_1gaf4a50ebee9ce3c5005e6d774b084247e" kindref="member">VERBOSERF24</ref>;</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(verboseSet,cmp_rmVBrf24)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>^<sp/><ref refid="group__cfgprm_1gaf4a50ebee9ce3c5005e6d774b084247e" kindref="member">VERBOSERF24</ref>;</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(verboseSet,cmp_addVBsens)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>|<sp/><ref refid="group__cfgprm_1gabbebd88be435a6d071042f8251429af3" kindref="member">VERBOSESENSOR</ref>;</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(verboseSet,cmp_rmVBsens)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>^<sp/><ref refid="group__cfgprm_1gabbebd88be435a6d071042f8251429af3" kindref="member">VERBOSESENSOR</ref>;</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(verboseSet,cmp_addVBob)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>|<sp/><ref refid="group__cfgprm_1gac3cd2647e712226e16b8083de6a08459" kindref="member">VERBOSEOBUFFER</ref>;</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(verboseSet,cmp_rmVBob)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>^<sp/><ref refid="group__cfgprm_1gac3cd2647e712226e16b8083de6a08459" kindref="member">VERBOSEOBUFFER</ref>;</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(verboseSet,cmp_addVBobex)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>|<sp/><ref refid="group__cfgprm_1gae9a37ad6afb8852590ec12eb38479742" kindref="member">VERBOSEOBUFFEREXT</ref>;</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(verboseSet,cmp_rmVBobex)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>^<sp/><ref refid="group__cfgprm_1gae9a37ad6afb8852590ec12eb38479742" kindref="member">VERBOSEOBUFFEREXT</ref>;</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(verboseSet,cmp_addVBorder)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>|<sp/><ref refid="group__cfgprm_1ga1bfbdf34c4d8bce71fc8bfdf3557594c" kindref="member">VERBOSEORDER</ref>;</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(verboseSet,cmp_rmVBorder)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>^<sp/><ref refid="group__cfgprm_1ga1bfbdf34c4d8bce71fc8bfdf3557594c" kindref="member">VERBOSEORDER</ref>;</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(verboseSet,cmp_addVBorderex)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>|<sp/><ref refid="group__cfgprm_1gae547067a76fb78acbdd81d85415bc463" kindref="member">VERBOSEORDEREXT</ref>;</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(verboseSet,cmp_rmVBorderex)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>^<sp/><ref refid="group__cfgprm_1gae547067a76fb78acbdd81d85415bc463" kindref="member">VERBOSEORDEREXT</ref>;</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(verboseSet,cmp_addVBsql)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>|<sp/><ref refid="group__cfgprm_1ga6fcb419ffbd4d4e80fd2bf5aa447b9a9" kindref="member">VERBOSESQL</ref>;</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(verboseSet,cmp_rmVBsql)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>^<sp/><ref refid="group__cfgprm_1ga6fcb419ffbd4d4e80fd2bf5aa447b9a9" kindref="member">VERBOSESQL</ref>;</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(verboseSet,cmp_addVBother)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>|<sp/><ref refid="group__cfgprm_1ga419620cb0de1aad093f1c0846571074b" kindref="member">VERBOSEOTHER</ref>;</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(verboseSet,cmp_rmVBother)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>^<sp/><ref refid="group__cfgprm_1ga419620cb0de1aad093f1c0846571074b" kindref="member">VERBOSEOTHER</ref>;</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(verboseSet,cmp_addVBpnt)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>|<sp/><ref refid="group__cfgprm_1gacd7ea6f3d6cce9b2aacc73bfda026205" kindref="member">VERBOSEPOINTER</ref>;</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strcmp(verboseSet,cmp_rmVBpnt)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>^<sp/><ref refid="group__cfgprm_1gacd7ea6f3d6cce9b2aacc73bfda026205" kindref="member">VERBOSEPOINTER</ref>;</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>retval;</highlight></codeline>
+<codeline lineno="178"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"></highlight></codeline>
+<codeline lineno="180"><highlight class="normal"></highlight></codeline>
+<codeline lineno="181"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="common_8cpp_1a28b2e361d35373f385ce446654913342" kindref="member">alloc_str</ref>(uint16_t<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>msgTxt,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>size,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>timestamp)<sp/>{</highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>&amp;<sp/><ref refid="group__cfgprm_1gacd7ea6f3d6cce9b2aacc73bfda026205" kindref="member">VERBOSEPOINTER</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;%sMalloc<sp/>%s<sp/>P:&quot;</highlight><highlight class="normal">,<sp/>timestamp,<sp/>msgTxt);</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*retval<sp/>=<sp/><sp/>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*)<sp/>malloc<sp/>(size);</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(retval,<sp/>0,<sp/>size);</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>&amp;<sp/><ref refid="group__cfgprm_1gacd7ea6f3d6cce9b2aacc73bfda026205" kindref="member">VERBOSEPOINTER</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;&lt;%p&gt;<sp/>OK\n&quot;</highlight><highlight class="normal">,<sp/>retval);</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="190"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>retval;</highlight></codeline>
+<codeline lineno="191"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="192"><highlight class="normal"></highlight></codeline>
+<codeline lineno="193"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="common_8cpp_1a9d50abf17c3111a72781f13ef54d9c3d" kindref="member">free_str</ref>(uint16_t<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>msgTxt,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>str,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>timestamp)<sp/>{</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>&amp;<sp/><ref refid="group__cfgprm_1gacd7ea6f3d6cce9b2aacc73bfda026205" kindref="member">VERBOSEPOINTER</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;%sFree<sp/>%s<sp/>P:&lt;%p&gt;&quot;</highlight><highlight class="normal">,<sp/>timestamp,<sp/>msgTxt,<sp/>str);</highlight></codeline>
+<codeline lineno="196"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="197"><highlight class="normal"><sp/><sp/><sp/><sp/>free(str);</highlight></codeline>
+<codeline lineno="198"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>&amp;<sp/><ref refid="group__cfgprm_1gacd7ea6f3d6cce9b2aacc73bfda026205" kindref="member">VERBOSEPOINTER</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;<sp/>OK\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="200"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="201"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"></highlight></codeline>
+<codeline lineno="203"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="common_8cpp_1ac858321bf90c9e4a48b93c1cf636fa4d" kindref="member">sendUdpMessage</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>host,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>port,<sp/><ref refid="structudpdata__t" kindref="compound">udpdata_t</ref><sp/>*<sp/><ref refid="rf24gwd_8h_1aed24fc049dc5a6c8b3fd89e20c79be34" kindref="member">udpdata</ref><sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="204"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="rf24hubd_8h_1ad2c8fb3df3a737e0685e902870a611d2" kindref="member">sockfd</ref>;</highlight></codeline>
+<codeline lineno="205"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">addrinfo<sp/>hints,<sp/>*servinfo,<sp/>*p;</highlight></codeline>
+<codeline lineno="206"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>rv;</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>numbytes;</highlight></codeline>
+<codeline lineno="208"><highlight class="normal"></highlight></codeline>
+<codeline lineno="209"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(&amp;hints,<sp/>0,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal"><sp/>hints);</highlight></codeline>
+<codeline lineno="210"><highlight class="normal"><sp/><sp/><sp/><sp/>hints.ai_family<sp/>=<sp/>AF_INET;<sp/><sp/><sp/></highlight><highlight class="comment">//AF_UNSPEC;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/>hints.ai_socktype<sp/>=<sp/>SOCK_DGRAM;</highlight></codeline>
+<codeline lineno="212"><highlight class="normal"></highlight></codeline>
+<codeline lineno="213"><highlight class="normal"><sp/><sp/><sp/><sp/>rv<sp/>=<sp/>getaddrinfo(host,<sp/>port,<sp/>&amp;hints,<sp/>&amp;servinfo);</highlight></codeline>
+<codeline lineno="214"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>rv<sp/>!=<sp/>0<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="215"><highlight class="normal"><sp/><sp/><sp/><sp/>fprintf(stderr,<sp/></highlight><highlight class="stringliteral">&quot;Host:<sp/>%s<sp/>Port:<sp/>%p<sp/>\n&quot;</highlight><highlight class="normal">,<sp/>host,<sp/>port);</highlight></codeline>
+<codeline lineno="216"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>fprintf(stderr,<sp/></highlight><highlight class="stringliteral">&quot;getaddrinfo:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/>gai_strerror(rv));</highlight></codeline>
+<codeline lineno="217"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/>exit(1);</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="218"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="219"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>loop<sp/>through<sp/>all<sp/>the<sp/>results<sp/>and<sp/>make<sp/>a<sp/>socket</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="220"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(p<sp/>=<sp/>servinfo;<sp/>p<sp/>!=<sp/>NULL;<sp/>p<sp/>=<sp/>p-&gt;ai_next)<sp/>{</highlight></codeline>
+<codeline lineno="221"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rf24hubd_8h_1ad2c8fb3df3a737e0685e902870a611d2" kindref="member">sockfd</ref><sp/>=<sp/>socket(p-&gt;ai_family,<sp/>p-&gt;ai_socktype,<sp/>p-&gt;ai_protocol);</highlight></codeline>
+<codeline lineno="222"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/><ref refid="rf24hubd_8h_1ad2c8fb3df3a737e0685e902870a611d2" kindref="member">sockfd</ref><sp/>==<sp/>-1<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="223"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>perror(</highlight><highlight class="stringliteral">&quot;Error:<sp/>socket&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="226"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="228"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(p<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="229"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>fprintf(stderr,<sp/></highlight><highlight class="stringliteral">&quot;Error:<sp/>failed<sp/>to<sp/>bind<sp/>socket\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="230"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//exit(1);</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="231"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="232"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>((numbytes<sp/>=<sp/>sendto(<ref refid="rf24hubd_8h_1ad2c8fb3df3a737e0685e902870a611d2" kindref="member">sockfd</ref>,<sp/><ref refid="rf24gwd_8h_1aed24fc049dc5a6c8b3fd89e20c79be34" kindref="member">udpdata</ref>,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="structudpdata__t" kindref="compound">udpdata_t</ref>),<sp/>0,<sp/>p-&gt;ai_addr,<sp/>p-&gt;ai_addrlen))<sp/>==<sp/>-1)<sp/>{</highlight></codeline>
+<codeline lineno="233"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>perror(</highlight><highlight class="stringliteral">&quot;Error:<sp/>sendto<sp/>error&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="234"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//exit(1);</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="235"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="236"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="237"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/><ref refid="rf24hubd_8h_1ad2c8fb3df3a737e0685e902870a611d2" kindref="member">sockfd</ref><sp/>!=<sp/>-1<sp/>)<sp/>close(<ref refid="rf24hubd_8h_1ad2c8fb3df3a737e0685e902870a611d2" kindref="member">sockfd</ref>);</highlight></codeline>
+<codeline lineno="238"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="239"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>rv<sp/>==<sp/>0<sp/>)<sp/>freeaddrinfo(servinfo);</highlight></codeline>
+<codeline lineno="240"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="241"><highlight class="normal"></highlight></codeline>
+<codeline lineno="242"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="common_8cpp_1a7d5dae7e3622aa0e69d8531af6430829" kindref="member">openSocket</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>port,<sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>sockaddr_in<sp/>*address,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">*<sp/>handle,<sp/><ref refid="common_8h_1a32b5c6c372c524c9144fd368d586d4bb" kindref="member">sockType_t</ref><sp/>sockType<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="243"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>in_socket<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="244"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>rv;</highlight></codeline>
+<codeline lineno="245"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>retval<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="246"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>save_fd;</highlight></codeline>
+<codeline lineno="247"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>y<sp/>=<sp/>1;</highlight></codeline>
+<codeline lineno="248"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">addrinfo<sp/>hints,<sp/>*servinfo,<sp/>*p;</highlight></codeline>
+<codeline lineno="249"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/>hints.ai_family<sp/>=<sp/>AF_INET;<sp/><sp/>//<sp/>force<sp/>IPv4</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="250"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/>hints.ai_family<sp/>=<sp/>AF_INET6;<sp/>//<sp/>force<sp/>IPv6</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="251"><highlight class="normal"><sp/><sp/><sp/><sp/>hints.ai_family<sp/>=<sp/>AF_UNSPEC;<sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Allow<sp/>IPv4<sp/>or<sp/>IPv6<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="252"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>sockType<sp/>==<sp/><ref refid="common_8h_1a32b5c6c372c524c9144fd368d586d4bbaa040cd7feeb588104634cdadf35abf1c" kindref="member">TCP</ref><sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="253"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>hints.ai_socktype<sp/>=<sp/>SOCK_STREAM;</highlight></codeline>
+<codeline lineno="254"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="255"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>hints.ai_socktype<sp/>=<sp/>SOCK_DGRAM;</highlight></codeline>
+<codeline lineno="256"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="257"><highlight class="normal"><sp/><sp/><sp/><sp/>hints.ai_flags<sp/>=<sp/>AI_PASSIVE;<sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>For<sp/>wildcard<sp/>IP<sp/>address<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="258"><highlight class="normal"><sp/><sp/><sp/><sp/>hints.ai_protocol<sp/>=<sp/>0;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Any<sp/>protocol<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="259"><highlight class="normal"><sp/><sp/><sp/><sp/>hints.ai_canonname<sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="260"><highlight class="normal"><sp/><sp/><sp/><sp/>hints.ai_addr<sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="261"><highlight class="normal"><sp/><sp/><sp/><sp/>hints.ai_next<sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="262"><highlight class="normal"><sp/><sp/><sp/><sp/>rv<sp/>=<sp/>getaddrinfo(NULL,<sp/>port,<sp/>&amp;hints,<sp/>&amp;servinfo);</highlight></codeline>
+<codeline lineno="263"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(rv<sp/>!=<sp/>0)<sp/>retval<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="264"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>loop<sp/>through<sp/>all<sp/>the<sp/>results<sp/>and<sp/>bind<sp/>to<sp/>the<sp/>first<sp/>we<sp/>can</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="265"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(p<sp/>=<sp/>servinfo;<sp/>p<sp/>!=<sp/>NULL;<sp/>p<sp/>=<sp/>p-&gt;ai_next)<sp/>{</highlight></codeline>
+<codeline lineno="266"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>((in_socket<sp/>=<sp/>socket(p-&gt;ai_family,<sp/>p-&gt;ai_socktype,<sp/>p-&gt;ai_protocol))<sp/>==<sp/>-1)<sp/>{</highlight></codeline>
+<codeline lineno="267"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="268"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="269"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(bind(in_socket,<sp/>p-&gt;ai_addr,<sp/>p-&gt;ai_addrlen)<sp/>==<sp/>-1)<sp/>{</highlight></codeline>
+<codeline lineno="270"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>close(in_socket);</highlight></codeline>
+<codeline lineno="271"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="272"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="273"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="274"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="275"><highlight class="normal"><sp/><sp/><sp/><sp/>freeaddrinfo(servinfo);</highlight></codeline>
+<codeline lineno="276"><highlight class="normal"><sp/><sp/><sp/><sp/>setsockopt(<sp/>in_socket,<sp/>SOL_SOCKET,<sp/>SO_REUSEADDR,<sp/>&amp;y,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal">)<sp/>);</highlight></codeline>
+<codeline lineno="277"><highlight class="normal"><sp/><sp/><sp/><sp/>listen<sp/>(in_socket,<sp/>5);</highlight></codeline>
+<codeline lineno="278"><highlight class="normal"><sp/><sp/><sp/><sp/>save_fd<sp/>=<sp/>fcntl(<sp/>in_socket,<sp/>F_GETFL<sp/>);</highlight></codeline>
+<codeline lineno="279"><highlight class="normal"><sp/><sp/><sp/><sp/>save_fd<sp/>|=<sp/>O_NONBLOCK;</highlight></codeline>
+<codeline lineno="280"><highlight class="normal"><sp/><sp/><sp/><sp/>fcntl(<sp/>in_socket,<sp/>F_SETFL,<sp/>save_fd<sp/>);</highlight></codeline>
+<codeline lineno="281"><highlight class="normal"><sp/><sp/><sp/><sp/>*handle<sp/>=<sp/>in_socket;</highlight></codeline>
+<codeline lineno="282"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>retval;</highlight></codeline>
+<codeline lineno="283"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="284"><highlight class="normal"></highlight></codeline>
+<codeline lineno="285"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="common_8cpp_1a78264021b512e588dbd4f8dfc393881c" kindref="member">printPayload</ref>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="common_8cpp_1a83eaed94816137f9fe9521a7946efff0" kindref="member">ts</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>header,<sp/><ref refid="structpayload__t" kindref="compound">payload_t</ref>*<sp/><ref refid="rf24gwd_8h_1a9ab81a7ae17f3497b23bbccb020c3308" kindref="member">payload</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="286"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>[6];</highlight></codeline>
+<codeline lineno="287"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>6;<sp/>i++)<sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>[i]=(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*)malloc(10);</highlight></codeline>
+<codeline lineno="288"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>[0]=<ref refid="group__datafmt_1ga02342d8c3916c9953de9d5edce69869e" kindref="member">unpackTransportValue</ref>(<ref refid="rf24gwd_8h_1a9ab81a7ae17f3497b23bbccb020c3308" kindref="member">payload</ref>-&gt;<ref refid="structpayload__t_1a18f328fa1c71e87663b30ed1fde701bb" kindref="member">data1</ref>,<sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>[0]);</highlight></codeline>
+<codeline lineno="289"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>[1]=<ref refid="group__datafmt_1ga02342d8c3916c9953de9d5edce69869e" kindref="member">unpackTransportValue</ref>(<ref refid="rf24gwd_8h_1a9ab81a7ae17f3497b23bbccb020c3308" kindref="member">payload</ref>-&gt;<ref refid="structpayload__t_1a6a3bdd422de558f0762911297b8d6dfa" kindref="member">data2</ref>,<sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>[1]);</highlight></codeline>
+<codeline lineno="290"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>[2]=<ref refid="group__datafmt_1ga02342d8c3916c9953de9d5edce69869e" kindref="member">unpackTransportValue</ref>(<ref refid="rf24gwd_8h_1a9ab81a7ae17f3497b23bbccb020c3308" kindref="member">payload</ref>-&gt;<ref refid="structpayload__t_1acf0a2b00de74d3cb536bf51a7ed05e57" kindref="member">data3</ref>,<sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>[2]);</highlight></codeline>
+<codeline lineno="291"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>[3]=<ref refid="group__datafmt_1ga02342d8c3916c9953de9d5edce69869e" kindref="member">unpackTransportValue</ref>(<ref refid="rf24gwd_8h_1a9ab81a7ae17f3497b23bbccb020c3308" kindref="member">payload</ref>-&gt;<ref refid="structpayload__t_1a994342c5f4f30ab8e2219b5dabbcb4ac" kindref="member">data4</ref>,<sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>[3]);</highlight></codeline>
+<codeline lineno="292"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>[4]=<ref refid="group__datafmt_1ga02342d8c3916c9953de9d5edce69869e" kindref="member">unpackTransportValue</ref>(<ref refid="rf24gwd_8h_1a9ab81a7ae17f3497b23bbccb020c3308" kindref="member">payload</ref>-&gt;<ref refid="structpayload__t_1a92f6a3267ceb4b5cd05018d407d58afc" kindref="member">data5</ref>,<sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>[4]);</highlight></codeline>
+<codeline lineno="293"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>[5]=<ref refid="group__datafmt_1ga02342d8c3916c9953de9d5edce69869e" kindref="member">unpackTransportValue</ref>(<ref refid="rf24gwd_8h_1a9ab81a7ae17f3497b23bbccb020c3308" kindref="member">payload</ref>-&gt;<ref refid="structpayload__t_1a123b9a41dc6fbff0b0c8aeed9e03a7d6" kindref="member">data6</ref>,<sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>[5]);</highlight></codeline>
+<codeline lineno="294"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;%s%s<sp/>N:%u<sp/>T:%u<sp/>m:%u<sp/>F:0x%02X<sp/>O:%u<sp/>H:%u<sp/>(%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="common_8cpp_1a83eaed94816137f9fe9521a7946efff0" kindref="member">ts</ref>,<sp/>header,</highlight></codeline>
+<codeline lineno="295"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rf24gwd_8h_1a9ab81a7ae17f3497b23bbccb020c3308" kindref="member">payload</ref>-&gt;<ref refid="structpayload__t_1a3afa33b39f6de1877e858f9fb0b5f87a" kindref="member">node_id</ref>,<sp/><ref refid="rf24gwd_8h_1a9ab81a7ae17f3497b23bbccb020c3308" kindref="member">payload</ref>-&gt;<ref refid="structpayload__t_1a332fd1884f12dc0307317907cf57d4ea" kindref="member">msg_type</ref>,<sp/><ref refid="rf24gwd_8h_1a9ab81a7ae17f3497b23bbccb020c3308" kindref="member">payload</ref>-&gt;<ref refid="structpayload__t_1a6ea24ed09a51f607a1e2a1b0f2ade2cb" kindref="member">msg_id</ref>,<sp/><ref refid="rf24gwd_8h_1a9ab81a7ae17f3497b23bbccb020c3308" kindref="member">payload</ref>-&gt;<ref refid="structpayload__t_1a1a9dfd6db5d1c123d2dccecceb14112e" kindref="member">msg_flags</ref>,<sp/><ref refid="rf24gwd_8h_1a9ab81a7ae17f3497b23bbccb020c3308" kindref="member">payload</ref>-&gt;<ref refid="structpayload__t_1a5c24bc8a9f0e51a910baa9f8c4110fbc" kindref="member">orderno</ref>,<sp/><ref refid="rf24gwd_8h_1a9ab81a7ae17f3497b23bbccb020c3308" kindref="member">payload</ref>-&gt;<ref refid="structpayload__t_1a6097a5427f09fe70856fb44f916da240" kindref="member">heartbeatno</ref>,</highlight></codeline>
+<codeline lineno="296"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__datafmt_1ga1bc47883133ecf3ccab0bc5e94946f0b" kindref="member">getChannel</ref>(<ref refid="rf24gwd_8h_1a9ab81a7ae17f3497b23bbccb020c3308" kindref="member">payload</ref>-&gt;<ref refid="structpayload__t_1a18f328fa1c71e87663b30ed1fde701bb" kindref="member">data1</ref>),<sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>[0],</highlight></codeline>
+<codeline lineno="297"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__datafmt_1ga1bc47883133ecf3ccab0bc5e94946f0b" kindref="member">getChannel</ref>(<ref refid="rf24gwd_8h_1a9ab81a7ae17f3497b23bbccb020c3308" kindref="member">payload</ref>-&gt;<ref refid="structpayload__t_1a6a3bdd422de558f0762911297b8d6dfa" kindref="member">data2</ref>),<sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>[1],</highlight></codeline>
+<codeline lineno="298"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__datafmt_1ga1bc47883133ecf3ccab0bc5e94946f0b" kindref="member">getChannel</ref>(<ref refid="rf24gwd_8h_1a9ab81a7ae17f3497b23bbccb020c3308" kindref="member">payload</ref>-&gt;<ref refid="structpayload__t_1acf0a2b00de74d3cb536bf51a7ed05e57" kindref="member">data3</ref>),<sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>[2],</highlight></codeline>
+<codeline lineno="299"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__datafmt_1ga1bc47883133ecf3ccab0bc5e94946f0b" kindref="member">getChannel</ref>(<ref refid="rf24gwd_8h_1a9ab81a7ae17f3497b23bbccb020c3308" kindref="member">payload</ref>-&gt;<ref refid="structpayload__t_1a994342c5f4f30ab8e2219b5dabbcb4ac" kindref="member">data4</ref>),<sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>[3],</highlight></codeline>
+<codeline lineno="300"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__datafmt_1ga1bc47883133ecf3ccab0bc5e94946f0b" kindref="member">getChannel</ref>(<ref refid="rf24gwd_8h_1a9ab81a7ae17f3497b23bbccb020c3308" kindref="member">payload</ref>-&gt;<ref refid="structpayload__t_1a92f6a3267ceb4b5cd05018d407d58afc" kindref="member">data5</ref>),<sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>[4],</highlight></codeline>
+<codeline lineno="301"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__datafmt_1ga1bc47883133ecf3ccab0bc5e94946f0b" kindref="member">getChannel</ref>(<ref refid="rf24gwd_8h_1a9ab81a7ae17f3497b23bbccb020c3308" kindref="member">payload</ref>-&gt;<ref refid="structpayload__t_1a123b9a41dc6fbff0b0c8aeed9e03a7d6" kindref="member">data6</ref>),<sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>[5]);<sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="302"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>6;<sp/>i++)<sp/>free(<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>[i]);</highlight></codeline>
+<codeline lineno="303"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="304"><highlight class="normal"></highlight></codeline>
+<codeline lineno="305"><highlight class="normal"></highlight></codeline>
+<codeline lineno="306"><highlight class="normal"></highlight></codeline>
+<codeline lineno="307"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/stick/netz/projekte/RF24Hub/linux/common.cpp"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,72 @@
+\hypertarget{common_8h_source}{}\doxysection{common.\+h}
+\mbox{\hyperlink{common_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#ifndef \_COMMON\_H\_   }\textcolor{comment}{/* Include guard */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{20 \textcolor{preprocessor}{\#define \_COMMON\_H\_}}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{23 \textcolor{preprocessor}{\#include <cstring>}}
+\DoxyCodeLine{24 \textcolor{preprocessor}{\#include <ctype.h>} }
+\DoxyCodeLine{25 \textcolor{preprocessor}{\#include <time.h>}}
+\DoxyCodeLine{26 \textcolor{preprocessor}{\#include <sys/time.h>}}
+\DoxyCodeLine{27 \textcolor{preprocessor}{\#include <stdlib.h>}}
+\DoxyCodeLine{28 \textcolor{preprocessor}{\#include <stdbool.h>}}
+\DoxyCodeLine{29 \textcolor{preprocessor}{\#include <sys/types.h>}}
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#include <sys/socket.h>}}
+\DoxyCodeLine{31 \textcolor{preprocessor}{\#include <arpa/inet.h>}}
+\DoxyCodeLine{32 \textcolor{preprocessor}{\#include <unistd.h>}}
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#include <netdb.h>}}
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#include <cstdio>}}
+\DoxyCodeLine{35 \textcolor{preprocessor}{\#include <netinet/in.h>}}
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#include <fcntl.h>}}
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{config_8h}{config.h}}"{}}}
+\DoxyCodeLine{38 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{dataformat_8h}{dataformat.h}}"{}}}
+\DoxyCodeLine{39 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{rf24__config_8h}{rf24\_config.h}}"{}}}
+\DoxyCodeLine{40 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{version_8h}{version.h}}"{}}}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42 \textcolor{keyword}{enum} \mbox{\hyperlink{common_8h_a32b5c6c372c524c9144fd368d586d4bb}{sockType\_t}} \{ \mbox{\hyperlink{common_8h_a32b5c6c372c524c9144fd368d586d4bbaa040cd7feeb588104634cdadf35abf1c}{TCP}}, \mbox{\hyperlink{common_8h_a32b5c6c372c524c9144fd368d586d4bbadb542475cf9d0636e4225e216cee9ae6}{UDP}}\};}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44 \textcolor{keyword}{struct }\mbox{\hyperlink{structTnData__t}{TnData\_t}} \{}
+\DoxyCodeLine{45         \textcolor{keywordtype}{char} \mbox{\hyperlink{structTnData__t_a87707d4598519db53f7472c681124086}{tntext}}[\mbox{\hyperlink{group__cfgprm_ga62ddb5fa1007795fbfbf34dbfce0779c}{DEBUGSTRINGSIZE}}];}
+\DoxyCodeLine{46         \textcolor{keywordtype}{int}  \mbox{\hyperlink{structTnData__t_a0a24ed22b4cd43b3168f7aac9b856511}{tn\_socket}};    }
+\DoxyCodeLine{47 \};}
+\DoxyCodeLine{48 }
+\DoxyCodeLine{49 \textcolor{keyword}{struct }\mbox{\hyperlink{structTnMsg__t}{TnMsg\_t}} \{}
+\DoxyCodeLine{50         \textcolor{keywordtype}{long} \mbox{\hyperlink{structTnMsg__t_a37ad5db965af43e993138735b8687003}{mtype}};}
+\DoxyCodeLine{51         \textcolor{keyword}{struct }\mbox{\hyperlink{structTnData__t}{TnData\_t}} \mbox{\hyperlink{structTnMsg__t_a4214b4f3cf94fdbc7c013d313fc58090}{TnData}};}
+\DoxyCodeLine{52 \};}
+\DoxyCodeLine{53 }
+\DoxyCodeLine{54 \textcolor{keyword}{struct }\mbox{\hyperlink{structthread__tn__data}{thread\_tn\_data}} \{}
+\DoxyCodeLine{55    \textcolor{keywordtype}{int} \mbox{\hyperlink{structthread__tn__data_a2390ee21939fcaf8c82f8225819f34cd}{tnsocket}};}
+\DoxyCodeLine{56 \};}
+\DoxyCodeLine{57 }
+\DoxyCodeLine{58 \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{char} date\_format1[] = \textcolor{stringliteral}{"{}\%d.\%m.\%Y \%H:\%M:\%S"{}};}
+\DoxyCodeLine{59 \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{char} date\_format2[] = \textcolor{stringliteral}{"{}\%Y.\%m.\%d \%H:\%M:\%S"{}};}
+\DoxyCodeLine{60 }
+\DoxyCodeLine{75 \textcolor{keywordtype}{char}* \mbox{\hyperlink{common_8h_a3492d22004148ae3319a0760867b0b02}{utime2str}}(time\_t utime, \textcolor{keywordtype}{char}* \mbox{\hyperlink{rf24gwd_8h_a1fe855c208bc17a51a4d34fefdb2d5b1}{buf}}, uint8\_t format);}
+\DoxyCodeLine{76 }
+\DoxyCodeLine{83 \textcolor{keywordtype}{char}* \mbox{\hyperlink{common_8h_a83eaed94816137f9fe9521a7946efff0}{ts}}(\textcolor{keywordtype}{char}* \mbox{\hyperlink{rf24gwd_8h_a1fe855c208bc17a51a4d34fefdb2d5b1}{buf}});}
+\DoxyCodeLine{84 }
+\DoxyCodeLine{91 \textcolor{keywordtype}{char} * \mbox{\hyperlink{common_8h_ae5bb0c43f76b886197ee48679f0e8dbc}{trim}} (\textcolor{keywordtype}{char} * s);}
+\DoxyCodeLine{92 }
+\DoxyCodeLine{102 \textcolor{keywordtype}{char}* \mbox{\hyperlink{common_8h_ab905ca9c82a764bd40d6ff0054d7c9f5}{alloc\_str}}(uint16\_t \mbox{\hyperlink{cfg_8h_a2ac10a3f1b8393a2208b7dc7f6672704}{verboseLevel}}, \textcolor{keyword}{const} \textcolor{keywordtype}{char}* msgTxt, \textcolor{keywordtype}{size\_t} size, \textcolor{keywordtype}{char}* timestring);}
+\DoxyCodeLine{103 }
+\DoxyCodeLine{112 \textcolor{keywordtype}{void} \mbox{\hyperlink{common_8h_a878847cc41730df300c9ea6f9906756c}{free\_str}}(uint16\_t \mbox{\hyperlink{cfg_8h_a2ac10a3f1b8393a2208b7dc7f6672704}{verboseLevel}}, \textcolor{keyword}{const} \textcolor{keywordtype}{char}* msgTxt, \textcolor{keywordtype}{char}* str, \textcolor{keywordtype}{char}* timestring);}
+\DoxyCodeLine{113 }
+\DoxyCodeLine{118 uint64\_t \mbox{\hyperlink{common_8h_afab512e15911b8554463ad51246fe9d0}{mymillis}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{119 }
+\DoxyCodeLine{125 \textcolor{keywordtype}{char}* \mbox{\hyperlink{common_8h_afafa6fc1062835acb394ed23d75713aa}{printVerbose}}(uint16\_t \mbox{\hyperlink{cfg_8h_a2ac10a3f1b8393a2208b7dc7f6672704}{verboseLevel}}, \textcolor{keywordtype}{char}* \mbox{\hyperlink{rf24gwd_8h_a1fe855c208bc17a51a4d34fefdb2d5b1}{buf}});}
+\DoxyCodeLine{126 }
+\DoxyCodeLine{133 uint16\_t \mbox{\hyperlink{common_8h_a938ac03956edbe8f3fb790224413be8f}{decodeVerbose}}(uint16\_t \mbox{\hyperlink{cfg_8h_a2ac10a3f1b8393a2208b7dc7f6672704}{verboseLevel}}, \textcolor{keywordtype}{char}* verboseSet);}
+\DoxyCodeLine{134 }
+\DoxyCodeLine{141 \textcolor{keywordtype}{void} \mbox{\hyperlink{common_8h_ac858321bf90c9e4a48b93c1cf636fa4d}{sendUdpMessage}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* host, \textcolor{keyword}{const} \textcolor{keywordtype}{char}* port, \mbox{\hyperlink{structudpdata__t}{udpdata\_t}} * \mbox{\hyperlink{rf24gwd_8h_aed24fc049dc5a6c8b3fd89e20c79be34}{udpdata}} );}
+\DoxyCodeLine{142 }
+\DoxyCodeLine{150 \textcolor{keywordtype}{bool} \mbox{\hyperlink{common_8h_a7d5dae7e3622aa0e69d8531af6430829}{openSocket}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* port, \textcolor{keyword}{struct} sockaddr\_in *address, \textcolor{keywordtype}{int}* handle, \mbox{\hyperlink{common_8h_a32b5c6c372c524c9144fd368d586d4bb}{sockType\_t}} sockType );}
+\DoxyCodeLine{151 }
+\DoxyCodeLine{158 \textcolor{keywordtype}{void} \mbox{\hyperlink{common_8h_a78264021b512e588dbd4f8dfc393881c}{printPayload}}(\textcolor{keywordtype}{char}* \mbox{\hyperlink{common_8h_a83eaed94816137f9fe9521a7946efff0}{ts}}, \textcolor{keyword}{const} \textcolor{keywordtype}{char}* header, \mbox{\hyperlink{structpayload__t}{payload\_t}}* \mbox{\hyperlink{rf24gwd_8h_a9ab81a7ae17f3497b23bbccb020c3308}{payload}});}
+\DoxyCodeLine{159 }
+\DoxyCodeLine{160 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// \_RF24HUBD\_COMMON\_H\_}}
+\DoxyCodeLine{161 }
+
+\end{DoxyCode}

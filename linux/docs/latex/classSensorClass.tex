@@ -1,0 +1,228 @@
+\hypertarget{classSensorClass}{}\doxysection{Sensor\+Class Class Reference}
+\label{classSensorClass}\index{SensorClass@{SensorClass}}
+
+
+{\ttfamily \#include $<$sensorclass.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classSensorClass_a978a64b43a7e945913bfd9577849f90e}{set\+Verbose}} (uint16\+\_\+t \+\_\+verbose\+Level)
+\item 
+void \mbox{\hyperlink{classSensorClass_a90a48ee12a5946d3f037051dbcf6e80f}{cleanup}} (void)
+\item 
+void \mbox{\hyperlink{classSensorClass_a35adde018d58f27fc3d3c7805c9fab09}{add\+Sensor}} (uint32\+\_\+t sensor, \mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id, uint8\+\_\+t channel, uint8\+\_\+t datatype, char $\ast$fhem\+\_\+dev, uint32\+\_\+t last\+\_\+utime, uint32\+\_\+t last\+\_\+data, char $\ast$sensor\+\_\+name)
+\item 
+bool \mbox{\hyperlink{classSensorClass_a7fb1baf1cb828cb7b28fedab0f6a2dd8}{update\+Last\+Val}} (uint32\+\_\+t sensor\+\_\+id, uint32\+\_\+t last\+\_\+data)
+\item 
+uint32\+\_\+t \mbox{\hyperlink{classSensorClass_ae99fc0db76089763c473e839591e707e}{get\+Sensor\+By\+Node\+Channel}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id, uint8\+\_\+t channel)
+\item 
+bool \mbox{\hyperlink{classSensorClass_a40f85d0824bc6b06a5b3ab42e6f1d080}{get\+Node\+Channel\+By\+Sensor\+ID}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} $\ast$p\+\_\+node\+\_\+id, uint8\+\_\+t $\ast$p\+\_\+channel, uint32\+\_\+t sensor\+\_\+id)
+\item 
+bool \mbox{\hyperlink{classSensorClass_afd56d3c39fa1d965a3e8c4660a0a8eb4}{get\+Node\+Channel\+By\+Sensor\+Name}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} $\ast$p\+\_\+node\+\_\+id, uint8\+\_\+t $\ast$p\+\_\+channel, char $\ast$sensor\+\_\+name)
+\item 
+bool \mbox{\hyperlink{classSensorClass_a94fb730fd99d71a554e4b8253855e292}{get\+Node\+Channel\+By\+Fhem\+Dev}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} $\ast$p\+\_\+node\+\_\+id, uint8\+\_\+t $\ast$p\+\_\+channel, char $\ast$fhem\+\_\+dev)
+\item 
+char $\ast$ \mbox{\hyperlink{classSensorClass_aab0e1acf140241ebcef1510e5e4db2da}{get\+Fhem\+Dev\+By\+Node\+Channel}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id, uint8\+\_\+t channel)
+\item 
+int8\+\_\+t \mbox{\hyperlink{classSensorClass_aec94a66c9bc5e9eebf7a60cef07fa2a6}{get\+Data\+Type\+By\+Node\+Channel}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id, uint8\+\_\+t channel)
+\item 
+void \mbox{\hyperlink{classSensorClass_ac9bd62ebe2c2b7a7c7b1ae121f8b2a4b}{print\+Buffer}} (int new\+\_\+tn\+\_\+in\+\_\+socket, bool html)
+\item 
+\mbox{\hyperlink{classSensorClass_a80d1ef4799b02eb87a0a52b273dc3753}{Sensor\+Class}} (void)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classSensorClass_a80d1ef4799b02eb87a0a52b273dc3753}\label{classSensorClass_a80d1ef4799b02eb87a0a52b273dc3753}} 
+\index{SensorClass@{SensorClass}!SensorClass@{SensorClass}}
+\index{SensorClass@{SensorClass}!SensorClass@{SensorClass}}
+\doxysubsubsection{\texorpdfstring{SensorClass()}{SensorClass()}}
+{\footnotesize\ttfamily Sensor\+Class\+::\+Sensor\+Class (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classSensorClass_a35adde018d58f27fc3d3c7805c9fab09}\label{classSensorClass_a35adde018d58f27fc3d3c7805c9fab09}} 
+\index{SensorClass@{SensorClass}!addSensor@{addSensor}}
+\index{addSensor@{addSensor}!SensorClass@{SensorClass}}
+\doxysubsubsection{\texorpdfstring{addSensor()}{addSensor()}}
+{\footnotesize\ttfamily void Sensor\+Class\+::add\+Sensor (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{sensor,  }\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id,  }\item[{uint8\+\_\+t}]{channel,  }\item[{uint8\+\_\+t}]{datatype,  }\item[{char $\ast$}]{fhem\+\_\+dev,  }\item[{uint32\+\_\+t}]{last\+\_\+utime,  }\item[{uint32\+\_\+t}]{last\+\_\+data,  }\item[{char $\ast$}]{sensor\+\_\+name }\end{DoxyParamCaption})}
+
+Fügt einen neuen Sensor hinzu 
+\begin{DoxyParams}{Parameters}
+{\em sensor\+\_\+id} & Die Sensor-\/\+ID \\
+\hline
+{\em node\+\_\+id} & Die Node-\/\+ID \\
+\hline
+{\em channel} & Der Channel für diesen Sensor ~\newline
+ \\
+\hline
+{\em datatype} & Der verwendete Datentyp zur Übertragung der Werte \\
+\hline
+{\em fhem\+\_\+dev} & Der Devicename innerhalb von FHEM für diesen Sensor. Ist dieser gesetzt wird bei jeder Änderung eine Änderung an FHEM gesendet. \\
+\hline
+{\em last\+\_\+utime} & Unix-\/\+Timestamp des letzten Wertes \\
+\hline
+{\em last\+\_\+data} & Der letzte Wert des Sensors (Transportwert) \\
+\hline
+{\em sensor\+\_\+name} & Der Bezeichner dieses Sensors \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classSensorClass_a90a48ee12a5946d3f037051dbcf6e80f}\label{classSensorClass_a90a48ee12a5946d3f037051dbcf6e80f}} 
+\index{SensorClass@{SensorClass}!cleanup@{cleanup}}
+\index{cleanup@{cleanup}!SensorClass@{SensorClass}}
+\doxysubsubsection{\texorpdfstring{cleanup()}{cleanup()}}
+{\footnotesize\ttfamily void Sensor\+Class\+::cleanup (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Löscht den kompletten Inhalt und leert den Buffer \mbox{\Hypertarget{classSensorClass_aec94a66c9bc5e9eebf7a60cef07fa2a6}\label{classSensorClass_aec94a66c9bc5e9eebf7a60cef07fa2a6}} 
+\index{SensorClass@{SensorClass}!getDataTypeByNodeChannel@{getDataTypeByNodeChannel}}
+\index{getDataTypeByNodeChannel@{getDataTypeByNodeChannel}!SensorClass@{SensorClass}}
+\doxysubsubsection{\texorpdfstring{getDataTypeByNodeChannel()}{getDataTypeByNodeChannel()}}
+{\footnotesize\ttfamily int8\+\_\+t Sensor\+Class\+::get\+Data\+Type\+By\+Node\+Channel (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id,  }\item[{uint8\+\_\+t}]{channel }\end{DoxyParamCaption})}
+
+Findet den für diesen Sensor verwendeten Datentypen durch node\+\_\+id und channel 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Ein Pointer auf die Node-\/\+ID (Nimmt das Ergebnis auf) \\
+\hline
+{\em channel} & Ein Pointer auf den Channel für diesen Sensor (Nimmt das Ergebnis auf) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Der Datentyp dieses Sensors ~\newline
+ 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classSensorClass_aab0e1acf140241ebcef1510e5e4db2da}\label{classSensorClass_aab0e1acf140241ebcef1510e5e4db2da}} 
+\index{SensorClass@{SensorClass}!getFhemDevByNodeChannel@{getFhemDevByNodeChannel}}
+\index{getFhemDevByNodeChannel@{getFhemDevByNodeChannel}!SensorClass@{SensorClass}}
+\doxysubsubsection{\texorpdfstring{getFhemDevByNodeChannel()}{getFhemDevByNodeChannel()}}
+{\footnotesize\ttfamily char $\ast$ Sensor\+Class\+::get\+Fhem\+Dev\+By\+Node\+Channel (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id,  }\item[{uint8\+\_\+t}]{channel }\end{DoxyParamCaption})}
+
+Findet FHEM Device des Sensors durch node\+\_\+id und channel 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Ein Pointer auf die Node-\/\+ID (Nimmt das Ergebnis auf) \\
+\hline
+{\em channel} & Ein Pointer auf den Channel für diesen Sensor (Nimmt das Ergebnis auf) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Ein Pointer auf einen String mit der Bezeichnung des Sensors ~\newline
+ 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classSensorClass_a94fb730fd99d71a554e4b8253855e292}\label{classSensorClass_a94fb730fd99d71a554e4b8253855e292}} 
+\index{SensorClass@{SensorClass}!getNodeChannelByFhemDev@{getNodeChannelByFhemDev}}
+\index{getNodeChannelByFhemDev@{getNodeChannelByFhemDev}!SensorClass@{SensorClass}}
+\doxysubsubsection{\texorpdfstring{getNodeChannelByFhemDev()}{getNodeChannelByFhemDev()}}
+{\footnotesize\ttfamily bool Sensor\+Class\+::get\+Node\+Channel\+By\+Fhem\+Dev (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} $\ast$}]{p\+\_\+node\+\_\+id,  }\item[{uint8\+\_\+t $\ast$}]{p\+\_\+channel,  }\item[{char $\ast$}]{fhem\+\_\+dev }\end{DoxyParamCaption})}
+
+Findet node\+\_\+id und channel des Sensors durch FHEM Device 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Ein Pointer auf die Node-\/\+ID (Nimmt das Ergebnis auf) \\
+\hline
+{\em channel} & Ein Pointer auf den Channel für diesen Sensor (Nimmt das Ergebnis auf) \\
+\hline
+{\em fhem\+\_\+dev} & Ein Pointer auf einen String mit der FHEM Device ~\newline
+ \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classSensorClass_a40f85d0824bc6b06a5b3ab42e6f1d080}\label{classSensorClass_a40f85d0824bc6b06a5b3ab42e6f1d080}} 
+\index{SensorClass@{SensorClass}!getNodeChannelBySensorID@{getNodeChannelBySensorID}}
+\index{getNodeChannelBySensorID@{getNodeChannelBySensorID}!SensorClass@{SensorClass}}
+\doxysubsubsection{\texorpdfstring{getNodeChannelBySensorID()}{getNodeChannelBySensorID()}}
+{\footnotesize\ttfamily bool Sensor\+Class\+::get\+Node\+Channel\+By\+Sensor\+ID (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} $\ast$}]{p\+\_\+node\+\_\+id,  }\item[{uint8\+\_\+t $\ast$}]{p\+\_\+channel,  }\item[{uint32\+\_\+t}]{sensor\+\_\+id }\end{DoxyParamCaption})}
+
+Findet node\+\_\+id und channel des Sensors durch die sensor\+\_\+id 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Ein Pointer auf die Node-\/\+ID (Nimmt das Ergebnis auf) \\
+\hline
+{\em channel} & Ein Pointer auf den Channel für diesen Sensor (Nimmt das Ergebnis auf) \\
+\hline
+{\em sensor\+\_\+id} & Die Sensor ID ~\newline
+ \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\char`\"{}true\char`\"{} wenn diese Sensor ID gefunden wurde, sonst \char`\"{}false\char`\"{} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classSensorClass_afd56d3c39fa1d965a3e8c4660a0a8eb4}\label{classSensorClass_afd56d3c39fa1d965a3e8c4660a0a8eb4}} 
+\index{SensorClass@{SensorClass}!getNodeChannelBySensorName@{getNodeChannelBySensorName}}
+\index{getNodeChannelBySensorName@{getNodeChannelBySensorName}!SensorClass@{SensorClass}}
+\doxysubsubsection{\texorpdfstring{getNodeChannelBySensorName()}{getNodeChannelBySensorName()}}
+{\footnotesize\ttfamily bool Sensor\+Class\+::get\+Node\+Channel\+By\+Sensor\+Name (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} $\ast$}]{p\+\_\+node\+\_\+id,  }\item[{uint8\+\_\+t $\ast$}]{p\+\_\+channel,  }\item[{char $\ast$}]{sensor\+\_\+name }\end{DoxyParamCaption})}
+
+Findet node\+\_\+id und channel des Sensors durch FHEM Device 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Ein Pointer auf die Node-\/\+ID (Nimmt das Ergebnis auf) \\
+\hline
+{\em channel} & Ein Pointer auf den Channel für diesen Sensor (Nimmt das Ergebnis auf) \\
+\hline
+{\em sensor\+\_\+name} & Ein Pointer auf einen String mit der Bezeichnung des Sensors ~\newline
+ \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\char`\"{}true\char`\"{} wenn diese Sensorbezeichnung gefunden wurde, sonst \char`\"{}false\char`\"{} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classSensorClass_ae99fc0db76089763c473e839591e707e}\label{classSensorClass_ae99fc0db76089763c473e839591e707e}} 
+\index{SensorClass@{SensorClass}!getSensorByNodeChannel@{getSensorByNodeChannel}}
+\index{getSensorByNodeChannel@{getSensorByNodeChannel}!SensorClass@{SensorClass}}
+\doxysubsubsection{\texorpdfstring{getSensorByNodeChannel()}{getSensorByNodeChannel()}}
+{\footnotesize\ttfamily uint32\+\_\+t Sensor\+Class\+::get\+Sensor\+By\+Node\+Channel (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id,  }\item[{uint8\+\_\+t}]{channel }\end{DoxyParamCaption})}
+
+Findet die Sensor\+\_\+id durch node\+\_\+id und channel, 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Die Node-\/\+ID \\
+\hline
+{\em channel} & Der Channel für diesen Sensor ~\newline
+ \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Rückgabewert ist die sensor\+\_\+id 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classSensorClass_ac9bd62ebe2c2b7a7c7b1ae121f8b2a4b}\label{classSensorClass_ac9bd62ebe2c2b7a7c7b1ae121f8b2a4b}} 
+\index{SensorClass@{SensorClass}!printBuffer@{printBuffer}}
+\index{printBuffer@{printBuffer}!SensorClass@{SensorClass}}
+\doxysubsubsection{\texorpdfstring{printBuffer()}{printBuffer()}}
+{\footnotesize\ttfamily void Sensor\+Class\+::print\+Buffer (\begin{DoxyParamCaption}\item[{int}]{new\+\_\+tn\+\_\+in\+\_\+socket,  }\item[{bool}]{html }\end{DoxyParamCaption})}
+
+Druckt alle records im Buffer in den out\+\_\+socket out\+\_\+socket ist dabei ein gültiger socket file descriptor entweder aus accept für einen socket oder mittels fileno(stdout) für den stdout Der zweite Parameter bestimmt das Format, true =\texorpdfstring{$>$}{>} HTML Format; false =\texorpdfstring{$>$}{>} Textformat 
+\begin{DoxyParams}{Parameters}
+{\em tn\+\_\+socket} & Das aktuelle Socket zur Ausgabe \\
+\hline
+{\em htmlformat} & \char`\"{}true\char`\"{} liefert die Ausgabe im HTML Format, \char`\"{}false\char`\"{} im Textformat \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classSensorClass_a978a64b43a7e945913bfd9577849f90e}\label{classSensorClass_a978a64b43a7e945913bfd9577849f90e}} 
+\index{SensorClass@{SensorClass}!setVerbose@{setVerbose}}
+\index{setVerbose@{setVerbose}!SensorClass@{SensorClass}}
+\doxysubsubsection{\texorpdfstring{setVerbose()}{setVerbose()}}
+{\footnotesize\ttfamily void Sensor\+Class\+::set\+Verbose (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{\+\_\+verbose\+Level }\end{DoxyParamCaption})}
+
+Setzt den Verboselevel. Mögliche Level sind in den Makros VERBOSE$\ast$ in \mbox{\hyperlink{config_8h}{config.\+h}} definiert. 
+\begin{DoxyParams}{Parameters}
+{\em verbose\+Level} & Der aktuelle Verboselevel \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classSensorClass_a7fb1baf1cb828cb7b28fedab0f6a2dd8}\label{classSensorClass_a7fb1baf1cb828cb7b28fedab0f6a2dd8}} 
+\index{SensorClass@{SensorClass}!updateLastVal@{updateLastVal}}
+\index{updateLastVal@{updateLastVal}!SensorClass@{SensorClass}}
+\doxysubsubsection{\texorpdfstring{updateLastVal()}{updateLastVal()}}
+{\footnotesize\ttfamily bool Sensor\+Class\+::update\+Last\+Val (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{sensor\+\_\+id,  }\item[{uint32\+\_\+t}]{last\+\_\+data }\end{DoxyParamCaption})}
+
+Setzt den letzten Wert dieses Sensors in der Form des Transport\+Values 
+\begin{DoxyParams}{Parameters}
+{\em sensor\+\_\+id} & Die Sensor-\/\+ID \\
+\hline
+{\em last\+\_\+data} & Der letzte Wert des Sensors (Transportwert) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\char`\"{}true\char`\"{} wenn ein Update erfolgt ist, sonst \char`\"{}false\char`\"{} 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{sensorclass_8h}{sensorclass.\+h}}\item 
+\mbox{\hyperlink{sensorclass_8cpp}{sensorclass.\+cpp}}\end{DoxyCompactItemize}

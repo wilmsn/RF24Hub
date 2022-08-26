@@ -1,0 +1,149 @@
+\hypertarget{classOrderBuffer}{}\doxysection{Order\+Buffer Class Reference}
+\label{classOrderBuffer}\index{OrderBuffer@{OrderBuffer}}
+
+
+{\ttfamily \#include $<$orderbuffer.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classOrderBuffer_ac2e46ceea9fd69bc594ec75eb9b84749}{set\+Verbose}} (uint16\+\_\+t \+\_\+verbose\+Level)
+\item 
+void $\ast$ \mbox{\hyperlink{classOrderBuffer_ac54dc8c5c0db25872e62e98fc34c63ac}{find\+Order4\+Node}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id, void $\ast$p\+\_\+last, uint32\+\_\+t $\ast$p\+\_\+data)
+\item 
+void \mbox{\hyperlink{classOrderBuffer_abf623ccfc9b7b1a0ddda35d6ba866c9c}{add\+Order\+Buffer}} (uint64\+\_\+t millis, \mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id, uint8\+\_\+t channel, uint32\+\_\+t data)
+\item 
+bool \mbox{\hyperlink{classOrderBuffer_afe3f5105c21e7f9926283f21dd473c9c}{del\+By\+Node\+Channel}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id, uint8\+\_\+t channel)
+\item 
+bool \mbox{\hyperlink{classOrderBuffer_a04559ae9a12bd0b6179424cb6bee347b}{del\+By\+Node}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id)
+\item 
+bool \mbox{\hyperlink{classOrderBuffer_a0a57a5e89ee6fa874f8ffdc19100495e}{node\+Has\+Entry}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id)
+\item 
+void \mbox{\hyperlink{classOrderBuffer_a2e572634d52e8bb3e01ef876c9c73780}{print\+Buffer}} (int out\+\_\+socket, bool html\+Format)
+\item 
+\mbox{\hyperlink{classOrderBuffer_ad1d77cfabad48e73a59caf09be2d1a16}{Order\+Buffer}} (void)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classOrderBuffer_ad1d77cfabad48e73a59caf09be2d1a16}\label{classOrderBuffer_ad1d77cfabad48e73a59caf09be2d1a16}} 
+\index{OrderBuffer@{OrderBuffer}!OrderBuffer@{OrderBuffer}}
+\index{OrderBuffer@{OrderBuffer}!OrderBuffer@{OrderBuffer}}
+\doxysubsubsection{\texorpdfstring{OrderBuffer()}{OrderBuffer()}}
+{\footnotesize\ttfamily Order\+Buffer\+::\+Order\+Buffer (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classOrderBuffer_abf623ccfc9b7b1a0ddda35d6ba866c9c}\label{classOrderBuffer_abf623ccfc9b7b1a0ddda35d6ba866c9c}} 
+\index{OrderBuffer@{OrderBuffer}!addOrderBuffer@{addOrderBuffer}}
+\index{addOrderBuffer@{addOrderBuffer}!OrderBuffer@{OrderBuffer}}
+\doxysubsubsection{\texorpdfstring{addOrderBuffer()}{addOrderBuffer()}}
+{\footnotesize\ttfamily void Order\+Buffer\+::add\+Order\+Buffer (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{millis,  }\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id,  }\item[{uint8\+\_\+t}]{channel,  }\item[{uint32\+\_\+t}]{data }\end{DoxyParamCaption})}
+
+Fügt einen neuen record ein 
+\begin{DoxyParams}{Parameters}
+{\em millis} & Der aktuelle Zeitstempel mit \mbox{\hyperlink{common_8cpp_afab512e15911b8554463ad51246fe9d0}{mymillis()}} erzeugt \\
+\hline
+{\em node\+\_\+id} & Die Node\+\_\+\+ID \\
+\hline
+{\em channel} & Der Channel \\
+\hline
+{\em data} & Die zu übermittelnden Daten als Transportwert \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classOrderBuffer_a04559ae9a12bd0b6179424cb6bee347b}\label{classOrderBuffer_a04559ae9a12bd0b6179424cb6bee347b}} 
+\index{OrderBuffer@{OrderBuffer}!delByNode@{delByNode}}
+\index{delByNode@{delByNode}!OrderBuffer@{OrderBuffer}}
+\doxysubsubsection{\texorpdfstring{delByNode()}{delByNode()}}
+{\footnotesize\ttfamily bool Order\+Buffer\+::del\+By\+Node (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id }\end{DoxyParamCaption})}
+
+Löscht alle records für die übergebene node\+\_\+id 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Die Node\+\_\+\+ID \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\char`\"{}true\char`\"{} wenn erfolgreich, sonst \char`\"{}false\char`\"{} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classOrderBuffer_afe3f5105c21e7f9926283f21dd473c9c}\label{classOrderBuffer_afe3f5105c21e7f9926283f21dd473c9c}} 
+\index{OrderBuffer@{OrderBuffer}!delByNodeChannel@{delByNodeChannel}}
+\index{delByNodeChannel@{delByNodeChannel}!OrderBuffer@{OrderBuffer}}
+\doxysubsubsection{\texorpdfstring{delByNodeChannel()}{delByNodeChannel()}}
+{\footnotesize\ttfamily bool Order\+Buffer\+::del\+By\+Node\+Channel (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id,  }\item[{uint8\+\_\+t}]{channel }\end{DoxyParamCaption})}
+
+Löscht den record für die übergebe Kombinaltion von node\+\_\+id und channel 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Die Node\+\_\+\+ID \\
+\hline
+{\em channel} & Der Channel \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\char`\"{}true\char`\"{} wenn erfolgreich, sonst \char`\"{}false\char`\"{} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classOrderBuffer_ac54dc8c5c0db25872e62e98fc34c63ac}\label{classOrderBuffer_ac54dc8c5c0db25872e62e98fc34c63ac}} 
+\index{OrderBuffer@{OrderBuffer}!findOrder4Node@{findOrder4Node}}
+\index{findOrder4Node@{findOrder4Node}!OrderBuffer@{OrderBuffer}}
+\doxysubsubsection{\texorpdfstring{findOrder4Node()}{findOrder4Node()}}
+{\footnotesize\ttfamily void $\ast$ Order\+Buffer\+::find\+Order4\+Node (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id,  }\item[{void $\ast$}]{p\+\_\+last,  }\item[{uint32\+\_\+t $\ast$}]{p\+\_\+data }\end{DoxyParamCaption})}
+
+\begin{DoxyNote}{Note}
+Ruft den nächsten Record für einen Node ab. Initialer Aufruf mit p\+\_\+last = NULL. Beim nächsten Aufruf wird der Rückgabewert des letzten Aufrufs bei p\+\_\+last übergeben 
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Die Node\+\_\+\+ID \\
+\hline
+{\em p\+\_\+last} & Beim ersten Aufruf NULL, sonst den Rückgabewert des letzten Aufrufs. \\
+\hline
+{\em p\+\_\+data} & Pointer auf ein data Feld. Dieses Feld ist nach dem Aufruf gefüllt. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Ein gesetzter Pointer wenn ein Datensatz gefunden wurde, sonst NULL. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classOrderBuffer_a0a57a5e89ee6fa874f8ffdc19100495e}\label{classOrderBuffer_a0a57a5e89ee6fa874f8ffdc19100495e}} 
+\index{OrderBuffer@{OrderBuffer}!nodeHasEntry@{nodeHasEntry}}
+\index{nodeHasEntry@{nodeHasEntry}!OrderBuffer@{OrderBuffer}}
+\doxysubsubsection{\texorpdfstring{nodeHasEntry()}{nodeHasEntry()}}
+{\footnotesize\ttfamily bool Order\+Buffer\+::node\+Has\+Entry (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id }\end{DoxyParamCaption})}
+
+Gibt es mindestens einen record für den übergebenen node\+\_\+id? 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Die Node\+\_\+\+ID \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\char`\"{}true\char`\"{} wenn Records vorhanden, sonst \char`\"{}false\char`\"{} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classOrderBuffer_a2e572634d52e8bb3e01ef876c9c73780}\label{classOrderBuffer_a2e572634d52e8bb3e01ef876c9c73780}} 
+\index{OrderBuffer@{OrderBuffer}!printBuffer@{printBuffer}}
+\index{printBuffer@{printBuffer}!OrderBuffer@{OrderBuffer}}
+\doxysubsubsection{\texorpdfstring{printBuffer()}{printBuffer()}}
+{\footnotesize\ttfamily void Order\+Buffer\+::print\+Buffer (\begin{DoxyParamCaption}\item[{int}]{out\+\_\+socket,  }\item[{bool}]{html\+Format }\end{DoxyParamCaption})}
+
+Druckt alle records im Buffer in den out\+\_\+socket. out\+\_\+socket ist dabei ein gültiger socket file descriptor entweder aus accept für einen socket oder mittels fileno(stdout) für den stdout Der zweite Parameter bestimmt das Format, true =\texorpdfstring{$>$}{>} HTML Format; false =\texorpdfstring{$>$}{>} Textformat 
+\begin{DoxyParams}{Parameters}
+{\em tn\+\_\+socket} & Das aktuelle Socket zur Ausgabe \\
+\hline
+{\em htmlformat} & \char`\"{}true\char`\"{} liefert die Ausgabe im HTML Format, \char`\"{}false\char`\"{} im Textformat \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classOrderBuffer_ac2e46ceea9fd69bc594ec75eb9b84749}\label{classOrderBuffer_ac2e46ceea9fd69bc594ec75eb9b84749}} 
+\index{OrderBuffer@{OrderBuffer}!setVerbose@{setVerbose}}
+\index{setVerbose@{setVerbose}!OrderBuffer@{OrderBuffer}}
+\doxysubsubsection{\texorpdfstring{setVerbose()}{setVerbose()}}
+{\footnotesize\ttfamily void Order\+Buffer\+::set\+Verbose (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{\+\_\+verbose\+Level }\end{DoxyParamCaption})}
+
+Setzt den Verboselevel. Mögliche Level sind in den Makros VERBOSE$\ast$ in \mbox{\hyperlink{config_8h}{config.\+h}} definiert. 
+\begin{DoxyParams}{Parameters}
+{\em verbose\+Level} & Der aktuelle Verboselevel \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{orderbuffer_8h}{orderbuffer.\+h}}\item 
+\mbox{\hyperlink{orderbuffer_8cpp}{orderbuffer.\+cpp}}\end{DoxyCompactItemize}

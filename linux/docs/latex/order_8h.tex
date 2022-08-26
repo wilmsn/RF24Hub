@@ -1,0 +1,43 @@
+\hypertarget{order_8h}{}\doxysection{order.\+h File Reference}
+\label{order_8h}\index{order.h@{order.h}}
+
+
+Die Klasse \mbox{\hyperlink{classOrder}{Order}} ist ein Objekt zur Speicherung von Bestellungen an einen Node.  
+
+
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$cstring$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include \char`\"{}rf24\+\_\+config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}rf24hub\+\_\+config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}common.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}dataformat.\+h\char`\"{}}\newline
+Include dependency graph for order.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{order_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=235pt]{order_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classOrder}{Order}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Die Klasse \mbox{\hyperlink{classOrder}{Order}} ist ein Objekt zur Speicherung von Bestellungen an einen Node. 
+
+Kommt eine Anforderung im Hub an, wird diese zunächst im Orderbuffer gespeichert. Besteht Kontakt zu einem Node (bei ankommendem Heartbeat) werden alle offenen Orderbuffereinträge für diesen Node zu einer Orderstruktur (in der Klasse \mbox{\hyperlink{classOrder}{Order}}) aggregiert. In einer \mbox{\hyperlink{classOrder}{Order}} können 6 Orderbuffereinträge zum Node übertragen werden. 

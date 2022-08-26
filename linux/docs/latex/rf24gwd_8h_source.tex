@@ -1,0 +1,81 @@
+\hypertarget{rf24gwd_8h_source}{}\doxysection{rf24gwd.\+h}
+\mbox{\hyperlink{rf24gwd_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#ifndef \_RF24GWD\_H\_   }\textcolor{comment}{/* Include guard */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#define \_RF24GWD\_H\_}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/ End of global define -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{9 }
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include <cstdlib>}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include <sstream>}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include <string>} }
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include <iomanip>}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#include <RF24/RF24.h>}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#include <RF24/utility/RPi/bcm2835.h>}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#include <time.h>}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#include <sys/time.h>}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#include <sys/types.h>}}
+\DoxyCodeLine{20 \textcolor{preprocessor}{\#include <sys/stat.h>}}
+\DoxyCodeLine{21 \textcolor{preprocessor}{\#include <sys/ipc.h>}}
+\DoxyCodeLine{22 \textcolor{preprocessor}{\#include <sys/msg.h>}}
+\DoxyCodeLine{23 \textcolor{preprocessor}{\#include <stdio.h>}}
+\DoxyCodeLine{24 \textcolor{preprocessor}{\#include <unistd.h>}}
+\DoxyCodeLine{25 \textcolor{preprocessor}{\#include <getopt.h>}}
+\DoxyCodeLine{26 \textcolor{preprocessor}{\#include <syslog.h>}}
+\DoxyCodeLine{27 \textcolor{preprocessor}{\#include <signal.h>}}
+\DoxyCodeLine{28 \textcolor{preprocessor}{\#include <stdlib.h>}}
+\DoxyCodeLine{29 \textcolor{preprocessor}{\#include <netinet/in.h>}}
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#include <netdb.h>} }
+\DoxyCodeLine{31 \textcolor{preprocessor}{\#include <arpa/inet.h>}}
+\DoxyCodeLine{32 \textcolor{preprocessor}{\#include <fcntl.h>}}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{version_8h}{version.h}}"{}}}
+\DoxyCodeLine{35 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{config_8h}{config.h}}"{}}}
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{common_8h}{common.h}}"{}}}
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{cfg_8h}{cfg.h}}"{}}}
+\DoxyCodeLine{38 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{rf24__config_8h}{rf24\_config.h}}"{}}}
+\DoxyCodeLine{39 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{rf24gw__config_8h}{rf24gw\_config.h}}"{}}}
+\DoxyCodeLine{40 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{rf24gw__text_8h}{rf24gw\_text.h}}"{}}}
+\DoxyCodeLine{41 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{secrets_8h}{secrets.h}}"{}}}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43 \textcolor{keyword}{using namespace }std;}
+\DoxyCodeLine{44 }
+\DoxyCodeLine{46 FILE * \mbox{\hyperlink{rf24gwd_8h_a74cdc67e1a2355a8a3857dd631c2e20d}{pidfile\_ptr}};}
+\DoxyCodeLine{48 FILE * \mbox{\hyperlink{rf24gwd_8h_a8b911740b70463f6330c1b22ac52d2b0}{logfile\_ptr}};}
+\DoxyCodeLine{49 }
+\DoxyCodeLine{50 \textcolor{keyword}{struct }sockaddr\_in \mbox{\hyperlink{rf24gwd_8h_a256159eb435342e0e9a5029438e331e2}{udp\_address}};}
+\DoxyCodeLine{52 \textcolor{keywordtype}{int} \mbox{\hyperlink{rf24gwd_8h_a6cea0a0a116498be4285855eb37dc1b5}{udp\_sockfd}};}
+\DoxyCodeLine{54 uint16\_t \mbox{\hyperlink{rf24gwd_8h_a2ac10a3f1b8393a2208b7dc7f6672704}{verboseLevel}} = \mbox{\hyperlink{group__cfgprm_ga6c4340ca162dd39191fb258fe86f573a}{STARTUPVERBOSELEVEL}};}
+\DoxyCodeLine{56 \mbox{\hyperlink{structpayload__t}{payload\_t}} \mbox{\hyperlink{rf24gwd_8h_a9ab81a7ae17f3497b23bbccb020c3308}{payload}};}
+\DoxyCodeLine{58 \mbox{\hyperlink{structudpdata__t}{udpdata\_t}} \mbox{\hyperlink{rf24gwd_8h_aed24fc049dc5a6c8b3fd89e20c79be34}{udpdata}};}
+\DoxyCodeLine{60 \textcolor{keywordtype}{char}* \mbox{\hyperlink{rf24gwd_8h_a1fe855c208bc17a51a4d34fefdb2d5b1}{buf}};}
+\DoxyCodeLine{62 \textcolor{keywordtype}{char}* \mbox{\hyperlink{rf24gwd_8h_aa5a00c1b8970dc4fbaabfa7b8a4aa021}{tsbuf}};}
+\DoxyCodeLine{63 }
+\DoxyCodeLine{64 \textcolor{comment}{// Setup for GPIO 25 CE and CE0 CSN with SPI Speed @ 8Mhz}}
+\DoxyCodeLine{65 \textcolor{comment}{//RF24 radio(RPI\_V2\_GPIO\_P1\_22, BCM2835\_SPI\_CS0, BCM2835\_SPI\_SPEED\_8MHZ);}}
+\DoxyCodeLine{67 \textcolor{comment}{}RF24 \mbox{\hyperlink{rf24gwd_8h_a83a2ff436ee39fd336fbf4e16d0c4dd8}{radio}}(RPI\_V2\_GPIO\_P1\_22, BCM2835\_SPI\_CS0, BCM2835\_SPI\_CLOCK\_DIVIDER\_32768);}
+\DoxyCodeLine{68 \textcolor{comment}{//RF24 radio(22,0,BCM2835\_SPI\_SPEED\_1MHZ);}}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{71 \mbox{\hyperlink{classCfg}{Cfg}}          \mbox{\hyperlink{rf24gwd_8h_a6a559eb4e518378c7c552d2fdc1769af}{cfg}}(\mbox{\hyperlink{version_8h_a476a6cff0fb1a40441544f8a530ddbe9}{SWVERSION\_STR}},\_\_DATE\_\_);}
+\DoxyCodeLine{72 }
+\DoxyCodeLine{77 \textcolor{keyword}{static} \textcolor{keywordtype}{void}* receive\_tn\_in (\textcolor{keywordtype}{void} *arg);}
+\DoxyCodeLine{78 }
+\DoxyCodeLine{82 \textcolor{keywordtype}{bool} \mbox{\hyperlink{rf24gwd_8h_a446a8d9244864e4ac7be80a56fb5e330}{process\_tn\_in}}( \textcolor{keywordtype}{char}* inbuffer, \textcolor{keywordtype}{int} tn\_socket);}
+\DoxyCodeLine{83 }
+\DoxyCodeLine{87 \textcolor{keywordtype}{void} \mbox{\hyperlink{rf24gwd_8h_a3c31c4b9bcc08e22669f923d656f9a15}{exit\_system}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{88 }
+\DoxyCodeLine{92 \textcolor{keywordtype}{void} \mbox{\hyperlink{rf24gwd_8h_a348d23d5899ce59d18975284dfb0afc0}{init\_system}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{93 }
+\DoxyCodeLine{98 \textcolor{keywordtype}{void} \mbox{\hyperlink{rf24gwd_8h_a44efc275c6e206dfd83ae1bc324b2c68}{channelscanner}} (uint8\_t channel);}
+\DoxyCodeLine{99 }
+\DoxyCodeLine{103 \textcolor{keywordtype}{void} \mbox{\hyperlink{rf24gwd_8h_a5bc1ca9f1e5195673548e9a88b9a7a6a}{scanner}}(\textcolor{keywordtype}{char} scanlevel);}
+\DoxyCodeLine{104 }
+\DoxyCodeLine{108 \textcolor{keywordtype}{void} \mbox{\hyperlink{rf24gwd_8h_a6b38722bb47fc93ce0ae3c462e6c4934}{sighandler}}(\textcolor{keywordtype}{int} signal);}
+\DoxyCodeLine{109 }
+\DoxyCodeLine{113 \textcolor{keywordtype}{int} \mbox{\hyperlink{rf24gwd_8h_a0ddf1224851353fc92bfbff6f499fa97}{main}}(\textcolor{keywordtype}{int} argc, \textcolor{keywordtype}{char}* argv[]);}
+\DoxyCodeLine{114 }
+\DoxyCodeLine{115 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// \_RF24GWD\_H\_}}
+
+\end{DoxyCode}

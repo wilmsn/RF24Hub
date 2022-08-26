@@ -1,0 +1,406 @@
+\hypertarget{classCfg}{}\doxysection{Cfg Class Reference}
+\label{classCfg}\index{Cfg@{Cfg}}
+
+
+{\ttfamily \#include $<$cfg.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classCfg_aac9284b09ac6aa86a892dc8ab09989ec}{Cfg}} (string \+\_\+prg\+Name, string \+\_\+prg\+Version)
+\item 
+void \mbox{\hyperlink{classCfg_ac7f6954d45eef4c17ef652b2ed7b1c6b}{usage}} (const char $\ast$prg\+Name)
+\item 
+void \mbox{\hyperlink{classCfg_a962963a6c34ac9851259ccf5ab165db1}{process\+Params}} (const char $\ast$prg\+Name, int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\item 
+void \mbox{\hyperlink{classCfg_a059563d535a096471410e5a76d4a5c96}{print\+Config\+\_\+gw}} (void)
+\item 
+void \mbox{\hyperlink{classCfg_a12a56a77125fa182718e2164a23eed48}{print\+Config\+\_\+hub}} (void)
+\item 
+void \mbox{\hyperlink{classCfg_ab785421eee0353b1b5a6443d9f97efaf}{print\+Config\+\_\+db}} (void)
+\item 
+bool \mbox{\hyperlink{classCfg_acfcbf6a7e35c893ad13e41713a5b51a9}{set\+Pid\+File}} (string pid\+File\+Name)
+\item 
+void \mbox{\hyperlink{classCfg_acf0cea642cbaafbd61860629a8076b15}{remove\+Pid\+File}} (string pid\+File\+Name)
+\item 
+bool \mbox{\hyperlink{classCfg_a28651b7c3cb08d57921e53340ef5e933}{check\+Pid\+File\+Set}} (string pid\+File\+Name)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+string \mbox{\hyperlink{classCfg_ab6a3c443f9adc2c71b6d75c20e9df8fc}{gw\+Log\+File\+Name}}
+\item 
+string \mbox{\hyperlink{classCfg_a5beacd3f7187e23a3a166190b5fb6bb3}{gw\+Pid\+File\+Name}}
+\item 
+string \mbox{\hyperlink{classCfg_a4943a808300c155b874e7e716326aa56}{gw\+Hub\+Host\+Name}}
+\item 
+string \mbox{\hyperlink{classCfg_a6df600ac075fa021caa9c45efa9f0601}{gw\+Udp\+Port\+No}}
+\item 
+string \mbox{\hyperlink{classCfg_ac4df10edefafe41ec1b0251d80ff2de5}{gw\+Tcp\+Port\+No}}
+\item 
+bool \mbox{\hyperlink{classCfg_ac82059ea3ea0ef7f44231408da29de3b}{gw\+Tcp\+Port\+Set}}
+\item 
+bool \mbox{\hyperlink{classCfg_a40e5f1fbec69c36732d808e05363e024}{gw\+Udp\+Port\+Set}}
+\item 
+string \mbox{\hyperlink{classCfg_a5ec995cf894c4b957de9bc3e5c881424}{gw\+No}}
+\item 
+string \mbox{\hyperlink{classCfg_a4b2a65134693dce7d66f955c3389b8f5}{hub\+Udp\+Port\+No}}
+\item 
+string \mbox{\hyperlink{classCfg_a6b3bf6aaf8b2faf63fbaff815e65c14f}{hub\+Log\+File\+Name}}
+\item 
+string \mbox{\hyperlink{classCfg_aab6d96f28a3284c1272ce3836a58c3f4}{hub\+Pid\+File\+Name}}
+\item 
+string \mbox{\hyperlink{classCfg_a49753408815026a15f56b7cd4247d06b}{hub\+Tcp\+Port\+No}}
+\item 
+bool \mbox{\hyperlink{classCfg_a0ce03c7bc0c0b5a6f75b0276ba1cf42a}{hub\+Tcp\+Port\+Set}}
+\item 
+bool \mbox{\hyperlink{classCfg_ad250bf11fc3d0a13e3bb37c9517849e0}{hub\+Udp\+Port\+Set}}
+\item 
+string \mbox{\hyperlink{classCfg_ae1e7f239b800f0104dcc73157004caeb}{db\+Host\+Name}}
+\item 
+string \mbox{\hyperlink{classCfg_aabb83b325c0f808fcc7401677e317302}{db\+Port\+No}}
+\item 
+string \mbox{\hyperlink{classCfg_a37997fdb4da8fbe674ff617a1ac00679}{db\+Schema}}
+\item 
+string \mbox{\hyperlink{classCfg_ab96f7a9e239ea73732644835532d918b}{db\+User\+Name}}
+\item 
+string \mbox{\hyperlink{classCfg_ad1436b8fe2ea5d64a531bb25424d8384}{db\+Pass\+Word}}
+\item 
+string \mbox{\hyperlink{classCfg_a1b5fdfaf2ee6ae30d7f229ed26d088a6}{fhem\+Host\+Name}}
+\item 
+string \mbox{\hyperlink{classCfg_a7283a114baa582d592c3aea559a6efe5}{fhem\+Port\+No}}
+\item 
+bool \mbox{\hyperlink{classCfg_ac7abf5aed3b16e826c70840b48716b14}{fhem\+Host\+Set}}
+\item 
+bool \mbox{\hyperlink{classCfg_a93959e7a9564ffeb208eca45685a8c97}{fhem\+Port\+Set}}
+\item 
+bool \mbox{\hyperlink{classCfg_a9eefce31b95beb80f66eff2f9ba9294c}{start\+Daemon}} = false
+\item 
+bool \mbox{\hyperlink{classCfg_a029cac532a52c6716be2f0a8f4c4b3cc}{start\+Sniffer}} = false
+\item 
+bool \mbox{\hyperlink{classCfg_a65e582daf11d5dcbd222ad1501d33ff8}{start\+Scanner}} = false
+\item 
+int \mbox{\hyperlink{classCfg_aa310020b99a2cfe3900b724a400344eb}{set\+Scan\+Level}} = 0
+\item 
+int \mbox{\hyperlink{classCfg_ae5b09f245e8241e22339aa61a21a2fe3}{channel\+Scanner\+\_\+\+Channel}} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classCfg_aac9284b09ac6aa86a892dc8ab09989ec}\label{classCfg_aac9284b09ac6aa86a892dc8ab09989ec}} 
+\index{Cfg@{Cfg}!Cfg@{Cfg}}
+\index{Cfg@{Cfg}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{Cfg()}{Cfg()}}
+{\footnotesize\ttfamily Cfg\+::\+Cfg (\begin{DoxyParamCaption}\item[{string}]{\+\_\+prg\+Name,  }\item[{string}]{\+\_\+prg\+Version }\end{DoxyParamCaption})}
+
+Constructor der Klasse \mbox{\hyperlink{classCfg}{Cfg}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+prg\+Name} & Ein String mit dem Namen des aufrufenden Programms. \\
+\hline
+{\em \+\_\+prg\+Version} & Ein String mit der Programmversion \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classCfg_a28651b7c3cb08d57921e53340ef5e933}\label{classCfg_a28651b7c3cb08d57921e53340ef5e933}} 
+\index{Cfg@{Cfg}!checkPidFileSet@{checkPidFileSet}}
+\index{checkPidFileSet@{checkPidFileSet}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{checkPidFileSet()}{checkPidFileSet()}}
+{\footnotesize\ttfamily bool Cfg\+::check\+Pid\+File\+Set (\begin{DoxyParamCaption}\item[{string}]{pid\+File\+Name }\end{DoxyParamCaption})}
+
+Prüft ob ein PID-\/\+File gesetzt ist. Bei gesetztem PID-\/\+File wird zusätzlich eine Warnmeldung \char`\"{}\+PIDFILE\+: $<$\+PIDFILE Name$>$ exists\char`\"{} in den STDERR geschrieben.
+
+
+\begin{DoxyParams}{Parameters}
+{\em pid\+File\+Name} & Dateiname mit absulutem Pfad \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True wenn PID-\/\+File vorhanden ist, sonst False 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classCfg_ab785421eee0353b1b5a6443d9f97efaf}\label{classCfg_ab785421eee0353b1b5a6443d9f97efaf}} 
+\index{Cfg@{Cfg}!printConfig\_db@{printConfig\_db}}
+\index{printConfig\_db@{printConfig\_db}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{printConfig\_db()}{printConfig\_db()}}
+{\footnotesize\ttfamily void Cfg\+::print\+Config\+\_\+db (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Gibt die Configuration für die Datenbank aus. \mbox{\Hypertarget{classCfg_a059563d535a096471410e5a76d4a5c96}\label{classCfg_a059563d535a096471410e5a76d4a5c96}} 
+\index{Cfg@{Cfg}!printConfig\_gw@{printConfig\_gw}}
+\index{printConfig\_gw@{printConfig\_gw}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{printConfig\_gw()}{printConfig\_gw()}}
+{\footnotesize\ttfamily void Cfg\+::print\+Config\+\_\+gw (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Gibt die Configuration für das Programm rf24gwd aus. \mbox{\Hypertarget{classCfg_a12a56a77125fa182718e2164a23eed48}\label{classCfg_a12a56a77125fa182718e2164a23eed48}} 
+\index{Cfg@{Cfg}!printConfig\_hub@{printConfig\_hub}}
+\index{printConfig\_hub@{printConfig\_hub}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{printConfig\_hub()}{printConfig\_hub()}}
+{\footnotesize\ttfamily void Cfg\+::print\+Config\+\_\+hub (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Gibt die Configuration für das Programm rf24hubd aus. \mbox{\Hypertarget{classCfg_a962963a6c34ac9851259ccf5ab165db1}\label{classCfg_a962963a6c34ac9851259ccf5ab165db1}} 
+\index{Cfg@{Cfg}!processParams@{processParams}}
+\index{processParams@{processParams}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{processParams()}{processParams()}}
+{\footnotesize\ttfamily void Cfg\+::process\+Params (\begin{DoxyParamCaption}\item[{const char $\ast$}]{prg\+Name,  }\item[{int}]{argc,  }\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+Verarbeitet die Parameter, die beim Start übergeben wurden. Zusätzlich wird hier das Config-\/\+File ausgelesen und verarbeitet.
+
+
+\begin{DoxyParams}{Parameters}
+{\em prg\+Name} & Ein String mit dem Namen des aufrufenden Programms. \\
+\hline
+{\em argc} & Anzahl der Aufrufparameter \\
+\hline
+{\em argv} & Ein Array mit den Aufrufparametern \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classCfg_acf0cea642cbaafbd61860629a8076b15}\label{classCfg_acf0cea642cbaafbd61860629a8076b15}} 
+\index{Cfg@{Cfg}!removePidFile@{removePidFile}}
+\index{removePidFile@{removePidFile}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{removePidFile()}{removePidFile()}}
+{\footnotesize\ttfamily void Cfg\+::remove\+Pid\+File (\begin{DoxyParamCaption}\item[{string}]{pid\+File\+Name }\end{DoxyParamCaption})}
+
+Löscht ein PID-\/\+File
+
+
+\begin{DoxyParams}{Parameters}
+{\em pid\+File\+Name} & Dateiname mit absulutem Pfad \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classCfg_acfcbf6a7e35c893ad13e41713a5b51a9}\label{classCfg_acfcbf6a7e35c893ad13e41713a5b51a9}} 
+\index{Cfg@{Cfg}!setPidFile@{setPidFile}}
+\index{setPidFile@{setPidFile}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{setPidFile()}{setPidFile()}}
+{\footnotesize\ttfamily bool Cfg\+::set\+Pid\+File (\begin{DoxyParamCaption}\item[{string}]{pid\+File\+Name }\end{DoxyParamCaption})}
+
+Setzt ein PID File
+
+
+\begin{DoxyParams}{Parameters}
+{\em pid\+File\+Name} & Dateiname mit absulutem Pfad \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True wenn PID-\/\+File gesetzt wurde, sonst False 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classCfg_ac7f6954d45eef4c17ef652b2ed7b1c6b}\label{classCfg_ac7f6954d45eef4c17ef652b2ed7b1c6b}} 
+\index{Cfg@{Cfg}!usage@{usage}}
+\index{usage@{usage}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{usage()}{usage()}}
+{\footnotesize\ttfamily void Cfg\+::usage (\begin{DoxyParamCaption}\item[{const char $\ast$}]{prg\+Name }\end{DoxyParamCaption})}
+
+Gibt Nutzungsinformationen zum Programm aus
+
+
+\begin{DoxyParams}{Parameters}
+{\em prg\+Name} & Ein String mit dem Namen des aufrufenden Programms. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classCfg_ae5b09f245e8241e22339aa61a21a2fe3}\label{classCfg_ae5b09f245e8241e22339aa61a21a2fe3}} 
+\index{Cfg@{Cfg}!channelScanner\_Channel@{channelScanner\_Channel}}
+\index{channelScanner\_Channel@{channelScanner\_Channel}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{channelScanner\_Channel}{channelScanner\_Channel}}
+{\footnotesize\ttfamily int Cfg\+::channel\+Scanner\+\_\+\+Channel = 0}
+
+Beinnhaltet den Kanal der gescannt werden soll (1..125); 0 is deaktiviert \mbox{\Hypertarget{classCfg_ae1e7f239b800f0104dcc73157004caeb}\label{classCfg_ae1e7f239b800f0104dcc73157004caeb}} 
+\index{Cfg@{Cfg}!dbHostName@{dbHostName}}
+\index{dbHostName@{dbHostName}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{dbHostName}{dbHostName}}
+{\footnotesize\ttfamily string Cfg\+::db\+Host\+Name}
+
+Hostname für den Datenbankserver \mbox{\Hypertarget{classCfg_ad1436b8fe2ea5d64a531bb25424d8384}\label{classCfg_ad1436b8fe2ea5d64a531bb25424d8384}} 
+\index{Cfg@{Cfg}!dbPassWord@{dbPassWord}}
+\index{dbPassWord@{dbPassWord}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{dbPassWord}{dbPassWord}}
+{\footnotesize\ttfamily string Cfg\+::db\+Pass\+Word}
+
+Passwort zur Anmeldung an der Datenbank. \mbox{\Hypertarget{classCfg_aabb83b325c0f808fcc7401677e317302}\label{classCfg_aabb83b325c0f808fcc7401677e317302}} 
+\index{Cfg@{Cfg}!dbPortNo@{dbPortNo}}
+\index{dbPortNo@{dbPortNo}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{dbPortNo}{dbPortNo}}
+{\footnotesize\ttfamily string Cfg\+::db\+Port\+No}
+
+Port für den Datenbankserver \mbox{\Hypertarget{classCfg_a37997fdb4da8fbe674ff617a1ac00679}\label{classCfg_a37997fdb4da8fbe674ff617a1ac00679}} 
+\index{Cfg@{Cfg}!dbSchema@{dbSchema}}
+\index{dbSchema@{dbSchema}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{dbSchema}{dbSchema}}
+{\footnotesize\ttfamily string Cfg\+::db\+Schema}
+
+Genutztes Schema innerhalb der Datenbank. \mbox{\Hypertarget{classCfg_ab96f7a9e239ea73732644835532d918b}\label{classCfg_ab96f7a9e239ea73732644835532d918b}} 
+\index{Cfg@{Cfg}!dbUserName@{dbUserName}}
+\index{dbUserName@{dbUserName}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{dbUserName}{dbUserName}}
+{\footnotesize\ttfamily string Cfg\+::db\+User\+Name}
+
+Username zur Anmeldung an der Datenbank. \mbox{\Hypertarget{classCfg_a1b5fdfaf2ee6ae30d7f229ed26d088a6}\label{classCfg_a1b5fdfaf2ee6ae30d7f229ed26d088a6}} 
+\index{Cfg@{Cfg}!fhemHostName@{fhemHostName}}
+\index{fhemHostName@{fhemHostName}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{fhemHostName}{fhemHostName}}
+{\footnotesize\ttfamily string Cfg\+::fhem\+Host\+Name}
+
+Hostname für den FHEM Server \mbox{\Hypertarget{classCfg_ac7abf5aed3b16e826c70840b48716b14}\label{classCfg_ac7abf5aed3b16e826c70840b48716b14}} 
+\index{Cfg@{Cfg}!fhemHostSet@{fhemHostSet}}
+\index{fhemHostSet@{fhemHostSet}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{fhemHostSet}{fhemHostSet}}
+{\footnotesize\ttfamily bool Cfg\+::fhem\+Host\+Set}
+
+fhem\+Set\+: True wenn fhem\+Host\+Name gesetzt ist, sonst flase \mbox{\Hypertarget{classCfg_a7283a114baa582d592c3aea559a6efe5}\label{classCfg_a7283a114baa582d592c3aea559a6efe5}} 
+\index{Cfg@{Cfg}!fhemPortNo@{fhemPortNo}}
+\index{fhemPortNo@{fhemPortNo}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{fhemPortNo}{fhemPortNo}}
+{\footnotesize\ttfamily string Cfg\+::fhem\+Port\+No}
+
+Port für den FHEM Server \begin{DoxyNote}{Note}
+Über diesen TCP Port werden Steuerbefehle vom rf24hubd an FHEM geschickt. 
+\end{DoxyNote}
+\mbox{\Hypertarget{classCfg_a93959e7a9564ffeb208eca45685a8c97}\label{classCfg_a93959e7a9564ffeb208eca45685a8c97}} 
+\index{Cfg@{Cfg}!fhemPortSet@{fhemPortSet}}
+\index{fhemPortSet@{fhemPortSet}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{fhemPortSet}{fhemPortSet}}
+{\footnotesize\ttfamily bool Cfg\+::fhem\+Port\+Set}
+
+fhem\+Set\+: True wenn fhem\+Port\+Set gesetzt ist, sonst flase \mbox{\Hypertarget{classCfg_a4943a808300c155b874e7e716326aa56}\label{classCfg_a4943a808300c155b874e7e716326aa56}} 
+\index{Cfg@{Cfg}!gwHubHostName@{gwHubHostName}}
+\index{gwHubHostName@{gwHubHostName}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{gwHubHostName}{gwHubHostName}}
+{\footnotesize\ttfamily string Cfg\+::gw\+Hub\+Host\+Name}
+
+Speichert den eindeutigen Servernamen inkl. Domaine für rf24hubd \mbox{\Hypertarget{classCfg_ab6a3c443f9adc2c71b6d75c20e9df8fc}\label{classCfg_ab6a3c443f9adc2c71b6d75c20e9df8fc}} 
+\index{Cfg@{Cfg}!gwLogFileName@{gwLogFileName}}
+\index{gwLogFileName@{gwLogFileName}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{gwLogFileName}{gwLogFileName}}
+{\footnotesize\ttfamily string Cfg\+::gw\+Log\+File\+Name}
+
+Logfilename für rf24gwd \mbox{\Hypertarget{classCfg_a5ec995cf894c4b957de9bc3e5c881424}\label{classCfg_a5ec995cf894c4b957de9bc3e5c881424}} 
+\index{Cfg@{Cfg}!gwNo@{gwNo}}
+\index{gwNo@{gwNo}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{gwNo}{gwNo}}
+{\footnotesize\ttfamily string Cfg\+::gw\+No}
+
+Die eindeutige Nummer(\+ID) für diesem rf24gwd \mbox{\Hypertarget{classCfg_a5beacd3f7187e23a3a166190b5fb6bb3}\label{classCfg_a5beacd3f7187e23a3a166190b5fb6bb3}} 
+\index{Cfg@{Cfg}!gwPidFileName@{gwPidFileName}}
+\index{gwPidFileName@{gwPidFileName}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{gwPidFileName}{gwPidFileName}}
+{\footnotesize\ttfamily string Cfg\+::gw\+Pid\+File\+Name}
+
+Pidfilename für rf24gwd \mbox{\Hypertarget{classCfg_ac4df10edefafe41ec1b0251d80ff2de5}\label{classCfg_ac4df10edefafe41ec1b0251d80ff2de5}} 
+\index{Cfg@{Cfg}!gwTcpPortNo@{gwTcpPortNo}}
+\index{gwTcpPortNo@{gwTcpPortNo}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{gwTcpPortNo}{gwTcpPortNo}}
+{\footnotesize\ttfamily string Cfg\+::gw\+Tcp\+Port\+No}
+
+Eingehender TCP Port vom rf24gwd \begin{DoxyNote}{Note}
+Über den TCP Port können Steuerbefehle an den rf24gwd gesendet werden 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$>telnet \mbox{\hyperlink{rf24hubd_8h_a8f718c687d0f28ecb0f281df574ada24}{server}}.domain <tcp-\/port>}
+\DoxyCodeLine{}
+\DoxyCodeLine{rf24gwd> set verbose +rf24 }
+
+\end{DoxyCode}
+ 
+\end{DoxyNote}
+\mbox{\Hypertarget{classCfg_ac82059ea3ea0ef7f44231408da29de3b}\label{classCfg_ac82059ea3ea0ef7f44231408da29de3b}} 
+\index{Cfg@{Cfg}!gwTcpPortSet@{gwTcpPortSet}}
+\index{gwTcpPortSet@{gwTcpPortSet}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{gwTcpPortSet}{gwTcpPortSet}}
+{\footnotesize\ttfamily bool Cfg\+::gw\+Tcp\+Port\+Set}
+
+gw\+Tcp\+Port\+Set\+: true wenn ein eingehender TCP Port gesetzt ist, sonst flase \mbox{\Hypertarget{classCfg_a6df600ac075fa021caa9c45efa9f0601}\label{classCfg_a6df600ac075fa021caa9c45efa9f0601}} 
+\index{Cfg@{Cfg}!gwUdpPortNo@{gwUdpPortNo}}
+\index{gwUdpPortNo@{gwUdpPortNo}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{gwUdpPortNo}{gwUdpPortNo}}
+{\footnotesize\ttfamily string Cfg\+::gw\+Udp\+Port\+No}
+
+Eingehender UDP port vom rf24gwd \begin{DoxyNote}{Note}
+Zwischen rf24hubd und rf24gwd werden Anweisungen mittels UDP ausgetauscht. 
+\end{DoxyNote}
+\mbox{\Hypertarget{classCfg_a40e5f1fbec69c36732d808e05363e024}\label{classCfg_a40e5f1fbec69c36732d808e05363e024}} 
+\index{Cfg@{Cfg}!gwUdpPortSet@{gwUdpPortSet}}
+\index{gwUdpPortSet@{gwUdpPortSet}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{gwUdpPortSet}{gwUdpPortSet}}
+{\footnotesize\ttfamily bool Cfg\+::gw\+Udp\+Port\+Set}
+
+gw\+Udp\+Port\+Set\+: True wenn ein eingehender UDP Port gesetzt ist, sonst flase \mbox{\Hypertarget{classCfg_a6b3bf6aaf8b2faf63fbaff815e65c14f}\label{classCfg_a6b3bf6aaf8b2faf63fbaff815e65c14f}} 
+\index{Cfg@{Cfg}!hubLogFileName@{hubLogFileName}}
+\index{hubLogFileName@{hubLogFileName}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{hubLogFileName}{hubLogFileName}}
+{\footnotesize\ttfamily string Cfg\+::hub\+Log\+File\+Name}
+
+Logfilename für rf24hubd \mbox{\Hypertarget{classCfg_aab6d96f28a3284c1272ce3836a58c3f4}\label{classCfg_aab6d96f28a3284c1272ce3836a58c3f4}} 
+\index{Cfg@{Cfg}!hubPidFileName@{hubPidFileName}}
+\index{hubPidFileName@{hubPidFileName}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{hubPidFileName}{hubPidFileName}}
+{\footnotesize\ttfamily string Cfg\+::hub\+Pid\+File\+Name}
+
+Pidfilename für rf24hubd \mbox{\Hypertarget{classCfg_a49753408815026a15f56b7cd4247d06b}\label{classCfg_a49753408815026a15f56b7cd4247d06b}} 
+\index{Cfg@{Cfg}!hubTcpPortNo@{hubTcpPortNo}}
+\index{hubTcpPortNo@{hubTcpPortNo}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{hubTcpPortNo}{hubTcpPortNo}}
+{\footnotesize\ttfamily string Cfg\+::hub\+Tcp\+Port\+No}
+
+Eingehender TCP Port vom rf24hubd \begin{DoxyNote}{Note}
+Über den TCP Port können Steuerbefehle an den rf24hubd gesendet werden. Diesen Port netzt auch FHEM um seine Steuerbefehle an den Hub zu senden. 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$>telnet \mbox{\hyperlink{rf24hubd_8h_a8f718c687d0f28ecb0f281df574ada24}{server}}.domain <tcp-\/port>}
+\DoxyCodeLine{}
+\DoxyCodeLine{rf24hubd> set verbose +\mbox{\hyperlink{rf24hubd_8h_a7d595d1f42346d5c8b67a1230240e542}{order}} }
+
+\end{DoxyCode}
+ 
+\end{DoxyNote}
+\mbox{\Hypertarget{classCfg_a0ce03c7bc0c0b5a6f75b0276ba1cf42a}\label{classCfg_a0ce03c7bc0c0b5a6f75b0276ba1cf42a}} 
+\index{Cfg@{Cfg}!hubTcpPortSet@{hubTcpPortSet}}
+\index{hubTcpPortSet@{hubTcpPortSet}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{hubTcpPortSet}{hubTcpPortSet}}
+{\footnotesize\ttfamily bool Cfg\+::hub\+Tcp\+Port\+Set}
+
+gw\+Tcp\+Port\+Set\+: True wenn ein eingehender TCP Port gesetzt ist, sonst flase \mbox{\Hypertarget{classCfg_a4b2a65134693dce7d66f955c3389b8f5}\label{classCfg_a4b2a65134693dce7d66f955c3389b8f5}} 
+\index{Cfg@{Cfg}!hubUdpPortNo@{hubUdpPortNo}}
+\index{hubUdpPortNo@{hubUdpPortNo}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{hubUdpPortNo}{hubUdpPortNo}}
+{\footnotesize\ttfamily string Cfg\+::hub\+Udp\+Port\+No}
+
+Eingehender UDP port vom rf24hubd \begin{DoxyNote}{Note}
+Zwischen rf24hubd und rf24gwd werden Anweisungen mittels UDP ausgetauscht. 
+\end{DoxyNote}
+\mbox{\Hypertarget{classCfg_ad250bf11fc3d0a13e3bb37c9517849e0}\label{classCfg_ad250bf11fc3d0a13e3bb37c9517849e0}} 
+\index{Cfg@{Cfg}!hubUdpPortSet@{hubUdpPortSet}}
+\index{hubUdpPortSet@{hubUdpPortSet}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{hubUdpPortSet}{hubUdpPortSet}}
+{\footnotesize\ttfamily bool Cfg\+::hub\+Udp\+Port\+Set}
+
+gw\+Udp\+Port\+Set\+: True wenn ein eingehender UDP Port gesetzt ist, sonst flase \mbox{\Hypertarget{classCfg_aa310020b99a2cfe3900b724a400344eb}\label{classCfg_aa310020b99a2cfe3900b724a400344eb}} 
+\index{Cfg@{Cfg}!setScanLevel@{setScanLevel}}
+\index{setScanLevel@{setScanLevel}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{setScanLevel}{setScanLevel}}
+{\footnotesize\ttfamily int Cfg\+::set\+Scan\+Level = 0}
+
+Beinhaltet das beim Programmaufruf übergebene Scanlevel (0..9) \mbox{\Hypertarget{classCfg_a9eefce31b95beb80f66eff2f9ba9294c}\label{classCfg_a9eefce31b95beb80f66eff2f9ba9294c}} 
+\index{Cfg@{Cfg}!startDaemon@{startDaemon}}
+\index{startDaemon@{startDaemon}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{startDaemon}{startDaemon}}
+{\footnotesize\ttfamily bool Cfg\+::start\+Daemon = false}
+
+start\+Daemon\+: True wenn der Programmaufruf mit -\/d oder --daemon erfolgte, sonst false \mbox{\Hypertarget{classCfg_a65e582daf11d5dcbd222ad1501d33ff8}\label{classCfg_a65e582daf11d5dcbd222ad1501d33ff8}} 
+\index{Cfg@{Cfg}!startScanner@{startScanner}}
+\index{startScanner@{startScanner}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{startScanner}{startScanner}}
+{\footnotesize\ttfamily bool Cfg\+::start\+Scanner = false}
+
+start\+Scanner\+: True wenn der Programmaufruf mit -\/s oder --scanner erfolgte, sonst false \mbox{\Hypertarget{classCfg_a029cac532a52c6716be2f0a8f4c4b3cc}\label{classCfg_a029cac532a52c6716be2f0a8f4c4b3cc}} 
+\index{Cfg@{Cfg}!startSniffer@{startSniffer}}
+\index{startSniffer@{startSniffer}!Cfg@{Cfg}}
+\doxysubsubsection{\texorpdfstring{startSniffer}{startSniffer}}
+{\footnotesize\ttfamily bool Cfg\+::start\+Sniffer = false}
+
+start\+Sniffer\+: True wenn der Programmaufruf mit -\/S oder --sniffer erfolgte, sonst false 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{cfg_8h}{cfg.\+h}}\item 
+\mbox{\hyperlink{cfg_8cpp}{cfg.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,83 @@
+\hypertarget{rf24gwd_8cpp}{}\doxysection{rf24gwd.\+cpp File Reference}
+\label{rf24gwd_8cpp}\index{rf24gwd.cpp@{rf24gwd.cpp}}
+{\ttfamily \#include \char`\"{}rf24gwd.\+h\char`\"{}}\newline
+Include dependency graph for rf24gwd.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rf24gwd_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{rf24gwd_8cpp_a446a8d9244864e4ac7be80a56fb5e330}{process\+\_\+tn\+\_\+in}} (char $\ast$inbuffer, int tn\+\_\+socket)
+\item 
+void \mbox{\hyperlink{rf24gwd_8cpp_a3c31c4b9bcc08e22669f923d656f9a15}{exit\+\_\+system}} (void)
+\item 
+void \mbox{\hyperlink{rf24gwd_8cpp_a348d23d5899ce59d18975284dfb0afc0}{init\+\_\+system}} (void)
+\item 
+void \mbox{\hyperlink{rf24gwd_8cpp_a6b38722bb47fc93ce0ae3c462e6c4934}{sighandler}} (int signal)
+\item 
+void \mbox{\hyperlink{rf24gwd_8cpp_a44efc275c6e206dfd83ae1bc324b2c68}{channelscanner}} (uint8\+\_\+t channel)
+\item 
+void \mbox{\hyperlink{rf24gwd_8cpp_a5bc1ca9f1e5195673548e9a88b9a7a6a}{scanner}} (char scanlevel)
+\item 
+int \mbox{\hyperlink{rf24gwd_8cpp_a0ddf1224851353fc92bfbff6f499fa97}{main}} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em Das Hauptprogramm. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{rf24gwd_8cpp_a44efc275c6e206dfd83ae1bc324b2c68}\label{rf24gwd_8cpp_a44efc275c6e206dfd83ae1bc324b2c68}} 
+\index{rf24gwd.cpp@{rf24gwd.cpp}!channelscanner@{channelscanner}}
+\index{channelscanner@{channelscanner}!rf24gwd.cpp@{rf24gwd.cpp}}
+\doxysubsubsection{\texorpdfstring{channelscanner()}{channelscanner()}}
+{\footnotesize\ttfamily void channelscanner (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{channel }\end{DoxyParamCaption})}
+
+Ein eingebauter Scanner zur Beurteilung des übergebenen Kanals 
+\begin{DoxyParams}{Parameters}
+{\em channel} & Der WLAN Kanal \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{rf24gwd_8cpp_a3c31c4b9bcc08e22669f923d656f9a15}\label{rf24gwd_8cpp_a3c31c4b9bcc08e22669f923d656f9a15}} 
+\index{rf24gwd.cpp@{rf24gwd.cpp}!exit\_system@{exit\_system}}
+\index{exit\_system@{exit\_system}!rf24gwd.cpp@{rf24gwd.cpp}}
+\doxysubsubsection{\texorpdfstring{exit\_system()}{exit\_system()}}
+{\footnotesize\ttfamily void exit\+\_\+system (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Aufräumen, Daten speichern (falls erforderlich) und Deamon sauber verlassen/beenden \mbox{\Hypertarget{rf24gwd_8cpp_a348d23d5899ce59d18975284dfb0afc0}\label{rf24gwd_8cpp_a348d23d5899ce59d18975284dfb0afc0}} 
+\index{rf24gwd.cpp@{rf24gwd.cpp}!init\_system@{init\_system}}
+\index{init\_system@{init\_system}!rf24gwd.cpp@{rf24gwd.cpp}}
+\doxysubsubsection{\texorpdfstring{init\_system()}{init\_system()}}
+{\footnotesize\ttfamily void init\+\_\+system (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Deamon initialisieren, Daten aus DB laden (falls erforderlich) und Deamon sauber hochfahren \mbox{\Hypertarget{rf24gwd_8cpp_a0ddf1224851353fc92bfbff6f499fa97}\label{rf24gwd_8cpp_a0ddf1224851353fc92bfbff6f499fa97}} 
+\index{rf24gwd.cpp@{rf24gwd.cpp}!main@{main}}
+\index{main@{main}!rf24gwd.cpp@{rf24gwd.cpp}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+
+
+Das Hauptprogramm. 
+
+Das Haupprogramm \mbox{\Hypertarget{rf24gwd_8cpp_a446a8d9244864e4ac7be80a56fb5e330}\label{rf24gwd_8cpp_a446a8d9244864e4ac7be80a56fb5e330}} 
+\index{rf24gwd.cpp@{rf24gwd.cpp}!process\_tn\_in@{process\_tn\_in}}
+\index{process\_tn\_in@{process\_tn\_in}!rf24gwd.cpp@{rf24gwd.cpp}}
+\doxysubsubsection{\texorpdfstring{process\_tn\_in()}{process\_tn\_in()}}
+{\footnotesize\ttfamily bool process\+\_\+tn\+\_\+in (\begin{DoxyParamCaption}\item[{char $\ast$}]{inbuffer,  }\item[{int}]{tn\+\_\+socket }\end{DoxyParamCaption})}
+
+Werte die Eingaben, die über telnet gekommen sind aus. \mbox{\Hypertarget{rf24gwd_8cpp_a5bc1ca9f1e5195673548e9a88b9a7a6a}\label{rf24gwd_8cpp_a5bc1ca9f1e5195673548e9a88b9a7a6a}} 
+\index{rf24gwd.cpp@{rf24gwd.cpp}!scanner@{scanner}}
+\index{scanner@{scanner}!rf24gwd.cpp@{rf24gwd.cpp}}
+\doxysubsubsection{\texorpdfstring{scanner()}{scanner()}}
+{\footnotesize\ttfamily void scanner (\begin{DoxyParamCaption}\item[{char}]{scanlevel }\end{DoxyParamCaption})}
+
+Ein eingebauter Scanner über alle WLAN Kanäle \mbox{\Hypertarget{rf24gwd_8cpp_a6b38722bb47fc93ce0ae3c462e6c4934}\label{rf24gwd_8cpp_a6b38722bb47fc93ce0ae3c462e6c4934}} 
+\index{rf24gwd.cpp@{rf24gwd.cpp}!sighandler@{sighandler}}
+\index{sighandler@{sighandler}!rf24gwd.cpp@{rf24gwd.cpp}}
+\doxysubsubsection{\texorpdfstring{sighandler()}{sighandler()}}
+{\footnotesize\ttfamily void sighandler (\begin{DoxyParamCaption}\item[{int}]{signal }\end{DoxyParamCaption})}
+
+Ein Signalhandler, der es ermöglicht den Deamon z.\+B. mit CTRL-\/C oder mit \char`\"{}kill\char`\"{} zu beenden 

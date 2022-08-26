@@ -1,0 +1,254 @@
+\hypertarget{rf24gwd_8h}{}\doxysection{rf24gwd.\+h File Reference}
+\label{rf24gwd_8h}\index{rf24gwd.h@{rf24gwd.h}}
+{\ttfamily \#include $<$cstdlib$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$sstream$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$iomanip$>$}\newline
+{\ttfamily \#include $<$RF24/\+RF24.\+h$>$}\newline
+{\ttfamily \#include $<$RF24/utility/\+RPi/bcm2835.\+h$>$}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+{\ttfamily \#include $<$sys/time.\+h$>$}\newline
+{\ttfamily \#include $<$sys/types.\+h$>$}\newline
+{\ttfamily \#include $<$sys/stat.\+h$>$}\newline
+{\ttfamily \#include $<$sys/ipc.\+h$>$}\newline
+{\ttfamily \#include $<$sys/msg.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$getopt.\+h$>$}\newline
+{\ttfamily \#include $<$syslog.\+h$>$}\newline
+{\ttfamily \#include $<$signal.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$netinet/in.\+h$>$}\newline
+{\ttfamily \#include $<$netdb.\+h$>$}\newline
+{\ttfamily \#include $<$arpa/inet.\+h$>$}\newline
+{\ttfamily \#include $<$fcntl.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}version.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}common.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}cfg.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}rf24\+\_\+config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}rf24gw\+\_\+config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}rf24gw\+\_\+text.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}secrets.\+h\char`\"{}}\newline
+Include dependency graph for rf24gwd.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rf24gwd_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=157pt]{rf24gwd_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+RF24 \mbox{\hyperlink{rf24gwd_8h_a83a2ff436ee39fd336fbf4e16d0c4dd8}{radio}} (RPI\+\_\+\+V2\+\_\+\+GPIO\+\_\+\+P1\+\_\+22, BCM2835\+\_\+\+SPI\+\_\+\+CS0, BCM2835\+\_\+\+SPI\+\_\+\+CLOCK\+\_\+\+DIVIDER\+\_\+32768)
+\begin{DoxyCompactList}\small\item\em Initialisierung des Radio. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classCfg}{Cfg}} \mbox{\hyperlink{rf24gwd_8h_a6a559eb4e518378c7c552d2fdc1769af}{cfg}} (\mbox{\hyperlink{version_8h_a476a6cff0fb1a40441544f8a530ddbe9}{SWVERSION\+\_\+\+STR}}, \+\_\+\+\_\+\+DATE\+\_\+\+\_\+)
+\begin{DoxyCompactList}\small\item\em Eine Instanz der Klasse cfg zur Konfiguration für den Gatewaydeamon. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{rf24gwd_8h_a446a8d9244864e4ac7be80a56fb5e330}{process\+\_\+tn\+\_\+in}} (char $\ast$inbuffer, int tn\+\_\+socket)
+\item 
+void \mbox{\hyperlink{rf24gwd_8h_a3c31c4b9bcc08e22669f923d656f9a15}{exit\+\_\+system}} (void)
+\item 
+void \mbox{\hyperlink{rf24gwd_8h_a348d23d5899ce59d18975284dfb0afc0}{init\+\_\+system}} (void)
+\item 
+void \mbox{\hyperlink{rf24gwd_8h_a44efc275c6e206dfd83ae1bc324b2c68}{channelscanner}} (uint8\+\_\+t channel)
+\item 
+void \mbox{\hyperlink{rf24gwd_8h_a5bc1ca9f1e5195673548e9a88b9a7a6a}{scanner}} (char scanlevel)
+\item 
+void \mbox{\hyperlink{rf24gwd_8h_a6b38722bb47fc93ce0ae3c462e6c4934}{sighandler}} (int signal)
+\item 
+int \mbox{\hyperlink{rf24gwd_8h_a0ddf1224851353fc92bfbff6f499fa97}{main}} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+FILE $\ast$ \mbox{\hyperlink{rf24gwd_8h_a74cdc67e1a2355a8a3857dd631c2e20d}{pidfile\+\_\+ptr}}
+\begin{DoxyCompactList}\small\item\em Ein Pointer für das PID File. Ist dieses angelegt, kann der rf24gwd nicht (nochmal) gestartet werden. \end{DoxyCompactList}\item 
+FILE $\ast$ \mbox{\hyperlink{rf24gwd_8h_a8b911740b70463f6330c1b22ac52d2b0}{logfile\+\_\+ptr}}
+\begin{DoxyCompactList}\small\item\em Ein Pointer für das Log File. \end{DoxyCompactList}\item 
+struct sockaddr\+\_\+in \mbox{\hyperlink{rf24gwd_8h_a256159eb435342e0e9a5029438e331e2}{udp\+\_\+address}}
+\item 
+int \mbox{\hyperlink{rf24gwd_8h_a6cea0a0a116498be4285855eb37dc1b5}{udp\+\_\+sockfd}}
+\begin{DoxyCompactList}\small\item\em Ein handler für den UDP Socket. \end{DoxyCompactList}\item 
+uint16\+\_\+t \mbox{\hyperlink{rf24gwd_8h_a2ac10a3f1b8393a2208b7dc7f6672704}{verbose\+Level}} = \mbox{\hyperlink{group__cfgprm_ga6c4340ca162dd39191fb258fe86f573a}{STARTUPVERBOSELEVEL}}
+\begin{DoxyCompactList}\small\item\em Eine Variable für das aktuelle Verboselevel. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structpayload__t}{payload\+\_\+t}} \mbox{\hyperlink{rf24gwd_8h_a9ab81a7ae17f3497b23bbccb020c3308}{payload}}
+\begin{DoxyCompactList}\small\item\em Die Payloadstruktur als Variable zur Übertragung an den Node. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structudpdata__t}{udpdata\+\_\+t}} \mbox{\hyperlink{rf24gwd_8h_aed24fc049dc5a6c8b3fd89e20c79be34}{udpdata}}
+\begin{DoxyCompactList}\small\item\em Die Udpdatastruktur als Variable. \end{DoxyCompactList}\item 
+char $\ast$ \mbox{\hyperlink{rf24gwd_8h_a1fe855c208bc17a51a4d34fefdb2d5b1}{buf}}
+\begin{DoxyCompactList}\small\item\em Ein generischer Buffer. \end{DoxyCompactList}\item 
+char $\ast$ \mbox{\hyperlink{rf24gwd_8h_aa5a00c1b8970dc4fbaabfa7b8a4aa021}{tsbuf}}
+\begin{DoxyCompactList}\small\item\em Ein Buffer zur Aufnahme des Zeitstrings. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Header File für den rf24gwd 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{rf24gwd_8h_a6a559eb4e518378c7c552d2fdc1769af}\label{rf24gwd_8h_a6a559eb4e518378c7c552d2fdc1769af}} 
+\index{rf24gwd.h@{rf24gwd.h}!cfg@{cfg}}
+\index{cfg@{cfg}!rf24gwd.h@{rf24gwd.h}}
+\doxysubsubsection{\texorpdfstring{cfg()}{cfg()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classCfg}{Cfg}} cfg (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{version_8h_a476a6cff0fb1a40441544f8a530ddbe9}{SWVERSION\+\_\+\+STR}}}]{,  }\item[{\+\_\+\+\_\+\+DATE\+\_\+\+\_\+}]{ }\end{DoxyParamCaption})}
+
+
+
+Eine Instanz der Klasse cfg zur Konfiguration für den Gatewaydeamon. 
+
+\mbox{\Hypertarget{rf24gwd_8h_a44efc275c6e206dfd83ae1bc324b2c68}\label{rf24gwd_8h_a44efc275c6e206dfd83ae1bc324b2c68}} 
+\index{rf24gwd.h@{rf24gwd.h}!channelscanner@{channelscanner}}
+\index{channelscanner@{channelscanner}!rf24gwd.h@{rf24gwd.h}}
+\doxysubsubsection{\texorpdfstring{channelscanner()}{channelscanner()}}
+{\footnotesize\ttfamily void channelscanner (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{channel }\end{DoxyParamCaption})}
+
+Ein eingebauter Scanner zur Beurteilung des übergebenen Kanals 
+\begin{DoxyParams}{Parameters}
+{\em channel} & Der WLAN Kanal \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{rf24gwd_8h_a3c31c4b9bcc08e22669f923d656f9a15}\label{rf24gwd_8h_a3c31c4b9bcc08e22669f923d656f9a15}} 
+\index{rf24gwd.h@{rf24gwd.h}!exit\_system@{exit\_system}}
+\index{exit\_system@{exit\_system}!rf24gwd.h@{rf24gwd.h}}
+\doxysubsubsection{\texorpdfstring{exit\_system()}{exit\_system()}}
+{\footnotesize\ttfamily void exit\+\_\+system (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Aufräumen, Daten speichern (falls erforderlich) und Deamon sauber verlassen/beenden \mbox{\Hypertarget{rf24gwd_8h_a348d23d5899ce59d18975284dfb0afc0}\label{rf24gwd_8h_a348d23d5899ce59d18975284dfb0afc0}} 
+\index{rf24gwd.h@{rf24gwd.h}!init\_system@{init\_system}}
+\index{init\_system@{init\_system}!rf24gwd.h@{rf24gwd.h}}
+\doxysubsubsection{\texorpdfstring{init\_system()}{init\_system()}}
+{\footnotesize\ttfamily void init\+\_\+system (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Deamon initialisieren, Daten aus DB laden (falls erforderlich) und Deamon sauber hochfahren \mbox{\Hypertarget{rf24gwd_8h_a0ddf1224851353fc92bfbff6f499fa97}\label{rf24gwd_8h_a0ddf1224851353fc92bfbff6f499fa97}} 
+\index{rf24gwd.h@{rf24gwd.h}!main@{main}}
+\index{main@{main}!rf24gwd.h@{rf24gwd.h}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+Das Haupprogramm \mbox{\Hypertarget{rf24gwd_8h_a446a8d9244864e4ac7be80a56fb5e330}\label{rf24gwd_8h_a446a8d9244864e4ac7be80a56fb5e330}} 
+\index{rf24gwd.h@{rf24gwd.h}!process\_tn\_in@{process\_tn\_in}}
+\index{process\_tn\_in@{process\_tn\_in}!rf24gwd.h@{rf24gwd.h}}
+\doxysubsubsection{\texorpdfstring{process\_tn\_in()}{process\_tn\_in()}}
+{\footnotesize\ttfamily bool process\+\_\+tn\+\_\+in (\begin{DoxyParamCaption}\item[{char $\ast$}]{inbuffer,  }\item[{int}]{tn\+\_\+socket }\end{DoxyParamCaption})}
+
+Werte die Eingaben, die über telnet gekommen sind aus. \mbox{\Hypertarget{rf24gwd_8h_a83a2ff436ee39fd336fbf4e16d0c4dd8}\label{rf24gwd_8h_a83a2ff436ee39fd336fbf4e16d0c4dd8}} 
+\index{rf24gwd.h@{rf24gwd.h}!radio@{radio}}
+\index{radio@{radio}!rf24gwd.h@{rf24gwd.h}}
+\doxysubsubsection{\texorpdfstring{radio()}{radio()}}
+{\footnotesize\ttfamily RF24 radio (\begin{DoxyParamCaption}\item[{RPI\+\_\+\+V2\+\_\+\+GPIO\+\_\+\+P1\+\_\+22}]{,  }\item[{BCM2835\+\_\+\+SPI\+\_\+\+CS0}]{,  }\item[{BCM2835\+\_\+\+SPI\+\_\+\+CLOCK\+\_\+\+DIVIDER\+\_\+32768}]{ }\end{DoxyParamCaption})}
+
+
+
+Initialisierung des Radio. 
+
+\mbox{\Hypertarget{rf24gwd_8h_a5bc1ca9f1e5195673548e9a88b9a7a6a}\label{rf24gwd_8h_a5bc1ca9f1e5195673548e9a88b9a7a6a}} 
+\index{rf24gwd.h@{rf24gwd.h}!scanner@{scanner}}
+\index{scanner@{scanner}!rf24gwd.h@{rf24gwd.h}}
+\doxysubsubsection{\texorpdfstring{scanner()}{scanner()}}
+{\footnotesize\ttfamily void scanner (\begin{DoxyParamCaption}\item[{char}]{scanlevel }\end{DoxyParamCaption})}
+
+Ein eingebauter Scanner über alle WLAN Kanäle \mbox{\Hypertarget{rf24gwd_8h_a6b38722bb47fc93ce0ae3c462e6c4934}\label{rf24gwd_8h_a6b38722bb47fc93ce0ae3c462e6c4934}} 
+\index{rf24gwd.h@{rf24gwd.h}!sighandler@{sighandler}}
+\index{sighandler@{sighandler}!rf24gwd.h@{rf24gwd.h}}
+\doxysubsubsection{\texorpdfstring{sighandler()}{sighandler()}}
+{\footnotesize\ttfamily void sighandler (\begin{DoxyParamCaption}\item[{int}]{signal }\end{DoxyParamCaption})}
+
+Ein Signalhandler, der es ermöglicht den Deamon z.\+B. mit CTRL-\/C oder mit \char`\"{}kill\char`\"{} zu beenden 
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{rf24gwd_8h_a1fe855c208bc17a51a4d34fefdb2d5b1}\label{rf24gwd_8h_a1fe855c208bc17a51a4d34fefdb2d5b1}} 
+\index{rf24gwd.h@{rf24gwd.h}!buf@{buf}}
+\index{buf@{buf}!rf24gwd.h@{rf24gwd.h}}
+\doxysubsubsection{\texorpdfstring{buf}{buf}}
+{\footnotesize\ttfamily char$\ast$ buf}
+
+
+
+Ein generischer Buffer. 
+
+\mbox{\Hypertarget{rf24gwd_8h_a8b911740b70463f6330c1b22ac52d2b0}\label{rf24gwd_8h_a8b911740b70463f6330c1b22ac52d2b0}} 
+\index{rf24gwd.h@{rf24gwd.h}!logfile\_ptr@{logfile\_ptr}}
+\index{logfile\_ptr@{logfile\_ptr}!rf24gwd.h@{rf24gwd.h}}
+\doxysubsubsection{\texorpdfstring{logfile\_ptr}{logfile\_ptr}}
+{\footnotesize\ttfamily FILE$\ast$ logfile\+\_\+ptr}
+
+
+
+Ein Pointer für das Log File. 
+
+\mbox{\Hypertarget{rf24gwd_8h_a9ab81a7ae17f3497b23bbccb020c3308}\label{rf24gwd_8h_a9ab81a7ae17f3497b23bbccb020c3308}} 
+\index{rf24gwd.h@{rf24gwd.h}!payload@{payload}}
+\index{payload@{payload}!rf24gwd.h@{rf24gwd.h}}
+\doxysubsubsection{\texorpdfstring{payload}{payload}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structpayload__t}{payload\+\_\+t}} payload}
+
+
+
+Die Payloadstruktur als Variable zur Übertragung an den Node. 
+
+\mbox{\Hypertarget{rf24gwd_8h_a74cdc67e1a2355a8a3857dd631c2e20d}\label{rf24gwd_8h_a74cdc67e1a2355a8a3857dd631c2e20d}} 
+\index{rf24gwd.h@{rf24gwd.h}!pidfile\_ptr@{pidfile\_ptr}}
+\index{pidfile\_ptr@{pidfile\_ptr}!rf24gwd.h@{rf24gwd.h}}
+\doxysubsubsection{\texorpdfstring{pidfile\_ptr}{pidfile\_ptr}}
+{\footnotesize\ttfamily FILE$\ast$ pidfile\+\_\+ptr}
+
+
+
+Ein Pointer für das PID File. Ist dieses angelegt, kann der rf24gwd nicht (nochmal) gestartet werden. 
+
+\mbox{\Hypertarget{rf24gwd_8h_aa5a00c1b8970dc4fbaabfa7b8a4aa021}\label{rf24gwd_8h_aa5a00c1b8970dc4fbaabfa7b8a4aa021}} 
+\index{rf24gwd.h@{rf24gwd.h}!tsbuf@{tsbuf}}
+\index{tsbuf@{tsbuf}!rf24gwd.h@{rf24gwd.h}}
+\doxysubsubsection{\texorpdfstring{tsbuf}{tsbuf}}
+{\footnotesize\ttfamily char$\ast$ tsbuf}
+
+
+
+Ein Buffer zur Aufnahme des Zeitstrings. 
+
+\mbox{\Hypertarget{rf24gwd_8h_a256159eb435342e0e9a5029438e331e2}\label{rf24gwd_8h_a256159eb435342e0e9a5029438e331e2}} 
+\index{rf24gwd.h@{rf24gwd.h}!udp\_address@{udp\_address}}
+\index{udp\_address@{udp\_address}!rf24gwd.h@{rf24gwd.h}}
+\doxysubsubsection{\texorpdfstring{udp\_address}{udp\_address}}
+{\footnotesize\ttfamily struct sockaddr\+\_\+in udp\+\_\+address}
+
+\mbox{\Hypertarget{rf24gwd_8h_a6cea0a0a116498be4285855eb37dc1b5}\label{rf24gwd_8h_a6cea0a0a116498be4285855eb37dc1b5}} 
+\index{rf24gwd.h@{rf24gwd.h}!udp\_sockfd@{udp\_sockfd}}
+\index{udp\_sockfd@{udp\_sockfd}!rf24gwd.h@{rf24gwd.h}}
+\doxysubsubsection{\texorpdfstring{udp\_sockfd}{udp\_sockfd}}
+{\footnotesize\ttfamily int udp\+\_\+sockfd}
+
+
+
+Ein handler für den UDP Socket. 
+
+\mbox{\Hypertarget{rf24gwd_8h_aed24fc049dc5a6c8b3fd89e20c79be34}\label{rf24gwd_8h_aed24fc049dc5a6c8b3fd89e20c79be34}} 
+\index{rf24gwd.h@{rf24gwd.h}!udpdata@{udpdata}}
+\index{udpdata@{udpdata}!rf24gwd.h@{rf24gwd.h}}
+\doxysubsubsection{\texorpdfstring{udpdata}{udpdata}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structudpdata__t}{udpdata\+\_\+t}} udpdata}
+
+
+
+Die Udpdatastruktur als Variable. 
+
+\mbox{\Hypertarget{rf24gwd_8h_a2ac10a3f1b8393a2208b7dc7f6672704}\label{rf24gwd_8h_a2ac10a3f1b8393a2208b7dc7f6672704}} 
+\index{rf24gwd.h@{rf24gwd.h}!verboseLevel@{verboseLevel}}
+\index{verboseLevel@{verboseLevel}!rf24gwd.h@{rf24gwd.h}}
+\doxysubsubsection{\texorpdfstring{verboseLevel}{verboseLevel}}
+{\footnotesize\ttfamily uint16\+\_\+t verbose\+Level = \mbox{\hyperlink{group__cfgprm_ga6c4340ca162dd39191fb258fe86f573a}{STARTUPVERBOSELEVEL}}}
+
+
+
+Eine Variable für das aktuelle Verboselevel. 
+
+Die Variable verbose\+Level wird extern mitbenutzt. 

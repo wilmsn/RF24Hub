@@ -1,0 +1,43 @@
+\hypertarget{orderbuffer_8h}{}\doxysection{orderbuffer.\+h File Reference}
+\label{orderbuffer_8h}\index{orderbuffer.h@{orderbuffer.h}}
+
+
+Der Orderbuffer ist ein Objekt zur Speicherung von Einzelanforderungen.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$cstring$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}rf24\+\_\+config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}rf24hub\+\_\+config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}common.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}dataformat.\+h\char`\"{}}\newline
+Include dependency graph for orderbuffer.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{orderbuffer_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=263pt]{orderbuffer_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classOrderBuffer}{Order\+Buffer}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Der Orderbuffer ist ein Objekt zur Speicherung von Einzelanforderungen. 
+
+Kommt eine Anforderung im Hub an, wird diese zunächst im Orderbuffer gespeichert. Besteht Kontakt zu einem Node (bei ankommendem Heartbeat) werden alle offenen Orderbuffereinträge für diesen Node zu einer Orderstruktur aggregiert. In einer \mbox{\hyperlink{classOrder}{Order}} können 6 Orderbuffereinträge zum Node übertragen werden. 

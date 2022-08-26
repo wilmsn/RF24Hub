@@ -10,73 +10,89 @@
 //-----------------------------------------------------
 #if defined(SOLARNODE)
 #define RF24NODE               202
-#define LOW_VOLT_LEVEL         2.2
-#define EEPROM_VERSION         4
+#define VOLT_LV                2.2
+#define SLEEPTIME_LV           300
+#define EEPROM_VERSION         7
 #define STATUSLED              A2
-#define SLEEPTIME_SEC          30
+#define SLEEPTIME              30
 #define EMPTYLOOPS             9
 // Mist die Spannung an der Referenzzelle die NUR mit einem Widerstand abgeschlossen ist
 #define SOLARZELLE1            A0
 // Mist die Spannung an der Versorgungssolarzelle vor dem Step-Up Wandler
 #define SOLARZELLE2            A3
-// Ist die Batteriespannung groesser als USE_BATTERIE wird der Tiefschlaf von MC und Radio abgeschaltet
-#define DISCHARGE1             2.6
-// Ist die Batteriespannung groesser als USE_BATTERIE wird der Tiefschlaf von MC und Radio abgeschaltet
-#define DISCHARGE2             2.7
-// Am DISCHARGE_PIN liegt ein Widerstand von 340 Ohm gegen Vcc 
-#define DISCHARGE2_PIN         5
+// Ist die Batteriespannung groesser als DISCHARGE1 wird der Tiefschlaf vom MC abgeschaltet
+#define DISCHARGE1             2.7
+// Ist die Batteriespannung groesser als DISCHARGE2 wird zusätzlich zu DISCHARGE1 die Status LED eingeschaltet
+#define DISCHARGE2             2.75
+// Ist die Batteriespannung groesser als DISCHARGE3 wird zusätzlich zu DISCHARGE2 Strom über einen Widerstand an DISCHARGE3_PIN gegen GND abgeleitet
+#define DISCHARGE3             2.8
+#define DISCHARGE3_PIN         5
 // Load Ballancer
+// Mittlerer Pol der Batterie ist über einen 680 Ohm Widerstand an den Pin angeschlossen
 #define LOAD_BALLANCER_PIN     A1
 // Maximale Differenzspannung zwischen den Zellen
-#define LOAD_BALLANCER         0.2
-
-#define MAX_SENDCOUNT          5
-#define LOW_VOLT_LOOPS         90
+#define LOAD_BALLANCER         0.1
 #endif
 //-----------------------------------------------------
 //-----------------------------------------------------
 #if defined(AUSSENTHERMOMETER)
-#define RF24NODE        200
+#define RF24NODE             200
+#define EEPROM_VERSION       5
 #define SENSOR_BOSCH
-#define STATUSLED       3
-#define STATUSLED_ON    HIGH
-#define STATUSLED_OFF   LOW
-#define LOW_VOLT_LEVEL  1
-#define EEPROM_VERSION  5
-#define SLEEPTIME       900
+#define VOLT_LV              2
+#define SLEEPTIME            900
+#endif
+//-----------------------------------------------------
+#if defined(NODE_101)
+#define RF24NODE             101
+#define SENSOR_18B20         8
+#define DISPLAY_5110
+#define EEPROM_VERSION       3
+#define EMPTYLOOPS           9
+#define VOLT_OFF             0.55
+#define LOW_VOLT_LEVEL       3.6
 #endif
 //-----------------------------------------------------
 #if defined(BASTELZIMMERTHERMOMETER_SW)
 #define RF24NODE             105
-#define SENSOR_18B20
+#define EEPROM_VERSION       5
+#define SENSOR_18B20         8
 #define DISPLAY_5110
 //#define MONITOR
-#define EEPROM_VERSION       3
 #define VOLT_OFF             0.55
 #define EMPTYLOOPS           9
-#define LOW_VOLT_LEVEL       3.6
+#define VOLT_LV              3.6
+#define SLEEPTIME_LV         1200
+#define STATUSLED_ON         LOW
+#define STATUSLED_OFF        HIGH
+#endif
+//-----------------------------------------------------
+#if defined(ANKLEIDEZIMMERTHERMOMETER)
+#define RF24NODE             110
+#define EEPROM_VERSION       4
+#define SENSOR_18B20         8
+#define DISPLAY_5110
+#define EMPTYLOOPS           9
+#define VOLT_OFF             0.68
+#define LOW_VOLT_LEVEL       3.0
+#define SLEEP4MS_FAC         950
 #define STATUSLED_ON         LOW
 #define STATUSLED_OFF        HIGH
 #endif
 //-----------------------------------------------------
 //    Testnodes
 //-----------------------------------------------------
-#if defined(TESTNODE_101)
-#define RF24NODE                      101
-//#define EEPROM_VERSION              45
+#if defined(TESTNODE_240)
+#define RF24NODE                      240
+#define EEPROM_VERSION                7
 #define BATTERY_READ_EXTERNAL         A2
 #define BATTERY_VOLTAGEDIVIDER_R1     220
 #define BATTERY_VOLTAGEDIVIDER_R2     220
-#define LOW_VOLT_LEVEL                3
+#define VOLT_LV                       3.3
 #define SLEEPTIME                     60
 #define EMPTYLOOPS                    4
 #define SENSOR_18B20                  8
 #define STATUSLED                     7
-#define DISCHARGE1                    5
-#define DISCHARGE2                    6
-#define DISCHARGE2_PIN                5
-//#define DISPLAY_5110
-
 #endif
 //-----------------------------------------------------
 #if defined(TESTNODE_UNO)
@@ -139,7 +155,7 @@
 #define DEBUG_SERIAL
 #endif
 #if defined(LOAD_BALANCER) || defined(DISCHARGE1) || defined(DISCHARGE1)
-#define BATT_MOITOR
+#define BATT_MONITOR
 #endif
 
 //basic definitions - can be overwritten in node settings
@@ -155,15 +171,18 @@
 #ifndef RADIO_CSN_PIN
 #define RADIO_CSN_PIN   9
 #endif
+
 // The status LED
-#if defined (STATUSLED)
+#ifndef STATUSLED
+#define STATUSLED 3
+#endif
 #ifndef STATUSLED_ON
 #define STATUSLED_ON  HIGH
 #endif
 #ifndef STATUSLED_OFF
 #define STATUSLED_OFF LOW
 #endif
-#endif
+
 // Relais
 #ifndef RELAIS_ON
 #define RELAIS_ON     HIGH
@@ -179,6 +198,10 @@
 #ifndef DUMMY_TEMP
 #define DUMMY_TEMP    33.3
 #endif
+// Channel for temperature
+#ifndef TEMPERATURE_CHANNEL
+#define TEMPERATURE_CHANNEL     1
+#endif
 #endif
 
 // Dallas 18B20 Sensor
@@ -187,9 +210,29 @@
 #ifndef SENSOR_18B20_RESOLUTION
 #define SENSOR_18B20_RESOLUTION 9
 #endif
-// Delaytime ffor 18B20 measurement
+// Delaytime for 18B20 measurement
 #ifndef SENSOR_18B20_DELAYTIME
 #define SENSOR_18B20_DELAYTIME  100
+#endif
+// Channel for temperature
+#ifndef TEMPERATURE_CHANNEL
+#define TEMPERATURE_CHANNEL     1
+#endif
+#endif
+
+// Bosch Sensor (BMP180; BMP280; BME280)
+#ifdef SENSOR_BOSCH
+// Channel for temperature
+#ifndef TEMPERATURE_CHANNEL
+#define TEMPERATURE_CHANNEL     1
+#endif
+// Channel for temperature
+#ifndef PRESSURE_CHANNEL
+#define PRESSURE_CHANNEL     2
+#endif
+// Channel for temperature
+#ifndef HUMIDITY_CHANNEL
+#define HUMIDITY_CHANNEL     3
 #endif
 #endif
 
@@ -207,6 +250,15 @@
 
 #endif
 
+#if defined(LOAD_BALLANCER) || defined(DISCHARGE1) || defined(DISCHARGE2)
+#ifndef BATT1_CHANNEL
+#define BATT1_CHANNEL           7
+#endif
+#ifndef BATT_MOD_CHANNEL
+#define BATT_MOD_CHANNEL        8
+#endif
+
+#endif
 
 
 
@@ -250,7 +302,7 @@
 // Max number of attempts to send for a nomal message!!
 // (valid 1 ... 20)
 #ifndef MAX_SENDCOUNT
-#define MAX_SENDCOUNT   3
+#define MAX_SENDCOUNT   5
 #endif
 // Max number of attempts to send for a stop message!!
 // (valid 1 ... 20)
@@ -286,6 +338,11 @@
 // 90 => every 3 hours (sleeptime 120)
 #ifndef SLEEPTIME_LV
 #define SLEEPTIME_LV  90
+#endif
+
+// PA_Level for the radio, default is maximum
+#ifndef PA_LEVEL
+#define PA_LEVEL RF24_PA_MAX
 #endif
 
 // Some definitions for the display

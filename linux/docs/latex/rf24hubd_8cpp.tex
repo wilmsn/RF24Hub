@@ -1,0 +1,137 @@
+\hypertarget{rf24hubd_8cpp}{}\doxysection{rf24hubd.\+cpp File Reference}
+\label{rf24hubd_8cpp}\index{rf24hubd.cpp@{rf24hubd.cpp}}
+{\ttfamily \#include \char`\"{}rf24hubd.\+h\char`\"{}}\newline
+Include dependency graph for rf24hubd.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rf24hubd_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{rf24hubd_8cpp_a20c28fcabc4e4bafe6c9c48305ca0cee}{send\+\_\+fhem\+\_\+cmd}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id, uint8\+\_\+t channel, char $\ast$value)
+\begin{DoxyCompactList}\small\item\em send a value of a sensor to the fhem-\/host \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rf24hubd_8cpp_ab7e3b1b511de9b3dec5a7b635d1f2fdb}{send\+\_\+fhem\+\_\+tn}} (char $\ast$tn\+\_\+cmd)
+\begin{DoxyCompactList}\small\item\em send a telnet comand to the fhem-\/host \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{rf24hubd_8cpp_a446a8d9244864e4ac7be80a56fb5e330}{process\+\_\+tn\+\_\+in}} (char $\ast$inbuffer, int tn\+\_\+socket)
+\item 
+void \mbox{\hyperlink{rf24hubd_8cpp_a29578e615b1ea3664c879869c27084fe}{make\+\_\+order}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id, uint8\+\_\+t msg\+\_\+type)
+\begin{DoxyCompactList}\small\item\em Erzeugung eines Datensatzes zur Übertragung an einen Node. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rf24hubd_8cpp_a3c31c4b9bcc08e22669f923d656f9a15}{exit\+\_\+system}} (void)
+\item 
+void \mbox{\hyperlink{rf24hubd_8cpp_a348d23d5899ce59d18975284dfb0afc0}{init\+\_\+system}} (void)
+\item 
+void \mbox{\hyperlink{rf24hubd_8cpp_acbbb0ccfc0d80a3581b2b073f5334aa0}{process\+\_\+sensor}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id, uint32\+\_\+t mydata)
+\begin{DoxyCompactList}\small\item\em Verarbeitet einen empfangenen Wert. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rf24hubd_8cpp_a6b38722bb47fc93ce0ae3c462e6c4934}{sighandler}} (int signal)
+\item 
+void \mbox{\hyperlink{rf24hubd_8cpp_ae034153f8a279b6e78077f53703bd1aa}{process\+\_\+payload}} (\mbox{\hyperlink{structpayload__t}{payload\+\_\+t}} $\ast$mypayload)
+\item 
+int \mbox{\hyperlink{rf24hubd_8cpp_a0ddf1224851353fc92bfbff6f499fa97}{main}} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em Das Hauptprogramm. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{rf24hubd_8cpp_a3c31c4b9bcc08e22669f923d656f9a15}\label{rf24hubd_8cpp_a3c31c4b9bcc08e22669f923d656f9a15}} 
+\index{rf24hubd.cpp@{rf24hubd.cpp}!exit\_system@{exit\_system}}
+\index{exit\_system@{exit\_system}!rf24hubd.cpp@{rf24hubd.cpp}}
+\doxysubsubsection{\texorpdfstring{exit\_system()}{exit\_system()}}
+{\footnotesize\ttfamily void exit\+\_\+system (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Aufräumen, Daten speichern (falls erforderlich) und Deamon sauber verlassen/beenden \mbox{\Hypertarget{rf24hubd_8cpp_a348d23d5899ce59d18975284dfb0afc0}\label{rf24hubd_8cpp_a348d23d5899ce59d18975284dfb0afc0}} 
+\index{rf24hubd.cpp@{rf24hubd.cpp}!init\_system@{init\_system}}
+\index{init\_system@{init\_system}!rf24hubd.cpp@{rf24hubd.cpp}}
+\doxysubsubsection{\texorpdfstring{init\_system()}{init\_system()}}
+{\footnotesize\ttfamily void init\+\_\+system (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Deamon initialisieren, Daten aus DB laden (falls erforderlich) und Deamon sauber hochfahren \mbox{\Hypertarget{rf24hubd_8cpp_a0ddf1224851353fc92bfbff6f499fa97}\label{rf24hubd_8cpp_a0ddf1224851353fc92bfbff6f499fa97}} 
+\index{rf24hubd.cpp@{rf24hubd.cpp}!main@{main}}
+\index{main@{main}!rf24hubd.cpp@{rf24hubd.cpp}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+
+
+Das Hauptprogramm. 
+
+Das Haupprogramm \mbox{\Hypertarget{rf24hubd_8cpp_a29578e615b1ea3664c879869c27084fe}\label{rf24hubd_8cpp_a29578e615b1ea3664c879869c27084fe}} 
+\index{rf24hubd.cpp@{rf24hubd.cpp}!make\_order@{make\_order}}
+\index{make\_order@{make\_order}!rf24hubd.cpp@{rf24hubd.cpp}}
+\doxysubsubsection{\texorpdfstring{make\_order()}{make\_order()}}
+{\footnotesize\ttfamily void make\+\_\+order (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id,  }\item[{uint8\+\_\+t}]{msg\+\_\+type }\end{DoxyParamCaption})}
+
+
+
+Erzeugung eines Datensatzes zur Übertragung an einen Node. 
+
+In dieser Prozedure werden alle offenen (bis zu max. 6) Anweisungen für einen Node gesammelt und für die Übertragung vorbereitet. 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Der Node \\
+\hline
+{\em msg\+\_\+type} & Der Nachrichtentyp \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{rf24hubd_8cpp_ae034153f8a279b6e78077f53703bd1aa}\label{rf24hubd_8cpp_ae034153f8a279b6e78077f53703bd1aa}} 
+\index{rf24hubd.cpp@{rf24hubd.cpp}!process\_payload@{process\_payload}}
+\index{process\_payload@{process\_payload}!rf24hubd.cpp@{rf24hubd.cpp}}
+\doxysubsubsection{\texorpdfstring{process\_payload()}{process\_payload()}}
+{\footnotesize\ttfamily void process\+\_\+payload (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structpayload__t}{payload\+\_\+t}} $\ast$}]{payload }\end{DoxyParamCaption})}
+
+Verarbeitet die empfangenen Daten einer Funksendung 
+\begin{DoxyParams}{Parameters}
+{\em payload} & Der Payload \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{rf24hubd_8cpp_acbbb0ccfc0d80a3581b2b073f5334aa0}\label{rf24hubd_8cpp_acbbb0ccfc0d80a3581b2b073f5334aa0}} 
+\index{rf24hubd.cpp@{rf24hubd.cpp}!process\_sensor@{process\_sensor}}
+\index{process\_sensor@{process\_sensor}!rf24hubd.cpp@{rf24hubd.cpp}}
+\doxysubsubsection{\texorpdfstring{process\_sensor()}{process\_sensor()}}
+{\footnotesize\ttfamily void process\+\_\+sensor (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id,  }\item[{uint32\+\_\+t}]{data }\end{DoxyParamCaption})}
+
+
+
+Verarbeitet einen empfangenen Wert. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Der sendende Node \\
+\hline
+{\em data} & Der Transportwert \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{rf24hubd_8cpp_a446a8d9244864e4ac7be80a56fb5e330}\label{rf24hubd_8cpp_a446a8d9244864e4ac7be80a56fb5e330}} 
+\index{rf24hubd.cpp@{rf24hubd.cpp}!process\_tn\_in@{process\_tn\_in}}
+\index{process\_tn\_in@{process\_tn\_in}!rf24hubd.cpp@{rf24hubd.cpp}}
+\doxysubsubsection{\texorpdfstring{process\_tn\_in()}{process\_tn\_in()}}
+{\footnotesize\ttfamily bool process\+\_\+tn\+\_\+in (\begin{DoxyParamCaption}\item[{char $\ast$}]{inbuffer,  }\item[{int}]{tn\+\_\+socket }\end{DoxyParamCaption})}
+
+Werte die Eingaben, die über telnet gekommen sind aus. \mbox{\Hypertarget{rf24hubd_8cpp_a20c28fcabc4e4bafe6c9c48305ca0cee}\label{rf24hubd_8cpp_a20c28fcabc4e4bafe6c9c48305ca0cee}} 
+\index{rf24hubd.cpp@{rf24hubd.cpp}!send\_fhem\_cmd@{send\_fhem\_cmd}}
+\index{send\_fhem\_cmd@{send\_fhem\_cmd}!rf24hubd.cpp@{rf24hubd.cpp}}
+\doxysubsubsection{\texorpdfstring{send\_fhem\_cmd()}{send\_fhem\_cmd()}}
+{\footnotesize\ttfamily void send\+\_\+fhem\+\_\+cmd (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node,  }\item[{uint8\+\_\+t}]{channel,  }\item[{char $\ast$}]{value }\end{DoxyParamCaption})}
+
+
+
+send a value of a sensor to the fhem-\/host 
+
+Ein Sensor ist eindeutig durch die Kombination aus Node und Channel bestimmt. Der Wert des Sensors wird hier an FHEM übertragen. \mbox{\Hypertarget{rf24hubd_8cpp_ab7e3b1b511de9b3dec5a7b635d1f2fdb}\label{rf24hubd_8cpp_ab7e3b1b511de9b3dec5a7b635d1f2fdb}} 
+\index{rf24hubd.cpp@{rf24hubd.cpp}!send\_fhem\_tn@{send\_fhem\_tn}}
+\index{send\_fhem\_tn@{send\_fhem\_tn}!rf24hubd.cpp@{rf24hubd.cpp}}
+\doxysubsubsection{\texorpdfstring{send\_fhem\_tn()}{send\_fhem\_tn()}}
+{\footnotesize\ttfamily void send\+\_\+fhem\+\_\+tn (\begin{DoxyParamCaption}\item[{char $\ast$}]{tn\+\_\+cmd }\end{DoxyParamCaption})}
+
+
+
+send a telnet comand to the fhem-\/host 
+
+Die Eventverwaltung wird in meinem System durch FHEM realisiert. Dazu ist es nötig das alle geänderten Sensorwerte an FHEM übertragen werden. \mbox{\Hypertarget{rf24hubd_8cpp_a6b38722bb47fc93ce0ae3c462e6c4934}\label{rf24hubd_8cpp_a6b38722bb47fc93ce0ae3c462e6c4934}} 
+\index{rf24hubd.cpp@{rf24hubd.cpp}!sighandler@{sighandler}}
+\index{sighandler@{sighandler}!rf24hubd.cpp@{rf24hubd.cpp}}
+\doxysubsubsection{\texorpdfstring{sighandler()}{sighandler()}}
+{\footnotesize\ttfamily void sighandler (\begin{DoxyParamCaption}\item[{int}]{signal }\end{DoxyParamCaption})}
+
+Ein Signalhandler, der es ermöglicht den Deamon z.\+B. mit CTRL-\/C oder mit \char`\"{}kill\char`\"{} zu beenden 

@@ -1,0 +1,629 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classNodeClass" kind="class" language="C++" prot="public">
+    <compoundname>NodeClass</compoundname>
+    <includes refid="nodeclass_8h" local="no">nodeclass.h</includes>
+    <innerclass refid="structNodeClass_1_1nodeClass__t" prot="private">NodeClass::nodeClass_t</innerclass>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classNodeClass_1a243b1fca198d1f2d520ce57d934557d6" prot="private" static="no" mutable="no">
+        <type>nodeClass_t *</type>
+        <definition>nodeClass_t* NodeClass::p_initial</definition>
+        <argsstring></argsstring>
+        <name>p_initial</name>
+        <qualifiedname>NodeClass::p_initial</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="37" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classNodeClass_1ac086154e36cf83534898d4d3805c14c8" prot="private" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* NodeClass::buf</definition>
+        <argsstring></argsstring>
+        <name>buf</name>
+        <qualifiedname>NodeClass::buf</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="41" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classNodeClass_1aece002593b4a13bb79499dc0556a76e1" prot="private" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* NodeClass::tsbuf</definition>
+        <argsstring></argsstring>
+        <name>tsbuf</name>
+        <qualifiedname>NodeClass::tsbuf</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="45" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classNodeClass_1ac9cfbc10cf37065ca67e3a78c56e6043" prot="private" static="no" mutable="no">
+        <type>uint16_t</type>
+        <definition>uint16_t NodeClass::_verboseLevel</definition>
+        <argsstring></argsstring>
+        <name>_verboseLevel</name>
+        <qualifiedname>NodeClass::_verboseLevel</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="49" column="13" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classNodeClass_1ad0a83c1000e898b0c953555f0583cb94" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void NodeClass::newEntry</definition>
+        <argsstring>(nodeClass_t *)</argsstring>
+        <name>newEntry</name>
+        <qualifiedname>NodeClass::newEntry</qualifiedname>
+        <param>
+          <type>nodeClass_t *</type>
+          <defname>p_new</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="53" column="13" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.cpp" bodystart="35" bodyend="47"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classNodeClass_1aab2d021eab042764ce711d612bddcdfb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void NodeClass::setVerbose</definition>
+        <argsstring>(uint16_t verboseLevel)</argsstring>
+        <name>setVerbose</name>
+        <qualifiedname>NodeClass::setVerbose</qualifiedname>
+        <param>
+          <type>uint16_t</type>
+          <declname>verboseLevel</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Setzt den Verboselevel. Mögliche Level sind in den Makros VERBOSE* in <ref refid="config_8h" kindref="compound">config.h</ref> definiert. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>verboseLevel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der aktuelle Verboselevel </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="61" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.cpp" bodystart="222" bodyend="224"/>
+      </memberdef>
+      <memberdef kind="function" id="classNodeClass_1a83714f63c522c0204d64409636e21df5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool NodeClass::isValidNode</definition>
+        <argsstring>(NODE_DATTYPE node_id)</argsstring>
+        <name>isValidNode</name>
+        <qualifiedname>NodeClass::isValidNode</qualifiedname>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+          <declname>node_id</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Gibt an ob ein Node als Datensatz vorhanden ist <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Node-ID </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>&quot;true&quot; wenn dieser Node bekannt ist, &quot;false&quot; wenn nicht. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="68" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.cpp" bodystart="10" bodyend="23"/>
+      </memberdef>
+      <memberdef kind="function" id="classNodeClass_1a3ee0b4ebf2f323e162118926930d5aba" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void NodeClass::cleanup</definition>
+        <argsstring>(void)</argsstring>
+        <name>cleanup</name>
+        <qualifiedname>NodeClass::cleanup</qualifiedname>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Löscht den kompletten Inhalt und leert den Buffer </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="73" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.cpp" bodystart="25" bodyend="33"/>
+      </memberdef>
+      <memberdef kind="function" id="classNodeClass_1ab127025de949d5afa5a288dacd81a6bc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void NodeClass::addNode</definition>
+        <argsstring>(NODE_DATTYPE node_id, char *node_name, float u_batt, bool is_mastered, uint8_t PALevel)</argsstring>
+        <name>addNode</name>
+        <qualifiedname>NodeClass::addNode</qualifiedname>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+          <declname>node_id</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>node_name</declname>
+        </param>
+        <param>
+          <type>float</type>
+          <declname>u_batt</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>is_mastered</declname>
+        </param>
+        <param>
+          <type>uint8_t</type>
+          <declname>PALevel</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Fügt einen neuen Node hinzu <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Node-ID </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>node_name</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Name des Node </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>u_batt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die aktuelle Batteriespannung </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>is_mastered</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>&quot;true&quot; wenn dieser Hub diesen Node verwaltet, sonst &quot;false&quot; </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>PALevel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Das gemessene PALevel </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="83" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.cpp" bodystart="49" bodyend="61"/>
+      </memberdef>
+      <memberdef kind="function" id="classNodeClass_1aa9a89a27bef5e048e0a0bc77110599fc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>char *</type>
+        <definition>char * NodeClass::getNodeName</definition>
+        <argsstring>(NODE_DATTYPE node_id)</argsstring>
+        <name>getNodeName</name>
+        <qualifiedname>NodeClass::getNodeName</qualifiedname>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+          <declname>node_id</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Gibt zur NodeID den Namen des Nodes zurück <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Node-ID </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Der Name des Nodes als Zeiger auf einen String </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="90" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.cpp" bodystart="63" bodyend="76"/>
+      </memberdef>
+      <memberdef kind="function" id="classNodeClass_1a5c8f294ac1cc473fa4fa9496b4e4e0cd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool NodeClass::isNewHB</definition>
+        <argsstring>(NODE_DATTYPE node_id, uint8_t heartbeatno, uint32_t utime)</argsstring>
+        <name>isNewHB</name>
+        <qualifiedname>NodeClass::isNewHB</qualifiedname>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+          <declname>node_id</declname>
+        </param>
+        <param>
+          <type>uint8_t</type>
+          <declname>heartbeatno</declname>
+        </param>
+        <param>
+          <type>uint32_t</type>
+          <declname>utime</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Prüft ob ein Heartbeat neu (=neue heartbeatno) <linebreak/>
+ oder alt ist. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Node-ID </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>heartbeatno</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die vom Node übermittelte Heartbeat-Nummer </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>utime</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die aktuelle Unix-times </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>&quot;true&quot; wenn es sich um einen neuen Heartbeat handelt, sonst &quot;false&quot; </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="100" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.cpp" bodystart="78" bodyend="111"/>
+      </memberdef>
+      <memberdef kind="function" id="classNodeClass_1a3f4609d7e76738f48f79b01390346b07" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool NodeClass::isMasteredNode</definition>
+        <argsstring>(NODE_DATTYPE node_id)</argsstring>
+        <name>isMasteredNode</name>
+        <qualifiedname>NodeClass::isMasteredNode</qualifiedname>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+          <declname>node_id</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Prüft ob ein Node ein Node von diesem Hub gesteuert wird oder nicht <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Node-ID </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>&quot;true&quot; wenn der Node durch diesen Hub verwaltet wird, sonst &quot;false&quot; </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="107" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.cpp" bodystart="170" bodyend="184"/>
+      </memberdef>
+      <memberdef kind="function" id="classNodeClass_1ab6d5ef2c4cba3b430c2aaf4ab2ad6eae" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void NodeClass::setMasteredNode</definition>
+        <argsstring>(NODE_DATTYPE node_id, bool isMastered)</argsstring>
+        <name>setMasteredNode</name>
+        <qualifiedname>NodeClass::setMasteredNode</qualifiedname>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+          <declname>node_id</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>isMastered</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Setzt einen Node in den Zustand &quot;mastered&quot; = von diesem Hub gesteuert; oder nicht <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Node-ID </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>isMastered</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>&quot;true&quot; wenn der Node durch diesen Hub verwaltet wird, sonst &quot;false&quot; </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="114" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.cpp" bodystart="186" bodyend="198"/>
+      </memberdef>
+      <memberdef kind="function" id="classNodeClass_1ad20259b5d0b26161b3b413cf888850cb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void NodeClass::setRecLevel</definition>
+        <argsstring>(NODE_DATTYPE node_id, uint8_t pa_level)</argsstring>
+        <name>setRecLevel</name>
+        <qualifiedname>NodeClass::setRecLevel</qualifiedname>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+          <declname>node_id</declname>
+        </param>
+        <param>
+          <type>uint8_t</type>
+          <declname>pa_level</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Setzt den letzten ermittelten PA Level für diesen Node PA Level 9=unknown; 0=Min; 1=Low; 2=High; 3=Max <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Node-ID </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>pa_level</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Das ermittelte Empfangsfeldstärke </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="122" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.cpp" bodystart="113" bodyend="125"/>
+      </memberdef>
+      <memberdef kind="function" id="classNodeClass_1ad2c13bbc7342720f9a7b2a6cb9234af2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void NodeClass::setPaLevel</definition>
+        <argsstring>(NODE_DATTYPE node_id, uint8_t pa_level)</argsstring>
+        <name>setPaLevel</name>
+        <qualifiedname>NodeClass::setPaLevel</qualifiedname>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+          <declname>node_id</declname>
+        </param>
+        <param>
+          <type>uint8_t</type>
+          <declname>pa_level</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Setzt die aktuelle Sendefeldstärke für diesen Node PA Level 9=unknown; 0=Min; 1=Low; 2=High; 3=Max <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Node-ID </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>pa_level</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die aktuelle Sendefeldstärke </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="130" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.cpp" bodystart="127" bodyend="139"/>
+      </memberdef>
+      <memberdef kind="function" id="classNodeClass_1a1ae3f15bc57186191cbf5f3b5b379fae" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uint8_t</type>
+        <definition>uint8_t NodeClass::getPaLevel</definition>
+        <argsstring>(NODE_DATTYPE node_id)</argsstring>
+        <name>getPaLevel</name>
+        <qualifiedname>NodeClass::getPaLevel</qualifiedname>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+          <declname>node_id</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Liest den letzten ermittelten PA Level für diesen Node aus PA Level 0=unknown; 1=Min; 2=Low; 3=High; 4=Max <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Node-ID </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Das gespeicherte PA Level </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="138" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.cpp" bodystart="141" bodyend="154"/>
+      </memberdef>
+      <memberdef kind="function" id="classNodeClass_1a7ec14e4aa2e923b6d021ac5bf40bb291" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void NodeClass::setVoltage</definition>
+        <argsstring>(NODE_DATTYPE node_id, float u_batt)</argsstring>
+        <name>setVoltage</name>
+        <qualifiedname>NodeClass::setVoltage</qualifiedname>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+          <declname>node_id</declname>
+        </param>
+        <param>
+          <type>float</type>
+          <declname>u_batt</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Setzt die letzte gemessene Spannung des Nodes <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Node-ID </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>u_batt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die aktuelle Batteriespannung </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="145" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.cpp" bodystart="156" bodyend="168"/>
+      </memberdef>
+      <memberdef kind="function" id="classNodeClass_1a804319206db034ece2d5e9a2a5e8a03d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void NodeClass::printBuffer</definition>
+        <argsstring>(int tn_socket, bool htmlformat)</argsstring>
+        <name>printBuffer</name>
+        <qualifiedname>NodeClass::printBuffer</qualifiedname>
+        <param>
+          <type>int</type>
+          <declname>tn_socket</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>htmlformat</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Druckt alle records im Buffer in den out_socket out_socket ist dabei ein gültiger socket file descriptor entweder aus accept für einen socket oder mittels fileno(stdout) für den stdout Der zweite Parameter bestimmt das Format, true =&gt; HTML Format; false =&gt; Textformat <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>tn_socket</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Das aktuelle Socket zur Ausgabe </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>htmlformat</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>&quot;true&quot; liefert die Ausgabe im HTML Format, &quot;false&quot; im Textformat </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="157" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.cpp" bodystart="200" bodyend="220"/>
+      </memberdef>
+      <memberdef kind="function" id="classNodeClass_1ae8a245ced682781f86feeb6569c9119a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>NodeClass::NodeClass</definition>
+        <argsstring>(void)</argsstring>
+        <name>NodeClass</name>
+        <qualifiedname>NodeClass::NodeClass</qualifiedname>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Construktor des Buffers </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="162" column="1" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.cpp" bodystart="3" bodyend="8"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="20" column="1" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" bodystart="20" bodyend="164"/>
+    <listofallmembers>
+      <member refid="classNodeClass_1ac9cfbc10cf37065ca67e3a78c56e6043" prot="private" virt="non-virtual"><scope>NodeClass</scope><name>_verboseLevel</name></member>
+      <member refid="classNodeClass_1ab127025de949d5afa5a288dacd81a6bc" prot="public" virt="non-virtual"><scope>NodeClass</scope><name>addNode</name></member>
+      <member refid="classNodeClass_1ac086154e36cf83534898d4d3805c14c8" prot="private" virt="non-virtual"><scope>NodeClass</scope><name>buf</name></member>
+      <member refid="classNodeClass_1a3ee0b4ebf2f323e162118926930d5aba" prot="public" virt="non-virtual"><scope>NodeClass</scope><name>cleanup</name></member>
+      <member refid="classNodeClass_1aa9a89a27bef5e048e0a0bc77110599fc" prot="public" virt="non-virtual"><scope>NodeClass</scope><name>getNodeName</name></member>
+      <member refid="classNodeClass_1a1ae3f15bc57186191cbf5f3b5b379fae" prot="public" virt="non-virtual"><scope>NodeClass</scope><name>getPaLevel</name></member>
+      <member refid="classNodeClass_1a3f4609d7e76738f48f79b01390346b07" prot="public" virt="non-virtual"><scope>NodeClass</scope><name>isMasteredNode</name></member>
+      <member refid="classNodeClass_1a5c8f294ac1cc473fa4fa9496b4e4e0cd" prot="public" virt="non-virtual"><scope>NodeClass</scope><name>isNewHB</name></member>
+      <member refid="classNodeClass_1a83714f63c522c0204d64409636e21df5" prot="public" virt="non-virtual"><scope>NodeClass</scope><name>isValidNode</name></member>
+      <member refid="classNodeClass_1ad0a83c1000e898b0c953555f0583cb94" prot="private" virt="non-virtual"><scope>NodeClass</scope><name>newEntry</name></member>
+      <member refid="classNodeClass_1ae8a245ced682781f86feeb6569c9119a" prot="public" virt="non-virtual"><scope>NodeClass</scope><name>NodeClass</name></member>
+      <member refid="classNodeClass_1a243b1fca198d1f2d520ce57d934557d6" prot="private" virt="non-virtual"><scope>NodeClass</scope><name>p_initial</name></member>
+      <member refid="classNodeClass_1a804319206db034ece2d5e9a2a5e8a03d" prot="public" virt="non-virtual"><scope>NodeClass</scope><name>printBuffer</name></member>
+      <member refid="classNodeClass_1ab6d5ef2c4cba3b430c2aaf4ab2ad6eae" prot="public" virt="non-virtual"><scope>NodeClass</scope><name>setMasteredNode</name></member>
+      <member refid="classNodeClass_1ad2c13bbc7342720f9a7b2a6cb9234af2" prot="public" virt="non-virtual"><scope>NodeClass</scope><name>setPaLevel</name></member>
+      <member refid="classNodeClass_1ad20259b5d0b26161b3b413cf888850cb" prot="public" virt="non-virtual"><scope>NodeClass</scope><name>setRecLevel</name></member>
+      <member refid="classNodeClass_1aab2d021eab042764ce711d612bddcdfb" prot="public" virt="non-virtual"><scope>NodeClass</scope><name>setVerbose</name></member>
+      <member refid="classNodeClass_1a7ec14e4aa2e923b6d021ac5bf40bb291" prot="public" virt="non-virtual"><scope>NodeClass</scope><name>setVoltage</name></member>
+      <member refid="classNodeClass_1aece002593b4a13bb79499dc0556a76e1" prot="private" virt="non-virtual"><scope>NodeClass</scope><name>tsbuf</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

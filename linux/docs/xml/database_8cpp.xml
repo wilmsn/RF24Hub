@@ -1,0 +1,497 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="database_8cpp" kind="file" language="C++">
+    <compoundname>database.cpp</compoundname>
+    <includes refid="database_8h" local="yes">database.h</includes>
+    <incdepgraph>
+      <node id="13">
+        <label>common.h</label>
+        <link refid="common_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+      </node>
+      <node id="24">
+        <label>config.h</label>
+        <link refid="config_8h"/>
+      </node>
+      <node id="1">
+        <label>database.cpp</label>
+        <link refid="database_8cpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>database.h</label>
+        <link refid="database_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+      </node>
+      <node id="25">
+        <label>dataformat.h</label>
+        <link refid="dataformat_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+      </node>
+      <node id="31">
+        <label>gatewayclass.h</label>
+        <link refid="gatewayclass_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+      </node>
+      <node id="28">
+        <label>nodeclass.h</label>
+        <link refid="nodeclass_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>rf24_config.h</label>
+        <link refid="rf24__config_8h"/>
+      </node>
+      <node id="12">
+        <label>rf24hub_config.h</label>
+        <link refid="rf24hub__config_8h"/>
+      </node>
+      <node id="29">
+        <label>sensorclass.h</label>
+        <link refid="sensorclass_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+      </node>
+      <node id="27">
+        <label>version.h</label>
+        <link refid="version_8h"/>
+      </node>
+      <node id="19">
+        <label>arpa/inet.h</label>
+      </node>
+      <node id="21">
+        <label>cstdio</label>
+      </node>
+      <node id="30">
+        <label>cstdlib</label>
+      </node>
+      <node id="4">
+        <label>cstring</label>
+      </node>
+      <node id="14">
+        <label>ctype.h</label>
+      </node>
+      <node id="23">
+        <label>fcntl.h</label>
+      </node>
+      <node id="9">
+        <label>iostream</label>
+      </node>
+      <node id="10">
+        <label>mariadb/mysql.h</label>
+      </node>
+      <node id="20">
+        <label>netdb.h</label>
+      </node>
+      <node id="22">
+        <label>netinet/in.h</label>
+      </node>
+      <node id="16">
+        <label>stdbool.h</label>
+      </node>
+      <node id="3">
+        <label>stdint.h</label>
+      </node>
+      <node id="6">
+        <label>stdio.h</label>
+      </node>
+      <node id="7">
+        <label>stdlib.h</label>
+      </node>
+      <node id="26">
+        <label>string.h</label>
+      </node>
+      <node id="18">
+        <label>sys/socket.h</label>
+      </node>
+      <node id="15">
+        <label>sys/time.h</label>
+      </node>
+      <node id="17">
+        <label>sys/types.h</label>
+      </node>
+      <node id="8">
+        <label>time.h</label>
+      </node>
+      <node id="5">
+        <label>unistd.h</label>
+      </node>
+    </incdepgraph>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&quot;<ref refid="database_8h" kindref="compound">database.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"><ref refid="classDatabase_1a65fe13accaa0205e66142103ed07258a" kindref="member">Database::Database</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="4"><highlight class="normal"><sp/><sp/><sp/><sp/>tsbuf<sp/>=<sp/>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*)<sp/>malloc<sp/>(<ref refid="group__cfgprm_1gaa1800aa17cfe587014ff0f8387e4eace" kindref="member">TSBUFFERSIZE</ref>);</highlight></codeline>
+<codeline lineno="5"><highlight class="normal"><sp/><sp/><sp/><sp/>sql_stmt<sp/>=<sp/>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*)<sp/>malloc(<ref refid="group__cfgprm_1gabbb73c35faea3bdd0661dc217b75bc99" kindref="member">SQLSTRINGSIZE</ref>);</highlight></codeline>
+<codeline lineno="6"><highlight class="normal"><sp/><sp/><sp/><sp/>verboseLevel<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="7"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>Database::db_check_error(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(mysql_errno(db)<sp/>!=<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;%sDB-Fehler:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="common_8cpp_1a83eaed94816137f9fe9521a7946efff0" kindref="member">ts</ref>(tsbuf),<sp/>mysql_error(db));</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="13"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classDatabase_1a9fa9601b6f5a24f628a51685fbd731f9" kindref="member">Database::set_Volt_LV</ref>(<ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref><sp/>node_id,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>volt_LV)<sp/>{</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/>sprintf<sp/>(sql_stmt,<sp/></highlight><highlight class="stringliteral">&quot;update<sp/>node<sp/>set<sp/>volt_lv<sp/>=<sp/>%f<sp/>where<sp/>node_id<sp/>=<sp/>%u&quot;</highlight><highlight class="normal">,<sp/>volt_LV,<sp/>node_id);</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/>do_sql(sql_stmt);</highlight></codeline>
+<codeline lineno="18"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classDatabase_1a9d551c009288ffe3da9a22c2f48b9f66" kindref="member">Database::sync_sensordata_d</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/>sprintf<sp/>(sql_stmt,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;create<sp/>table<sp/>sensordata_max<sp/>engine<sp/>=<sp/>MEMORY<sp/>as<sp/>select<sp/>UNIX_TIMESTAMP(FROM_UNIXTIME(max(utime),&apos;%Y%m%d&apos;))<sp/>max_ts<sp/>from<sp/>sensordata_d&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/>do_sql(sql_stmt);</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/>sprintf<sp/>(sql_stmt,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;delete<sp/>from<sp/>sensordata_d<sp/>where<sp/>utime<sp/>&gt;<sp/>(select<sp/>max_ts<sp/>from<sp/>sensordata_max)&quot;</highlight><highlight class="normal"><sp/>);</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/>do_sql(sql_stmt);</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/>sprintf<sp/>(sql_stmt,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;insert<sp/>into<sp/>sensordata_d(sensor_id,<sp/>value,<sp/>utime)<sp/>select<sp/>sensor_id<sp/>as<sp/>s_id,<sp/>min(value)<sp/>as<sp/>min_val,<sp/>UNIX_TIMESTAMP(FROM_UNIXTIME(utime,&apos;%Y%m%d&apos;))+21600<sp/>as<sp/>ts<sp/>from<sp/>sensordata<sp/>where<sp/>utime<sp/>&gt;<sp/>(select<sp/>max_ts<sp/>from<sp/>sensordata_max)<sp/>group<sp/>by<sp/>sensor_id,<sp/>UNIX_TIMESTAMP(FROM_UNIXTIME(utime,&apos;%Y%m%d&apos;))&quot;</highlight><highlight class="normal"><sp/>);</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/>do_sql(sql_stmt);</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/>sprintf<sp/>(sql_stmt,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;insert<sp/>into<sp/>sensordata_d(sensor_id,<sp/>value,<sp/>utime)<sp/>select<sp/>sensor_id<sp/>as<sp/>s_id,<sp/>max(value)<sp/>as<sp/>max_val,<sp/>UNIX_TIMESTAMP(FROM_UNIXTIME(utime,&apos;%Y%m%d&apos;))+64800<sp/>as<sp/>ts<sp/>from<sp/>sensordata<sp/>where<sp/>utime<sp/>&gt;<sp/>(select<sp/>max_ts<sp/>from<sp/>sensordata_max)<sp/>group<sp/>by<sp/>sensor_id,<sp/>UNIX_TIMESTAMP(FROM_UNIXTIME(utime,&apos;%Y%m%d&apos;))&quot;</highlight><highlight class="normal"><sp/>);</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/>do_sql(sql_stmt);</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/>sprintf<sp/>(sql_stmt,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;drop<sp/>table<sp/>sensordata_max&quot;</highlight><highlight class="normal"><sp/>);</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/>do_sql(sql_stmt);</highlight></codeline>
+<codeline lineno="31"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classDatabase_1aa34470fdf087ea6b0960b0d97675498f" kindref="member">Database::rebuild_sensordata_d</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/>sprintf<sp/>(sql_stmt,<sp/></highlight><highlight class="stringliteral">&quot;truncate<sp/>table<sp/>sensordata_d&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/>do_sql(sql_stmt);</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/>sprintf<sp/>(sql_stmt,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;insert<sp/>into<sp/>sensordata_d(sensor_id,<sp/>value,<sp/>utime)<sp/>select<sp/>sensor_id,<sp/>min(value)<sp/>as<sp/>min_val,<sp/>UNIX_TIMESTAMP(FROM_UNIXTIME(utime,&apos;%Y%m%d&apos;))+21600<sp/>from<sp/>sensordata<sp/>group<sp/>by<sp/>sensor_id,<sp/>UNIX_TIMESTAMP(FROM_UNIXTIME(utime,&apos;%Y%m%d&apos;))&quot;</highlight><highlight class="normal"><sp/>);</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/>do_sql(sql_stmt);</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/>sprintf<sp/>(sql_stmt,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;insert<sp/>into<sp/>sensordata_d(sensor_id,<sp/>value,<sp/>utime)<sp/>select<sp/>sensor_id,<sp/>max(value)<sp/>as<sp/>max_val,<sp/>UNIX_TIMESTAMP(FROM_UNIXTIME(utime,&apos;%Y%m%d&apos;))+64800<sp/>from<sp/>sensordata<sp/>group<sp/>by<sp/>sensor_id,<sp/>UNIX_TIMESTAMP(FROM_UNIXTIME(utime,&apos;%Y%m%d&apos;))&quot;</highlight><highlight class="normal"><sp/>);</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/>do_sql(sql_stmt);</highlight></codeline>
+<codeline lineno="40"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classDatabase_1a63afca68774fd4faaa85ec80f0df8908" kindref="member">Database::initSystem</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>sensordata_d<sp/>ist<sp/>eine<sp/>in<sp/>Memory<sp/>Tabelle<sp/>und<sp/>muss<sp/>neu<sp/>aufgebaut<sp/>werden!</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classDatabase_1aa34470fdf087ea6b0960b0d97675498f" kindref="member">rebuild_sensordata_d</ref>();</highlight></codeline>
+<codeline lineno="45"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classDatabase_1a409479c4647a926fd9cc771cdaa53fc0" kindref="member">Database::initGateway</ref>(<ref refid="classGatewayClass" kindref="compound">GatewayClass</ref>*<sp/><ref refid="rf24hubd_8h_1a5d04e25b77f7ecfc9256335eac98b51f" kindref="member">gatewayClass</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>connect()<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/>MYSQL_ROW<sp/>row;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>gw_name[40];</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/>uint16_t<sp/>gw_no;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>isactive;</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/>sprintf<sp/>(sql_stmt,<sp/></highlight><highlight class="stringliteral">&quot;select<sp/>gw_name,<sp/>gw_no,<sp/>isactive<sp/>from<sp/>gateway&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/>debugPrintSQL(sql_stmt);</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/>mysql_query(db,<sp/>sql_stmt);</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/>db_check_error();</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/>MYSQL_RES<sp/>*result<sp/>=<sp/>mysql_store_result(db);</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/>db_check_error();</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>((row<sp/>=<sp/>mysql_fetch_row(result)))<sp/>{</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>row[0]<sp/>!=<sp/>NULL<sp/>)<sp/>sprintf(gw_name,</highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal">,<ref refid="common_8cpp_1ae5bb0c43f76b886197ee48679f0e8dbc" kindref="member">trim</ref>(row[0]));<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>sprintf(gw_name,</highlight><highlight class="stringliteral">&quot;<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>row[1]<sp/>!=<sp/>NULL<sp/>)<sp/>gw_no<sp/>=<sp/>strtoul(row[1],<sp/>&amp;pEnd,<sp/>10);<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>gw_no<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>row[2]<sp/>!=<sp/>NULL<sp/>)<sp/>isactive<sp/>=<sp/>(<sp/>row[2][0]<sp/>==<sp/></highlight><highlight class="charliteral">&apos;y&apos;</highlight><highlight class="normal"><sp/>||<sp/>row[2][0]<sp/>==<sp/></highlight><highlight class="charliteral">&apos;j&apos;</highlight><highlight class="normal"><sp/>||<sp/>row[2][0]<sp/>==<sp/></highlight><highlight class="charliteral">&apos;1&apos;</highlight><highlight class="normal">);<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>isactive<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rf24hubd_8h_1a5d04e25b77f7ecfc9256335eac98b51f" kindref="member">gatewayClass</ref>-&gt;<ref refid="classGatewayClass_1a071bfc650e553ed979b138a020b5adc5" kindref="member">addGateway</ref>(gw_name,<sp/>gw_no,<sp/>isactive);<sp/></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/>mysql_free_result(result);<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/>disconnect();</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="68"><highlight class="normal">}<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/><ref refid="classDatabase_1a4e28a24d04516fa49b0b002272cf68ce" kindref="member">Database::getBeginOfDay</ref>(){</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>retval<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>connect()<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/>MYSQL_ROW<sp/>row;</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/>sprintf<sp/>(sql_stmt,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;select<sp/>UNIX_TIMESTAMP(FROM_UNIXTIME(UNIX_TIMESTAMP(),&apos;%Y%m%d&apos;))&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/>debugPrintSQL(sql_stmt);</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/>mysql_query(db,<sp/>sql_stmt);</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/>db_check_error();</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/>MYSQL_RES<sp/>*result<sp/>=<sp/>mysql_store_result(db);</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/>db_check_error();</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>((row<sp/>=<sp/>mysql_fetch_row(result)))<sp/>{</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>row[0]<sp/>!=<sp/>NULL<sp/>)<sp/>retval<sp/>=<sp/>strtoul(row[0],<sp/>&amp;pEnd,<sp/>10);<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>retval<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/>mysql_free_result(result);</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/>disconnect();</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>retval;<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="87"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classDatabase_1acf6dc74e76d9afb47173c29af9da32b6" kindref="member">Database::addGateway</ref>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>gw_hostname,<sp/>uint16_t<sp/>gw_no){</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/>sprintf<sp/>(sql_stmt,<sp/></highlight><highlight class="stringliteral">&quot;insert<sp/>into<sp/>gateway(gw_name,<sp/>gw_no,<sp/>isActive)<sp/>values(&apos;%s&apos;,<sp/>%u,<sp/>&apos;j&apos;)&quot;</highlight><highlight class="normal">,<sp/>gw_hostname,<sp/>gw_no);</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/>do_sql(sql_stmt);</highlight></codeline>
+<codeline lineno="92"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classDatabase_1a12da257cf14167a4d356f2974fa58ccc" kindref="member">Database::delGateway</ref>(uint16_t<sp/>gw_no){</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/>sprintf<sp/>(sql_stmt,<sp/></highlight><highlight class="stringliteral">&quot;delete<sp/>from<sp/>gateway<sp/>where<sp/>gw_no<sp/>=<sp/>%u&quot;</highlight><highlight class="normal">,<sp/>gw_no);</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/>do_sql(sql_stmt);</highlight></codeline>
+<codeline lineno="97"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"></highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classDatabase_1a3fcc9f7098d8b40f2892c082ea61bdb0" kindref="member">Database::enableGateway</ref>(uint16_t<sp/>gw_no){</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/>sprintf<sp/>(sql_stmt,<sp/></highlight><highlight class="stringliteral">&quot;update<sp/>gateway<sp/>set<sp/>isActive<sp/>=<sp/>&apos;y&apos;<sp/>where<sp/>gw_no<sp/>=<sp/>%u&quot;</highlight><highlight class="normal">,<sp/>gw_no);</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/>do_sql(sql_stmt);</highlight></codeline>
+<codeline lineno="102"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classDatabase_1af54268220c3c1239c51f1fde41540f38" kindref="member">Database::disableGateway</ref>(uint16_t<sp/>gw_no){</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/>sprintf<sp/>(sql_stmt,<sp/></highlight><highlight class="stringliteral">&quot;update<sp/>gateway<sp/>set<sp/>isActive<sp/>=<sp/>&apos;n&apos;<sp/>where<sp/>gw_no<sp/>=<sp/>%u&quot;</highlight><highlight class="normal">,<sp/>gw_no);</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/>do_sql(sql_stmt);</highlight></codeline>
+<codeline lineno="107"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"></highlight></codeline>
+<codeline lineno="109"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classDatabase_1a14bf51ac805ea157223c7a1cb29c11c3" kindref="member">Database::initNode</ref>(<ref refid="classNodeClass" kindref="compound">NodeClass</ref>*<sp/><ref refid="rf24hubd_8h_1a6f21c130ea438b6c54c3deb9a25901b2" kindref="member">nodeClass</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>connect()<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref><sp/>node_id<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>node_name[<ref refid="group__cfgprm_1ga76912cbcc5d1508936264c32cbbc1273" kindref="member">NODENAMESIZE</ref>];</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/>node_name[0]<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>isMastered<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/>uint32_t<sp/>pa_level;</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>u_batt;</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>cmp_y[]=</highlight><highlight class="stringliteral">&quot;y&quot;</highlight><highlight class="normal">,cmp_j[]=</highlight><highlight class="stringliteral">&quot;j&quot;</highlight><highlight class="normal">;<sp/></highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/>MYSQL_ROW<sp/>row;</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/>sprintf<sp/>(sql_stmt,<sp/></highlight><highlight class="stringliteral">&quot;select<sp/>node_id,<sp/>node_name,<sp/>mastered,<sp/>pa_level<sp/>from<sp/>node&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/>debugPrintSQL(sql_stmt);</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/>mysql_query(db,<sp/>sql_stmt);</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/>db_check_error();</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/>MYSQL_RES<sp/>*result<sp/>=<sp/>mysql_store_result(db);</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/>db_check_error();</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>((row<sp/>=<sp/>mysql_fetch_row(result)))<sp/>{</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>row[0]<sp/>!=<sp/>NULL<sp/>)<sp/>node_id<sp/>=<sp/>strtoul(row[0],<sp/>&amp;pEnd,10);</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>row[1]<sp/>!=<sp/>NULL<sp/>)<sp/>sprintf(node_name,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal">,<sp/>row[1]);</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>((strcmp(row[2],cmp_y)<sp/>==<sp/>0)<sp/>||<sp/>(strcmp(row[2],cmp_j)<sp/>==<sp/>0))<sp/>{<sp/>isMastered<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;<sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{<sp/>isMastered<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;<sp/>}</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>row[3]<sp/>!=<sp/>NULL<sp/>)<sp/>pa_level<sp/>=<sp/>strtoul(row[3],<sp/>&amp;pEnd,<sp/>10);<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>pa_level<sp/>=<sp/>9;</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rf24hubd_8h_1a6f21c130ea438b6c54c3deb9a25901b2" kindref="member">nodeClass</ref>-&gt;<ref refid="classNodeClass_1ab127025de949d5afa5a288dacd81a6bc" kindref="member">addNode</ref>(node_id,<sp/>node_name,<sp/>0,<sp/>isMastered,<sp/>pa_level);<sp/></highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/>mysql_free_result(result);<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/>disconnect();</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="135"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"></highlight></codeline>
+<codeline lineno="137"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classDatabase_1a965b1f5fc54effcf2e8f3fc94eb8131a" kindref="member">Database::initSensor</ref>(<ref refid="classSensorClass" kindref="compound">SensorClass</ref>*<sp/><ref refid="rf24hubd_8h_1a32b75ac9948db837416adb463c101ae7" kindref="member">sensorClass</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>connect()<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>fhem_dev<sp/>=<sp/><ref refid="common_8cpp_1a28b2e361d35373f385ce446654913342" kindref="member">alloc_str</ref>(verboseLevel,</highlight><highlight class="stringliteral">&quot;Database::initSensor<sp/>fhem_dev&quot;</highlight><highlight class="normal">,<ref refid="group__cfgprm_1ga59a900dc73429083f9aa8d06c504e493" kindref="member">FHEMDEVLENGTH</ref>,<sp/><ref refid="common_8cpp_1a83eaed94816137f9fe9521a7946efff0" kindref="member">ts</ref>(tsbuf));</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>sensor_name<sp/>=<sp/><ref refid="common_8cpp_1a28b2e361d35373f385ce446654913342" kindref="member">alloc_str</ref>(verboseLevel,</highlight><highlight class="stringliteral">&quot;Database::initSensor<sp/>sensor_name&quot;</highlight><highlight class="normal">,<ref refid="group__cfgprm_1ga59a900dc73429083f9aa8d06c504e493" kindref="member">FHEMDEVLENGTH</ref>,<sp/><ref refid="common_8cpp_1a83eaed94816137f9fe9521a7946efff0" kindref="member">ts</ref>(tsbuf));</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/>uint32_t<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mysensor;</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref><sp/><sp/><sp/><sp/>node_id;</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mychannel;</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/>int8_t<sp/><sp/><sp/><sp/><sp/><sp/>mydatatype;</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/>MYSQL_ROW<sp/>row;</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/>sprintf<sp/>(sql_stmt,<sp/></highlight><highlight class="stringliteral">&quot;select<sp/>sensor_id,<sp/>node_id,<sp/>channel,<sp/>datatype,<sp/>fhem_dev,<sp/>sensor_name<sp/>from<sp/>sensor&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/>debugPrintSQL(sql_stmt);</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/>mysql_query(db,<sp/>sql_stmt);</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/>db_check_error();</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/>MYSQL_RES<sp/>*result<sp/>=<sp/>mysql_store_result(db);</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/>db_check_error();</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>((row<sp/>=<sp/>mysql_fetch_row(result)))<sp/>{</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>row[0]<sp/>!=<sp/>NULL<sp/>)<sp/>mysensor<sp/>=<sp/>strtoul(row[0],<sp/>&amp;pEnd,10);<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>mysensor<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>row[1]<sp/>!=<sp/>NULL<sp/>)<sp/>node_id<sp/>=<sp/>strtoul(row[1],<sp/>&amp;pEnd,10);<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>node_id<sp/>=<sp/>0;<sp/></highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>row[2]<sp/>!=<sp/>NULL<sp/>)<sp/>mychannel<sp/>=<sp/>strtoul(row[2],<sp/>&amp;pEnd,10);<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>mychannel<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>row[3]<sp/>!=<sp/>NULL<sp/>)<sp/>mydatatype<sp/>=<sp/>strtoul(row[3],<sp/>&amp;pEnd,10);<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>mydatatype<sp/>=<sp/>-1;</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>row[4]<sp/>!=<sp/>NULL<sp/>)<sp/>sprintf(fhem_dev,</highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal">,<ref refid="common_8cpp_1ae5bb0c43f76b886197ee48679f0e8dbc" kindref="member">trim</ref>(row[4]));<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>sprintf(fhem_dev,</highlight><highlight class="stringliteral">&quot;not_set&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>row[5]<sp/>!=<sp/>NULL<sp/>)<sp/>sprintf(sensor_name,</highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal">,<ref refid="common_8cpp_1ae5bb0c43f76b886197ee48679f0e8dbc" kindref="member">trim</ref>(row[5]));</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>ToDo</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rf24hubd_8h_1a32b75ac9948db837416adb463c101ae7" kindref="member">sensorClass</ref>-&gt;<ref refid="classSensorClass_1a35adde018d58f27fc3d3c7805c9fab09" kindref="member">addSensor</ref>(mysensor,<sp/>node_id,<sp/>mychannel,<sp/>mydatatype,<sp/>fhem_dev,<sp/>0,<sp/>0,<sp/>sensor_name);</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/>mysql_free_result(result);</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="common_8cpp_1a9d50abf17c3111a72781f13ef54d9c3d" kindref="member">free_str</ref>(verboseLevel,</highlight><highlight class="stringliteral">&quot;Database::initSensor<sp/>fhem_dev&quot;</highlight><highlight class="normal">,fhem_dev,<sp/><ref refid="common_8cpp_1a83eaed94816137f9fe9521a7946efff0" kindref="member">ts</ref>(tsbuf));<sp/></highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="common_8cpp_1a9d50abf17c3111a72781f13ef54d9c3d" kindref="member">free_str</ref>(verboseLevel,</highlight><highlight class="stringliteral">&quot;Database::initSensor<sp/>sensor_name&quot;</highlight><highlight class="normal">,sensor_name,<sp/><ref refid="common_8cpp_1a83eaed94816137f9fe9521a7946efff0" kindref="member">ts</ref>(tsbuf));<sp/></highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/>disconnect();</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="167"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"></highlight></codeline>
+<codeline lineno="169"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>Database::do_sql(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*sqlstmt)<sp/>{</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>connect()<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/>debugPrintSQL(sqlstmt);</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(mysql_query(db,<sp/>sqlstmt)<sp/>!=<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;%s\n&quot;</highlight><highlight class="normal">,<sp/>sqlstmt);</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/>db_check_error();</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/>mysql_commit(db);</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/>disconnect();</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="179"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="180"><highlight class="normal"></highlight></codeline>
+<codeline lineno="181"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classDatabase_1aa1475d6e31a6a9117f87edc3156bcf03" kindref="member">Database::storeSensorValue</ref>(uint32_t<sp/>sensor_id,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>value)<sp/>{</highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/>sprintf(sql_stmt,</highlight><highlight class="stringliteral">&quot;insert<sp/>into<sp/>sensordata<sp/>(sensor_ID,<sp/>utime,<sp/>value)<sp/>values<sp/>(%u,<sp/>UNIX_TIMESTAMP(),<sp/>%s)&quot;</highlight><highlight class="normal">,<sp/>sensor_id,<sp/>value);</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/>do_sql(sql_stmt);</highlight></codeline>
+<codeline lineno="184"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="185"><highlight class="normal"></highlight></codeline>
+<codeline lineno="186"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classDatabase_1aed24791f665b60d9f3108aad82eb28b3" kindref="member">Database::storeNodeConfig</ref>(<ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref><sp/>node_id,<sp/>uint8_t<sp/>channel,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>value)<sp/>{</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>channel<sp/>==<sp/><ref refid="group__reg_1gac3a176252032d2f36955fc3204718c92" kindref="member">REG_PALEVEL</ref><sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sprintf(sql_stmt,</highlight><highlight class="stringliteral">&quot;update<sp/>node<sp/>set<sp/>pa_level<sp/>=<sp/>%s<sp/>where<sp/>node_id<sp/>=<sp/>%u<sp/>&quot;</highlight><highlight class="normal">,<sp/>value,<sp/>node_id);</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>do_sql(sql_stmt);</highlight></codeline>
+<codeline lineno="190"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="191"><highlight class="normal"><sp/><sp/><sp/><sp/>sprintf(sql_stmt,</highlight><highlight class="stringliteral">&quot;delete<sp/>from<sp/>node_configdata<sp/>where<sp/>node_id<sp/>=<sp/>%u<sp/>and<sp/>channel<sp/>=<sp/>%u<sp/>&quot;</highlight><highlight class="normal">,<sp/>node_id,<sp/>channel);</highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/><sp/><sp/>do_sql(sql_stmt);</highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/><sp/><sp/>sprintf(sql_stmt,</highlight><highlight class="stringliteral">&quot;insert<sp/>into<sp/>node_configdata<sp/>(node_id,<sp/>channel,<sp/>utime,<sp/>value)<sp/>values<sp/>(%u,<sp/>%u,<sp/>UNIX_TIMESTAMP(),<sp/>%s<sp/>)<sp/>&quot;</highlight><highlight class="normal">,<sp/>node_id,<sp/>channel,<sp/>value);</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"><sp/><sp/><sp/><sp/>do_sql(sql_stmt);</highlight></codeline>
+<codeline lineno="195"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="196"><highlight class="normal"></highlight></codeline>
+<codeline lineno="197"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classDatabase_1a31e5aaf049add0c5410630a08268bb61" kindref="member">Database::updateNodeMastered</ref>(<ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref><sp/>node_id,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>isMastered)<sp/>{</highlight></codeline>
+<codeline lineno="198"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(isMastered)<sp/>{</highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sprintf(sql_stmt,</highlight><highlight class="stringliteral">&quot;update<sp/>node<sp/>set<sp/>mastered<sp/>=<sp/>&apos;y&apos;<sp/>where<sp/>node_id<sp/>=<sp/>%u<sp/>&quot;</highlight><highlight class="normal">,<sp/>node_id);</highlight></codeline>
+<codeline lineno="200"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="201"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sprintf(sql_stmt,</highlight><highlight class="stringliteral">&quot;update<sp/>node<sp/>set<sp/>mastered<sp/>=<sp/>&apos;n&apos;<sp/>where<sp/>node_id<sp/>=<sp/>%u<sp/>&quot;</highlight><highlight class="normal">,<sp/>node_id);</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="203"><highlight class="normal"><sp/><sp/><sp/><sp/>do_sql(sql_stmt);</highlight></codeline>
+<codeline lineno="204"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="205"><highlight class="normal"></highlight></codeline>
+<codeline lineno="206"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>Database::connect(</highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>_db_hostname,<sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>_db_username,<sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>_db_password,<sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>_db_schema,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>_db_port)<sp/>{</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"><sp/><sp/><sp/><sp/>snprintf(db_hostname,<sp/><ref refid="database_8h_1a71badab0561d937f60e2f0b3d90b0ff4" kindref="member">DB_HOSTNAME_SIZE</ref>,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal">,<sp/>_db_hostname.c_str());</highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/>snprintf(db_username,<sp/><ref refid="database_8h_1aad96d4cf533a55a27fdd9db4d57676b3" kindref="member">DB_USERNAME_SIZE</ref>,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal">,<sp/>_db_username.c_str());</highlight></codeline>
+<codeline lineno="209"><highlight class="normal"><sp/><sp/><sp/><sp/>snprintf(db_password,<sp/><ref refid="database_8h_1a92c835ae2433795c105f0282d86dc978" kindref="member">DB_PASSWORD_SIZE</ref>,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal">,<sp/>_db_password.c_str());</highlight></codeline>
+<codeline lineno="210"><highlight class="normal"><sp/><sp/><sp/><sp/>snprintf(db_schema,<sp/><ref refid="database_8h_1a3d236c022bad8359fd406f353a69296a" kindref="member">DB_SCHEMA_SIZE</ref>,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal">,<sp/>_db_schema.c_str());</highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/>db_port<sp/>=<sp/>_db_port;</highlight></codeline>
+<codeline lineno="212"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>verboseLevel<sp/>&amp;<sp/><ref refid="group__cfgprm_1ga0da648731e92ae0cf3620a696dd7583f" kindref="member">VERBOSESTARTUP</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="213"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;%sMaria-DB<sp/>client<sp/>version:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="common_8cpp_1a83eaed94816137f9fe9521a7946efff0" kindref="member">ts</ref>(tsbuf),<sp/>mysql_get_client_info());</highlight></codeline>
+<codeline lineno="214"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="215"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>retval<sp/>=<sp/>connect();</highlight></codeline>
+<codeline lineno="216"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(retval)<sp/>{</highlight></codeline>
+<codeline lineno="217"><highlight class="normal"><sp/><sp/><sp/><sp/>disconnect();</highlight></codeline>
+<codeline lineno="218"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Init<sp/>finished<sp/>sucessfull\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="219"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="220"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>retval;</highlight></codeline>
+<codeline lineno="221"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="222"><highlight class="normal"></highlight></codeline>
+<codeline lineno="223"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>Database::connect()<sp/>{</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>retval<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/>db<sp/>=<sp/>mysql_init(NULL);</highlight></codeline>
+<codeline lineno="226"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(db<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/>sleep(1);</highlight></codeline>
+<codeline lineno="228"><highlight class="normal"><sp/><sp/><sp/><sp/>db<sp/>=<sp/>mysql_init(NULL);</highlight></codeline>
+<codeline lineno="229"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(db<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="230"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;%sERROR<sp/>getting<sp/>DB-Handle<sp/>\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="common_8cpp_1a83eaed94816137f9fe9521a7946efff0" kindref="member">ts</ref>(tsbuf));</highlight></codeline>
+<codeline lineno="231"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="232"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="233"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="234"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>retval<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="235"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(mysql_real_connect(db,<sp/>db_hostname,<sp/>db_username,<sp/>db_password,<sp/>db_schema,<sp/>db_port,<sp/>NULL,<sp/>0)<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="236"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sleep(1);</highlight></codeline>
+<codeline lineno="237"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(mysql_real_connect(db,<sp/>db_hostname,<sp/>db_username,<sp/>db_password,<sp/>db_schema,<sp/>db_port,<sp/>NULL,<sp/>0)<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="238"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;%sERROR<sp/>connecting<sp/>database:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="common_8cpp_1a83eaed94816137f9fe9521a7946efff0" kindref="member">ts</ref>(tsbuf),<sp/>mysql_error(db));</highlight></codeline>
+<codeline lineno="239"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mysql_close(db);</highlight></codeline>
+<codeline lineno="240"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="241"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="242"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="243"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="244"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>retval;</highlight></codeline>
+<codeline lineno="245"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="246"><highlight class="normal"></highlight></codeline>
+<codeline lineno="247"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>Database::disconnect()<sp/>{</highlight></codeline>
+<codeline lineno="248"><highlight class="normal"><sp/><sp/><sp/><sp/>mysql_close(db);</highlight></codeline>
+<codeline lineno="249"><highlight class="normal"><sp/><sp/><sp/><sp/>db<sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="250"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="251"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="252"><highlight class="normal"></highlight></codeline>
+<codeline lineno="253"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>Database::debugPrintSQL(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>sqlstmt)<sp/>{</highlight></codeline>
+<codeline lineno="254"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>verboseLevel<sp/>&amp;<sp/><ref refid="group__cfgprm_1ga6fcb419ffbd4d4e80fd2bf5aa447b9a9" kindref="member">VERBOSESQL</ref>)<sp/>{<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="255"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;%sSQL:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="common_8cpp_1a83eaed94816137f9fe9521a7946efff0" kindref="member">ts</ref>(tsbuf),<sp/>sqlstmt);</highlight></codeline>
+<codeline lineno="256"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="257"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="258"><highlight class="normal"></highlight></codeline>
+<codeline lineno="259"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classDatabase_1a9bc6c107fdce74c8d75ccd2e2978a92b" kindref="member">Database::setVerbose</ref>(uint16_t<sp/>_verboseLevel)<sp/>{</highlight></codeline>
+<codeline lineno="260"><highlight class="normal"><sp/><sp/><sp/><sp/>verboseLevel<sp/>=<sp/>_verboseLevel;</highlight></codeline>
+<codeline lineno="261"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/stick/netz/projekte/RF24Hub/linux/database.cpp"/>
+  </compounddef>
+</doxygen>

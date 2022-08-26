@@ -1,0 +1,75 @@
+\hypertarget{orderbuffer_8h_source}{}\doxysection{orderbuffer.\+h}
+\mbox{\hyperlink{orderbuffer_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#ifndef \_ORDERBUFFER\_H\_   }}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#define \_ORDERBUFFER\_H\_}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include <stdio.h>} }
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#include <cstring>}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#include <unistd.h>}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{rf24__config_8h}{rf24\_config.h}}"{}}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{rf24hub__config_8h}{rf24hub\_config.h}}"{}}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{common_8h}{common.h}}"{}}}
+\DoxyCodeLine{20 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{dataformat_8h}{dataformat.h}}"{}}}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22 }
+\DoxyCodeLine{23 \textcolor{keyword}{class }\mbox{\hyperlink{classOrderBuffer}{OrderBuffer}} \{}
+\DoxyCodeLine{24     }
+\DoxyCodeLine{25 \textcolor{keyword}{private}:}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{27 \textcolor{keyword}{struct }orderbuffer\_t \{}
+\DoxyCodeLine{28         uint64\_t        entrytime;}
+\DoxyCodeLine{29         \mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}}    node\_id;}
+\DoxyCodeLine{30         uint8\_t         channel;}
+\DoxyCodeLine{31         uint32\_t        utime;}
+\DoxyCodeLine{32         uint32\_t        data;}
+\DoxyCodeLine{33         orderbuffer\_t*  p\_next;}
+\DoxyCodeLine{34 \};}
+\DoxyCodeLine{35 orderbuffer\_t*     p\_initial;}
+\DoxyCodeLine{36 \textcolor{comment}{/**************************************************************}}
+\DoxyCodeLine{37 \textcolor{comment}{ * char buffer zur Ausgabe, generisch }}
+\DoxyCodeLine{38 \textcolor{comment}{ *************************************************************/}}
+\DoxyCodeLine{39 \textcolor{keywordtype}{char}*       buf;}
+\DoxyCodeLine{40 \textcolor{keywordtype}{char}*       buf1;}
+\DoxyCodeLine{41 \textcolor{comment}{/**************************************************************}}
+\DoxyCodeLine{42 \textcolor{comment}{ * char buffer zur Ausgabe des timestrings ==> ts(tsbuf)}}
+\DoxyCodeLine{43 \textcolor{comment}{ *************************************************************/}}
+\DoxyCodeLine{44 \textcolor{keywordtype}{char}*       tsbuf;}
+\DoxyCodeLine{45 \textcolor{comment}{/**************************************************************}}
+\DoxyCodeLine{46 \textcolor{comment}{ * Bufferinterner Speicher für den verboseLevel}}
+\DoxyCodeLine{47 \textcolor{comment}{ *************************************************************/}}
+\DoxyCodeLine{48 uint16\_t    verboseLevel;}
+\DoxyCodeLine{49 \textcolor{comment}{/**************************************************************}}
+\DoxyCodeLine{50 \textcolor{comment}{ * fügt einen neuen record zum Buffer hibzu}}
+\DoxyCodeLine{51 \textcolor{comment}{ *************************************************************/}}
+\DoxyCodeLine{52 \textcolor{keywordtype}{void}    newEntry(orderbuffer\_t*);}
+\DoxyCodeLine{53 \textcolor{comment}{/**************************************************************}}
+\DoxyCodeLine{54 \textcolor{comment}{ * löscht den übergebenen record aus dem Buffer}}
+\DoxyCodeLine{55 \textcolor{comment}{ *************************************************************/}}
+\DoxyCodeLine{56 \textcolor{keywordtype}{bool}    delEntry(orderbuffer\_t*);}
+\DoxyCodeLine{57 }
+\DoxyCodeLine{58 \textcolor{keyword}{public}:}
+\DoxyCodeLine{59     }
+\DoxyCodeLine{64 \textcolor{keywordtype}{void} \mbox{\hyperlink{classOrderBuffer_ac2e46ceea9fd69bc594ec75eb9b84749}{setVerbose}}(uint16\_t \_verboseLevel);}
+\DoxyCodeLine{65 }
+\DoxyCodeLine{76 \textcolor{keywordtype}{void}* \mbox{\hyperlink{classOrderBuffer_ac54dc8c5c0db25872e62e98fc34c63ac}{findOrder4Node}}(\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}} node\_id, \textcolor{keywordtype}{void}* p\_last, uint32\_t* p\_data);}
+\DoxyCodeLine{77 }
+\DoxyCodeLine{85 \textcolor{keywordtype}{void} \mbox{\hyperlink{classOrderBuffer_abf623ccfc9b7b1a0ddda35d6ba866c9c}{addOrderBuffer}}(uint64\_t millis, \mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}} node\_id, uint8\_t channel, uint32\_t data);}
+\DoxyCodeLine{86 }
+\DoxyCodeLine{93 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classOrderBuffer_afe3f5105c21e7f9926283f21dd473c9c}{delByNodeChannel}}(\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}} node\_id, uint8\_t channel);}
+\DoxyCodeLine{94 }
+\DoxyCodeLine{100 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classOrderBuffer_a04559ae9a12bd0b6179424cb6bee347b}{delByNode}}(\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}} node\_id);}
+\DoxyCodeLine{101 }
+\DoxyCodeLine{107 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classOrderBuffer_a0a57a5e89ee6fa874f8ffdc19100495e}{nodeHasEntry}}(\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}} node\_id);}
+\DoxyCodeLine{108 }
+\DoxyCodeLine{119 \textcolor{keywordtype}{void} \mbox{\hyperlink{classOrderBuffer_a2e572634d52e8bb3e01ef876c9c73780}{printBuffer}}(\textcolor{keywordtype}{int} out\_socket, \textcolor{keywordtype}{bool} htmlFormat);}
+\DoxyCodeLine{120 }
+\DoxyCodeLine{121 \mbox{\hyperlink{classOrderBuffer_ad1d77cfabad48e73a59caf09be2d1a16}{OrderBuffer}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{122 }
+\DoxyCodeLine{123 \};}
+\DoxyCodeLine{124 }
+\DoxyCodeLine{125 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// \_ORDERBUFFER\_H\_}}
+
+\end{DoxyCode}

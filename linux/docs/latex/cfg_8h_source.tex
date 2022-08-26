@@ -1,0 +1,108 @@
+\hypertarget{cfg_8h_source}{}\doxysection{cfg.\+h}
+\mbox{\hyperlink{cfg_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#ifndef CFG\_H   }}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#define CFG\_H}}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#include <stdio.h>}}
+\DoxyCodeLine{20 \textcolor{preprocessor}{\#include <stdlib.h>}}
+\DoxyCodeLine{21 \textcolor{preprocessor}{\#include <string>} \textcolor{comment}{// for string class }}
+\DoxyCodeLine{22 \textcolor{preprocessor}{\#include <string.h>}}
+\DoxyCodeLine{23 \textcolor{preprocessor}{\#include <ctype.h>}}
+\DoxyCodeLine{24 \textcolor{preprocessor}{\#include <stdlib.h>}}
+\DoxyCodeLine{25 \textcolor{preprocessor}{\#include <time.h>}}
+\DoxyCodeLine{26 \textcolor{preprocessor}{\#include <unistd.h>}}
+\DoxyCodeLine{27 \textcolor{preprocessor}{\#include <getopt.h>}}
+\DoxyCodeLine{28 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{29 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{config_8h}{config.h}}"{}}}
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{common_8h}{common.h}}"{}}}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32 \textcolor{keyword}{using namespace }std; }
+\DoxyCodeLine{33 }
+\DoxyCodeLine{35 \textcolor{keyword}{extern} uint16\_t \mbox{\hyperlink{cfg_8h_a2ac10a3f1b8393a2208b7dc7f6672704}{verboseLevel}};}
+\DoxyCodeLine{36 }
+\DoxyCodeLine{37 \textcolor{keyword}{class }\mbox{\hyperlink{classCfg}{Cfg}} \{}
+\DoxyCodeLine{38     }
+\DoxyCodeLine{39 \textcolor{keyword}{private}:}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41 FILE * pidfile\_ptr;}
+\DoxyCodeLine{42 FILE * logfile\_ptr;}
+\DoxyCodeLine{43 \textcolor{comment}{// The filename incl. path of the configfile}}
+\DoxyCodeLine{44 \textcolor{keywordtype}{string} configFile;}
+\DoxyCodeLine{45 \textcolor{comment}{// the programm name goes here}}
+\DoxyCodeLine{46 \textcolor{keywordtype}{string} prgName;}
+\DoxyCodeLine{47 \textcolor{comment}{// the programm version goes here}}
+\DoxyCodeLine{48 \textcolor{keywordtype}{string} prgVersion;}
+\DoxyCodeLine{49     }
+\DoxyCodeLine{50 \textcolor{keyword}{public}:}
+\DoxyCodeLine{51     }
+\DoxyCodeLine{52 \textcolor{comment}{// Hier die verwendeten Variablen:}}
+\DoxyCodeLine{53 \textcolor{comment}{/**********************************************}}
+\DoxyCodeLine{54 \textcolor{comment}{ * Variablen für den Gateway}}
+\DoxyCodeLine{55 \textcolor{comment}{ **********************************************/}}
+\DoxyCodeLine{59 \textcolor{keywordtype}{string} \mbox{\hyperlink{classCfg_ab6a3c443f9adc2c71b6d75c20e9df8fc}{gwLogFileName}};}
+\DoxyCodeLine{63 \textcolor{keywordtype}{string} \mbox{\hyperlink{classCfg_a5beacd3f7187e23a3a166190b5fb6bb3}{gwPidFileName}};}
+\DoxyCodeLine{67 \textcolor{keywordtype}{string} \mbox{\hyperlink{classCfg_a4943a808300c155b874e7e716326aa56}{gwHubHostName}};}
+\DoxyCodeLine{72 \textcolor{keywordtype}{string} \mbox{\hyperlink{classCfg_a6df600ac075fa021caa9c45efa9f0601}{gwUdpPortNo}};}
+\DoxyCodeLine{80 \textcolor{keywordtype}{string} \mbox{\hyperlink{classCfg_ac4df10edefafe41ec1b0251d80ff2de5}{gwTcpPortNo}};}
+\DoxyCodeLine{84 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classCfg_ac82059ea3ea0ef7f44231408da29de3b}{gwTcpPortSet}};}
+\DoxyCodeLine{88 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classCfg_a40e5f1fbec69c36732d808e05363e024}{gwUdpPortSet}};}
+\DoxyCodeLine{92 \textcolor{keywordtype}{string} \mbox{\hyperlink{classCfg_a5ec995cf894c4b957de9bc3e5c881424}{gwNo}};}
+\DoxyCodeLine{93 \textcolor{comment}{/**********************************************}}
+\DoxyCodeLine{94 \textcolor{comment}{ * Variablen für den Hub}}
+\DoxyCodeLine{95 \textcolor{comment}{ **********************************************/}}
+\DoxyCodeLine{100 \textcolor{keywordtype}{string} \mbox{\hyperlink{classCfg_a4b2a65134693dce7d66f955c3389b8f5}{hubUdpPortNo}};}
+\DoxyCodeLine{104 \textcolor{keywordtype}{string} \mbox{\hyperlink{classCfg_a6b3bf6aaf8b2faf63fbaff815e65c14f}{hubLogFileName}};}
+\DoxyCodeLine{108 \textcolor{keywordtype}{string} \mbox{\hyperlink{classCfg_aab6d96f28a3284c1272ce3836a58c3f4}{hubPidFileName}};}
+\DoxyCodeLine{117 \textcolor{keywordtype}{string} \mbox{\hyperlink{classCfg_a49753408815026a15f56b7cd4247d06b}{hubTcpPortNo}};}
+\DoxyCodeLine{121 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classCfg_a0ce03c7bc0c0b5a6f75b0276ba1cf42a}{hubTcpPortSet}};}
+\DoxyCodeLine{125 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classCfg_ad250bf11fc3d0a13e3bb37c9517849e0}{hubUdpPortSet}};}
+\DoxyCodeLine{126 \textcolor{comment}{/**********************************************}}
+\DoxyCodeLine{127 \textcolor{comment}{ * Database}}
+\DoxyCodeLine{128 \textcolor{comment}{ **********************************************/}}
+\DoxyCodeLine{132 \textcolor{keywordtype}{string} \mbox{\hyperlink{classCfg_ae1e7f239b800f0104dcc73157004caeb}{dbHostName}};}
+\DoxyCodeLine{136 \textcolor{keywordtype}{string} \mbox{\hyperlink{classCfg_aabb83b325c0f808fcc7401677e317302}{dbPortNo}};}
+\DoxyCodeLine{140 \textcolor{keywordtype}{string} \mbox{\hyperlink{classCfg_a37997fdb4da8fbe674ff617a1ac00679}{dbSchema}};}
+\DoxyCodeLine{144 \textcolor{keywordtype}{string} \mbox{\hyperlink{classCfg_ab96f7a9e239ea73732644835532d918b}{dbUserName}};}
+\DoxyCodeLine{148 \textcolor{keywordtype}{string} \mbox{\hyperlink{classCfg_ad1436b8fe2ea5d64a531bb25424d8384}{dbPassWord}};}
+\DoxyCodeLine{149 \textcolor{comment}{/**********************************************}}
+\DoxyCodeLine{150 \textcolor{comment}{ * FHEM}}
+\DoxyCodeLine{151 \textcolor{comment}{ **********************************************/}}
+\DoxyCodeLine{155 \textcolor{keywordtype}{string} \mbox{\hyperlink{classCfg_a1b5fdfaf2ee6ae30d7f229ed26d088a6}{fhemHostName}};}
+\DoxyCodeLine{160 \textcolor{keywordtype}{string} \mbox{\hyperlink{classCfg_a7283a114baa582d592c3aea559a6efe5}{fhemPortNo}};}
+\DoxyCodeLine{164 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classCfg_ac7abf5aed3b16e826c70840b48716b14}{fhemHostSet}};}
+\DoxyCodeLine{168 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classCfg_a93959e7a9564ffeb208eca45685a8c97}{fhemPortSet}};}
+\DoxyCodeLine{169 }
+\DoxyCodeLine{170 \textcolor{comment}{/**********************************************}}
+\DoxyCodeLine{171 \textcolor{comment}{ * GENERIC}}
+\DoxyCodeLine{172 \textcolor{comment}{ **********************************************/}}
+\DoxyCodeLine{176 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classCfg_a9eefce31b95beb80f66eff2f9ba9294c}{startDaemon}} = \textcolor{keyword}{false};}
+\DoxyCodeLine{180 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classCfg_a029cac532a52c6716be2f0a8f4c4b3cc}{startSniffer}} = \textcolor{keyword}{false};}
+\DoxyCodeLine{184 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classCfg_a65e582daf11d5dcbd222ad1501d33ff8}{startScanner}} = \textcolor{keyword}{false};}
+\DoxyCodeLine{188 \textcolor{keywordtype}{int} \mbox{\hyperlink{classCfg_aa310020b99a2cfe3900b724a400344eb}{setScanLevel}} = 0;}
+\DoxyCodeLine{192 \textcolor{keywordtype}{int} \mbox{\hyperlink{classCfg_ae5b09f245e8241e22339aa61a21a2fe3}{channelScanner\_Channel}} = 0;}
+\DoxyCodeLine{193 }
+\DoxyCodeLine{201 \mbox{\hyperlink{classCfg_aac9284b09ac6aa86a892dc8ab09989ec}{Cfg}}(\textcolor{keywordtype}{string} \_prgName, \textcolor{keywordtype}{string} \_prgVersion);}
+\DoxyCodeLine{202 }
+\DoxyCodeLine{209 \textcolor{keywordtype}{void} \mbox{\hyperlink{classCfg_ac7f6954d45eef4c17ef652b2ed7b1c6b}{usage}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* prgName);}
+\DoxyCodeLine{210 }
+\DoxyCodeLine{220 \textcolor{keywordtype}{void} \mbox{\hyperlink{classCfg_a962963a6c34ac9851259ccf5ab165db1}{processParams}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* prgName, \textcolor{keywordtype}{int} argc, \textcolor{keywordtype}{char}* argv[]);}
+\DoxyCodeLine{221 }
+\DoxyCodeLine{225 \textcolor{keywordtype}{void} \mbox{\hyperlink{classCfg_a059563d535a096471410e5a76d4a5c96}{printConfig\_gw}} (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{226 }
+\DoxyCodeLine{230 \textcolor{keywordtype}{void} \mbox{\hyperlink{classCfg_a12a56a77125fa182718e2164a23eed48}{printConfig\_hub}} (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{231 }
+\DoxyCodeLine{235 \textcolor{keywordtype}{void} \mbox{\hyperlink{classCfg_ab785421eee0353b1b5a6443d9f97efaf}{printConfig\_db}} (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{236 }
+\DoxyCodeLine{243 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classCfg_acfcbf6a7e35c893ad13e41713a5b51a9}{setPidFile}}(\textcolor{keywordtype}{string} pidFileName);}
+\DoxyCodeLine{244 }
+\DoxyCodeLine{250 \textcolor{keywordtype}{void} \mbox{\hyperlink{classCfg_acf0cea642cbaafbd61860629a8076b15}{removePidFile}}(\textcolor{keywordtype}{string} pidFileName);}
+\DoxyCodeLine{251 }
+\DoxyCodeLine{259 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classCfg_a28651b7c3cb08d57921e53340ef5e933}{checkPidFileSet}}(\textcolor{keywordtype}{string} pidFileName);}
+\DoxyCodeLine{260 }
+\DoxyCodeLine{261 \};}
+\DoxyCodeLine{262 }
+\DoxyCodeLine{263 \textcolor{preprocessor}{\#endif  }\textcolor{comment}{//CFG\_H}}
+
+\end{DoxyCode}

@@ -1,0 +1,400 @@
+\hypertarget{rf24hubd_8h}{}\doxysection{rf24hubd.\+h File Reference}
+\label{rf24hubd_8h}\index{rf24hubd.h@{rf24hubd.h}}
+{\ttfamily \#include $<$cstdlib$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$sstream$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$iomanip$>$}\newline
+{\ttfamily \#include $<$RF24/\+RF24.\+h$>$}\newline
+{\ttfamily \#include $<$RF24/utility/\+RPi/bcm2835.\+h$>$}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+{\ttfamily \#include $<$sys/time.\+h$>$}\newline
+{\ttfamily \#include $<$sys/types.\+h$>$}\newline
+{\ttfamily \#include $<$sys/stat.\+h$>$}\newline
+{\ttfamily \#include $<$sys/ipc.\+h$>$}\newline
+{\ttfamily \#include $<$sys/msg.\+h$>$}\newline
+{\ttfamily \#include $<$sys/socket.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$getopt.\+h$>$}\newline
+{\ttfamily \#include $<$syslog.\+h$>$}\newline
+{\ttfamily \#include $<$signal.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$netinet/in.\+h$>$}\newline
+{\ttfamily \#include $<$netdb.\+h$>$}\newline
+{\ttfamily \#include $<$arpa/inet.\+h$>$}\newline
+{\ttfamily \#include $<$fcntl.\+h$>$}\newline
+{\ttfamily \#include $<$pthread.\+h$>$}\newline
+{\ttfamily \#include $<$errno.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}nodeclass.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}sensorclass.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}order.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}orderbuffer.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}gatewayclass.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}common.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}cfg.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}database.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}rf24\+\_\+config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}rf24hub\+\_\+config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}rf24hub\+\_\+text.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}dataformat.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}version.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}secrets.\+h\char`\"{}}\newline
+Include dependency graph for rf24hubd.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rf24hubd_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=160pt]{rf24hubd_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structthread__db__data}{thread\+\_\+db\+\_\+data}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{rf24hubd_8h_a24f52ac52d6e714cb04a5aa01be3bdd0}{BUF}}~1024
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classCfg}{Cfg}} \mbox{\hyperlink{rf24hubd_8h_a6a559eb4e518378c7c552d2fdc1769af}{cfg}} (\mbox{\hyperlink{version_8h_a476a6cff0fb1a40441544f8a530ddbe9}{SWVERSION\+\_\+\+STR}}, \+\_\+\+\_\+\+DATE\+\_\+\+\_\+)
+\begin{DoxyCompactList}\small\item\em Eine Instanz der Klasse \mbox{\hyperlink{classCfg}{Cfg}}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rf24hubd_8h_ab7e3b1b511de9b3dec5a7b635d1f2fdb}{send\+\_\+fhem\+\_\+tn}} (char $\ast$tn\+\_\+cmd)
+\begin{DoxyCompactList}\small\item\em send a telnet comand to the fhem-\/host \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rf24hubd_8h_aeb3e38715133e68a4851c2a22da2fc57}{send\+\_\+fhem\+\_\+cmd}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node, uint8\+\_\+t channel, char $\ast$value)
+\begin{DoxyCompactList}\small\item\em send a value of a sensor to the fhem-\/host \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rf24hubd_8h_a6fa00eddac8eebb959e8be172b517f69}{process\+\_\+tn\+\_\+in}} (int new\+\_\+socket, char $\ast$buffer, char $\ast$client\+\_\+message)
+\item 
+void \mbox{\hyperlink{rf24hubd_8h_a348d23d5899ce59d18975284dfb0afc0}{init\+\_\+system}} (void)
+\item 
+void \mbox{\hyperlink{rf24hubd_8h_a3c31c4b9bcc08e22669f923d656f9a15}{exit\+\_\+system}} (void)
+\item 
+void \mbox{\hyperlink{rf24hubd_8h_a29578e615b1ea3664c879869c27084fe}{make\+\_\+order}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id, uint8\+\_\+t msg\+\_\+type)
+\begin{DoxyCompactList}\small\item\em Erzeugung eines Datensatzes zur Übertragung an einen Node. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rf24hubd_8h_a73e6c3b1f79965c6df281c74b2e34ce7}{process\+\_\+sensor}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id, uint32\+\_\+t data)
+\begin{DoxyCompactList}\small\item\em Verarbeitet einen empfangenen Wert. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rf24hubd_8h_a6b38722bb47fc93ce0ae3c462e6c4934}{sighandler}} (int signal)
+\item 
+void \mbox{\hyperlink{rf24hubd_8h_acae9a628aec720efc0fc27cd2064b1f0}{process\+\_\+payload}} (\mbox{\hyperlink{structpayload__t}{payload\+\_\+t}} $\ast$\mbox{\hyperlink{rf24gwd_8h_a9ab81a7ae17f3497b23bbccb020c3308}{payload}})
+\item 
+int \mbox{\hyperlink{rf24hubd_8h_a0ddf1224851353fc92bfbff6f499fa97}{main}} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em Das Hauptprogramm. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{rf24hubd_8h_ad2c8fb3df3a737e0685e902870a611d2}{sockfd}}
+\begin{DoxyCompactList}\small\item\em Ein handler für den UDP Socket. \end{DoxyCompactList}\item 
+struct sockaddr\+\_\+in \mbox{\hyperlink{rf24hubd_8h_ac724fe70ae8af2d1406927ee7b574a1b}{serv\+\_\+addr}}
+\item 
+struct hostent $\ast$ \mbox{\hyperlink{rf24hubd_8h_a8f718c687d0f28ecb0f281df574ada24}{server}}
+\item 
+FILE $\ast$ \mbox{\hyperlink{rf24hubd_8h_a74cdc67e1a2355a8a3857dd631c2e20d}{pidfile\+\_\+ptr}}
+\begin{DoxyCompactList}\small\item\em Ein Pointer für das PID File. Ist dieses angelegt, kann der rf24gwd nicht (nochmal) gestartet werden. \end{DoxyCompactList}\item 
+FILE $\ast$ \mbox{\hyperlink{rf24hubd_8h_a8b911740b70463f6330c1b22ac52d2b0}{logfile\+\_\+ptr}}
+\begin{DoxyCompactList}\small\item\em Ein Pointer für das Log File. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structudpdata__t}{udpdata\+\_\+t}} \mbox{\hyperlink{rf24hubd_8h_aed24fc049dc5a6c8b3fd89e20c79be34}{udpdata}}
+\begin{DoxyCompactList}\small\item\em Die Udpdatastruktur als Variable. \end{DoxyCompactList}\item 
+uint16\+\_\+t \mbox{\hyperlink{rf24hubd_8h_a2ac10a3f1b8393a2208b7dc7f6672704}{verbose\+Level}} = \mbox{\hyperlink{group__cfgprm_ga6c4340ca162dd39191fb258fe86f573a}{STARTUPVERBOSELEVEL}}
+\begin{DoxyCompactList}\small\item\em Eine Variable für das aktuelle Verboselevel. \end{DoxyCompactList}\item 
+char $\ast$ \mbox{\hyperlink{rf24hubd_8h_a1fe855c208bc17a51a4d34fefdb2d5b1}{buf}}
+\begin{DoxyCompactList}\small\item\em Ein generischer Buffer. \end{DoxyCompactList}\item 
+char $\ast$ \mbox{\hyperlink{rf24hubd_8h_aa5a00c1b8970dc4fbaabfa7b8a4aa021}{tsbuf}}
+\begin{DoxyCompactList}\small\item\em Ein Buffer zur Aufnahme des Zeitstrings. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classOrder}{Order}} \mbox{\hyperlink{rf24hubd_8h_a7d595d1f42346d5c8b67a1230240e542}{order}}
+\begin{DoxyCompactList}\small\item\em Eine Instanz der Klasse \mbox{\hyperlink{classOrder}{Order}}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classOrderBuffer}{Order\+Buffer}} \mbox{\hyperlink{rf24hubd_8h_ad0b7f7965d54c9be61b1c652959d8f2a}{orderbuffer}}
+\begin{DoxyCompactList}\small\item\em Eine Instanz der Klasse \mbox{\hyperlink{classOrderBuffer}{Order\+Buffer}}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classSensorClass}{Sensor\+Class}} \mbox{\hyperlink{rf24hubd_8h_a32b75ac9948db837416adb463c101ae7}{sensor\+Class}}
+\begin{DoxyCompactList}\small\item\em Eine Instanz der Klasse Sensor. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classNodeClass}{Node\+Class}} \mbox{\hyperlink{rf24hubd_8h_a6f21c130ea438b6c54c3deb9a25901b2}{node\+Class}}
+\begin{DoxyCompactList}\small\item\em Eine Instanz der Klasse Node. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classDatabase}{Database}} \mbox{\hyperlink{rf24hubd_8h_a781c289826d0041d9a1e4d7f746b20a2}{database}}
+\begin{DoxyCompactList}\small\item\em Eine Instanz der Klasse \mbox{\hyperlink{classDatabase}{Database}}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classGatewayClass}{Gateway\+Class}} \mbox{\hyperlink{rf24hubd_8h_a5d04e25b77f7ecfc9256335eac98b51f}{gateway\+Class}}
+\begin{DoxyCompactList}\small\item\em Eine Instanz der Klasse Gateway. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{rf24hubd_8h_a24f52ac52d6e714cb04a5aa01be3bdd0}\label{rf24hubd_8h_a24f52ac52d6e714cb04a5aa01be3bdd0}} 
+\index{rf24hubd.h@{rf24hubd.h}!BUF@{BUF}}
+\index{BUF@{BUF}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{BUF}{BUF}}
+{\footnotesize\ttfamily \#define BUF~1024}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{rf24hubd_8h_a6a559eb4e518378c7c552d2fdc1769af}\label{rf24hubd_8h_a6a559eb4e518378c7c552d2fdc1769af}} 
+\index{rf24hubd.h@{rf24hubd.h}!cfg@{cfg}}
+\index{cfg@{cfg}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{cfg()}{cfg()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classCfg}{Cfg}} cfg (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{version_8h_a476a6cff0fb1a40441544f8a530ddbe9}{SWVERSION\+\_\+\+STR}}}]{,  }\item[{\+\_\+\+\_\+\+DATE\+\_\+\+\_\+}]{ }\end{DoxyParamCaption})}
+
+
+
+Eine Instanz der Klasse \mbox{\hyperlink{classCfg}{Cfg}}. 
+
+\mbox{\Hypertarget{rf24hubd_8h_a3c31c4b9bcc08e22669f923d656f9a15}\label{rf24hubd_8h_a3c31c4b9bcc08e22669f923d656f9a15}} 
+\index{rf24hubd.h@{rf24hubd.h}!exit\_system@{exit\_system}}
+\index{exit\_system@{exit\_system}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{exit\_system()}{exit\_system()}}
+{\footnotesize\ttfamily void exit\+\_\+system (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Aufräumen bei Programmende
+
+Aufräumen, Daten speichern (falls erforderlich) und Deamon sauber verlassen/beenden \mbox{\Hypertarget{rf24hubd_8h_a348d23d5899ce59d18975284dfb0afc0}\label{rf24hubd_8h_a348d23d5899ce59d18975284dfb0afc0}} 
+\index{rf24hubd.h@{rf24hubd.h}!init\_system@{init\_system}}
+\index{init\_system@{init\_system}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{init\_system()}{init\_system()}}
+{\footnotesize\ttfamily void init\+\_\+system (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Initialisierung des Systems
+
+Deamon initialisieren, Daten aus DB laden (falls erforderlich) und Deamon sauber hochfahren \mbox{\Hypertarget{rf24hubd_8h_a0ddf1224851353fc92bfbff6f499fa97}\label{rf24hubd_8h_a0ddf1224851353fc92bfbff6f499fa97}} 
+\index{rf24hubd.h@{rf24hubd.h}!main@{main}}
+\index{main@{main}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+
+
+Das Hauptprogramm. 
+
+Das Haupprogramm \mbox{\Hypertarget{rf24hubd_8h_a29578e615b1ea3664c879869c27084fe}\label{rf24hubd_8h_a29578e615b1ea3664c879869c27084fe}} 
+\index{rf24hubd.h@{rf24hubd.h}!make\_order@{make\_order}}
+\index{make\_order@{make\_order}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{make\_order()}{make\_order()}}
+{\footnotesize\ttfamily void make\+\_\+order (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id,  }\item[{uint8\+\_\+t}]{msg\+\_\+type }\end{DoxyParamCaption})}
+
+
+
+Erzeugung eines Datensatzes zur Übertragung an einen Node. 
+
+In dieser Prozedure werden alle offenen (bis zu max. 6) Anweisungen für einen Node gesammelt und für die Übertragung vorbereitet. 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Der Node \\
+\hline
+{\em msg\+\_\+type} & Der Nachrichtentyp \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{rf24hubd_8h_acae9a628aec720efc0fc27cd2064b1f0}\label{rf24hubd_8h_acae9a628aec720efc0fc27cd2064b1f0}} 
+\index{rf24hubd.h@{rf24hubd.h}!process\_payload@{process\_payload}}
+\index{process\_payload@{process\_payload}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{process\_payload()}{process\_payload()}}
+{\footnotesize\ttfamily void process\+\_\+payload (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structpayload__t}{payload\+\_\+t}} $\ast$}]{payload }\end{DoxyParamCaption})}
+
+Verarbeitet die empfangenen Daten einer Funksendung 
+\begin{DoxyParams}{Parameters}
+{\em payload} & Der Payload \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{rf24hubd_8h_a73e6c3b1f79965c6df281c74b2e34ce7}\label{rf24hubd_8h_a73e6c3b1f79965c6df281c74b2e34ce7}} 
+\index{rf24hubd.h@{rf24hubd.h}!process\_sensor@{process\_sensor}}
+\index{process\_sensor@{process\_sensor}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{process\_sensor()}{process\_sensor()}}
+{\footnotesize\ttfamily void process\+\_\+sensor (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id,  }\item[{uint32\+\_\+t}]{data }\end{DoxyParamCaption})}
+
+
+
+Verarbeitet einen empfangenen Wert. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Der sendende Node \\
+\hline
+{\em data} & Der Transportwert \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{rf24hubd_8h_a6fa00eddac8eebb959e8be172b517f69}\label{rf24hubd_8h_a6fa00eddac8eebb959e8be172b517f69}} 
+\index{rf24hubd.h@{rf24hubd.h}!process\_tn\_in@{process\_tn\_in}}
+\index{process\_tn\_in@{process\_tn\_in}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{process\_tn\_in()}{process\_tn\_in()}}
+{\footnotesize\ttfamily void process\+\_\+tn\+\_\+in (\begin{DoxyParamCaption}\item[{int}]{new\+\_\+socket,  }\item[{char $\ast$}]{buffer,  }\item[{char $\ast$}]{client\+\_\+message }\end{DoxyParamCaption})}
+
+Verabeitet eine eingehende Telnet Nachricht \mbox{\Hypertarget{rf24hubd_8h_aeb3e38715133e68a4851c2a22da2fc57}\label{rf24hubd_8h_aeb3e38715133e68a4851c2a22da2fc57}} 
+\index{rf24hubd.h@{rf24hubd.h}!send\_fhem\_cmd@{send\_fhem\_cmd}}
+\index{send\_fhem\_cmd@{send\_fhem\_cmd}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{send\_fhem\_cmd()}{send\_fhem\_cmd()}}
+{\footnotesize\ttfamily void send\+\_\+fhem\+\_\+cmd (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node,  }\item[{uint8\+\_\+t}]{channel,  }\item[{char $\ast$}]{value }\end{DoxyParamCaption})}
+
+
+
+send a value of a sensor to the fhem-\/host 
+
+Ein Sensor ist eindeutig durch die Kombination aus Node und Channel bestimmt. Der Wert des Sensors wird hier an FHEM übertragen. \mbox{\Hypertarget{rf24hubd_8h_ab7e3b1b511de9b3dec5a7b635d1f2fdb}\label{rf24hubd_8h_ab7e3b1b511de9b3dec5a7b635d1f2fdb}} 
+\index{rf24hubd.h@{rf24hubd.h}!send\_fhem\_tn@{send\_fhem\_tn}}
+\index{send\_fhem\_tn@{send\_fhem\_tn}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{send\_fhem\_tn()}{send\_fhem\_tn()}}
+{\footnotesize\ttfamily void send\+\_\+fhem\+\_\+tn (\begin{DoxyParamCaption}\item[{char $\ast$}]{tn\+\_\+cmd }\end{DoxyParamCaption})}
+
+
+
+send a telnet comand to the fhem-\/host 
+
+Die Eventverwaltung wird in meinem System durch FHEM realisiert. Dazu ist es nötig das alle geänderten Sensorwerte an FHEM übertragen werden. \mbox{\Hypertarget{rf24hubd_8h_a6b38722bb47fc93ce0ae3c462e6c4934}\label{rf24hubd_8h_a6b38722bb47fc93ce0ae3c462e6c4934}} 
+\index{rf24hubd.h@{rf24hubd.h}!sighandler@{sighandler}}
+\index{sighandler@{sighandler}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{sighandler()}{sighandler()}}
+{\footnotesize\ttfamily void sighandler (\begin{DoxyParamCaption}\item[{int}]{signal }\end{DoxyParamCaption})}
+
+Handler für die Interruptverarbeitung (z.\+B. CTRL-\/C)
+
+Ein Signalhandler, der es ermöglicht den Deamon z.\+B. mit CTRL-\/C oder mit \char`\"{}kill\char`\"{} zu beenden 
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{rf24hubd_8h_a1fe855c208bc17a51a4d34fefdb2d5b1}\label{rf24hubd_8h_a1fe855c208bc17a51a4d34fefdb2d5b1}} 
+\index{rf24hubd.h@{rf24hubd.h}!buf@{buf}}
+\index{buf@{buf}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{buf}{buf}}
+{\footnotesize\ttfamily char$\ast$ buf}
+
+
+
+Ein generischer Buffer. 
+
+\mbox{\Hypertarget{rf24hubd_8h_a781c289826d0041d9a1e4d7f746b20a2}\label{rf24hubd_8h_a781c289826d0041d9a1e4d7f746b20a2}} 
+\index{rf24hubd.h@{rf24hubd.h}!database@{database}}
+\index{database@{database}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{database}{database}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classDatabase}{Database}} database}
+
+
+
+Eine Instanz der Klasse \mbox{\hyperlink{classDatabase}{Database}}. 
+
+\mbox{\Hypertarget{rf24hubd_8h_a5d04e25b77f7ecfc9256335eac98b51f}\label{rf24hubd_8h_a5d04e25b77f7ecfc9256335eac98b51f}} 
+\index{rf24hubd.h@{rf24hubd.h}!gatewayClass@{gatewayClass}}
+\index{gatewayClass@{gatewayClass}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{gatewayClass}{gatewayClass}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classGatewayClass}{Gateway\+Class}} gateway\+Class}
+
+
+
+Eine Instanz der Klasse Gateway. 
+
+\mbox{\Hypertarget{rf24hubd_8h_a8b911740b70463f6330c1b22ac52d2b0}\label{rf24hubd_8h_a8b911740b70463f6330c1b22ac52d2b0}} 
+\index{rf24hubd.h@{rf24hubd.h}!logfile\_ptr@{logfile\_ptr}}
+\index{logfile\_ptr@{logfile\_ptr}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{logfile\_ptr}{logfile\_ptr}}
+{\footnotesize\ttfamily FILE$\ast$ logfile\+\_\+ptr}
+
+
+
+Ein Pointer für das Log File. 
+
+\mbox{\Hypertarget{rf24hubd_8h_a6f21c130ea438b6c54c3deb9a25901b2}\label{rf24hubd_8h_a6f21c130ea438b6c54c3deb9a25901b2}} 
+\index{rf24hubd.h@{rf24hubd.h}!nodeClass@{nodeClass}}
+\index{nodeClass@{nodeClass}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{nodeClass}{nodeClass}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classNodeClass}{Node\+Class}} node\+Class}
+
+
+
+Eine Instanz der Klasse Node. 
+
+\mbox{\Hypertarget{rf24hubd_8h_a7d595d1f42346d5c8b67a1230240e542}\label{rf24hubd_8h_a7d595d1f42346d5c8b67a1230240e542}} 
+\index{rf24hubd.h@{rf24hubd.h}!order@{order}}
+\index{order@{order}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{order}{order}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classOrder}{Order}} order}
+
+
+
+Eine Instanz der Klasse \mbox{\hyperlink{classOrder}{Order}}. 
+
+\mbox{\Hypertarget{rf24hubd_8h_ad0b7f7965d54c9be61b1c652959d8f2a}\label{rf24hubd_8h_ad0b7f7965d54c9be61b1c652959d8f2a}} 
+\index{rf24hubd.h@{rf24hubd.h}!orderbuffer@{orderbuffer}}
+\index{orderbuffer@{orderbuffer}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{orderbuffer}{orderbuffer}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classOrderBuffer}{Order\+Buffer}} orderbuffer}
+
+
+
+Eine Instanz der Klasse \mbox{\hyperlink{classOrderBuffer}{Order\+Buffer}}. 
+
+\mbox{\Hypertarget{rf24hubd_8h_a74cdc67e1a2355a8a3857dd631c2e20d}\label{rf24hubd_8h_a74cdc67e1a2355a8a3857dd631c2e20d}} 
+\index{rf24hubd.h@{rf24hubd.h}!pidfile\_ptr@{pidfile\_ptr}}
+\index{pidfile\_ptr@{pidfile\_ptr}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{pidfile\_ptr}{pidfile\_ptr}}
+{\footnotesize\ttfamily FILE$\ast$ pidfile\+\_\+ptr}
+
+
+
+Ein Pointer für das PID File. Ist dieses angelegt, kann der rf24gwd nicht (nochmal) gestartet werden. 
+
+\mbox{\Hypertarget{rf24hubd_8h_a32b75ac9948db837416adb463c101ae7}\label{rf24hubd_8h_a32b75ac9948db837416adb463c101ae7}} 
+\index{rf24hubd.h@{rf24hubd.h}!sensorClass@{sensorClass}}
+\index{sensorClass@{sensorClass}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{sensorClass}{sensorClass}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classSensorClass}{Sensor\+Class}} sensor\+Class}
+
+
+
+Eine Instanz der Klasse Sensor. 
+
+\mbox{\Hypertarget{rf24hubd_8h_ac724fe70ae8af2d1406927ee7b574a1b}\label{rf24hubd_8h_ac724fe70ae8af2d1406927ee7b574a1b}} 
+\index{rf24hubd.h@{rf24hubd.h}!serv\_addr@{serv\_addr}}
+\index{serv\_addr@{serv\_addr}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{serv\_addr}{serv\_addr}}
+{\footnotesize\ttfamily struct sockaddr\+\_\+in serv\+\_\+addr}
+
+\mbox{\Hypertarget{rf24hubd_8h_a8f718c687d0f28ecb0f281df574ada24}\label{rf24hubd_8h_a8f718c687d0f28ecb0f281df574ada24}} 
+\index{rf24hubd.h@{rf24hubd.h}!server@{server}}
+\index{server@{server}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{server}{server}}
+{\footnotesize\ttfamily struct hostent$\ast$ server}
+
+\mbox{\Hypertarget{rf24hubd_8h_ad2c8fb3df3a737e0685e902870a611d2}\label{rf24hubd_8h_ad2c8fb3df3a737e0685e902870a611d2}} 
+\index{rf24hubd.h@{rf24hubd.h}!sockfd@{sockfd}}
+\index{sockfd@{sockfd}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{sockfd}{sockfd}}
+{\footnotesize\ttfamily int sockfd}
+
+
+
+Ein handler für den UDP Socket. 
+
+\mbox{\Hypertarget{rf24hubd_8h_aa5a00c1b8970dc4fbaabfa7b8a4aa021}\label{rf24hubd_8h_aa5a00c1b8970dc4fbaabfa7b8a4aa021}} 
+\index{rf24hubd.h@{rf24hubd.h}!tsbuf@{tsbuf}}
+\index{tsbuf@{tsbuf}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{tsbuf}{tsbuf}}
+{\footnotesize\ttfamily char$\ast$ tsbuf}
+
+
+
+Ein Buffer zur Aufnahme des Zeitstrings. 
+
+\mbox{\Hypertarget{rf24hubd_8h_aed24fc049dc5a6c8b3fd89e20c79be34}\label{rf24hubd_8h_aed24fc049dc5a6c8b3fd89e20c79be34}} 
+\index{rf24hubd.h@{rf24hubd.h}!udpdata@{udpdata}}
+\index{udpdata@{udpdata}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{udpdata}{udpdata}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structudpdata__t}{udpdata\+\_\+t}} udpdata}
+
+
+
+Die Udpdatastruktur als Variable. 
+
+\mbox{\Hypertarget{rf24hubd_8h_a2ac10a3f1b8393a2208b7dc7f6672704}\label{rf24hubd_8h_a2ac10a3f1b8393a2208b7dc7f6672704}} 
+\index{rf24hubd.h@{rf24hubd.h}!verboseLevel@{verboseLevel}}
+\index{verboseLevel@{verboseLevel}!rf24hubd.h@{rf24hubd.h}}
+\doxysubsubsection{\texorpdfstring{verboseLevel}{verboseLevel}}
+{\footnotesize\ttfamily uint16\+\_\+t verbose\+Level = \mbox{\hyperlink{group__cfgprm_ga6c4340ca162dd39191fb258fe86f573a}{STARTUPVERBOSELEVEL}}}
+
+
+
+Eine Variable für das aktuelle Verboselevel. 
+
+Die Variable verbose\+Level wird extern mitbenutzt. 

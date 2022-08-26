@@ -1,0 +1,92 @@
+\hypertarget{database_8h_source}{}\doxysection{database.\+h}
+\mbox{\hyperlink{database_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#ifndef \_DATABASE\_H\_   }}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#define \_DATABASE\_H\_}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#include <cstring>}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#include <unistd.h>}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#include <stdio.h>} }
+\DoxyCodeLine{20 \textcolor{preprocessor}{\#include <stdlib.h>}}
+\DoxyCodeLine{21 \textcolor{preprocessor}{\#include <time.h>} }
+\DoxyCodeLine{22 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{23 \textcolor{preprocessor}{\#include <mariadb/mysql.h>}}
+\DoxyCodeLine{24 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{rf24__config_8h}{rf24\_config.h}}"{}}}
+\DoxyCodeLine{25 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{rf24hub__config_8h}{rf24hub\_config.h}}"{}}}
+\DoxyCodeLine{26 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{common_8h}{common.h}}"{}}}
+\DoxyCodeLine{27 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{nodeclass_8h}{nodeclass.h}}"{}}}
+\DoxyCodeLine{28 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{sensorclass_8h}{sensorclass.h}}"{}}}
+\DoxyCodeLine{29 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{gatewayclass_8h}{gatewayclass.h}}"{}}}
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#define DB\_HOSTNAME\_SIZE 30}}
+\DoxyCodeLine{31 \textcolor{preprocessor}{\#define DB\_USERNAME\_SIZE 20}}
+\DoxyCodeLine{32 \textcolor{preprocessor}{\#define DB\_PASSWORD\_SIZE 20}}
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#define DB\_SCHEMA\_SIZE 20}}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{35 \textcolor{keyword}{using namespace }std; }
+\DoxyCodeLine{36 }
+\DoxyCodeLine{37 \textcolor{keyword}{class }\mbox{\hyperlink{classDatabase}{Database}} \{}
+\DoxyCodeLine{38 }
+\DoxyCodeLine{39 \textcolor{keyword}{private}:}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41     MYSQL*      db;}
+\DoxyCodeLine{42     MYSQL\_RES*  res;}
+\DoxyCodeLine{43     MYSQL\_ROW   row;}
+\DoxyCodeLine{44     \textcolor{keywordtype}{char}*       pEnd;}
+\DoxyCodeLine{45     \textcolor{keywordtype}{char}*       tsbuf;}
+\DoxyCodeLine{46     \textcolor{keywordtype}{char}*       sql\_stmt;}
+\DoxyCodeLine{47     uint16\_t    verboseLevel;}
+\DoxyCodeLine{48     \textcolor{keywordtype}{char}    db\_hostname[\mbox{\hyperlink{database_8h_a71badab0561d937f60e2f0b3d90b0ff4}{DB\_HOSTNAME\_SIZE}}+1];}
+\DoxyCodeLine{49     \textcolor{keywordtype}{char}    db\_username[\mbox{\hyperlink{database_8h_aad96d4cf533a55a27fdd9db4d57676b3}{DB\_USERNAME\_SIZE}}+1];}
+\DoxyCodeLine{50     \textcolor{keywordtype}{char}    db\_password[\mbox{\hyperlink{database_8h_a92c835ae2433795c105f0282d86dc978}{DB\_PASSWORD\_SIZE}}+1];}
+\DoxyCodeLine{51     \textcolor{keywordtype}{char}    db\_schema[\mbox{\hyperlink{database_8h_a3d236c022bad8359fd406f353a69296a}{DB\_SCHEMA\_SIZE}}+1];}
+\DoxyCodeLine{52     \textcolor{keywordtype}{int}     db\_port;}
+\DoxyCodeLine{53     \textcolor{keywordtype}{void} do\_sql(\textcolor{keywordtype}{char}* stmt);}
+\DoxyCodeLine{54     \textcolor{keywordtype}{void} debugPrintSQL(\textcolor{keywordtype}{char}* sqlstmt);}
+\DoxyCodeLine{55     \textcolor{keywordtype}{void} db\_check\_error(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{56     uint32\_t    mykey;}
+\DoxyCodeLine{57     }
+\DoxyCodeLine{58 }
+\DoxyCodeLine{62     \textcolor{keywordtype}{bool} connect(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{63     \textcolor{keywordtype}{bool} disconnect(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{64     }
+\DoxyCodeLine{65 \textcolor{keyword}{public}:}
+\DoxyCodeLine{66 }
+\DoxyCodeLine{71     \textcolor{keywordtype}{void} \mbox{\hyperlink{classDatabase_a9bc6c107fdce74c8d75ccd2e2978a92b}{setVerbose}}(uint16\_t \_verboseLevel);}
+\DoxyCodeLine{81     \textcolor{keywordtype}{bool} connect(\textcolor{keywordtype}{string} db\_hostname, \textcolor{keywordtype}{string} db\_username, \textcolor{keywordtype}{string} db\_password, \textcolor{keywordtype}{string} db\_schema, \textcolor{keywordtype}{int} db\_port);}
+\DoxyCodeLine{82 }
+\DoxyCodeLine{88    \textcolor{keywordtype}{void} \mbox{\hyperlink{classDatabase_a9fa9601b6f5a24f628a51685fbd731f9}{set\_Volt\_LV}}(\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}} node\_id, \textcolor{keywordtype}{float} volt\_LV);}
+\DoxyCodeLine{89    }
+\DoxyCodeLine{95     \textcolor{keywordtype}{void} \mbox{\hyperlink{classDatabase_aa1475d6e31a6a9117f87edc3156bcf03}{storeSensorValue}}(uint32\_t sensor\_id, \textcolor{keywordtype}{char}* value);}
+\DoxyCodeLine{96     }
+\DoxyCodeLine{103     \textcolor{keywordtype}{void} \mbox{\hyperlink{classDatabase_aed24791f665b60d9f3108aad82eb28b3}{storeNodeConfig}}(\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}} node\_id, uint8\_t channel, \textcolor{keywordtype}{char}* value);}
+\DoxyCodeLine{104 }
+\DoxyCodeLine{110     \textcolor{keywordtype}{void} \mbox{\hyperlink{classDatabase_a965b1f5fc54effcf2e8f3fc94eb8131a}{initSensor}}(\mbox{\hyperlink{classSensorClass}{SensorClass}}* \mbox{\hyperlink{rf24hubd_8h_a32b75ac9948db837416adb463c101ae7}{sensorClass}});}
+\DoxyCodeLine{111     }
+\DoxyCodeLine{117     \textcolor{keywordtype}{void} \mbox{\hyperlink{classDatabase_a14bf51ac805ea157223c7a1cb29c11c3}{initNode}}(\mbox{\hyperlink{classNodeClass}{NodeClass}}* \mbox{\hyperlink{rf24hubd_8h_a6f21c130ea438b6c54c3deb9a25901b2}{nodeClass}});}
+\DoxyCodeLine{118     }
+\DoxyCodeLine{124     \textcolor{keywordtype}{void} \mbox{\hyperlink{classDatabase_a409479c4647a926fd9cc771cdaa53fc0}{initGateway}}(\mbox{\hyperlink{classGatewayClass}{GatewayClass}}* \mbox{\hyperlink{rf24hubd_8h_a5d04e25b77f7ecfc9256335eac98b51f}{gatewayClass}});}
+\DoxyCodeLine{125     }
+\DoxyCodeLine{130     \textcolor{keywordtype}{void} \mbox{\hyperlink{classDatabase_a63afca68774fd4faaa85ec80f0df8908}{initSystem}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{131 }
+\DoxyCodeLine{135     \textcolor{keywordtype}{void} \mbox{\hyperlink{classDatabase_aa34470fdf087ea6b0960b0d97675498f}{rebuild\_sensordata\_d}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{136     }
+\DoxyCodeLine{140     \textcolor{keywordtype}{void} \mbox{\hyperlink{classDatabase_a9d551c009288ffe3da9a22c2f48b9f66}{sync\_sensordata\_d}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{141     }
+\DoxyCodeLine{145     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \mbox{\hyperlink{classDatabase_a4e28a24d04516fa49b0b002272cf68ce}{getBeginOfDay}}();}
+\DoxyCodeLine{146 }
+\DoxyCodeLine{152     \textcolor{keywordtype}{void} \mbox{\hyperlink{classDatabase_acf6dc74e76d9afb47173c29af9da32b6}{addGateway}}(\textcolor{keywordtype}{char}* gw\_hostname, uint16\_t gw\_no);}
+\DoxyCodeLine{153 }
+\DoxyCodeLine{158     \textcolor{keywordtype}{void} \mbox{\hyperlink{classDatabase_a12da257cf14167a4d356f2974fa58ccc}{delGateway}}(uint16\_t gw\_no);}
+\DoxyCodeLine{159 }
+\DoxyCodeLine{164     \textcolor{keywordtype}{void} \mbox{\hyperlink{classDatabase_a3fcc9f7098d8b40f2892c082ea61bdb0}{enableGateway}}(uint16\_t gw\_no);}
+\DoxyCodeLine{165 }
+\DoxyCodeLine{170     \textcolor{keywordtype}{void} \mbox{\hyperlink{classDatabase_af54268220c3c1239c51f1fde41540f38}{disableGateway}}(uint16\_t gw\_no);}
+\DoxyCodeLine{171 }
+\DoxyCodeLine{177     \textcolor{keywordtype}{void} \mbox{\hyperlink{classDatabase_a31e5aaf049add0c5410630a08268bb61}{updateNodeMastered}}(\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}} node\_id, \textcolor{keywordtype}{bool} isMastered);}
+\DoxyCodeLine{181     \mbox{\hyperlink{classDatabase_a65fe13accaa0205e66142103ed07258a}{Database}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{182 \};}
+\DoxyCodeLine{183 }
+\DoxyCodeLine{184 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// \_DATABASE\_H\_}}
+
+\end{DoxyCode}

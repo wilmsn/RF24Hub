@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structOrderBuffer_1_1orderbuffer__t" kind="struct" language="C++" prot="private">
+    <compoundname>OrderBuffer::orderbuffer_t</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structOrderBuffer_1_1orderbuffer__t_1aa03b97c8ad0ae0528b31a79fe0b67b5a" prot="public" static="no" mutable="no">
+        <type>uint64_t</type>
+        <definition>uint64_t OrderBuffer::orderbuffer_t::entrytime</definition>
+        <argsstring></argsstring>
+        <name>entrytime</name>
+        <qualifiedname>OrderBuffer::orderbuffer_t::entrytime</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" line="28" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structOrderBuffer_1_1orderbuffer__t_1a2188448f56add177ea12ea650f5e4c1b" prot="public" static="no" mutable="no">
+        <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+        <definition>NODE_DATTYPE OrderBuffer::orderbuffer_t::node_id</definition>
+        <argsstring></argsstring>
+        <name>node_id</name>
+        <qualifiedname>OrderBuffer::orderbuffer_t::node_id</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" line="29" column="24" bodyfile="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structOrderBuffer_1_1orderbuffer__t_1abfc56a92bd08b1076408b458164e66f4" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t OrderBuffer::orderbuffer_t::channel</definition>
+        <argsstring></argsstring>
+        <name>channel</name>
+        <qualifiedname>OrderBuffer::orderbuffer_t::channel</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" line="30" column="21" bodyfile="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structOrderBuffer_1_1orderbuffer__t_1a2a06eca7c25a8616f354db8837f1706c" prot="public" static="no" mutable="no">
+        <type>uint32_t</type>
+        <definition>uint32_t OrderBuffer::orderbuffer_t::utime</definition>
+        <argsstring></argsstring>
+        <name>utime</name>
+        <qualifiedname>OrderBuffer::orderbuffer_t::utime</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" line="31" column="25" bodyfile="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structOrderBuffer_1_1orderbuffer__t_1ae481a7752ed7366bcb8d3b3051a738ac" prot="public" static="no" mutable="no">
+        <type>uint32_t</type>
+        <definition>uint32_t OrderBuffer::orderbuffer_t::data</definition>
+        <argsstring></argsstring>
+        <name>data</name>
+        <qualifiedname>OrderBuffer::orderbuffer_t::data</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" line="32" column="25" bodyfile="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structOrderBuffer_1_1orderbuffer__t_1a6b4d86a88a5dbfb40f18ef42fb6b48d5" prot="public" static="no" mutable="no">
+        <type>orderbuffer_t *</type>
+        <definition>orderbuffer_t* OrderBuffer::orderbuffer_t::p_next</definition>
+        <argsstring></argsstring>
+        <name>p_next</name>
+        <qualifiedname>OrderBuffer::orderbuffer_t::p_next</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" line="33" column="24" bodyfile="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>OrderBuffer::orderbuffer_t</label>
+        <childnode refid="1" relation="usage">
+          <edgelabel>p_next</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" line="27" column="1" bodyfile="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" bodystart="27" bodyend="34"/>
+    <listofallmembers>
+      <member refid="structOrderBuffer_1_1orderbuffer__t_1abfc56a92bd08b1076408b458164e66f4" prot="public" virt="non-virtual"><scope>OrderBuffer::orderbuffer_t</scope><name>channel</name></member>
+      <member refid="structOrderBuffer_1_1orderbuffer__t_1ae481a7752ed7366bcb8d3b3051a738ac" prot="public" virt="non-virtual"><scope>OrderBuffer::orderbuffer_t</scope><name>data</name></member>
+      <member refid="structOrderBuffer_1_1orderbuffer__t_1aa03b97c8ad0ae0528b31a79fe0b67b5a" prot="public" virt="non-virtual"><scope>OrderBuffer::orderbuffer_t</scope><name>entrytime</name></member>
+      <member refid="structOrderBuffer_1_1orderbuffer__t_1a2188448f56add177ea12ea650f5e4c1b" prot="public" virt="non-virtual"><scope>OrderBuffer::orderbuffer_t</scope><name>node_id</name></member>
+      <member refid="structOrderBuffer_1_1orderbuffer__t_1a6b4d86a88a5dbfb40f18ef42fb6b48d5" prot="public" virt="non-virtual"><scope>OrderBuffer::orderbuffer_t</scope><name>p_next</name></member>
+      <member refid="structOrderBuffer_1_1orderbuffer__t_1a2a06eca7c25a8616f354db8837f1706c" prot="public" virt="non-virtual"><scope>OrderBuffer::orderbuffer_t</scope><name>utime</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

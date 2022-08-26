@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structthread__db__data" kind="struct" language="C++" prot="public">
+    <compoundname>thread_db_data</compoundname>
+    <includes refid="rf24hubd_8h" local="no">rf24hubd.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structthread__db__data_1ab9932db90b9a60fd2bf9f40702b64c28" prot="public" static="no" mutable="no">
+        <type>uint32_t</type>
+        <definition>uint32_t thread_db_data::sensor_id</definition>
+        <argsstring></argsstring>
+        <name>sensor_id</name>
+        <qualifiedname>thread_db_data::sensor_id</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="78" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" bodystart="78" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structthread__db__data_1a6d591c8384c70de6c37c04de0ab2c4ac" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char thread_db_data::buf[20]</definition>
+        <argsstring>[20]</argsstring>
+        <name>buf</name>
+        <qualifiedname>thread_db_data::buf</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="79" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" bodystart="79" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="77" column="1" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" bodystart="77" bodyend="80"/>
+    <listofallmembers>
+      <member refid="structthread__db__data_1a6d591c8384c70de6c37c04de0ab2c4ac" prot="public" virt="non-virtual"><scope>thread_db_data</scope><name>buf</name></member>
+      <member refid="structthread__db__data_1ab9932db90b9a60fd2bf9f40702b64c28" prot="public" virt="non-virtual"><scope>thread_db_data</scope><name>sensor_id</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

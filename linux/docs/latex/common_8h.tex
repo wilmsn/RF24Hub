@@ -1,0 +1,272 @@
+\hypertarget{common_8h}{}\doxysection{common.\+h File Reference}
+\label{common_8h}\index{common.h@{common.h}}
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$cstring$>$}\newline
+{\ttfamily \#include $<$ctype.\+h$>$}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+{\ttfamily \#include $<$sys/time.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include $<$sys/types.\+h$>$}\newline
+{\ttfamily \#include $<$sys/socket.\+h$>$}\newline
+{\ttfamily \#include $<$arpa/inet.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$netdb.\+h$>$}\newline
+{\ttfamily \#include $<$cstdio$>$}\newline
+{\ttfamily \#include $<$netinet/in.\+h$>$}\newline
+{\ttfamily \#include $<$fcntl.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}dataformat.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}rf24\+\_\+config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}version.\+h\char`\"{}}\newline
+Include dependency graph for common.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{common_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{common_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structTnData__t}{Tn\+Data\+\_\+t}}
+\item 
+struct \mbox{\hyperlink{structTnMsg__t}{Tn\+Msg\+\_\+t}}
+\item 
+struct \mbox{\hyperlink{structthread__tn__data}{thread\+\_\+tn\+\_\+data}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{common_8h_a32b5c6c372c524c9144fd368d586d4bb}{sock\+Type\+\_\+t}} \{ \mbox{\hyperlink{common_8h_a32b5c6c372c524c9144fd368d586d4bbaa040cd7feeb588104634cdadf35abf1c}{TCP}}
+, \mbox{\hyperlink{common_8h_a32b5c6c372c524c9144fd368d586d4bbadb542475cf9d0636e4225e216cee9ae6}{UDP}}
+ \}
+\begin{DoxyCompactList}\small\item\em Common functions used in rf24gwd and rf24hubd. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+char $\ast$ \mbox{\hyperlink{common_8h_a3492d22004148ae3319a0760867b0b02}{utime2str}} (time\+\_\+t utime, char $\ast$\mbox{\hyperlink{rf24hubd_8h_a1fe855c208bc17a51a4d34fefdb2d5b1}{buf}}, uint8\+\_\+t format)
+\item 
+char $\ast$ \mbox{\hyperlink{common_8h_a83eaed94816137f9fe9521a7946efff0}{ts}} (char $\ast$\mbox{\hyperlink{rf24hubd_8h_a1fe855c208bc17a51a4d34fefdb2d5b1}{buf}})
+\item 
+char $\ast$ \mbox{\hyperlink{common_8h_ae5bb0c43f76b886197ee48679f0e8dbc}{trim}} (char $\ast$s)
+\item 
+char $\ast$ \mbox{\hyperlink{common_8h_ab905ca9c82a764bd40d6ff0054d7c9f5}{alloc\+\_\+str}} (uint16\+\_\+t \mbox{\hyperlink{rf24hubd_8h_a2ac10a3f1b8393a2208b7dc7f6672704}{verbose\+Level}}, const char $\ast$msg\+Txt, size\+\_\+t size, char $\ast$timestring)
+\item 
+void \mbox{\hyperlink{common_8h_a878847cc41730df300c9ea6f9906756c}{free\+\_\+str}} (uint16\+\_\+t \mbox{\hyperlink{rf24hubd_8h_a2ac10a3f1b8393a2208b7dc7f6672704}{verbose\+Level}}, const char $\ast$msg\+Txt, char $\ast$str, char $\ast$timestring)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{common_8h_afab512e15911b8554463ad51246fe9d0}{mymillis}} (void)
+\item 
+char $\ast$ \mbox{\hyperlink{common_8h_afafa6fc1062835acb394ed23d75713aa}{print\+Verbose}} (uint16\+\_\+t \mbox{\hyperlink{rf24hubd_8h_a2ac10a3f1b8393a2208b7dc7f6672704}{verbose\+Level}}, char $\ast$\mbox{\hyperlink{rf24hubd_8h_a1fe855c208bc17a51a4d34fefdb2d5b1}{buf}})
+\item 
+uint16\+\_\+t \mbox{\hyperlink{common_8h_a938ac03956edbe8f3fb790224413be8f}{decode\+Verbose}} (uint16\+\_\+t \mbox{\hyperlink{rf24hubd_8h_a2ac10a3f1b8393a2208b7dc7f6672704}{verbose\+Level}}, char $\ast$verbose\+Set)
+\item 
+void \mbox{\hyperlink{common_8h_ac858321bf90c9e4a48b93c1cf636fa4d}{send\+Udp\+Message}} (const char $\ast$host, const char $\ast$port, \mbox{\hyperlink{structudpdata__t}{udpdata\+\_\+t}} $\ast$\mbox{\hyperlink{rf24hubd_8h_aed24fc049dc5a6c8b3fd89e20c79be34}{udpdata}})
+\item 
+bool \mbox{\hyperlink{common_8h_a7d5dae7e3622aa0e69d8531af6430829}{open\+Socket}} (const char $\ast$port, struct sockaddr\+\_\+in $\ast$address, int $\ast$handle, \mbox{\hyperlink{common_8h_a32b5c6c372c524c9144fd368d586d4bb}{sock\+Type\+\_\+t}} sock\+Type)
+\item 
+void \mbox{\hyperlink{common_8h_a78264021b512e588dbd4f8dfc393881c}{print\+Payload}} (char $\ast$\mbox{\hyperlink{common_8h_a83eaed94816137f9fe9521a7946efff0}{ts}}, const char $\ast$header, \mbox{\hyperlink{structpayload__t}{payload\+\_\+t}} $\ast$\mbox{\hyperlink{rf24gwd_8h_a9ab81a7ae17f3497b23bbccb020c3308}{payload}})
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{common_8h_a32b5c6c372c524c9144fd368d586d4bb}\label{common_8h_a32b5c6c372c524c9144fd368d586d4bb}} 
+\index{common.h@{common.h}!sockType\_t@{sockType\_t}}
+\index{sockType\_t@{sockType\_t}!common.h@{common.h}}
+\doxysubsubsection{\texorpdfstring{sockType\_t}{sockType\_t}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{common_8h_a32b5c6c372c524c9144fd368d586d4bb}{sock\+Type\+\_\+t}}}
+
+
+
+Common functions used in rf24gwd and rf24hubd. 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{TCP@{TCP}!common.h@{common.h}}\index{common.h@{common.h}!TCP@{TCP}}}\mbox{\Hypertarget{common_8h_a32b5c6c372c524c9144fd368d586d4bbaa040cd7feeb588104634cdadf35abf1c}\label{common_8h_a32b5c6c372c524c9144fd368d586d4bbaa040cd7feeb588104634cdadf35abf1c}} 
+TCP&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{UDP@{UDP}!common.h@{common.h}}\index{common.h@{common.h}!UDP@{UDP}}}\mbox{\Hypertarget{common_8h_a32b5c6c372c524c9144fd368d586d4bbadb542475cf9d0636e4225e216cee9ae6}\label{common_8h_a32b5c6c372c524c9144fd368d586d4bbadb542475cf9d0636e4225e216cee9ae6}} 
+UDP&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{common_8h_ab905ca9c82a764bd40d6ff0054d7c9f5}\label{common_8h_ab905ca9c82a764bd40d6ff0054d7c9f5}} 
+\index{common.h@{common.h}!alloc\_str@{alloc\_str}}
+\index{alloc\_str@{alloc\_str}!common.h@{common.h}}
+\doxysubsubsection{\texorpdfstring{alloc\_str()}{alloc\_str()}}
+{\footnotesize\ttfamily char $\ast$ alloc\+\_\+str (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{verbose\+Level,  }\item[{const char $\ast$}]{msg\+Txt,  }\item[{size\+\_\+t}]{size,  }\item[{char $\ast$}]{timestring }\end{DoxyParamCaption})}
+
+Ein Wrapper für malloc() mit folgenden Erweiterungen\+: Je nach aktuell gesetztem Verboselevel erfolgen Ausgaben 
+\begin{DoxyParams}{Parameters}
+{\em verbose\+Level} & Der aktuell gesetzte Verboselevel \\
+\hline
+{\em msg\+Txt} & Der Ausgabetext für Verbosemeldungen \\
+\hline
+{\em size} & Die mittels malloc() zu allokierende Speichergröße \\
+\hline
+{\em timestring} & Der aktuelle Timestring z.\+B. durch ts(buf) erzeugt \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Ein leerer String mit der Größe $<$size$>$ 
+\end{DoxyReturn}
+\mbox{\Hypertarget{common_8h_a938ac03956edbe8f3fb790224413be8f}\label{common_8h_a938ac03956edbe8f3fb790224413be8f}} 
+\index{common.h@{common.h}!decodeVerbose@{decodeVerbose}}
+\index{decodeVerbose@{decodeVerbose}!common.h@{common.h}}
+\doxysubsubsection{\texorpdfstring{decodeVerbose()}{decodeVerbose()}}
+{\footnotesize\ttfamily uint16\+\_\+t decode\+Verbose (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{verbose\+Level,  }\item[{char $\ast$}]{verbose\+Set }\end{DoxyParamCaption})}
+
+Ermittelt den Binärwert eines neuen Verboselevels 
+\begin{DoxyParams}{Parameters}
+{\em verbose\+Level} & Der alte Verboselevel als binärwert \\
+\hline
+{\em verbose\+Set} & Der neue Verboselevel als String, z.\+B. rf24 \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Der neu Verboselevel als binärwert 
+\end{DoxyReturn}
+\mbox{\Hypertarget{common_8h_a878847cc41730df300c9ea6f9906756c}\label{common_8h_a878847cc41730df300c9ea6f9906756c}} 
+\index{common.h@{common.h}!free\_str@{free\_str}}
+\index{free\_str@{free\_str}!common.h@{common.h}}
+\doxysubsubsection{\texorpdfstring{free\_str()}{free\_str()}}
+{\footnotesize\ttfamily void free\+\_\+str (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{verbose\+Level,  }\item[{const char $\ast$}]{msg\+Txt,  }\item[{char $\ast$}]{str,  }\item[{char $\ast$}]{timestring }\end{DoxyParamCaption})}
+
+Ein Wrapper für free() mit folgenden Erweiterungen\+: Je nach aktuell gesetztem Verboselevel erfolgen Ausgaben 
+\begin{DoxyParams}{Parameters}
+{\em verbose\+Level} & Der aktuell gesetzte Verboselevel \\
+\hline
+{\em msg\+Txt} & Der Ausgabetext für Verbosemeldungen \\
+\hline
+{\em str} & Ein zuvor mit alloc\+\_\+str reservierter String(\+Speicherbereich) \\
+\hline
+{\em timestring} & Der aktuelle Timestring z.\+B. durch ts(buf) erzeugt \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{common_8h_afab512e15911b8554463ad51246fe9d0}\label{common_8h_afab512e15911b8554463ad51246fe9d0}} 
+\index{common.h@{common.h}!mymillis@{mymillis}}
+\index{mymillis@{mymillis}!common.h@{common.h}}
+\doxysubsubsection{\texorpdfstring{mymillis()}{mymillis()}}
+{\footnotesize\ttfamily uint64\+\_\+t mymillis (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Bildet den Unix Timestamp erweitert um Millisekunden ab \begin{DoxyReturn}{Returns}
+Der erweiterte Timestamp 
+\end{DoxyReturn}
+\mbox{\Hypertarget{common_8h_a7d5dae7e3622aa0e69d8531af6430829}\label{common_8h_a7d5dae7e3622aa0e69d8531af6430829}} 
+\index{common.h@{common.h}!openSocket@{openSocket}}
+\index{openSocket@{openSocket}!common.h@{common.h}}
+\doxysubsubsection{\texorpdfstring{openSocket()}{openSocket()}}
+{\footnotesize\ttfamily bool open\+Socket (\begin{DoxyParamCaption}\item[{const char $\ast$}]{port,  }\item[{struct sockaddr\+\_\+in $\ast$}]{address,  }\item[{int $\ast$}]{handle,  }\item[{\mbox{\hyperlink{common_8h_a32b5c6c372c524c9144fd368d586d4bb}{sock\+Type\+\_\+t}}}]{sock\+Type }\end{DoxyParamCaption})}
+
+Öffnet ein Socket auf dem localen Host 
+\begin{DoxyParams}{Parameters}
+{\em port} & Der zu öffnede Port \\
+\hline
+{\em address} & Eine leere Varaible vom Typ \\
+\hline
+{\em handle} & Ein Pointer auf eine INT Variable -\/ Der Filehandler für dieses Socket \\
+\hline
+{\em sock\+Type} & Typ des Sockets\+: UDP oder TCP \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{common_8h_a78264021b512e588dbd4f8dfc393881c}\label{common_8h_a78264021b512e588dbd4f8dfc393881c}} 
+\index{common.h@{common.h}!printPayload@{printPayload}}
+\index{printPayload@{printPayload}!common.h@{common.h}}
+\doxysubsubsection{\texorpdfstring{printPayload()}{printPayload()}}
+{\footnotesize\ttfamily void print\+Payload (\begin{DoxyParamCaption}\item[{char $\ast$}]{ts,  }\item[{const char $\ast$}]{header,  }\item[{\mbox{\hyperlink{structpayload__t}{payload\+\_\+t}} $\ast$}]{payload }\end{DoxyParamCaption})}
+
+Druckt den übergebenen payload in den STDIO 
+\begin{DoxyParams}{Parameters}
+{\em ts} & Ein gültiges array of char mit dem Timestamp \\
+\hline
+{\em header} & Ein vor dem Payload zu druckener Text \\
+\hline
+{\em payload} & der zu druckende Payload \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{common_8h_afafa6fc1062835acb394ed23d75713aa}\label{common_8h_afafa6fc1062835acb394ed23d75713aa}} 
+\index{common.h@{common.h}!printVerbose@{printVerbose}}
+\index{printVerbose@{printVerbose}!common.h@{common.h}}
+\doxysubsubsection{\texorpdfstring{printVerbose()}{printVerbose()}}
+{\footnotesize\ttfamily char $\ast$ print\+Verbose (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{verbose\+Level,  }\item[{char $\ast$}]{buf }\end{DoxyParamCaption})}
+
+Gibt das aktuelle Verboselevel aus 
+\begin{DoxyParams}{Parameters}
+{\em buf} & Hier muss ein gültiges CHAR Array übergeben werden \\
+\hline
+{\em verbose\+Level} & Der aktuelle Verboselevel \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{common_8h_ac858321bf90c9e4a48b93c1cf636fa4d}\label{common_8h_ac858321bf90c9e4a48b93c1cf636fa4d}} 
+\index{common.h@{common.h}!sendUdpMessage@{sendUdpMessage}}
+\index{sendUdpMessage@{sendUdpMessage}!common.h@{common.h}}
+\doxysubsubsection{\texorpdfstring{sendUdpMessage()}{sendUdpMessage()}}
+{\footnotesize\ttfamily void send\+Udp\+Message (\begin{DoxyParamCaption}\item[{const char $\ast$}]{host,  }\item[{const char $\ast$}]{port,  }\item[{\mbox{\hyperlink{structudpdata__t}{udpdata\+\_\+t}} $\ast$}]{udpdata }\end{DoxyParamCaption})}
+
+Verschickt eine UDP Nachricht 
+\begin{DoxyParams}{Parameters}
+{\em host} & Der Empfängerhost \\
+\hline
+{\em port} & Der UDP Port auf dem Empfängerhost \\
+\hline
+{\em udpdata} & Die zu übertragenen Daten als Datentyp \mbox{\hyperlink{structudpdata__t}{udpdata\+\_\+t}} \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{common_8h_ae5bb0c43f76b886197ee48679f0e8dbc}\label{common_8h_ae5bb0c43f76b886197ee48679f0e8dbc}} 
+\index{common.h@{common.h}!trim@{trim}}
+\index{trim@{trim}!common.h@{common.h}}
+\doxysubsubsection{\texorpdfstring{trim()}{trim()}}
+{\footnotesize\ttfamily char $\ast$ trim (\begin{DoxyParamCaption}\item[{char $\ast$}]{s }\end{DoxyParamCaption})}
+
+trim\+: get rid of trailing and leading whitespace... ...including the annoying \char`\"{}\textbackslash{}n\char`\"{} from fgets() 
+\begin{DoxyParams}{Parameters}
+{\em s} & Eingabestring (schmutzig) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Ausgabestring (gereinigt) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{common_8h_a83eaed94816137f9fe9521a7946efff0}\label{common_8h_a83eaed94816137f9fe9521a7946efff0}} 
+\index{common.h@{common.h}!ts@{ts}}
+\index{ts@{ts}!common.h@{common.h}}
+\doxysubsubsection{\texorpdfstring{ts()}{ts()}}
+{\footnotesize\ttfamily char $\ast$ ts (\begin{DoxyParamCaption}\item[{char $\ast$}]{buf }\end{DoxyParamCaption})}
+
+Erzeugt einen aktuellen Zeitstempel zur Verwendung in Log-\/\+Ausgaben. Wichtig\+: Es muss ein Buffer übergeben werden, der diesen Zeitstempel komplett aufnehmen kann! 
+\begin{DoxyParams}{Parameters}
+{\em Der} & Buffer zur Aufnahme des Zeitstempels \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Der Zeitstempel als String 
+\end{DoxyReturn}
+\mbox{\Hypertarget{common_8h_a3492d22004148ae3319a0760867b0b02}\label{common_8h_a3492d22004148ae3319a0760867b0b02}} 
+\index{common.h@{common.h}!utime2str@{utime2str}}
+\index{utime2str@{utime2str}!common.h@{common.h}}
+\doxysubsubsection{\texorpdfstring{utime2str()}{utime2str()}}
+{\footnotesize\ttfamily char $\ast$ utime2str (\begin{DoxyParamCaption}\item[{time\+\_\+t}]{utime,  }\item[{char $\ast$}]{buf,  }\item[{uint8\+\_\+t}]{format }\end{DoxyParamCaption})}
+
+utime2str\+: konvertiert den übergebenen Unix Zeitstempel utime in einen String Ist utime = 0 wird die aktuelle Zeit genommen. Für form gilt\+: 1 =\texorpdfstring{$>$}{>} 20.\+04.\+2020 18\+:38\+:17 2 =\texorpdfstring{$>$}{>} 2020.\+04.\+20 18\+:38\+:17 Wichtig\+: Es muss ein Speicherplatz buf zur Aufnahme des Strings ( Grösse 20 Byte ) übergeben werden! 
+\begin{DoxyParams}{Parameters}
+{\em utime} & Unix Timestamp \\
+\hline
+{\em buf} & Ein Puffer zur Aufnahme des Ausgabestrings. Muss groß genug sein um den Ausgabestring komplett aufnehem zu können. \\
+\hline
+{\em format} & Bestimmt das Ausgabeformat des Zeitstrings\+: \char`\"{}1\char`\"{} =\texorpdfstring{$>$}{>} \char`\"{}\+Tag.\+Monat.\+Jahr Stunde\+:\+Minute\+:\+Sekunde\char`\"{}; \char`\"{}2\char`\"{} =\texorpdfstring{$>$}{>} \char`\"{}\+Jahr.\+Monat.\+Tag Stunde\+:\+Minute\+:\+Sekunde\char`\"{} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Der Zeitstring 
+\end{DoxyReturn}

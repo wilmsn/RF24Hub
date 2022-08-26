@@ -1,0 +1,449 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classOrderBuffer" kind="class" language="C++" prot="public">
+    <compoundname>OrderBuffer</compoundname>
+    <includes refid="orderbuffer_8h" local="no">orderbuffer.h</includes>
+    <innerclass refid="structOrderBuffer_1_1orderbuffer__t" prot="private">OrderBuffer::orderbuffer_t</innerclass>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classOrderBuffer_1a8654efe1bec04c71acfd000d6d45f071" prot="private" static="no" mutable="no">
+        <type>orderbuffer_t *</type>
+        <definition>orderbuffer_t* OrderBuffer::p_initial</definition>
+        <argsstring></argsstring>
+        <name>p_initial</name>
+        <qualifiedname>OrderBuffer::p_initial</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" line="35" column="19" bodyfile="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classOrderBuffer_1a1e7222603902feb59f6cbbb936ba2478" prot="private" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* OrderBuffer::buf</definition>
+        <argsstring></argsstring>
+        <name>buf</name>
+        <qualifiedname>OrderBuffer::buf</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" line="39" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classOrderBuffer_1a9bfde4e194933a5f242cfba2750bbd85" prot="private" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* OrderBuffer::buf1</definition>
+        <argsstring></argsstring>
+        <name>buf1</name>
+        <qualifiedname>OrderBuffer::buf1</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" line="40" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classOrderBuffer_1a5d4170f319bd1be9586af777109df1e1" prot="private" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* OrderBuffer::tsbuf</definition>
+        <argsstring></argsstring>
+        <name>tsbuf</name>
+        <qualifiedname>OrderBuffer::tsbuf</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" line="44" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classOrderBuffer_1af127dcde20847270cb8be27decb873be" prot="private" static="no" mutable="no">
+        <type>uint16_t</type>
+        <definition>uint16_t OrderBuffer::verboseLevel</definition>
+        <argsstring></argsstring>
+        <name>verboseLevel</name>
+        <qualifiedname>OrderBuffer::verboseLevel</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" line="48" column="13" bodyfile="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classOrderBuffer_1a5a2683f04150f0138821ebefe118afac" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void OrderBuffer::newEntry</definition>
+        <argsstring>(orderbuffer_t *)</argsstring>
+        <name>newEntry</name>
+        <qualifiedname>OrderBuffer::newEntry</qualifiedname>
+        <param>
+          <type>orderbuffer_t *</type>
+          <defname>p_new</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" line="52" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/orderbuffer.cpp" bodystart="11" bodyend="33"/>
+      </memberdef>
+      <memberdef kind="function" id="classOrderBuffer_1a91d234fb33d8fc4a262b3ec9a133b5d6" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool OrderBuffer::delEntry</definition>
+        <argsstring>(orderbuffer_t *)</argsstring>
+        <name>delEntry</name>
+        <qualifiedname>OrderBuffer::delEntry</qualifiedname>
+        <param>
+          <type>orderbuffer_t *</type>
+          <defname>p_del</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" line="56" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/orderbuffer.cpp" bodystart="35" bodyend="63"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classOrderBuffer_1ac2e46ceea9fd69bc594ec75eb9b84749" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void OrderBuffer::setVerbose</definition>
+        <argsstring>(uint16_t _verboseLevel)</argsstring>
+        <name>setVerbose</name>
+        <qualifiedname>OrderBuffer::setVerbose</qualifiedname>
+        <param>
+          <type>uint16_t</type>
+          <declname>_verboseLevel</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Setzt den Verboselevel. Mögliche Level sind in den Makros VERBOSE* in <ref refid="config_8h" kindref="compound">config.h</ref> definiert. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>verboseLevel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der aktuelle Verboselevel </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" line="64" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/orderbuffer.cpp" bodystart="191" bodyend="193"/>
+      </memberdef>
+      <memberdef kind="function" id="classOrderBuffer_1ac54dc8c5c0db25872e62e98fc34c63ac" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void *</type>
+        <definition>void * OrderBuffer::findOrder4Node</definition>
+        <argsstring>(NODE_DATTYPE node_id, void *p_last, uint32_t *p_data)</argsstring>
+        <name>findOrder4Node</name>
+        <qualifiedname>OrderBuffer::findOrder4Node</qualifiedname>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+          <declname>node_id</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>p_last</declname>
+        </param>
+        <param>
+          <type>uint32_t *</type>
+          <declname>p_data</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="note"><para>Ruft den nächsten Record für einen Node ab. Initialer Aufruf mit p_last = NULL. Beim nächsten Aufruf wird der Rückgabewert des letzten Aufrufs bei p_last übergeben </para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Node_ID </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>p_last</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Beim ersten Aufruf NULL, sonst den Rückgabewert des letzten Aufrufs. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>p_data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer auf ein data Feld. Dieses Feld ist nach dem Aufruf gefüllt. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Ein gesetzter Pointer wenn ein Datensatz gefunden wurde, sonst NULL. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" line="76" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/orderbuffer.cpp" bodystart="139" bodyend="158"/>
+      </memberdef>
+      <memberdef kind="function" id="classOrderBuffer_1abf623ccfc9b7b1a0ddda35d6ba866c9c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void OrderBuffer::addOrderBuffer</definition>
+        <argsstring>(uint64_t millis, NODE_DATTYPE node_id, uint8_t channel, uint32_t data)</argsstring>
+        <name>addOrderBuffer</name>
+        <qualifiedname>OrderBuffer::addOrderBuffer</qualifiedname>
+        <param>
+          <type>uint64_t</type>
+          <declname>millis</declname>
+        </param>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+          <declname>node_id</declname>
+        </param>
+        <param>
+          <type>uint8_t</type>
+          <declname>channel</declname>
+        </param>
+        <param>
+          <type>uint32_t</type>
+          <declname>data</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Fügt einen neuen record ein <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>millis</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der aktuelle Zeitstempel mit <ref refid="common_8cpp_1afab512e15911b8554463ad51246fe9d0" kindref="member">mymillis()</ref> erzeugt </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Node_ID </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Channel </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die zu übermittelnden Daten als Transportwert </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" line="85" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/orderbuffer.cpp" bodystart="126" bodyend="137"/>
+      </memberdef>
+      <memberdef kind="function" id="classOrderBuffer_1afe3f5105c21e7f9926283f21dd473c9c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool OrderBuffer::delByNodeChannel</definition>
+        <argsstring>(NODE_DATTYPE node_id, uint8_t channel)</argsstring>
+        <name>delByNodeChannel</name>
+        <qualifiedname>OrderBuffer::delByNodeChannel</qualifiedname>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+          <declname>node_id</declname>
+        </param>
+        <param>
+          <type>uint8_t</type>
+          <declname>channel</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Löscht den record für die übergebe Kombinaltion von node_id und channel <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Node_ID </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Channel </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>&quot;true&quot; wenn erfolgreich, sonst &quot;false&quot; </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" line="93" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/orderbuffer.cpp" bodystart="65" bodyend="87"/>
+      </memberdef>
+      <memberdef kind="function" id="classOrderBuffer_1a04559ae9a12bd0b6179424cb6bee347b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool OrderBuffer::delByNode</definition>
+        <argsstring>(NODE_DATTYPE node_id)</argsstring>
+        <name>delByNode</name>
+        <qualifiedname>OrderBuffer::delByNode</qualifiedname>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+          <declname>node_id</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Löscht alle records für die übergebene node_id <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Node_ID </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>&quot;true&quot; wenn erfolgreich, sonst &quot;false&quot; </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" line="100" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/orderbuffer.cpp" bodystart="89" bodyend="109"/>
+      </memberdef>
+      <memberdef kind="function" id="classOrderBuffer_1a0a57a5e89ee6fa874f8ffdc19100495e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool OrderBuffer::nodeHasEntry</definition>
+        <argsstring>(NODE_DATTYPE node_id)</argsstring>
+        <name>nodeHasEntry</name>
+        <qualifiedname>OrderBuffer::nodeHasEntry</qualifiedname>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+          <declname>node_id</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Gibt es mindestens einen record für den übergebenen node_id? <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Node_ID </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>&quot;true&quot; wenn Records vorhanden, sonst &quot;false&quot; </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" line="107" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/orderbuffer.cpp" bodystart="111" bodyend="124"/>
+      </memberdef>
+      <memberdef kind="function" id="classOrderBuffer_1a2e572634d52e8bb3e01ef876c9c73780" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void OrderBuffer::printBuffer</definition>
+        <argsstring>(int out_socket, bool htmlFormat)</argsstring>
+        <name>printBuffer</name>
+        <qualifiedname>OrderBuffer::printBuffer</qualifiedname>
+        <param>
+          <type>int</type>
+          <declname>out_socket</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>htmlFormat</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Druckt alle records im Buffer in den out_socket. out_socket ist dabei ein gültiger socket file descriptor entweder aus accept für einen socket oder mittels fileno(stdout) für den stdout Der zweite Parameter bestimmt das Format, true =&gt; HTML Format; false =&gt; Textformat <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>tn_socket</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Das aktuelle Socket zur Ausgabe </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>htmlformat</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>&quot;true&quot; liefert die Ausgabe im HTML Format, &quot;false&quot; im Textformat </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" line="119" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/orderbuffer.cpp" bodystart="160" bodyend="189"/>
+      </memberdef>
+      <memberdef kind="function" id="classOrderBuffer_1ad1d77cfabad48e73a59caf09be2d1a16" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>OrderBuffer::OrderBuffer</definition>
+        <argsstring>(void)</argsstring>
+        <name>OrderBuffer</name>
+        <qualifiedname>OrderBuffer::OrderBuffer</qualifiedname>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" line="121" column="1" bodyfile="/stick/netz/projekte/RF24Hub/linux/orderbuffer.cpp" bodystart="3" bodyend="9"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" line="23" column="1" bodyfile="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h" bodystart="23" bodyend="123"/>
+    <listofallmembers>
+      <member refid="classOrderBuffer_1abf623ccfc9b7b1a0ddda35d6ba866c9c" prot="public" virt="non-virtual"><scope>OrderBuffer</scope><name>addOrderBuffer</name></member>
+      <member refid="classOrderBuffer_1a1e7222603902feb59f6cbbb936ba2478" prot="private" virt="non-virtual"><scope>OrderBuffer</scope><name>buf</name></member>
+      <member refid="classOrderBuffer_1a9bfde4e194933a5f242cfba2750bbd85" prot="private" virt="non-virtual"><scope>OrderBuffer</scope><name>buf1</name></member>
+      <member refid="classOrderBuffer_1a04559ae9a12bd0b6179424cb6bee347b" prot="public" virt="non-virtual"><scope>OrderBuffer</scope><name>delByNode</name></member>
+      <member refid="classOrderBuffer_1afe3f5105c21e7f9926283f21dd473c9c" prot="public" virt="non-virtual"><scope>OrderBuffer</scope><name>delByNodeChannel</name></member>
+      <member refid="classOrderBuffer_1a91d234fb33d8fc4a262b3ec9a133b5d6" prot="private" virt="non-virtual"><scope>OrderBuffer</scope><name>delEntry</name></member>
+      <member refid="classOrderBuffer_1ac54dc8c5c0db25872e62e98fc34c63ac" prot="public" virt="non-virtual"><scope>OrderBuffer</scope><name>findOrder4Node</name></member>
+      <member refid="classOrderBuffer_1a5a2683f04150f0138821ebefe118afac" prot="private" virt="non-virtual"><scope>OrderBuffer</scope><name>newEntry</name></member>
+      <member refid="classOrderBuffer_1a0a57a5e89ee6fa874f8ffdc19100495e" prot="public" virt="non-virtual"><scope>OrderBuffer</scope><name>nodeHasEntry</name></member>
+      <member refid="classOrderBuffer_1ad1d77cfabad48e73a59caf09be2d1a16" prot="public" virt="non-virtual"><scope>OrderBuffer</scope><name>OrderBuffer</name></member>
+      <member refid="classOrderBuffer_1a8654efe1bec04c71acfd000d6d45f071" prot="private" virt="non-virtual"><scope>OrderBuffer</scope><name>p_initial</name></member>
+      <member refid="classOrderBuffer_1a2e572634d52e8bb3e01ef876c9c73780" prot="public" virt="non-virtual"><scope>OrderBuffer</scope><name>printBuffer</name></member>
+      <member refid="classOrderBuffer_1ac2e46ceea9fd69bc594ec75eb9b84749" prot="public" virt="non-virtual"><scope>OrderBuffer</scope><name>setVerbose</name></member>
+      <member refid="classOrderBuffer_1a5d4170f319bd1be9586af777109df1e1" prot="private" virt="non-virtual"><scope>OrderBuffer</scope><name>tsbuf</name></member>
+      <member refid="classOrderBuffer_1af127dcde20847270cb8be27decb873be" prot="private" virt="non-virtual"><scope>OrderBuffer</scope><name>verboseLevel</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="group__rf24makros" kind="group">
+    <compoundname>rf24makros</compoundname>
+    <title>RF24 Makros</title>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="group__rf24makros_1ga79c4f3ace1ef49486708487f8c2ecd29" prot="public" static="no">
+        <name>RF24_CHANNEL</name>
+        <initializer>95</initializer>
+        <briefdescription>
+<para>Der verwendete RF24 Funkkanal. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="18" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__rf24makros_1ga7a81650373c02155ba2adab775a611d9" prot="public" static="no">
+        <name>RF24_SPEED</name>
+        <initializer>RF24_250KBPS</initializer>
+        <briefdescription>
+<para>Die Übertragungsgeschwindigkeit. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="20" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__rf24makros_1ga09f69030b8d9ea328b68d9094f8fee10" prot="public" static="no">
+        <name>RF24_HUB2NODE</name>
+        <initializer>{ 0xf0, 0xcc, 0xfc, 0xcc, 0xcc}</initializer>
+        <briefdescription>
+<para>Der Netzwerkschlüssel Hub zum Node. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="22" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__rf24makros_1ga0d59bcd261338d1bef2ac25f7ce555ca" prot="public" static="no">
+        <name>RF24_NODE2HUB</name>
+        <initializer>{ 0x33, 0xcc, 0xfc, 0xcc, 0xcc}</initializer>
+        <briefdescription>
+<para>Der Netzwerkschlüssel Node zum Hub. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="24" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__rf24makros_1ga030de4f033221607739a15cb52508022" prot="public" static="no">
+        <name>NODE_DATTYPE</name>
+        <initializer>uint8_t</initializer>
+        <briefdescription>
+<para>Der Datentyp für die Node_ID. Ist aktuell auf 1...255 festgelegt. Werden mehr Nodes benötigt, kann der Datentyp hier zentral umgestellt werden. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="26" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__rf24makros_1gac284fce722a0be7bec73e511dc3f2bbd" prot="public" static="no">
+        <name>ONR_DATTYPE</name>
+        <initializer>uint8_t</initializer>
+        <briefdescription>
+<para>Der Datentyp für die Ordernummer. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="28" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Definition der RF24 Netzwerk Einstellungen. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

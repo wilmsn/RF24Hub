@@ -1,0 +1,167 @@
+\hypertarget{classGatewayClass}{}\doxysection{Gateway\+Class Class Reference}
+\label{classGatewayClass}\index{GatewayClass@{GatewayClass}}
+
+
+{\ttfamily \#include $<$gatewayclass.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void $\ast$ \mbox{\hyperlink{classGatewayClass_a2fdfc5f5e6b91d13c29f9d4b278c8377}{get\+Gateway}} (void $\ast$p\+\_\+rec, char $\ast$gw\+\_\+hostname, uint16\+\_\+t $\ast$p\+\_\+gw\+\_\+no)
+\item 
+void \mbox{\hyperlink{classGatewayClass_aadf30dc0ff1c8a84347712dc70f31f01}{set\+Verbose}} (uint16\+\_\+t \+\_\+verbose\+Level)
+\item 
+bool \mbox{\hyperlink{classGatewayClass_acbabdfc75f98783038e00e5359a168b3}{has\+Entry}} (void)
+\item 
+void \mbox{\hyperlink{classGatewayClass_a45ff71f99c461140613be7fbac5ed535}{cleanup}} (void)
+\item 
+void \mbox{\hyperlink{classGatewayClass_ae0030f1970133ce2b1fe8f758fd2639e}{gw\+\_\+contact}} (uint16\+\_\+t gw\+\_\+no)
+\item 
+void \mbox{\hyperlink{classGatewayClass_a071bfc650e553ed979b138a020b5adc5}{add\+Gateway}} (char $\ast$gw\+\_\+hostname, uint16\+\_\+t gw\+\_\+no, bool is\+Active)
+\item 
+void \mbox{\hyperlink{classGatewayClass_a98ff39cc2f3954ddc664375080389233}{del\+Gateway}} (uint16\+\_\+t gw\+\_\+no)
+\item 
+void \mbox{\hyperlink{classGatewayClass_af100d0a602c77a2d7b4be5fc59ac07de}{set\+Gateway}} (uint16\+\_\+t gw\+\_\+no, bool is\+Active)
+\item 
+bool \mbox{\hyperlink{classGatewayClass_abf334658a2bf4be83592dcfcba3b99e1}{is\+Gateway}} (uint16\+\_\+t gw\+\_\+no)
+\item 
+void \mbox{\hyperlink{classGatewayClass_a1f72467b42d2835f3f39c12b34b116a8}{print\+Buffer}} (int tn\+\_\+socket, bool htmlformat)
+\item 
+\mbox{\hyperlink{classGatewayClass_ac5d9184f20247ca917c19f51b1b20a55}{Gateway\+Class}} (void)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classGatewayClass_ac5d9184f20247ca917c19f51b1b20a55}\label{classGatewayClass_ac5d9184f20247ca917c19f51b1b20a55}} 
+\index{GatewayClass@{GatewayClass}!GatewayClass@{GatewayClass}}
+\index{GatewayClass@{GatewayClass}!GatewayClass@{GatewayClass}}
+\doxysubsubsection{\texorpdfstring{GatewayClass()}{GatewayClass()}}
+{\footnotesize\ttfamily Gateway\+Class\+::\+Gateway\+Class (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Construktor des Buffers 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classGatewayClass_a071bfc650e553ed979b138a020b5adc5}\label{classGatewayClass_a071bfc650e553ed979b138a020b5adc5}} 
+\index{GatewayClass@{GatewayClass}!addGateway@{addGateway}}
+\index{addGateway@{addGateway}!GatewayClass@{GatewayClass}}
+\doxysubsubsection{\texorpdfstring{addGateway()}{addGateway()}}
+{\footnotesize\ttfamily void Gateway\+Class\+::add\+Gateway (\begin{DoxyParamCaption}\item[{char $\ast$}]{gw\+\_\+hostname,  }\item[{uint16\+\_\+t}]{gw\+\_\+no,  }\item[{bool}]{is\+Active }\end{DoxyParamCaption})}
+
+Fügt einen neuen Gateway hinzu 
+\begin{DoxyParams}{Parameters}
+{\em gw\+\_\+hostname} & Der Hostname mit Domaine des Gateways \\
+\hline
+{\em gw\+\_\+no} & Die Nummer des Gateways \\
+\hline
+{\em is\+Active} & Statusflag ob dieser Gateway aktiv (=true) ist oder inaktiv (=false) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classGatewayClass_a45ff71f99c461140613be7fbac5ed535}\label{classGatewayClass_a45ff71f99c461140613be7fbac5ed535}} 
+\index{GatewayClass@{GatewayClass}!cleanup@{cleanup}}
+\index{cleanup@{cleanup}!GatewayClass@{GatewayClass}}
+\doxysubsubsection{\texorpdfstring{cleanup()}{cleanup()}}
+{\footnotesize\ttfamily void Gateway\+Class\+::cleanup (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Löscht den kompletten Inhalt und leert den Buffer \mbox{\Hypertarget{classGatewayClass_a98ff39cc2f3954ddc664375080389233}\label{classGatewayClass_a98ff39cc2f3954ddc664375080389233}} 
+\index{GatewayClass@{GatewayClass}!delGateway@{delGateway}}
+\index{delGateway@{delGateway}!GatewayClass@{GatewayClass}}
+\doxysubsubsection{\texorpdfstring{delGateway()}{delGateway()}}
+{\footnotesize\ttfamily void Gateway\+Class\+::del\+Gateway (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{gw\+\_\+no }\end{DoxyParamCaption})}
+
+Entfernt einen Gateway 
+\begin{DoxyParams}{Parameters}
+{\em gw\+\_\+no} & Die Nummer des Gateways \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classGatewayClass_a2fdfc5f5e6b91d13c29f9d4b278c8377}\label{classGatewayClass_a2fdfc5f5e6b91d13c29f9d4b278c8377}} 
+\index{GatewayClass@{GatewayClass}!getGateway@{getGateway}}
+\index{getGateway@{getGateway}!GatewayClass@{GatewayClass}}
+\doxysubsubsection{\texorpdfstring{getGateway()}{getGateway()}}
+{\footnotesize\ttfamily void $\ast$ Gateway\+Class\+::get\+Gateway (\begin{DoxyParamCaption}\item[{void $\ast$}]{p\+\_\+rec,  }\item[{char $\ast$}]{gw\+\_\+hostname,  }\item[{uint16\+\_\+t $\ast$}]{p\+\_\+gw\+\_\+no }\end{DoxyParamCaption})}
+
+Gibt den Pointer auf einen Gateway zurück Mit einem NULL Pointer wird die erste IP und ein Pointer auf den nächsten Record zurückgegeben. Wenn ein NULL Pointer zurückgegeben wird, dann war es der letzte Record 
+\begin{DoxyParams}{Parameters}
+{\em p\+\_\+rec} & Ein Pointer auf die Gatewaystruktur \\
+\hline
+{\em gw\+\_\+hostname} & Ein Pointer zur Aufnahme des Hostnames des Gateways (Wird von der Prozedur gefüllt) \\
+\hline
+{\em p\+\_\+gw\+\_\+no} & Ein Pointer zur Aufnahme der Gatewaynummer (Wird von der Prozedur gefüllt) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classGatewayClass_ae0030f1970133ce2b1fe8f758fd2639e}\label{classGatewayClass_ae0030f1970133ce2b1fe8f758fd2639e}} 
+\index{GatewayClass@{GatewayClass}!gw\_contact@{gw\_contact}}
+\index{gw\_contact@{gw\_contact}!GatewayClass@{GatewayClass}}
+\doxysubsubsection{\texorpdfstring{gw\_contact()}{gw\_contact()}}
+{\footnotesize\ttfamily void Gateway\+Class\+::gw\+\_\+contact (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{gw\+\_\+no }\end{DoxyParamCaption})}
+
+Setzt ein Update auf den Zeitstempel des letzten Kontaktes zu diesem Gateway 
+\begin{DoxyParams}{Parameters}
+{\em gw\+\_\+no} & Die Gatewaynummer \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classGatewayClass_acbabdfc75f98783038e00e5359a168b3}\label{classGatewayClass_acbabdfc75f98783038e00e5359a168b3}} 
+\index{GatewayClass@{GatewayClass}!hasEntry@{hasEntry}}
+\index{hasEntry@{hasEntry}!GatewayClass@{GatewayClass}}
+\doxysubsubsection{\texorpdfstring{hasEntry()}{hasEntry()}}
+{\footnotesize\ttfamily bool Gateway\+Class\+::has\+Entry (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Gibt an ob mind. ein Datensatz vorhanden ist \begin{DoxyReturn}{Returns}
+\char`\"{}true\char`\"{} wenn mind. 1 Gateway im System vorhanden ist, sonst \char`\"{}false\char`\"{} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classGatewayClass_abf334658a2bf4be83592dcfcba3b99e1}\label{classGatewayClass_abf334658a2bf4be83592dcfcba3b99e1}} 
+\index{GatewayClass@{GatewayClass}!isGateway@{isGateway}}
+\index{isGateway@{isGateway}!GatewayClass@{GatewayClass}}
+\doxysubsubsection{\texorpdfstring{isGateway()}{isGateway()}}
+{\footnotesize\ttfamily bool Gateway\+Class\+::is\+Gateway (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{gw\+\_\+no }\end{DoxyParamCaption})}
+
+Prüft ob ein Gateway aktiv (= true) ist. 
+\begin{DoxyParams}{Parameters}
+{\em gw\+\_\+no} & Die Nummer des Gateways \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\char`\"{}true\char`\"{} wenn der Gateway im System als aktiv gekennzeichnet ist, sonst \char`\"{}false\char`\"{} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classGatewayClass_a1f72467b42d2835f3f39c12b34b116a8}\label{classGatewayClass_a1f72467b42d2835f3f39c12b34b116a8}} 
+\index{GatewayClass@{GatewayClass}!printBuffer@{printBuffer}}
+\index{printBuffer@{printBuffer}!GatewayClass@{GatewayClass}}
+\doxysubsubsection{\texorpdfstring{printBuffer()}{printBuffer()}}
+{\footnotesize\ttfamily void Gateway\+Class\+::print\+Buffer (\begin{DoxyParamCaption}\item[{int}]{tn\+\_\+socket,  }\item[{bool}]{htmlformat }\end{DoxyParamCaption})}
+
+Druckt alle records im Buffer in den out\+\_\+socket out\+\_\+socket ist dabei ein gültiger socket file descriptor entweder aus accept für einen socket oder mittels fileno(stdout) für den stdout Der zweite Parameter bestimmt das Format, true =\texorpdfstring{$>$}{>} HTML Format; false =\texorpdfstring{$>$}{>} Textformat 
+\begin{DoxyParams}{Parameters}
+{\em tn\+\_\+socket} & Das aktuelle Socket zur Ausgabe \\
+\hline
+{\em htmlformat} & \char`\"{}true\char`\"{} liefert die Ausgabe im HTML Format, \char`\"{}false\char`\"{} im Textformat \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classGatewayClass_af100d0a602c77a2d7b4be5fc59ac07de}\label{classGatewayClass_af100d0a602c77a2d7b4be5fc59ac07de}} 
+\index{GatewayClass@{GatewayClass}!setGateway@{setGateway}}
+\index{setGateway@{setGateway}!GatewayClass@{GatewayClass}}
+\doxysubsubsection{\texorpdfstring{setGateway()}{setGateway()}}
+{\footnotesize\ttfamily void Gateway\+Class\+::set\+Gateway (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{gw\+\_\+no,  }\item[{bool}]{is\+Active }\end{DoxyParamCaption})}
+
+Setzt einen Gateway in den übergebenen Status 
+\begin{DoxyParams}{Parameters}
+{\em gw\+\_\+no} & Die Nummer des Gateways \\
+\hline
+{\em is\+Active} & Statusflag ob dieser Gateway aktiv (=true) ist oder inaktiv (=false) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classGatewayClass_aadf30dc0ff1c8a84347712dc70f31f01}\label{classGatewayClass_aadf30dc0ff1c8a84347712dc70f31f01}} 
+\index{GatewayClass@{GatewayClass}!setVerbose@{setVerbose}}
+\index{setVerbose@{setVerbose}!GatewayClass@{GatewayClass}}
+\doxysubsubsection{\texorpdfstring{setVerbose()}{setVerbose()}}
+{\footnotesize\ttfamily void Gateway\+Class\+::set\+Verbose (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{\+\_\+verbose\+Level }\end{DoxyParamCaption})}
+
+Setzt den Verboselevel. Mögliche Level sind in den Makros VERBOSE$\ast$ in \mbox{\hyperlink{config_8h}{config.\+h}} definiert. 
+\begin{DoxyParams}{Parameters}
+{\em verbose\+Level} & Der aktuelle Verboselevel \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{gatewayclass_8h}{gatewayclass.\+h}}\item 
+\mbox{\hyperlink{gatewayclass_8cpp}{gatewayclass.\+cpp}}\end{DoxyCompactItemize}

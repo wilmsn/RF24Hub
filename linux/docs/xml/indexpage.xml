@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="indexpage" kind="page">
+    <compoundname>index</compoundname>
+    <title>RF24HUB A Network of Sensors communicating over an 2.4GHZ Network.</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><image type="html" name="overview.png"></image>
+ Components:<itemizedlist>
+<listitem><para>ATMEL/Arduino based Nodes</para>
+</listitem><listitem><para>Gateway based on ESP8266/ESP32 or Raspberry PI (ervery Linux System with useable GPIO Pins can be used)</para>
+</listitem><listitem><para>Hub as the cental Component based on any Linux System</para>
+</listitem><listitem><para>Further Details:</para>
+</listitem><listitem><para>Quick Install Guide and System Overview</para>
+</listitem><listitem><para>Configure and Build a Arduino-Node from the Template</para>
+</listitem><listitem><para>Configure and Build a ESP-Node from the Template </para>
+</listitem></itemizedlist>
+</para>
+    </detaileddescription>
+    <location file="/stick/netz/projekte/RF24Hub/linux/common.h"/>
+  </compounddef>
+</doxygen>

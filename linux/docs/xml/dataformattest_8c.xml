@@ -1,0 +1,438 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="dataformattest_8c" kind="file" language="C++">
+    <compoundname>dataformattest.c</compoundname>
+    <includes local="no">sys/types.h</includes>
+    <includes local="no">stdio.h</includes>
+    <includes local="no">unistd.h</includes>
+    <includes local="no">string.h</includes>
+    <includes local="no">stdlib.h</includes>
+    <includes local="no">errno.h</includes>
+    <includes local="no">getopt.h</includes>
+    <includes refid="dataformat_8h" local="yes">dataformat.h</includes>
+    <incdepgraph>
+      <node id="9">
+        <label>dataformat.h</label>
+        <link refid="dataformat_8h"/>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>dataformattest.c</label>
+        <link refid="dataformattest_8c"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="12">
+        <label>rf24_config.h</label>
+        <link refid="rf24__config_8h"/>
+      </node>
+      <node id="7">
+        <label>errno.h</label>
+      </node>
+      <node id="8">
+        <label>getopt.h</label>
+      </node>
+      <node id="11">
+        <label>stdbool.h</label>
+      </node>
+      <node id="10">
+        <label>stdint.h</label>
+      </node>
+      <node id="3">
+        <label>stdio.h</label>
+      </node>
+      <node id="6">
+        <label>stdlib.h</label>
+      </node>
+      <node id="5">
+        <label>string.h</label>
+      </node>
+      <node id="2">
+        <label>sys/types.h</label>
+      </node>
+      <node id="4">
+        <label>unistd.h</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="dataformattest_8c_1a102d43d6c2f3ecbab5813d3d103dbf55" prot="public" static="no">
+        <name>FEHLERTOLLERANZ</name>
+        <initializer>0.01</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformattest.c" line="16" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformattest.c" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="dataformattest_8c_1a372d0cd018310f3a79a4e89a78a7b59d" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool verbose_set</definition>
+        <argsstring></argsstring>
+        <name>verbose_set</name>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformattest.c" line="18" column="8" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformattest.c" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="dataformattest_8c_1a40f1184df6fe01e6a066d1c005e6f6de" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void help</definition>
+        <argsstring>(char *prgname)</argsstring>
+        <name>help</name>
+        <param>
+          <type>char *</type>
+          <declname>prgname</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformattest.c" line="20" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformattest.c" bodystart="20" bodyend="27"/>
+      </memberdef>
+      <memberdef kind="function" id="dataformattest_8c_1a701f1ea3b2f08f7741cc9c134a74fcce" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void test_uint</definition>
+        <argsstring>(uint16_t zahl)</argsstring>
+        <name>test_uint</name>
+        <param>
+          <type>uint16_t</type>
+          <declname>zahl</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformattest.c" line="29" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformattest.c" bodystart="29" bodyend="58"/>
+      </memberdef>
+      <memberdef kind="function" id="dataformattest_8c_1ab52977b51522723f8406244879a4fef5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void test_int</definition>
+        <argsstring>(int16_t zahl)</argsstring>
+        <name>test_int</name>
+        <param>
+          <type>int16_t</type>
+          <declname>zahl</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformattest.c" line="60" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformattest.c" bodystart="60" bodyend="89"/>
+      </memberdef>
+      <memberdef kind="function" id="dataformattest_8c_1acef42b788ddf4cd72c12e7cae052a890" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void test_float</definition>
+        <argsstring>(float zahl)</argsstring>
+        <name>test_float</name>
+        <param>
+          <type>float</type>
+          <declname>zahl</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformattest.c" line="91" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformattest.c" bodystart="91" bodyend="120"/>
+      </memberdef>
+      <memberdef kind="function" id="dataformattest_8c_1a3c04138a5bfe5d72780bb7e82a18e627" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int main</definition>
+        <argsstring>(int argc, char **argv)</argsstring>
+        <name>main</name>
+        <param>
+          <type>int</type>
+          <declname>argc</declname>
+        </param>
+        <param>
+          <type>char **</type>
+          <declname>argv</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformattest.c" line="122" column="5" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformattest.c" bodystart="122" bodyend="228"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*<sp/>test_dataformat.c</highlight></codeline>
+<codeline lineno="2"><highlight class="comment">*</highlight></codeline>
+<codeline lineno="3"><highlight class="comment">*<sp/>A<sp/>testtool<sp/>for<sp/>the<sp/>lib<sp/>dataformat.*</highlight></codeline>
+<codeline lineno="4"><highlight class="comment">*</highlight></codeline>
+<codeline lineno="5"><highlight class="comment">*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/types.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdio.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdlib.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;getopt.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="dataformat_8h" kindref="compound">dataformat.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="comment">//#include<sp/>&quot;secrets.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>FEHLERTOLLERANZ<sp/><sp/><sp/>0.01</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="dataformattest_8c_1a372d0cd018310f3a79a4e89a78a7b59d" kindref="member">verbose_set</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="dataformattest_8c_1a40f1184df6fe01e6a066d1c005e6f6de" kindref="member">help</ref>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>prgname)<sp/>{</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/>printf<sp/>(</highlight><highlight class="stringliteral">&quot;Usage::<sp/>%s<sp/>[-v][-f/i/u/a]<sp/>[--]<sp/>&lt;start&gt;<sp/>[stop<sp/>[step]]\n&quot;</highlight><highlight class="normal">,<sp/>prgname);</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/>printf<sp/>(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>-v<sp/>Show<sp/>all<sp/>results\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/>printf<sp/>(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>-f<sp/>Use<sp/>FLOAT\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/>printf<sp/>(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>-i<sp/>Use<sp/>INTEGER\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/>printf<sp/>(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>-u<sp/>Use<sp/>Unsigned<sp/>INTEGER\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/>printf<sp/>(</highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>-a<sp/>Use<sp/>automatic<sp/>format<sp/>(DEFAULT)\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="27"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="dataformattest_8c_1a701f1ea3b2f08f7741cc9c134a74fcce" kindref="member">test_uint</ref>(uint16_t<sp/>zahl)<sp/>{</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>val_str[20];</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/>uint16_t<sp/>erg1,<sp/>erg2;<sp/></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/>uint32_t<sp/>data1,<sp/>data2;</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>delta1,<sp/>delta2;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>fehler1,<sp/>fehler2;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/>snprintf(val_str,19,</highlight><highlight class="stringliteral">&quot;%u&quot;</highlight><highlight class="normal">,<sp/>zahl);</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="dataformattest_8c_1a372d0cd018310f3a79a4e89a78a7b59d" kindref="member">verbose_set</ref>)<sp/>printf(</highlight><highlight class="stringliteral">&quot;Use<sp/>unsigned<sp/>integer\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/>data1<sp/>=<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(1,<sp/>val_str);</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/>data2<sp/>=<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(1,<sp/>zahl);</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<sp/><ref refid="group__datafmt_1ga87fd32ad4e05f024d6feaa6302a17595" kindref="member">getValue</ref>(data1,<sp/>&amp;erg1)<sp/>)<sp/>printf(</highlight><highlight class="stringliteral">&quot;String:<sp/>False<sp/>returened<sp/>from<sp/>&apos;getValue(%u,<sp/>%u)&apos;\n&quot;</highlight><highlight class="normal">,<sp/>data1,<sp/>erg1);</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<sp/><ref refid="group__datafmt_1ga87fd32ad4e05f024d6feaa6302a17595" kindref="member">getValue</ref>(data2,<sp/>&amp;erg2)<sp/>)<sp/>printf(</highlight><highlight class="stringliteral">&quot;Wert:<sp/><sp/><sp/>False<sp/>returened<sp/>from<sp/>&apos;getValue(%u,<sp/>%u)&apos;\n&quot;</highlight><highlight class="normal">,<sp/>data2,<sp/>erg2);</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(data1<sp/>!=<sp/>data2)<sp/>printf(</highlight><highlight class="stringliteral">&quot;Unterschiede<sp/>zwischen<sp/>kodierung<sp/>über<sp/>Wert<sp/>und<sp/>String\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/>delta1<sp/>=<sp/>erg1-zahl;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/>delta2<sp/>=<sp/>erg2-zahl;</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>zahl<sp/>!=<sp/>0<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/>fehler1<sp/>=<sp/>(float)(erg1-zahl)/zahl;</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/>fehler2<sp/>=<sp/>(float)(erg2-zahl)/zahl;</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/>fehler1<sp/>=<sp/>erg1;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/>fehler2<sp/>=<sp/>erg1;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/>}<sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(fehler1<sp/>&lt;<sp/>0)<sp/>fehler1<sp/>*=<sp/>-1;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(fehler2<sp/>&lt;<sp/>0)<sp/>fehler2<sp/>*=<sp/>-1;</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(fehler1<sp/>&gt;<sp/><ref refid="dataformattest_8c_1a102d43d6c2f3ecbab5813d3d103dbf55" kindref="member">FEHLERTOLLERANZ</ref>)<sp/>printf(</highlight><highlight class="stringliteral">&quot;ZF:<sp/>%u<sp/>Zahl:<sp/>%u\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="group__datafmt_1ga2ecd9323066a3bcae374c8471d69c074" kindref="member">getDataType</ref>(data1)<sp/>&gt;&gt;<sp/><ref refid="group__datafmt_1ga6a43886b9442c8937b7e8a945ea746f6" kindref="member">ZF_SHIFT_FORMAT</ref>,<sp/>data1<sp/>&amp;<sp/><ref refid="group__datafmt_1ga946f2bd156088c36f49dca32bccf3074" kindref="member">ZF_ZAHL_WERT_INT</ref>);</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(fehler2<sp/>&gt;<sp/><ref refid="dataformattest_8c_1a102d43d6c2f3ecbab5813d3d103dbf55" kindref="member">FEHLERTOLLERANZ</ref>)<sp/>printf(</highlight><highlight class="stringliteral">&quot;ZF:<sp/>%u<sp/>Zahl:<sp/>%u\n&quot;</highlight><highlight class="normal">,<sp/>(data2<sp/>&amp;<sp/><ref refid="group__datafmt_1ga01cfcdafb2f084038e46f33cd67cbb6d" kindref="member">ZF_FORMAT</ref>)<sp/>&gt;&gt;<sp/><ref refid="group__datafmt_1ga6a43886b9442c8937b7e8a945ea746f6" kindref="member">ZF_SHIFT_FORMAT</ref>,<sp/>data2<sp/>&amp;<sp/><ref refid="group__datafmt_1ga946f2bd156088c36f49dca32bccf3074" kindref="member">ZF_ZAHL_WERT_INT</ref>);</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>fehler1<sp/>&gt;<sp/><ref refid="dataformattest_8c_1a102d43d6c2f3ecbab5813d3d103dbf55" kindref="member">FEHLERTOLLERANZ</ref><sp/>||<sp/>fehler2<sp/>&gt;<sp/><ref refid="dataformattest_8c_1a102d43d6c2f3ecbab5813d3d103dbf55" kindref="member">FEHLERTOLLERANZ</ref><sp/>||<sp/><ref refid="dataformattest_8c_1a372d0cd018310f3a79a4e89a78a7b59d" kindref="member">verbose_set</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Wert:%s,<sp/>Ergebnis:%u/%u<sp/><sp/>Delta:%f/%f<sp/><sp/>Fehler:%f/%f\n&quot;</highlight><highlight class="normal">,<sp/>val_str,<sp/>erg1,<sp/>erg2,<sp/>delta1,<sp/>delta2,<sp/>fehler1,<sp/>fehler2);</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="58"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="dataformattest_8c_1ab52977b51522723f8406244879a4fef5" kindref="member">test_int</ref>(int16_t<sp/>zahl)<sp/>{</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>val_str[20];</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/>int16_t<sp/>erg1,<sp/>erg2;<sp/></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/>uint32_t<sp/>data1,<sp/>data2;</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>delta1,<sp/>delta2;</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>fehler1,<sp/>fehler2;</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/>snprintf(val_str,19,</highlight><highlight class="stringliteral">&quot;%d&quot;</highlight><highlight class="normal">,<sp/>zahl);</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="dataformattest_8c_1a372d0cd018310f3a79a4e89a78a7b59d" kindref="member">verbose_set</ref>)<sp/>printf(</highlight><highlight class="stringliteral">&quot;Use<sp/>integer\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/>data1<sp/>=<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(1,<sp/>val_str);</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/>data2<sp/>=<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(1,<sp/>zahl);</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<sp/><ref refid="group__datafmt_1ga87fd32ad4e05f024d6feaa6302a17595" kindref="member">getValue</ref>(data1,<sp/>&amp;erg1)<sp/>)<sp/>printf(</highlight><highlight class="stringliteral">&quot;String:<sp/>False<sp/>returened<sp/>from<sp/>&apos;getValue(%u,<sp/>%d)&apos;\n&quot;</highlight><highlight class="normal">,<sp/>data1,<sp/>erg1);</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<sp/><ref refid="group__datafmt_1ga87fd32ad4e05f024d6feaa6302a17595" kindref="member">getValue</ref>(data2,<sp/>&amp;erg2)<sp/>)<sp/>printf(</highlight><highlight class="stringliteral">&quot;Wert:<sp/><sp/><sp/>False<sp/>returened<sp/>from<sp/>&apos;getValue(%u,<sp/>%d)&apos;\n&quot;</highlight><highlight class="normal">,<sp/>data2,<sp/>erg2);</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(data1<sp/>!=<sp/>data2)<sp/>printf(</highlight><highlight class="stringliteral">&quot;Unterschiede<sp/>zwischen<sp/>kodierung<sp/>über<sp/>Wert<sp/>und<sp/>String\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/>delta1<sp/>=<sp/>erg1-zahl;</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/>delta2<sp/>=<sp/>erg2-zahl;</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>zahl<sp/>!=<sp/>0<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/>fehler1<sp/>=<sp/>(float)(erg1-zahl)/zahl;</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/>fehler2<sp/>=<sp/>(float)(erg2-zahl)/zahl;</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/>fehler1<sp/>=<sp/>erg1;</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/>fehler2<sp/>=<sp/>erg1;</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/>}<sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(fehler1<sp/>&lt;<sp/>0)<sp/>fehler1<sp/>*=<sp/>-1;</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(fehler2<sp/>&lt;<sp/>0)<sp/>fehler2<sp/>*=<sp/>-1;</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(fehler1<sp/>&gt;<sp/><ref refid="dataformattest_8c_1a102d43d6c2f3ecbab5813d3d103dbf55" kindref="member">FEHLERTOLLERANZ</ref>)<sp/>printf(</highlight><highlight class="stringliteral">&quot;ZF:<sp/>%u<sp/>Zahl:<sp/>%d\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="group__datafmt_1ga2ecd9323066a3bcae374c8471d69c074" kindref="member">getDataType</ref>(data1),<sp/>data1<sp/>&amp;<sp/><ref refid="group__datafmt_1ga946f2bd156088c36f49dca32bccf3074" kindref="member">ZF_ZAHL_WERT_INT</ref>);</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(fehler2<sp/>&gt;<sp/><ref refid="dataformattest_8c_1a102d43d6c2f3ecbab5813d3d103dbf55" kindref="member">FEHLERTOLLERANZ</ref>)<sp/>printf(</highlight><highlight class="stringliteral">&quot;ZF:<sp/>%u<sp/>Zahl:<sp/>%d\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="group__datafmt_1ga2ecd9323066a3bcae374c8471d69c074" kindref="member">getDataType</ref>(data2),<sp/>data2<sp/>&amp;<sp/><ref refid="group__datafmt_1ga946f2bd156088c36f49dca32bccf3074" kindref="member">ZF_ZAHL_WERT_INT</ref>);</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>fehler1<sp/>&gt;<sp/><ref refid="dataformattest_8c_1a102d43d6c2f3ecbab5813d3d103dbf55" kindref="member">FEHLERTOLLERANZ</ref><sp/>||<sp/>fehler2<sp/>&gt;<sp/><ref refid="dataformattest_8c_1a102d43d6c2f3ecbab5813d3d103dbf55" kindref="member">FEHLERTOLLERANZ</ref><sp/>||<sp/><ref refid="dataformattest_8c_1a372d0cd018310f3a79a4e89a78a7b59d" kindref="member">verbose_set</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Wert:%s,<sp/>Ergebnis:%d/%d<sp/><sp/>Delta:%f/%f<sp/><sp/>Fehler:%f/%f\n&quot;</highlight><highlight class="normal">,<sp/>val_str,<sp/>erg1,<sp/>erg2,<sp/>delta1,<sp/>delta2,<sp/>fehler1,<sp/>fehler2);</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="89"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="dataformattest_8c_1acef42b788ddf4cd72c12e7cae052a890" kindref="member">test_float</ref>(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>zahl)<sp/>{</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>val_str[20];</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>erg1,<sp/>erg2;<sp/></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/>uint32_t<sp/>data1,<sp/>data2;</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>delta1,<sp/>delta2;</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>fehler1,<sp/>fehler2;</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/>snprintf(val_str,19,</highlight><highlight class="stringliteral">&quot;%f&quot;</highlight><highlight class="normal">,<sp/>zahl);</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="dataformattest_8c_1a372d0cd018310f3a79a4e89a78a7b59d" kindref="member">verbose_set</ref>)<sp/>printf(</highlight><highlight class="stringliteral">&quot;Use<sp/>float\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/>data1<sp/>=<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(1,<sp/>val_str);</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/>data2<sp/>=<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(1,<sp/>zahl);</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<sp/><ref refid="group__datafmt_1ga87fd32ad4e05f024d6feaa6302a17595" kindref="member">getValue</ref>(data1,<sp/>&amp;erg1)<sp/>)<sp/>printf(</highlight><highlight class="stringliteral">&quot;String:<sp/>False<sp/>returened<sp/>from<sp/>&apos;getValue(%u,<sp/>%f)&apos;\n&quot;</highlight><highlight class="normal">,<sp/>data1,<sp/>erg1);</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<sp/><ref refid="group__datafmt_1ga87fd32ad4e05f024d6feaa6302a17595" kindref="member">getValue</ref>(data2,<sp/>&amp;erg2)<sp/>)<sp/>printf(</highlight><highlight class="stringliteral">&quot;Wert:<sp/><sp/><sp/>False<sp/>returened<sp/>from<sp/>&apos;getValue(%u,<sp/>%f)&apos;\n&quot;</highlight><highlight class="normal">,<sp/>data2,<sp/>erg2);</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(data1<sp/>!=<sp/>data2)<sp/>{</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Unterschiede<sp/>zwischen<sp/>kodierung<sp/>über<sp/>String<sp/>und<sp/>Wert\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;String:<sp/>data1:<sp/>0b&quot;</highlight><highlight class="normal">);<sp/><ref refid="group__datafmt_1ga553dc49f84a0874f09d55f9e84fb31d2" kindref="member">printBits</ref>(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(data1),&amp;data1);</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Wert:<sp/><sp/><sp/>data2:<sp/>0b&quot;</highlight><highlight class="normal">);<sp/><ref refid="group__datafmt_1ga553dc49f84a0874f09d55f9e84fb31d2" kindref="member">printBits</ref>(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(data2),&amp;data2);</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/>delta1<sp/>=<sp/>erg1-zahl;</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/>delta2<sp/>=<sp/>erg2-zahl;</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>zahl<sp/>!=<sp/>0<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/>fehler1<sp/>=<sp/>(float)(erg1-zahl)/zahl;</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/>fehler2<sp/>=<sp/>(float)(erg2-zahl)/zahl;</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/>fehler1<sp/>=<sp/>erg1;</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/>fehler2<sp/>=<sp/>erg1;</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/>}<sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>(delta1/zahl<sp/>&gt;<sp/>0.0001<sp/>||<sp/>delta1/zahl<sp/>&lt;<sp/>-0.0001)<sp/>||<sp/>(delta2/zahl<sp/>&gt;<sp/>0.0001<sp/>||<sp/>delta2/zahl<sp/>&lt;<sp/>-0.0001)<sp/>||<sp/><ref refid="dataformattest_8c_1a372d0cd018310f3a79a4e89a78a7b59d" kindref="member">verbose_set</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Wert:%s,<sp/>Ergebnis:%f/%f<sp/><sp/>Delta:%f/%f<sp/><sp/>Fehler:%f/%f\n&quot;</highlight><highlight class="normal">,<sp/>val_str,<sp/>erg1,<sp/>erg2,<sp/>delta1,<sp/>delta2,<sp/>fehler1,<sp/>fehler2);</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="120"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"></highlight></codeline>
+<codeline lineno="122"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="dataformattest_8c_1a3c04138a5bfe5d72780bb7e82a18e627" kindref="member">main</ref><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>argc,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>**argv)<sp/>{</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>start,<sp/>ende,<sp/>schritt;</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>format_set<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>ende_set<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>schritt_set<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>use_auto<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>use_float<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>use_int<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>use_uint<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/></highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>Kommandozeile<sp/>auswerten<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(1)<sp/>{</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>result<sp/>=<sp/>getopt(argc,<sp/>argv,<sp/></highlight><highlight class="stringliteral">&quot;vfaius:e:d:&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(result<sp/>==<sp/>-1)<sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;<sp/></highlight><highlight class="comment">/*<sp/>end<sp/>of<sp/>list<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">switch</highlight><highlight class="normal"><sp/>(result)<sp/>{</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/></highlight><highlight class="charliteral">&apos;v&apos;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="dataformattest_8c_1a372d0cd018310f3a79a4e89a78a7b59d" kindref="member">verbose_set</ref><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/></highlight><highlight class="charliteral">&apos;a&apos;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>!<sp/>format_set<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>use_auto<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>format_set<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/></highlight><highlight class="charliteral">&apos;f&apos;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>!<sp/>format_set<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>use_float<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>use_auto<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>format_set<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/></highlight><highlight class="charliteral">&apos;i&apos;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>!<sp/>format_set<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>use_int<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>use_auto<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>format_set<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/></highlight><highlight class="charliteral">&apos;u&apos;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>!<sp/>format_set<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>use_uint<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>use_auto<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>format_set<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/></highlight><highlight class="charliteral">&apos;h&apos;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">default</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="dataformattest_8c_1a40f1184df6fe01e6a066d1c005e6f6de" kindref="member">help</ref>(argv[0]);</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"></highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/></highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(optind<sp/>&lt;<sp/>argc)<sp/>{</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/>start<sp/>=<sp/>atof(argv[optind++]);</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(optind<sp/>&lt;<sp/>argc)<sp/>{</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/>ende<sp/>=<sp/>atof(argv[optind++]);</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/>ende_set<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="180"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="181"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(optind<sp/>&lt;<sp/>argc)<sp/>{</highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/>schritt<sp/>=<sp/>atof(argv[optind++]);</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/>schritt_set<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/></highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<sp/>ende_set)<sp/>ende<sp/>=<sp/>start;</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<sp/>schritt_set)<sp/>schritt<sp/>=<sp/>1;</highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/></highlight></codeline>
+<codeline lineno="189"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="dataformattest_8c_1a372d0cd018310f3a79a4e89a78a7b59d" kindref="member">verbose_set</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="190"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Start:%f<sp/>Ende:%f<sp/>Schritt:%f<sp/>&quot;</highlight><highlight class="normal">,start,<sp/>ende,<sp/>schritt);</highlight></codeline>
+<codeline lineno="191"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(use_auto<sp/>)<sp/>printf(</highlight><highlight class="stringliteral">&quot;Zahlenformat:<sp/>auto\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(use_int<sp/>)<sp/>printf(</highlight><highlight class="stringliteral">&quot;Zahlenformat:<sp/>int\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(use_uint<sp/>)<sp/>printf(</highlight><highlight class="stringliteral">&quot;Zahlenformat:<sp/>uint\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(use_float<sp/>)<sp/>printf(</highlight><highlight class="stringliteral">&quot;Zahlenformat:<sp/>float\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><sp/><sp/>}<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="196"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(use_auto)<sp/>{</highlight></codeline>
+<codeline lineno="197"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>wert<sp/>=<sp/>start;<sp/>wert<sp/>&lt;=<sp/>ende;<sp/>wert<sp/>+=<sp/>schritt)<sp/>{</highlight></codeline>
+<codeline lineno="198"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Testen<sp/>ob<sp/>Wert<sp/>auch<sp/>als<sp/>INT<sp/>oder<sp/>UINT<sp/>übergeben<sp/>werden<sp/>kann</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(wert<sp/>&gt;<sp/>0<sp/>&amp;&amp;<sp/>wert<sp/>==<sp/>(uint16_t)wert)<sp/>{</highlight></codeline>
+<codeline lineno="200"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="dataformattest_8c_1a701f1ea3b2f08f7741cc9c134a74fcce" kindref="member">test_uint</ref>(<sp/>(uint16_t)wert<sp/>);</highlight></codeline>
+<codeline lineno="201"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(wert<sp/>&lt;<sp/>0<sp/>&amp;&amp;<sp/>wert<sp/>==<sp/>(int16_t)wert)<sp/>{</highlight></codeline>
+<codeline lineno="203"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="dataformattest_8c_1ab52977b51522723f8406244879a4fef5" kindref="member">test_int</ref>(<sp/>(int16_t)wert<sp/>);</highlight></codeline>
+<codeline lineno="204"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="205"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="dataformattest_8c_1acef42b788ddf4cd72c12e7cae052a890" kindref="member">test_float</ref>(<sp/>wert<sp/>);</highlight></codeline>
+<codeline lineno="206"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="209"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="210"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(use_float)<sp/>{</highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>wert<sp/>=<sp/>start;<sp/>wert<sp/>&lt;=<sp/>ende;<sp/>wert<sp/>+=<sp/>schritt)<sp/>{</highlight></codeline>
+<codeline lineno="212"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="dataformattest_8c_1acef42b788ddf4cd72c12e7cae052a890" kindref="member">test_float</ref>(<sp/>wert<sp/>);</highlight></codeline>
+<codeline lineno="213"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="214"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="215"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(use_int)<sp/>{</highlight></codeline>
+<codeline lineno="216"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(int16_t<sp/>wert<sp/>=<sp/>start;<sp/>wert<sp/>&lt;=<sp/>ende;<sp/>wert<sp/>+=<sp/>schritt)<sp/>{</highlight></codeline>
+<codeline lineno="217"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="dataformattest_8c_1ab52977b51522723f8406244879a4fef5" kindref="member">test_int</ref>(<sp/>wert<sp/>);</highlight></codeline>
+<codeline lineno="218"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="219"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="220"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(use_uint)<sp/>{</highlight></codeline>
+<codeline lineno="221"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(uint16_t<sp/>wert=start;<sp/>wert<sp/>&lt;=<sp/>ende;<sp/>wert<sp/>+=<sp/>schritt)<sp/>{</highlight></codeline>
+<codeline lineno="222"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="dataformattest_8c_1a701f1ea3b2f08f7741cc9c134a74fcce" kindref="member">test_uint</ref>(<sp/>wert<sp/>);</highlight></codeline>
+<codeline lineno="223"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="226"><highlight class="normal"><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Programmende<sp/>\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="227"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>EXIT_SUCCESS;</highlight></codeline>
+<codeline lineno="228"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/stick/netz/projekte/RF24Hub/linux/dataformattest.c"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,947 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="common_8h" kind="file" language="C++">
+    <compoundname>common.h</compoundname>
+    <includes local="no">stdint.h</includes>
+    <includes local="no">cstring</includes>
+    <includes local="no">ctype.h</includes>
+    <includes local="no">time.h</includes>
+    <includes local="no">sys/time.h</includes>
+    <includes local="no">stdlib.h</includes>
+    <includes local="no">stdbool.h</includes>
+    <includes local="no">sys/types.h</includes>
+    <includes local="no">sys/socket.h</includes>
+    <includes local="no">arpa/inet.h</includes>
+    <includes local="no">unistd.h</includes>
+    <includes local="no">netdb.h</includes>
+    <includes local="no">cstdio</includes>
+    <includes local="no">netinet/in.h</includes>
+    <includes local="no">fcntl.h</includes>
+    <includes refid="config_8h" local="yes">config.h</includes>
+    <includes refid="dataformat_8h" local="yes">dataformat.h</includes>
+    <includes refid="rf24__config_8h" local="yes">rf24_config.h</includes>
+    <includes refid="version_8h" local="yes">version.h</includes>
+    <includedby refid="cfg_8h" local="yes">cfg.h</includedby>
+    <includedby refid="common_8cpp" local="yes">common.cpp</includedby>
+    <includedby refid="database_8h" local="yes">database.h</includedby>
+    <includedby refid="gatewayclass_8h" local="yes">gatewayclass.h</includedby>
+    <includedby refid="nodeclass_8h" local="yes">nodeclass.h</includedby>
+    <includedby refid="order_8h" local="yes">order.h</includedby>
+    <includedby refid="orderbuffer_8h" local="yes">orderbuffer.h</includedby>
+    <includedby refid="rf24gwd_8h" local="yes">rf24gwd.h</includedby>
+    <includedby refid="rf24hubd_8h" local="yes">rf24hubd.h</includedby>
+    <includedby refid="sensorclass_8h" local="yes">sensorclass.h</includedby>
+    <includedby refid="simulator_8c" local="yes">simulator.c</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>common.h</label>
+        <link refid="common_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="17">
+        <label>config.h</label>
+        <link refid="config_8h"/>
+      </node>
+      <node id="18">
+        <label>dataformat.h</label>
+        <link refid="dataformat_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+      </node>
+      <node id="21">
+        <label>rf24_config.h</label>
+        <link refid="rf24__config_8h"/>
+      </node>
+      <node id="22">
+        <label>version.h</label>
+        <link refid="version_8h"/>
+      </node>
+      <node id="11">
+        <label>arpa/inet.h</label>
+      </node>
+      <node id="14">
+        <label>cstdio</label>
+      </node>
+      <node id="3">
+        <label>cstring</label>
+      </node>
+      <node id="4">
+        <label>ctype.h</label>
+      </node>
+      <node id="16">
+        <label>fcntl.h</label>
+      </node>
+      <node id="13">
+        <label>netdb.h</label>
+      </node>
+      <node id="15">
+        <label>netinet/in.h</label>
+      </node>
+      <node id="8">
+        <label>stdbool.h</label>
+      </node>
+      <node id="2">
+        <label>stdint.h</label>
+      </node>
+      <node id="19">
+        <label>stdio.h</label>
+      </node>
+      <node id="7">
+        <label>stdlib.h</label>
+      </node>
+      <node id="20">
+        <label>string.h</label>
+      </node>
+      <node id="10">
+        <label>sys/socket.h</label>
+      </node>
+      <node id="6">
+        <label>sys/time.h</label>
+      </node>
+      <node id="9">
+        <label>sys/types.h</label>
+      </node>
+      <node id="5">
+        <label>time.h</label>
+      </node>
+      <node id="12">
+        <label>unistd.h</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="3">
+        <label>cfg.cpp</label>
+        <link refid="cfg_8cpp"/>
+      </node>
+      <node id="2">
+        <label>cfg.h</label>
+        <link refid="cfg_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>common.cpp</label>
+        <link refid="common_8cpp"/>
+      </node>
+      <node id="1">
+        <label>common.h</label>
+        <link refid="common_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+      </node>
+      <node id="10">
+        <label>database.cpp</label>
+        <link refid="database_8cpp"/>
+      </node>
+      <node id="9">
+        <label>database.h</label>
+        <link refid="database_8h"/>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="12">
+        <label>gatewayclass.cpp</label>
+        <link refid="gatewayclass_8cpp"/>
+      </node>
+      <node id="11">
+        <label>gatewayclass.h</label>
+        <link refid="gatewayclass_8h"/>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="14">
+        <label>nodeclass.cpp</label>
+        <link refid="nodeclass_8cpp"/>
+      </node>
+      <node id="13">
+        <label>nodeclass.h</label>
+        <link refid="nodeclass_8h"/>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="16">
+        <label>order.cpp</label>
+        <link refid="order_8cpp"/>
+      </node>
+      <node id="15">
+        <label>order.h</label>
+        <link refid="order_8h"/>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="18">
+        <label>orderbuffer.cpp</label>
+        <link refid="orderbuffer_8cpp"/>
+      </node>
+      <node id="17">
+        <label>orderbuffer.h</label>
+        <link refid="orderbuffer_8h"/>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>rf24gwd.cpp</label>
+        <link refid="rf24gwd_8cpp"/>
+      </node>
+      <node id="4">
+        <label>rf24gwd.h</label>
+        <link refid="rf24gwd_8h"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>rf24hubd.cpp</label>
+        <link refid="rf24hubd_8cpp"/>
+      </node>
+      <node id="6">
+        <label>rf24hubd.h</label>
+        <link refid="rf24hubd_8h"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="20">
+        <label>sensorclass.cpp</label>
+        <link refid="sensorclass_8cpp"/>
+      </node>
+      <node id="19">
+        <label>sensorclass.h</label>
+        <link refid="sensorclass_8h"/>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+      </node>
+      <node id="21">
+        <label>simulator.c</label>
+        <link refid="simulator_8c"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structTnData__t" prot="public">TnData_t</innerclass>
+    <innerclass refid="structTnMsg__t" prot="public">TnMsg_t</innerclass>
+    <innerclass refid="structthread__tn__data" prot="public">thread_tn_data</innerclass>
+      <sectiondef kind="enum">
+      <memberdef kind="enum" id="common_8h_1a32b5c6c372c524c9144fd368d586d4bb" prot="public" static="no" strong="no">
+        <type></type>
+        <name>sockType_t</name>
+        <enumvalue id="common_8h_1a32b5c6c372c524c9144fd368d586d4bbaa040cd7feeb588104634cdadf35abf1c" prot="public">
+          <name>TCP</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="common_8h_1a32b5c6c372c524c9144fd368d586d4bbadb542475cf9d0636e4225e216cee9ae6" prot="public">
+          <name>UDP</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+<para>Common functions used in rf24gwd and rf24hubd. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.h" line="42" column="1" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.h" bodystart="42" bodyend="42"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="common_8h_1a26b6f95e75f7b67600021215f56a81e8" prot="public" static="yes" mutable="no">
+        <type>const char</type>
+        <definition>const char date_format1[]</definition>
+        <argsstring>[]</argsstring>
+        <name>date_format1</name>
+        <initializer>= &quot;%d.%m.%Y %H:%M:%S&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.h" line="58" column="19" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.h" bodystart="58" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="common_8h_1ad48e1ebe44a8ec711849b7d6b6aa025a" prot="public" static="yes" mutable="no">
+        <type>const char</type>
+        <definition>const char date_format2[]</definition>
+        <argsstring>[]</argsstring>
+        <name>date_format2</name>
+        <initializer>= &quot;%Y.%m.%d %H:%M:%S&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.h" line="59" column="19" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.h" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="common_8h_1a3492d22004148ae3319a0760867b0b02" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>char *</type>
+        <definition>char * utime2str</definition>
+        <argsstring>(time_t utime, char *buf, uint8_t format)</argsstring>
+        <name>utime2str</name>
+        <param>
+          <type>time_t</type>
+          <declname>utime</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>buf</declname>
+        </param>
+        <param>
+          <type>uint8_t</type>
+          <declname>format</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>utime2str: konvertiert den übergebenen Unix Zeitstempel utime in einen String Ist utime = 0 wird die aktuelle Zeit genommen. Für form gilt: 1 =&gt; 20.04.2020 18:38:17 2 =&gt; 2020.04.20 18:38:17 Wichtig: Es muss ein Speicherplatz buf zur Aufnahme des Strings ( Grösse 20 Byte ) übergeben werden! <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>utime</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Unix Timestamp </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>buf</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Puffer zur Aufnahme des Ausgabestrings. Muss groß genug sein um den Ausgabestring komplett aufnehem zu können. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>format</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Bestimmt das Ausgabeformat des Zeitstrings: &quot;1&quot; =&gt; &quot;Tag.Monat.Jahr Stunde:Minute:Sekunde&quot;; &quot;2&quot; =&gt; &quot;Jahr.Monat.Tag Stunde:Minute:Sekunde&quot; </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Der Zeitstring </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.h" line="75" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.cpp" bodystart="18" bodyend="38" declfile="/stick/netz/projekte/RF24Hub/linux/common.h" declline="75" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="common_8h_1a83eaed94816137f9fe9521a7946efff0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>char *</type>
+        <definition>char * ts</definition>
+        <argsstring>(char *buf)</argsstring>
+        <name>ts</name>
+        <param>
+          <type>char *</type>
+          <declname>buf</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Erzeugt einen aktuellen Zeitstempel zur Verwendung in Log-Ausgaben. Wichtig: Es muss ein Buffer übergeben werden, der diesen Zeitstempel komplett aufnehmen kann! <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>Der</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Buffer zur Aufnahme des Zeitstempels </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Der Zeitstempel als String </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.h" line="83" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.cpp" bodystart="40" bodyend="52" declfile="/stick/netz/projekte/RF24Hub/linux/common.h" declline="83" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="common_8h_1ae5bb0c43f76b886197ee48679f0e8dbc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>char *</type>
+        <definition>char * trim</definition>
+        <argsstring>(char *s)</argsstring>
+        <name>trim</name>
+        <param>
+          <type>char *</type>
+          <declname>s</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>trim: get rid of trailing and leading whitespace... ...including the annoying &quot;\n&quot; from fgets() <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>s</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Eingabestring (schmutzig) </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Ausgabestring (gereinigt) </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.h" line="91" column="7" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.cpp" bodystart="3" bodyend="16" declfile="/stick/netz/projekte/RF24Hub/linux/common.h" declline="91" declcolumn="7"/>
+      </memberdef>
+      <memberdef kind="function" id="common_8h_1ab905ca9c82a764bd40d6ff0054d7c9f5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>char *</type>
+        <definition>char * alloc_str</definition>
+        <argsstring>(uint16_t verboseLevel, const char *msgTxt, size_t size, char *timestring)</argsstring>
+        <name>alloc_str</name>
+        <param>
+          <type>uint16_t</type>
+          <declname>verboseLevel</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>msgTxt</declname>
+        </param>
+        <param>
+          <type>size_t</type>
+          <declname>size</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>timestring</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Ein Wrapper für malloc() mit folgenden Erweiterungen: Je nach aktuell gesetztem Verboselevel erfolgen Ausgaben <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>verboseLevel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der aktuell gesetzte Verboselevel </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>msgTxt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Ausgabetext für Verbosemeldungen </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>size</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die mittels malloc() zu allokierende Speichergröße </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>timestring</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der aktuelle Timestring z.B. durch ts(buf) erzeugt </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Ein leerer String mit der Größe &lt;size&gt; </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.h" line="102" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.cpp" bodystart="181" bodyend="191" declfile="/stick/netz/projekte/RF24Hub/linux/common.h" declline="102" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="common_8h_1a878847cc41730df300c9ea6f9906756c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void free_str</definition>
+        <argsstring>(uint16_t verboseLevel, const char *msgTxt, char *str, char *timestring)</argsstring>
+        <name>free_str</name>
+        <param>
+          <type>uint16_t</type>
+          <declname>verboseLevel</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>msgTxt</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>str</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>timestring</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Ein Wrapper für free() mit folgenden Erweiterungen: Je nach aktuell gesetztem Verboselevel erfolgen Ausgaben <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>verboseLevel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der aktuell gesetzte Verboselevel </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>msgTxt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Ausgabetext für Verbosemeldungen </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>str</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein zuvor mit alloc_str reservierter String(Speicherbereich) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>timestring</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der aktuelle Timestring z.B. durch ts(buf) erzeugt </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.h" line="112" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.cpp" bodystart="193" bodyend="201" declfile="/stick/netz/projekte/RF24Hub/linux/common.h" declline="112" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="common_8h_1afab512e15911b8554463ad51246fe9d0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uint64_t</type>
+        <definition>uint64_t mymillis</definition>
+        <argsstring>(void)</argsstring>
+        <name>mymillis</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Bildet den Unix Timestamp erweitert um Millisekunden ab <simplesect kind="return"><para>Der erweiterte Timestamp </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.h" line="118" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.cpp" bodystart="54" bodyend="60" declfile="/stick/netz/projekte/RF24Hub/linux/common.h" declline="118" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="common_8h_1afafa6fc1062835acb394ed23d75713aa" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>char *</type>
+        <definition>char * printVerbose</definition>
+        <argsstring>(uint16_t verboseLevel, char *buf)</argsstring>
+        <name>printVerbose</name>
+        <param>
+          <type>uint16_t</type>
+          <declname>verboseLevel</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>buf</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Gibt das aktuelle Verboselevel aus <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>buf</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Hier muss ein gültiges CHAR Array übergeben werden </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>verboseLevel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der aktuelle Verboselevel </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.h" line="125" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.cpp" bodystart="62" bodyend="77" declfile="/stick/netz/projekte/RF24Hub/linux/common.h" declline="125" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="common_8h_1a938ac03956edbe8f3fb790224413be8f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uint16_t</type>
+        <definition>uint16_t decodeVerbose</definition>
+        <argsstring>(uint16_t verboseLevel, char *verboseSet)</argsstring>
+        <name>decodeVerbose</name>
+        <param>
+          <type>uint16_t</type>
+          <declname>verboseLevel</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>verboseSet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Ermittelt den Binärwert eines neuen Verboselevels <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>verboseLevel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der alte Verboselevel als binärwert </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>verboseSet</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der neue Verboselevel als String, z.B. rf24 </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Der neu Verboselevel als binärwert </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.h" line="133" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.cpp" bodystart="79" bodyend="178" declfile="/stick/netz/projekte/RF24Hub/linux/common.h" declline="133" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="common_8h_1ac858321bf90c9e4a48b93c1cf636fa4d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void sendUdpMessage</definition>
+        <argsstring>(const char *host, const char *port, udpdata_t *udpdata)</argsstring>
+        <name>sendUdpMessage</name>
+        <param>
+          <type>const char *</type>
+          <declname>host</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>port</declname>
+        </param>
+        <param>
+          <type><ref refid="structudpdata__t" kindref="compound">udpdata_t</ref> *</type>
+          <declname>udpdata</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Verschickt eine UDP Nachricht <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>host</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Empfängerhost </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>port</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der UDP Port auf dem Empfängerhost </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>udpdata</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die zu übertragenen Daten als Datentyp <ref refid="structudpdata__t" kindref="compound">udpdata_t</ref> </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.h" line="141" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.cpp" bodystart="203" bodyend="240" declfile="/stick/netz/projekte/RF24Hub/linux/common.h" declline="141" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="common_8h_1a7d5dae7e3622aa0e69d8531af6430829" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool openSocket</definition>
+        <argsstring>(const char *port, struct sockaddr_in *address, int *handle, sockType_t sockType)</argsstring>
+        <name>openSocket</name>
+        <param>
+          <type>const char *</type>
+          <declname>port</declname>
+        </param>
+        <param>
+          <type>struct sockaddr_in *</type>
+          <declname>address</declname>
+        </param>
+        <param>
+          <type>int *</type>
+          <declname>handle</declname>
+        </param>
+        <param>
+          <type><ref refid="common_8h_1a32b5c6c372c524c9144fd368d586d4bb" kindref="member">sockType_t</ref></type>
+          <declname>sockType</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Öffnet ein Socket auf dem localen Host <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>port</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der zu öffnede Port </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>address</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Eine leere Varaible vom Typ </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>handle</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Pointer auf eine INT Variable - Der Filehandler für dieses Socket </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sockType</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Typ des Sockets: UDP oder TCP </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.h" line="150" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.cpp" bodystart="242" bodyend="283" declfile="/stick/netz/projekte/RF24Hub/linux/common.h" declline="150" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="common_8h_1a78264021b512e588dbd4f8dfc393881c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void printPayload</definition>
+        <argsstring>(char *ts, const char *header, payload_t *payload)</argsstring>
+        <name>printPayload</name>
+        <param>
+          <type>char *</type>
+          <declname>ts</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>header</declname>
+        </param>
+        <param>
+          <type><ref refid="structpayload__t" kindref="compound">payload_t</ref> *</type>
+          <declname>payload</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Druckt den übergebenen payload in den STDIO <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>ts</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein gültiges array of char mit dem Timestamp </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>header</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein vor dem Payload zu druckener Text </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>payload</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>der zu druckende Payload </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.h" line="158" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.cpp" bodystart="285" bodyend="303" declfile="/stick/netz/projekte/RF24Hub/linux/common.h" declline="158" declcolumn="6"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>_COMMON_H_<sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Include<sp/>guard<sp/>*/</highlight><highlight class="preprocessor"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_COMMON_H_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cstring&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;ctype.h&gt;</highlight><highlight class="normal"><sp/></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;time.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/time.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdlib.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdbool.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/types.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/socket.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;arpa/inet.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;netdb.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cstdio&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;netinet/in.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;fcntl.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="config_8h" kindref="compound">config.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="dataformat_8h" kindref="compound">dataformat.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="rf24__config_8h" kindref="compound">rf24_config.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="version_8h" kindref="compound">version.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight></codeline>
+<codeline lineno="42" refid="common_8h_1a32b5c6c372c524c9144fd368d586d4bb" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/><ref refid="common_8h_1a32b5c6c372c524c9144fd368d586d4bb" kindref="member">sockType_t</ref><sp/>{<sp/><ref refid="common_8h_1a32b5c6c372c524c9144fd368d586d4bbaa040cd7feeb588104634cdadf35abf1c" kindref="member">TCP</ref>,<sp/><ref refid="common_8h_1a32b5c6c372c524c9144fd368d586d4bbadb542475cf9d0636e4225e216cee9ae6" kindref="member">UDP</ref>};</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44" refid="structTnData__t" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structTnData__t" kindref="compound">TnData_t</ref><sp/>{</highlight></codeline>
+<codeline lineno="45" refid="structTnData__t_1a87707d4598519db53f7472c681124086" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="structTnData__t_1a87707d4598519db53f7472c681124086" kindref="member">tntext</ref>[<ref refid="group__cfgprm_1ga62ddb5fa1007795fbfbf34dbfce0779c" kindref="member">DEBUGSTRINGSIZE</ref>];</highlight></codeline>
+<codeline lineno="46" refid="structTnData__t_1a0a24ed22b4cd43b3168f7aac9b856511" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><sp/><ref refid="structTnData__t_1a0a24ed22b4cd43b3168f7aac9b856511" kindref="member">tn_socket</ref>;<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="47"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49" refid="structTnMsg__t" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structTnMsg__t" kindref="compound">TnMsg_t</ref><sp/>{</highlight></codeline>
+<codeline lineno="50" refid="structTnMsg__t_1a37ad5db965af43e993138735b8687003" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/><ref refid="structTnMsg__t_1a37ad5db965af43e993138735b8687003" kindref="member">mtype</ref>;</highlight></codeline>
+<codeline lineno="51" refid="structTnMsg__t_1a4214b4f3cf94fdbc7c013d313fc58090" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structTnData__t" kindref="compound">TnData_t</ref><sp/><ref refid="structTnMsg__t_1a4214b4f3cf94fdbc7c013d313fc58090" kindref="member">TnData</ref>;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54" refid="structthread__tn__data" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structthread__tn__data" kindref="compound">thread_tn_data</ref><sp/>{</highlight></codeline>
+<codeline lineno="55" refid="structthread__tn__data_1a2390ee21939fcaf8c82f8225819f34cd" refkind="member"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structthread__tn__data_1a2390ee21939fcaf8c82f8225819f34cd" kindref="member">tnsocket</ref>;</highlight></codeline>
+<codeline lineno="56"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>date_format1[]<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;%d.%m.%Y<sp/>%H:%M:%S&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>date_format2[]<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;%Y.%m.%d<sp/>%H:%M:%S&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight></codeline>
+<codeline lineno="75"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="common_8h_1a3492d22004148ae3319a0760867b0b02" kindref="member">utime2str</ref>(time_t<sp/>utime,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>,<sp/>uint8_t<sp/>format);</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="common_8h_1a83eaed94816137f9fe9521a7946efff0" kindref="member">ts</ref>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>);</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*<sp/><ref refid="common_8h_1ae5bb0c43f76b886197ee48679f0e8dbc" kindref="member">trim</ref><sp/>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*<sp/>s);</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"></highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="common_8h_1ab905ca9c82a764bd40d6ff0054d7c9f5" kindref="member">alloc_str</ref>(uint16_t<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>msgTxt,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>size,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>timestring);</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight></codeline>
+<codeline lineno="112"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="common_8h_1a878847cc41730df300c9ea6f9906756c" kindref="member">free_str</ref>(uint16_t<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>msgTxt,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>str,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>timestring);</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"></highlight></codeline>
+<codeline lineno="118"><highlight class="normal">uint64_t<sp/><ref refid="common_8h_1afab512e15911b8554463ad51246fe9d0" kindref="member">mymillis</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"></highlight></codeline>
+<codeline lineno="125"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="common_8h_1afafa6fc1062835acb394ed23d75713aa" kindref="member">printVerbose</ref>(uint16_t<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref>,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>);</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"></highlight></codeline>
+<codeline lineno="133"><highlight class="normal">uint16_t<sp/><ref refid="common_8h_1a938ac03956edbe8f3fb790224413be8f" kindref="member">decodeVerbose</ref>(uint16_t<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref>,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>verboseSet);</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"></highlight></codeline>
+<codeline lineno="141"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="common_8h_1ac858321bf90c9e4a48b93c1cf636fa4d" kindref="member">sendUdpMessage</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>host,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>port,<sp/><ref refid="structudpdata__t" kindref="compound">udpdata_t</ref><sp/>*<sp/><ref refid="rf24gwd_8h_1aed24fc049dc5a6c8b3fd89e20c79be34" kindref="member">udpdata</ref><sp/>);</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"></highlight></codeline>
+<codeline lineno="150"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="common_8h_1a7d5dae7e3622aa0e69d8531af6430829" kindref="member">openSocket</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>port,<sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>sockaddr_in<sp/>*address,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">*<sp/>handle,<sp/><ref refid="common_8h_1a32b5c6c372c524c9144fd368d586d4bb" kindref="member">sockType_t</ref><sp/>sockType<sp/>);</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"></highlight></codeline>
+<codeline lineno="158"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="common_8h_1a78264021b512e588dbd4f8dfc393881c" kindref="member">printPayload</ref>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="common_8h_1a83eaed94816137f9fe9521a7946efff0" kindref="member">ts</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>header,<sp/><ref refid="structpayload__t" kindref="compound">payload_t</ref>*<sp/><ref refid="rf24gwd_8h_1a9ab81a7ae17f3497b23bbccb020c3308" kindref="member">payload</ref>);</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"></highlight></codeline>
+<codeline lineno="160"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//<sp/>_RF24HUBD_COMMON_H_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="161"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/stick/netz/projekte/RF24Hub/linux/common.h"/>
+  </compounddef>
+</doxygen>

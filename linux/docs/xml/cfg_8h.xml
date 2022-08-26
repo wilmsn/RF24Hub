@@ -1,0 +1,351 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="cfg_8h" kind="file" language="C++">
+    <compoundname>cfg.h</compoundname>
+    <includes local="no">stdio.h</includes>
+    <includes local="no">stdlib.h</includes>
+    <includes local="no">string</includes>
+    <includes local="no">string.h</includes>
+    <includes local="no">ctype.h</includes>
+    <includes local="no">time.h</includes>
+    <includes local="no">unistd.h</includes>
+    <includes local="no">getopt.h</includes>
+    <includes local="no">stdint.h</includes>
+    <includes refid="config_8h" local="yes">config.h</includes>
+    <includes refid="common_8h" local="yes">common.h</includes>
+    <includedby refid="cfg_8cpp" local="yes">cfg.cpp</includedby>
+    <includedby refid="rf24gwd_8h" local="yes">rf24gwd.h</includedby>
+    <includedby refid="rf24hubd_8h" local="yes">rf24hubd.h</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>cfg.h</label>
+        <link refid="cfg_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+      </node>
+      <node id="12">
+        <label>common.h</label>
+        <link refid="common_8h"/>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>config.h</label>
+        <link refid="config_8h"/>
+      </node>
+      <node id="23">
+        <label>dataformat.h</label>
+        <link refid="dataformat_8h"/>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+      </node>
+      <node id="24">
+        <label>rf24_config.h</label>
+        <link refid="rf24__config_8h"/>
+      </node>
+      <node id="25">
+        <label>version.h</label>
+        <link refid="version_8h"/>
+      </node>
+      <node id="18">
+        <label>arpa/inet.h</label>
+      </node>
+      <node id="20">
+        <label>cstdio</label>
+      </node>
+      <node id="13">
+        <label>cstring</label>
+      </node>
+      <node id="6">
+        <label>ctype.h</label>
+      </node>
+      <node id="22">
+        <label>fcntl.h</label>
+      </node>
+      <node id="9">
+        <label>getopt.h</label>
+      </node>
+      <node id="19">
+        <label>netdb.h</label>
+      </node>
+      <node id="21">
+        <label>netinet/in.h</label>
+      </node>
+      <node id="15">
+        <label>stdbool.h</label>
+      </node>
+      <node id="10">
+        <label>stdint.h</label>
+      </node>
+      <node id="2">
+        <label>stdio.h</label>
+      </node>
+      <node id="3">
+        <label>stdlib.h</label>
+      </node>
+      <node id="4">
+        <label>string</label>
+      </node>
+      <node id="5">
+        <label>string.h</label>
+      </node>
+      <node id="17">
+        <label>sys/socket.h</label>
+      </node>
+      <node id="14">
+        <label>sys/time.h</label>
+      </node>
+      <node id="16">
+        <label>sys/types.h</label>
+      </node>
+      <node id="7">
+        <label>time.h</label>
+      </node>
+      <node id="8">
+        <label>unistd.h</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="2">
+        <label>cfg.cpp</label>
+        <link refid="cfg_8cpp"/>
+      </node>
+      <node id="1">
+        <label>cfg.h</label>
+        <link refid="cfg_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>rf24gwd.cpp</label>
+        <link refid="rf24gwd_8cpp"/>
+      </node>
+      <node id="3">
+        <label>rf24gwd.h</label>
+        <link refid="rf24gwd_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>rf24hubd.cpp</label>
+        <link refid="rf24hubd_8cpp"/>
+      </node>
+      <node id="5">
+        <label>rf24hubd.h</label>
+        <link refid="rf24hubd_8h"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="classCfg" prot="public">Cfg</innerclass>
+    <innernamespace refid="namespacestd">std</innernamespace>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" prot="public" static="no" mutable="no">
+        <type>uint16_t</type>
+        <definition>uint16_t verboseLevel</definition>
+        <argsstring></argsstring>
+        <name>verboseLevel</name>
+        <briefdescription>
+<para>Die Variable verboseLevel wird extern mitbenutzt. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Die Variable verboseLevel wird extern mitbenutzt. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="35" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24gwd.h" bodystart="54" bodyend="-1" declfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" declline="35" declcolumn="17"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Headerfile für das <ref refid="classCfg" kindref="compound">Cfg</ref> Objekt. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>Grundsätzliches zum Ablauf einer Initialisierung:<itemizedlist>
+<listitem><para>Übergebene Parameter überschreiben Einträge im Config File</para>
+</listitem><listitem><para>In den Config-Variablen werden die letztgültigen Werte abgelegt</para>
+</listitem></itemizedlist>
+</para>
+<para>Folgende Parameter des Config Files können durch übergebene Parameter überschrieben werden:<orderedlist>
+<listitem><para>Logfile</para>
+</listitem><listitem><para>Verbosemode </para>
+</listitem></orderedlist>
+</para>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>CFG_H<sp/><sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CFG_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdio.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdlib.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string&gt;</highlight><highlight class="normal"><sp/></highlight><highlight class="comment">//<sp/>for<sp/>string<sp/>class<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;ctype.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdlib.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;time.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;getopt.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="config_8h" kindref="compound">config.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="common_8h" kindref="compound">common.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;<sp/></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="keyword">extern</highlight><highlight class="normal"><sp/>uint16_t<sp/><ref refid="cfg_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref>;</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37" refid="classCfg" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classCfg" kindref="compound">Cfg</ref><sp/>{</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal">FILE<sp/>*<sp/>pidfile_ptr;</highlight></codeline>
+<codeline lineno="42"><highlight class="normal">FILE<sp/>*<sp/>logfile_ptr;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight><highlight class="comment">//<sp/>The<sp/>filename<sp/>incl.<sp/>path<sp/>of<sp/>the<sp/>configfile</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>configFile;</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight><highlight class="comment">//<sp/>the<sp/>programm<sp/>name<sp/>goes<sp/>here</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>prgName;</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight><highlight class="comment">//<sp/>the<sp/>programm<sp/>version<sp/>goes<sp/>here</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>prgVersion;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Hier<sp/>die<sp/>verwendeten<sp/>Variablen:</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight><highlight class="comment">/**********************************************</highlight></codeline>
+<codeline lineno="54"><highlight class="comment"><sp/>*<sp/>Variablen<sp/>für<sp/>den<sp/>Gateway</highlight></codeline>
+<codeline lineno="55"><highlight class="comment"><sp/>**********************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="59" refid="classCfg_1ab6a3c443f9adc2c71b6d75c20e9df8fc" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/><ref refid="classCfg_1ab6a3c443f9adc2c71b6d75c20e9df8fc" kindref="member">gwLogFileName</ref>;</highlight></codeline>
+<codeline lineno="63" refid="classCfg_1a5beacd3f7187e23a3a166190b5fb6bb3" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/><ref refid="classCfg_1a5beacd3f7187e23a3a166190b5fb6bb3" kindref="member">gwPidFileName</ref>;</highlight></codeline>
+<codeline lineno="67" refid="classCfg_1a4943a808300c155b874e7e716326aa56" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/><ref refid="classCfg_1a4943a808300c155b874e7e716326aa56" kindref="member">gwHubHostName</ref>;</highlight></codeline>
+<codeline lineno="72" refid="classCfg_1a6df600ac075fa021caa9c45efa9f0601" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/><ref refid="classCfg_1a6df600ac075fa021caa9c45efa9f0601" kindref="member">gwUdpPortNo</ref>;</highlight></codeline>
+<codeline lineno="80" refid="classCfg_1ac4df10edefafe41ec1b0251d80ff2de5" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/><ref refid="classCfg_1ac4df10edefafe41ec1b0251d80ff2de5" kindref="member">gwTcpPortNo</ref>;</highlight></codeline>
+<codeline lineno="84" refid="classCfg_1ac82059ea3ea0ef7f44231408da29de3b" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classCfg_1ac82059ea3ea0ef7f44231408da29de3b" kindref="member">gwTcpPortSet</ref>;</highlight></codeline>
+<codeline lineno="88" refid="classCfg_1a40e5f1fbec69c36732d808e05363e024" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classCfg_1a40e5f1fbec69c36732d808e05363e024" kindref="member">gwUdpPortSet</ref>;</highlight></codeline>
+<codeline lineno="92" refid="classCfg_1a5ec995cf894c4b957de9bc3e5c881424" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/><ref refid="classCfg_1a5ec995cf894c4b957de9bc3e5c881424" kindref="member">gwNo</ref>;</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight><highlight class="comment">/**********************************************</highlight></codeline>
+<codeline lineno="94"><highlight class="comment"><sp/>*<sp/>Variablen<sp/>für<sp/>den<sp/>Hub</highlight></codeline>
+<codeline lineno="95"><highlight class="comment"><sp/>**********************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="100" refid="classCfg_1a4b2a65134693dce7d66f955c3389b8f5" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/><ref refid="classCfg_1a4b2a65134693dce7d66f955c3389b8f5" kindref="member">hubUdpPortNo</ref>;</highlight></codeline>
+<codeline lineno="104" refid="classCfg_1a6b3bf6aaf8b2faf63fbaff815e65c14f" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/><ref refid="classCfg_1a6b3bf6aaf8b2faf63fbaff815e65c14f" kindref="member">hubLogFileName</ref>;</highlight></codeline>
+<codeline lineno="108" refid="classCfg_1aab6d96f28a3284c1272ce3836a58c3f4" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/><ref refid="classCfg_1aab6d96f28a3284c1272ce3836a58c3f4" kindref="member">hubPidFileName</ref>;</highlight></codeline>
+<codeline lineno="117" refid="classCfg_1a49753408815026a15f56b7cd4247d06b" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/><ref refid="classCfg_1a49753408815026a15f56b7cd4247d06b" kindref="member">hubTcpPortNo</ref>;</highlight></codeline>
+<codeline lineno="121" refid="classCfg_1a0ce03c7bc0c0b5a6f75b0276ba1cf42a" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classCfg_1a0ce03c7bc0c0b5a6f75b0276ba1cf42a" kindref="member">hubTcpPortSet</ref>;</highlight></codeline>
+<codeline lineno="125" refid="classCfg_1ad250bf11fc3d0a13e3bb37c9517849e0" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classCfg_1ad250bf11fc3d0a13e3bb37c9517849e0" kindref="member">hubUdpPortSet</ref>;</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"></highlight><highlight class="comment">/**********************************************</highlight></codeline>
+<codeline lineno="127"><highlight class="comment"><sp/>*<sp/>Database</highlight></codeline>
+<codeline lineno="128"><highlight class="comment"><sp/>**********************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="132" refid="classCfg_1ae1e7f239b800f0104dcc73157004caeb" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/><ref refid="classCfg_1ae1e7f239b800f0104dcc73157004caeb" kindref="member">dbHostName</ref>;</highlight></codeline>
+<codeline lineno="136" refid="classCfg_1aabb83b325c0f808fcc7401677e317302" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/><ref refid="classCfg_1aabb83b325c0f808fcc7401677e317302" kindref="member">dbPortNo</ref>;</highlight></codeline>
+<codeline lineno="140" refid="classCfg_1a37997fdb4da8fbe674ff617a1ac00679" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/><ref refid="classCfg_1a37997fdb4da8fbe674ff617a1ac00679" kindref="member">dbSchema</ref>;</highlight></codeline>
+<codeline lineno="144" refid="classCfg_1ab96f7a9e239ea73732644835532d918b" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/><ref refid="classCfg_1ab96f7a9e239ea73732644835532d918b" kindref="member">dbUserName</ref>;</highlight></codeline>
+<codeline lineno="148" refid="classCfg_1ad1436b8fe2ea5d64a531bb25424d8384" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/><ref refid="classCfg_1ad1436b8fe2ea5d64a531bb25424d8384" kindref="member">dbPassWord</ref>;</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"></highlight><highlight class="comment">/**********************************************</highlight></codeline>
+<codeline lineno="150"><highlight class="comment"><sp/>*<sp/>FHEM</highlight></codeline>
+<codeline lineno="151"><highlight class="comment"><sp/>**********************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="155" refid="classCfg_1a1b5fdfaf2ee6ae30d7f229ed26d088a6" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/><ref refid="classCfg_1a1b5fdfaf2ee6ae30d7f229ed26d088a6" kindref="member">fhemHostName</ref>;</highlight></codeline>
+<codeline lineno="160" refid="classCfg_1a7283a114baa582d592c3aea559a6efe5" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/><ref refid="classCfg_1a7283a114baa582d592c3aea559a6efe5" kindref="member">fhemPortNo</ref>;</highlight></codeline>
+<codeline lineno="164" refid="classCfg_1ac7abf5aed3b16e826c70840b48716b14" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classCfg_1ac7abf5aed3b16e826c70840b48716b14" kindref="member">fhemHostSet</ref>;</highlight></codeline>
+<codeline lineno="168" refid="classCfg_1a93959e7a9564ffeb208eca45685a8c97" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classCfg_1a93959e7a9564ffeb208eca45685a8c97" kindref="member">fhemPortSet</ref>;</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"></highlight></codeline>
+<codeline lineno="170"><highlight class="normal"></highlight><highlight class="comment">/**********************************************</highlight></codeline>
+<codeline lineno="171"><highlight class="comment"><sp/>*<sp/>GENERIC</highlight></codeline>
+<codeline lineno="172"><highlight class="comment"><sp/>**********************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="176" refid="classCfg_1a9eefce31b95beb80f66eff2f9ba9294c" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classCfg_1a9eefce31b95beb80f66eff2f9ba9294c" kindref="member">startDaemon</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="180" refid="classCfg_1a029cac532a52c6716be2f0a8f4c4b3cc" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classCfg_1a029cac532a52c6716be2f0a8f4c4b3cc" kindref="member">startSniffer</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="184" refid="classCfg_1a65e582daf11d5dcbd222ad1501d33ff8" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classCfg_1a65e582daf11d5dcbd222ad1501d33ff8" kindref="member">startScanner</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="188" refid="classCfg_1aa310020b99a2cfe3900b724a400344eb" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="classCfg_1aa310020b99a2cfe3900b724a400344eb" kindref="member">setScanLevel</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="192" refid="classCfg_1ae5b09f245e8241e22339aa61a21a2fe3" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="classCfg_1ae5b09f245e8241e22339aa61a21a2fe3" kindref="member">channelScanner_Channel</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="193"><highlight class="normal"></highlight></codeline>
+<codeline lineno="201"><highlight class="normal"><ref refid="classCfg_1aac9284b09ac6aa86a892dc8ab09989ec" kindref="member">Cfg</ref>(</highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>_prgName,<sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>_prgVersion);</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"></highlight></codeline>
+<codeline lineno="209"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classCfg_1ac7f6954d45eef4c17ef652b2ed7b1c6b" kindref="member">usage</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>prgName);</highlight></codeline>
+<codeline lineno="210"><highlight class="normal"></highlight></codeline>
+<codeline lineno="220"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classCfg_1a962963a6c34ac9851259ccf5ab165db1" kindref="member">processParams</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>prgName,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>argc,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>argv[]);</highlight></codeline>
+<codeline lineno="221"><highlight class="normal"></highlight></codeline>
+<codeline lineno="225"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classCfg_1a059563d535a096471410e5a76d4a5c96" kindref="member">printConfig_gw</ref><sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="226"><highlight class="normal"></highlight></codeline>
+<codeline lineno="230"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classCfg_1a12a56a77125fa182718e2164a23eed48" kindref="member">printConfig_hub</ref><sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="231"><highlight class="normal"></highlight></codeline>
+<codeline lineno="235"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classCfg_1ab785421eee0353b1b5a6443d9f97efaf" kindref="member">printConfig_db</ref><sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="236"><highlight class="normal"></highlight></codeline>
+<codeline lineno="243"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classCfg_1acfcbf6a7e35c893ad13e41713a5b51a9" kindref="member">setPidFile</ref>(</highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>pidFileName);</highlight></codeline>
+<codeline lineno="244"><highlight class="normal"></highlight></codeline>
+<codeline lineno="250"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classCfg_1acf0cea642cbaafbd61860629a8076b15" kindref="member">removePidFile</ref>(</highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>pidFileName);</highlight></codeline>
+<codeline lineno="251"><highlight class="normal"></highlight></codeline>
+<codeline lineno="259"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classCfg_1a28651b7c3cb08d57921e53340ef5e933" kindref="member">checkPidFileSet</ref>(</highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>pidFileName);</highlight></codeline>
+<codeline lineno="260"><highlight class="normal"></highlight></codeline>
+<codeline lineno="261"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="262"><highlight class="normal"></highlight></codeline>
+<codeline lineno="263"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/><sp/></highlight><highlight class="comment">//CFG_H</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h"/>
+  </compounddef>
+</doxygen>

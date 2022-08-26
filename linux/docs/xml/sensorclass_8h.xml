@@ -1,0 +1,290 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="sensorclass_8h" kind="file" language="C++">
+    <compoundname>sensorclass.h</compoundname>
+    <includes local="no">stdint.h</includes>
+    <includes local="no">cstring</includes>
+    <includes local="no">unistd.h</includes>
+    <includes local="no">cstdlib</includes>
+    <includes refid="rf24__config_8h" local="yes">rf24_config.h</includes>
+    <includes refid="rf24hub__config_8h" local="yes">rf24hub_config.h</includes>
+    <includes refid="common_8h" local="yes">common.h</includes>
+    <includedby refid="database_8h" local="yes">database.h</includedby>
+    <includedby refid="rf24hubd_8h" local="yes">rf24hubd.h</includedby>
+    <includedby refid="sensorclass_8cpp" local="yes">sensorclass.cpp</includedby>
+    <incdepgraph>
+      <node id="8">
+        <label>common.h</label>
+        <link refid="common_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="21">
+        <label>config.h</label>
+        <link refid="config_8h"/>
+      </node>
+      <node id="22">
+        <label>dataformat.h</label>
+        <link refid="dataformat_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>rf24_config.h</label>
+        <link refid="rf24__config_8h"/>
+      </node>
+      <node id="7">
+        <label>rf24hub_config.h</label>
+        <link refid="rf24hub__config_8h"/>
+      </node>
+      <node id="1">
+        <label>sensorclass.h</label>
+        <link refid="sensorclass_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="25">
+        <label>version.h</label>
+        <link refid="version_8h"/>
+      </node>
+      <node id="16">
+        <label>arpa/inet.h</label>
+      </node>
+      <node id="18">
+        <label>cstdio</label>
+      </node>
+      <node id="5">
+        <label>cstdlib</label>
+      </node>
+      <node id="3">
+        <label>cstring</label>
+      </node>
+      <node id="9">
+        <label>ctype.h</label>
+      </node>
+      <node id="20">
+        <label>fcntl.h</label>
+      </node>
+      <node id="17">
+        <label>netdb.h</label>
+      </node>
+      <node id="19">
+        <label>netinet/in.h</label>
+      </node>
+      <node id="13">
+        <label>stdbool.h</label>
+      </node>
+      <node id="2">
+        <label>stdint.h</label>
+      </node>
+      <node id="23">
+        <label>stdio.h</label>
+      </node>
+      <node id="12">
+        <label>stdlib.h</label>
+      </node>
+      <node id="24">
+        <label>string.h</label>
+      </node>
+      <node id="15">
+        <label>sys/socket.h</label>
+      </node>
+      <node id="11">
+        <label>sys/time.h</label>
+      </node>
+      <node id="14">
+        <label>sys/types.h</label>
+      </node>
+      <node id="10">
+        <label>time.h</label>
+      </node>
+      <node id="4">
+        <label>unistd.h</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="3">
+        <label>database.cpp</label>
+        <link refid="database_8cpp"/>
+      </node>
+      <node id="2">
+        <label>database.h</label>
+        <link refid="database_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>rf24hubd.cpp</label>
+        <link refid="rf24hubd_8cpp"/>
+      </node>
+      <node id="4">
+        <label>rf24hubd.h</label>
+        <link refid="rf24hubd_8h"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>sensorclass.cpp</label>
+        <link refid="sensorclass_8cpp"/>
+      </node>
+      <node id="1">
+        <label>sensorclass.h</label>
+        <link refid="sensorclass_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="classSensorClass" prot="public">SensorClass</innerclass>
+    <innerclass refid="structSensorClass_1_1sensor__t" prot="private">SensorClass::sensor_t</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>_SENSOR_H_<sp/><sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_SENSOR_H_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cstring&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cstdlib&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="rf24__config_8h" kindref="compound">rf24_config.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="rf24hub__config_8h" kindref="compound">rf24hub_config.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="common_8h" kindref="compound">common.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20" refid="classSensorClass" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classSensorClass" kindref="compound">SensorClass</ref><sp/>{</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">sensor_t<sp/>{</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint32_t<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sensor_id;</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sensor_name[<ref refid="group__cfgprm_1ga59a900dc73429083f9aa8d06c504e493" kindref="member">FHEMDEVLENGTH</ref>];</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref><sp/><sp/><sp/><sp/>node_id;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>channel;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>datatype;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>fhem_dev[<ref refid="group__cfgprm_1ga59a900dc73429083f9aa8d06c504e493" kindref="member">FHEMDEVLENGTH</ref>];</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint32_t<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>last_data;</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint32_t<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>last_utime;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sensor_t*<sp/><sp/><sp/><sp/><sp/><sp/><sp/>p_next;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="36"><highlight class="normal">sensor_t*<sp/><sp/><sp/><sp/><sp/>p_initial;</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight><highlight class="comment">/**************************************************************</highlight></codeline>
+<codeline lineno="38"><highlight class="comment"><sp/>*<sp/>char<sp/>buffer<sp/>zur<sp/>allgemeinen<sp/>Ausgabe</highlight></codeline>
+<codeline lineno="39"><highlight class="comment"><sp/>*************************************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><sp/><sp/><sp/><sp/><sp/><sp/>buf;</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><sp/><sp/><sp/><sp/><sp/><sp/>buf1;</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight><highlight class="comment">/**************************************************************</highlight></codeline>
+<codeline lineno="43"><highlight class="comment"><sp/>*<sp/>char<sp/>buffer<sp/>zur<sp/>Ausgabe<sp/>des<sp/>timestrings<sp/>==&gt;<sp/>ts(tsbuf)</highlight></codeline>
+<codeline lineno="44"><highlight class="comment"><sp/>*************************************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><sp/><sp/><sp/><sp/><sp/><sp/>tsbuf;</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight><highlight class="comment">/**************************************************************</highlight></codeline>
+<codeline lineno="47"><highlight class="comment"><sp/>*<sp/>Bufferinterner<sp/>Speicher<sp/>für<sp/>den<sp/>verboseLevel</highlight></codeline>
+<codeline lineno="48"><highlight class="comment"><sp/>*************************************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal">uint16_t<sp/><sp/><sp/><sp/>verboseLevel;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight><highlight class="comment">/**************************************************************</highlight></codeline>
+<codeline lineno="51"><highlight class="comment"><sp/>*<sp/>fügt<sp/>einen<sp/>neuen<sp/>record<sp/>zum<sp/>Buffer<sp/>hinzu</highlight></codeline>
+<codeline lineno="52"><highlight class="comment"><sp/>*************************************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>newEntry(sensor_t*);</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight><highlight class="comment">/**************************************************************</highlight></codeline>
+<codeline lineno="55"><highlight class="comment"><sp/>*<sp/>löscht<sp/>den<sp/>übergebenen<sp/>record<sp/>aus<sp/>dem<sp/>Buffer</highlight></codeline>
+<codeline lineno="56"><highlight class="comment"><sp/>*************************************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>delEntry(sensor_t*);</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classSensorClass_1a978a64b43a7e945913bfd9577849f90e" kindref="member">setVerbose</ref>(uint16_t<sp/>_verboseLevel);</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classSensorClass_1a90a48ee12a5946d3f037051dbcf6e80f" kindref="member">cleanup</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classSensorClass_1a35adde018d58f27fc3d3c7805c9fab09" kindref="member">addSensor</ref>(uint32_t<sp/>sensor,<sp/><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref><sp/>node_id,<sp/>uint8_t<sp/>channel,<sp/>uint8_t<sp/>datatype,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>fhem_dev,<sp/>uint32_t<sp/>last_utime,<sp/>uint32_t<sp/>last_data,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>sensor_name);</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classSensorClass_1a7fb1baf1cb828cb7b28fedab0f6a2dd8" kindref="member">updateLastVal</ref>(uint32_t<sp/>sensor_id,<sp/>uint32_t<sp/>last_data);</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"></highlight></codeline>
+<codeline lineno="99"><highlight class="normal">uint32_t<sp/><ref refid="classSensorClass_1ae99fc0db76089763c473e839591e707e" kindref="member">getSensorByNodeChannel</ref>(<ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref><sp/>node_id,<sp/>uint8_t<sp/>channel);</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight></codeline>
+<codeline lineno="108"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classSensorClass_1a40f85d0824bc6b06a5b3ab42e6f1d080" kindref="member">getNodeChannelBySensorID</ref>(<ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref>*<sp/>p_node_id,<sp/>uint8_t*<sp/>p_channel,<sp/>uint32_t<sp/>sensor_id);</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"></highlight></codeline>
+<codeline lineno="117"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classSensorClass_1afd56d3c39fa1d965a3e8c4660a0a8eb4" kindref="member">getNodeChannelBySensorName</ref>(<ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref><sp/>*p_node_id,<sp/>uint8_t*<sp/>p_channel,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>sensor_name);</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"></highlight></codeline>
+<codeline lineno="125"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classSensorClass_1a94fb730fd99d71a554e4b8253855e292" kindref="member">getNodeChannelByFhemDev</ref>(<ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref><sp/>*p_node_id,<sp/>uint8_t*<sp/>p_channel,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>fhem_dev);</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"></highlight></codeline>
+<codeline lineno="133"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="classSensorClass_1aab0e1acf140241ebcef1510e5e4db2da" kindref="member">getFhemDevByNodeChannel</ref>(<ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref><sp/>node_id,<sp/>uint8_t<sp/>channel);</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"></highlight></codeline>
+<codeline lineno="141"><highlight class="normal">int8_t<sp/><ref refid="classSensorClass_1aec94a66c9bc5e9eebf7a60cef07fa2a6" kindref="member">getDataTypeByNodeChannel</ref>(<ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref><sp/>node_id,<sp/>uint8_t<sp/>channel);</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"></highlight></codeline>
+<codeline lineno="153"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classSensorClass_1ac9bd62ebe2c2b7a7c7b1ae121f8b2a4b" kindref="member">printBuffer</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>new_tn_in_socket,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>html);</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"></highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><ref refid="classSensorClass_1a80d1ef4799b02eb87a0a52b273dc3753" kindref="member">SensorClass</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"></highlight></codeline>
+<codeline lineno="157"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"></highlight></codeline>
+<codeline lineno="159"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//<sp/>_SENSOR_H_</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h"/>
+  </compounddef>
+</doxygen>

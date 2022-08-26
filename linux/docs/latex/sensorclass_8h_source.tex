@@ -1,0 +1,84 @@
+\hypertarget{sensorclass_8h_source}{}\doxysection{sensorclass.\+h}
+\mbox{\hyperlink{sensorclass_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#ifndef \_SENSOR\_H\_   }}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#define \_SENSOR\_H\_}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include <cstring>}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include <unistd.h>}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#include <cstdlib>}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{rf24__config_8h}{rf24\_config.h}}"{}}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{rf24hub__config_8h}{rf24hub\_config.h}}"{}}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{common_8h}{common.h}}"{}}}
+\DoxyCodeLine{19 }
+\DoxyCodeLine{20 \textcolor{keyword}{class }\mbox{\hyperlink{classSensorClass}{SensorClass}} \{}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22     }
+\DoxyCodeLine{23 \textcolor{keyword}{private}:}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25 \textcolor{keyword}{struct }sensor\_t \{}
+\DoxyCodeLine{26         uint32\_t        sensor\_id;}
+\DoxyCodeLine{27         \textcolor{keywordtype}{char}            sensor\_name[\mbox{\hyperlink{group__cfgprm_ga59a900dc73429083f9aa8d06c504e493}{FHEMDEVLENGTH}}];}
+\DoxyCodeLine{28         \mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}}    node\_id;        }
+\DoxyCodeLine{29         uint8\_t         channel;}
+\DoxyCodeLine{30         uint8\_t         datatype;}
+\DoxyCodeLine{31         \textcolor{keywordtype}{char}            fhem\_dev[\mbox{\hyperlink{group__cfgprm_ga59a900dc73429083f9aa8d06c504e493}{FHEMDEVLENGTH}}];}
+\DoxyCodeLine{32         uint32\_t        last\_data;}
+\DoxyCodeLine{33         uint32\_t        last\_utime;}
+\DoxyCodeLine{34         sensor\_t*       p\_next;}
+\DoxyCodeLine{35 \};}
+\DoxyCodeLine{36 sensor\_t*     p\_initial;}
+\DoxyCodeLine{37 \textcolor{comment}{/**************************************************************}}
+\DoxyCodeLine{38 \textcolor{comment}{ * char buffer zur allgemeinen Ausgabe}}
+\DoxyCodeLine{39 \textcolor{comment}{ *************************************************************/}}
+\DoxyCodeLine{40 \textcolor{keywordtype}{char}*       buf;}
+\DoxyCodeLine{41 \textcolor{keywordtype}{char}*       buf1;}
+\DoxyCodeLine{42 \textcolor{comment}{/**************************************************************}}
+\DoxyCodeLine{43 \textcolor{comment}{ * char buffer zur Ausgabe des timestrings ==> ts(tsbuf)}}
+\DoxyCodeLine{44 \textcolor{comment}{ *************************************************************/}}
+\DoxyCodeLine{45 \textcolor{keywordtype}{char}*       tsbuf;}
+\DoxyCodeLine{46 \textcolor{comment}{/**************************************************************}}
+\DoxyCodeLine{47 \textcolor{comment}{ * Bufferinterner Speicher für den verboseLevel}}
+\DoxyCodeLine{48 \textcolor{comment}{ *************************************************************/}}
+\DoxyCodeLine{49 uint16\_t    verboseLevel;}
+\DoxyCodeLine{50 \textcolor{comment}{/**************************************************************}}
+\DoxyCodeLine{51 \textcolor{comment}{ * fügt einen neuen record zum Buffer hinzu}}
+\DoxyCodeLine{52 \textcolor{comment}{ *************************************************************/}}
+\DoxyCodeLine{53 \textcolor{keywordtype}{void}        newEntry(sensor\_t*);}
+\DoxyCodeLine{54 \textcolor{comment}{/**************************************************************}}
+\DoxyCodeLine{55 \textcolor{comment}{ * löscht den übergebenen record aus dem Buffer}}
+\DoxyCodeLine{56 \textcolor{comment}{ *************************************************************/}}
+\DoxyCodeLine{57 \textcolor{keywordtype}{bool}        delEntry(sensor\_t*);}
+\DoxyCodeLine{58 }
+\DoxyCodeLine{59 \textcolor{keyword}{public}:}
+\DoxyCodeLine{60     }
+\DoxyCodeLine{65 \textcolor{keywordtype}{void} \mbox{\hyperlink{classSensorClass_a978a64b43a7e945913bfd9577849f90e}{setVerbose}}(uint16\_t \_verboseLevel);}
+\DoxyCodeLine{66 }
+\DoxyCodeLine{70 \textcolor{keywordtype}{void} \mbox{\hyperlink{classSensorClass_a90a48ee12a5946d3f037051dbcf6e80f}{cleanup}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{71 }
+\DoxyCodeLine{83 \textcolor{keywordtype}{void} \mbox{\hyperlink{classSensorClass_a35adde018d58f27fc3d3c7805c9fab09}{addSensor}}(uint32\_t sensor, \mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}} node\_id, uint8\_t channel, uint8\_t datatype, \textcolor{keywordtype}{char}* fhem\_dev, uint32\_t last\_utime, uint32\_t last\_data, \textcolor{keywordtype}{char}* sensor\_name);}
+\DoxyCodeLine{84 }
+\DoxyCodeLine{91 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classSensorClass_a7fb1baf1cb828cb7b28fedab0f6a2dd8}{updateLastVal}}(uint32\_t sensor\_id, uint32\_t last\_data);}
+\DoxyCodeLine{92 }
+\DoxyCodeLine{99 uint32\_t \mbox{\hyperlink{classSensorClass_ae99fc0db76089763c473e839591e707e}{getSensorByNodeChannel}}(\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}} node\_id, uint8\_t channel);}
+\DoxyCodeLine{100 }
+\DoxyCodeLine{108 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classSensorClass_a40f85d0824bc6b06a5b3ab42e6f1d080}{getNodeChannelBySensorID}}(\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}}* p\_node\_id, uint8\_t* p\_channel, uint32\_t sensor\_id);}
+\DoxyCodeLine{109 }
+\DoxyCodeLine{117 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classSensorClass_afd56d3c39fa1d965a3e8c4660a0a8eb4}{getNodeChannelBySensorName}}(\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}} *p\_node\_id, uint8\_t* p\_channel, \textcolor{keywordtype}{char}* sensor\_name);}
+\DoxyCodeLine{118 }
+\DoxyCodeLine{125 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classSensorClass_a94fb730fd99d71a554e4b8253855e292}{getNodeChannelByFhemDev}}(\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}} *p\_node\_id, uint8\_t* p\_channel, \textcolor{keywordtype}{char}* fhem\_dev);}
+\DoxyCodeLine{126 }
+\DoxyCodeLine{133 \textcolor{keywordtype}{char}* \mbox{\hyperlink{classSensorClass_aab0e1acf140241ebcef1510e5e4db2da}{getFhemDevByNodeChannel}}(\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}} node\_id, uint8\_t channel);}
+\DoxyCodeLine{134 }
+\DoxyCodeLine{141 int8\_t \mbox{\hyperlink{classSensorClass_aec94a66c9bc5e9eebf7a60cef07fa2a6}{getDataTypeByNodeChannel}}(\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}} node\_id, uint8\_t channel);}
+\DoxyCodeLine{142 }
+\DoxyCodeLine{153 \textcolor{keywordtype}{void} \mbox{\hyperlink{classSensorClass_ac9bd62ebe2c2b7a7c7b1ae121f8b2a4b}{printBuffer}}(\textcolor{keywordtype}{int} new\_tn\_in\_socket, \textcolor{keywordtype}{bool} html);}
+\DoxyCodeLine{154 }
+\DoxyCodeLine{155 \mbox{\hyperlink{classSensorClass_a80d1ef4799b02eb87a0a52b273dc3753}{SensorClass}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{156 }
+\DoxyCodeLine{157 \};}
+\DoxyCodeLine{158 }
+\DoxyCodeLine{159 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// \_SENSOR\_H\_}}
+
+\end{DoxyCode}

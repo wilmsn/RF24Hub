@@ -1,0 +1,158 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structSensorClass_1_1sensor__t" kind="struct" language="C++" prot="private">
+    <compoundname>SensorClass::sensor_t</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structSensorClass_1_1sensor__t_1ac7e946e5103f870a696cbe02ca9c2369" prot="public" static="no" mutable="no">
+        <type>uint32_t</type>
+        <definition>uint32_t SensorClass::sensor_t::sensor_id</definition>
+        <argsstring></argsstring>
+        <name>sensor_id</name>
+        <qualifiedname>SensorClass::sensor_t::sensor_id</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="26" column="25" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structSensorClass_1_1sensor__t_1ac9d246562c1da7f04e0f5969b1507c9a" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char SensorClass::sensor_t::sensor_name[FHEMDEVLENGTH]</definition>
+        <argsstring>[FHEMDEVLENGTH]</argsstring>
+        <name>sensor_name</name>
+        <qualifiedname>SensorClass::sensor_t::sensor_name</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="27" column="25" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structSensorClass_1_1sensor__t_1a0746b532e24aa580af6f609b8d61591a" prot="public" static="no" mutable="no">
+        <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+        <definition>NODE_DATTYPE SensorClass::sensor_t::node_id</definition>
+        <argsstring></argsstring>
+        <name>node_id</name>
+        <qualifiedname>SensorClass::sensor_t::node_id</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="28" column="25" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structSensorClass_1_1sensor__t_1ae5c7584f21533e822b2289bfc570f99d" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t SensorClass::sensor_t::channel</definition>
+        <argsstring></argsstring>
+        <name>channel</name>
+        <qualifiedname>SensorClass::sensor_t::channel</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="29" column="25" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structSensorClass_1_1sensor__t_1a651444294b9b578733df8fd994615633" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t SensorClass::sensor_t::datatype</definition>
+        <argsstring></argsstring>
+        <name>datatype</name>
+        <qualifiedname>SensorClass::sensor_t::datatype</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="30" column="25" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structSensorClass_1_1sensor__t_1aa82f199f9a5eb8e4878a53c757531d30" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char SensorClass::sensor_t::fhem_dev[FHEMDEVLENGTH]</definition>
+        <argsstring>[FHEMDEVLENGTH]</argsstring>
+        <name>fhem_dev</name>
+        <qualifiedname>SensorClass::sensor_t::fhem_dev</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="31" column="25" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structSensorClass_1_1sensor__t_1a7443ecd0cd2f0c47605eda037f271242" prot="public" static="no" mutable="no">
+        <type>uint32_t</type>
+        <definition>uint32_t SensorClass::sensor_t::last_data</definition>
+        <argsstring></argsstring>
+        <name>last_data</name>
+        <qualifiedname>SensorClass::sensor_t::last_data</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="32" column="25" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structSensorClass_1_1sensor__t_1a0a2016f2bf117b59f55a57bed23776f4" prot="public" static="no" mutable="no">
+        <type>uint32_t</type>
+        <definition>uint32_t SensorClass::sensor_t::last_utime</definition>
+        <argsstring></argsstring>
+        <name>last_utime</name>
+        <qualifiedname>SensorClass::sensor_t::last_utime</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="33" column="25" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structSensorClass_1_1sensor__t_1af6a95cf0ac34c402abcdf83121e85289" prot="public" static="no" mutable="no">
+        <type>sensor_t *</type>
+        <definition>sensor_t* SensorClass::sensor_t::p_next</definition>
+        <argsstring></argsstring>
+        <name>p_next</name>
+        <qualifiedname>SensorClass::sensor_t::p_next</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="34" column="24" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>SensorClass::sensor_t</label>
+        <childnode refid="1" relation="usage">
+          <edgelabel>p_next</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="25" column="1" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" bodystart="25" bodyend="35"/>
+    <listofallmembers>
+      <member refid="structSensorClass_1_1sensor__t_1ae5c7584f21533e822b2289bfc570f99d" prot="public" virt="non-virtual"><scope>SensorClass::sensor_t</scope><name>channel</name></member>
+      <member refid="structSensorClass_1_1sensor__t_1a651444294b9b578733df8fd994615633" prot="public" virt="non-virtual"><scope>SensorClass::sensor_t</scope><name>datatype</name></member>
+      <member refid="structSensorClass_1_1sensor__t_1aa82f199f9a5eb8e4878a53c757531d30" prot="public" virt="non-virtual"><scope>SensorClass::sensor_t</scope><name>fhem_dev</name></member>
+      <member refid="structSensorClass_1_1sensor__t_1a7443ecd0cd2f0c47605eda037f271242" prot="public" virt="non-virtual"><scope>SensorClass::sensor_t</scope><name>last_data</name></member>
+      <member refid="structSensorClass_1_1sensor__t_1a0a2016f2bf117b59f55a57bed23776f4" prot="public" virt="non-virtual"><scope>SensorClass::sensor_t</scope><name>last_utime</name></member>
+      <member refid="structSensorClass_1_1sensor__t_1a0746b532e24aa580af6f609b8d61591a" prot="public" virt="non-virtual"><scope>SensorClass::sensor_t</scope><name>node_id</name></member>
+      <member refid="structSensorClass_1_1sensor__t_1af6a95cf0ac34c402abcdf83121e85289" prot="public" virt="non-virtual"><scope>SensorClass::sensor_t</scope><name>p_next</name></member>
+      <member refid="structSensorClass_1_1sensor__t_1ac7e946e5103f870a696cbe02ca9c2369" prot="public" virt="non-virtual"><scope>SensorClass::sensor_t</scope><name>sensor_id</name></member>
+      <member refid="structSensorClass_1_1sensor__t_1ac9d246562c1da7f04e0f5969b1507c9a" prot="public" virt="non-virtual"><scope>SensorClass::sensor_t</scope><name>sensor_name</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

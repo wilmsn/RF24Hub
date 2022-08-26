@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structGatewayClass_1_1gateway__t" kind="struct" language="C++" prot="private">
+    <compoundname>GatewayClass::gateway_t</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structGatewayClass_1_1gateway__t_1aa32b883025d133b9f7a2cd23b9cdd508" prot="public" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* GatewayClass::gateway_t::gw_hostname</definition>
+        <argsstring></argsstring>
+        <name>gw_hostname</name>
+        <qualifiedname>GatewayClass::gateway_t::gw_hostname</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" line="27" column="27" bodyfile="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGatewayClass_1_1gateway__t_1aeca7c42646060b4b1805c0e432fd7208" prot="public" static="no" mutable="no">
+        <type>uint16_t</type>
+        <definition>uint16_t GatewayClass::gateway_t::gw_no</definition>
+        <argsstring></argsstring>
+        <name>gw_no</name>
+        <qualifiedname>GatewayClass::gateway_t::gw_no</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" line="28" column="28" bodyfile="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGatewayClass_1_1gateway__t_1a4d8c3128acb55bf246130694790c25b7" prot="public" static="no" mutable="no">
+        <type>time_t</type>
+        <definition>time_t GatewayClass::gateway_t::last_contact</definition>
+        <argsstring></argsstring>
+        <name>last_contact</name>
+        <qualifiedname>GatewayClass::gateway_t::last_contact</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" line="29" column="28" bodyfile="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGatewayClass_1_1gateway__t_1acf25101ef85d02296f2bde5442b7a0c0" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool GatewayClass::gateway_t::isActive</definition>
+        <argsstring></argsstring>
+        <name>isActive</name>
+        <qualifiedname>GatewayClass::gateway_t::isActive</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" line="30" column="28" bodyfile="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGatewayClass_1_1gateway__t_1ab15043454e14a11a03e7c5601e35a800" prot="public" static="no" mutable="no">
+        <type>gateway_t *</type>
+        <definition>gateway_t* GatewayClass::gateway_t::p_next</definition>
+        <argsstring></argsstring>
+        <name>p_next</name>
+        <qualifiedname>GatewayClass::gateway_t::p_next</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" line="31" column="27" bodyfile="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>GatewayClass::gateway_t</label>
+        <childnode refid="1" relation="usage">
+          <edgelabel>p_next</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" line="26" column="1" bodyfile="/stick/netz/projekte/RF24Hub/linux/gatewayclass.h" bodystart="26" bodyend="32"/>
+    <listofallmembers>
+      <member refid="structGatewayClass_1_1gateway__t_1aa32b883025d133b9f7a2cd23b9cdd508" prot="public" virt="non-virtual"><scope>GatewayClass::gateway_t</scope><name>gw_hostname</name></member>
+      <member refid="structGatewayClass_1_1gateway__t_1aeca7c42646060b4b1805c0e432fd7208" prot="public" virt="non-virtual"><scope>GatewayClass::gateway_t</scope><name>gw_no</name></member>
+      <member refid="structGatewayClass_1_1gateway__t_1acf25101ef85d02296f2bde5442b7a0c0" prot="public" virt="non-virtual"><scope>GatewayClass::gateway_t</scope><name>isActive</name></member>
+      <member refid="structGatewayClass_1_1gateway__t_1a4d8c3128acb55bf246130694790c25b7" prot="public" virt="non-virtual"><scope>GatewayClass::gateway_t</scope><name>last_contact</name></member>
+      <member refid="structGatewayClass_1_1gateway__t_1ab15043454e14a11a03e7c5601e35a800" prot="public" virt="non-virtual"><scope>GatewayClass::gateway_t</scope><name>p_next</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

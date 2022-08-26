@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structTnData__t" kind="struct" language="C++" prot="public">
+    <compoundname>TnData_t</compoundname>
+    <includes refid="common_8h" local="no">common.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structTnData__t_1a87707d4598519db53f7472c681124086" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char TnData_t::tntext[DEBUGSTRINGSIZE]</definition>
+        <argsstring>[DEBUGSTRINGSIZE]</argsstring>
+        <name>tntext</name>
+        <qualifiedname>TnData_t::tntext</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.h" line="45" column="14" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.h" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structTnData__t_1a0a24ed22b4cd43b3168f7aac9b856511" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int TnData_t::tn_socket</definition>
+        <argsstring></argsstring>
+        <name>tn_socket</name>
+        <qualifiedname>TnData_t::tn_socket</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.h" line="46" column="14" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.h" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/stick/netz/projekte/RF24Hub/linux/common.h" line="44" column="1" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.h" bodystart="44" bodyend="47"/>
+    <listofallmembers>
+      <member refid="structTnData__t_1a0a24ed22b4cd43b3168f7aac9b856511" prot="public" virt="non-virtual"><scope>TnData_t</scope><name>tn_socket</name></member>
+      <member refid="structTnData__t_1a87707d4598519db53f7472c681124086" prot="public" virt="non-virtual"><scope>TnData_t</scope><name>tntext</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

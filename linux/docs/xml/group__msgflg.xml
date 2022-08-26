@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="group__msgflg" kind="group">
+    <compoundname>msgflg</compoundname>
+    <title>Definition der Messageflags</title>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="group__msgflg_1ga929979867bb47a7888324bc579f63bdc" prot="public" static="no">
+        <name>PAYLOAD_FLAG_EMPTY</name>
+        <initializer>0b00000000</initializer>
+        <briefdescription>
+<para>Leeres Messageflag. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="157" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="157" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__msgflg_1gab11d6261c1644c2c90eae7de795de319" prot="public" static="no">
+        <name>PAYLOAD_FLAG_LASTMESSAGE</name>
+        <initializer>0b00000001</initializer>
+        <briefdescription>
+<para>Flag zeigt an das diese Nachricht die letzte (Teil-)Nachricht war. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="159" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="159" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__msgflg_1ga1cd37b5698541e3ce971f3344b8cb0f2" prot="public" static="no">
+        <name>PAYLOAD_FLAG_NEEDHELP</name>
+        <initializer>0b10000000</initializer>
+        <briefdescription>
+<para>Flag zeigt an das der Node Support benötigt (z.B. durch niedrige Spannung) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="161" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="161" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Definition der Messageflags =&gt; Payload Message Flags </para>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

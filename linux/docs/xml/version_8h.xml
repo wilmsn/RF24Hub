@@ -1,0 +1,200 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="version_8h" kind="file" language="C++">
+    <compoundname>version.h</compoundname>
+    <includedby refid="common_8h" local="yes">common.h</includedby>
+    <includedby refid="rf24gwd_8h" local="yes">rf24gwd.h</includedby>
+    <includedby refid="rf24hubd_8h" local="yes">rf24hubd.h</includedby>
+    <invincdepgraph>
+      <node id="4">
+        <label>cfg.cpp</label>
+        <link refid="cfg_8cpp"/>
+      </node>
+      <node id="3">
+        <label>cfg.h</label>
+        <link refid="cfg_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>common.cpp</label>
+        <link refid="common_8cpp"/>
+      </node>
+      <node id="2">
+        <label>common.h</label>
+        <link refid="common_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>database.cpp</label>
+        <link refid="database_8cpp"/>
+      </node>
+      <node id="10">
+        <label>database.h</label>
+        <link refid="database_8h"/>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="13">
+        <label>gatewayclass.cpp</label>
+        <link refid="gatewayclass_8cpp"/>
+      </node>
+      <node id="12">
+        <label>gatewayclass.h</label>
+        <link refid="gatewayclass_8h"/>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="15">
+        <label>nodeclass.cpp</label>
+        <link refid="nodeclass_8cpp"/>
+      </node>
+      <node id="14">
+        <label>nodeclass.h</label>
+        <link refid="nodeclass_8h"/>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="17">
+        <label>order.cpp</label>
+        <link refid="order_8cpp"/>
+      </node>
+      <node id="16">
+        <label>order.h</label>
+        <link refid="order_8h"/>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="19">
+        <label>orderbuffer.cpp</label>
+        <link refid="orderbuffer_8cpp"/>
+      </node>
+      <node id="18">
+        <label>orderbuffer.h</label>
+        <link refid="orderbuffer_8h"/>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>rf24gwd.cpp</label>
+        <link refid="rf24gwd_8cpp"/>
+      </node>
+      <node id="5">
+        <label>rf24gwd.h</label>
+        <link refid="rf24gwd_8h"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>rf24hubd.cpp</label>
+        <link refid="rf24hubd_8cpp"/>
+      </node>
+      <node id="7">
+        <label>rf24hubd.h</label>
+        <link refid="rf24hubd_8h"/>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="21">
+        <label>sensorclass.cpp</label>
+        <link refid="sensorclass_8cpp"/>
+      </node>
+      <node id="20">
+        <label>sensorclass.h</label>
+        <link refid="sensorclass_8h"/>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+      </node>
+      <node id="22">
+        <label>simulator.c</label>
+        <link refid="simulator_8c"/>
+      </node>
+      <node id="1">
+        <label>version.h</label>
+        <link refid="version_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="version_8h_1a1c6b0e0bdbb8d14a494a629fdf871511" prot="public" static="no">
+        <name>SWVERSION</name>
+        <initializer>2900</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/version.h" line="1" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/version.h" bodystart="1" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="version_8h_1a476a6cff0fb1a40441544f8a530ddbe9" prot="public" static="no">
+        <name>SWVERSION_STR</name>
+        <initializer>&quot;2.900dev&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/version.h" line="2" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/version.h" bodystart="2" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1" refid="version_8h_1a1c6b0e0bdbb8d14a494a629fdf871511" refkind="member"><highlight class="preprocessor">#define<sp/>SWVERSION<sp/><sp/><sp/>2900</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2" refid="version_8h_1a476a6cff0fb1a40441544f8a530ddbe9" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SWVERSION_STR<sp/><sp/><sp/>&quot;2.900dev&quot;</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/stick/netz/projekte/RF24Hub/linux/version.h"/>
+  </compounddef>
+</doxygen>

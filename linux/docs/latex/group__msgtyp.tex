@@ -1,0 +1,108 @@
+\hypertarget{group__msgtyp}{}\doxysection{Definition der Messagetypen}
+\label{group__msgtyp}\index{Definition der Messagetypen@{Definition der Messagetypen}}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{group__msgtyp_ga8ed9c5c04291e0672a6d1f39bf1978fa}{PAYLOAD\+\_\+\+TYPE\+\_\+\+INIT}}~1
+\item 
+\#define \mbox{\hyperlink{group__msgtyp_gad54e4cbc3efebbb4cb3321c41fd8df64}{PAYLOAD\+\_\+\+TYPE\+\_\+\+ESP}}~41
+\item 
+\#define \mbox{\hyperlink{group__msgtyp_gafddf6f34f055d5d9f09e75ffa2ae9892}{PAYLOAD\+\_\+\+TYPE\+\_\+\+HB}}~51
+\item 
+\#define \mbox{\hyperlink{group__msgtyp_ga74268dc65a0cc32f9195e4bb0cf204ef}{PAYLOAD\+\_\+\+TYPE\+\_\+\+HB\+\_\+\+RESP}}~52
+\item 
+\#define \mbox{\hyperlink{group__msgtyp_ga1d003667cb94fd56dd9eab06a2a1af15}{PAYLOAD\+\_\+\+TYPE\+\_\+\+DAT}}~61
+\item 
+\#define \mbox{\hyperlink{group__msgtyp_ga61bcd8adef5b203b5d7fbc98931dbcc6}{PAYLOAD\+\_\+\+TYPE\+\_\+\+DATRESP}}~62
+\item 
+\#define \mbox{\hyperlink{group__msgtyp_ga92669cdab68ff3e107fb427994ccd8a2}{PAYLOAD\+\_\+\+TYPE\+\_\+\+DATSTOP}}~63
+\item 
+\#define \mbox{\hyperlink{group__msgtyp_ga8db0468027a4128b2b9379b2f2924c3c}{PAYLOAD\+\_\+\+TYPE\+\_\+\+PING\+\_\+\+POW\+\_\+\+MIN}}~101
+\item 
+\#define \mbox{\hyperlink{group__msgtyp_ga7ca9b155447f464c8fb5be7820bab18c}{PAYLOAD\+\_\+\+TYPE\+\_\+\+PING\+\_\+\+POW\+\_\+\+LOW}}~102
+\item 
+\#define \mbox{\hyperlink{group__msgtyp_gad57d6606e11d197b130a79f5d2d4dac4}{PAYLOAD\+\_\+\+TYPE\+\_\+\+PING\+\_\+\+POW\+\_\+\+HIGH}}~103
+\item 
+\#define \mbox{\hyperlink{group__msgtyp_gaca1e0957550707c027e2fe45dd387463}{PAYLOAD\+\_\+\+TYPE\+\_\+\+PING\+\_\+\+POW\+\_\+\+MAX}}~104
+\item 
+\#define \mbox{\hyperlink{group__msgtyp_ga9649cc4d662d6db2dad415a6f70dff4b}{PAYLOAD\+\_\+\+TYPE\+\_\+\+PING\+\_\+\+END}}~105
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Nachrichten werden in abhängigkeit von ihrem Nachrichtentyp im Hub unterschiedlich behandelt. {\bfseries{Sonderfall Ping zur Feldstärkenmessung\+:}} Ein Ping geht immer vom Node aus. Durch die unterschiedlichen Sendeleistungen kann die Qualität der Funkverbindung beurteilt werden. 
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{group__msgtyp_ga1d003667cb94fd56dd9eab06a2a1af15}\label{group__msgtyp_ga1d003667cb94fd56dd9eab06a2a1af15}} 
+\index{Definition der Messagetypen@{Definition der Messagetypen}!PAYLOAD\_TYPE\_DAT@{PAYLOAD\_TYPE\_DAT}}
+\index{PAYLOAD\_TYPE\_DAT@{PAYLOAD\_TYPE\_DAT}!Definition der Messagetypen@{Definition der Messagetypen}}
+\doxysubsubsection{\texorpdfstring{PAYLOAD\_TYPE\_DAT}{PAYLOAD\_TYPE\_DAT}}
+{\footnotesize\ttfamily \#define PAYLOAD\+\_\+\+TYPE\+\_\+\+DAT~61}
+
+Daten Nachricht, erfolgt als Antwort auf einen Heartbeat wenn der Hub dem Node etwas mitteilen möchte. Ursprung\+: Hub; Empfänger\+: Node \mbox{\Hypertarget{group__msgtyp_ga61bcd8adef5b203b5d7fbc98931dbcc6}\label{group__msgtyp_ga61bcd8adef5b203b5d7fbc98931dbcc6}} 
+\index{Definition der Messagetypen@{Definition der Messagetypen}!PAYLOAD\_TYPE\_DATRESP@{PAYLOAD\_TYPE\_DATRESP}}
+\index{PAYLOAD\_TYPE\_DATRESP@{PAYLOAD\_TYPE\_DATRESP}!Definition der Messagetypen@{Definition der Messagetypen}}
+\doxysubsubsection{\texorpdfstring{PAYLOAD\_TYPE\_DATRESP}{PAYLOAD\_TYPE\_DATRESP}}
+{\footnotesize\ttfamily \#define PAYLOAD\+\_\+\+TYPE\+\_\+\+DATRESP~62}
+
+Antwort auf Daten Nachricht verarbeitete Daten werden unverändert zurückgesand Ursprung\+: Node; Empfänger\+: Hub \mbox{\Hypertarget{group__msgtyp_ga92669cdab68ff3e107fb427994ccd8a2}\label{group__msgtyp_ga92669cdab68ff3e107fb427994ccd8a2}} 
+\index{Definition der Messagetypen@{Definition der Messagetypen}!PAYLOAD\_TYPE\_DATSTOP@{PAYLOAD\_TYPE\_DATSTOP}}
+\index{PAYLOAD\_TYPE\_DATSTOP@{PAYLOAD\_TYPE\_DATSTOP}!Definition der Messagetypen@{Definition der Messagetypen}}
+\doxysubsubsection{\texorpdfstring{PAYLOAD\_TYPE\_DATSTOP}{PAYLOAD\_TYPE\_DATSTOP}}
+{\footnotesize\ttfamily \#define PAYLOAD\+\_\+\+TYPE\+\_\+\+DATSTOP~63}
+
+\mbox{\Hypertarget{group__msgtyp_gad54e4cbc3efebbb4cb3321c41fd8df64}\label{group__msgtyp_gad54e4cbc3efebbb4cb3321c41fd8df64}} 
+\index{Definition der Messagetypen@{Definition der Messagetypen}!PAYLOAD\_TYPE\_ESP@{PAYLOAD\_TYPE\_ESP}}
+\index{PAYLOAD\_TYPE\_ESP@{PAYLOAD\_TYPE\_ESP}!Definition der Messagetypen@{Definition der Messagetypen}}
+\doxysubsubsection{\texorpdfstring{PAYLOAD\_TYPE\_ESP}{PAYLOAD\_TYPE\_ESP}}
+{\footnotesize\ttfamily \#define PAYLOAD\+\_\+\+TYPE\+\_\+\+ESP~41}
+
+Nachricht ist ein Messwert aus einem ESPNode Ursprung\+: ESPNode; Empfänger\+: Hub Diese Nachricht wird nicht vom Hub beantwortet \mbox{\Hypertarget{group__msgtyp_gafddf6f34f055d5d9f09e75ffa2ae9892}\label{group__msgtyp_gafddf6f34f055d5d9f09e75ffa2ae9892}} 
+\index{Definition der Messagetypen@{Definition der Messagetypen}!PAYLOAD\_TYPE\_HB@{PAYLOAD\_TYPE\_HB}}
+\index{PAYLOAD\_TYPE\_HB@{PAYLOAD\_TYPE\_HB}!Definition der Messagetypen@{Definition der Messagetypen}}
+\doxysubsubsection{\texorpdfstring{PAYLOAD\_TYPE\_HB}{PAYLOAD\_TYPE\_HB}}
+{\footnotesize\ttfamily \#define PAYLOAD\+\_\+\+TYPE\+\_\+\+HB~51}
+
+Nachricht ist ein Heatbeat Ursprung\+: Node; Empfänger\+: Hub \mbox{\Hypertarget{group__msgtyp_ga74268dc65a0cc32f9195e4bb0cf204ef}\label{group__msgtyp_ga74268dc65a0cc32f9195e4bb0cf204ef}} 
+\index{Definition der Messagetypen@{Definition der Messagetypen}!PAYLOAD\_TYPE\_HB\_RESP@{PAYLOAD\_TYPE\_HB\_RESP}}
+\index{PAYLOAD\_TYPE\_HB\_RESP@{PAYLOAD\_TYPE\_HB\_RESP}!Definition der Messagetypen@{Definition der Messagetypen}}
+\doxysubsubsection{\texorpdfstring{PAYLOAD\_TYPE\_HB\_RESP}{PAYLOAD\_TYPE\_HB\_RESP}}
+{\footnotesize\ttfamily \#define PAYLOAD\+\_\+\+TYPE\+\_\+\+HB\+\_\+\+RESP~52}
+
+Nachricht ist eine Quittung für einen Heatbeat, Alle 6 data Felder sind leer (0) Ursprung\+: Hub; Empfänger\+: Node \mbox{\Hypertarget{group__msgtyp_ga8ed9c5c04291e0672a6d1f39bf1978fa}\label{group__msgtyp_ga8ed9c5c04291e0672a6d1f39bf1978fa}} 
+\index{Definition der Messagetypen@{Definition der Messagetypen}!PAYLOAD\_TYPE\_INIT@{PAYLOAD\_TYPE\_INIT}}
+\index{PAYLOAD\_TYPE\_INIT@{PAYLOAD\_TYPE\_INIT}!Definition der Messagetypen@{Definition der Messagetypen}}
+\doxysubsubsection{\texorpdfstring{PAYLOAD\_TYPE\_INIT}{PAYLOAD\_TYPE\_INIT}}
+{\footnotesize\ttfamily \#define PAYLOAD\+\_\+\+TYPE\+\_\+\+INIT~1}
+
+Nachricht ist ein Init Ursprung\+: Node; Empfänger\+: Hub \mbox{\Hypertarget{group__msgtyp_ga9649cc4d662d6db2dad415a6f70dff4b}\label{group__msgtyp_ga9649cc4d662d6db2dad415a6f70dff4b}} 
+\index{Definition der Messagetypen@{Definition der Messagetypen}!PAYLOAD\_TYPE\_PING\_END@{PAYLOAD\_TYPE\_PING\_END}}
+\index{PAYLOAD\_TYPE\_PING\_END@{PAYLOAD\_TYPE\_PING\_END}!Definition der Messagetypen@{Definition der Messagetypen}}
+\doxysubsubsection{\texorpdfstring{PAYLOAD\_TYPE\_PING\_END}{PAYLOAD\_TYPE\_PING\_END}}
+{\footnotesize\ttfamily \#define PAYLOAD\+\_\+\+TYPE\+\_\+\+PING\+\_\+\+END~105}
+
+Nachricht ist ein Ping. Ende des Tests Sendeleistung ist Max ( 0 d\+Bm) \mbox{\Hypertarget{group__msgtyp_gad57d6606e11d197b130a79f5d2d4dac4}\label{group__msgtyp_gad57d6606e11d197b130a79f5d2d4dac4}} 
+\index{Definition der Messagetypen@{Definition der Messagetypen}!PAYLOAD\_TYPE\_PING\_POW\_HIGH@{PAYLOAD\_TYPE\_PING\_POW\_HIGH}}
+\index{PAYLOAD\_TYPE\_PING\_POW\_HIGH@{PAYLOAD\_TYPE\_PING\_POW\_HIGH}!Definition der Messagetypen@{Definition der Messagetypen}}
+\doxysubsubsection{\texorpdfstring{PAYLOAD\_TYPE\_PING\_POW\_HIGH}{PAYLOAD\_TYPE\_PING\_POW\_HIGH}}
+{\footnotesize\ttfamily \#define PAYLOAD\+\_\+\+TYPE\+\_\+\+PING\+\_\+\+POW\+\_\+\+HIGH~103}
+
+Nachricht ist ein Ping. Sendeleistung ist High (-\/6 d\+Bm) \mbox{\Hypertarget{group__msgtyp_ga7ca9b155447f464c8fb5be7820bab18c}\label{group__msgtyp_ga7ca9b155447f464c8fb5be7820bab18c}} 
+\index{Definition der Messagetypen@{Definition der Messagetypen}!PAYLOAD\_TYPE\_PING\_POW\_LOW@{PAYLOAD\_TYPE\_PING\_POW\_LOW}}
+\index{PAYLOAD\_TYPE\_PING\_POW\_LOW@{PAYLOAD\_TYPE\_PING\_POW\_LOW}!Definition der Messagetypen@{Definition der Messagetypen}}
+\doxysubsubsection{\texorpdfstring{PAYLOAD\_TYPE\_PING\_POW\_LOW}{PAYLOAD\_TYPE\_PING\_POW\_LOW}}
+{\footnotesize\ttfamily \#define PAYLOAD\+\_\+\+TYPE\+\_\+\+PING\+\_\+\+POW\+\_\+\+LOW~102}
+
+Nachricht ist ein Ping. Sendeleistung ist Low (-\/12 d\+Bm) \mbox{\Hypertarget{group__msgtyp_gaca1e0957550707c027e2fe45dd387463}\label{group__msgtyp_gaca1e0957550707c027e2fe45dd387463}} 
+\index{Definition der Messagetypen@{Definition der Messagetypen}!PAYLOAD\_TYPE\_PING\_POW\_MAX@{PAYLOAD\_TYPE\_PING\_POW\_MAX}}
+\index{PAYLOAD\_TYPE\_PING\_POW\_MAX@{PAYLOAD\_TYPE\_PING\_POW\_MAX}!Definition der Messagetypen@{Definition der Messagetypen}}
+\doxysubsubsection{\texorpdfstring{PAYLOAD\_TYPE\_PING\_POW\_MAX}{PAYLOAD\_TYPE\_PING\_POW\_MAX}}
+{\footnotesize\ttfamily \#define PAYLOAD\+\_\+\+TYPE\+\_\+\+PING\+\_\+\+POW\+\_\+\+MAX~104}
+
+Nachricht ist ein Ping. Sendeleistung ist Max ( 0 d\+Bm) \mbox{\Hypertarget{group__msgtyp_ga8db0468027a4128b2b9379b2f2924c3c}\label{group__msgtyp_ga8db0468027a4128b2b9379b2f2924c3c}} 
+\index{Definition der Messagetypen@{Definition der Messagetypen}!PAYLOAD\_TYPE\_PING\_POW\_MIN@{PAYLOAD\_TYPE\_PING\_POW\_MIN}}
+\index{PAYLOAD\_TYPE\_PING\_POW\_MIN@{PAYLOAD\_TYPE\_PING\_POW\_MIN}!Definition der Messagetypen@{Definition der Messagetypen}}
+\doxysubsubsection{\texorpdfstring{PAYLOAD\_TYPE\_PING\_POW\_MIN}{PAYLOAD\_TYPE\_PING\_POW\_MIN}}
+{\footnotesize\ttfamily \#define PAYLOAD\+\_\+\+TYPE\+\_\+\+PING\+\_\+\+POW\+\_\+\+MIN~101}
+
+Nachricht ist ein Ping. Sendeleistung ist Minimal (-\/18 d\+Bm) 

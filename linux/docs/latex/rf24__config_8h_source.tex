@@ -1,0 +1,100 @@
+\hypertarget{rf24__config_8h_source}{}\doxysection{rf24\+\_\+config.\+h}
+\mbox{\hyperlink{rf24__config_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef RF24\_CONFIG\_H   }}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define RF24\_CONFIG\_H}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#define RF24\_CHANNEL        95}}
+\DoxyCodeLine{20 \textcolor{preprocessor}{\#define RF24\_SPEED          RF24\_250KBPS}}
+\DoxyCodeLine{22 \textcolor{preprocessor}{\#define RF24\_HUB2NODE       \{ 0xf0, 0xcc, 0xfc, 0xcc, 0xcc\}}}
+\DoxyCodeLine{24 \textcolor{preprocessor}{\#define RF24\_NODE2HUB       \{ 0x33, 0xcc, 0xfc, 0xcc, 0xcc\}}}
+\DoxyCodeLine{26 \textcolor{preprocessor}{\#define NODE\_DATTYPE        uint8\_t}}
+\DoxyCodeLine{28 \textcolor{preprocessor}{\#define ONR\_DATTYPE         uint8\_t}}
+\DoxyCodeLine{30 }
+\DoxyCodeLine{46 \textcolor{preprocessor}{\#define SENSOR\_CHANNEL\_FIRST    1}}
+\DoxyCodeLine{48 \textcolor{preprocessor}{\#define SENSOR\_CHANNEL\_LAST     78}}
+\DoxyCodeLine{49 \textcolor{comment}{// 79 ist die Batterie !!!!}}
+\DoxyCodeLine{51 \textcolor{comment}{}\textcolor{preprocessor}{\#define REG\_NOSTORE\_FIRST       80}}
+\DoxyCodeLine{53 \textcolor{preprocessor}{\#define REG\_NOSTORE\_LAST        89}}
+\DoxyCodeLine{55 \textcolor{preprocessor}{\#define REG\_NORMAL\_FIRST        90}}
+\DoxyCodeLine{57 \textcolor{preprocessor}{\#define REG\_NORMAL\_LAST         120}}
+\DoxyCodeLine{59 \textcolor{preprocessor}{\#define REG\_READONLY\_FIRST      121}}
+\DoxyCodeLine{61 \textcolor{preprocessor}{\#define REG\_READONLY\_LAST       127}}
+\DoxyCodeLine{63 }
+\DoxyCodeLine{72 \textcolor{preprocessor}{\#define REG\_BATT                    79}}
+\DoxyCodeLine{75 \textcolor{preprocessor}{\#define REG\_SLEEPTIME\_KOR           80}}
+\DoxyCodeLine{78 \textcolor{preprocessor}{\#define REG\_TRANSREG                81}}
+\DoxyCodeLine{81 \textcolor{preprocessor}{\#define REG\_TRANSPA                 82}}
+\DoxyCodeLine{84 \textcolor{preprocessor}{\#define REG\_DISCHARGE\_LEV1          91}}
+\DoxyCodeLine{87 \textcolor{preprocessor}{\#define REG\_DISCHARGE\_LEV2          92}}
+\DoxyCodeLine{90 \textcolor{preprocessor}{\#define REG\_DISCHARGE\_LEV3          93}}
+\DoxyCodeLine{93 \textcolor{preprocessor}{\#define REG\_LOAD\_BALLANCER      94}}
+\DoxyCodeLine{95 \textcolor{preprocessor}{\#define REG\_CONTRAST                95}}
+\DoxyCodeLine{97 \textcolor{preprocessor}{\#define REG\_BRIGHTNES               96}}
+\DoxyCodeLine{101 \textcolor{preprocessor}{\#define REG\_VOLT\_FAC                110}}
+\DoxyCodeLine{105 \textcolor{preprocessor}{\#define REG\_VOLT\_OFF                111}}
+\DoxyCodeLine{109 \textcolor{preprocessor}{\#define REG\_VOLT\_LV                 112}}
+\DoxyCodeLine{113 \textcolor{preprocessor}{\#define REG\_SLEEPTIME\_LV        113}}
+\DoxyCodeLine{117 \textcolor{preprocessor}{\#define REG\_SLEEPTIME               114}}
+\DoxyCodeLine{120 \textcolor{preprocessor}{\#define REG\_SLEEP4MS\_FAC            115}}
+\DoxyCodeLine{123 \textcolor{preprocessor}{\#define REG\_SENDDELAY               116}}
+\DoxyCodeLine{126 \textcolor{preprocessor}{\#define REG\_MAX\_SENDCOUNT           117}}
+\DoxyCodeLine{129 \textcolor{preprocessor}{\#define REG\_MAX\_STOPCOUNT           118}}
+\DoxyCodeLine{132 \textcolor{preprocessor}{\#define REG\_EMPTYLOOPS              119}}
+\DoxyCodeLine{136 \textcolor{preprocessor}{\#define REG\_PALEVEL                 120}}
+\DoxyCodeLine{142 \textcolor{preprocessor}{\#define REG\_RECLEVEL                121}}
+\DoxyCodeLine{146 \textcolor{preprocessor}{\#define REG\_SW                      125}}
+\DoxyCodeLine{148 }
+\DoxyCodeLine{157 \textcolor{preprocessor}{\#define PAYLOAD\_FLAG\_EMPTY       0b00000000}}
+\DoxyCodeLine{159 \textcolor{preprocessor}{\#define PAYLOAD\_FLAG\_LASTMESSAGE 0b00000001}}
+\DoxyCodeLine{161 \textcolor{preprocessor}{\#define PAYLOAD\_FLAG\_NEEDHELP    0b10000000}}
+\DoxyCodeLine{163 }
+\DoxyCodeLine{164 }
+\DoxyCodeLine{177 \textcolor{preprocessor}{\#define PAYLOAD\_TYPE\_INIT        1}}
+\DoxyCodeLine{178 }
+\DoxyCodeLine{182 \textcolor{preprocessor}{\#define PAYLOAD\_TYPE\_ESP         41}}
+\DoxyCodeLine{183 }
+\DoxyCodeLine{186 \textcolor{preprocessor}{\#define PAYLOAD\_TYPE\_HB          51}}
+\DoxyCodeLine{187 }
+\DoxyCodeLine{191 \textcolor{preprocessor}{\#define PAYLOAD\_TYPE\_HB\_RESP      52}}
+\DoxyCodeLine{192 }
+\DoxyCodeLine{195 \textcolor{preprocessor}{\#define PAYLOAD\_TYPE\_DAT         61}}
+\DoxyCodeLine{196 }
+\DoxyCodeLine{200 \textcolor{preprocessor}{\#define PAYLOAD\_TYPE\_DATRESP     62}}
+\DoxyCodeLine{201 }
+\DoxyCodeLine{202 \textcolor{comment}{// Antwort auf Datenantwort(PAYLOAD\_TYPE\_DATRES) / Stoppnachricht}}
+\DoxyCodeLine{203 \textcolor{comment}{// Alle Datenfelder sind leer}}
+\DoxyCodeLine{204 \textcolor{comment}{// Ursprung: Hub; Empfänger: Node}}
+\DoxyCodeLine{205 \textcolor{preprocessor}{\#define PAYLOAD\_TYPE\_DATSTOP     63}}
+\DoxyCodeLine{206 }
+\DoxyCodeLine{209 \textcolor{preprocessor}{\#define PAYLOAD\_TYPE\_PING\_POW\_MIN 101}}
+\DoxyCodeLine{212 \textcolor{preprocessor}{\#define PAYLOAD\_TYPE\_PING\_POW\_LOW 102}}
+\DoxyCodeLine{215 \textcolor{preprocessor}{\#define PAYLOAD\_TYPE\_PING\_POW\_HIGH 103}}
+\DoxyCodeLine{218 \textcolor{preprocessor}{\#define PAYLOAD\_TYPE\_PING\_POW\_MAX 104}}
+\DoxyCodeLine{221 \textcolor{preprocessor}{\#define PAYLOAD\_TYPE\_PING\_END 105}}
+\DoxyCodeLine{223 }
+\DoxyCodeLine{229 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\{}
+\DoxyCodeLine{233     \mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\_DATTYPE}}    \mbox{\hyperlink{structpayload__t_a3afa33b39f6de1877e858f9fb0b5f87a}{node\_id}};         }
+\DoxyCodeLine{236     uint8\_t     \mbox{\hyperlink{structpayload__t_a6ea24ed09a51f607a1e2a1b0f2ade2cb}{msg\_id}};          }
+\DoxyCodeLine{238     uint8\_t     \mbox{\hyperlink{structpayload__t_a332fd1884f12dc0307317907cf57d4ea}{msg\_type}};        }
+\DoxyCodeLine{240     uint8\_t     \mbox{\hyperlink{structpayload__t_a1a9dfd6db5d1c123d2dccecceb14112e}{msg\_flags}};   }
+\DoxyCodeLine{245     \mbox{\hyperlink{group__rf24makros_gac284fce722a0be7bec73e511dc3f2bbd}{ONR\_DATTYPE}}     \mbox{\hyperlink{structpayload__t_a5c24bc8a9f0e51a910baa9f8c4110fbc}{orderno}};         }
+\DoxyCodeLine{249     uint8\_t     \mbox{\hyperlink{structpayload__t_a6097a5427f09fe70856fb44f916da240}{heartbeatno}};      }
+\DoxyCodeLine{251     uint8\_t     \mbox{\hyperlink{structpayload__t_a637f46e37304fb9a195ebb15091daf08}{reserved2}};      }
+\DoxyCodeLine{253     uint8\_t     \mbox{\hyperlink{structpayload__t_a50b1e3c3f3965249b76f3b3c5b8d8d21}{reserved3}};      }
+\DoxyCodeLine{255     uint32\_t    \mbox{\hyperlink{structpayload__t_a18f328fa1c71e87663b30ed1fde701bb}{data1}};         }
+\DoxyCodeLine{257     uint32\_t    \mbox{\hyperlink{structpayload__t_a6a3bdd422de558f0762911297b8d6dfa}{data2}};         }
+\DoxyCodeLine{259     uint32\_t    \mbox{\hyperlink{structpayload__t_acf0a2b00de74d3cb536bf51a7ed05e57}{data3}};         }
+\DoxyCodeLine{261     uint32\_t    \mbox{\hyperlink{structpayload__t_a994342c5f4f30ab8e2219b5dabbcb4ac}{data4}};         }
+\DoxyCodeLine{263     uint32\_t    \mbox{\hyperlink{structpayload__t_a92f6a3267ceb4b5cd05018d407d58afc}{data5}};         }
+\DoxyCodeLine{265     uint32\_t    \mbox{\hyperlink{structpayload__t_a123b9a41dc6fbff0b0c8aeed9e03a7d6}{data6}};         }
+\DoxyCodeLine{266 \} \mbox{\hyperlink{structpayload__t}{payload\_t}};}
+\DoxyCodeLine{267 }
+\DoxyCodeLine{273 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\{}
+\DoxyCodeLine{275   uint16\_t      \mbox{\hyperlink{structudpdata__t_a01bf50b0c47eadbef0e1bc814b75630a}{gw\_no}};         \textcolor{comment}{// the number of the sending gateway}}
+\DoxyCodeLine{277 \textcolor{comment}{}  \mbox{\hyperlink{structpayload__t}{payload\_t}}     \mbox{\hyperlink{structudpdata__t_a1b63064045b272e47bf86c111e502394}{payload}};      \textcolor{comment}{// the payload to send forward}}
+\DoxyCodeLine{278 \} \mbox{\hyperlink{structudpdata__t}{udpdata\_t}};}
+\DoxyCodeLine{279 }
+\DoxyCodeLine{280 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

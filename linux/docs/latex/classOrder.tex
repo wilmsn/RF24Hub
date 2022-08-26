@@ -1,0 +1,200 @@
+\hypertarget{classOrder}{}\doxysection{Order Class Reference}
+\label{classOrder}\index{Order@{Order}}
+
+
+{\ttfamily \#include $<$order.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classOrder_aa3bd5f850c35828a8932bd454d957786}{set\+Verbose}} (uint16\+\_\+t \+\_\+verbose\+Level)
+\item 
+bool \mbox{\hyperlink{classOrder_a510913f6ddd1251411d31ba8dc178c1d}{has\+Entry}} (void)
+\item 
+bool \mbox{\hyperlink{classOrder_a6d6988f47e9d2bd0b794cfa273b81204}{is\+Order\+No}} (\mbox{\hyperlink{group__rf24makros_gac284fce722a0be7bec73e511dc3f2bbd}{ONR\+\_\+\+DATTYPE}} orderno)
+\item 
+bool \mbox{\hyperlink{classOrder_a7ac722f883247bede7e7698f6181e48a}{del\+By\+Order\+No}} (\mbox{\hyperlink{group__rf24makros_gac284fce722a0be7bec73e511dc3f2bbd}{ONR\+\_\+\+DATTYPE}} orderno)
+\item 
+bool \mbox{\hyperlink{classOrder_ab48e4d9e5c667e311e34370457d0cf66}{del\+By\+Node}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id)
+\item 
+void \mbox{\hyperlink{classOrder_adeb26a5c026d56451a564abd99ad31dc}{add\+Order}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id, uint8\+\_\+t msg\+\_\+type, uint32\+\_\+t data, uint64\+\_\+t entrytime)
+\item 
+void \mbox{\hyperlink{classOrder_a5e21d4b6dfd0ddbe3b94b457fab84ba3}{modify\+Order}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id, uint8\+\_\+t pos, uint32\+\_\+t data)
+\item 
+void \mbox{\hyperlink{classOrder_afd6f46e1c4ba4e4c793d631e763ae0d6}{modify\+Order\+Flags}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id, uint8\+\_\+t msg\+\_\+flags)
+\item 
+void \mbox{\hyperlink{classOrder_a4e13120ba8d0f4ddefa70e8dea609a4c}{adjust\+Entry\+Time}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id, uint64\+\_\+t new\+Entrytime)
+\item 
+bool \mbox{\hyperlink{classOrder_a444d3f930a34aeff0340d70401f5229f}{get\+Order\+For\+Transmission}} (\mbox{\hyperlink{structpayload__t}{payload\+\_\+t}} $\ast$\mbox{\hyperlink{rf24gwd_8h_a9ab81a7ae17f3497b23bbccb020c3308}{payload}}, uint64\+\_\+t mytime)
+\item 
+void \mbox{\hyperlink{classOrder_ac40ade15a5dcef9ec300e949d7c4ed65}{print\+Buffer}} (int out\+\_\+socket, bool html\+Format)
+\item 
+\mbox{\hyperlink{classOrder_aeb3f68149a7e0bd65c36eace4909e484}{Order}} (void)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classOrder_aeb3f68149a7e0bd65c36eace4909e484}\label{classOrder_aeb3f68149a7e0bd65c36eace4909e484}} 
+\index{Order@{Order}!Order@{Order}}
+\index{Order@{Order}!Order@{Order}}
+\doxysubsubsection{\texorpdfstring{Order()}{Order()}}
+{\footnotesize\ttfamily Order\+::\+Order (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classOrder_adeb26a5c026d56451a564abd99ad31dc}\label{classOrder_adeb26a5c026d56451a564abd99ad31dc}} 
+\index{Order@{Order}!addOrder@{addOrder}}
+\index{addOrder@{addOrder}!Order@{Order}}
+\doxysubsubsection{\texorpdfstring{addOrder()}{addOrder()}}
+{\footnotesize\ttfamily void Order\+::add\+Order (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id,  }\item[{uint8\+\_\+t}]{msg\+\_\+type,  }\item[{uint32\+\_\+t}]{data,  }\item[{uint64\+\_\+t}]{entrytime }\end{DoxyParamCaption})}
+
+fügt einen neuen record zum Buffer hinzu 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Die Node ID \\
+\hline
+{\em msg\+\_\+type} & Der Nachrichtentyp \\
+\hline
+{\em data} & Ein als Transportwert verpackter Datensatz. Wird im Feld data1 gespeichert. \\
+\hline
+{\em entrytime} & Die Eintrittszeit erzeugt aus \mbox{\hyperlink{common_8cpp_afab512e15911b8554463ad51246fe9d0}{mymillis()}} \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classOrder_a4e13120ba8d0f4ddefa70e8dea609a4c}\label{classOrder_a4e13120ba8d0f4ddefa70e8dea609a4c}} 
+\index{Order@{Order}!adjustEntryTime@{adjustEntryTime}}
+\index{adjustEntryTime@{adjustEntryTime}!Order@{Order}}
+\doxysubsubsection{\texorpdfstring{adjustEntryTime()}{adjustEntryTime()}}
+{\footnotesize\ttfamily void Order\+::adjust\+Entry\+Time (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id,  }\item[{uint64\+\_\+t}]{new\+Entrytime }\end{DoxyParamCaption})}
+
+Setzt die entrytime auf den aktuellen Zeitpunkt für Orders zu diesem Node. Anwendung\+: Wird trotz Quittung ein Nachrichtentyp weiter empfangen, ist davon auszugehen das die Quittung nicht angekommen ist. Beispiel\+: HB (-\/\texorpdfstring{$>$}{>}in) HBSTOP (-\/\texorpdfstring{$>$}{>}out) 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Die Node ID \\
+\hline
+{\em new\+Entrytime} & Die neue Eintrittszeit erzeugt aus \mbox{\hyperlink{common_8cpp_afab512e15911b8554463ad51246fe9d0}{mymillis()}} \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classOrder_ab48e4d9e5c667e311e34370457d0cf66}\label{classOrder_ab48e4d9e5c667e311e34370457d0cf66}} 
+\index{Order@{Order}!delByNode@{delByNode}}
+\index{delByNode@{delByNode}!Order@{Order}}
+\doxysubsubsection{\texorpdfstring{delByNode()}{delByNode()}}
+{\footnotesize\ttfamily bool Order\+::del\+By\+Node (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id }\end{DoxyParamCaption})}
+
+löscht den record im Buffer mit der übergebenen node\+\_\+id 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Die Node ID \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\char`\"{}true\char`\"{} wenn Datensätze gelöscht wurden, sonst \char`\"{}false\char`\"{} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classOrder_a7ac722f883247bede7e7698f6181e48a}\label{classOrder_a7ac722f883247bede7e7698f6181e48a}} 
+\index{Order@{Order}!delByOrderNo@{delByOrderNo}}
+\index{delByOrderNo@{delByOrderNo}!Order@{Order}}
+\doxysubsubsection{\texorpdfstring{delByOrderNo()}{delByOrderNo()}}
+{\footnotesize\ttfamily bool Order\+::del\+By\+Order\+No (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_gac284fce722a0be7bec73e511dc3f2bbd}{ONR\+\_\+\+DATTYPE}}}]{orderno }\end{DoxyParamCaption})}
+
+löscht den record im Buffer mit der übergebenen orderno 
+\begin{DoxyParams}{Parameters}
+{\em orderno} & Die Ordernummer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\char`\"{}true\char`\"{} wenn Datensätze gelöscht wurden, sonst \char`\"{}false\char`\"{} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classOrder_a444d3f930a34aeff0340d70401f5229f}\label{classOrder_a444d3f930a34aeff0340d70401f5229f}} 
+\index{Order@{Order}!getOrderForTransmission@{getOrderForTransmission}}
+\index{getOrderForTransmission@{getOrderForTransmission}!Order@{Order}}
+\doxysubsubsection{\texorpdfstring{getOrderForTransmission()}{getOrderForTransmission()}}
+{\footnotesize\ttfamily bool Order\+::get\+Order\+For\+Transmission (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structpayload__t}{payload\+\_\+t}} $\ast$}]{payload,  }\item[{uint64\+\_\+t}]{mytime }\end{DoxyParamCaption})}
+
+füllt den Payload mit den Daten für die nächste Sendung 
+\begin{DoxyParams}{Parameters}
+{\em payload} & Ein Zeiger auf den payload \\
+\hline
+{\em mytime} & Die aktuelle Zeit erzeugt aus \mbox{\hyperlink{common_8cpp_afab512e15911b8554463ad51246fe9d0}{mymillis()}} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\char`\"{}true\char`\"{} wenn der payload gefüllt wurde, sonst \char`\"{}false\char`\"{} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classOrder_a510913f6ddd1251411d31ba8dc178c1d}\label{classOrder_a510913f6ddd1251411d31ba8dc178c1d}} 
+\index{Order@{Order}!hasEntry@{hasEntry}}
+\index{hasEntry@{hasEntry}!Order@{Order}}
+\doxysubsubsection{\texorpdfstring{hasEntry()}{hasEntry()}}
+{\footnotesize\ttfamily bool Order\+::has\+Entry (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Fragt die Orderstruktur ab ob mind. ein Eintrag vorhanden ist \begin{DoxyReturn}{Returns}
+\char`\"{}true\char`\"{} wenn mind. ein Eintrag vorhanden sonst \char`\"{}false\char`\"{} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classOrder_a6d6988f47e9d2bd0b794cfa273b81204}\label{classOrder_a6d6988f47e9d2bd0b794cfa273b81204}} 
+\index{Order@{Order}!isOrderNo@{isOrderNo}}
+\index{isOrderNo@{isOrderNo}!Order@{Order}}
+\doxysubsubsection{\texorpdfstring{isOrderNo()}{isOrderNo()}}
+{\footnotesize\ttfamily bool Order\+::is\+Order\+No (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_gac284fce722a0be7bec73e511dc3f2bbd}{ONR\+\_\+\+DATTYPE}}}]{orderno }\end{DoxyParamCaption})}
+
+true wenn die übergebene orderno einen record im Speicher hat 
+\begin{DoxyParams}{Parameters}
+{\em orderno} & Die Ordernummer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\char`\"{}true\char`\"{} wenn die übergebene orderno einen record innerhalb der Speicherstruktur hat, sonst \char`\"{}false\char`\"{} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classOrder_a5e21d4b6dfd0ddbe3b94b457fab84ba3}\label{classOrder_a5e21d4b6dfd0ddbe3b94b457fab84ba3}} 
+\index{Order@{Order}!modifyOrder@{modifyOrder}}
+\index{modifyOrder@{modifyOrder}!Order@{Order}}
+\doxysubsubsection{\texorpdfstring{modifyOrder()}{modifyOrder()}}
+{\footnotesize\ttfamily void Order\+::modify\+Order (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id,  }\item[{uint8\+\_\+t}]{pos,  }\item[{uint32\+\_\+t}]{data }\end{DoxyParamCaption})}
+
+Füllt das data Feld an der Position pos 2..6 =\texorpdfstring{$>$}{>} data2..data6 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Die Node ID \\
+\hline
+{\em pos} & Die Position auf der das Datenpaket gespeichert wird (2 = data2 ... 6 = data6) \\
+\hline
+{\em data} & Ein als Transportwert verpackter Datensatz. Wird im Feld data$<$pos$>$ gespeichert. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classOrder_afd6f46e1c4ba4e4c793d631e763ae0d6}\label{classOrder_afd6f46e1c4ba4e4c793d631e763ae0d6}} 
+\index{Order@{Order}!modifyOrderFlags@{modifyOrderFlags}}
+\index{modifyOrderFlags@{modifyOrderFlags}!Order@{Order}}
+\doxysubsubsection{\texorpdfstring{modifyOrderFlags()}{modifyOrderFlags()}}
+{\footnotesize\ttfamily void Order\+::modify\+Order\+Flags (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id,  }\item[{uint8\+\_\+t}]{msg\+\_\+flags }\end{DoxyParamCaption})}
+
+Setzt das msg\+\_\+flag für die übergebene node\+\_\+id 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Die Node ID \\
+\hline
+{\em msg\+\_\+flag} & Das Nachrichtenflag \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classOrder_ac40ade15a5dcef9ec300e949d7c4ed65}\label{classOrder_ac40ade15a5dcef9ec300e949d7c4ed65}} 
+\index{Order@{Order}!printBuffer@{printBuffer}}
+\index{printBuffer@{printBuffer}!Order@{Order}}
+\doxysubsubsection{\texorpdfstring{printBuffer()}{printBuffer()}}
+{\footnotesize\ttfamily void Order\+::print\+Buffer (\begin{DoxyParamCaption}\item[{int}]{out\+\_\+socket,  }\item[{bool}]{html\+Format }\end{DoxyParamCaption})}
+
+Druckt alle records im Buffer in den out\+\_\+socket out\+\_\+socket ist dabei ein gültiger socket file descriptor entweder aus accept für einen socket oder mittels fileno(stdout) für den stdout Der zweite Parameter bestimmt das Format, true =\texorpdfstring{$>$}{>} HTML Format; false =\texorpdfstring{$>$}{>} Textformat 
+\begin{DoxyParams}{Parameters}
+{\em tn\+\_\+socket} & Das aktuelle Socket zur Ausgabe \\
+\hline
+{\em htmlformat} & \char`\"{}true\char`\"{} liefert die Ausgabe im HTML Format, \char`\"{}false\char`\"{} im Textformat \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classOrder_aa3bd5f850c35828a8932bd454d957786}\label{classOrder_aa3bd5f850c35828a8932bd454d957786}} 
+\index{Order@{Order}!setVerbose@{setVerbose}}
+\index{setVerbose@{setVerbose}!Order@{Order}}
+\doxysubsubsection{\texorpdfstring{setVerbose()}{setVerbose()}}
+{\footnotesize\ttfamily void Order\+::set\+Verbose (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{\+\_\+verbose\+Level }\end{DoxyParamCaption})}
+
+Setzt den Verboselevel. Mögliche Level sind in den Makros VERBOSE$\ast$ in \mbox{\hyperlink{config_8h}{config.\+h}} definiert. 
+\begin{DoxyParams}{Parameters}
+{\em verbose\+Level} & Der aktuelle Verboselevel \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{order_8h}{order.\+h}}\item 
+\mbox{\hyperlink{order_8cpp}{order.\+cpp}}\end{DoxyCompactItemize}

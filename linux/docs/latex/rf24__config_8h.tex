@@ -1,0 +1,134 @@
+\hypertarget{rf24__config_8h}{}\doxysection{rf24\+\_\+config.\+h File Reference}
+\label{rf24__config_8h}\index{rf24\_config.h@{rf24\_config.h}}
+
+
+Definition der RF24 Parameter Diese Datei wird vom GW, vom Hub und von den Nodes eingebunden !!! Hier sind alle Parameter zum RF24-\/\+Netzwerk und die Register definiert. Zusätzlich sind hier die Payload Struktur und diee Udpdata Struktur definiert.  
+
+
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rf24__config_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structpayload__t}{payload\+\_\+t}}
+\item 
+struct \mbox{\hyperlink{structudpdata__t}{udpdata\+\_\+t}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{group__rf24makros_ga79c4f3ace1ef49486708487f8c2ecd29}{RF24\+\_\+\+CHANNEL}}~95
+\begin{DoxyCompactList}\small\item\em Der verwendete RF24 Funkkanal. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__rf24makros_ga7a81650373c02155ba2adab775a611d9}{RF24\+\_\+\+SPEED}}~RF24\+\_\+250\+KBPS
+\begin{DoxyCompactList}\small\item\em Die Übertragungsgeschwindigkeit. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__rf24makros_ga09f69030b8d9ea328b68d9094f8fee10}{RF24\+\_\+\+HUB2\+NODE}}~\{ 0xf0, 0xcc, 0xfc, 0xcc, 0xcc\}
+\begin{DoxyCompactList}\small\item\em Der Netzwerkschlüssel Hub zum Node. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__rf24makros_ga0d59bcd261338d1bef2ac25f7ce555ca}{RF24\+\_\+\+NODE2\+HUB}}~\{ 0x33, 0xcc, 0xfc, 0xcc, 0xcc\}
+\begin{DoxyCompactList}\small\item\em Der Netzwerkschlüssel Node zum Hub. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}~uint8\+\_\+t
+\begin{DoxyCompactList}\small\item\em Der Datentyp für die Node\+\_\+\+ID. Ist aktuell auf 1...255 festgelegt. Werden mehr Nodes benötigt, kann der Datentyp hier zentral umgestellt werden. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__rf24makros_gac284fce722a0be7bec73e511dc3f2bbd}{ONR\+\_\+\+DATTYPE}}~uint8\+\_\+t
+\begin{DoxyCompactList}\small\item\em Der Datentyp für die Ordernummer. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__reggrp_ga31d58e874d25ee6246bcc06be3d3a998}{SENSOR\+\_\+\+CHANNEL\+\_\+\+FIRST}}~1
+\begin{DoxyCompactList}\small\item\em Erster normaler Sensorchannel. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__reggrp_ga94e5d80ab3baa99e428caa332b38ef9a}{SENSOR\+\_\+\+CHANNEL\+\_\+\+LAST}}~78
+\begin{DoxyCompactList}\small\item\em Letzter normaler Sensorchannel. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__reggrp_ga30f797b8cac9d272e126b59f51695681}{REG\+\_\+\+NOSTORE\+\_\+\+FIRST}}~80
+\begin{DoxyCompactList}\small\item\em Erstes Register, das vom Hub nicht gespeichert wird. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__reggrp_gab198067fdc3e91a388fa77af4cb373c6}{REG\+\_\+\+NOSTORE\+\_\+\+LAST}}~89
+\begin{DoxyCompactList}\small\item\em Letztes Register, das vom Hub nicht gespeichert wird. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__reggrp_ga83e5e44bcbe1269a61ada5065ad98ec3}{REG\+\_\+\+NORMAL\+\_\+\+FIRST}}~90
+\begin{DoxyCompactList}\small\item\em Erstes Register gilt die normale Behandlung. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__reggrp_ga8c54eed0c49bca83dbf10b633c410d3f}{REG\+\_\+\+NORMAL\+\_\+\+LAST}}~120
+\begin{DoxyCompactList}\small\item\em Letztes Register gilt die normale Behandlung. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__reggrp_ga7411746d54207b437c25d550f7759388}{REG\+\_\+\+READONLY\+\_\+\+FIRST}}~121
+\begin{DoxyCompactList}\small\item\em Erstes Read only Register. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__reggrp_ga7ea9ed0acad4c34176051285608b5580}{REG\+\_\+\+READONLY\+\_\+\+LAST}}~127
+\begin{DoxyCompactList}\small\item\em Letztes Read only Register. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__reg_ga3856ce72c4a30d1a351032b146d77a89}{REG\+\_\+\+BATT}}~79
+\begin{DoxyCompactList}\small\item\em Register für den Spannungswert der Batterie. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__reg_ga7a18b90d6f4b1fa67dc16622df64df75}{REG\+\_\+\+SLEEPTIME\+\_\+\+KOR}}~80
+\item 
+\#define \mbox{\hyperlink{group__reg_ga343f6886beb165ee8aa1e43136b5e5cb}{REG\+\_\+\+TRANSREG}}~81
+\item 
+\#define \mbox{\hyperlink{group__reg_ga18851cc59d7f737da4f690a50078857e}{REG\+\_\+\+TRANSPA}}~82
+\item 
+\#define \mbox{\hyperlink{group__reg_gaf3e20e659610dc66535a64b67361da34}{REG\+\_\+\+DISCHARGE\+\_\+\+LEV1}}~91
+\item 
+\#define \mbox{\hyperlink{group__reg_gaa72275244c4fed9b432596ef6ca6da8c}{REG\+\_\+\+DISCHARGE\+\_\+\+LEV2}}~92
+\item 
+\#define \mbox{\hyperlink{group__reg_gaa8933dd1a420955d32e98250ce138251}{REG\+\_\+\+DISCHARGE\+\_\+\+LEV3}}~93
+\item 
+\#define \mbox{\hyperlink{group__reg_ga35fa4a806d158e970fcd24ed59ae0f27}{REG\+\_\+\+LOAD\+\_\+\+BALLANCER}}~94
+\item 
+\#define \mbox{\hyperlink{group__reg_gafd9c137a46dad8933460657db3acfac6}{REG\+\_\+\+CONTRAST}}~95
+\begin{DoxyCompactList}\small\item\em Kontrastpegel (nur bei Displays) \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__reg_ga6fbd8624ea37b66935a94b5944745ea5}{REG\+\_\+\+BRIGHTNES}}~96
+\begin{DoxyCompactList}\small\item\em Helligkeitspegel (nur bei Displays) \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__reg_ga859786b74fb4ad8a9a22505b995d3758}{REG\+\_\+\+VOLT\+\_\+\+FAC}}~110
+\item 
+\#define \mbox{\hyperlink{group__reg_ga00818e32665ddbd0b600ceeab402833f}{REG\+\_\+\+VOLT\+\_\+\+OFF}}~111
+\item 
+\#define \mbox{\hyperlink{group__reg_gafa6e35ad9d107b4c4219aa71a5cee14d}{REG\+\_\+\+VOLT\+\_\+\+LV}}~112
+\item 
+\#define \mbox{\hyperlink{group__reg_ga2e917c07d13d1513443a2b54460af2ef}{REG\+\_\+\+SLEEPTIME\+\_\+\+LV}}~113
+\item 
+\#define \mbox{\hyperlink{group__reg_gaf9fe6ec07a95753ffb42ac3772e5637f}{REG\+\_\+\+SLEEPTIME}}~114
+\item 
+\#define \mbox{\hyperlink{group__reg_ga6b60151223f7fd83725f9b2c0f3ce01c}{REG\+\_\+\+SLEEP4\+MS\+\_\+\+FAC}}~115
+\item 
+\#define \mbox{\hyperlink{group__reg_ga29d34461382bfa0b4c2493b263326e5f}{REG\+\_\+\+SENDDELAY}}~116
+\item 
+\#define \mbox{\hyperlink{group__reg_ga098b49ec3990305ace2ce568ffec254d}{REG\+\_\+\+MAX\+\_\+\+SENDCOUNT}}~117
+\item 
+\#define \mbox{\hyperlink{group__reg_ga02a5c564d021d24122aa1a03b8e415db}{REG\+\_\+\+MAX\+\_\+\+STOPCOUNT}}~118
+\item 
+\#define \mbox{\hyperlink{group__reg_gaa53fc2c65f33cfee344eaff23d066910}{REG\+\_\+\+EMPTYLOOPS}}~119
+\item 
+\#define \mbox{\hyperlink{group__reg_gac3a176252032d2f36955fc3204718c92}{REG\+\_\+\+PALEVEL}}~120
+\item 
+\#define \mbox{\hyperlink{group__reg_gadf156e6de21f2eaf237f5776671768f6}{REG\+\_\+\+RECLEVEL}}~121
+\item 
+\#define \mbox{\hyperlink{group__reg_ga32a7d9ab1a11b996d75e7afced77cb53}{REG\+\_\+\+SW}}~125
+\item 
+\#define \mbox{\hyperlink{group__msgflg_ga929979867bb47a7888324bc579f63bdc}{PAYLOAD\+\_\+\+FLAG\+\_\+\+EMPTY}}~0b00000000
+\begin{DoxyCompactList}\small\item\em Leeres Messageflag. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__msgflg_gab11d6261c1644c2c90eae7de795de319}{PAYLOAD\+\_\+\+FLAG\+\_\+\+LASTMESSAGE}}~0b00000001
+\begin{DoxyCompactList}\small\item\em Flag zeigt an das diese Nachricht die letzte (Teil-\/)Nachricht war. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__msgflg_ga1cd37b5698541e3ce971f3344b8cb0f2}{PAYLOAD\+\_\+\+FLAG\+\_\+\+NEEDHELP}}~0b10000000
+\begin{DoxyCompactList}\small\item\em Flag zeigt an das der Node Support benötigt (z.\+B. durch niedrige Spannung) \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__msgtyp_ga8ed9c5c04291e0672a6d1f39bf1978fa}{PAYLOAD\+\_\+\+TYPE\+\_\+\+INIT}}~1
+\item 
+\#define \mbox{\hyperlink{group__msgtyp_gad54e4cbc3efebbb4cb3321c41fd8df64}{PAYLOAD\+\_\+\+TYPE\+\_\+\+ESP}}~41
+\item 
+\#define \mbox{\hyperlink{group__msgtyp_gafddf6f34f055d5d9f09e75ffa2ae9892}{PAYLOAD\+\_\+\+TYPE\+\_\+\+HB}}~51
+\item 
+\#define \mbox{\hyperlink{group__msgtyp_ga74268dc65a0cc32f9195e4bb0cf204ef}{PAYLOAD\+\_\+\+TYPE\+\_\+\+HB\+\_\+\+RESP}}~52
+\item 
+\#define \mbox{\hyperlink{group__msgtyp_ga1d003667cb94fd56dd9eab06a2a1af15}{PAYLOAD\+\_\+\+TYPE\+\_\+\+DAT}}~61
+\item 
+\#define \mbox{\hyperlink{group__msgtyp_ga61bcd8adef5b203b5d7fbc98931dbcc6}{PAYLOAD\+\_\+\+TYPE\+\_\+\+DATRESP}}~62
+\item 
+\#define \mbox{\hyperlink{group__msgtyp_ga92669cdab68ff3e107fb427994ccd8a2}{PAYLOAD\+\_\+\+TYPE\+\_\+\+DATSTOP}}~63
+\item 
+\#define \mbox{\hyperlink{group__msgtyp_ga8db0468027a4128b2b9379b2f2924c3c}{PAYLOAD\+\_\+\+TYPE\+\_\+\+PING\+\_\+\+POW\+\_\+\+MIN}}~101
+\item 
+\#define \mbox{\hyperlink{group__msgtyp_ga7ca9b155447f464c8fb5be7820bab18c}{PAYLOAD\+\_\+\+TYPE\+\_\+\+PING\+\_\+\+POW\+\_\+\+LOW}}~102
+\item 
+\#define \mbox{\hyperlink{group__msgtyp_gad57d6606e11d197b130a79f5d2d4dac4}{PAYLOAD\+\_\+\+TYPE\+\_\+\+PING\+\_\+\+POW\+\_\+\+HIGH}}~103
+\item 
+\#define \mbox{\hyperlink{group__msgtyp_gaca1e0957550707c027e2fe45dd387463}{PAYLOAD\+\_\+\+TYPE\+\_\+\+PING\+\_\+\+POW\+\_\+\+MAX}}~104
+\item 
+\#define \mbox{\hyperlink{group__msgtyp_ga9649cc4d662d6db2dad415a6f70dff4b}{PAYLOAD\+\_\+\+TYPE\+\_\+\+PING\+\_\+\+END}}~105
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Definition der RF24 Parameter Diese Datei wird vom GW, vom Hub und von den Nodes eingebunden !!! Hier sind alle Parameter zum RF24-\/\+Netzwerk und die Register definiert. Zusätzlich sind hier die Payload Struktur und diee Udpdata Struktur definiert. 
+

@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="rf24gw__config_8h" kind="file" language="C++">
+    <compoundname>rf24gw_config.h</compoundname>
+    <includedby refid="rf24gwd_8h" local="yes">rf24gwd.h</includedby>
+    <invincdepgraph>
+      <node id="1">
+        <label>rf24gw_config.h</label>
+        <link refid="rf24gw__config_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>rf24gwd.cpp</label>
+        <link refid="rf24gwd_8cpp"/>
+      </node>
+      <node id="2">
+        <label>rf24gwd.h</label>
+        <link refid="rf24gwd_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="rf24gw__config_8h_1afbe8c53c64028f330068ae893cff0736" prot="public" static="no">
+        <name>PRGNAME</name>
+        <initializer>&quot;rf24gwd&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24gw_config.h" line="7" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24gw_config.h" bodystart="7" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="rf24gw__config_8h_1a6d3fef197146b932f5ad01fce683a66b" prot="public" static="no">
+        <name>LOGFILE</name>
+        <initializer>&quot;/var/log/rf24gwd.log&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24gw_config.h" line="12" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24gw_config.h" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="rf24gw__config_8h_1af5fe208f8640c8c789a4d5d5b8ad47f5" prot="public" static="no">
+        <name>PIDFILE</name>
+        <initializer>&quot;/var/run/rf24gwd.pid&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24gw_config.h" line="13" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24gw_config.h" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="rf24gw__config_8h_1a24f52ac52d6e714cb04a5aa01be3bdd0" prot="public" static="no">
+        <name>BUF</name>
+        <initializer>1024</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24gw_config.h" line="22" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24gw_config.h" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="rf24gw__config_8h_1a63f627c83d06c9ea54c0f7882c61a1da" prot="public" static="no">
+        <name>LOOPSLEEPTIME_QUIET</name>
+        <initializer>200000</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24gw_config.h" line="23" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24gw_config.h" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="rf24gw__config_8h_1a33e4e7860113183514fc86b63d92af81" prot="public" static="no">
+        <name>LOOPSLEEPTIME_BUSY</name>
+        <initializer>50000</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24gw_config.h" line="24" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24gw_config.h" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Definitions for rf24gwd </para>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>_RF24GW_CONFIG_H_<sp/><sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_RF24GW_CONFIG_H_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7" refid="rf24gw__config_8h_1afbe8c53c64028f330068ae893cff0736" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PRGNAME<sp/>&quot;rf24gwd&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="comment">//<sp/>default<sp/>values:<sp/>can<sp/>be<sp/>overwritten<sp/>in<sp/>config<sp/>file</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12" refid="rf24gw__config_8h_1a6d3fef197146b932f5ad01fce683a66b" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>LOGFILE<sp/>&quot;/var/log/rf24gwd.log&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13" refid="rf24gw__config_8h_1af5fe208f8640c8c789a4d5d5b8ad47f5" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PIDFILE<sp/>&quot;/var/run/rf24gwd.pid&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="comment">//<sp/>END<sp/>default<sp/>values:<sp/>can<sp/>be<sp/>overwritten<sp/>in<sp/>config<sp/>file</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="comment">//-------------------------------------------------------</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Define<sp/>an<sp/>empty<sp/>string<sp/>for<sp/>displaying<sp/>data<sp/>in<sp/>all<sp/>its<sp/>forms</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22" refid="rf24gw__config_8h_1a24f52ac52d6e714cb04a5aa01be3bdd0" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BUF<sp/>1024</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23" refid="rf24gw__config_8h_1a63f627c83d06c9ea54c0f7882c61a1da" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>LOOPSLEEPTIME_QUIET<sp/><sp/>200000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24" refid="rf24gw__config_8h_1a33e4e7860113183514fc86b63d92af81" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>LOOPSLEEPTIME_BUSY<sp/><sp/><sp/>50000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//<sp/>_RF24GW_CONFIG_H_</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/stick/netz/projekte/RF24Hub/linux/rf24gw_config.h"/>
+  </compounddef>
+</doxygen>

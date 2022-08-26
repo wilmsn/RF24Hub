@@ -1,0 +1,1090 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="rf24hubd_8h" kind="file" language="C++">
+    <compoundname>rf24hubd.h</compoundname>
+    <includes local="no">cstdlib</includes>
+    <includes local="no">iostream</includes>
+    <includes local="no">sstream</includes>
+    <includes local="no">string</includes>
+    <includes local="no">iomanip</includes>
+    <includes local="no">RF24/RF24.h</includes>
+    <includes local="no">RF24/utility/RPi/bcm2835.h</includes>
+    <includes local="no">time.h</includes>
+    <includes local="no">sys/time.h</includes>
+    <includes local="no">sys/types.h</includes>
+    <includes local="no">sys/stat.h</includes>
+    <includes local="no">sys/ipc.h</includes>
+    <includes local="no">sys/msg.h</includes>
+    <includes local="no">sys/socket.h</includes>
+    <includes local="no">stdio.h</includes>
+    <includes local="no">unistd.h</includes>
+    <includes local="no">getopt.h</includes>
+    <includes local="no">syslog.h</includes>
+    <includes local="no">signal.h</includes>
+    <includes local="no">stdlib.h</includes>
+    <includes local="no">netinet/in.h</includes>
+    <includes local="no">netdb.h</includes>
+    <includes local="no">arpa/inet.h</includes>
+    <includes local="no">fcntl.h</includes>
+    <includes local="no">pthread.h</includes>
+    <includes local="no">errno.h</includes>
+    <includes refid="nodeclass_8h" local="yes">nodeclass.h</includes>
+    <includes refid="sensorclass_8h" local="yes">sensorclass.h</includes>
+    <includes refid="order_8h" local="yes">order.h</includes>
+    <includes refid="orderbuffer_8h" local="yes">orderbuffer.h</includes>
+    <includes refid="gatewayclass_8h" local="yes">gatewayclass.h</includes>
+    <includes refid="common_8h" local="yes">common.h</includes>
+    <includes refid="config_8h" local="yes">config.h</includes>
+    <includes refid="cfg_8h" local="yes">cfg.h</includes>
+    <includes refid="database_8h" local="yes">database.h</includes>
+    <includes refid="rf24__config_8h" local="yes">rf24_config.h</includes>
+    <includes refid="rf24hub__config_8h" local="yes">rf24hub_config.h</includes>
+    <includes refid="rf24hub__text_8h" local="yes">rf24hub_text.h</includes>
+    <includes refid="dataformat_8h" local="yes">dataformat.h</includes>
+    <includes refid="version_8h" local="yes">version.h</includes>
+    <includes refid="secrets_8h" local="yes">secrets.h</includes>
+    <includedby refid="rf24hubd_8cpp" local="yes">rf24hubd.cpp</includedby>
+    <incdepgraph>
+      <node id="45">
+        <label>cfg.h</label>
+        <link refid="cfg_8h"/>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+      </node>
+      <node id="32">
+        <label>common.h</label>
+        <link refid="common_8h"/>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="40" relation="include">
+        </childnode>
+      </node>
+      <node id="37">
+        <label>config.h</label>
+        <link refid="config_8h"/>
+      </node>
+      <node id="46">
+        <label>database.h</label>
+        <link refid="database_8h"/>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="47" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="41" relation="include">
+        </childnode>
+        <childnode refid="44" relation="include">
+        </childnode>
+      </node>
+      <node id="38">
+        <label>dataformat.h</label>
+        <link refid="dataformat_8h"/>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+      </node>
+      <node id="44">
+        <label>gatewayclass.h</label>
+        <link refid="gatewayclass_8h"/>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+      </node>
+      <node id="28">
+        <label>nodeclass.h</label>
+        <link refid="nodeclass_8h"/>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+      </node>
+      <node id="42">
+        <label>order.h</label>
+        <link refid="order_8h"/>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+      </node>
+      <node id="43">
+        <label>orderbuffer.h</label>
+        <link refid="orderbuffer_8h"/>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+      </node>
+      <node id="30">
+        <label>rf24_config.h</label>
+        <link refid="rf24__config_8h"/>
+      </node>
+      <node id="31">
+        <label>rf24hub_config.h</label>
+        <link refid="rf24hub__config_8h"/>
+      </node>
+      <node id="48">
+        <label>rf24hub_text.h</label>
+        <link refid="rf24hub__text_8h"/>
+      </node>
+      <node id="1">
+        <label>rf24hubd.h</label>
+        <link refid="rf24hubd_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="41" relation="include">
+        </childnode>
+        <childnode refid="42" relation="include">
+        </childnode>
+        <childnode refid="43" relation="include">
+        </childnode>
+        <childnode refid="44" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="45" relation="include">
+        </childnode>
+        <childnode refid="46" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="48" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="40" relation="include">
+        </childnode>
+        <childnode refid="49" relation="include">
+        </childnode>
+      </node>
+      <node id="49">
+        <label>secrets.h</label>
+        <link refid="secrets_8h"/>
+      </node>
+      <node id="41">
+        <label>sensorclass.h</label>
+        <link refid="sensorclass_8h"/>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+      </node>
+      <node id="40">
+        <label>version.h</label>
+        <link refid="version_8h"/>
+      </node>
+      <node id="7">
+        <label>RF24/RF24.h</label>
+      </node>
+      <node id="8">
+        <label>RF24/utility/RPi/bcm2835.h</label>
+      </node>
+      <node id="24">
+        <label>arpa/inet.h</label>
+      </node>
+      <node id="36">
+        <label>cstdio</label>
+      </node>
+      <node id="2">
+        <label>cstdlib</label>
+      </node>
+      <node id="33">
+        <label>cstring</label>
+      </node>
+      <node id="34">
+        <label>ctype.h</label>
+      </node>
+      <node id="27">
+        <label>errno.h</label>
+      </node>
+      <node id="25">
+        <label>fcntl.h</label>
+      </node>
+      <node id="18">
+        <label>getopt.h</label>
+      </node>
+      <node id="6">
+        <label>iomanip</label>
+      </node>
+      <node id="3">
+        <label>iostream</label>
+      </node>
+      <node id="47">
+        <label>mariadb/mysql.h</label>
+      </node>
+      <node id="23">
+        <label>netdb.h</label>
+      </node>
+      <node id="22">
+        <label>netinet/in.h</label>
+      </node>
+      <node id="26">
+        <label>pthread.h</label>
+      </node>
+      <node id="20">
+        <label>signal.h</label>
+      </node>
+      <node id="4">
+        <label>sstream</label>
+      </node>
+      <node id="35">
+        <label>stdbool.h</label>
+      </node>
+      <node id="29">
+        <label>stdint.h</label>
+      </node>
+      <node id="16">
+        <label>stdio.h</label>
+      </node>
+      <node id="21">
+        <label>stdlib.h</label>
+      </node>
+      <node id="5">
+        <label>string</label>
+      </node>
+      <node id="39">
+        <label>string.h</label>
+      </node>
+      <node id="13">
+        <label>sys/ipc.h</label>
+      </node>
+      <node id="14">
+        <label>sys/msg.h</label>
+      </node>
+      <node id="15">
+        <label>sys/socket.h</label>
+      </node>
+      <node id="12">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="10">
+        <label>sys/time.h</label>
+      </node>
+      <node id="11">
+        <label>sys/types.h</label>
+      </node>
+      <node id="19">
+        <label>syslog.h</label>
+      </node>
+      <node id="9">
+        <label>time.h</label>
+      </node>
+      <node id="17">
+        <label>unistd.h</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="2">
+        <label>rf24hubd.cpp</label>
+        <link refid="rf24hubd_8cpp"/>
+      </node>
+      <node id="1">
+        <label>rf24hubd.h</label>
+        <link refid="rf24hubd_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structthread__db__data" prot="public">thread_db_data</innerclass>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="rf24hubd_8h_1a24f52ac52d6e714cb04a5aa01be3bdd0" prot="public" static="no">
+        <name>BUF</name>
+        <initializer>1024</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="54" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="rf24hubd_8h_1ad2c8fb3df3a737e0685e902870a611d2" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int sockfd</definition>
+        <argsstring></argsstring>
+        <name>sockfd</name>
+        <briefdescription>
+<para>Ein handler für den UDP Socket. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="59" column="5" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hubd_8h_1ac724fe70ae8af2d1406927ee7b574a1b" prot="public" static="no" mutable="no">
+        <type>struct sockaddr_in</type>
+        <definition>struct sockaddr_in serv_addr</definition>
+        <argsstring></argsstring>
+        <name>serv_addr</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="60" column="18" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" bodystart="60" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hubd_8h_1a8f718c687d0f28ecb0f281df574ada24" prot="public" static="no" mutable="no">
+        <type>struct hostent *</type>
+        <definition>struct hostent* server</definition>
+        <argsstring></argsstring>
+        <name>server</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="61" column="14" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" bodystart="61" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hubd_8h_1a74cdc67e1a2355a8a3857dd631c2e20d" prot="public" static="no" mutable="no">
+        <type>FILE *</type>
+        <definition>FILE* pidfile_ptr</definition>
+        <argsstring></argsstring>
+        <name>pidfile_ptr</name>
+        <briefdescription>
+<para>Ein Pointer für das PID File. Ist dieses angelegt, kann der rf24gwd nicht (nochmal) gestartet werden. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="63" column="7" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" bodystart="63" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hubd_8h_1a8b911740b70463f6330c1b22ac52d2b0" prot="public" static="no" mutable="no">
+        <type>FILE *</type>
+        <definition>FILE* logfile_ptr</definition>
+        <argsstring></argsstring>
+        <name>logfile_ptr</name>
+        <briefdescription>
+<para>Ein Pointer für das Log File. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="65" column="7" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" bodystart="65" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hubd_8h_1aed24fc049dc5a6c8b3fd89e20c79be34" prot="public" static="no" mutable="no">
+        <type><ref refid="structudpdata__t" kindref="compound">udpdata_t</ref></type>
+        <definition>udpdata_t udpdata</definition>
+        <argsstring></argsstring>
+        <name>udpdata</name>
+        <briefdescription>
+<para>Die Udpdatastruktur als Variable. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="67" column="11" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hubd_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" prot="public" static="no" mutable="no">
+        <type>uint16_t</type>
+        <definition>uint16_t verboseLevel</definition>
+        <argsstring></argsstring>
+        <name>verboseLevel</name>
+        <initializer>= <ref refid="group__cfgprm_1ga6c4340ca162dd39191fb258fe86f573a" kindref="member">STARTUPVERBOSELEVEL</ref></initializer>
+        <briefdescription>
+<para>Eine Variable für das aktuelle Verboselevel. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Die Variable verboseLevel wird extern mitbenutzt. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="70" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" bodystart="70" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hubd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" prot="public" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* buf</definition>
+        <argsstring></argsstring>
+        <name>buf</name>
+        <briefdescription>
+<para>Ein generischer Buffer. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="72" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hubd_8h_1aa5a00c1b8970dc4fbaabfa7b8a4aa021" prot="public" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* tsbuf</definition>
+        <argsstring></argsstring>
+        <name>tsbuf</name>
+        <briefdescription>
+<para>Ein Buffer zur Aufnahme des Zeitstrings. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="74" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" bodystart="74" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hubd_8h_1a7d595d1f42346d5c8b67a1230240e542" prot="public" static="no" mutable="no">
+        <type><ref refid="classOrder" kindref="compound">Order</ref></type>
+        <definition>Order order</definition>
+        <argsstring></argsstring>
+        <name>order</name>
+        <briefdescription>
+<para>Eine Instanz der Klasse <ref refid="classOrder" kindref="compound">Order</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="83" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" bodystart="83" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hubd_8h_1ad0b7f7965d54c9be61b1c652959d8f2a" prot="public" static="no" mutable="no">
+        <type><ref refid="classOrderBuffer" kindref="compound">OrderBuffer</ref></type>
+        <definition>OrderBuffer orderbuffer</definition>
+        <argsstring></argsstring>
+        <name>orderbuffer</name>
+        <briefdescription>
+<para>Eine Instanz der Klasse <ref refid="classOrderBuffer" kindref="compound">OrderBuffer</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="85" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" bodystart="85" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hubd_8h_1a32b75ac9948db837416adb463c101ae7" prot="public" static="no" mutable="no">
+        <type><ref refid="classSensorClass" kindref="compound">SensorClass</ref></type>
+        <definition>SensorClass sensorClass</definition>
+        <argsstring></argsstring>
+        <name>sensorClass</name>
+        <briefdescription>
+<para>Eine Instanz der Klasse Sensor. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="87" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" bodystart="87" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hubd_8h_1a6f21c130ea438b6c54c3deb9a25901b2" prot="public" static="no" mutable="no">
+        <type><ref refid="classNodeClass" kindref="compound">NodeClass</ref></type>
+        <definition>NodeClass nodeClass</definition>
+        <argsstring></argsstring>
+        <name>nodeClass</name>
+        <briefdescription>
+<para>Eine Instanz der Klasse Node. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="89" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" bodystart="89" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hubd_8h_1a781c289826d0041d9a1e4d7f746b20a2" prot="public" static="no" mutable="no">
+        <type><ref refid="classDatabase" kindref="compound">Database</ref></type>
+        <definition>Database database</definition>
+        <argsstring></argsstring>
+        <name>database</name>
+        <briefdescription>
+<para>Eine Instanz der Klasse <ref refid="classDatabase" kindref="compound">Database</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="91" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" bodystart="91" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hubd_8h_1a5d04e25b77f7ecfc9256335eac98b51f" prot="public" static="no" mutable="no">
+        <type><ref refid="classGatewayClass" kindref="compound">GatewayClass</ref></type>
+        <definition>GatewayClass gatewayClass</definition>
+        <argsstring></argsstring>
+        <name>gatewayClass</name>
+        <briefdescription>
+<para>Eine Instanz der Klasse Gateway. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="93" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" bodystart="93" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="rf24hubd_8h_1a6a559eb4e518378c7c552d2fdc1769af" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classCfg" kindref="compound">Cfg</ref></type>
+        <definition>Cfg cfg</definition>
+        <argsstring>(SWVERSION_STR, __DATE__)</argsstring>
+        <name>cfg</name>
+        <param>
+          <type><ref refid="version_8h_1a476a6cff0fb1a40441544f8a530ddbe9" kindref="member">SWVERSION_STR</ref></type>
+        </param>
+        <param>
+          <type>__DATE__</type>
+        </param>
+        <briefdescription>
+<para>Eine Instanz der Klasse <ref refid="classCfg" kindref="compound">Cfg</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="95" column="17" declfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" declline="95" declcolumn="17"/>
+      </memberdef>
+      <memberdef kind="function" id="rf24hubd_8h_1ab7e3b1b511de9b3dec5a7b635d1f2fdb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void send_fhem_tn</definition>
+        <argsstring>(char *tn_cmd)</argsstring>
+        <name>send_fhem_tn</name>
+        <param>
+          <type>char *</type>
+          <declname>tn_cmd</declname>
+        </param>
+        <briefdescription>
+<para>send a telnet comand to the fhem-host </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Die Eventverwaltung wird in meinem System durch FHEM realisiert. Dazu ist es nötig das alle geänderten Sensorwerte an FHEM übertragen werden. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="103" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.cpp" bodystart="15" bodyend="54" declfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" declline="103" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="rf24hubd_8h_1aeb3e38715133e68a4851c2a22da2fc57" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void send_fhem_cmd</definition>
+        <argsstring>(NODE_DATTYPE node, uint8_t channel, char *value)</argsstring>
+        <name>send_fhem_cmd</name>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+          <declname>node</declname>
+        </param>
+        <param>
+          <type>uint8_t</type>
+          <declname>channel</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+<para>send a value of a sensor to the fhem-host </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Ein Sensor ist eindeutig durch die Kombination aus Node und Channel bestimmt. Der Wert des Sensors wird hier an FHEM übertragen. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="111" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.cpp" bodystart="3" bodyend="10" declfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" declline="111" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="rf24hubd_8h_1a6fa00eddac8eebb959e8be172b517f69" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void process_tn_in</definition>
+        <argsstring>(int new_socket, char *buffer, char *client_message)</argsstring>
+        <name>process_tn_in</name>
+        <param>
+          <type>int</type>
+          <declname>new_socket</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>buffer</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>client_message</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Verabeitet eine eingehende Telnet Nachricht </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="116" column="6" declfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" declline="116" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="rf24hubd_8h_1a348d23d5899ce59d18975284dfb0afc0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void init_system</definition>
+        <argsstring>(void)</argsstring>
+        <name>init_system</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Initialisierung des Systems</para>
+<para>Deamon initialisieren, Daten aus DB laden (falls erforderlich) und Deamon sauber hochfahren </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="121" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24gwd.cpp" bodystart="159" bodyend="160" declfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" declline="121" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="rf24hubd_8h_1a3c31c4b9bcc08e22669f923d656f9a15" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void exit_system</definition>
+        <argsstring>(void)</argsstring>
+        <name>exit_system</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Aufräumen bei Programmende</para>
+<para>Aufräumen, Daten speichern (falls erforderlich) und Deamon sauber verlassen/beenden </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="126" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24gwd.cpp" bodystart="156" bodyend="157" declfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" declline="126" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="rf24hubd_8h_1a29578e615b1ea3664c879869c27084fe" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void make_order</definition>
+        <argsstring>(NODE_DATTYPE node_id, uint8_t msg_type)</argsstring>
+        <name>make_order</name>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+          <declname>node_id</declname>
+        </param>
+        <param>
+          <type>uint8_t</type>
+          <declname>msg_type</declname>
+        </param>
+        <briefdescription>
+<para>Erzeugung eines Datensatzes zur Übertragung an einen Node. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>In dieser Prozedure werden alle offenen (bis zu max. 6) Anweisungen für einen Node gesammelt und für die Übertragung vorbereitet. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Node </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>msg_type</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Nachrichtentyp </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="135" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.cpp" bodystart="376" bodyend="422" declfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" declline="135" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="rf24hubd_8h_1a73e6c3b1f79965c6df281c74b2e34ce7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void process_sensor</definition>
+        <argsstring>(NODE_DATTYPE node_id, uint32_t data)</argsstring>
+        <name>process_sensor</name>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+          <declname>node_id</declname>
+        </param>
+        <param>
+          <type>uint32_t</type>
+          <declname>data</declname>
+        </param>
+        <briefdescription>
+<para>Verarbeitet einen empfangenen Wert. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der sendende Node </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Transportwert </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="143" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.cpp" bodystart="439" bodyend="492" declfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" declline="143" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="rf24hubd_8h_1a6b38722bb47fc93ce0ae3c462e6c4934" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void sighandler</definition>
+        <argsstring>(int signal)</argsstring>
+        <name>sighandler</name>
+        <param>
+          <type>int</type>
+          <declname>signal</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Handler für die Interruptverarbeitung (z.B. CTRL-C)</para>
+<para>Ein Signalhandler, der es ermöglicht den Deamon z.B. mit CTRL-C oder mit &quot;kill&quot; zu beenden </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="148" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24gwd.cpp" bodystart="167" bodyend="171" declfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" declline="148" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="rf24hubd_8h_1acae9a628aec720efc0fc27cd2064b1f0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void process_payload</definition>
+        <argsstring>(payload_t *payload)</argsstring>
+        <name>process_payload</name>
+        <param>
+          <type><ref refid="structpayload__t" kindref="compound">payload_t</ref> *</type>
+          <declname>payload</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Verarbeitet die empfangenen Daten einer Funksendung <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>payload</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Payload </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="154" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.cpp" bodystart="507" bodyend="514" declfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" declline="154" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="rf24hubd_8h_1a0ddf1224851353fc92bfbff6f499fa97" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int main</definition>
+        <argsstring>(int argc, char *argv[])</argsstring>
+        <name>main</name>
+        <param>
+          <type>int</type>
+          <declname>argc</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>argv</declname>
+          <array>[]</array>
+        </param>
+        <briefdescription>
+<para>Das Hauptprogramm. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Das Haupprogramm </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" line="160" column="5" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24gwd.cpp" bodystart="299" bodyend="490" declfile="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h" declline="160" declcolumn="5"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>_RF24HUBD_H_<sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Include<sp/>guard<sp/>*/</highlight><highlight class="preprocessor"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_RF24HUBD_H_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="comment">//---------<sp/>End<sp/>of<sp/>global<sp/>define<sp/>-----------------</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cstdlib&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sstream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string&gt;</highlight><highlight class="normal"><sp/></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iomanip&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;RF24/RF24.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;RF24/utility/RPi/bcm2835.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;time.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/time.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/types.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/stat.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/ipc.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/msg.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/socket.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdio.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;getopt.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;syslog.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;signal.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdlib.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;netinet/in.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;netdb.h&gt;</highlight><highlight class="normal"><sp/></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;arpa/inet.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;fcntl.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;pthread.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="nodeclass_8h" kindref="compound">nodeclass.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="sensorclass_8h" kindref="compound">sensorclass.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="order_8h" kindref="compound">order.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="orderbuffer_8h" kindref="compound">orderbuffer.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="gatewayclass_8h" kindref="compound">gatewayclass.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="common_8h" kindref="compound">common.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="config_8h" kindref="compound">config.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="cfg_8h" kindref="compound">cfg.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="database_8h" kindref="compound">database.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="rf24__config_8h" kindref="compound">rf24_config.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="rf24hub__config_8h" kindref="compound">rf24hub_config.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="rf24hub__text_8h" kindref="compound">rf24hub_text.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="dataformat_8h" kindref="compound">dataformat.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="version_8h" kindref="compound">version.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="secrets_8h" kindref="compound">secrets.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54" refid="rf24hubd_8h_1a24f52ac52d6e714cb04a5aa01be3bdd0" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BUF<sp/>1024</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59" refid="rf24hubd_8h_1ad2c8fb3df3a737e0685e902870a611d2" refkind="member"><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="rf24hubd_8h_1ad2c8fb3df3a737e0685e902870a611d2" kindref="member">sockfd</ref>;</highlight></codeline>
+<codeline lineno="60" refid="rf24hubd_8h_1ac724fe70ae8af2d1406927ee7b574a1b" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">sockaddr_in<sp/><ref refid="rf24hubd_8h_1ac724fe70ae8af2d1406927ee7b574a1b" kindref="member">serv_addr</ref>;</highlight></codeline>
+<codeline lineno="61" refid="rf24hubd_8h_1a8f718c687d0f28ecb0f281df574ada24" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">hostent<sp/>*<ref refid="rf24hubd_8h_1a8f718c687d0f28ecb0f281df574ada24" kindref="member">server</ref>;</highlight></codeline>
+<codeline lineno="63" refid="rf24hubd_8h_1a74cdc67e1a2355a8a3857dd631c2e20d" refkind="member"><highlight class="normal">FILE<sp/>*<sp/><ref refid="rf24hubd_8h_1a74cdc67e1a2355a8a3857dd631c2e20d" kindref="member">pidfile_ptr</ref>;</highlight></codeline>
+<codeline lineno="65" refid="rf24hubd_8h_1a8b911740b70463f6330c1b22ac52d2b0" refkind="member"><highlight class="normal">FILE<sp/>*<sp/><ref refid="rf24hubd_8h_1a8b911740b70463f6330c1b22ac52d2b0" kindref="member">logfile_ptr</ref>;</highlight></codeline>
+<codeline lineno="67" refid="rf24hubd_8h_1aed24fc049dc5a6c8b3fd89e20c79be34" refkind="member"><highlight class="normal"><ref refid="structudpdata__t" kindref="compound">udpdata_t</ref><sp/><ref refid="rf24hubd_8h_1aed24fc049dc5a6c8b3fd89e20c79be34" kindref="member">udpdata</ref>;</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70" refid="rf24hubd_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" refkind="member"><highlight class="normal">uint16_t<sp/><ref refid="rf24hubd_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref><sp/>=<sp/><ref refid="group__cfgprm_1ga6c4340ca162dd39191fb258fe86f573a" kindref="member">STARTUPVERBOSELEVEL</ref>;</highlight></codeline>
+<codeline lineno="72" refid="rf24hubd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" refkind="member"><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="rf24hubd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>;</highlight></codeline>
+<codeline lineno="74" refid="rf24hubd_8h_1aa5a00c1b8970dc4fbaabfa7b8a4aa021" refkind="member"><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="rf24hubd_8h_1aa5a00c1b8970dc4fbaabfa7b8a4aa021" kindref="member">tsbuf</ref>;</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight></codeline>
+<codeline lineno="77" refid="structthread__db__data" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structthread__db__data" kindref="compound">thread_db_data</ref><sp/>{</highlight></codeline>
+<codeline lineno="78" refid="structthread__db__data_1ab9932db90b9a60fd2bf9f40702b64c28" refkind="member"><highlight class="normal"><sp/><sp/><sp/>uint32_t<sp/><sp/><sp/><sp/><sp/><ref refid="structthread__db__data_1ab9932db90b9a60fd2bf9f40702b64c28" kindref="member">sensor_id</ref>;</highlight></codeline>
+<codeline lineno="79" refid="structthread__db__data_1a6d591c8384c70de6c37c04de0ab2c4ac" refkind="member"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structthread__db__data_1a6d591c8384c70de6c37c04de0ab2c4ac" kindref="member">buf</ref>[20];</highlight></codeline>
+<codeline lineno="80"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight></codeline>
+<codeline lineno="83" refid="rf24hubd_8h_1a7d595d1f42346d5c8b67a1230240e542" refkind="member"><highlight class="normal"><ref refid="classOrder" kindref="compound">Order</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rf24hubd_8h_1a7d595d1f42346d5c8b67a1230240e542" kindref="member">order</ref>;</highlight></codeline>
+<codeline lineno="85" refid="rf24hubd_8h_1ad0b7f7965d54c9be61b1c652959d8f2a" refkind="member"><highlight class="normal"><ref refid="classOrderBuffer" kindref="compound">OrderBuffer</ref><sp/><sp/><sp/><sp/><sp/><ref refid="rf24hubd_8h_1ad0b7f7965d54c9be61b1c652959d8f2a" kindref="member">orderbuffer</ref>;</highlight></codeline>
+<codeline lineno="87" refid="rf24hubd_8h_1a32b75ac9948db837416adb463c101ae7" refkind="member"><highlight class="normal"><ref refid="classSensorClass" kindref="compound">SensorClass</ref><sp/><sp/><sp/><sp/><sp/><ref refid="rf24hubd_8h_1a32b75ac9948db837416adb463c101ae7" kindref="member">sensorClass</ref>;</highlight></codeline>
+<codeline lineno="89" refid="rf24hubd_8h_1a6f21c130ea438b6c54c3deb9a25901b2" refkind="member"><highlight class="normal"><ref refid="classNodeClass" kindref="compound">NodeClass</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rf24hubd_8h_1a6f21c130ea438b6c54c3deb9a25901b2" kindref="member">nodeClass</ref>;</highlight></codeline>
+<codeline lineno="91" refid="rf24hubd_8h_1a781c289826d0041d9a1e4d7f746b20a2" refkind="member"><highlight class="normal"><ref refid="classDatabase" kindref="compound">Database</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rf24hubd_8h_1a781c289826d0041d9a1e4d7f746b20a2" kindref="member">database</ref>;</highlight></codeline>
+<codeline lineno="93" refid="rf24hubd_8h_1a5d04e25b77f7ecfc9256335eac98b51f" refkind="member"><highlight class="normal"><ref refid="classGatewayClass" kindref="compound">GatewayClass</ref><sp/><sp/><sp/><sp/><ref refid="rf24hubd_8h_1a5d04e25b77f7ecfc9256335eac98b51f" kindref="member">gatewayClass</ref>;</highlight></codeline>
+<codeline lineno="95" refid="rf24hubd_8h_1a6a559eb4e518378c7c552d2fdc1769af" refkind="member"><highlight class="normal"><ref refid="classCfg" kindref="compound">Cfg</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rf24hubd_8h_1a6a559eb4e518378c7c552d2fdc1769af" kindref="member">cfg</ref>(<ref refid="version_8h_1a476a6cff0fb1a40441544f8a530ddbe9" kindref="member">SWVERSION_STR</ref>,__DATE__);</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="rf24hubd_8h_1ab7e3b1b511de9b3dec5a7b635d1f2fdb" kindref="member">send_fhem_tn</ref>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>tn_cmd);</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="rf24hubd_8h_1aeb3e38715133e68a4851c2a22da2fc57" kindref="member">send_fhem_cmd</ref>(<ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref><sp/>node,<sp/>uint8_t<sp/>channel,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>value);</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"></highlight></codeline>
+<codeline lineno="116" refid="rf24hubd_8h_1a6fa00eddac8eebb959e8be172b517f69" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="rf24hubd_8h_1a6fa00eddac8eebb959e8be172b517f69" kindref="member">process_tn_in</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>new_socket,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>buffer,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>client_message);</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="rf24hubd_8h_1a348d23d5899ce59d18975284dfb0afc0" kindref="member">init_system</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"></highlight></codeline>
+<codeline lineno="126"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="rf24hubd_8h_1a3c31c4b9bcc08e22669f923d656f9a15" kindref="member">exit_system</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"></highlight></codeline>
+<codeline lineno="135"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="rf24hubd_8h_1a29578e615b1ea3664c879869c27084fe" kindref="member">make_order</ref>(<ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref><sp/>node_id,<sp/>uint8_t<sp/>msg_type);</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"></highlight></codeline>
+<codeline lineno="143"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="rf24hubd_8h_1a73e6c3b1f79965c6df281c74b2e34ce7" kindref="member">process_sensor</ref>(<ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref><sp/>node_id,<sp/>uint32_t<sp/>data);</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"></highlight></codeline>
+<codeline lineno="148"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="rf24hubd_8h_1a6b38722bb47fc93ce0ae3c462e6c4934" kindref="member">sighandler</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>signal);</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"></highlight></codeline>
+<codeline lineno="154"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="rf24hubd_8h_1acae9a628aec720efc0fc27cd2064b1f0" kindref="member">process_payload</ref>(<ref refid="structpayload__t" kindref="compound">payload_t</ref>*<sp/><ref refid="rf24gwd_8h_1a9ab81a7ae17f3497b23bbccb020c3308" kindref="member">payload</ref>);</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"></highlight></codeline>
+<codeline lineno="160"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="rf24hubd_8h_1a0ddf1224851353fc92bfbff6f499fa97" kindref="member">main</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>argc,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>argv[]);</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"></highlight></codeline>
+<codeline lineno="162"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//<sp/>_RF24HUBD_H_</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/stick/netz/projekte/RF24Hub/linux/rf24hubd.h"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structTnMsg__t" kind="struct" language="C++" prot="public">
+    <compoundname>TnMsg_t</compoundname>
+    <includes refid="common_8h" local="no">common.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structTnMsg__t_1a37ad5db965af43e993138735b8687003" prot="public" static="no" mutable="no">
+        <type>long</type>
+        <definition>long TnMsg_t::mtype</definition>
+        <argsstring></argsstring>
+        <name>mtype</name>
+        <qualifiedname>TnMsg_t::mtype</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.h" line="50" column="14" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.h" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structTnMsg__t_1a4214b4f3cf94fdbc7c013d313fc58090" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structTnData__t" kindref="compound">TnData_t</ref></type>
+        <definition>struct TnData_t TnMsg_t::TnData</definition>
+        <argsstring></argsstring>
+        <name>TnData</name>
+        <qualifiedname>TnMsg_t::TnData</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/common.h" line="51" column="23" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.h" bodystart="51" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="2">
+        <label>TnData_t</label>
+        <link refid="structTnData__t"/>
+      </node>
+      <node id="1">
+        <label>TnMsg_t</label>
+        <link refid="structTnMsg__t"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>TnData</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/stick/netz/projekte/RF24Hub/linux/common.h" line="49" column="1" bodyfile="/stick/netz/projekte/RF24Hub/linux/common.h" bodystart="49" bodyend="52"/>
+    <listofallmembers>
+      <member refid="structTnMsg__t_1a37ad5db965af43e993138735b8687003" prot="public" virt="non-virtual"><scope>TnMsg_t</scope><name>mtype</name></member>
+      <member refid="structTnMsg__t_1a4214b4f3cf94fdbc7c013d313fc58090" prot="public" virt="non-virtual"><scope>TnMsg_t</scope><name>TnData</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

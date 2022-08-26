@@ -1,0 +1,792 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="dataformat_8cpp" kind="file" language="C++">
+    <compoundname>dataformat.cpp</compoundname>
+    <includes refid="dataformat_8h" local="yes">dataformat.h</includes>
+    <incdepgraph>
+      <node id="1">
+        <label>dataformat.cpp</label>
+        <link refid="dataformat_8cpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>dataformat.h</label>
+        <link refid="dataformat_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>rf24_config.h</label>
+        <link refid="rf24__config_8h"/>
+      </node>
+      <node id="5">
+        <label>stdbool.h</label>
+      </node>
+      <node id="3">
+        <label>stdint.h</label>
+      </node>
+      <node id="6">
+        <label>stdio.h</label>
+      </node>
+      <node id="4">
+        <label>stdlib.h</label>
+      </node>
+      <node id="7">
+        <label>string.h</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="dataformat_8cpp_1a3a0f50ef57dd9b1aa1974e867358cf82" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>float</type>
+        <definition>float getValue_f</definition>
+        <argsstring>(uint32_t data)</argsstring>
+        <name>getValue_f</name>
+        <param>
+          <type>uint32_t</type>
+          <declname>data</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" line="265" column="7" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" bodystart="265" bodyend="286" declfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" declline="4" declcolumn="7"/>
+      </memberdef>
+      <memberdef kind="function" id="dataformat_8cpp_1a45c553970e8e1c2f86a4abbd3c536b55" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int16_t</type>
+        <definition>int16_t getValue_i</definition>
+        <argsstring>(uint32_t data)</argsstring>
+        <name>getValue_i</name>
+        <param>
+          <type>uint32_t</type>
+          <declname>data</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" line="288" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" bodystart="288" bodyend="294" declfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" declline="5" declcolumn="9"/>
+      </memberdef>
+      <memberdef kind="function" id="dataformat_8cpp_1af890ea464785cefcdf4becec9f4a5c87" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uint16_t</type>
+        <definition>uint16_t getValue_ui</definition>
+        <argsstring>(uint32_t data)</argsstring>
+        <name>getValue_ui</name>
+        <param>
+          <type>uint32_t</type>
+          <declname>data</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" line="296" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" bodystart="296" bodyend="302" declfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" declline="6" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="group__datafmt_1ga553dc49f84a0874f09d55f9e84fb31d2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void printBits</definition>
+        <argsstring>(size_t const size, void const *const ptr)</argsstring>
+        <name>printBits</name>
+        <param>
+          <type>size_t const</type>
+          <declname>size</declname>
+        </param>
+        <param>
+          <type>void const *const</type>
+          <declname>ptr</declname>
+        </param>
+        <briefdescription>
+<para>Beschreibung des verwendeten Zahlenformates zur Übertragung (TransportWert) Es handelt sich um ein 32 Bit unsigned Integer Format. Der Sensorwert wird mit einer Genauigkeit von 17 Bit (131072 max, genutzt 100000 = 5 Stellen = 0,01 Promille) gespeichert. Zahlenformat X * 10^Y Format des Sensorwertes Bitreihenfolge: Bit 1 (MSB) ... Bit 32 (LSB) </para>
+        </briefdescription>
+        <detaileddescription>
+<para>1) FLOAT Bit 1..2: Verwendetes Zahlenformat (0b00) Bit 3..9: Sensornummer (1..127) Bit 10: Vorzeichen (0=positiv; 1=negativ) Bit 11: Vorzeichen Exponent (0=10^X; 1=10^-X) Bit 12..15 Exponent (0..15) Bit 16..32 Mantisse (0..100000)</para>
+<para>2) INTEGER Bit 1..2: Verwendetes Zahlenformat (0b01) Bit 3..9: Sensornummer (1..127) Bit 10: Vorzeichen (0=positiv; 1=negativ) Bit 11..17: ungenutzt Bit 18..32 15 bit unsigned Integer (0..32767)</para>
+<para>3) UNSIGNED INTEGER Bit 1..2: Verwendetes Zahlenformat (0b10) Bit 3..9: Sensornummer (1..127) Bit 11..16: ungenutzt Bit 17..32 16 bit unsigned Integer (0..65536)</para>
+<para>4) CHARACTER (2 Characters) Bit 1..2: Verwendetes Zahlenformat (0b11) Bit 3..9: Sensornummer (1..127) Bit 11..16: ungenutzt Bit 17..32 2*8 bit Char Diese Funktion ist nur für das Debugging des Zahlenformates bestimmt !!!!! </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" line="10" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" bodystart="10" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="function" id="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uint32_t</type>
+        <definition>uint32_t calcTransportValue</definition>
+        <argsstring>(uint8_t channel, float value)</argsstring>
+        <name>calcTransportValue</name>
+        <param>
+          <type>uint8_t</type>
+          <declname>channel</declname>
+        </param>
+        <param>
+          <type>float</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Verpackt die Sensornummer und den Messwert zu einem TransportWert des Datentyps uint32_t. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Channel, gültige Werte zwischen 1..127 </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>value</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>gültige Werte: -1*10^19 .. 1*10^19 </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Der Transportwert </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" line="26" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" bodystart="26" bodyend="59"/>
+      </memberdef>
+      <memberdef kind="function" id="group__datafmt_1gadb9719633356f80394982b89ee66f213" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uint32_t</type>
+        <definition>uint32_t calcTransportValue</definition>
+        <argsstring>(uint8_t channel, uint16_t value)</argsstring>
+        <name>calcTransportValue</name>
+        <param>
+          <type>uint8_t</type>
+          <declname>channel</declname>
+        </param>
+        <param>
+          <type>uint16_t</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Verpackt die Sensornummer und den Messwert zu einem TransportWert des Datentyps uint32_t. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Channel, gültige Werte zwischen 1..127 </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>value</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Wert, gültige Werte: 0 .. 65535 </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Der Transportwert </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" line="61" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" bodystart="61" bodyend="68"/>
+      </memberdef>
+      <memberdef kind="function" id="group__datafmt_1gae53a08e10db33776546054e9a2111ac0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uint32_t</type>
+        <definition>uint32_t calcTransportValue</definition>
+        <argsstring>(uint8_t channel, int16_t value)</argsstring>
+        <name>calcTransportValue</name>
+        <param>
+          <type>uint8_t</type>
+          <declname>channel</declname>
+        </param>
+        <param>
+          <type>int16_t</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Verpackt die Sensornummer und den Messwert zu einem TransportWert des Datentyps uint32_t. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>gültige Werte zwischen 1..127 </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>value</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>gültige Werte: -32,768 to 32,767 </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Der Transportwert </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" line="70" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" bodystart="70" bodyend="77"/>
+      </memberdef>
+      <memberdef kind="function" id="dataformat_8cpp_1a34354887a71db79b29c863c72a362746" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uint32_t</type>
+        <definition>uint32_t calcTransportValue</definition>
+        <argsstring>(uint8_t channel, char value1, char value2)</argsstring>
+        <name>calcTransportValue</name>
+        <param>
+          <type>uint8_t</type>
+          <declname>channel</declname>
+        </param>
+        <param>
+          <type>char</type>
+          <declname>value1</declname>
+        </param>
+        <param>
+          <type>char</type>
+          <declname>value2</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" line="79" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" bodystart="79" bodyend="88"/>
+      </memberdef>
+      <memberdef kind="function" id="group__datafmt_1ga87fd32ad4e05f024d6feaa6302a17595" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool getValue</definition>
+        <argsstring>(uint32_t data, float *zahl)</argsstring>
+        <name>getValue</name>
+        <param>
+          <type>uint32_t</type>
+          <declname>data</declname>
+        </param>
+        <param>
+          <type>float *</type>
+          <declname>zahl</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Extrahiert den Sensorwert aus dem Transportwert Hier: Float <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Transportwert </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>zahl</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Zeiger auf eine FLOAT Variable, hier wird das Ergebnis hinterlegt. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>&quot;true&quot; wenn im Transportwert ein float eingepackt war, wurde eine Konvertierung durchgeführt wird ein &quot;false&quot; zurückgegeben. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" line="146" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" bodystart="146" bodyend="161"/>
+      </memberdef>
+      <memberdef kind="function" id="group__datafmt_1gab7502bc515a7f09a16515f3817229461" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool getValue</definition>
+        <argsstring>(uint32_t data, int16_t *zahl)</argsstring>
+        <name>getValue</name>
+        <param>
+          <type>uint32_t</type>
+          <declname>data</declname>
+        </param>
+        <param>
+          <type>int16_t *</type>
+          <declname>zahl</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Extrahiert den Sensorwert aus dem Transportwert Hier: Integer (15 Bit + Vorzeichen) <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Transportwert </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>zahl</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Zeiger auf eine int16_t Variable, hier wird das Ergebnis hinterlegt. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>&quot;true&quot; wenn im Transportwert ein int16_t eingepackt war, wurde eine Konvertierung durchgeführt wird ein &quot;false&quot; zurückgegeben. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" line="163" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" bodystart="163" bodyend="178"/>
+      </memberdef>
+      <memberdef kind="function" id="group__datafmt_1gae7d45dd22998aa8968195df1e05401d1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool getValue</definition>
+        <argsstring>(uint32_t data, uint16_t *zahl)</argsstring>
+        <name>getValue</name>
+        <param>
+          <type>uint32_t</type>
+          <declname>data</declname>
+        </param>
+        <param>
+          <type>uint16_t *</type>
+          <declname>zahl</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Extrahiert den Sensorwert aus dem Transportwert Hier: unsigned int (16 Bit) <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Transportwert </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>zahl</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Zeiger auf eine uint16_t Variable, hier wird das Ergebnis hinterlegt. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>&quot;true&quot; wenn im Transportwert ein uint16_t eingepackt war, wurde eine Konvertierung durchgeführt wird ein &quot;false&quot; zurückgegeben. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" line="180" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" bodystart="180" bodyend="195"/>
+      </memberdef>
+      <memberdef kind="function" id="group__datafmt_1ga2ecd9323066a3bcae374c8471d69c074" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uint8_t</type>
+        <definition>uint8_t getDataType</definition>
+        <argsstring>(uint32_t data)</argsstring>
+        <name>getDataType</name>
+        <param>
+          <type>uint32_t</type>
+          <declname>data</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Extrahiert den Datentyp aus den Transportdaten Dabei gilt folgende Zuordnung: 0 =&gt; float Value 1 =&gt; integer Value 2 =&gt; unsigned int Value 3 =&gt; Character <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Transportwert </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Der verwendete Datentyp </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" line="197" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" bodystart="197" bodyend="201"/>
+      </memberdef>
+      <memberdef kind="function" id="group__datafmt_1ga1bc47883133ecf3ccab0bc5e94946f0b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uint8_t</type>
+        <definition>uint8_t getChannel</definition>
+        <argsstring>(uint32_t data)</argsstring>
+        <name>getChannel</name>
+        <param>
+          <type>uint32_t</type>
+          <declname>data</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Extrahiert die Channel aus dem Transportwert <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Transportwert </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Der verwendete Channel </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" line="203" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" bodystart="203" bodyend="207"/>
+      </memberdef>
+      <memberdef kind="function" id="group__datafmt_1ga02342d8c3916c9953de9d5edce69869e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>char *</type>
+        <definition>char * unpackTransportValue</definition>
+        <argsstring>(uint32_t data, char *buf)</argsstring>
+        <name>unpackTransportValue</name>
+        <param>
+          <type>uint32_t</type>
+          <declname>data</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>buf</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Entpackt die übertragenen Daten <simplesect kind="note"><para>Der übergebene <bold>buf</bold> muss gross genug sein um den Rückgabewert aufzunehmen </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" line="209" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp" bodystart="209" bodyend="259"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&quot;<ref refid="dataformat_8h" kindref="compound">dataformat.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//<sp/>some<sp/>forward<sp/>declaration</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/><ref refid="dataformat_8cpp_1a3a0f50ef57dd9b1aa1974e867358cf82" kindref="member">getValue_f</ref>(uint32_t<sp/>data);</highlight></codeline>
+<codeline lineno="5"><highlight class="normal">int16_t<sp/><ref refid="dataformat_8cpp_1a45c553970e8e1c2f86a4abbd3c536b55" kindref="member">getValue_i</ref>(uint32_t<sp/>data);</highlight></codeline>
+<codeline lineno="6"><highlight class="normal">uint16_t<sp/><ref refid="dataformat_8cpp_1af890ea464785cefcdf4becec9f4a5c87" kindref="member">getValue_ui</ref>(uint32_t<sp/>data);</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">//<sp/>END<sp/>some<sp/>forward<sp/>declaration</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="comment">//<sp/>This<sp/>function<sp/>is<sp/>only<sp/>for<sp/>debugging</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="group__datafmt_1ga553dc49f84a0874f09d55f9e84fb31d2" kindref="member">printBits</ref>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>size,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>*<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>ptr)<sp/>{</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*b<sp/>=<sp/>(</highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*)<sp/>ptr;</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>byte;</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i,<sp/>j;</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(i<sp/>=<sp/>size-1;<sp/>i<sp/>&gt;=<sp/>0;<sp/>i--)<sp/>{</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(j<sp/>=<sp/>7;<sp/>j<sp/>&gt;=<sp/>0;<sp/>j--)<sp/>{</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">byte</highlight><highlight class="normal"><sp/>=<sp/>(b[i]<sp/>&gt;&gt;<sp/>j)<sp/>&amp;<sp/>1;</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;%u&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="keywordtype">byte</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/>puts(</highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="22"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="comment">//<sp/>END<sp/>This<sp/>function<sp/>is<sp/>only<sp/>for<sp/>debugging</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal">uint32_t<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(uint8_t<sp/>channel,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>value)<sp/>{</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>_val<sp/>=<sp/>value;</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/>uint32_t<sp/>ui_val<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/>uint32_t<sp/>exponent<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>expo_negativ<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/>uint32_t<sp/>result<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/>result<sp/>=<sp/>((uint32_t)channel<sp/>&lt;&lt;<sp/><ref refid="group__datafmt_1ga609cbe477a2c1fb108e0ff7d1e843cba" kindref="member">ZF_SHIFT_CHANNEL</ref>);</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>value<sp/>&gt;<sp/>0.00001<sp/>||<sp/>value<sp/>&lt;<sp/>-0.00001<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>negativ<sp/>=<sp/>value<sp/>&lt;<sp/>0.0;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>negativ<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>result<sp/>|=<sp/><ref refid="group__datafmt_1gae475064281ce57140b56f6964a0d91bb" kindref="member">ZF_ZAHL_NEGATIV</ref>;</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>_val<sp/>*=<sp/>-1;</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(<sp/>_val<sp/>&lt;<sp/>6553.6<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>expo_negativ<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>exponent++;</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>_val<sp/>*=<sp/>10.0;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>expo_negativ<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>result<sp/>|=<sp/><ref refid="group__datafmt_1ga29a9b055debb9d9f832bd4f2b8d59eae" kindref="member">ZF_EXPO_NEGATIV</ref>;</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(<sp/>_val<sp/>&gt;<sp/>65536.0<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>exponent++;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>_val<sp/>/=<sp/>10.0;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/>ui_val<sp/>=<sp/>1<sp/>*<sp/>_val;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/>ui_val<sp/>&amp;=<sp/><ref refid="group__datafmt_1ga4f710eda1e9718288fca1ab96bdbc645" kindref="member">ZF_ZAHL_WERT_FLOAT</ref>;</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/>exponent<sp/>&lt;&lt;=<sp/><ref refid="group__datafmt_1ga038229ffb138634b959d5162301733fe" kindref="member">ZF_SHIFT_EXPO</ref>;</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/>result<sp/>|=<sp/><ref refid="group__datafmt_1ga623273d4fd3132434a3a48ec0d30c754" kindref="member">ZF_FORMAT_FLOAT</ref>;</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/>result<sp/>|=<sp/>exponent;</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/>result<sp/>|=<sp/>ui_val;</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>result;<sp/></highlight></codeline>
+<codeline lineno="59"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal">uint32_t<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(uint8_t<sp/>channel,<sp/>uint16_t<sp/>value)<sp/>{<sp/><sp/></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/>uint32_t<sp/>result<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/>result<sp/>=<sp/>(uint32_t)channel<sp/>&lt;&lt;<sp/><ref refid="group__datafmt_1ga609cbe477a2c1fb108e0ff7d1e843cba" kindref="member">ZF_SHIFT_CHANNEL</ref>;</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/>result<sp/>&amp;=<sp/><ref refid="group__datafmt_1gafc1d779c3223302bc38f03f4134ecab2" kindref="member">ZF_CHANNEL</ref>;</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/>result<sp/>|=<sp/>((uint32_t)value<sp/>&amp;<sp/><ref refid="group__datafmt_1ga57d2710d3bb4c20e209ee83e39ab2a83" kindref="member">ZF_ZAHL_WERT_UINT</ref>);</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/>result<sp/>|=<sp/><ref refid="group__datafmt_1ga8cd44f5c3321c7bf29985a55835343c9" kindref="member">ZF_FORMAT_UINT</ref>;</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>result;<sp/></highlight></codeline>
+<codeline lineno="68"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal">uint32_t<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(uint8_t<sp/>channel,<sp/>int16_t<sp/>value)<sp/>{<sp/><sp/></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/>uint32_t<sp/>result<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/>result<sp/>=<sp/>(uint32_t)channel<sp/>&lt;&lt;<sp/><ref refid="group__datafmt_1ga609cbe477a2c1fb108e0ff7d1e843cba" kindref="member">ZF_SHIFT_CHANNEL</ref>;</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/>result<sp/>&amp;=<sp/><ref refid="group__datafmt_1gafc1d779c3223302bc38f03f4134ecab2" kindref="member">ZF_CHANNEL</ref>;</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/>result<sp/>|=<sp/>((uint32_t)value<sp/>&amp;<sp/><ref refid="group__datafmt_1ga946f2bd156088c36f49dca32bccf3074" kindref="member">ZF_ZAHL_WERT_INT</ref>);</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/>result<sp/>|=<sp/><ref refid="group__datafmt_1ga6b708445b514622694ba428e7fd8fcbc" kindref="member">ZF_FORMAT_INT</ref>;</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>result;<sp/></highlight></codeline>
+<codeline lineno="77"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal">uint32_t<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(uint8_t<sp/>channel,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>value1,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>value2)<sp/>{</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/>uint32_t<sp/>result<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/>uint32_t<sp/>c2<sp/>=<sp/>value2&lt;&lt;8;</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/>uint32_t<sp/>c1<sp/>=<sp/>value1;</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/>result<sp/>=<sp/>channel;</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/>result<sp/>&lt;&lt;=<sp/><ref refid="group__datafmt_1ga609cbe477a2c1fb108e0ff7d1e843cba" kindref="member">ZF_SHIFT_CHANNEL</ref>;<sp/></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/>result<sp/>&amp;=<sp/><ref refid="group__datafmt_1gafc1d779c3223302bc38f03f4134ecab2" kindref="member">ZF_CHANNEL</ref>;</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/>result<sp/>=<sp/>result<sp/>|<sp/><ref refid="group__datafmt_1ga7512197e1d94493ecab02587e70fb799" kindref="member">ZF_FORMAT_CHAR</ref><sp/>|<sp/>c1<sp/>|<sp/>c2;<sp/><sp/></highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>result;<sp/><sp/></highlight></codeline>
+<codeline lineno="88"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>defined(__linux__)<sp/>||<sp/>defined(ESP8266)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal">uint32_t<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(uint8_t<sp/>channel,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>value,<sp/>uint8_t<sp/>dataType)<sp/>{</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/>uint32_t<sp/>retval<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>pEnd;<sp/></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">switch</highlight><highlight class="normal"><sp/>(<sp/>dataType<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="group__datafmt_1gaad934efedb3f55d7626d8da28246ec64" kindref="member">ZF_FLOAT</ref>:</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>val_f<sp/>=<sp/>strtof(value,<sp/>&amp;pEnd);</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(channel,<sp/>val_f);</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="group__datafmt_1ga821199c6b4b78b02c5d54aab71d1d5d3" kindref="member">ZF_INT</ref>:</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>int16_t<sp/>val_i<sp/>=<sp/>(int16_t)strtol(value,<sp/>&amp;pEnd,<sp/>10);</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(channel,<sp/>val_i);</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="group__datafmt_1ga26bb16a78b9acd9959eddb35ac08fec5" kindref="member">ZF_UINT</ref>:</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint16_t<sp/>val_ui<sp/>=<sp/>(uint16_t)strtoul(value,<sp/>&amp;pEnd,<sp/>10);</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retval<sp/>=<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(channel,<sp/>val_ui);</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="group__datafmt_1ga64dd970c125f6a2aff5b941a8bb812ed" kindref="member">ZF_CHAR</ref>:</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>ToDo<sp/>Wort<sp/>kann<sp/>ein<sp/>kompletter<sp/>Text<sp/>sein,<sp/>das<sp/>in<sp/>verschiedene<sp/>Channels<sp/>zerlegt<sp/>wird</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/>Max<sp/>Länge<sp/>20*3=60<sp/>Zeichen</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>retval;</highlight></codeline>
+<codeline lineno="119"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal">uint32_t<sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(uint8_t<sp/>channel,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>value)<sp/>{</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/>dataType<sp/>=<sp/><ref refid="group__datafmt_1ga69e9fff4a15910eeb1a71dd60f23e69f" kindref="member">ZF_UNKNOWN</ref>;</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>i=0;<sp/>i&lt;strlen(value);<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>(value[i]<sp/>&gt;=<sp/></highlight><highlight class="charliteral">&apos;a&apos;</highlight><highlight class="normal"><sp/>&amp;&amp;<sp/>value[i]<sp/>&lt;=<sp/></highlight><highlight class="charliteral">&apos;z&apos;</highlight><highlight class="normal">)<sp/>||<sp/>(value[i]<sp/>&gt;=<sp/></highlight><highlight class="charliteral">&apos;A&apos;</highlight><highlight class="normal"><sp/>&amp;&amp;<sp/>value[i]<sp/>&lt;=<sp/></highlight><highlight class="charliteral">&apos;Z&apos;</highlight><highlight class="normal">)<sp/>)<sp/>dataType<sp/>=<sp/><ref refid="group__datafmt_1ga64dd970c125f6a2aff5b941a8bb812ed" kindref="member">ZF_CHAR</ref>;</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>dataType<sp/>==<sp/><ref refid="group__datafmt_1ga64dd970c125f6a2aff5b941a8bb812ed" kindref="member">ZF_CHAR</ref><sp/>||<sp/>dataType<sp/>==<sp/><ref refid="group__datafmt_1ga69e9fff4a15910eeb1a71dd60f23e69f" kindref="member">ZF_UNKNOWN</ref><sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>value[0]<sp/>&gt;=<sp/></highlight><highlight class="charliteral">&apos;0&apos;</highlight><highlight class="normal"><sp/>&amp;&amp;<sp/>value[0]<sp/>&lt;=<sp/></highlight><highlight class="charliteral">&apos;9&apos;</highlight><highlight class="normal"><sp/>)<sp/>dataType<sp/>=<sp/><ref refid="group__datafmt_1ga26bb16a78b9acd9959eddb35ac08fec5" kindref="member">ZF_UINT</ref>;</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>dataType<sp/>==<sp/><ref refid="group__datafmt_1ga64dd970c125f6a2aff5b941a8bb812ed" kindref="member">ZF_CHAR</ref><sp/>||<sp/>dataType<sp/>==<sp/><ref refid="group__datafmt_1ga26bb16a78b9acd9959eddb35ac08fec5" kindref="member">ZF_UINT</ref><sp/>||<sp/>dataType<sp/>==<sp/><ref refid="group__datafmt_1ga69e9fff4a15910eeb1a71dd60f23e69f" kindref="member">ZF_UNKNOWN</ref><sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>value[0]<sp/>==<sp/></highlight><highlight class="charliteral">&apos;-&apos;</highlight><highlight class="normal"><sp/>)<sp/>dataType<sp/>=<sp/><ref refid="group__datafmt_1ga821199c6b4b78b02c5d54aab71d1d5d3" kindref="member">ZF_INT</ref>;</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>i=0;<sp/>i&lt;strlen(value);<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>dataType<sp/>==<sp/><ref refid="group__datafmt_1ga64dd970c125f6a2aff5b941a8bb812ed" kindref="member">ZF_CHAR</ref><sp/>||<sp/>dataType<sp/>==<sp/><ref refid="group__datafmt_1ga26bb16a78b9acd9959eddb35ac08fec5" kindref="member">ZF_UINT</ref><sp/>||<sp/>dataType<sp/>==<sp/><ref refid="group__datafmt_1ga821199c6b4b78b02c5d54aab71d1d5d3" kindref="member">ZF_INT</ref><sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>value[i]<sp/>==<sp/></highlight><highlight class="charliteral">&apos;.&apos;</highlight><highlight class="normal"><sp/>)<sp/>dataType<sp/>=<sp/><ref refid="group__datafmt_1gaad934efedb3f55d7626d8da28246ec64" kindref="member">ZF_FLOAT</ref>;</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>pEnd;<sp/></highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>val_f<sp/>=<sp/>strtof(value,<sp/>&amp;pEnd);</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>((val_f<sp/>&gt;<sp/>32768)<sp/>&amp;&amp;<sp/>(dataType<sp/>==<sp/><ref refid="group__datafmt_1ga821199c6b4b78b02c5d54aab71d1d5d3" kindref="member">ZF_INT</ref>))<sp/>||<sp/>((val_f<sp/>&gt;<sp/>65536)<sp/>&amp;&amp;<sp/>(dataType<sp/>==<sp/><ref refid="group__datafmt_1ga26bb16a78b9acd9959eddb35ac08fec5" kindref="member">ZF_UINT</ref>))<sp/>)<sp/>dataType<sp/>=<sp/><ref refid="group__datafmt_1gaad934efedb3f55d7626d8da28246ec64" kindref="member">ZF_FLOAT</ref>;</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="group__datafmt_1ga12f15e8310418544b966ce75d8c23e92" kindref="member">calcTransportValue</ref>(channel,<sp/>value,<sp/>dataType);</highlight></codeline>
+<codeline lineno="141"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"></highlight></codeline>
+<codeline lineno="143"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="144"><highlight class="normal"></highlight></codeline>
+<codeline lineno="145"><highlight class="normal"></highlight></codeline>
+<codeline lineno="146"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="group__datafmt_1ga87fd32ad4e05f024d6feaa6302a17595" kindref="member">getValue</ref>(uint32_t<sp/>data,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal">*<sp/>zahl)<sp/>{</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>retval<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/><ref refid="group__datafmt_1ga2ecd9323066a3bcae374c8471d69c074" kindref="member">getDataType</ref>(data)<sp/>==<sp/><ref refid="group__datafmt_1gaad934efedb3f55d7626d8da28246ec64" kindref="member">ZF_FLOAT</ref><sp/>)<sp/>{<sp/></highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/>*zahl<sp/>=<sp/><ref refid="dataformat_8cpp_1a3a0f50ef57dd9b1aa1974e867358cf82" kindref="member">getValue_f</ref>(data);</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/>retval<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/><ref refid="group__datafmt_1ga2ecd9323066a3bcae374c8471d69c074" kindref="member">getDataType</ref>(data)<sp/>==<sp/><ref refid="group__datafmt_1ga821199c6b4b78b02c5d54aab71d1d5d3" kindref="member">ZF_INT</ref><sp/>)<sp/>{<sp/></highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/>*zahl<sp/>=<sp/>(float)<ref refid="dataformat_8cpp_1a45c553970e8e1c2f86a4abbd3c536b55" kindref="member">getValue_i</ref>(data);</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/>retval<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/><ref refid="group__datafmt_1ga2ecd9323066a3bcae374c8471d69c074" kindref="member">getDataType</ref>(data)<sp/>==<sp/><ref refid="group__datafmt_1ga26bb16a78b9acd9959eddb35ac08fec5" kindref="member">ZF_UINT</ref><sp/>)<sp/>{<sp/></highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/>*zahl<sp/>=<sp/>(float)<ref refid="dataformat_8cpp_1af890ea464785cefcdf4becec9f4a5c87" kindref="member">getValue_ui</ref>(data);</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/>retval<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>retval;</highlight></codeline>
+<codeline lineno="161"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"></highlight></codeline>
+<codeline lineno="163"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="group__datafmt_1ga87fd32ad4e05f024d6feaa6302a17595" kindref="member">getValue</ref>(uint32_t<sp/>data,<sp/>int16_t<sp/>*<sp/>zahl)<sp/>{</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>retval<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/><ref refid="group__datafmt_1ga2ecd9323066a3bcae374c8471d69c074" kindref="member">getDataType</ref>(data)<sp/>==<sp/><ref refid="group__datafmt_1gaad934efedb3f55d7626d8da28246ec64" kindref="member">ZF_FLOAT</ref><sp/>)<sp/>{<sp/></highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/>*zahl<sp/>=<sp/>(int16_t)<ref refid="dataformat_8cpp_1a3a0f50ef57dd9b1aa1974e867358cf82" kindref="member">getValue_f</ref>(data);</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/>retval<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/><ref refid="group__datafmt_1ga2ecd9323066a3bcae374c8471d69c074" kindref="member">getDataType</ref>(data)<sp/>==<sp/><ref refid="group__datafmt_1ga821199c6b4b78b02c5d54aab71d1d5d3" kindref="member">ZF_INT</ref><sp/>)<sp/>{<sp/></highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/>*zahl<sp/>=<sp/><ref refid="dataformat_8cpp_1a45c553970e8e1c2f86a4abbd3c536b55" kindref="member">getValue_i</ref>(data);</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/>retval<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/><ref refid="group__datafmt_1ga2ecd9323066a3bcae374c8471d69c074" kindref="member">getDataType</ref>(data)<sp/>==<sp/><ref refid="group__datafmt_1ga26bb16a78b9acd9959eddb35ac08fec5" kindref="member">ZF_UINT</ref><sp/>)<sp/>{<sp/></highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/>*zahl<sp/>=<sp/>(int16_t)<ref refid="dataformat_8cpp_1af890ea464785cefcdf4becec9f4a5c87" kindref="member">getValue_ui</ref>(data);</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/>retval<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>retval;</highlight></codeline>
+<codeline lineno="178"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"></highlight></codeline>
+<codeline lineno="180"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="group__datafmt_1ga87fd32ad4e05f024d6feaa6302a17595" kindref="member">getValue</ref>(uint32_t<sp/>data,<sp/>uint16_t*<sp/>zahl)<sp/>{</highlight></codeline>
+<codeline lineno="181"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>retval<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/><ref refid="group__datafmt_1ga2ecd9323066a3bcae374c8471d69c074" kindref="member">getDataType</ref>(data)<sp/>==<sp/><ref refid="group__datafmt_1gaad934efedb3f55d7626d8da28246ec64" kindref="member">ZF_FLOAT</ref><sp/>)<sp/>{<sp/></highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/>*zahl<sp/>=<sp/>(uint16_t)<ref refid="dataformat_8cpp_1a3a0f50ef57dd9b1aa1974e867358cf82" kindref="member">getValue_f</ref>(data);</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/><sp/><sp/>retval<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/><ref refid="group__datafmt_1ga2ecd9323066a3bcae374c8471d69c074" kindref="member">getDataType</ref>(data)<sp/>==<sp/><ref refid="group__datafmt_1ga821199c6b4b78b02c5d54aab71d1d5d3" kindref="member">ZF_INT</ref><sp/>)<sp/>{<sp/></highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/>*zahl<sp/>=<sp/>(uint16_t)<ref refid="dataformat_8cpp_1a45c553970e8e1c2f86a4abbd3c536b55" kindref="member">getValue_i</ref>(data);</highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/><sp/><sp/>retval<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="190"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/><ref refid="group__datafmt_1ga2ecd9323066a3bcae374c8471d69c074" kindref="member">getDataType</ref>(data)<sp/>==<sp/><ref refid="group__datafmt_1ga26bb16a78b9acd9959eddb35ac08fec5" kindref="member">ZF_UINT</ref><sp/>)<sp/>{<sp/></highlight></codeline>
+<codeline lineno="191"><highlight class="normal"><sp/><sp/><sp/><sp/>*zahl<sp/>=<sp/><ref refid="dataformat_8cpp_1af890ea464785cefcdf4becec9f4a5c87" kindref="member">getValue_ui</ref>(data);</highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/><sp/><sp/>retval<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>retval;</highlight></codeline>
+<codeline lineno="195"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="196"><highlight class="normal"></highlight></codeline>
+<codeline lineno="197"><highlight class="normal">uint8_t<sp/><ref refid="group__datafmt_1ga2ecd9323066a3bcae374c8471d69c074" kindref="member">getDataType</ref>(uint32_t<sp/>data)<sp/>{</highlight></codeline>
+<codeline lineno="198"><highlight class="normal"><sp/><sp/>uint8_t<sp/>retval;</highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><sp/><sp/>retval<sp/>=<sp/>((data<sp/>&amp;<sp/><ref refid="group__datafmt_1ga01cfcdafb2f084038e46f33cd67cbb6d" kindref="member">ZF_FORMAT</ref>)<sp/>&gt;&gt;<sp/><ref refid="group__datafmt_1ga6a43886b9442c8937b7e8a945ea746f6" kindref="member">ZF_SHIFT_FORMAT</ref>);</highlight></codeline>
+<codeline lineno="200"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>retval;</highlight></codeline>
+<codeline lineno="201"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"></highlight></codeline>
+<codeline lineno="203"><highlight class="normal">uint8_t<sp/><ref refid="group__datafmt_1ga1bc47883133ecf3ccab0bc5e94946f0b" kindref="member">getChannel</ref>(uint32_t<sp/>data)<sp/>{</highlight></codeline>
+<codeline lineno="204"><highlight class="normal"><sp/><sp/>uint8_t<sp/>retval;</highlight></codeline>
+<codeline lineno="205"><highlight class="normal"><sp/><sp/>retval<sp/>=<sp/>(data<sp/>&amp;<sp/><ref refid="group__datafmt_1gafc1d779c3223302bc38f03f4134ecab2" kindref="member">ZF_CHANNEL</ref>)<sp/>&gt;&gt;<sp/><ref refid="group__datafmt_1ga609cbe477a2c1fb108e0ff7d1e843cba" kindref="member">ZF_SHIFT_CHANNEL</ref>;</highlight></codeline>
+<codeline lineno="206"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>retval;</highlight></codeline>
+<codeline lineno="207"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="208"><highlight class="normal"></highlight></codeline>
+<codeline lineno="209"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="group__datafmt_1ga02342d8c3916c9953de9d5edce69869e" kindref="member">unpackTransportValue</ref>(uint32_t<sp/>data,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="210"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/>dataType<sp/>=<sp/><ref refid="group__datafmt_1ga2ecd9323066a3bcae374c8471d69c074" kindref="member">getDataType</ref>(data);</highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">switch</highlight><highlight class="normal"><sp/>(<sp/>dataType<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="212"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="group__datafmt_1gaad934efedb3f55d7626d8da28246ec64" kindref="member">ZF_FLOAT</ref>:<sp/><sp/></highlight></codeline>
+<codeline lineno="213"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="214"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>myval;</highlight></codeline>
+<codeline lineno="215"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__datafmt_1ga87fd32ad4e05f024d6feaa6302a17595" kindref="member">getValue</ref>(data,<sp/>&amp;myval);</highlight></codeline>
+<codeline lineno="216"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>myval<sp/>&gt;<sp/>500<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="217"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>defined(__linux__)<sp/>||<sp/>defined(ESP8266)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="218"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>snprintf(<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>,9,</highlight><highlight class="stringliteral">&quot;%.1f&quot;</highlight><highlight class="normal">,<sp/>myval);</highlight></codeline>
+<codeline lineno="219"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="220"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>dtostrf(myval,<sp/>4,<sp/>0,<sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>);</highlight></codeline>
+<codeline lineno="221"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="222"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="223"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>myval<sp/>&gt;<sp/>9.9<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>defined(__linux__)<sp/>||<sp/>defined(ESP8266)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>snprintf(<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>,9,</highlight><highlight class="stringliteral">&quot;%.2f&quot;</highlight><highlight class="normal">,<sp/>myval);</highlight></codeline>
+<codeline lineno="226"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>dtostrf(myval,<sp/>4,<sp/>1,<sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>);</highlight></codeline>
+<codeline lineno="228"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="229"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="230"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>defined(__linux__)<sp/>||<sp/>defined(ESP8266)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="231"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>snprintf(<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>,9,</highlight><highlight class="stringliteral">&quot;%.3f&quot;</highlight><highlight class="normal">,<sp/>myval);</highlight></codeline>
+<codeline lineno="232"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="233"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>dtostrf(myval,<sp/>4,<sp/>2,<sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>);</highlight></codeline>
+<codeline lineno="234"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="235"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="236"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="237"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="238"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="239"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="group__datafmt_1ga821199c6b4b78b02c5d54aab71d1d5d3" kindref="member">ZF_INT</ref>:</highlight></codeline>
+<codeline lineno="240"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="241"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>int16_t<sp/>myval;</highlight></codeline>
+<codeline lineno="242"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__datafmt_1ga87fd32ad4e05f024d6feaa6302a17595" kindref="member">getValue</ref>(data,<sp/>&amp;myval);</highlight></codeline>
+<codeline lineno="243"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sprintf(<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>,</highlight><highlight class="stringliteral">&quot;%d&quot;</highlight><highlight class="normal">,myval);</highlight></codeline>
+<codeline lineno="244"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="245"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="246"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="group__datafmt_1ga26bb16a78b9acd9959eddb35ac08fec5" kindref="member">ZF_UINT</ref>:</highlight></codeline>
+<codeline lineno="247"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="248"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint16_t<sp/>myval;</highlight></codeline>
+<codeline lineno="249"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__datafmt_1ga87fd32ad4e05f024d6feaa6302a17595" kindref="member">getValue</ref>(data,<sp/>&amp;myval);</highlight></codeline>
+<codeline lineno="250"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sprintf(<ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>,</highlight><highlight class="stringliteral">&quot;%u&quot;</highlight><highlight class="normal">,myval);</highlight></codeline>
+<codeline lineno="251"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="252"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="253"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="group__datafmt_1ga64dd970c125f6a2aff5b941a8bb812ed" kindref="member">ZF_CHAR</ref>:</highlight></codeline>
+<codeline lineno="254"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>ToDo<sp/>Wort<sp/>kann<sp/>ein<sp/>kompletter<sp/>Text<sp/>sein,<sp/>das<sp/>in<sp/>verschiedene<sp/>Channels<sp/>zerlegt<sp/>wird</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="255"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/>Max<sp/>Länge<sp/>20*3=60<sp/>Zeichen</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="256"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="257"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="258"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="rf24gwd_8h_1a1fe855c208bc17a51a4d34fefdb2d5b1" kindref="member">buf</ref>;</highlight></codeline>
+<codeline lineno="259"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="260"><highlight class="normal"></highlight></codeline>
+<codeline lineno="261"><highlight class="normal"></highlight><highlight class="comment">/***************************************</highlight></codeline>
+<codeline lineno="262"><highlight class="comment"><sp/>*<sp/>getValue_?<sp/>sind<sp/>nur<sp/>modulintern<sp/>und<sp/>deshalb</highlight></codeline>
+<codeline lineno="263"><highlight class="comment"><sp/>*<sp/>nicht<sp/>in<sp/>dataformat.h<sp/>deklariert<sp/>!!!!!</highlight></codeline>
+<codeline lineno="264"><highlight class="comment"><sp/>**************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="265"><highlight class="normal"></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/><ref refid="dataformat_8cpp_1a3a0f50ef57dd9b1aa1974e867358cf82" kindref="member">getValue_f</ref>(uint32_t<sp/>data)<sp/>{</highlight></codeline>
+<codeline lineno="266"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>zahl;</highlight></codeline>
+<codeline lineno="267"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/><ref refid="group__datafmt_1ga2ecd9323066a3bcae374c8471d69c074" kindref="member">getDataType</ref>(data)<sp/>==<sp/><ref refid="group__datafmt_1gaad934efedb3f55d7626d8da28246ec64" kindref="member">ZF_FLOAT</ref><sp/>)<sp/>{<sp/></highlight></codeline>
+<codeline lineno="268"><highlight class="normal"><sp/><sp/><sp/><sp/>uint32_t<sp/>exponent<sp/>=<sp/>(data<sp/>&amp;<sp/><ref refid="group__datafmt_1gad954db99f0df7447832a14beb665dc7b" kindref="member">ZF_EXPO_WERT</ref>)<sp/>&gt;&gt;<sp/>17;</highlight></codeline>
+<codeline lineno="269"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>expo_negativ<sp/>=<sp/>data<sp/>&amp;<sp/><ref refid="group__datafmt_1ga29a9b055debb9d9f832bd4f2b8d59eae" kindref="member">ZF_EXPO_NEGATIV</ref>;</highlight></codeline>
+<codeline lineno="270"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>zahl_negativ<sp/>=<sp/>data<sp/>&amp;<sp/><sp/><ref refid="group__datafmt_1gae475064281ce57140b56f6964a0d91bb" kindref="member">ZF_ZAHL_NEGATIV</ref>;</highlight></codeline>
+<codeline lineno="271"><highlight class="normal"><sp/><sp/><sp/><sp/>zahl<sp/>=<sp/>data<sp/>&amp;<sp/><ref refid="group__datafmt_1ga4f710eda1e9718288fca1ab96bdbc645" kindref="member">ZF_ZAHL_WERT_FLOAT</ref>;</highlight></codeline>
+<codeline lineno="272"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>expo_negativ<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="273"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(uint8_t<sp/>i=exponent;i&gt;0;i--)<sp/>{</highlight></codeline>
+<codeline lineno="274"><highlight class="normal"><sp/><sp/><sp/><sp/>zahl<sp/>/=<sp/>10.0;</highlight></codeline>
+<codeline lineno="275"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="276"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="277"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(uint8_t<sp/>i=exponent;i&gt;0;i--)<sp/>{</highlight></codeline>
+<codeline lineno="278"><highlight class="normal"><sp/><sp/><sp/><sp/>zahl<sp/>*=<sp/>10.0;</highlight></codeline>
+<codeline lineno="279"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="280"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="281"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>zahl_negativ<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="282"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>zahl<sp/>*=<sp/>-1.0;</highlight></codeline>
+<codeline lineno="283"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="284"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="285"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>zahl;</highlight></codeline>
+<codeline lineno="286"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="287"><highlight class="normal"></highlight></codeline>
+<codeline lineno="288"><highlight class="normal">int16_t<sp/><ref refid="dataformat_8cpp_1a45c553970e8e1c2f86a4abbd3c536b55" kindref="member">getValue_i</ref>(uint32_t<sp/>data)<sp/>{</highlight></codeline>
+<codeline lineno="289"><highlight class="normal"><sp/><sp/>int16_t<sp/>zahl;</highlight></codeline>
+<codeline lineno="290"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/><ref refid="group__datafmt_1ga2ecd9323066a3bcae374c8471d69c074" kindref="member">getDataType</ref>(data)<sp/>==<sp/><ref refid="group__datafmt_1ga821199c6b4b78b02c5d54aab71d1d5d3" kindref="member">ZF_INT</ref><sp/>)<sp/>{<sp/></highlight></codeline>
+<codeline lineno="291"><highlight class="normal"><sp/><sp/><sp/><sp/>zahl<sp/>=<sp/>data<sp/>&amp;<sp/><ref refid="group__datafmt_1ga946f2bd156088c36f49dca32bccf3074" kindref="member">ZF_ZAHL_WERT_INT</ref>;</highlight></codeline>
+<codeline lineno="292"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="293"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>zahl;</highlight></codeline>
+<codeline lineno="294"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="295"><highlight class="normal"></highlight></codeline>
+<codeline lineno="296"><highlight class="normal">uint16_t<sp/><ref refid="dataformat_8cpp_1af890ea464785cefcdf4becec9f4a5c87" kindref="member">getValue_ui</ref>(uint32_t<sp/>data)<sp/>{</highlight></codeline>
+<codeline lineno="297"><highlight class="normal"><sp/><sp/>uint16_t<sp/>zahl;</highlight></codeline>
+<codeline lineno="298"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/><ref refid="group__datafmt_1ga2ecd9323066a3bcae374c8471d69c074" kindref="member">getDataType</ref>(data)<sp/>==<sp/><ref refid="group__datafmt_1ga26bb16a78b9acd9959eddb35ac08fec5" kindref="member">ZF_UINT</ref><sp/>)<sp/>{<sp/></highlight></codeline>
+<codeline lineno="299"><highlight class="normal"><sp/><sp/><sp/><sp/>zahl<sp/>=<sp/>data<sp/>&amp;<sp/><ref refid="group__datafmt_1ga57d2710d3bb4c20e209ee83e39ab2a83" kindref="member">ZF_ZAHL_WERT_UINT</ref>;</highlight></codeline>
+<codeline lineno="300"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="301"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>zahl;</highlight></codeline>
+<codeline lineno="302"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="303"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/stick/netz/projekte/RF24Hub/linux/dataformat.cpp"/>
+  </compounddef>
+</doxygen>

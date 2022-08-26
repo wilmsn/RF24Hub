@@ -1,0 +1,253 @@
+\hypertarget{classDatabase}{}\doxysection{Database Class Reference}
+\label{classDatabase}\index{Database@{Database}}
+
+
+{\ttfamily \#include $<$database.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classDatabase_a9bc6c107fdce74c8d75ccd2e2978a92b}{set\+Verbose}} (uint16\+\_\+t \+\_\+verbose\+Level)
+\item 
+bool \mbox{\hyperlink{classDatabase_acbed9ea8d0a159f656313aa521406c8a}{connect}} (string db\+\_\+hostname, string db\+\_\+username, string db\+\_\+password, string db\+\_\+schema, int db\+\_\+port)
+\item 
+void \mbox{\hyperlink{classDatabase_a9fa9601b6f5a24f628a51685fbd731f9}{set\+\_\+\+Volt\+\_\+\+LV}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id, float volt\+\_\+\+LV)
+\item 
+void \mbox{\hyperlink{classDatabase_aa1475d6e31a6a9117f87edc3156bcf03}{store\+Sensor\+Value}} (uint32\+\_\+t sensor\+\_\+id, char $\ast$value)
+\item 
+void \mbox{\hyperlink{classDatabase_aed24791f665b60d9f3108aad82eb28b3}{store\+Node\+Config}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id, uint8\+\_\+t channel, char $\ast$value)
+\item 
+void \mbox{\hyperlink{classDatabase_a965b1f5fc54effcf2e8f3fc94eb8131a}{init\+Sensor}} (\mbox{\hyperlink{classSensorClass}{Sensor\+Class}} $\ast$\mbox{\hyperlink{rf24hubd_8h_a32b75ac9948db837416adb463c101ae7}{sensor\+Class}})
+\item 
+void \mbox{\hyperlink{classDatabase_a14bf51ac805ea157223c7a1cb29c11c3}{init\+Node}} (\mbox{\hyperlink{classNodeClass}{Node\+Class}} $\ast$\mbox{\hyperlink{rf24hubd_8h_a6f21c130ea438b6c54c3deb9a25901b2}{node\+Class}})
+\item 
+void \mbox{\hyperlink{classDatabase_a409479c4647a926fd9cc771cdaa53fc0}{init\+Gateway}} (\mbox{\hyperlink{classGatewayClass}{Gateway\+Class}} $\ast$\mbox{\hyperlink{rf24hubd_8h_a5d04e25b77f7ecfc9256335eac98b51f}{gateway\+Class}})
+\item 
+void \mbox{\hyperlink{classDatabase_a63afca68774fd4faaa85ec80f0df8908}{init\+System}} (void)
+\item 
+void \mbox{\hyperlink{classDatabase_aa34470fdf087ea6b0960b0d97675498f}{rebuild\+\_\+sensordata\+\_\+d}} (void)
+\item 
+void \mbox{\hyperlink{classDatabase_a9d551c009288ffe3da9a22c2f48b9f66}{sync\+\_\+sensordata\+\_\+d}} (void)
+\item 
+unsigned long \mbox{\hyperlink{classDatabase_a4e28a24d04516fa49b0b002272cf68ce}{get\+Begin\+Of\+Day}} ()
+\item 
+void \mbox{\hyperlink{classDatabase_acf6dc74e76d9afb47173c29af9da32b6}{add\+Gateway}} (char $\ast$gw\+\_\+hostname, uint16\+\_\+t gw\+\_\+no)
+\item 
+void \mbox{\hyperlink{classDatabase_a12da257cf14167a4d356f2974fa58ccc}{del\+Gateway}} (uint16\+\_\+t gw\+\_\+no)
+\item 
+void \mbox{\hyperlink{classDatabase_a3fcc9f7098d8b40f2892c082ea61bdb0}{enable\+Gateway}} (uint16\+\_\+t gw\+\_\+no)
+\item 
+void \mbox{\hyperlink{classDatabase_af54268220c3c1239c51f1fde41540f38}{disable\+Gateway}} (uint16\+\_\+t gw\+\_\+no)
+\item 
+void \mbox{\hyperlink{classDatabase_a31e5aaf049add0c5410630a08268bb61}{update\+Node\+Mastered}} (\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}} node\+\_\+id, bool is\+Mastered)
+\item 
+\mbox{\hyperlink{classDatabase_a65fe13accaa0205e66142103ed07258a}{Database}} (void)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classDatabase_a65fe13accaa0205e66142103ed07258a}\label{classDatabase_a65fe13accaa0205e66142103ed07258a}} 
+\index{Database@{Database}!Database@{Database}}
+\index{Database@{Database}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{Database()}{Database()}}
+{\footnotesize\ttfamily Database\+::\+Database (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+The constructor 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classDatabase_acf6dc74e76d9afb47173c29af9da32b6}\label{classDatabase_acf6dc74e76d9afb47173c29af9da32b6}} 
+\index{Database@{Database}!addGateway@{addGateway}}
+\index{addGateway@{addGateway}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{addGateway()}{addGateway()}}
+{\footnotesize\ttfamily void Database\+::add\+Gateway (\begin{DoxyParamCaption}\item[{char $\ast$}]{gw\+\_\+hostname,  }\item[{uint16\+\_\+t}]{gw\+\_\+no }\end{DoxyParamCaption})}
+
+Adds a gateay to the database 
+\begin{DoxyParams}{Parameters}
+{\em gw\+\_\+hostname} & Der Hostname mit Domaine des Gateways \\
+\hline
+{\em gw\+\_\+no} & Die Gatewaynummer \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classDatabase_acbed9ea8d0a159f656313aa521406c8a}\label{classDatabase_acbed9ea8d0a159f656313aa521406c8a}} 
+\index{Database@{Database}!connect@{connect}}
+\index{connect@{connect}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{connect()}{connect()}}
+{\footnotesize\ttfamily bool Database\+::connect (\begin{DoxyParamCaption}\item[{string}]{db\+\_\+hostname,  }\item[{string}]{db\+\_\+username,  }\item[{string}]{db\+\_\+password,  }\item[{string}]{db\+\_\+schema,  }\item[{int}]{db\+\_\+port }\end{DoxyParamCaption})}
+
+connects to the database 
+\begin{DoxyParams}{Parameters}
+{\em db\+\_\+hostname} & Der Hostname der Datenbank mit Domaine \\
+\hline
+{\em db\+\_\+username} & Der Username zum Zugriff auf die Datenbank. Muss innerhalb der Datenbank alle benötigten Rechte haben. \\
+\hline
+{\em db\+\_\+password} & Das Datenbankpasswort für den Datenbanknutzer \\
+\hline
+{\em db\+\_\+schema} & Das Datenbankschema \\
+\hline
+{\em db\+\_\+port} & Der Datenbankport \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\char`\"{}true\char`\"{} bei erfolgreicher Anmeldung, sonst \char`\"{}false\char`\"{} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDatabase_a12da257cf14167a4d356f2974fa58ccc}\label{classDatabase_a12da257cf14167a4d356f2974fa58ccc}} 
+\index{Database@{Database}!delGateway@{delGateway}}
+\index{delGateway@{delGateway}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{delGateway()}{delGateway()}}
+{\footnotesize\ttfamily void Database\+::del\+Gateway (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{gw\+\_\+no }\end{DoxyParamCaption})}
+
+Deletes a gateay from the database 
+\begin{DoxyParams}{Parameters}
+{\em gw\+\_\+no} & Die Gatewaynummer \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classDatabase_af54268220c3c1239c51f1fde41540f38}\label{classDatabase_af54268220c3c1239c51f1fde41540f38}} 
+\index{Database@{Database}!disableGateway@{disableGateway}}
+\index{disableGateway@{disableGateway}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{disableGateway()}{disableGateway()}}
+{\footnotesize\ttfamily void Database\+::disable\+Gateway (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{gw\+\_\+no }\end{DoxyParamCaption})}
+
+Disables a gateay in the database 
+\begin{DoxyParams}{Parameters}
+{\em gw\+\_\+no} & Die Gatewaynummer \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classDatabase_a3fcc9f7098d8b40f2892c082ea61bdb0}\label{classDatabase_a3fcc9f7098d8b40f2892c082ea61bdb0}} 
+\index{Database@{Database}!enableGateway@{enableGateway}}
+\index{enableGateway@{enableGateway}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{enableGateway()}{enableGateway()}}
+{\footnotesize\ttfamily void Database\+::enable\+Gateway (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{gw\+\_\+no }\end{DoxyParamCaption})}
+
+Enables a gateay in the database 
+\begin{DoxyParams}{Parameters}
+{\em gw\+\_\+no} & Die Gatewaynummer \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classDatabase_a4e28a24d04516fa49b0b002272cf68ce}\label{classDatabase_a4e28a24d04516fa49b0b002272cf68ce}} 
+\index{Database@{Database}!getBeginOfDay@{getBeginOfDay}}
+\index{getBeginOfDay@{getBeginOfDay}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{getBeginOfDay()}{getBeginOfDay()}}
+{\footnotesize\ttfamily unsigned long Database\+::get\+Begin\+Of\+Day (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Gets the begin of this day as unix time \mbox{\Hypertarget{classDatabase_a409479c4647a926fd9cc771cdaa53fc0}\label{classDatabase_a409479c4647a926fd9cc771cdaa53fc0}} 
+\index{Database@{Database}!initGateway@{initGateway}}
+\index{initGateway@{initGateway}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{initGateway()}{initGateway()}}
+{\footnotesize\ttfamily void Database\+::init\+Gateway (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classGatewayClass}{Gateway\+Class}} $\ast$}]{gateway\+Class }\end{DoxyParamCaption})}
+
+Reads the data to initializise the gateway array from the \mbox{\hyperlink{classDatabase}{Database}} 
+\begin{DoxyParams}{Parameters}
+{\em gateway} & Ein Pointer auf das gateway Objekt \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classDatabase_a14bf51ac805ea157223c7a1cb29c11c3}\label{classDatabase_a14bf51ac805ea157223c7a1cb29c11c3}} 
+\index{Database@{Database}!initNode@{initNode}}
+\index{initNode@{initNode}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{initNode()}{initNode()}}
+{\footnotesize\ttfamily void Database\+::init\+Node (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classNodeClass}{Node\+Class}} $\ast$}]{node\+Class }\end{DoxyParamCaption})}
+
+Reads the data to initializise the node array from the \mbox{\hyperlink{classDatabase}{Database}} 
+\begin{DoxyParams}{Parameters}
+{\em node} & Ein Pointer auf das Node Objekt \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classDatabase_a965b1f5fc54effcf2e8f3fc94eb8131a}\label{classDatabase_a965b1f5fc54effcf2e8f3fc94eb8131a}} 
+\index{Database@{Database}!initSensor@{initSensor}}
+\index{initSensor@{initSensor}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{initSensor()}{initSensor()}}
+{\footnotesize\ttfamily void Database\+::init\+Sensor (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classSensorClass}{Sensor\+Class}} $\ast$}]{sensor\+Class }\end{DoxyParamCaption})}
+
+Reads the data to initializise the sensor array from the \mbox{\hyperlink{classDatabase}{Database}} 
+\begin{DoxyParams}{Parameters}
+{\em sensor} & Ein Pointer auf das Sensor Objekt \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classDatabase_a63afca68774fd4faaa85ec80f0df8908}\label{classDatabase_a63afca68774fd4faaa85ec80f0df8908}} 
+\index{Database@{Database}!initSystem@{initSystem}}
+\index{initSystem@{initSystem}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{initSystem()}{initSystem()}}
+{\footnotesize\ttfamily void Database\+::init\+System (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Initializise the system from the \mbox{\hyperlink{classDatabase}{Database}} \mbox{\Hypertarget{classDatabase_aa34470fdf087ea6b0960b0d97675498f}\label{classDatabase_aa34470fdf087ea6b0960b0d97675498f}} 
+\index{Database@{Database}!rebuild\_sensordata\_d@{rebuild\_sensordata\_d}}
+\index{rebuild\_sensordata\_d@{rebuild\_sensordata\_d}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{rebuild\_sensordata\_d()}{rebuild\_sensordata\_d()}}
+{\footnotesize\ttfamily void Database\+::rebuild\+\_\+sensordata\+\_\+d (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Refreshes the table sensordata\+\_\+d from scratch \mbox{\Hypertarget{classDatabase_a9fa9601b6f5a24f628a51685fbd731f9}\label{classDatabase_a9fa9601b6f5a24f628a51685fbd731f9}} 
+\index{Database@{Database}!set\_Volt\_LV@{set\_Volt\_LV}}
+\index{set\_Volt\_LV@{set\_Volt\_LV}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{set\_Volt\_LV()}{set\_Volt\_LV()}}
+{\footnotesize\ttfamily void Database\+::set\+\_\+\+Volt\+\_\+\+LV (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id,  }\item[{float}]{volt\+\_\+\+LV }\end{DoxyParamCaption})}
+
+Sets (true) or resets(false) the low Voltage State of a Node 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Die Node ID \\
+\hline
+{\em volt\+\_\+\+LV} & Die Spannung deren Unterschreitung das Low\+Voltage\+Level startet \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classDatabase_a9bc6c107fdce74c8d75ccd2e2978a92b}\label{classDatabase_a9bc6c107fdce74c8d75ccd2e2978a92b}} 
+\index{Database@{Database}!setVerbose@{setVerbose}}
+\index{setVerbose@{setVerbose}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{setVerbose()}{setVerbose()}}
+{\footnotesize\ttfamily void Database\+::set\+Verbose (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{\+\_\+verbose\+Level }\end{DoxyParamCaption})}
+
+Setzt den Verboselevel. Mögliche Level sind in den Makros VERBOSE$\ast$ in \mbox{\hyperlink{config_8h}{config.\+h}} definiert. 
+\begin{DoxyParams}{Parameters}
+{\em verbose\+Level} & Der aktuelle Verboselevel \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classDatabase_aed24791f665b60d9f3108aad82eb28b3}\label{classDatabase_aed24791f665b60d9f3108aad82eb28b3}} 
+\index{Database@{Database}!storeNodeConfig@{storeNodeConfig}}
+\index{storeNodeConfig@{storeNodeConfig}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{storeNodeConfig()}{storeNodeConfig()}}
+{\footnotesize\ttfamily void Database\+::store\+Node\+Config (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id,  }\item[{uint8\+\_\+t}]{channel,  }\item[{char $\ast$}]{value }\end{DoxyParamCaption})}
+
+Stores the config data of a node (Registervalue) 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Die Node ID \\
+\hline
+{\em channel} & Der Channel \\
+\hline
+{\em value} & Der Registerwert als String \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classDatabase_aa1475d6e31a6a9117f87edc3156bcf03}\label{classDatabase_aa1475d6e31a6a9117f87edc3156bcf03}} 
+\index{Database@{Database}!storeSensorValue@{storeSensorValue}}
+\index{storeSensorValue@{storeSensorValue}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{storeSensorValue()}{storeSensorValue()}}
+{\footnotesize\ttfamily void Database\+::store\+Sensor\+Value (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{sensor\+\_\+id,  }\item[{char $\ast$}]{value }\end{DoxyParamCaption})}
+
+Stores the last data(\+Transportvalue) of a sensor into the table sensordata 
+\begin{DoxyParams}{Parameters}
+{\em sensor\+\_\+id} & Die Sensor ID \\
+\hline
+{\em value} & Der Sensorwert als Transportvalue \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classDatabase_a9d551c009288ffe3da9a22c2f48b9f66}\label{classDatabase_a9d551c009288ffe3da9a22c2f48b9f66}} 
+\index{Database@{Database}!sync\_sensordata\_d@{sync\_sensordata\_d}}
+\index{sync\_sensordata\_d@{sync\_sensordata\_d}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{sync\_sensordata\_d()}{sync\_sensordata\_d()}}
+{\footnotesize\ttfamily void Database\+::sync\+\_\+sensordata\+\_\+d (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Refreshes the table sensordata\+\_\+d \mbox{\Hypertarget{classDatabase_a31e5aaf049add0c5410630a08268bb61}\label{classDatabase_a31e5aaf049add0c5410630a08268bb61}} 
+\index{Database@{Database}!updateNodeMastered@{updateNodeMastered}}
+\index{updateNodeMastered@{updateNodeMastered}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{updateNodeMastered()}{updateNodeMastered()}}
+{\footnotesize\ttfamily void Database\+::update\+Node\+Mastered (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__rf24makros_ga030de4f033221607739a15cb52508022}{NODE\+\_\+\+DATTYPE}}}]{node\+\_\+id,  }\item[{bool}]{is\+Mastered }\end{DoxyParamCaption})}
+
+Update the mastered flag of a node 
+\begin{DoxyParams}{Parameters}
+{\em node\+\_\+id} & Die Node ID \\
+\hline
+{\em is\+Mastered} & \char`\"{}true\char`\"{} wenn der Node durch dieses System verwaltet wird, sonst \char`\"{}false\char`\"{} \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{database_8h}{database.\+h}}\item 
+\mbox{\hyperlink{database_8cpp}{database.\+cpp}}\end{DoxyCompactItemize}

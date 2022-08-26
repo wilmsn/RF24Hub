@@ -1,0 +1,528 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="rf24hub__text_8h" kind="file" language="C++">
+    <compoundname>rf24hub_text.h</compoundname>
+    <includedby refid="rf24hubd_8h" local="yes">rf24hubd.h</includedby>
+    <invincdepgraph>
+      <node id="1">
+        <label>rf24hub_text.h</label>
+        <link refid="rf24hub__text_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>rf24hubd.cpp</label>
+        <link refid="rf24hubd_8cpp"/>
+      </node>
+      <node id="2">
+        <label>rf24hubd.h</label>
+        <link refid="rf24hubd_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="rf24hub__text_8h_1aab6cc9e968266e0b9f7583cbf387ebb6" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage01[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage01</name>
+        <initializer>= &quot;Usage:&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="7" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="7" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1a7647695a45ea70e949ab2e0ce77ab202" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage02[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage02</name>
+        <initializer>= &quot;set sensor &lt;sensornumber&gt; &lt;sensorvalue&gt;&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="8" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="8" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1a10d60dd0ff14e7bf67cba2b221064811" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage03[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage03</name>
+        <initializer>= &quot;   Sets the sensor &lt;sensornumber&gt; to the value &lt;sensorvalue&gt;&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="9" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1a297d4fce2074fd37829dbbfdc4a1581f" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage04[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage04</name>
+        <initializer>= &quot;push &lt;node&gt; &lt;channel&gt; &lt;sensorvalue&gt;&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="10" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1a72ffe433af634b16ad7084d90c9e6231" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage05[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage05</name>
+        <initializer>= &quot;   Pushes a value direct to a channel inside a node&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="11" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1ab0beebb03900ef63f208360894b975ec" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage06[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage06</name>
+        <initializer>= &quot;set verbose &lt;+/-&gt;&lt;<ref refid="rf24hubd_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref>&gt;&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="12" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1a584b7366c90c2a4211ffe17e94e2a3dd" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage07[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage07</name>
+        <initializer>= &quot;   adds or deletes a verboseLevel. Valid levels are:&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="13" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1ae360b532828c41c4592f0ae45da94ed9" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage08[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage08</name>
+        <initializer>= &quot;   config; telnet; rf24; sql; sensor; <ref refid="rf24hubd_8h_1a7d595d1f42346d5c8b67a1230240e542" kindref="member">order</ref>; orderext; obuffer; obufferext; other; pointer&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="14" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1a3362c5e92462124f0b88552434861faa" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage09[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage09</name>
+        <initializer>= &quot;   set verbose all: adds all <ref refid="rf24hubd_8h_1a2ac10a3f1b8393a2208b7dc7f6672704" kindref="member">verboseLevel</ref>; set verbose none: deletes all&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="15" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="15" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1ab466fda378488d6715d191e318484f4c" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage10[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage10</name>
+        <initializer>= &quot;set node &lt;node_no&gt; &lt;mastered/unmastered&gt;&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="16" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1a5f05453b0d795c7e4b67ece8cc15636b" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage11[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage11</name>
+        <initializer>= &quot;   sets a node to mastered (gets commands from this Hub) or unmastered&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="17" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1afb6c6e78439cdb577baeb2968d0a9a3b" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage12[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage12</name>
+        <initializer>= &quot;set gateway &lt;gateway_no&gt; &lt;on/off&gt;&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="18" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1a71c24803182dbf2008fd69ea68f217ee" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage13[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage13</name>
+        <initializer>= &quot;   sets a gateway active (on) or inactive (off)&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="19" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1a78527d6f92e31e0c0910201367657a22" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage14[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage14</name>
+        <initializer>= &quot;add gateway &lt;gatewayname&gt; &lt;gateway_no&gt;&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="20" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1a7de10cd3259b88809551cafd1f5a2263" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage15[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage15</name>
+        <initializer>= &quot;   adds a active gateway to the system&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="21" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1a7e7059f498e118e00db85aea60f9fa67" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage16[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage16</name>
+        <initializer>= &quot;delete gateway &lt;gateway_no&gt;&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="22" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1a1ec5b17de0bee39a17629052df43430b" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage17[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage17</name>
+        <initializer>= &quot;   deletes a gateway from the system&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="23" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1aa6a12c92b37797b7d1447e8d0c5c9145" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage18[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage18</name>
+        <initializer>= &quot;init&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="24" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1a5689ad6bce119f9f6c6cc01991f6efb3" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage19[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage19</name>
+        <initializer>= &quot;   Reinitialisation of rf24hub&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="25" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="25" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1a52f395e9e2ac66a7698f2ce784495584" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage20[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage20</name>
+        <initializer>= &quot;sync&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="26" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1a8aef6e5c8be0942777c1eb9640e46f0f" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage21[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage21</name>
+        <initializer>= &quot;   Syncs all in Memory tables to the persistent tables&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="27" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1afa3f71676638f28c3335929c8d796c62" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage22[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage22</name>
+        <initializer>= &quot;show <ref refid="rf24hubd_8h_1a7d595d1f42346d5c8b67a1230240e542" kindref="member">order</ref>&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="28" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1aa0756e8f854c19c4c5bdf03737cc8c94" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage23[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage23</name>
+        <initializer>= &quot;   lists the content of the <ref refid="rf24hubd_8h_1a7d595d1f42346d5c8b67a1230240e542" kindref="member">order</ref> queue&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="29" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1aa8e7234f87f577eaa6f6bdfc0d047456" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage24[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage24</name>
+        <initializer>= &quot;show sensor&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="30" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1abac42d06d383213d45f19a6e394499d5" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage25[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage25</name>
+        <initializer>= &quot;   lists the nodes and sensors in system&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="31" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1a9b48da316a8ca49db82036085f0f1574" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage26[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage26</name>
+        <initializer>= &quot;show gateway&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="32" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1aa273036f49be024b8e1d56c392bdf581" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage27[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage27</name>
+        <initializer>= &quot;   lists the gateways in system&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="33" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1a744f64a970f1089763c779b9ec61099b" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage28[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage28</name>
+        <initializer>= &quot;show verbose&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="34" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1aeabb03499a4aa2409786b02de2f5494b" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage29[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage29</name>
+        <initializer>= &quot;   list the current verbose level(s)&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="35" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1a7069b6171517feb24ddff6d141eae254" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage30[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage30</name>
+        <initializer>= &quot;truncate logfile&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="36" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1ac5c136fd5145382c3af85975ddac45f9" prot="public" static="no" mutable="no">
+        <type>const char</type>
+        <definition>const char tn_usage31[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage31</name>
+        <initializer>= &quot;   truncates the logfile&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="37" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rf24hub__text_8h_1a20d7204dd764a8fa5433bb70dc3caeee" prot="public" static="no" mutable="no">
+        <type>const char *</type>
+        <definition>const char* tn_usage_txt[]</definition>
+        <argsstring>[]</argsstring>
+        <name>tn_usage_txt</name>
+        <initializer>= { <ref refid="rf24hub__text_8h_1aab6cc9e968266e0b9f7583cbf387ebb6" kindref="member">tn_usage01</ref>, <ref refid="rf24hub__text_8h_1a7647695a45ea70e949ab2e0ce77ab202" kindref="member">tn_usage02</ref>, <ref refid="rf24hub__text_8h_1a10d60dd0ff14e7bf67cba2b221064811" kindref="member">tn_usage03</ref>, <ref refid="rf24hub__text_8h_1a297d4fce2074fd37829dbbfdc4a1581f" kindref="member">tn_usage04</ref>, <ref refid="rf24hub__text_8h_1a72ffe433af634b16ad7084d90c9e6231" kindref="member">tn_usage05</ref>, <ref refid="rf24hub__text_8h_1ab0beebb03900ef63f208360894b975ec" kindref="member">tn_usage06</ref>, <ref refid="rf24hub__text_8h_1a584b7366c90c2a4211ffe17e94e2a3dd" kindref="member">tn_usage07</ref>, <ref refid="rf24hub__text_8h_1ae360b532828c41c4592f0ae45da94ed9" kindref="member">tn_usage08</ref>, <ref refid="rf24hub__text_8h_1a3362c5e92462124f0b88552434861faa" kindref="member">tn_usage09</ref>,
+                               <ref refid="rf24hub__text_8h_1ab466fda378488d6715d191e318484f4c" kindref="member">tn_usage10</ref>, <ref refid="rf24hub__text_8h_1a5f05453b0d795c7e4b67ece8cc15636b" kindref="member">tn_usage11</ref>, <ref refid="rf24hub__text_8h_1afb6c6e78439cdb577baeb2968d0a9a3b" kindref="member">tn_usage12</ref>, <ref refid="rf24hub__text_8h_1a71c24803182dbf2008fd69ea68f217ee" kindref="member">tn_usage13</ref>, <ref refid="rf24hub__text_8h_1a78527d6f92e31e0c0910201367657a22" kindref="member">tn_usage14</ref>, <ref refid="rf24hub__text_8h_1a7de10cd3259b88809551cafd1f5a2263" kindref="member">tn_usage15</ref>, <ref refid="rf24hub__text_8h_1a7e7059f498e118e00db85aea60f9fa67" kindref="member">tn_usage16</ref>, <ref refid="rf24hub__text_8h_1a1ec5b17de0bee39a17629052df43430b" kindref="member">tn_usage17</ref>, <ref refid="rf24hub__text_8h_1aa6a12c92b37797b7d1447e8d0c5c9145" kindref="member">tn_usage18</ref>, 
+                               <ref refid="rf24hub__text_8h_1a5689ad6bce119f9f6c6cc01991f6efb3" kindref="member">tn_usage19</ref>, <ref refid="rf24hub__text_8h_1a52f395e9e2ac66a7698f2ce784495584" kindref="member">tn_usage20</ref>, <ref refid="rf24hub__text_8h_1a8aef6e5c8be0942777c1eb9640e46f0f" kindref="member">tn_usage21</ref>, <ref refid="rf24hub__text_8h_1afa3f71676638f28c3335929c8d796c62" kindref="member">tn_usage22</ref>, <ref refid="rf24hub__text_8h_1aa0756e8f854c19c4c5bdf03737cc8c94" kindref="member">tn_usage23</ref>, <ref refid="rf24hub__text_8h_1aa8e7234f87f577eaa6f6bdfc0d047456" kindref="member">tn_usage24</ref>, <ref refid="rf24hub__text_8h_1abac42d06d383213d45f19a6e394499d5" kindref="member">tn_usage25</ref>, <ref refid="rf24hub__text_8h_1a9b48da316a8ca49db82036085f0f1574" kindref="member">tn_usage26</ref>, <ref refid="rf24hub__text_8h_1aa273036f49be024b8e1d56c392bdf581" kindref="member">tn_usage27</ref>,
+                               <ref refid="rf24hub__text_8h_1a744f64a970f1089763c779b9ec61099b" kindref="member">tn_usage28</ref>, <ref refid="rf24hub__text_8h_1aeabb03499a4aa2409786b02de2f5494b" kindref="member">tn_usage29</ref>, <ref refid="rf24hub__text_8h_1a7069b6171517feb24ddff6d141eae254" kindref="member">tn_usage30</ref>, <ref refid="rf24hub__text_8h_1ac5c136fd5145382c3af85975ddac45f9" kindref="member">tn_usage31</ref> }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" line="39" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>all text messages for rf24hubd goes here =&gt; Easy to translate! </para>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>_RF24HUB_TEXT_H_<sp/><sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_RF24HUB_TEXT_H_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7" refid="rf24hub__text_8h_1aab6cc9e968266e0b9f7583cbf387ebb6" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1aab6cc9e968266e0b9f7583cbf387ebb6" kindref="member">tn_usage01</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;Usage:&quot;</highlight><highlight class="normal">;<sp/></highlight></codeline>
+<codeline lineno="8" refid="rf24hub__text_8h_1a7647695a45ea70e949ab2e0ce77ab202" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1a7647695a45ea70e949ab2e0ce77ab202" kindref="member">tn_usage02</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;set<sp/>sensor<sp/>&lt;sensornumber&gt;<sp/>&lt;sensorvalue&gt;&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="9" refid="rf24hub__text_8h_1a10d60dd0ff14e7bf67cba2b221064811" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1a10d60dd0ff14e7bf67cba2b221064811" kindref="member">tn_usage03</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/>Sets<sp/>the<sp/>sensor<sp/>&lt;sensornumber&gt;<sp/>to<sp/>the<sp/>value<sp/>&lt;sensorvalue&gt;&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="10" refid="rf24hub__text_8h_1a297d4fce2074fd37829dbbfdc4a1581f" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1a297d4fce2074fd37829dbbfdc4a1581f" kindref="member">tn_usage04</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;push<sp/>&lt;node&gt;<sp/>&lt;channel&gt;<sp/>&lt;sensorvalue&gt;&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="11" refid="rf24hub__text_8h_1a72ffe433af634b16ad7084d90c9e6231" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1a72ffe433af634b16ad7084d90c9e6231" kindref="member">tn_usage05</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/>Pushes<sp/>a<sp/>value<sp/>direct<sp/>to<sp/>a<sp/>channel<sp/>inside<sp/>a<sp/>node&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="12" refid="rf24hub__text_8h_1ab0beebb03900ef63f208360894b975ec" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1ab0beebb03900ef63f208360894b975ec" kindref="member">tn_usage06</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;set<sp/>verbose<sp/>&lt;+/-&gt;&lt;verboseLevel&gt;&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="13" refid="rf24hub__text_8h_1a584b7366c90c2a4211ffe17e94e2a3dd" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1a584b7366c90c2a4211ffe17e94e2a3dd" kindref="member">tn_usage07</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/>adds<sp/>or<sp/>deletes<sp/>a<sp/>verboseLevel.<sp/>Valid<sp/>levels<sp/>are:&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="14" refid="rf24hub__text_8h_1ae360b532828c41c4592f0ae45da94ed9" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1ae360b532828c41c4592f0ae45da94ed9" kindref="member">tn_usage08</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/>config;<sp/>telnet;<sp/>rf24;<sp/>sql;<sp/>sensor;<sp/>order;<sp/>orderext;<sp/>obuffer;<sp/>obufferext;<sp/>other;<sp/>pointer&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="15" refid="rf24hub__text_8h_1a3362c5e92462124f0b88552434861faa" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1a3362c5e92462124f0b88552434861faa" kindref="member">tn_usage09</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/>set<sp/>verbose<sp/>all:<sp/>adds<sp/>all<sp/>verboseLevel;<sp/>set<sp/>verbose<sp/>none:<sp/>deletes<sp/>all&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="16" refid="rf24hub__text_8h_1ab466fda378488d6715d191e318484f4c" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1ab466fda378488d6715d191e318484f4c" kindref="member">tn_usage10</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;set<sp/>node<sp/>&lt;node_no&gt;<sp/>&lt;mastered/unmastered&gt;&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="17" refid="rf24hub__text_8h_1a5f05453b0d795c7e4b67ece8cc15636b" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1a5f05453b0d795c7e4b67ece8cc15636b" kindref="member">tn_usage11</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/>sets<sp/>a<sp/>node<sp/>to<sp/>mastered<sp/>(gets<sp/>commands<sp/>from<sp/>this<sp/>Hub)<sp/>or<sp/>unmastered&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="18" refid="rf24hub__text_8h_1afb6c6e78439cdb577baeb2968d0a9a3b" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1afb6c6e78439cdb577baeb2968d0a9a3b" kindref="member">tn_usage12</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;set<sp/>gateway<sp/>&lt;gateway_no&gt;<sp/>&lt;on/off&gt;&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="19" refid="rf24hub__text_8h_1a71c24803182dbf2008fd69ea68f217ee" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1a71c24803182dbf2008fd69ea68f217ee" kindref="member">tn_usage13</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/>sets<sp/>a<sp/>gateway<sp/>active<sp/>(on)<sp/>or<sp/>inactive<sp/>(off)&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="20" refid="rf24hub__text_8h_1a78527d6f92e31e0c0910201367657a22" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1a78527d6f92e31e0c0910201367657a22" kindref="member">tn_usage14</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;add<sp/>gateway<sp/>&lt;gatewayname&gt;<sp/>&lt;gateway_no&gt;&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="21" refid="rf24hub__text_8h_1a7de10cd3259b88809551cafd1f5a2263" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1a7de10cd3259b88809551cafd1f5a2263" kindref="member">tn_usage15</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/>adds<sp/>a<sp/>active<sp/>gateway<sp/>to<sp/>the<sp/>system&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="22" refid="rf24hub__text_8h_1a7e7059f498e118e00db85aea60f9fa67" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1a7e7059f498e118e00db85aea60f9fa67" kindref="member">tn_usage16</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;delete<sp/>gateway<sp/>&lt;gateway_no&gt;&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="23" refid="rf24hub__text_8h_1a1ec5b17de0bee39a17629052df43430b" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1a1ec5b17de0bee39a17629052df43430b" kindref="member">tn_usage17</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/>deletes<sp/>a<sp/>gateway<sp/>from<sp/>the<sp/>system&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="24" refid="rf24hub__text_8h_1aa6a12c92b37797b7d1447e8d0c5c9145" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1aa6a12c92b37797b7d1447e8d0c5c9145" kindref="member">tn_usage18</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;init&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="25" refid="rf24hub__text_8h_1a5689ad6bce119f9f6c6cc01991f6efb3" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1a5689ad6bce119f9f6c6cc01991f6efb3" kindref="member">tn_usage19</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/>Reinitialisation<sp/>of<sp/>rf24hub&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="26" refid="rf24hub__text_8h_1a52f395e9e2ac66a7698f2ce784495584" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1a52f395e9e2ac66a7698f2ce784495584" kindref="member">tn_usage20</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;sync&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="27" refid="rf24hub__text_8h_1a8aef6e5c8be0942777c1eb9640e46f0f" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1a8aef6e5c8be0942777c1eb9640e46f0f" kindref="member">tn_usage21</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/>Syncs<sp/>all<sp/>in<sp/>Memory<sp/>tables<sp/>to<sp/>the<sp/>persistent<sp/>tables&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="28" refid="rf24hub__text_8h_1afa3f71676638f28c3335929c8d796c62" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1afa3f71676638f28c3335929c8d796c62" kindref="member">tn_usage22</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;show<sp/>order&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="29" refid="rf24hub__text_8h_1aa0756e8f854c19c4c5bdf03737cc8c94" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1aa0756e8f854c19c4c5bdf03737cc8c94" kindref="member">tn_usage23</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/>lists<sp/>the<sp/>content<sp/>of<sp/>the<sp/>order<sp/>queue&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="30" refid="rf24hub__text_8h_1aa8e7234f87f577eaa6f6bdfc0d047456" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1aa8e7234f87f577eaa6f6bdfc0d047456" kindref="member">tn_usage24</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;show<sp/>sensor&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="31" refid="rf24hub__text_8h_1abac42d06d383213d45f19a6e394499d5" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1abac42d06d383213d45f19a6e394499d5" kindref="member">tn_usage25</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/>lists<sp/>the<sp/>nodes<sp/>and<sp/>sensors<sp/>in<sp/>system&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="32" refid="rf24hub__text_8h_1a9b48da316a8ca49db82036085f0f1574" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1a9b48da316a8ca49db82036085f0f1574" kindref="member">tn_usage26</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;show<sp/>gateway&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="33" refid="rf24hub__text_8h_1aa273036f49be024b8e1d56c392bdf581" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1aa273036f49be024b8e1d56c392bdf581" kindref="member">tn_usage27</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/>lists<sp/>the<sp/>gateways<sp/>in<sp/>system&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="34" refid="rf24hub__text_8h_1a744f64a970f1089763c779b9ec61099b" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1a744f64a970f1089763c779b9ec61099b" kindref="member">tn_usage28</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;show<sp/>verbose&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="35" refid="rf24hub__text_8h_1aeabb03499a4aa2409786b02de2f5494b" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1aeabb03499a4aa2409786b02de2f5494b" kindref="member">tn_usage29</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/>list<sp/>the<sp/>current<sp/>verbose<sp/>level(s)&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="36" refid="rf24hub__text_8h_1a7069b6171517feb24ddff6d141eae254" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1a7069b6171517feb24ddff6d141eae254" kindref="member">tn_usage30</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;truncate<sp/>logfile&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="37" refid="rf24hub__text_8h_1ac5c136fd5145382c3af85975ddac45f9" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rf24hub__text_8h_1ac5c136fd5145382c3af85975ddac45f9" kindref="member">tn_usage31</ref>[]<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/>truncates<sp/>the<sp/>logfile&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39" refid="rf24hub__text_8h_1a20d7204dd764a8fa5433bb70dc3caeee" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*<ref refid="rf24hub__text_8h_1a20d7204dd764a8fa5433bb70dc3caeee" kindref="member">tn_usage_txt</ref>[]<sp/>=<sp/>{<sp/><ref refid="rf24hub__text_8h_1aab6cc9e968266e0b9f7583cbf387ebb6" kindref="member">tn_usage01</ref>,<sp/><ref refid="rf24hub__text_8h_1a7647695a45ea70e949ab2e0ce77ab202" kindref="member">tn_usage02</ref>,<sp/><ref refid="rf24hub__text_8h_1a10d60dd0ff14e7bf67cba2b221064811" kindref="member">tn_usage03</ref>,<sp/><ref refid="rf24hub__text_8h_1a297d4fce2074fd37829dbbfdc4a1581f" kindref="member">tn_usage04</ref>,<sp/><ref refid="rf24hub__text_8h_1a72ffe433af634b16ad7084d90c9e6231" kindref="member">tn_usage05</ref>,<sp/><ref refid="rf24hub__text_8h_1ab0beebb03900ef63f208360894b975ec" kindref="member">tn_usage06</ref>,<sp/><ref refid="rf24hub__text_8h_1a584b7366c90c2a4211ffe17e94e2a3dd" kindref="member">tn_usage07</ref>,<sp/><ref refid="rf24hub__text_8h_1ae360b532828c41c4592f0ae45da94ed9" kindref="member">tn_usage08</ref>,<sp/><ref refid="rf24hub__text_8h_1a3362c5e92462124f0b88552434861faa" kindref="member">tn_usage09</ref>,</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rf24hub__text_8h_1ab466fda378488d6715d191e318484f4c" kindref="member">tn_usage10</ref>,<sp/><ref refid="rf24hub__text_8h_1a5f05453b0d795c7e4b67ece8cc15636b" kindref="member">tn_usage11</ref>,<sp/><ref refid="rf24hub__text_8h_1afb6c6e78439cdb577baeb2968d0a9a3b" kindref="member">tn_usage12</ref>,<sp/><ref refid="rf24hub__text_8h_1a71c24803182dbf2008fd69ea68f217ee" kindref="member">tn_usage13</ref>,<sp/><ref refid="rf24hub__text_8h_1a78527d6f92e31e0c0910201367657a22" kindref="member">tn_usage14</ref>,<sp/><ref refid="rf24hub__text_8h_1a7de10cd3259b88809551cafd1f5a2263" kindref="member">tn_usage15</ref>,<sp/><ref refid="rf24hub__text_8h_1a7e7059f498e118e00db85aea60f9fa67" kindref="member">tn_usage16</ref>,<sp/><ref refid="rf24hub__text_8h_1a1ec5b17de0bee39a17629052df43430b" kindref="member">tn_usage17</ref>,<sp/><ref refid="rf24hub__text_8h_1aa6a12c92b37797b7d1447e8d0c5c9145" kindref="member">tn_usage18</ref>,<sp/></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rf24hub__text_8h_1a5689ad6bce119f9f6c6cc01991f6efb3" kindref="member">tn_usage19</ref>,<sp/><ref refid="rf24hub__text_8h_1a52f395e9e2ac66a7698f2ce784495584" kindref="member">tn_usage20</ref>,<sp/><ref refid="rf24hub__text_8h_1a8aef6e5c8be0942777c1eb9640e46f0f" kindref="member">tn_usage21</ref>,<sp/><ref refid="rf24hub__text_8h_1afa3f71676638f28c3335929c8d796c62" kindref="member">tn_usage22</ref>,<sp/><ref refid="rf24hub__text_8h_1aa0756e8f854c19c4c5bdf03737cc8c94" kindref="member">tn_usage23</ref>,<sp/><ref refid="rf24hub__text_8h_1aa8e7234f87f577eaa6f6bdfc0d047456" kindref="member">tn_usage24</ref>,<sp/><ref refid="rf24hub__text_8h_1abac42d06d383213d45f19a6e394499d5" kindref="member">tn_usage25</ref>,<sp/><ref refid="rf24hub__text_8h_1a9b48da316a8ca49db82036085f0f1574" kindref="member">tn_usage26</ref>,<sp/><ref refid="rf24hub__text_8h_1aa273036f49be024b8e1d56c392bdf581" kindref="member">tn_usage27</ref>,</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rf24hub__text_8h_1a744f64a970f1089763c779b9ec61099b" kindref="member">tn_usage28</ref>,<sp/><ref refid="rf24hub__text_8h_1aeabb03499a4aa2409786b02de2f5494b" kindref="member">tn_usage29</ref>,<sp/><ref refid="rf24hub__text_8h_1a7069b6171517feb24ddff6d141eae254" kindref="member">tn_usage30</ref>,<sp/><ref refid="rf24hub__text_8h_1ac5c136fd5145382c3af85975ddac45f9" kindref="member">tn_usage31</ref><sp/>};</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/stick/netz/projekte/RF24Hub/linux/rf24hub_text.h"/>
+  </compounddef>
+</doxygen>

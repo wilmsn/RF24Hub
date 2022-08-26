@@ -1,0 +1,842 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classCfg" kind="class" language="C++" prot="public">
+    <compoundname>Cfg</compoundname>
+    <includes refid="cfg_8h" local="no">cfg.h</includes>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classCfg_1a5197d4a21579aed4fb453f1ee2a4520a" prot="private" static="no" mutable="no">
+        <type>FILE *</type>
+        <definition>FILE* Cfg::pidfile_ptr</definition>
+        <argsstring></argsstring>
+        <name>pidfile_ptr</name>
+        <qualifiedname>Cfg::pidfile_ptr</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="41" column="7" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1ac99258dbf10645b65d5d2d3afb67a2e3" prot="private" static="no" mutable="no">
+        <type>FILE *</type>
+        <definition>FILE* Cfg::logfile_ptr</definition>
+        <argsstring></argsstring>
+        <name>logfile_ptr</name>
+        <qualifiedname>Cfg::logfile_ptr</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="42" column="7" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1a1025e7dc1d13190e6d2d9c906408bb9b" prot="private" static="no" mutable="no">
+        <type>string</type>
+        <definition>string Cfg::configFile</definition>
+        <argsstring></argsstring>
+        <name>configFile</name>
+        <qualifiedname>Cfg::configFile</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="44" column="8" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1a024be792e7b158ac0e939d14b6d37677" prot="private" static="no" mutable="no">
+        <type>string</type>
+        <definition>string Cfg::prgName</definition>
+        <argsstring></argsstring>
+        <name>prgName</name>
+        <qualifiedname>Cfg::prgName</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="46" column="8" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1a4331053290e6d8358a00a7b1f44bf508" prot="private" static="no" mutable="no">
+        <type>string</type>
+        <definition>string Cfg::prgVersion</definition>
+        <argsstring></argsstring>
+        <name>prgVersion</name>
+        <qualifiedname>Cfg::prgVersion</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="48" column="8" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classCfg_1ab6a3c443f9adc2c71b6d75c20e9df8fc" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string Cfg::gwLogFileName</definition>
+        <argsstring></argsstring>
+        <name>gwLogFileName</name>
+        <qualifiedname>Cfg::gwLogFileName</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Logfilename für rf24gwd </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="59" column="8" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1a5beacd3f7187e23a3a166190b5fb6bb3" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string Cfg::gwPidFileName</definition>
+        <argsstring></argsstring>
+        <name>gwPidFileName</name>
+        <qualifiedname>Cfg::gwPidFileName</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Pidfilename für rf24gwd </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="63" column="8" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="63" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1a4943a808300c155b874e7e716326aa56" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string Cfg::gwHubHostName</definition>
+        <argsstring></argsstring>
+        <name>gwHubHostName</name>
+        <qualifiedname>Cfg::gwHubHostName</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Speichert den eindeutigen Servernamen inkl. Domaine für rf24hubd </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="67" column="8" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1a6df600ac075fa021caa9c45efa9f0601" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string Cfg::gwUdpPortNo</definition>
+        <argsstring></argsstring>
+        <name>gwUdpPortNo</name>
+        <qualifiedname>Cfg::gwUdpPortNo</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Eingehender UDP port vom rf24gwd <simplesect kind="note"><para>Zwischen rf24hubd und rf24gwd werden Anweisungen mittels UDP ausgetauscht. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="72" column="8" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1ac4df10edefafe41ec1b0251d80ff2de5" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string Cfg::gwTcpPortNo</definition>
+        <argsstring></argsstring>
+        <name>gwTcpPortNo</name>
+        <qualifiedname>Cfg::gwTcpPortNo</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Eingehender TCP Port vom rf24gwd <simplesect kind="note"><para>Über den TCP Port können Steuerbefehle an den rf24gwd gesendet werden <programlisting><codeline><highlight class="normal">$&gt;telnet<sp/><ref refid="rf24hubd_8h_1a8f718c687d0f28ecb0f281df574ada24" kindref="member">server</ref>.domain<sp/>&lt;tcp-port&gt;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">rf24gwd&gt;<sp/>set<sp/>verbose<sp/>+rf24<sp/></highlight></codeline>
+</programlisting> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="80" column="8" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="80" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1ac82059ea3ea0ef7f44231408da29de3b" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Cfg::gwTcpPortSet</definition>
+        <argsstring></argsstring>
+        <name>gwTcpPortSet</name>
+        <qualifiedname>Cfg::gwTcpPortSet</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>gwTcpPortSet: true wenn ein eingehender TCP Port gesetzt ist, sonst flase </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="84" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="84" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1a40e5f1fbec69c36732d808e05363e024" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Cfg::gwUdpPortSet</definition>
+        <argsstring></argsstring>
+        <name>gwUdpPortSet</name>
+        <qualifiedname>Cfg::gwUdpPortSet</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>gwUdpPortSet: True wenn ein eingehender UDP Port gesetzt ist, sonst flase </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="88" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="88" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1a5ec995cf894c4b957de9bc3e5c881424" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string Cfg::gwNo</definition>
+        <argsstring></argsstring>
+        <name>gwNo</name>
+        <qualifiedname>Cfg::gwNo</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Die eindeutige Nummer(ID) für diesem rf24gwd </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="92" column="8" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="92" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1a4b2a65134693dce7d66f955c3389b8f5" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string Cfg::hubUdpPortNo</definition>
+        <argsstring></argsstring>
+        <name>hubUdpPortNo</name>
+        <qualifiedname>Cfg::hubUdpPortNo</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Eingehender UDP port vom rf24hubd <simplesect kind="note"><para>Zwischen rf24hubd und rf24gwd werden Anweisungen mittels UDP ausgetauscht. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="100" column="8" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="100" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1a6b3bf6aaf8b2faf63fbaff815e65c14f" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string Cfg::hubLogFileName</definition>
+        <argsstring></argsstring>
+        <name>hubLogFileName</name>
+        <qualifiedname>Cfg::hubLogFileName</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Logfilename für rf24hubd </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="104" column="8" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="104" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1aab6d96f28a3284c1272ce3836a58c3f4" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string Cfg::hubPidFileName</definition>
+        <argsstring></argsstring>
+        <name>hubPidFileName</name>
+        <qualifiedname>Cfg::hubPidFileName</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Pidfilename für rf24hubd </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="108" column="8" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="108" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1a49753408815026a15f56b7cd4247d06b" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string Cfg::hubTcpPortNo</definition>
+        <argsstring></argsstring>
+        <name>hubTcpPortNo</name>
+        <qualifiedname>Cfg::hubTcpPortNo</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Eingehender TCP Port vom rf24hubd <simplesect kind="note"><para>Über den TCP Port können Steuerbefehle an den rf24hubd gesendet werden. Diesen Port netzt auch FHEM um seine Steuerbefehle an den Hub zu senden. <programlisting><codeline><highlight class="normal">$&gt;telnet<sp/><ref refid="rf24hubd_8h_1a8f718c687d0f28ecb0f281df574ada24" kindref="member">server</ref>.domain<sp/>&lt;tcp-port&gt;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">rf24hubd&gt;<sp/>set<sp/>verbose<sp/>+<ref refid="rf24hubd_8h_1a7d595d1f42346d5c8b67a1230240e542" kindref="member">order</ref><sp/></highlight></codeline>
+</programlisting> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="117" column="8" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="117" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1a0ce03c7bc0c0b5a6f75b0276ba1cf42a" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Cfg::hubTcpPortSet</definition>
+        <argsstring></argsstring>
+        <name>hubTcpPortSet</name>
+        <qualifiedname>Cfg::hubTcpPortSet</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>gwTcpPortSet: True wenn ein eingehender TCP Port gesetzt ist, sonst flase </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="121" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="121" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1ad250bf11fc3d0a13e3bb37c9517849e0" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Cfg::hubUdpPortSet</definition>
+        <argsstring></argsstring>
+        <name>hubUdpPortSet</name>
+        <qualifiedname>Cfg::hubUdpPortSet</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>gwUdpPortSet: True wenn ein eingehender UDP Port gesetzt ist, sonst flase </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="125" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="125" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1ae1e7f239b800f0104dcc73157004caeb" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string Cfg::dbHostName</definition>
+        <argsstring></argsstring>
+        <name>dbHostName</name>
+        <qualifiedname>Cfg::dbHostName</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Hostname für den Datenbankserver </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="132" column="8" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="132" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1aabb83b325c0f808fcc7401677e317302" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string Cfg::dbPortNo</definition>
+        <argsstring></argsstring>
+        <name>dbPortNo</name>
+        <qualifiedname>Cfg::dbPortNo</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Port für den Datenbankserver </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="136" column="8" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="136" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1a37997fdb4da8fbe674ff617a1ac00679" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string Cfg::dbSchema</definition>
+        <argsstring></argsstring>
+        <name>dbSchema</name>
+        <qualifiedname>Cfg::dbSchema</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Genutztes Schema innerhalb der Datenbank. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="140" column="8" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="140" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1ab96f7a9e239ea73732644835532d918b" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string Cfg::dbUserName</definition>
+        <argsstring></argsstring>
+        <name>dbUserName</name>
+        <qualifiedname>Cfg::dbUserName</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Username zur Anmeldung an der Datenbank. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="144" column="8" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="144" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1ad1436b8fe2ea5d64a531bb25424d8384" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string Cfg::dbPassWord</definition>
+        <argsstring></argsstring>
+        <name>dbPassWord</name>
+        <qualifiedname>Cfg::dbPassWord</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Passwort zur Anmeldung an der Datenbank. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="148" column="8" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="148" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1a1b5fdfaf2ee6ae30d7f229ed26d088a6" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string Cfg::fhemHostName</definition>
+        <argsstring></argsstring>
+        <name>fhemHostName</name>
+        <qualifiedname>Cfg::fhemHostName</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Hostname für den FHEM Server </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="155" column="8" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="155" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1a7283a114baa582d592c3aea559a6efe5" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string Cfg::fhemPortNo</definition>
+        <argsstring></argsstring>
+        <name>fhemPortNo</name>
+        <qualifiedname>Cfg::fhemPortNo</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Port für den FHEM Server <simplesect kind="note"><para>Über diesen TCP Port werden Steuerbefehle vom rf24hubd an FHEM geschickt. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="160" column="8" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="160" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1ac7abf5aed3b16e826c70840b48716b14" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Cfg::fhemHostSet</definition>
+        <argsstring></argsstring>
+        <name>fhemHostSet</name>
+        <qualifiedname>Cfg::fhemHostSet</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>fhemSet: True wenn fhemHostName gesetzt ist, sonst flase </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="164" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="164" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1a93959e7a9564ffeb208eca45685a8c97" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Cfg::fhemPortSet</definition>
+        <argsstring></argsstring>
+        <name>fhemPortSet</name>
+        <qualifiedname>Cfg::fhemPortSet</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>fhemSet: True wenn fhemPortSet gesetzt ist, sonst flase </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="168" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="168" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1a9eefce31b95beb80f66eff2f9ba9294c" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Cfg::startDaemon</definition>
+        <argsstring></argsstring>
+        <name>startDaemon</name>
+        <qualifiedname>Cfg::startDaemon</qualifiedname>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>startDaemon: True wenn der Programmaufruf mit -d oder <ndash/>daemon erfolgte, sonst false </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="176" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="176" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1a029cac532a52c6716be2f0a8f4c4b3cc" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Cfg::startSniffer</definition>
+        <argsstring></argsstring>
+        <name>startSniffer</name>
+        <qualifiedname>Cfg::startSniffer</qualifiedname>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>startSniffer: True wenn der Programmaufruf mit -S oder <ndash/>sniffer erfolgte, sonst false </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="180" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="180" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1a65e582daf11d5dcbd222ad1501d33ff8" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Cfg::startScanner</definition>
+        <argsstring></argsstring>
+        <name>startScanner</name>
+        <qualifiedname>Cfg::startScanner</qualifiedname>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>startScanner: True wenn der Programmaufruf mit -s oder <ndash/>scanner erfolgte, sonst false </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="184" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="184" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1aa310020b99a2cfe3900b724a400344eb" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Cfg::setScanLevel</definition>
+        <argsstring></argsstring>
+        <name>setScanLevel</name>
+        <qualifiedname>Cfg::setScanLevel</qualifiedname>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Beinhaltet das beim Programmaufruf übergebene Scanlevel (0..9) </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="188" column="5" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="188" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classCfg_1ae5b09f245e8241e22339aa61a21a2fe3" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Cfg::channelScanner_Channel</definition>
+        <argsstring></argsstring>
+        <name>channelScanner_Channel</name>
+        <qualifiedname>Cfg::channelScanner_Channel</qualifiedname>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Beinnhaltet den Kanal der gescannt werden soll (1..125); 0 is deaktiviert </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="192" column="5" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="192" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classCfg_1aac9284b09ac6aa86a892dc8ab09989ec" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>Cfg::Cfg</definition>
+        <argsstring>(string _prgName, string _prgVersion)</argsstring>
+        <name>Cfg</name>
+        <qualifiedname>Cfg::Cfg</qualifiedname>
+        <param>
+          <type>string</type>
+          <declname>_prgName</declname>
+        </param>
+        <param>
+          <type>string</type>
+          <declname>_prgVersion</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Constructor der Klasse <ref refid="classCfg" kindref="compound">Cfg</ref></para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>_prgName</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein String mit dem Namen des aufrufenden Programms. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>_prgVersion</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein String mit der Programmversion </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="201" column="1" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.cpp" bodystart="3" bodyend="6"/>
+      </memberdef>
+      <memberdef kind="function" id="classCfg_1ac7f6954d45eef4c17ef652b2ed7b1c6b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Cfg::usage</definition>
+        <argsstring>(const char *prgName)</argsstring>
+        <name>usage</name>
+        <qualifiedname>Cfg::usage</qualifiedname>
+        <param>
+          <type>const char *</type>
+          <declname>prgName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Gibt Nutzungsinformationen zum Programm aus</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>prgName</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein String mit dem Namen des aufrufenden Programms. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="209" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.cpp" bodystart="220" bodyend="241"/>
+      </memberdef>
+      <memberdef kind="function" id="classCfg_1a962963a6c34ac9851259ccf5ab165db1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Cfg::processParams</definition>
+        <argsstring>(const char *prgName, int argc, char *argv[])</argsstring>
+        <name>processParams</name>
+        <qualifiedname>Cfg::processParams</qualifiedname>
+        <param>
+          <type>const char *</type>
+          <declname>prgName</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>argc</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>argv</declname>
+          <array>[]</array>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Verarbeitet die Parameter, die beim Start übergeben wurden. Zusätzlich wird hier das Config-File ausgelesen und verarbeitet.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>prgName</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein String mit dem Namen des aufrufenden Programms. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>argc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Anzahl der Aufrufparameter </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>argv</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Array mit den Aufrufparametern </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="220" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.cpp" bodystart="14" bodyend="191"/>
+      </memberdef>
+      <memberdef kind="function" id="classCfg_1a059563d535a096471410e5a76d4a5c96" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Cfg::printConfig_gw</definition>
+        <argsstring>(void)</argsstring>
+        <name>printConfig_gw</name>
+        <qualifiedname>Cfg::printConfig_gw</qualifiedname>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Gibt die Configuration für das Programm rf24gwd aus. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="225" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.cpp" bodystart="203" bodyend="210"/>
+      </memberdef>
+      <memberdef kind="function" id="classCfg_1a12a56a77125fa182718e2164a23eed48" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Cfg::printConfig_hub</definition>
+        <argsstring>(void)</argsstring>
+        <name>printConfig_hub</name>
+        <qualifiedname>Cfg::printConfig_hub</qualifiedname>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Gibt die Configuration für das Programm rf24hubd aus. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="230" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.cpp" bodystart="193" bodyend="201"/>
+      </memberdef>
+      <memberdef kind="function" id="classCfg_1ab785421eee0353b1b5a6443d9f97efaf" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Cfg::printConfig_db</definition>
+        <argsstring>(void)</argsstring>
+        <name>printConfig_db</name>
+        <qualifiedname>Cfg::printConfig_db</qualifiedname>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Gibt die Configuration für die Datenbank aus. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="235" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.cpp" bodystart="212" bodyend="218"/>
+      </memberdef>
+      <memberdef kind="function" id="classCfg_1acfcbf6a7e35c893ad13e41713a5b51a9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Cfg::setPidFile</definition>
+        <argsstring>(string pidFileName)</argsstring>
+        <name>setPidFile</name>
+        <qualifiedname>Cfg::setPidFile</qualifiedname>
+        <param>
+          <type>string</type>
+          <declname>pidFileName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Setzt ein PID File</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>pidFileName</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Dateiname mit absulutem Pfad </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>True wenn PID-File gesetzt wurde, sonst False </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="243" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.cpp" bodystart="244" bodyend="255"/>
+      </memberdef>
+      <memberdef kind="function" id="classCfg_1acf0cea642cbaafbd61860629a8076b15" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Cfg::removePidFile</definition>
+        <argsstring>(string pidFileName)</argsstring>
+        <name>removePidFile</name>
+        <qualifiedname>Cfg::removePidFile</qualifiedname>
+        <param>
+          <type>string</type>
+          <declname>pidFileName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Löscht ein PID-File</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>pidFileName</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Dateiname mit absulutem Pfad </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="250" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.cpp" bodystart="266" bodyend="268"/>
+      </memberdef>
+      <memberdef kind="function" id="classCfg_1a28651b7c3cb08d57921e53340ef5e933" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Cfg::checkPidFileSet</definition>
+        <argsstring>(string pidFileName)</argsstring>
+        <name>checkPidFileSet</name>
+        <qualifiedname>Cfg::checkPidFileSet</qualifiedname>
+        <param>
+          <type>string</type>
+          <declname>pidFileName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Prüft ob ein PID-File gesetzt ist. Bei gesetztem PID-File wird zusätzlich eine Warnmeldung &quot;PIDFILE: &lt;PIDFILE Name&gt; exists&quot; in den STDERR geschrieben.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>pidFileName</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Dateiname mit absulutem Pfad </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>True wenn PID-File vorhanden ist, sonst False </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="259" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.cpp" bodystart="257" bodyend="264"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/stick/netz/projekte/RF24Hub/linux/cfg.h" line="37" column="1" bodyfile="/stick/netz/projekte/RF24Hub/linux/cfg.h" bodystart="37" bodyend="261"/>
+    <listofallmembers>
+      <member refid="classCfg_1aac9284b09ac6aa86a892dc8ab09989ec" prot="public" virt="non-virtual"><scope>Cfg</scope><name>Cfg</name></member>
+      <member refid="classCfg_1ae5b09f245e8241e22339aa61a21a2fe3" prot="public" virt="non-virtual"><scope>Cfg</scope><name>channelScanner_Channel</name></member>
+      <member refid="classCfg_1a28651b7c3cb08d57921e53340ef5e933" prot="public" virt="non-virtual"><scope>Cfg</scope><name>checkPidFileSet</name></member>
+      <member refid="classCfg_1a1025e7dc1d13190e6d2d9c906408bb9b" prot="private" virt="non-virtual"><scope>Cfg</scope><name>configFile</name></member>
+      <member refid="classCfg_1ae1e7f239b800f0104dcc73157004caeb" prot="public" virt="non-virtual"><scope>Cfg</scope><name>dbHostName</name></member>
+      <member refid="classCfg_1ad1436b8fe2ea5d64a531bb25424d8384" prot="public" virt="non-virtual"><scope>Cfg</scope><name>dbPassWord</name></member>
+      <member refid="classCfg_1aabb83b325c0f808fcc7401677e317302" prot="public" virt="non-virtual"><scope>Cfg</scope><name>dbPortNo</name></member>
+      <member refid="classCfg_1a37997fdb4da8fbe674ff617a1ac00679" prot="public" virt="non-virtual"><scope>Cfg</scope><name>dbSchema</name></member>
+      <member refid="classCfg_1ab96f7a9e239ea73732644835532d918b" prot="public" virt="non-virtual"><scope>Cfg</scope><name>dbUserName</name></member>
+      <member refid="classCfg_1a1b5fdfaf2ee6ae30d7f229ed26d088a6" prot="public" virt="non-virtual"><scope>Cfg</scope><name>fhemHostName</name></member>
+      <member refid="classCfg_1ac7abf5aed3b16e826c70840b48716b14" prot="public" virt="non-virtual"><scope>Cfg</scope><name>fhemHostSet</name></member>
+      <member refid="classCfg_1a7283a114baa582d592c3aea559a6efe5" prot="public" virt="non-virtual"><scope>Cfg</scope><name>fhemPortNo</name></member>
+      <member refid="classCfg_1a93959e7a9564ffeb208eca45685a8c97" prot="public" virt="non-virtual"><scope>Cfg</scope><name>fhemPortSet</name></member>
+      <member refid="classCfg_1a4943a808300c155b874e7e716326aa56" prot="public" virt="non-virtual"><scope>Cfg</scope><name>gwHubHostName</name></member>
+      <member refid="classCfg_1ab6a3c443f9adc2c71b6d75c20e9df8fc" prot="public" virt="non-virtual"><scope>Cfg</scope><name>gwLogFileName</name></member>
+      <member refid="classCfg_1a5ec995cf894c4b957de9bc3e5c881424" prot="public" virt="non-virtual"><scope>Cfg</scope><name>gwNo</name></member>
+      <member refid="classCfg_1a5beacd3f7187e23a3a166190b5fb6bb3" prot="public" virt="non-virtual"><scope>Cfg</scope><name>gwPidFileName</name></member>
+      <member refid="classCfg_1ac4df10edefafe41ec1b0251d80ff2de5" prot="public" virt="non-virtual"><scope>Cfg</scope><name>gwTcpPortNo</name></member>
+      <member refid="classCfg_1ac82059ea3ea0ef7f44231408da29de3b" prot="public" virt="non-virtual"><scope>Cfg</scope><name>gwTcpPortSet</name></member>
+      <member refid="classCfg_1a6df600ac075fa021caa9c45efa9f0601" prot="public" virt="non-virtual"><scope>Cfg</scope><name>gwUdpPortNo</name></member>
+      <member refid="classCfg_1a40e5f1fbec69c36732d808e05363e024" prot="public" virt="non-virtual"><scope>Cfg</scope><name>gwUdpPortSet</name></member>
+      <member refid="classCfg_1a6b3bf6aaf8b2faf63fbaff815e65c14f" prot="public" virt="non-virtual"><scope>Cfg</scope><name>hubLogFileName</name></member>
+      <member refid="classCfg_1aab6d96f28a3284c1272ce3836a58c3f4" prot="public" virt="non-virtual"><scope>Cfg</scope><name>hubPidFileName</name></member>
+      <member refid="classCfg_1a49753408815026a15f56b7cd4247d06b" prot="public" virt="non-virtual"><scope>Cfg</scope><name>hubTcpPortNo</name></member>
+      <member refid="classCfg_1a0ce03c7bc0c0b5a6f75b0276ba1cf42a" prot="public" virt="non-virtual"><scope>Cfg</scope><name>hubTcpPortSet</name></member>
+      <member refid="classCfg_1a4b2a65134693dce7d66f955c3389b8f5" prot="public" virt="non-virtual"><scope>Cfg</scope><name>hubUdpPortNo</name></member>
+      <member refid="classCfg_1ad250bf11fc3d0a13e3bb37c9517849e0" prot="public" virt="non-virtual"><scope>Cfg</scope><name>hubUdpPortSet</name></member>
+      <member refid="classCfg_1ac99258dbf10645b65d5d2d3afb67a2e3" prot="private" virt="non-virtual"><scope>Cfg</scope><name>logfile_ptr</name></member>
+      <member refid="classCfg_1a5197d4a21579aed4fb453f1ee2a4520a" prot="private" virt="non-virtual"><scope>Cfg</scope><name>pidfile_ptr</name></member>
+      <member refid="classCfg_1a024be792e7b158ac0e939d14b6d37677" prot="private" virt="non-virtual"><scope>Cfg</scope><name>prgName</name></member>
+      <member refid="classCfg_1a4331053290e6d8358a00a7b1f44bf508" prot="private" virt="non-virtual"><scope>Cfg</scope><name>prgVersion</name></member>
+      <member refid="classCfg_1ab785421eee0353b1b5a6443d9f97efaf" prot="public" virt="non-virtual"><scope>Cfg</scope><name>printConfig_db</name></member>
+      <member refid="classCfg_1a059563d535a096471410e5a76d4a5c96" prot="public" virt="non-virtual"><scope>Cfg</scope><name>printConfig_gw</name></member>
+      <member refid="classCfg_1a12a56a77125fa182718e2164a23eed48" prot="public" virt="non-virtual"><scope>Cfg</scope><name>printConfig_hub</name></member>
+      <member refid="classCfg_1a962963a6c34ac9851259ccf5ab165db1" prot="public" virt="non-virtual"><scope>Cfg</scope><name>processParams</name></member>
+      <member refid="classCfg_1acf0cea642cbaafbd61860629a8076b15" prot="public" virt="non-virtual"><scope>Cfg</scope><name>removePidFile</name></member>
+      <member refid="classCfg_1acfcbf6a7e35c893ad13e41713a5b51a9" prot="public" virt="non-virtual"><scope>Cfg</scope><name>setPidFile</name></member>
+      <member refid="classCfg_1aa310020b99a2cfe3900b724a400344eb" prot="public" virt="non-virtual"><scope>Cfg</scope><name>setScanLevel</name></member>
+      <member refid="classCfg_1a9eefce31b95beb80f66eff2f9ba9294c" prot="public" virt="non-virtual"><scope>Cfg</scope><name>startDaemon</name></member>
+      <member refid="classCfg_1a65e582daf11d5dcbd222ad1501d33ff8" prot="public" virt="non-virtual"><scope>Cfg</scope><name>startScanner</name></member>
+      <member refid="classCfg_1a029cac532a52c6716be2f0a8f4c4b3cc" prot="public" virt="non-virtual"><scope>Cfg</scope><name>startSniffer</name></member>
+      <member refid="classCfg_1ac7f6954d45eef4c17ef652b2ed7b1c6b" prot="public" virt="non-virtual"><scope>Cfg</scope><name>usage</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

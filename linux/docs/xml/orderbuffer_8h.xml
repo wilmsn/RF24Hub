@@ -1,0 +1,274 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="orderbuffer_8h" kind="file" language="C++">
+    <compoundname>orderbuffer.h</compoundname>
+    <includes local="no">stdio.h</includes>
+    <includes local="no">iostream</includes>
+    <includes local="no">stdint.h</includes>
+    <includes local="no">cstring</includes>
+    <includes local="no">unistd.h</includes>
+    <includes refid="rf24__config_8h" local="yes">rf24_config.h</includes>
+    <includes refid="rf24hub__config_8h" local="yes">rf24hub_config.h</includes>
+    <includes refid="common_8h" local="yes">common.h</includes>
+    <includes refid="dataformat_8h" local="yes">dataformat.h</includes>
+    <includedby refid="orderbuffer_8cpp" local="yes">orderbuffer.cpp</includedby>
+    <includedby refid="rf24hubd_8h" local="yes">rf24hubd.h</includedby>
+    <incdepgraph>
+      <node id="9">
+        <label>common.h</label>
+        <link refid="common_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="22">
+        <label>config.h</label>
+        <link refid="config_8h"/>
+      </node>
+      <node id="23">
+        <label>dataformat.h</label>
+        <link refid="dataformat_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>orderbuffer.h</label>
+        <link refid="orderbuffer_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>rf24_config.h</label>
+        <link refid="rf24__config_8h"/>
+      </node>
+      <node id="8">
+        <label>rf24hub_config.h</label>
+        <link refid="rf24hub__config_8h"/>
+      </node>
+      <node id="25">
+        <label>version.h</label>
+        <link refid="version_8h"/>
+      </node>
+      <node id="17">
+        <label>arpa/inet.h</label>
+      </node>
+      <node id="19">
+        <label>cstdio</label>
+      </node>
+      <node id="5">
+        <label>cstring</label>
+      </node>
+      <node id="10">
+        <label>ctype.h</label>
+      </node>
+      <node id="21">
+        <label>fcntl.h</label>
+      </node>
+      <node id="3">
+        <label>iostream</label>
+      </node>
+      <node id="18">
+        <label>netdb.h</label>
+      </node>
+      <node id="20">
+        <label>netinet/in.h</label>
+      </node>
+      <node id="14">
+        <label>stdbool.h</label>
+      </node>
+      <node id="4">
+        <label>stdint.h</label>
+      </node>
+      <node id="2">
+        <label>stdio.h</label>
+      </node>
+      <node id="13">
+        <label>stdlib.h</label>
+      </node>
+      <node id="24">
+        <label>string.h</label>
+      </node>
+      <node id="16">
+        <label>sys/socket.h</label>
+      </node>
+      <node id="12">
+        <label>sys/time.h</label>
+      </node>
+      <node id="15">
+        <label>sys/types.h</label>
+      </node>
+      <node id="11">
+        <label>time.h</label>
+      </node>
+      <node id="6">
+        <label>unistd.h</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="2">
+        <label>orderbuffer.cpp</label>
+        <link refid="orderbuffer_8cpp"/>
+      </node>
+      <node id="1">
+        <label>orderbuffer.h</label>
+        <link refid="orderbuffer_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>rf24hubd.cpp</label>
+        <link refid="rf24hubd_8cpp"/>
+      </node>
+      <node id="3">
+        <label>rf24hubd.h</label>
+        <link refid="rf24hubd_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="classOrderBuffer" prot="public">OrderBuffer</innerclass>
+    <innerclass refid="structOrderBuffer_1_1orderbuffer__t" prot="private">OrderBuffer::orderbuffer_t</innerclass>
+    <briefdescription>
+<para>Der Orderbuffer ist ein Objekt zur Speicherung von Einzelanforderungen. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>Kommt eine Anforderung im Hub an, wird diese zunächst im Orderbuffer gespeichert. Besteht Kontakt zu einem Node (bei ankommendem Heartbeat) werden alle offenen Orderbuffereinträge für diesen Node zu einer Orderstruktur aggregiert. In einer <ref refid="classOrder" kindref="compound">Order</ref> können 6 Orderbuffereinträge zum Node übertragen werden. </para>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>_ORDERBUFFER_H_<sp/><sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_ORDERBUFFER_H_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdio.h&gt;</highlight><highlight class="normal"><sp/></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cstring&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="rf24__config_8h" kindref="compound">rf24_config.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="rf24hub__config_8h" kindref="compound">rf24hub_config.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="common_8h" kindref="compound">common.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="dataformat_8h" kindref="compound">dataformat.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23" refid="classOrderBuffer" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classOrderBuffer" kindref="compound">OrderBuffer</ref><sp/>{</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">orderbuffer_t<sp/>{</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint64_t<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>entrytime;</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref><sp/><sp/><sp/><sp/>node_id;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>channel;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint32_t<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>utime;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint32_t<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>data;</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>orderbuffer_t*<sp/><sp/>p_next;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="35"><highlight class="normal">orderbuffer_t*<sp/><sp/><sp/><sp/><sp/>p_initial;</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight><highlight class="comment">/**************************************************************</highlight></codeline>
+<codeline lineno="37"><highlight class="comment"><sp/>*<sp/>char<sp/>buffer<sp/>zur<sp/>Ausgabe,<sp/>generisch<sp/></highlight></codeline>
+<codeline lineno="38"><highlight class="comment"><sp/>*************************************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><sp/><sp/><sp/><sp/><sp/><sp/>buf;</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><sp/><sp/><sp/><sp/><sp/><sp/>buf1;</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight><highlight class="comment">/**************************************************************</highlight></codeline>
+<codeline lineno="42"><highlight class="comment"><sp/>*<sp/>char<sp/>buffer<sp/>zur<sp/>Ausgabe<sp/>des<sp/>timestrings<sp/>==&gt;<sp/>ts(tsbuf)</highlight></codeline>
+<codeline lineno="43"><highlight class="comment"><sp/>*************************************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><sp/><sp/><sp/><sp/><sp/><sp/>tsbuf;</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight><highlight class="comment">/**************************************************************</highlight></codeline>
+<codeline lineno="46"><highlight class="comment"><sp/>*<sp/>Bufferinterner<sp/>Speicher<sp/>für<sp/>den<sp/>verboseLevel</highlight></codeline>
+<codeline lineno="47"><highlight class="comment"><sp/>*************************************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal">uint16_t<sp/><sp/><sp/><sp/>verboseLevel;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight><highlight class="comment">/**************************************************************</highlight></codeline>
+<codeline lineno="50"><highlight class="comment"><sp/>*<sp/>fügt<sp/>einen<sp/>neuen<sp/>record<sp/>zum<sp/>Buffer<sp/>hibzu</highlight></codeline>
+<codeline lineno="51"><highlight class="comment"><sp/>*************************************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><sp/><sp/><sp/>newEntry(orderbuffer_t*);</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight><highlight class="comment">/**************************************************************</highlight></codeline>
+<codeline lineno="54"><highlight class="comment"><sp/>*<sp/>löscht<sp/>den<sp/>übergebenen<sp/>record<sp/>aus<sp/>dem<sp/>Buffer</highlight></codeline>
+<codeline lineno="55"><highlight class="comment"><sp/>*************************************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><sp/><sp/><sp/>delEntry(orderbuffer_t*);</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classOrderBuffer_1ac2e46ceea9fd69bc594ec75eb9b84749" kindref="member">setVerbose</ref>(uint16_t<sp/>_verboseLevel);</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="classOrderBuffer_1ac54dc8c5c0db25872e62e98fc34c63ac" kindref="member">findOrder4Node</ref>(<ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref><sp/>node_id,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>p_last,<sp/>uint32_t*<sp/>p_data);</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classOrderBuffer_1abf623ccfc9b7b1a0ddda35d6ba866c9c" kindref="member">addOrderBuffer</ref>(uint64_t<sp/>millis,<sp/><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref><sp/>node_id,<sp/>uint8_t<sp/>channel,<sp/>uint32_t<sp/>data);</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classOrderBuffer_1afe3f5105c21e7f9926283f21dd473c9c" kindref="member">delByNodeChannel</ref>(<ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref><sp/>node_id,<sp/>uint8_t<sp/>channel);</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"></highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classOrderBuffer_1a04559ae9a12bd0b6179424cb6bee347b" kindref="member">delByNode</ref>(<ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref><sp/>node_id);</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"></highlight></codeline>
+<codeline lineno="107"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classOrderBuffer_1a0a57a5e89ee6fa874f8ffdc19100495e" kindref="member">nodeHasEntry</ref>(<ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref><sp/>node_id);</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"></highlight></codeline>
+<codeline lineno="119"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classOrderBuffer_1a2e572634d52e8bb3e01ef876c9c73780" kindref="member">printBuffer</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>out_socket,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>htmlFormat);</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><ref refid="classOrderBuffer_1ad1d77cfabad48e73a59caf09be2d1a16" kindref="member">OrderBuffer</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"></highlight></codeline>
+<codeline lineno="123"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"></highlight></codeline>
+<codeline lineno="125"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//<sp/>_ORDERBUFFER_H_</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/stick/netz/projekte/RF24Hub/linux/orderbuffer.h"/>
+  </compounddef>
+</doxygen>

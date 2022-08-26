@@ -1,0 +1,899 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classDatabase" kind="class" language="C++" prot="public">
+    <compoundname>Database</compoundname>
+    <includes refid="database_8h" local="no">database.h</includes>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classDatabase_1a56966ba8f1137ba09dbe2b8998c41a06" prot="private" static="no" mutable="no">
+        <type>MYSQL *</type>
+        <definition>MYSQL* Database::db</definition>
+        <argsstring></argsstring>
+        <name>db</name>
+        <qualifiedname>Database::db</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="41" column="16" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.h" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classDatabase_1ab7653db724f6aa10696967e1b0cea73d" prot="private" static="no" mutable="no">
+        <type>MYSQL_RES *</type>
+        <definition>MYSQL_RES* Database::res</definition>
+        <argsstring></argsstring>
+        <name>res</name>
+        <qualifiedname>Database::res</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="42" column="16" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.h" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classDatabase_1a71ad7ae59677936d2ca6666f9de9df40" prot="private" static="no" mutable="no">
+        <type>MYSQL_ROW</type>
+        <definition>MYSQL_ROW Database::row</definition>
+        <argsstring></argsstring>
+        <name>row</name>
+        <qualifiedname>Database::row</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="43" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.h" bodystart="43" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classDatabase_1afe4f091f2280f2ba1ebd5433ab73e859" prot="private" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* Database::pEnd</definition>
+        <argsstring></argsstring>
+        <name>pEnd</name>
+        <qualifiedname>Database::pEnd</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="44" column="16" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.h" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classDatabase_1a218bf5e84b39991d21b4506210d87e3b" prot="private" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* Database::tsbuf</definition>
+        <argsstring></argsstring>
+        <name>tsbuf</name>
+        <qualifiedname>Database::tsbuf</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="45" column="16" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.h" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classDatabase_1a399cf0f99b5af8809da665d279d5a073" prot="private" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* Database::sql_stmt</definition>
+        <argsstring></argsstring>
+        <name>sql_stmt</name>
+        <qualifiedname>Database::sql_stmt</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="46" column="16" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.h" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classDatabase_1a0639f9a558fcd0050ff391b315801cd5" prot="private" static="no" mutable="no">
+        <type>uint16_t</type>
+        <definition>uint16_t Database::verboseLevel</definition>
+        <argsstring></argsstring>
+        <name>verboseLevel</name>
+        <qualifiedname>Database::verboseLevel</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="47" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.h" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classDatabase_1ace84fe5e17d39c02596925cca13cb5e1" prot="private" static="no" mutable="no">
+        <type>char</type>
+        <definition>char Database::db_hostname[DB_HOSTNAME_SIZE+1]</definition>
+        <argsstring>[DB_HOSTNAME_SIZE+1]</argsstring>
+        <name>db_hostname</name>
+        <qualifiedname>Database::db_hostname</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="48" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.h" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classDatabase_1a1e9da5f9df583186d7f602b0736145bd" prot="private" static="no" mutable="no">
+        <type>char</type>
+        <definition>char Database::db_username[DB_USERNAME_SIZE+1]</definition>
+        <argsstring>[DB_USERNAME_SIZE+1]</argsstring>
+        <name>db_username</name>
+        <qualifiedname>Database::db_username</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="49" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.h" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classDatabase_1a68b36c007e4a9eaa275b550d6d09f1c3" prot="private" static="no" mutable="no">
+        <type>char</type>
+        <definition>char Database::db_password[DB_PASSWORD_SIZE+1]</definition>
+        <argsstring>[DB_PASSWORD_SIZE+1]</argsstring>
+        <name>db_password</name>
+        <qualifiedname>Database::db_password</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="50" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.h" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classDatabase_1a5e72ea072f91bca405a009f7e0362414" prot="private" static="no" mutable="no">
+        <type>char</type>
+        <definition>char Database::db_schema[DB_SCHEMA_SIZE+1]</definition>
+        <argsstring>[DB_SCHEMA_SIZE+1]</argsstring>
+        <name>db_schema</name>
+        <qualifiedname>Database::db_schema</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="51" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.h" bodystart="51" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classDatabase_1aa90a56355ac7bf758da5750df41117f0" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Database::db_port</definition>
+        <argsstring></argsstring>
+        <name>db_port</name>
+        <qualifiedname>Database::db_port</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="52" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.h" bodystart="52" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classDatabase_1a792507568927bcd63cac2830d5bee1d7" prot="private" static="no" mutable="no">
+        <type>uint32_t</type>
+        <definition>uint32_t Database::mykey</definition>
+        <argsstring></argsstring>
+        <name>mykey</name>
+        <qualifiedname>Database::mykey</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="56" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.h" bodystart="56" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classDatabase_1a5b29dd9a9b824e704c40f1ca74bb30b3" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Database::do_sql</definition>
+        <argsstring>(char *stmt)</argsstring>
+        <name>do_sql</name>
+        <qualifiedname>Database::do_sql</qualifiedname>
+        <param>
+          <type>char *</type>
+          <declname>stmt</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="53" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.cpp" bodystart="169" bodyend="179"/>
+      </memberdef>
+      <memberdef kind="function" id="classDatabase_1aa72a22ebf2495fbd52dc7d05b43cd630" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Database::debugPrintSQL</definition>
+        <argsstring>(char *sqlstmt)</argsstring>
+        <name>debugPrintSQL</name>
+        <qualifiedname>Database::debugPrintSQL</qualifiedname>
+        <param>
+          <type>char *</type>
+          <declname>sqlstmt</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="54" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.cpp" bodystart="253" bodyend="257"/>
+      </memberdef>
+      <memberdef kind="function" id="classDatabase_1a4c2ebccf9bf4f247d69fe7443a7a4db9" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Database::db_check_error</definition>
+        <argsstring>(void)</argsstring>
+        <name>db_check_error</name>
+        <qualifiedname>Database::db_check_error</qualifiedname>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="55" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.cpp" bodystart="9" bodyend="13"/>
+      </memberdef>
+      <memberdef kind="function" id="classDatabase_1a728f85b7d8e62ab4bf67b0b4d47f5c33" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Database::connect</definition>
+        <argsstring>(void)</argsstring>
+        <name>connect</name>
+        <qualifiedname>Database::connect</qualifiedname>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>connects to the database </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="62" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.cpp" bodystart="223" bodyend="245"/>
+      </memberdef>
+      <memberdef kind="function" id="classDatabase_1a81669617b8d1ad90ca7ab27aaee582e1" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Database::disconnect</definition>
+        <argsstring>(void)</argsstring>
+        <name>disconnect</name>
+        <qualifiedname>Database::disconnect</qualifiedname>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="63" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.cpp" bodystart="247" bodyend="251"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classDatabase_1a9bc6c107fdce74c8d75ccd2e2978a92b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Database::setVerbose</definition>
+        <argsstring>(uint16_t _verboseLevel)</argsstring>
+        <name>setVerbose</name>
+        <qualifiedname>Database::setVerbose</qualifiedname>
+        <param>
+          <type>uint16_t</type>
+          <declname>_verboseLevel</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Setzt den Verboselevel. Mögliche Level sind in den Makros VERBOSE* in <ref refid="config_8h" kindref="compound">config.h</ref> definiert. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>verboseLevel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der aktuelle Verboselevel </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="71" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.cpp" bodystart="259" bodyend="261"/>
+      </memberdef>
+      <memberdef kind="function" id="classDatabase_1acbed9ea8d0a159f656313aa521406c8a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Database::connect</definition>
+        <argsstring>(string db_hostname, string db_username, string db_password, string db_schema, int db_port)</argsstring>
+        <name>connect</name>
+        <qualifiedname>Database::connect</qualifiedname>
+        <param>
+          <type>string</type>
+          <declname>db_hostname</declname>
+        </param>
+        <param>
+          <type>string</type>
+          <declname>db_username</declname>
+        </param>
+        <param>
+          <type>string</type>
+          <declname>db_password</declname>
+        </param>
+        <param>
+          <type>string</type>
+          <declname>db_schema</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>db_port</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>connects to the database <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>db_hostname</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Hostname der Datenbank mit Domaine </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>db_username</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Username zum Zugriff auf die Datenbank. Muss innerhalb der Datenbank alle benötigten Rechte haben. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>db_password</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Das Datenbankpasswort für den Datenbanknutzer </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>db_schema</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Das Datenbankschema </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>db_port</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Datenbankport </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>&quot;true&quot; bei erfolgreicher Anmeldung, sonst &quot;false&quot; </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="81" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.cpp" bodystart="206" bodyend="221"/>
+      </memberdef>
+      <memberdef kind="function" id="classDatabase_1a9fa9601b6f5a24f628a51685fbd731f9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Database::set_Volt_LV</definition>
+        <argsstring>(NODE_DATTYPE node_id, float volt_LV)</argsstring>
+        <name>set_Volt_LV</name>
+        <qualifiedname>Database::set_Volt_LV</qualifiedname>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+          <declname>node_id</declname>
+        </param>
+        <param>
+          <type>float</type>
+          <declname>volt_LV</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Sets (true) or resets(false) the low Voltage State of a Node <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Node ID </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>volt_LV</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Spannung deren Unterschreitung das LowVoltageLevel startet </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="88" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.cpp" bodystart="15" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="function" id="classDatabase_1aa1475d6e31a6a9117f87edc3156bcf03" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Database::storeSensorValue</definition>
+        <argsstring>(uint32_t sensor_id, char *value)</argsstring>
+        <name>storeSensorValue</name>
+        <qualifiedname>Database::storeSensorValue</qualifiedname>
+        <param>
+          <type>uint32_t</type>
+          <declname>sensor_id</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Stores the last data(Transportvalue) of a sensor into the table sensordata <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>sensor_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Sensor ID </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>value</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Sensorwert als Transportvalue </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="95" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.cpp" bodystart="181" bodyend="184"/>
+      </memberdef>
+      <memberdef kind="function" id="classDatabase_1aed24791f665b60d9f3108aad82eb28b3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Database::storeNodeConfig</definition>
+        <argsstring>(NODE_DATTYPE node_id, uint8_t channel, char *value)</argsstring>
+        <name>storeNodeConfig</name>
+        <qualifiedname>Database::storeNodeConfig</qualifiedname>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+          <declname>node_id</declname>
+        </param>
+        <param>
+          <type>uint8_t</type>
+          <declname>channel</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Stores the config data of a node (Registervalue) <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Node ID </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Channel </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>value</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Registerwert als String </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="103" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.cpp" bodystart="186" bodyend="195"/>
+      </memberdef>
+      <memberdef kind="function" id="classDatabase_1a965b1f5fc54effcf2e8f3fc94eb8131a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Database::initSensor</definition>
+        <argsstring>(SensorClass *sensorClass)</argsstring>
+        <name>initSensor</name>
+        <qualifiedname>Database::initSensor</qualifiedname>
+        <param>
+          <type><ref refid="classSensorClass" kindref="compound">SensorClass</ref> *</type>
+          <declname>sensorClass</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Reads the data to initializise the sensor array from the <ref refid="classDatabase" kindref="compound">Database</ref> <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>sensor</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Pointer auf das Sensor Objekt </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="110" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.cpp" bodystart="137" bodyend="167"/>
+      </memberdef>
+      <memberdef kind="function" id="classDatabase_1a14bf51ac805ea157223c7a1cb29c11c3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Database::initNode</definition>
+        <argsstring>(NodeClass *nodeClass)</argsstring>
+        <name>initNode</name>
+        <qualifiedname>Database::initNode</qualifiedname>
+        <param>
+          <type><ref refid="classNodeClass" kindref="compound">NodeClass</ref> *</type>
+          <declname>nodeClass</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Reads the data to initializise the node array from the <ref refid="classDatabase" kindref="compound">Database</ref> <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Pointer auf das Node Objekt </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="117" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.cpp" bodystart="109" bodyend="135"/>
+      </memberdef>
+      <memberdef kind="function" id="classDatabase_1a409479c4647a926fd9cc771cdaa53fc0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Database::initGateway</definition>
+        <argsstring>(GatewayClass *gatewayClass)</argsstring>
+        <name>initGateway</name>
+        <qualifiedname>Database::initGateway</qualifiedname>
+        <param>
+          <type><ref refid="classGatewayClass" kindref="compound">GatewayClass</ref> *</type>
+          <declname>gatewayClass</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Reads the data to initializise the gateway array from the <ref refid="classDatabase" kindref="compound">Database</ref> <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>gateway</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Pointer auf das gateway Objekt </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="124" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.cpp" bodystart="47" bodyend="68"/>
+      </memberdef>
+      <memberdef kind="function" id="classDatabase_1a63afca68774fd4faaa85ec80f0df8908" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Database::initSystem</definition>
+        <argsstring>(void)</argsstring>
+        <name>initSystem</name>
+        <qualifiedname>Database::initSystem</qualifiedname>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Initializise the system from the <ref refid="classDatabase" kindref="compound">Database</ref> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="130" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.cpp" bodystart="42" bodyend="45"/>
+      </memberdef>
+      <memberdef kind="function" id="classDatabase_1aa34470fdf087ea6b0960b0d97675498f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Database::rebuild_sensordata_d</definition>
+        <argsstring>(void)</argsstring>
+        <name>rebuild_sensordata_d</name>
+        <qualifiedname>Database::rebuild_sensordata_d</qualifiedname>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Refreshes the table sensordata_d from scratch </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="135" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.cpp" bodystart="33" bodyend="40"/>
+      </memberdef>
+      <memberdef kind="function" id="classDatabase_1a9d551c009288ffe3da9a22c2f48b9f66" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Database::sync_sensordata_d</definition>
+        <argsstring>(void)</argsstring>
+        <name>sync_sensordata_d</name>
+        <qualifiedname>Database::sync_sensordata_d</qualifiedname>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Refreshes the table sensordata_d </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="140" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.cpp" bodystart="20" bodyend="31"/>
+      </memberdef>
+      <memberdef kind="function" id="classDatabase_1a4e28a24d04516fa49b0b002272cf68ce" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>unsigned long</type>
+        <definition>unsigned long Database::getBeginOfDay</definition>
+        <argsstring>()</argsstring>
+        <name>getBeginOfDay</name>
+        <qualifiedname>Database::getBeginOfDay</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Gets the begin of this day as unix time </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="145" column="19" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.cpp" bodystart="70" bodyend="87"/>
+      </memberdef>
+      <memberdef kind="function" id="classDatabase_1acf6dc74e76d9afb47173c29af9da32b6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Database::addGateway</definition>
+        <argsstring>(char *gw_hostname, uint16_t gw_no)</argsstring>
+        <name>addGateway</name>
+        <qualifiedname>Database::addGateway</qualifiedname>
+        <param>
+          <type>char *</type>
+          <declname>gw_hostname</declname>
+        </param>
+        <param>
+          <type>uint16_t</type>
+          <declname>gw_no</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Adds a gateay to the database <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>gw_hostname</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Hostname mit Domaine des Gateways </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>gw_no</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Gatewaynummer </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="152" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.cpp" bodystart="89" bodyend="92"/>
+      </memberdef>
+      <memberdef kind="function" id="classDatabase_1a12da257cf14167a4d356f2974fa58ccc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Database::delGateway</definition>
+        <argsstring>(uint16_t gw_no)</argsstring>
+        <name>delGateway</name>
+        <qualifiedname>Database::delGateway</qualifiedname>
+        <param>
+          <type>uint16_t</type>
+          <declname>gw_no</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Deletes a gateay from the database <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>gw_no</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Gatewaynummer </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="158" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.cpp" bodystart="94" bodyend="97"/>
+      </memberdef>
+      <memberdef kind="function" id="classDatabase_1a3fcc9f7098d8b40f2892c082ea61bdb0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Database::enableGateway</definition>
+        <argsstring>(uint16_t gw_no)</argsstring>
+        <name>enableGateway</name>
+        <qualifiedname>Database::enableGateway</qualifiedname>
+        <param>
+          <type>uint16_t</type>
+          <declname>gw_no</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Enables a gateay in the database <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>gw_no</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Gatewaynummer </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="164" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.cpp" bodystart="99" bodyend="102"/>
+      </memberdef>
+      <memberdef kind="function" id="classDatabase_1af54268220c3c1239c51f1fde41540f38" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Database::disableGateway</definition>
+        <argsstring>(uint16_t gw_no)</argsstring>
+        <name>disableGateway</name>
+        <qualifiedname>Database::disableGateway</qualifiedname>
+        <param>
+          <type>uint16_t</type>
+          <declname>gw_no</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Disables a gateay in the database <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>gw_no</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Gatewaynummer </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="170" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.cpp" bodystart="104" bodyend="107"/>
+      </memberdef>
+      <memberdef kind="function" id="classDatabase_1a31e5aaf049add0c5410630a08268bb61" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Database::updateNodeMastered</definition>
+        <argsstring>(NODE_DATTYPE node_id, bool isMastered)</argsstring>
+        <name>updateNodeMastered</name>
+        <qualifiedname>Database::updateNodeMastered</qualifiedname>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+          <declname>node_id</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>isMastered</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Update the mastered flag of a node <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Node ID </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>isMastered</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>&quot;true&quot; wenn der Node durch dieses System verwaltet wird, sonst &quot;false&quot; </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="177" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.cpp" bodystart="197" bodyend="204"/>
+      </memberdef>
+      <memberdef kind="function" id="classDatabase_1a65fe13accaa0205e66142103ed07258a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>Database::Database</definition>
+        <argsstring>(void)</argsstring>
+        <name>Database</name>
+        <qualifiedname>Database::Database</qualifiedname>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>The constructor </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="181" column="5" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.cpp" bodystart="3" bodyend="7"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/stick/netz/projekte/RF24Hub/linux/database.h" line="37" column="1" bodyfile="/stick/netz/projekte/RF24Hub/linux/database.h" bodystart="37" bodyend="182"/>
+    <listofallmembers>
+      <member refid="classDatabase_1acf6dc74e76d9afb47173c29af9da32b6" prot="public" virt="non-virtual"><scope>Database</scope><name>addGateway</name></member>
+      <member refid="classDatabase_1a728f85b7d8e62ab4bf67b0b4d47f5c33" prot="private" virt="non-virtual"><scope>Database</scope><name>connect</name></member>
+      <member refid="classDatabase_1acbed9ea8d0a159f656313aa521406c8a" prot="public" virt="non-virtual"><scope>Database</scope><name>connect</name></member>
+      <member refid="classDatabase_1a65fe13accaa0205e66142103ed07258a" prot="public" virt="non-virtual"><scope>Database</scope><name>Database</name></member>
+      <member refid="classDatabase_1a56966ba8f1137ba09dbe2b8998c41a06" prot="private" virt="non-virtual"><scope>Database</scope><name>db</name></member>
+      <member refid="classDatabase_1a4c2ebccf9bf4f247d69fe7443a7a4db9" prot="private" virt="non-virtual"><scope>Database</scope><name>db_check_error</name></member>
+      <member refid="classDatabase_1ace84fe5e17d39c02596925cca13cb5e1" prot="private" virt="non-virtual"><scope>Database</scope><name>db_hostname</name></member>
+      <member refid="classDatabase_1a68b36c007e4a9eaa275b550d6d09f1c3" prot="private" virt="non-virtual"><scope>Database</scope><name>db_password</name></member>
+      <member refid="classDatabase_1aa90a56355ac7bf758da5750df41117f0" prot="private" virt="non-virtual"><scope>Database</scope><name>db_port</name></member>
+      <member refid="classDatabase_1a5e72ea072f91bca405a009f7e0362414" prot="private" virt="non-virtual"><scope>Database</scope><name>db_schema</name></member>
+      <member refid="classDatabase_1a1e9da5f9df583186d7f602b0736145bd" prot="private" virt="non-virtual"><scope>Database</scope><name>db_username</name></member>
+      <member refid="classDatabase_1aa72a22ebf2495fbd52dc7d05b43cd630" prot="private" virt="non-virtual"><scope>Database</scope><name>debugPrintSQL</name></member>
+      <member refid="classDatabase_1a12da257cf14167a4d356f2974fa58ccc" prot="public" virt="non-virtual"><scope>Database</scope><name>delGateway</name></member>
+      <member refid="classDatabase_1af54268220c3c1239c51f1fde41540f38" prot="public" virt="non-virtual"><scope>Database</scope><name>disableGateway</name></member>
+      <member refid="classDatabase_1a81669617b8d1ad90ca7ab27aaee582e1" prot="private" virt="non-virtual"><scope>Database</scope><name>disconnect</name></member>
+      <member refid="classDatabase_1a5b29dd9a9b824e704c40f1ca74bb30b3" prot="private" virt="non-virtual"><scope>Database</scope><name>do_sql</name></member>
+      <member refid="classDatabase_1a3fcc9f7098d8b40f2892c082ea61bdb0" prot="public" virt="non-virtual"><scope>Database</scope><name>enableGateway</name></member>
+      <member refid="classDatabase_1a4e28a24d04516fa49b0b002272cf68ce" prot="public" virt="non-virtual"><scope>Database</scope><name>getBeginOfDay</name></member>
+      <member refid="classDatabase_1a409479c4647a926fd9cc771cdaa53fc0" prot="public" virt="non-virtual"><scope>Database</scope><name>initGateway</name></member>
+      <member refid="classDatabase_1a14bf51ac805ea157223c7a1cb29c11c3" prot="public" virt="non-virtual"><scope>Database</scope><name>initNode</name></member>
+      <member refid="classDatabase_1a965b1f5fc54effcf2e8f3fc94eb8131a" prot="public" virt="non-virtual"><scope>Database</scope><name>initSensor</name></member>
+      <member refid="classDatabase_1a63afca68774fd4faaa85ec80f0df8908" prot="public" virt="non-virtual"><scope>Database</scope><name>initSystem</name></member>
+      <member refid="classDatabase_1a792507568927bcd63cac2830d5bee1d7" prot="private" virt="non-virtual"><scope>Database</scope><name>mykey</name></member>
+      <member refid="classDatabase_1afe4f091f2280f2ba1ebd5433ab73e859" prot="private" virt="non-virtual"><scope>Database</scope><name>pEnd</name></member>
+      <member refid="classDatabase_1aa34470fdf087ea6b0960b0d97675498f" prot="public" virt="non-virtual"><scope>Database</scope><name>rebuild_sensordata_d</name></member>
+      <member refid="classDatabase_1ab7653db724f6aa10696967e1b0cea73d" prot="private" virt="non-virtual"><scope>Database</scope><name>res</name></member>
+      <member refid="classDatabase_1a71ad7ae59677936d2ca6666f9de9df40" prot="private" virt="non-virtual"><scope>Database</scope><name>row</name></member>
+      <member refid="classDatabase_1a9fa9601b6f5a24f628a51685fbd731f9" prot="public" virt="non-virtual"><scope>Database</scope><name>set_Volt_LV</name></member>
+      <member refid="classDatabase_1a9bc6c107fdce74c8d75ccd2e2978a92b" prot="public" virt="non-virtual"><scope>Database</scope><name>setVerbose</name></member>
+      <member refid="classDatabase_1a399cf0f99b5af8809da665d279d5a073" prot="private" virt="non-virtual"><scope>Database</scope><name>sql_stmt</name></member>
+      <member refid="classDatabase_1aed24791f665b60d9f3108aad82eb28b3" prot="public" virt="non-virtual"><scope>Database</scope><name>storeNodeConfig</name></member>
+      <member refid="classDatabase_1aa1475d6e31a6a9117f87edc3156bcf03" prot="public" virt="non-virtual"><scope>Database</scope><name>storeSensorValue</name></member>
+      <member refid="classDatabase_1a9d551c009288ffe3da9a22c2f48b9f66" prot="public" virt="non-virtual"><scope>Database</scope><name>sync_sensordata_d</name></member>
+      <member refid="classDatabase_1a218bf5e84b39991d21b4506210d87e3b" prot="private" virt="non-virtual"><scope>Database</scope><name>tsbuf</name></member>
+      <member refid="classDatabase_1a31e5aaf049add0c5410630a08268bb61" prot="public" virt="non-virtual"><scope>Database</scope><name>updateNodeMastered</name></member>
+      <member refid="classDatabase_1a0639f9a558fcd0050ff391b315801cd5" prot="private" virt="non-virtual"><scope>Database</scope><name>verboseLevel</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

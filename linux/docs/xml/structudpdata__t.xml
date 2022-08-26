@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structudpdata__t" kind="struct" language="C++" prot="public">
+    <compoundname>udpdata_t</compoundname>
+    <includes refid="rf24__config_8h" local="no">rf24_config.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structudpdata__t_1a01bf50b0c47eadbef0e1bc814b75630a" prot="public" static="no" mutable="no">
+        <type>uint16_t</type>
+        <definition>uint16_t udpdata_t::gw_no</definition>
+        <argsstring></argsstring>
+        <name>gw_no</name>
+        <qualifiedname>udpdata_t::gw_no</qualifiedname>
+        <briefdescription>
+<para>Die eindeutige Gateway ID. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="275" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="275" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structudpdata__t_1a1b63064045b272e47bf86c111e502394" prot="public" static="no" mutable="no">
+        <type><ref refid="structpayload__t" kindref="compound">payload_t</ref></type>
+        <definition>payload_t udpdata_t::payload</definition>
+        <argsstring></argsstring>
+        <name>payload</name>
+        <qualifiedname>udpdata_t::payload</qualifiedname>
+        <briefdescription>
+<para>Die Payloadstruktur wie unter <ref refid="structpayload__t" kindref="compound">payload_t</ref> definiert. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="277" column="17" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="277" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="2">
+        <label>payload_t</label>
+        <link refid="structpayload__t"/>
+      </node>
+      <node id="1">
+        <label>udpdata_t</label>
+        <link refid="structudpdata__t"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>payload</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="273" column="1" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="273" bodyend="278"/>
+    <listofallmembers>
+      <member refid="structudpdata__t_1a01bf50b0c47eadbef0e1bc814b75630a" prot="public" virt="non-virtual"><scope>udpdata_t</scope><name>gw_no</name></member>
+      <member refid="structudpdata__t_1a1b63064045b272e47bf86c111e502394" prot="public" virt="non-virtual"><scope>udpdata_t</scope><name>payload</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,109 @@
+\hypertarget{dataformat_8h}{}\doxysection{dataformat.\+h File Reference}
+\label{dataformat_8h}\index{dataformat.h@{dataformat.h}}
+
+
+As we use our own dataformat it is defined here.  
+
+
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}rf24\+\_\+config.\+h\char`\"{}}\newline
+Include dependency graph for dataformat.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dataformat_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dataformat_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{group__datafmt_gaad934efedb3f55d7626d8da28246ec64}{ZF\+\_\+\+FLOAT}}~0
+\item 
+\#define \mbox{\hyperlink{group__datafmt_ga821199c6b4b78b02c5d54aab71d1d5d3}{ZF\+\_\+\+INT}}~1
+\item 
+\#define \mbox{\hyperlink{group__datafmt_ga26bb16a78b9acd9959eddb35ac08fec5}{ZF\+\_\+\+UINT}}~2
+\item 
+\#define \mbox{\hyperlink{group__datafmt_ga64dd970c125f6a2aff5b941a8bb812ed}{ZF\+\_\+\+CHAR}}~3
+\item 
+\#define \mbox{\hyperlink{group__datafmt_ga69e9fff4a15910eeb1a71dd60f23e69f}{ZF\+\_\+\+UNKNOWN}}~9
+\item 
+\#define \mbox{\hyperlink{group__datafmt_ga609cbe477a2c1fb108e0ff7d1e843cba}{ZF\+\_\+\+SHIFT\+\_\+\+CHANNEL}}~23
+\item 
+\#define \mbox{\hyperlink{group__datafmt_ga038229ffb138634b959d5162301733fe}{ZF\+\_\+\+SHIFT\+\_\+\+EXPO}}~17
+\item 
+\#define \mbox{\hyperlink{group__datafmt_ga6a43886b9442c8937b7e8a945ea746f6}{ZF\+\_\+\+SHIFT\+\_\+\+FORMAT}}~30
+\item 
+\#define \mbox{\hyperlink{group__datafmt_ga623273d4fd3132434a3a48ec0d30c754}{ZF\+\_\+\+FORMAT\+\_\+\+FLOAT}}~0b00000000000000000000000000000000
+\begin{DoxyCompactList}\small\item\em Datenformat float zur Bildung von data im eigenen Format. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__datafmt_ga6b708445b514622694ba428e7fd8fcbc}{ZF\+\_\+\+FORMAT\+\_\+\+INT}}~0b01000000000000000000000000000000
+\begin{DoxyCompactList}\small\item\em Datenformat integer zur Bildung von data im eigenen Format. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__datafmt_ga8cd44f5c3321c7bf29985a55835343c9}{ZF\+\_\+\+FORMAT\+\_\+\+UINT}}~0b10000000000000000000000000000000
+\begin{DoxyCompactList}\small\item\em Datenformat unsigned integer zur Bildung von data im eigenen Format. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__datafmt_ga7512197e1d94493ecab02587e70fb799}{ZF\+\_\+\+FORMAT\+\_\+\+CHAR}}~0b11000000000000000000000000000000
+\begin{DoxyCompactList}\small\item\em Datenformat char zur Bildung von data im eigenen Format. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__datafmt_ga01cfcdafb2f084038e46f33cd67cbb6d}{ZF\+\_\+\+FORMAT}}~0b11000000000000000000000000000000
+\begin{DoxyCompactList}\small\item\em Digits in denen beim eigenen Zahlenformat der Datentyp gespeichert wird. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__datafmt_gafc1d779c3223302bc38f03f4134ecab2}{ZF\+\_\+\+CHANNEL}}~0b00111111100000000000000000000000
+\begin{DoxyCompactList}\small\item\em Digits in denen beim eigenen Zahlenformat der Channel gespeichert wird. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__datafmt_gae475064281ce57140b56f6964a0d91bb}{ZF\+\_\+\+ZAHL\+\_\+\+NEGATIV}}~0b00000000010000000000000000000000
+\begin{DoxyCompactList}\small\item\em Digit in dem beim eigenen Zahlenformat das Vorzeichen der Zahl (1 = negativ) gespeichert wird. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__datafmt_ga29a9b055debb9d9f832bd4f2b8d59eae}{ZF\+\_\+\+EXPO\+\_\+\+NEGATIV}}~0b00000000001000000000000000000000
+\begin{DoxyCompactList}\small\item\em Digit in dem beim eigenen Zahlenformat das Vorzeichen des Exponenten (1 = negativ) gespeichert wird. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__datafmt_gad954db99f0df7447832a14beb665dc7b}{ZF\+\_\+\+EXPO\+\_\+\+WERT}}~0b00000000000111100000000000000000
+\begin{DoxyCompactList}\small\item\em Digits in denen beim eigenen Zahlenformat der Betrag des Exponenten gespeichert wird. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__datafmt_ga4f710eda1e9718288fca1ab96bdbc645}{ZF\+\_\+\+ZAHL\+\_\+\+WERT\+\_\+\+FLOAT}}~0b00000000000000001111111111111111
+\begin{DoxyCompactList}\small\item\em Digits in denen beim eigenen Zahlenformat für den Datentyp Float der Betrag der Mantisse gespeichert wird. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__datafmt_ga946f2bd156088c36f49dca32bccf3074}{ZF\+\_\+\+ZAHL\+\_\+\+WERT\+\_\+\+INT}}~0b00000000000000000111111111111111
+\begin{DoxyCompactList}\small\item\em Digits in denen beim eigenen Zahlenformat für den Datentyp Integer der Betrag der Zahl gespeichert wird. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group__datafmt_ga57d2710d3bb4c20e209ee83e39ab2a83}{ZF\+\_\+\+ZAHL\+\_\+\+WERT\+\_\+\+UINT}}~0b00000000000000001111111111111111
+\begin{DoxyCompactList}\small\item\em Digits in denen beim eigenen Zahlenformat für den Datentyp Unsigned Integer der Betrag der Zahl gespeichert wird. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{group__datafmt_ga553dc49f84a0874f09d55f9e84fb31d2}{print\+Bits}} (size\+\_\+t const size, void const $\ast$const ptr)
+\begin{DoxyCompactList}\small\item\em Beschreibung des verwendeten Zahlenformates zur Übertragung (Transport\+Wert) Es handelt sich um ein 32 Bit unsigned Integer Format. Der Sensorwert wird mit einer Genauigkeit von 17 Bit (131072 max, genutzt 100000 = 5 Stellen = 0,01 Promille) gespeichert. Zahlenformat X $\ast$ 10$^\wedge$Y Format des Sensorwertes Bitreihenfolge\+: Bit 1 (MSB) ... Bit 32 (LSB) \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{group__datafmt_ga12f15e8310418544b966ce75d8c23e92}{calc\+Transport\+Value}} (uint8\+\_\+t channel, float value)
+\item 
+uint32\+\_\+t \mbox{\hyperlink{group__datafmt_gadb9719633356f80394982b89ee66f213}{calc\+Transport\+Value}} (uint8\+\_\+t channel, uint16\+\_\+t value)
+\item 
+uint32\+\_\+t \mbox{\hyperlink{group__datafmt_gae53a08e10db33776546054e9a2111ac0}{calc\+Transport\+Value}} (uint8\+\_\+t channel, int16\+\_\+t value)
+\item 
+uint32\+\_\+t \mbox{\hyperlink{group__datafmt_ga2f720afb6babf71d52d0b3954f67f68f}{calc\+Transport\+Value}} (uint8\+\_\+t channel, char $\ast$value1, char $\ast$value2)
+\item 
+char $\ast$ \mbox{\hyperlink{group__datafmt_ga02342d8c3916c9953de9d5edce69869e}{unpack\+Transport\+Value}} (uint32\+\_\+t data, char $\ast$\mbox{\hyperlink{rf24hubd_8h_a1fe855c208bc17a51a4d34fefdb2d5b1}{buf}})
+\item 
+uint32\+\_\+t \mbox{\hyperlink{group__datafmt_ga051c0bbd575e4728ad37be7be7d7db31}{calc\+Transport\+Value}} (uint8\+\_\+t channel, char $\ast$value, uint8\+\_\+t data\+Type)
+\item 
+uint32\+\_\+t \mbox{\hyperlink{group__datafmt_ga79ee08ecee3c20d37672ceb9d959c200}{calc\+Transport\+Value}} (uint8\+\_\+t channel, char $\ast$value)
+\item 
+uint8\+\_\+t \mbox{\hyperlink{group__datafmt_ga2ecd9323066a3bcae374c8471d69c074}{get\+Data\+Type}} (uint32\+\_\+t data)
+\item 
+uint8\+\_\+t \mbox{\hyperlink{group__datafmt_ga1bc47883133ecf3ccab0bc5e94946f0b}{get\+Channel}} (uint32\+\_\+t data)
+\item 
+bool \mbox{\hyperlink{group__datafmt_ga87fd32ad4e05f024d6feaa6302a17595}{get\+Value}} (uint32\+\_\+t data, float $\ast$zahl)
+\item 
+bool \mbox{\hyperlink{group__datafmt_gab7502bc515a7f09a16515f3817229461}{get\+Value}} (uint32\+\_\+t data, int16\+\_\+t $\ast$zahl)
+\item 
+bool \mbox{\hyperlink{group__datafmt_gae7d45dd22998aa8968195df1e05401d1}{get\+Value}} (uint32\+\_\+t data, uint16\+\_\+t $\ast$zahl)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+As we use our own dataformat it is defined here. 
+
+Stellt die Funktionen bereit um das Zahlenformat für die Übertragung aufzubereiten und nach der Übertragung wieder zu dekodieren
+
+Genauigkeit\+: 1 von 100.\+000 = 0,01 Promille 

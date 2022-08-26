@@ -1,0 +1,87 @@
+\hypertarget{database_8h}{}\doxysection{database.\+h File Reference}
+\label{database_8h}\index{database.h@{database.h}}
+
+
+Covers all database stuff.  
+
+
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$cstring$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$mariadb/mysql.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}rf24\+\_\+config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}rf24hub\+\_\+config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}common.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}nodeclass.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}sensorclass.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}gatewayclass.\+h\char`\"{}}\newline
+Include dependency graph for database.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{database_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=255pt]{database_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classDatabase}{Database}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{database_8h_a71badab0561d937f60e2f0b3d90b0ff4}{DB\+\_\+\+HOSTNAME\+\_\+\+SIZE}}~30
+\item 
+\#define \mbox{\hyperlink{database_8h_aad96d4cf533a55a27fdd9db4d57676b3}{DB\+\_\+\+USERNAME\+\_\+\+SIZE}}~20
+\item 
+\#define \mbox{\hyperlink{database_8h_a92c835ae2433795c105f0282d86dc978}{DB\+\_\+\+PASSWORD\+\_\+\+SIZE}}~20
+\item 
+\#define \mbox{\hyperlink{database_8h_a3d236c022bad8359fd406f353a69296a}{DB\+\_\+\+SCHEMA\+\_\+\+SIZE}}~20
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Covers all database stuff. 
+
+This module covers all the communication to the database. Here we use Maria\+DB
+
+If you want to use a diffent database or even flatfiles to store the data, just replace this module. Make sure that functions and parameters remain unchanged !!! 
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{database_8h_a71badab0561d937f60e2f0b3d90b0ff4}\label{database_8h_a71badab0561d937f60e2f0b3d90b0ff4}} 
+\index{database.h@{database.h}!DB\_HOSTNAME\_SIZE@{DB\_HOSTNAME\_SIZE}}
+\index{DB\_HOSTNAME\_SIZE@{DB\_HOSTNAME\_SIZE}!database.h@{database.h}}
+\doxysubsubsection{\texorpdfstring{DB\_HOSTNAME\_SIZE}{DB\_HOSTNAME\_SIZE}}
+{\footnotesize\ttfamily \#define DB\+\_\+\+HOSTNAME\+\_\+\+SIZE~30}
+
+\mbox{\Hypertarget{database_8h_a92c835ae2433795c105f0282d86dc978}\label{database_8h_a92c835ae2433795c105f0282d86dc978}} 
+\index{database.h@{database.h}!DB\_PASSWORD\_SIZE@{DB\_PASSWORD\_SIZE}}
+\index{DB\_PASSWORD\_SIZE@{DB\_PASSWORD\_SIZE}!database.h@{database.h}}
+\doxysubsubsection{\texorpdfstring{DB\_PASSWORD\_SIZE}{DB\_PASSWORD\_SIZE}}
+{\footnotesize\ttfamily \#define DB\+\_\+\+PASSWORD\+\_\+\+SIZE~20}
+
+\mbox{\Hypertarget{database_8h_a3d236c022bad8359fd406f353a69296a}\label{database_8h_a3d236c022bad8359fd406f353a69296a}} 
+\index{database.h@{database.h}!DB\_SCHEMA\_SIZE@{DB\_SCHEMA\_SIZE}}
+\index{DB\_SCHEMA\_SIZE@{DB\_SCHEMA\_SIZE}!database.h@{database.h}}
+\doxysubsubsection{\texorpdfstring{DB\_SCHEMA\_SIZE}{DB\_SCHEMA\_SIZE}}
+{\footnotesize\ttfamily \#define DB\+\_\+\+SCHEMA\+\_\+\+SIZE~20}
+
+\mbox{\Hypertarget{database_8h_aad96d4cf533a55a27fdd9db4d57676b3}\label{database_8h_aad96d4cf533a55a27fdd9db4d57676b3}} 
+\index{database.h@{database.h}!DB\_USERNAME\_SIZE@{DB\_USERNAME\_SIZE}}
+\index{DB\_USERNAME\_SIZE@{DB\_USERNAME\_SIZE}!database.h@{database.h}}
+\doxysubsubsection{\texorpdfstring{DB\_USERNAME\_SIZE}{DB\_USERNAME\_SIZE}}
+{\footnotesize\ttfamily \#define DB\+\_\+\+USERNAME\+\_\+\+SIZE~20}
+

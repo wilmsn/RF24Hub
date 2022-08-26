@@ -1,0 +1,294 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="group__reg" kind="group">
+    <compoundname>reg</compoundname>
+    <title>Definition der Register</title>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="group__reg_1ga3856ce72c4a30d1a351032b146d77a89" prot="public" static="no">
+        <name>REG_BATT</name>
+        <initializer>79</initializer>
+        <briefdescription>
+<para>Register für den Spannungswert der Batterie. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="72" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reg_1ga7a18b90d6f4b1fa67dc16622df64df75" prot="public" static="no">
+        <name>REG_SLEEPTIME_KOR</name>
+        <initializer>80</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Einmalige Korrektur der Schlafzeit in Sekunden Format: int16_t; Wertebereich: -1000 ... 1000 </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="75" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="75" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reg_1ga343f6886beb165ee8aa1e43136b5e5cb" prot="public" static="no">
+        <name>REG_TRANSREG</name>
+        <initializer>81</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Schreiben eines beliebigen Wertes startet den Registertransfer zum Hub. Format: uint16_t; Wertebereich: beliebig </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="78" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="78" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reg_1ga18851cc59d7f737da4f690a50078857e" prot="public" static="no">
+        <name>REG_TRANSPA</name>
+        <initializer>82</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Schreiben eines beliebigen Wertes startet die PA Messung. Format: uint16_t; Wertebereich: beliebig </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="81" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="81" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reg_1gaf3e20e659610dc66535a64b67361da34" prot="public" static="no">
+        <name>REG_DISCHARGE_LEV1</name>
+        <initializer>91</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>EntladeSpannung Level 1<linebreak/>
+ Bei Überschreiten dieser Spannung wird der ATMega nicht mehr in den Schlafmodus versetzt. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="84" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="84" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reg_1gaa72275244c4fed9b432596ef6ca6da8c" prot="public" static="no">
+        <name>REG_DISCHARGE_LEV2</name>
+        <initializer>92</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>EntladeSpannung Level 2<linebreak/>
+ Bei Überschreiten dieser Spannung wird die Batterie zusätzlich über einen Widerstand entladen. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="87" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="87" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reg_1gaa8933dd1a420955d32e98250ce138251" prot="public" static="no">
+        <name>REG_DISCHARGE_LEV3</name>
+        <initializer>93</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>EntladeSpannung Level 2<linebreak/>
+ Bei Überschreiten dieser Spannung wird die Batterie zusätzlich über einen Widerstand entladen. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="90" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="90" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reg_1ga35fa4a806d158e970fcd24ed59ae0f27" prot="public" static="no">
+        <name>REG_LOAD_BALLANCER</name>
+        <initializer>94</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Maximal zulässige Differenzspannung bei 2 Batterien. Wird diese Spannung überschritten, wirden die Spannungspegel durch gezieltes laden/entladen angepasst. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="93" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="93" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reg_1gafd9c137a46dad8933460657db3acfac6" prot="public" static="no">
+        <name>REG_CONTRAST</name>
+        <initializer>95</initializer>
+        <briefdescription>
+<para>Kontrastpegel (nur bei Displays) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="95" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="95" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reg_1ga6fbd8624ea37b66935a94b5944745ea5" prot="public" static="no">
+        <name>REG_BRIGHTNES</name>
+        <initializer>96</initializer>
+        <briefdescription>
+<para>Helligkeitspegel (nur bei Displays) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="97" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="97" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reg_1ga859786b74fb4ad8a9a22505b995d3758" prot="public" static="no">
+        <name>REG_VOLT_FAC</name>
+        <initializer>110</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Spannungskorrekturfaktor U = Umess * factor + offset Format: float; Wertebereich: 0.1 ... 10; Default: 1 </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="101" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="101" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reg_1ga00818e32665ddbd0b600ceeab402833f" prot="public" static="no">
+        <name>REG_VOLT_OFF</name>
+        <initializer>111</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Spannungsoffset U = Umess * factor + offset Format: float; Wertebereich: -10 ... 10; Default: 0 </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="105" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="105" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reg_1gafa6e35ad9d107b4c4219aa71a5cee14d" prot="public" static="no">
+        <name>REG_VOLT_LV</name>
+        <initializer>112</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Low Voltage Level Bei unterschreiten dieser Spannung geht der Node in den Low Voltage Modus. Dann gilt die SLEEPTIME_LV. Format: float; Wertebereich: 1 ... 5; Default: 2 </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="109" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="109" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reg_1ga2e917c07d13d1513443a2b54460af2ef" prot="public" static="no">
+        <name>REG_SLEEPTIME_LV</name>
+        <initializer>113</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Schlafzeit im Low Voltgage Modus Der einstellbare Bereich liegt von 10 Sekunden bis 9 Stunden (=32400 Integer Begrenzung) Format: uint16_t; Wertebereich: 10 ... 32400; Default: 900 </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="113" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="113" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reg_1gaf9fe6ec07a95753ffb42ac3772e5637f" prot="public" static="no">
+        <name>REG_SLEEPTIME</name>
+        <initializer>114</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Normale Schlafzeit Der einstellbare Bereich liegt von 10 Sekunden bis 9 Stunden (=32400 Integer Begrenzung) Format: uint16_t; Wertebereich: 10 ... 32400; Default: 300 </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="117" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="117" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reg_1ga6b60151223f7fd83725f9b2c0f3ce01c" prot="public" static="no">
+        <name>REG_SLEEP4MS_FAC</name>
+        <initializer>115</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Feinjustierung der Sekunden für den Tiefschlaf Format: uint16_t; Wertebereich: 500 ... 2000; Default: 1000 </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="120" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="120" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reg_1ga29d34461382bfa0b4c2493b263326e5f" prot="public" static="no">
+        <name>REG_SENDDELAY</name>
+        <initializer>116</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Verzögerung zwischen zwei Sendungen/Sendewiederholung Format: uint16_t; Wertebereich: 50 ... 1000; Default: 500 </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="123" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="123" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reg_1ga098b49ec3990305ace2ce568ffec254d" prot="public" static="no">
+        <name>REG_MAX_SENDCOUNT</name>
+        <initializer>117</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Maximale Anzahl von Sendeversuchen für normale Sendungen Format: uint16_t; Wertebereich: 1 ... 20; Default: 10 </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="126" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="126" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reg_1ga02a5c564d021d24122aa1a03b8e415db" prot="public" static="no">
+        <name>REG_MAX_STOPCOUNT</name>
+        <initializer>118</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Maximale Anzahl von Sendeversuchen für stopp Sendungen Format: uint16_t; Wertebereich: 1 ... 20; Default: 3 </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="129" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="129" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reg_1gaa53fc2c65f33cfee344eaff23d066910" prot="public" static="no">
+        <name>REG_EMPTYLOOPS</name>
+        <initializer>119</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Anzahl der Loops ohne Sendungen Format: uint16_t; Wertebereich: 0 ... 20; Default: 0 </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="132" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="132" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reg_1gac3a176252032d2f36955fc3204718c92" prot="public" static="no">
+        <name>REG_PALEVEL</name>
+        <initializer>120</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Sendefeldstärke Legt die Felstärke fest mit der dieser Node sendet. 1 = Min(-18dbm), 2 = Low(-12dbm), 3 = High(-6dbm), 4 = Max(0dbm) Format: uint16_t; Wertebereich: 0 ... 3; Default: 3 </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="136" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="136" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reg_1gadf156e6de21f2eaf237f5776671768f6" prot="public" static="no">
+        <name>REG_RECLEVEL</name>
+        <initializer>121</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Empfangsfeldstärke Legt die Felstärke fest mit der dieser Node vom Hub empfangen wurde. 0 = Min(-18dbm), 1 = Low(-12dbm), 2 = High(-6dbm), 3 = Max(0dbm) Format: uint16_t; Wertebereich: 0 ... 3; Diese Information wird nicht zum Node übertragen </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="142" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="142" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__reg_1ga32a7d9ab1a11b996d75e7afced77cb53" prot="public" static="no">
+        <name>REG_SW</name>
+        <initializer>125</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Softwarestand Wird im Format XYZZ übertragen: X=Release, Y=Subrelease, ZZ=Änderungszähler Format: uint16_t; Wertebereich: 0 ... 20; Default: 0 </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" line="146" column="9" bodyfile="/stick/netz/projekte/RF24Hub/linux/rf24_config.h" bodystart="146" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Definition der Kontrollregister<linebreak/>
+ Nicht jedes Register ist in jedem Node verfügbar. Dies ist abhängig von der verbauten Hardware und der eingespielten Software. </para>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

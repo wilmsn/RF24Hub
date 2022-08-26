@@ -1,0 +1,158 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="structNodeClass_1_1nodeClass__t" kind="struct" language="C++" prot="private">
+    <compoundname>NodeClass::nodeClass_t</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structNodeClass_1_1nodeClass__t_1aea6d3d5043d959b787f5e0041d5c968a" prot="public" static="no" mutable="no">
+        <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+        <definition>NODE_DATTYPE NodeClass::nodeClass_t::node_id</definition>
+        <argsstring></argsstring>
+        <name>node_id</name>
+        <qualifiedname>NodeClass::nodeClass_t::node_id</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="27" column="24" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structNodeClass_1_1nodeClass__t_1ad5662cebbb6d48735588e1c4698df275" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char NodeClass::nodeClass_t::node_name[NODENAMESIZE]</definition>
+        <argsstring>[NODENAMESIZE]</argsstring>
+        <name>node_name</name>
+        <qualifiedname>NodeClass::nodeClass_t::node_name</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="28" column="25" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structNodeClass_1_1nodeClass__t_1aa3b249d2b3607443d846dbbacc9d3dfa" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t NodeClass::nodeClass_t::pa_level</definition>
+        <argsstring></argsstring>
+        <name>pa_level</name>
+        <qualifiedname>NodeClass::nodeClass_t::pa_level</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="29" column="25" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structNodeClass_1_1nodeClass__t_1aabd10b87cd5e4827377749641ad8389a" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t NodeClass::nodeClass_t::rec_level</definition>
+        <argsstring></argsstring>
+        <name>rec_level</name>
+        <qualifiedname>NodeClass::nodeClass_t::rec_level</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="30" column="25" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structNodeClass_1_1nodeClass__t_1a68e3c02703191a45b7c7b1433df6b758" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float NodeClass::nodeClass_t::u_batt</definition>
+        <argsstring></argsstring>
+        <name>u_batt</name>
+        <qualifiedname>NodeClass::nodeClass_t::u_batt</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="31" column="25" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structNodeClass_1_1nodeClass__t_1a62703dd6db1fe11ed32b7b64e34239fa" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t NodeClass::nodeClass_t::hb_no</definition>
+        <argsstring></argsstring>
+        <name>hb_no</name>
+        <qualifiedname>NodeClass::nodeClass_t::hb_no</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="32" column="25" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structNodeClass_1_1nodeClass__t_1aef4b1a854e24dfe4fdd3c83b27b157fa" prot="public" static="no" mutable="no">
+        <type>uint32_t</type>
+        <definition>uint32_t NodeClass::nodeClass_t::hb_utime</definition>
+        <argsstring></argsstring>
+        <name>hb_utime</name>
+        <qualifiedname>NodeClass::nodeClass_t::hb_utime</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="33" column="25" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structNodeClass_1_1nodeClass__t_1a6d697a0494461013ca44e9b4096516b8" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool NodeClass::nodeClass_t::is_mastered</definition>
+        <argsstring></argsstring>
+        <name>is_mastered</name>
+        <qualifiedname>NodeClass::nodeClass_t::is_mastered</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="34" column="25" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structNodeClass_1_1nodeClass__t_1ad05b142645f4393dbf3b4fe01099dcdc" prot="public" static="no" mutable="no">
+        <type>nodeClass_t *</type>
+        <definition>nodeClass_t* NodeClass::nodeClass_t::p_next</definition>
+        <argsstring></argsstring>
+        <name>p_next</name>
+        <qualifiedname>NodeClass::nodeClass_t::p_next</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="35" column="29" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>NodeClass::nodeClass_t</label>
+        <childnode refid="1" relation="usage">
+          <edgelabel>p_next</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" line="26" column="1" bodyfile="/stick/netz/projekte/RF24Hub/linux/nodeclass.h" bodystart="26" bodyend="36"/>
+    <listofallmembers>
+      <member refid="structNodeClass_1_1nodeClass__t_1a62703dd6db1fe11ed32b7b64e34239fa" prot="public" virt="non-virtual"><scope>NodeClass::nodeClass_t</scope><name>hb_no</name></member>
+      <member refid="structNodeClass_1_1nodeClass__t_1aef4b1a854e24dfe4fdd3c83b27b157fa" prot="public" virt="non-virtual"><scope>NodeClass::nodeClass_t</scope><name>hb_utime</name></member>
+      <member refid="structNodeClass_1_1nodeClass__t_1a6d697a0494461013ca44e9b4096516b8" prot="public" virt="non-virtual"><scope>NodeClass::nodeClass_t</scope><name>is_mastered</name></member>
+      <member refid="structNodeClass_1_1nodeClass__t_1aea6d3d5043d959b787f5e0041d5c968a" prot="public" virt="non-virtual"><scope>NodeClass::nodeClass_t</scope><name>node_id</name></member>
+      <member refid="structNodeClass_1_1nodeClass__t_1ad5662cebbb6d48735588e1c4698df275" prot="public" virt="non-virtual"><scope>NodeClass::nodeClass_t</scope><name>node_name</name></member>
+      <member refid="structNodeClass_1_1nodeClass__t_1ad05b142645f4393dbf3b4fe01099dcdc" prot="public" virt="non-virtual"><scope>NodeClass::nodeClass_t</scope><name>p_next</name></member>
+      <member refid="structNodeClass_1_1nodeClass__t_1aa3b249d2b3607443d846dbbacc9d3dfa" prot="public" virt="non-virtual"><scope>NodeClass::nodeClass_t</scope><name>pa_level</name></member>
+      <member refid="structNodeClass_1_1nodeClass__t_1aabd10b87cd5e4827377749641ad8389a" prot="public" virt="non-virtual"><scope>NodeClass::nodeClass_t</scope><name>rec_level</name></member>
+      <member refid="structNodeClass_1_1nodeClass__t_1a68e3c02703191a45b7c7b1433df6b758" prot="public" virt="non-virtual"><scope>NodeClass::nodeClass_t</scope><name>u_batt</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

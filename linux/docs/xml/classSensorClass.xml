@@ -1,0 +1,695 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classSensorClass" kind="class" language="C++" prot="public">
+    <compoundname>SensorClass</compoundname>
+    <includes refid="sensorclass_8h" local="no">sensorclass.h</includes>
+    <innerclass refid="structSensorClass_1_1sensor__t" prot="private">SensorClass::sensor_t</innerclass>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classSensorClass_1a4a491a22d7cd65bc477c9679ac33f605" prot="private" static="no" mutable="no">
+        <type>sensor_t *</type>
+        <definition>sensor_t* SensorClass::p_initial</definition>
+        <argsstring></argsstring>
+        <name>p_initial</name>
+        <qualifiedname>SensorClass::p_initial</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="36" column="14" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classSensorClass_1a6910e738cd66568a878ed5b7e26a5a1e" prot="private" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* SensorClass::buf</definition>
+        <argsstring></argsstring>
+        <name>buf</name>
+        <qualifiedname>SensorClass::buf</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="40" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classSensorClass_1af1a3533db184fd6e3e1acc8f1cfdf239" prot="private" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* SensorClass::buf1</definition>
+        <argsstring></argsstring>
+        <name>buf1</name>
+        <qualifiedname>SensorClass::buf1</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="41" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classSensorClass_1abc3cc1707d34e88d1e2d22ebe736875a" prot="private" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* SensorClass::tsbuf</definition>
+        <argsstring></argsstring>
+        <name>tsbuf</name>
+        <qualifiedname>SensorClass::tsbuf</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="45" column="12" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classSensorClass_1ad40c1a6eb3de7f5658af0e534a80bebe" prot="private" static="no" mutable="no">
+        <type>uint16_t</type>
+        <definition>uint16_t SensorClass::verboseLevel</definition>
+        <argsstring></argsstring>
+        <name>verboseLevel</name>
+        <qualifiedname>SensorClass::verboseLevel</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="49" column="13" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classSensorClass_1a6522f1b64b76f36dd509e8e43fada393" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void SensorClass::newEntry</definition>
+        <argsstring>(sensor_t *)</argsstring>
+        <name>newEntry</name>
+        <qualifiedname>SensorClass::newEntry</qualifiedname>
+        <param>
+          <type>sensor_t *</type>
+          <defname>p_new</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="53" column="13" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.cpp" bodystart="21" bodyend="33"/>
+      </memberdef>
+      <memberdef kind="function" id="classSensorClass_1ab9f935acc69ed5cbb4482afb447d403f" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool SensorClass::delEntry</definition>
+        <argsstring>(sensor_t *)</argsstring>
+        <name>delEntry</name>
+        <qualifiedname>SensorClass::delEntry</qualifiedname>
+        <param>
+          <type>sensor_t *</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="57" column="13"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classSensorClass_1a978a64b43a7e945913bfd9577849f90e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void SensorClass::setVerbose</definition>
+        <argsstring>(uint16_t _verboseLevel)</argsstring>
+        <name>setVerbose</name>
+        <qualifiedname>SensorClass::setVerbose</qualifiedname>
+        <param>
+          <type>uint16_t</type>
+          <declname>_verboseLevel</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Setzt den Verboselevel. Mögliche Level sind in den Makros VERBOSE* in <ref refid="config_8h" kindref="compound">config.h</ref> definiert. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>verboseLevel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der aktuelle Verboselevel </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="65" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.cpp" bodystart="188" bodyend="190"/>
+      </memberdef>
+      <memberdef kind="function" id="classSensorClass_1a90a48ee12a5946d3f037051dbcf6e80f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void SensorClass::cleanup</definition>
+        <argsstring>(void)</argsstring>
+        <name>cleanup</name>
+        <qualifiedname>SensorClass::cleanup</qualifiedname>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Löscht den kompletten Inhalt und leert den Buffer </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="70" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.cpp" bodystart="11" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="function" id="classSensorClass_1a35adde018d58f27fc3d3c7805c9fab09" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void SensorClass::addSensor</definition>
+        <argsstring>(uint32_t sensor, NODE_DATTYPE node_id, uint8_t channel, uint8_t datatype, char *fhem_dev, uint32_t last_utime, uint32_t last_data, char *sensor_name)</argsstring>
+        <name>addSensor</name>
+        <qualifiedname>SensorClass::addSensor</qualifiedname>
+        <param>
+          <type>uint32_t</type>
+          <declname>sensor</declname>
+        </param>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+          <declname>node_id</declname>
+        </param>
+        <param>
+          <type>uint8_t</type>
+          <declname>channel</declname>
+        </param>
+        <param>
+          <type>uint8_t</type>
+          <declname>datatype</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>fhem_dev</declname>
+        </param>
+        <param>
+          <type>uint32_t</type>
+          <declname>last_utime</declname>
+        </param>
+        <param>
+          <type>uint32_t</type>
+          <declname>last_data</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>sensor_name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Fügt einen neuen Sensor hinzu <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>sensor_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Sensor-ID </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Node-ID </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Channel für diesen Sensor <linebreak/>
+ </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>datatype</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der verwendete Datentyp zur Übertragung der Werte </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>fhem_dev</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Devicename innerhalb von FHEM für diesen Sensor. Ist dieser gesetzt wird bei jeder Änderung eine Änderung an FHEM gesendet. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>last_utime</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Unix-Timestamp des letzten Wertes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>last_data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der letzte Wert des Sensors (Transportwert) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sensor_name</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Bezeichner dieses Sensors </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="83" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.cpp" bodystart="35" bodyend="46"/>
+      </memberdef>
+      <memberdef kind="function" id="classSensorClass_1a7fb1baf1cb828cb7b28fedab0f6a2dd8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool SensorClass::updateLastVal</definition>
+        <argsstring>(uint32_t sensor_id, uint32_t last_data)</argsstring>
+        <name>updateLastVal</name>
+        <qualifiedname>SensorClass::updateLastVal</qualifiedname>
+        <param>
+          <type>uint32_t</type>
+          <declname>sensor_id</declname>
+        </param>
+        <param>
+          <type>uint32_t</type>
+          <declname>last_data</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Setzt den letzten Wert dieses Sensors in der Form des TransportValues <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>sensor_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Sensor-ID </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>last_data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der letzte Wert des Sensors (Transportwert) </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>&quot;true&quot; wenn ein Update erfolgt ist, sonst &quot;false&quot; </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="91" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.cpp" bodystart="48" bodyend="65"/>
+      </memberdef>
+      <memberdef kind="function" id="classSensorClass_1ae99fc0db76089763c473e839591e707e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uint32_t</type>
+        <definition>uint32_t SensorClass::getSensorByNodeChannel</definition>
+        <argsstring>(NODE_DATTYPE node_id, uint8_t channel)</argsstring>
+        <name>getSensorByNodeChannel</name>
+        <qualifiedname>SensorClass::getSensorByNodeChannel</qualifiedname>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+          <declname>node_id</declname>
+        </param>
+        <param>
+          <type>uint8_t</type>
+          <declname>channel</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Findet die Sensor_id durch node_id und channel, <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Node-ID </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Der Channel für diesen Sensor <linebreak/>
+ </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Rückgabewert ist die sensor_id </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="99" column="10" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.cpp" bodystart="67" bodyend="78"/>
+      </memberdef>
+      <memberdef kind="function" id="classSensorClass_1a40f85d0824bc6b06a5b3ab42e6f1d080" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool SensorClass::getNodeChannelBySensorID</definition>
+        <argsstring>(NODE_DATTYPE *p_node_id, uint8_t *p_channel, uint32_t sensor_id)</argsstring>
+        <name>getNodeChannelBySensorID</name>
+        <qualifiedname>SensorClass::getNodeChannelBySensorID</qualifiedname>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref> *</type>
+          <declname>p_node_id</declname>
+        </param>
+        <param>
+          <type>uint8_t *</type>
+          <declname>p_channel</declname>
+        </param>
+        <param>
+          <type>uint32_t</type>
+          <declname>sensor_id</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Findet node_id und channel des Sensors durch die sensor_id <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Pointer auf die Node-ID (Nimmt das Ergebnis auf) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Pointer auf den Channel für diesen Sensor (Nimmt das Ergebnis auf) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sensor_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Die Sensor ID <linebreak/>
+ </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>&quot;true&quot; wenn diese Sensor ID gefunden wurde, sonst &quot;false&quot; </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="108" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.cpp" bodystart="95" bodyend="111"/>
+      </memberdef>
+      <memberdef kind="function" id="classSensorClass_1afd56d3c39fa1d965a3e8c4660a0a8eb4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool SensorClass::getNodeChannelBySensorName</definition>
+        <argsstring>(NODE_DATTYPE *p_node_id, uint8_t *p_channel, char *sensor_name)</argsstring>
+        <name>getNodeChannelBySensorName</name>
+        <qualifiedname>SensorClass::getNodeChannelBySensorName</qualifiedname>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref> *</type>
+          <declname>p_node_id</declname>
+        </param>
+        <param>
+          <type>uint8_t *</type>
+          <declname>p_channel</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>sensor_name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Findet node_id und channel des Sensors durch FHEM Device <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Pointer auf die Node-ID (Nimmt das Ergebnis auf) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Pointer auf den Channel für diesen Sensor (Nimmt das Ergebnis auf) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sensor_name</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Pointer auf einen String mit der Bezeichnung des Sensors <linebreak/>
+ </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>&quot;true&quot; wenn diese Sensorbezeichnung gefunden wurde, sonst &quot;false&quot; </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="117" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.cpp" bodystart="131" bodyend="147"/>
+      </memberdef>
+      <memberdef kind="function" id="classSensorClass_1a94fb730fd99d71a554e4b8253855e292" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool SensorClass::getNodeChannelByFhemDev</definition>
+        <argsstring>(NODE_DATTYPE *p_node_id, uint8_t *p_channel, char *fhem_dev)</argsstring>
+        <name>getNodeChannelByFhemDev</name>
+        <qualifiedname>SensorClass::getNodeChannelByFhemDev</qualifiedname>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref> *</type>
+          <declname>p_node_id</declname>
+        </param>
+        <param>
+          <type>uint8_t *</type>
+          <declname>p_channel</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>fhem_dev</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Findet node_id und channel des Sensors durch FHEM Device <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Pointer auf die Node-ID (Nimmt das Ergebnis auf) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Pointer auf den Channel für diesen Sensor (Nimmt das Ergebnis auf) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>fhem_dev</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Pointer auf einen String mit der FHEM Device <linebreak/>
+ </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="125" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.cpp" bodystart="113" bodyend="129"/>
+      </memberdef>
+      <memberdef kind="function" id="classSensorClass_1aab0e1acf140241ebcef1510e5e4db2da" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>char *</type>
+        <definition>char * SensorClass::getFhemDevByNodeChannel</definition>
+        <argsstring>(NODE_DATTYPE node_id, uint8_t channel)</argsstring>
+        <name>getFhemDevByNodeChannel</name>
+        <qualifiedname>SensorClass::getFhemDevByNodeChannel</qualifiedname>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+          <declname>node_id</declname>
+        </param>
+        <param>
+          <type>uint8_t</type>
+          <declname>channel</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Findet FHEM Device des Sensors durch node_id und channel <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Pointer auf die Node-ID (Nimmt das Ergebnis auf) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Pointer auf den Channel für diesen Sensor (Nimmt das Ergebnis auf) </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Ein Pointer auf einen String mit der Bezeichnung des Sensors <linebreak/>
+ </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="133" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.cpp" bodystart="80" bodyend="93"/>
+      </memberdef>
+      <memberdef kind="function" id="classSensorClass_1aec94a66c9bc5e9eebf7a60cef07fa2a6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int8_t</type>
+        <definition>int8_t SensorClass::getDataTypeByNodeChannel</definition>
+        <argsstring>(NODE_DATTYPE node_id, uint8_t channel)</argsstring>
+        <name>getDataTypeByNodeChannel</name>
+        <qualifiedname>SensorClass::getDataTypeByNodeChannel</qualifiedname>
+        <param>
+          <type><ref refid="group__rf24makros_1ga030de4f033221607739a15cb52508022" kindref="member">NODE_DATTYPE</ref></type>
+          <declname>node_id</declname>
+        </param>
+        <param>
+          <type>uint8_t</type>
+          <declname>channel</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Findet den für diesen Sensor verwendeten Datentypen durch node_id und channel <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Pointer auf die Node-ID (Nimmt das Ergebnis auf) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Ein Pointer auf den Channel für diesen Sensor (Nimmt das Ergebnis auf) </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Der Datentyp dieses Sensors <linebreak/>
+ </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="141" column="8" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.cpp" bodystart="149" bodyend="162"/>
+      </memberdef>
+      <memberdef kind="function" id="classSensorClass_1ac9bd62ebe2c2b7a7c7b1ae121f8b2a4b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void SensorClass::printBuffer</definition>
+        <argsstring>(int new_tn_in_socket, bool html)</argsstring>
+        <name>printBuffer</name>
+        <qualifiedname>SensorClass::printBuffer</qualifiedname>
+        <param>
+          <type>int</type>
+          <declname>new_tn_in_socket</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>html</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Druckt alle records im Buffer in den out_socket out_socket ist dabei ein gültiger socket file descriptor entweder aus accept für einen socket oder mittels fileno(stdout) für den stdout Der zweite Parameter bestimmt das Format, true =&gt; HTML Format; false =&gt; Textformat <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>tn_socket</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Das aktuelle Socket zur Ausgabe </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>htmlformat</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>&quot;true&quot; liefert die Ausgabe im HTML Format, &quot;false&quot; im Textformat </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="153" column="6" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.cpp" bodystart="164" bodyend="186"/>
+      </memberdef>
+      <memberdef kind="function" id="classSensorClass_1a80d1ef4799b02eb87a0a52b273dc3753" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>SensorClass::SensorClass</definition>
+        <argsstring>(void)</argsstring>
+        <name>SensorClass</name>
+        <qualifiedname>SensorClass::SensorClass</qualifiedname>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="155" column="1" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.cpp" bodystart="3" bodyend="9"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" line="20" column="1" bodyfile="/stick/netz/projekte/RF24Hub/linux/sensorclass.h" bodystart="20" bodyend="157"/>
+    <listofallmembers>
+      <member refid="classSensorClass_1a35adde018d58f27fc3d3c7805c9fab09" prot="public" virt="non-virtual"><scope>SensorClass</scope><name>addSensor</name></member>
+      <member refid="classSensorClass_1a6910e738cd66568a878ed5b7e26a5a1e" prot="private" virt="non-virtual"><scope>SensorClass</scope><name>buf</name></member>
+      <member refid="classSensorClass_1af1a3533db184fd6e3e1acc8f1cfdf239" prot="private" virt="non-virtual"><scope>SensorClass</scope><name>buf1</name></member>
+      <member refid="classSensorClass_1a90a48ee12a5946d3f037051dbcf6e80f" prot="public" virt="non-virtual"><scope>SensorClass</scope><name>cleanup</name></member>
+      <member refid="classSensorClass_1ab9f935acc69ed5cbb4482afb447d403f" prot="private" virt="non-virtual"><scope>SensorClass</scope><name>delEntry</name></member>
+      <member refid="classSensorClass_1aec94a66c9bc5e9eebf7a60cef07fa2a6" prot="public" virt="non-virtual"><scope>SensorClass</scope><name>getDataTypeByNodeChannel</name></member>
+      <member refid="classSensorClass_1aab0e1acf140241ebcef1510e5e4db2da" prot="public" virt="non-virtual"><scope>SensorClass</scope><name>getFhemDevByNodeChannel</name></member>
+      <member refid="classSensorClass_1a94fb730fd99d71a554e4b8253855e292" prot="public" virt="non-virtual"><scope>SensorClass</scope><name>getNodeChannelByFhemDev</name></member>
+      <member refid="classSensorClass_1a40f85d0824bc6b06a5b3ab42e6f1d080" prot="public" virt="non-virtual"><scope>SensorClass</scope><name>getNodeChannelBySensorID</name></member>
+      <member refid="classSensorClass_1afd56d3c39fa1d965a3e8c4660a0a8eb4" prot="public" virt="non-virtual"><scope>SensorClass</scope><name>getNodeChannelBySensorName</name></member>
+      <member refid="classSensorClass_1ae99fc0db76089763c473e839591e707e" prot="public" virt="non-virtual"><scope>SensorClass</scope><name>getSensorByNodeChannel</name></member>
+      <member refid="classSensorClass_1a6522f1b64b76f36dd509e8e43fada393" prot="private" virt="non-virtual"><scope>SensorClass</scope><name>newEntry</name></member>
+      <member refid="classSensorClass_1a4a491a22d7cd65bc477c9679ac33f605" prot="private" virt="non-virtual"><scope>SensorClass</scope><name>p_initial</name></member>
+      <member refid="classSensorClass_1ac9bd62ebe2c2b7a7c7b1ae121f8b2a4b" prot="public" virt="non-virtual"><scope>SensorClass</scope><name>printBuffer</name></member>
+      <member refid="classSensorClass_1a80d1ef4799b02eb87a0a52b273dc3753" prot="public" virt="non-virtual"><scope>SensorClass</scope><name>SensorClass</name></member>
+      <member refid="classSensorClass_1a978a64b43a7e945913bfd9577849f90e" prot="public" virt="non-virtual"><scope>SensorClass</scope><name>setVerbose</name></member>
+      <member refid="classSensorClass_1abc3cc1707d34e88d1e2d22ebe736875a" prot="private" virt="non-virtual"><scope>SensorClass</scope><name>tsbuf</name></member>
+      <member refid="classSensorClass_1a7fb1baf1cb828cb7b28fedab0f6a2dd8" prot="public" virt="non-virtual"><scope>SensorClass</scope><name>updateLastVal</name></member>
+      <member refid="classSensorClass_1ad40c1a6eb3de7f5658af0e534a80bebe" prot="private" virt="non-virtual"><scope>SensorClass</scope><name>verboseLevel</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>
