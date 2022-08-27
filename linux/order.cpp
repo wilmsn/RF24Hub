@@ -47,7 +47,6 @@ bool Order::delEntry(order_t* p_del) {
     bool retval = false;
     order_t *p_search, *p_tmp;
     p_search = p_initial;
-    
     p_tmp = p_initial;
     if (verboseLevel & VERBOSEORDEREXT) {
         printf("%sBestand vorher\n",ts(tsbuf)); 

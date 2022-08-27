@@ -38,31 +38,47 @@ class Database {
 
 private:
 
-    MYSQL*      db;
-    MYSQL_RES*  res;
-    MYSQL_ROW   row;
+    struct sqlStore_t {
+        uint64_t            entrytime;
+        char*               sqlstmt;
+        sqlStore_t*         p_next;
+    };
+    sqlStore_t*     p_initial;
+    
+//    MYSQL*      db;
+//    MYSQL_RES*  res;
+//    MYSQL_ROW   row;
     char*       pEnd;
     char*       tsbuf;
     char*       sql_stmt;
     uint16_t    verboseLevel;
-    char 	db_hostname[DB_HOSTNAME_SIZE+1];
-    char 	db_username[DB_USERNAME_SIZE+1];
-    char 	db_password[DB_PASSWORD_SIZE+1];
-    char 	db_schema[DB_SCHEMA_SIZE+1];
+    char*	db_hostname;
+    char*	db_username;
+    char*	db_password;
+    char*	db_schema;
     int  	db_port;
     void do_sql(char* stmt);
     void debugPrintSQL(char* sqlstmt);
-    void db_check_error(void);
-    uint32_t    mykey;
+    void db_check_error(MYSQL* mydb);
     
+
+    
+public:
 
 /**
  * connects to the database
  */
-    bool connect(void);
-    bool disconnect(void);
-    
-public:
+    MYSQL* connect(void);
+
+    bool disconnect(MYSQL* mydb);
+
+    void storeSQL(char* sqlstmt);
+   
+    char* getSQL(uint64_t* timestamp);
+   
+    void delSQL(uint64_t timestamp);
+
+    void exec_sql(char* stmt);
 
 /**
  * Setzt den Verboselevel. Mögliche Level sind in den Makros VERBOSE* in config.h definiert.
@@ -78,7 +94,7 @@ public:
  * @param db_port Der Datenbankport
  * @return "true" bei erfolgreicher Anmeldung, sonst "false"
  */
-    bool connect(string db_hostname, string db_username, string db_password, string db_schema, int db_port);
+//    bool connect(string db_hostname, string db_username, string db_password, string db_schema, int db_port);
 
 /**
  * Sets Voltage of a Node where the Low Voltage Handling starts
@@ -184,10 +200,13 @@ public:
  */
     void updateNodeMastered(NODE_DATTYPE node_id, bool isMastered);
 
+    
+    void set_var(const char* _db_hostname, const char* _db_username, const char* _db_password, const char* _db_schema, int _db_port);
+
 /**
  * The constructor
  */
-    Database(void);
+   Database();
 };
 
 #endif // _DATABASE_H_

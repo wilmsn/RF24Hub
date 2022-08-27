@@ -101,6 +101,15 @@ static void* receive_tn_in (void *arg) {
     pthread_exit((void *)pthread_self());
 }
 	
+/* Die Thread-Funktion fuer die Abarbeitung der angesammelten SQL Statements*/
+static void* exec_sql (void *arg) {
+    struct db_data_t *db_data = (struct db_data_t *)arg;
+    db_data->p_database->exec_sql(db_data->sql);
+    free(db_data->sql);
+    free(db_data);
+    pthread_exit((void *)pthread_self());
+}
+
 /* Die Thread-Funktion fuer den Speicherung der Sensor Daten*/
 
 bool process_tn_in( char* inbuffer, int tn_socket) {
@@ -610,10 +619,8 @@ int main(int argc, char* argv[]) {
     
     cfg.setPidFile(cfg.hubPidFileName);
 
-    // connect database
-    if ( ! database.connect(cfg.dbHostName, cfg.dbUserName, cfg.dbPassWord, cfg.dbSchema, std::stoi(cfg.dbPortNo)) ) {
-	exit(1);
-    }
+    // init database Class
+    database.set_var(cfg.dbHostName.c_str(), cfg.dbUserName.c_str(), cfg.dbPassWord.c_str(), cfg.dbSchema.c_str(), std::stoi(cfg.dbPortNo));
 
     if ( cfg.fhemPortSet && cfg.fhemHostSet ) {
         printf("%stelnet session to FHEM started: Host: %s Port: %s\n",ts(tsbuf), cfg.fhemHostName.c_str(), cfg.fhemPortNo.c_str());
@@ -653,6 +660,26 @@ int main(int argc, char* argv[]) {
         if ( time(NULL) - lastDBsync > DBSYNCINTERVAL ) {
            database.sync_sensordata_d();   
            lastDBsync = database.getBeginOfDay();
+        }
+
+        /* Processing of stored SQL statements */
+        pthread_t b_thread;
+        int ret;
+        uint64_t myts;
+        char* mysql = database.getSQL(&myts);
+        if ( myts > 0 ) {
+            char* sqlstmt = (char*)malloc(strlen(mysql)+1);
+            sprintf(sqlstmt,"%s",mysql);
+ //           printf("%llu %s\n",myts,sqlstmt);
+            database.delSQL(myts);
+            struct db_data_t *db_data;
+            db_data = (struct db_data_t *)malloc(sizeof(struct db_data_t));
+            db_data->sql = sqlstmt;
+            db_data->p_database = &database;
+            ret = pthread_create(&b_thread, NULL, &exec_sql, db_data);
+            if (ret == 0) {
+                pthread_detach(b_thread);
+            }
         }
         /* Handling of incoming messages */
             if ( cfg.hubTcpPortSet ) {

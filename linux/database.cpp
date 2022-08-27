@@ -1,14 +1,87 @@
 #include "database.h"
 
-Database::Database(void) {
+Database::Database() {
+    
+}
+
+void Database::set_var(const char* _db_hostname, const char* _db_username, const char* _db_password, const char* _db_schema, int _db_port) {
     tsbuf = (char*) malloc (TSBUFFERSIZE);
     sql_stmt = (char*) malloc(SQLSTRINGSIZE);
+    db_hostname = (char*) malloc(strlen(_db_hostname)+1);
+    sprintf(db_hostname,"%s",_db_hostname);
+    db_username = (char*) malloc(strlen(_db_username)+1);
+    sprintf(db_username,"%s",_db_username);
+    db_password = (char*) malloc(strlen(_db_password)+1);
+    sprintf(db_password,"%s",_db_password);
+    db_schema = (char*) malloc(strlen(_db_schema)+1);
+    sprintf(db_schema,"%s",_db_schema);
+    db_port = _db_port;
     verboseLevel = 0;
 }
 
-void Database::db_check_error(void) {
-    if (mysql_errno(db) != 0) {
-	printf("%sDB-Fehler: %s\n", ts(tsbuf), mysql_error(db));
+void Database::storeSQL(char* sqlstmt) {
+    sqlStore_t *p_search;
+    sqlStore_t *p_new = new sqlStore_t;
+    char* mysql = (char*)malloc(strlen(sqlstmt)+1);
+    sprintf(mysql,"%s",sqlstmt);
+    p_new->sqlstmt = mysql;
+    p_new->entrytime = mymillis();
+    p_new->p_next = NULL;
+    if (p_initial) {
+        p_search = p_initial;
+        while (p_search->p_next) {
+            p_search = p_search->p_next;
+        }
+        p_search->p_next = p_new;
+    } else {
+        p_initial = p_new;
+    }
+}
+
+char* Database::getSQL(uint64_t* timestamp) {
+    char* retval = NULL;
+    if (p_initial) {
+	retval = p_initial->sqlstmt;
+	(*timestamp) = p_initial->entrytime;
+    } else {
+	(*timestamp) = 0;
+    }
+    return retval;
+}
+
+void Database::delSQL(uint64_t timestamp) {
+    sqlStore_t *p_search, *p_tmp;
+    p_search = p_initial;    
+    p_tmp = p_initial;
+    while (p_search) {
+        if (p_search->entrytime == timestamp ) {
+            if (p_search == p_initial) {
+                if (p_initial->p_next) { 
+                    p_tmp=p_initial->p_next;
+		    free(p_initial->sqlstmt);
+		    delete p_initial;
+                    p_initial=p_tmp;
+                } else {
+		    free(p_initial->sqlstmt);
+                    delete p_initial;
+                    p_initial = NULL;
+                }
+            } else            {
+                p_tmp->p_next=p_search->p_next;
+		free(p_search->sqlstmt);
+                delete p_search;
+            }
+            p_search = NULL;
+        } else {
+            p_tmp = p_search;
+            p_search=p_search->p_next;
+        }
+    }
+}
+
+void Database::db_check_error(MYSQL* mydb) {
+    if (mysql_errno(mydb) != 0) {
+	printf("%sDB-Fehler: %s\n", ts(tsbuf), mysql_error(mydb));
     }
 }
 
@@ -50,17 +123,18 @@ void Database::initSystem(void) {
 }
 
 void Database::initGateway(GatewayClass* gatewayClass) {
-    if ( connect() ) {
+    MYSQL* mydb;
+    if ( mydb = connect() ) {
 	MYSQL_ROW row;
 	char gw_name[40];
 	uint16_t gw_no;
 	bool isactive;
 	sprintf (sql_stmt, "select gw_name, gw_no, isactive from gateway");
 	debugPrintSQL(sql_stmt);
-	mysql_query(db, sql_stmt);
-	db_check_error();
-	MYSQL_RES *result = mysql_store_result(db);
-	db_check_error();
+	mysql_query(mydb, sql_stmt);
+	db_check_error(mydb);
+	MYSQL_RES *result = mysql_store_result(mydb);
+	db_check_error(mydb);
 	while ((row = mysql_fetch_row(result))) {
 	    if ( row[0] != NULL ) sprintf(gw_name,"%s",trim(row[0])); else sprintf(gw_name," ");
 	    if ( row[1] != NULL ) gw_no = strtoul(row[1], &pEnd, 10); else gw_no = 0;
@@ -68,25 +142,26 @@ void Database::initGateway(GatewayClass* gatewayClass) {
 	    gatewayClass->addGateway(gw_name, gw_no, isactive); 
 	}
 	mysql_free_result(result);    
-	disconnect();
+	disconnect(mydb);
     }
 }    
     
 unsigned long Database::getBeginOfDay(){
     unsigned long retval = 0;
-    if ( connect() ) {
+    MYSQL* mydb;
+    if ( mydb = connect() ) {
 	MYSQL_ROW row;
 	sprintf (sql_stmt, "%s", "select UNIX_TIMESTAMP(FROM_UNIXTIME(UNIX_TIMESTAMP(),'%Y%m%d'))");
 	debugPrintSQL(sql_stmt);
-	mysql_query(db, sql_stmt);
-	db_check_error();
-	MYSQL_RES *result = mysql_store_result(db);
-	db_check_error();
+	mysql_query(mydb, sql_stmt);
+	db_check_error(mydb);
+	MYSQL_RES *result = mysql_store_result(mydb);
+	db_check_error(mydb);
 	while ((row = mysql_fetch_row(result))) {
 	    if ( row[0] != NULL ) retval = strtoul(row[0], &pEnd, 10); else retval = 0;
 	}
 	mysql_free_result(result);
-	disconnect();
+	disconnect(mydb);
     }
     return retval;    
 }
@@ -112,7 +187,8 @@ void Database::disableGateway(uint16_t gw_no){
 }
 
 void Database::initNode(NodeClass* nodeClass) {
-    if ( connect() ) {
+    MYSQL* mydb;
+    if ( mydb = connect() ) {
 	NODE_DATTYPE node_id = 0;
 	char node_name[NODENAMESIZE];
 	node_name[0] = 0;
@@ -125,10 +201,10 @@ void Database::initNode(NodeClass* nodeClass) {
 	MYSQL_ROW row;
 	sprintf (sql_stmt, "select node_id, node_name, mastered, pa_level, rec_level, volt_lv, lv_flag from node");
 	debugPrintSQL(sql_stmt);
-	mysql_query(db, sql_stmt);
-	db_check_error();
-	MYSQL_RES *result = mysql_store_result(db);
-	db_check_error();
+	mysql_query(mydb, sql_stmt);
+	db_check_error(mydb);
+	MYSQL_RES *result = mysql_store_result(mydb);
+	db_check_error(mydb);
 	while ((row = mysql_fetch_row(result))) {
 	    if ( row[0] != NULL ) node_id = strtoul(row[0], &pEnd,10);
 	    if ( row[1] != NULL ) sprintf(node_name, "%s", row[1]);
@@ -140,12 +216,13 @@ void Database::initNode(NodeClass* nodeClass) {
 	    nodeClass->addNode(node_id, node_name, isMastered, pa_level, rec_level, lv_volt, lv_flag); 
 	}
 	mysql_free_result(result);    
-	disconnect();
+	disconnect(mydb);
     }
 }
 
 void Database::initSensor(SensorClass* sensorClass) {
-    if ( connect() ) {
+    MYSQL* mydb;
+    if ( mydb = connect() ) {
 	char* fhem_dev = alloc_str(verboseLevel,"Database::initSensor fhem_dev",FHEMDEVLENGTH, ts(tsbuf));
 	char* sensor_name = alloc_str(verboseLevel,"Database::initSensor sensor_name",FHEMDEVLENGTH, ts(tsbuf));
 	uint32_t     	mysensor;
@@ -155,10 +232,10 @@ void Database::initSensor(SensorClass* sensorClass) {
 	MYSQL_ROW row;
 	sprintf (sql_stmt, "select sensor_id, node_id, channel, datatype, fhem_dev, sensor_name from sensor");
 	debugPrintSQL(sql_stmt);
-	mysql_query(db, sql_stmt);
-	db_check_error();
-	MYSQL_RES *result = mysql_store_result(db);
-	db_check_error();
+	mysql_query(mydb, sql_stmt);
+	db_check_error(mydb);
+	MYSQL_RES *result = mysql_store_result(mydb);
+	db_check_error(mydb);
 	while ((row = mysql_fetch_row(result))) {
 	    if ( row[0] != NULL ) mysensor = strtoul(row[0], &pEnd,10); else mysensor = 0;
 	    if ( row[1] != NULL ) node_id = strtoul(row[1], &pEnd,10); else node_id = 0; 
@@ -172,26 +249,33 @@ void Database::initSensor(SensorClass* sensorClass) {
 	mysql_free_result(result);
 	free_str(verboseLevel,"Database::initSensor fhem_dev",fhem_dev, ts(tsbuf)); 
 	free_str(verboseLevel,"Database::initSensor sensor_name",sensor_name, ts(tsbuf)); 
-	disconnect();
+	disconnect(mydb);
+    }
+}
+
+void Database::exec_sql(char *sqlstmt) {
+    MYSQL* mydb;
+    if ( mydb = connect() ) {
+	mysql_query(mydb, sqlstmt);
+	mysql_commit(mydb);
+	disconnect(mydb);
     }
 }
 
 void Database::do_sql(char *sqlstmt) {
-    if ( connect() ) {
+    MYSQL* mydb;
+    if ( mydb = connect() ) {
 	debugPrintSQL(sqlstmt);
-	if (mysql_query(db, sqlstmt) != 0) {
-	    printf("%s\n", sqlstmt);
-	}
-	db_check_error();
-	mysql_commit(db);
-	disconnect();
-	debugPrintSQL("fertig");
+	mysql_query(mydb, sqlstmt);
+	db_check_error(mydb);
+	mysql_commit(mydb);
+	disconnect(mydb);
     }
 }
 
 void Database::storeSensorValue(uint32_t sensor_id, char* value) {
     sprintf(sql_stmt,"insert into sensordata (sensor_ID, utime, value) values (%u, UNIX_TIMESTAMP(), %s)", sensor_id, value);
-    do_sql(sql_stmt);
+    storeSQL(sql_stmt);
 }
 
 void Database::storeNodeConfig(NODE_DATTYPE node_id, uint8_t channel, char* value) {
@@ -204,7 +288,8 @@ void Database::storeNodeConfig(NODE_DATTYPE node_id, uint8_t channel, char* valu
         do_sql(sql_stmt);
     }
     sprintf(sql_stmt,"insert into node_configdata (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %s ) ON DUPLICATE KEY UPDATE utime = UNIX_TIMESTAMP(), value = %s ", node_id, channel, value, value);
-    do_sql(sql_stmt);
+    storeSQL(sql_stmt);
+//    do_sql(sql_stmt);
 }
 
 void Database::updateNodeMastered(NODE_DATTYPE node_id, bool isMastered) {
@@ -216,7 +301,8 @@ void Database::updateNodeMastered(NODE_DATTYPE node_id, bool isMastered) {
     do_sql(sql_stmt);
 }
 
-bool Database::connect(string _db_hostname, string _db_username, string _db_password, string _db_schema, int _db_port) {
+/*
+MYSQL* Database::connect(string _db_hostname, string _db_username, string _db_password, string _db_schema, int _db_port) {
     snprintf(db_hostname, DB_HOSTNAME_SIZE, "%s", _db_hostname.c_str());
     snprintf(db_username, DB_USERNAME_SIZE, "%s", _db_username.c_str());
     snprintf(db_password, DB_PASSWORD_SIZE, "%s", _db_password.c_str());
@@ -232,34 +318,31 @@ bool Database::connect(string _db_hostname, string _db_username, string _db_pass
     }
     return retval;
 }
+*/
 
-bool Database::connect() {
-    bool retval = true;
-    db = mysql_init(NULL);
-    if (db == NULL) {
+MYSQL* Database::connect() {
+    MYSQL* retval = NULL;
+    retval = mysql_init(NULL);
+    if (retval == NULL) {
 	sleep(1);
-	db = mysql_init(NULL);
-	if (db == NULL) {
+	retval = mysql_init(NULL);
+	if (retval == NULL) {
 	    printf("%sERROR getting DB-Handle \n", ts(tsbuf));
-	    retval = false;
 	}
-    }
-    if ( retval ) {
-        if (mysql_real_connect(db, db_hostname, db_username, db_password, db_schema, db_port, NULL, 0) == NULL) {
+    } else {
+        if (mysql_real_connect(retval, db_hostname, db_username, db_password, db_schema, db_port, NULL, 0) == NULL) {
 	    sleep(1);
-	    if (mysql_real_connect(db, db_hostname, db_username, db_password, db_schema, db_port, NULL, 0) == NULL) {
-		printf("%sERROR connecting database: %s\n", ts(tsbuf), mysql_error(db));
-                mysql_close(db);
-                retval = false;
+	    if (mysql_real_connect(retval, db_hostname, db_username, db_password, db_schema, db_port, NULL, 0) == NULL) {
+		printf("%sERROR connecting database: %s\n", ts(tsbuf), mysql_error(retval));
+                mysql_close(retval);
             }
-        }
+	}
     }
     return retval;
 }
 
-bool Database::disconnect() {
-    mysql_close(db);
-    db = NULL;
+bool Database::disconnect(MYSQL* mydb) {
+    mysql_close(mydb);
     return true;
 }
 

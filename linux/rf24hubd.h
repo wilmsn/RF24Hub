@@ -35,6 +35,8 @@
 #include <fcntl.h>
 #include <pthread.h>
 #include <errno.h>
+#include <thread>
+//#include <mariadb/mysql.h>
 #include "nodeclass.h"
 #include "sensorclass.h"
 #include "order.h"
@@ -74,11 +76,13 @@ char* buf;
 char* tsbuf;
 
 
-struct thread_db_data {
-   uint32_t     sensor_id;
-   char         buf[20];
+struct db_data_t {
+   char*       sql;
+   Database*   p_database;
 };
 
+/// Eine Instanz der Klasse Cfg
+Cfg             cfg(SWVERSION_STR,__DATE__);
 /// Eine Instanz der Klasse Order
 Order           order;
 /// Eine Instanz der Klasse OrderBuffer
@@ -91,8 +95,6 @@ NodeClass       nodeClass;
 Database        database;
 /// Eine Instanz der Klasse Gateway
 GatewayClass    gatewayClass;
-/// Eine Instanz der Klasse Cfg
-Cfg             cfg(SWVERSION_STR,__DATE__);
 
 /**
  * @brief send a telnet comand to the fhem-host
