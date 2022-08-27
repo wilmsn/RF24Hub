@@ -42,6 +42,7 @@ void send_fhem_tn(char* tn_cmd) {
                 }
                 if (write(sockfd,tn_quit,strlen(tn_quit)) < 1) {
                 // TODO: Need a message here?
+                    printf("Error in write socket länge < 1\n");
                 }
             }
             close(sockfd);
@@ -66,6 +67,7 @@ static void* receive_tn_in (void *arg) {
     sprintf(client_message,"rf24hub> ");
     if (write(f->tnsocket , client_message , strlen(client_message)) < 1 ) {
        // TODO: Need a message here?
+        printf("Error in write socket länge < 1\n");
     }
     MsgLen = recv(f->tnsocket, buffer, TELNETBUFFERSIZE, 0);
     if (MsgLen>0) {
@@ -103,8 +105,8 @@ static void* receive_tn_in (void *arg) {
 
 bool process_tn_in( char* inbuffer, int tn_socket) {
 /* Messages can look like this:
-       <word1		word2		word3		word4 				function>
-		set			sensor		<sensor#> 	<value>				Sets Sensor to Value (Store in Orderbuffer only)
+    word1		word2		word3		word4 				function
+    set			sensor		<sensor#> 	<value>				Sets Sensor to Value (Store in Orderbuffer only)
       for all details have a look at "rf24hub_text.h" 
 */
 
@@ -324,6 +326,7 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
         sprintf(message,"Active verboseLevel: %s\n", printVerbose(verboseLevel, buf));
         if ( write(tn_socket , message , strlen(message)) < 1 ) {
             // TODO: Need a message here?
+            printf("Error in write socket länge < 1\n");
         }
     }
     // html order
@@ -373,11 +376,13 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
             sprintf(message,"%s\n",tn_usage_txt[i]);
             if (write(tn_socket , message , strlen(message)) < 1) {
                 //TODO 
+                printf("Error in write socket länge < 1\n");
             }
         }
         sprintf(message,"%s version %s\n", PRGNAME, SWVERSION_STR);
         if (write(tn_socket , message , strlen(message)) < 1) {
             // TODO
+            printf("Error in write socket länge < 1\n");
         }
     }		
     free_str(verboseLevel,"process_tn_in wort1",wort1,ts(tsbuf));
@@ -508,7 +513,7 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
         break; 
     }
     orderbuffer.delByNodeChannel(node_id, channel);
-}	
+}
 
 /*******************************************************************************************
 *

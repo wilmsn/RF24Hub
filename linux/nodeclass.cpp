@@ -229,6 +229,7 @@ bool NodeClass::setLVFlag(NODE_DATTYPE node_id, bool lv_flag) {
                 retval=true;
                 if (_verboseLevel & VERBOSESENSOR) printf("%sNodeClass.setLVFlag: N:%u LV Flag %s\n", ts(tsbuf), node_id, lv_flag? "set":"Not set");    
             }
+            p_search = NULL;
         } else {
             p_search=p_search->p_next;
         }
@@ -243,6 +244,7 @@ void NodeClass::setLVVolt(NODE_DATTYPE node_id, float lv_volt) {
         if (p_search->node_id == node_id) {
             p_search->lv_volt = lv_volt;
             if (_verboseLevel & VERBOSESENSOR) printf("%sNodeClass.setLVFlag: N:%u LV: %fV\n", ts(tsbuf), node_id, lv_volt);    
+            p_search = NULL;
         } else {
             p_search=p_search->p_next;
         }

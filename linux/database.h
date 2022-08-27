@@ -100,7 +100,7 @@ public:
  * @param sensor_id Die Sensor ID
  * @param value Der Sensorwert als Transportvalue
  */
-    void storeSensorValue(uint32_t sensor_id, char* value);
+   void storeSensorValue(uint32_t sensor_id, char* value);
     
 /**
  * Stores the config data of a node (Registervalue)

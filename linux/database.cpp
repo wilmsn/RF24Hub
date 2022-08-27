@@ -18,7 +18,7 @@ void Database::setLVVolt(NODE_DATTYPE node_id, float lv_volt) {
 }
 
 void Database::setLVFlag(NODE_DATTYPE node_id, bool lv_flag) {
-    sprintf (sql_stmt, "update node set lv_flag = %s where node_id = %u", lv_flag? "y":"n", node_id);
+    sprintf (sql_stmt, "update node set lv_flag = '%s' where node_id = %u", lv_flag? "y":"n", node_id);
     do_sql(sql_stmt);
 }
 
@@ -179,12 +179,13 @@ void Database::initSensor(SensorClass* sensorClass) {
 void Database::do_sql(char *sqlstmt) {
     if ( connect() ) {
 	debugPrintSQL(sqlstmt);
-	    if (mysql_query(db, sqlstmt) != 0) {
+	if (mysql_query(db, sqlstmt) != 0) {
 	    printf("%s\n", sqlstmt);
 	}
 	db_check_error();
 	mysql_commit(db);
 	disconnect();
+	debugPrintSQL("fertig");
     }
 }
 
@@ -202,9 +203,7 @@ void Database::storeNodeConfig(NODE_DATTYPE node_id, uint8_t channel, char* valu
         sprintf(sql_stmt,"update node set rec_level = %s where node_id = %u ", value, node_id);
         do_sql(sql_stmt);
     }
-    sprintf(sql_stmt,"delete from node_configdata where node_id = %u and channel = %u ", node_id, channel);
-    do_sql(sql_stmt);
-    sprintf(sql_stmt,"insert into node_configdata (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %s ) ", node_id, channel, value);
+    sprintf(sql_stmt,"insert into node_configdata (node_id, channel, utime, value) values (%u, %u, UNIX_TIMESTAMP(), %s ) ON DUPLICATE KEY UPDATE utime = UNIX_TIMESTAMP(), value = %s ", node_id, channel, value, value);
     do_sql(sql_stmt);
 }
 
