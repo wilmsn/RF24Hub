@@ -48,7 +48,8 @@
 #define SENSOR_18B20         8
 #define DISPLAY_5110
 #define EEPROM_VERSION       3
-#define EMPTYLOOPS           9
+#define SLEEPTIME            60
+#define EMPTYLOOPS           4
 #define VOLT_OFF             0.55
 #define LOW_VOLT_LEVEL       3.6
 #endif

@@ -275,6 +275,7 @@ void Database::do_sql(char *sqlstmt) {
 
 void Database::storeSensorValue(uint32_t sensor_id, char* value) {
     sprintf(sql_stmt,"insert into sensordata (sensor_ID, utime, value) values (%u, UNIX_TIMESTAMP(), %s)", sensor_id, value);
+    debugPrintSQL(sql_stmt);
     storeSQL(sql_stmt);
 }
 

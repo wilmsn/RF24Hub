@@ -18,9 +18,9 @@
 //#define AUSSENTHERMOMETER2
 //#define BASTELZIMMERTHERMOMETER_SW
 //#define ANKLEIDEZIMMERTHERMOMETER
-//#define NODE_101
+#define NODE_101
 //----Testnodes-----
-#define TESTNODE_240
+//#define TESTNODE_240
 //#define TESTNODE_UNO
 //****************************************************
 // Default settings and settings for the individual nodes are in "Node_settings.h"
@@ -460,16 +460,6 @@ uint32_t action_loop(uint32_t data) {
       }
       break;  
 #endif
-      case REG_BATT: 
-      { 
-      // battery voltage
-#if defined(DEBUG_SERIAL_PROC)
-    Serial.print("Processing: Volt: ");
-    Serial.println(cur_voltage);
-#endif  
-        data = calcTransportValue(REG_BATT, cur_voltage);
-      }
-      break;   
       case REG_TRANSREG:
       {  
         exec_RegTrans = true;
@@ -1494,7 +1484,7 @@ void loop(void) {
       delay(10);
     }
     uint8_t pos=1;
-    payload_data(pos, REG_BATT, cur_voltage);
+    payload_data(pos, SENSOR_BATT, cur_voltage);
     pos++;
 #if defined(SENSOR_DUMMY)
     payload_data(pos, TEMPERATURE_CHANNEL, temp);
@@ -1546,7 +1536,7 @@ void loop(void) {
     pos++;
 #endif    
     uint8_t msg_flags = PAYLOAD_FLAG_LASTMESSAGE;
-    if ( low_voltage_flag ) msg_flags |= PAYLOAD_FLAG_NEEDHELP; 
+    if ( low_voltage_flag ) msg_flags |= PAYLOAD_FLAG_LOWVOLTAGE; 
     do_transmit(eeprom.max_sendcount, PAYLOAD_TYPE_HB, msg_flags, 0, 0);
     exec_jobs();
     radio.stopListening();

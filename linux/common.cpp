@@ -87,6 +87,8 @@ uint16_t decodeVerbose(uint16_t verboseLevel, char* verboseSet) {
          cmp_addVBrf24[]="+rf24",
          cmp_rmVBrf24[]="-rf24",
          cmp_addVBsens[]="+sensor",
+         cmp_rmVBnode[]="-node",
+         cmp_addVBnode[]="+node",
          cmp_rmVBsens[]="-sensor",
          cmp_addVBob[]="+obuffer",
          cmp_rmVBob[]="-obuffer",
@@ -131,6 +133,12 @@ uint16_t decodeVerbose(uint16_t verboseLevel, char* verboseSet) {
     }
     if (strcmp(verboseSet,cmp_rmVBsens) == 0) {
         retval = verboseLevel ^ VERBOSESENSOR;
+    }    
+    if (strcmp(verboseSet,cmp_addVBnode) == 0) {
+        retval = verboseLevel | VERBOSENODE;
+    }
+    if (strcmp(verboseSet,cmp_rmVBnode) == 0) {
+        retval = verboseLevel ^ VERBOSENODE;
     }    
     if (strcmp(verboseSet,cmp_addVBob) == 0) {
         retval = verboseLevel | VERBOSEOBUFFER;

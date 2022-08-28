@@ -471,10 +471,19 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
         case SENSOR_CHANNEL_FIRST ... SENSOR_CHANNEL_LAST: {
 	    // Sensor or Actor that gets or delivers a number
             uint32_t sensor_id = sensorClass.getSensorByNodeChannel(node_id, channel);
-            if ( sensor_id > 0 ) { 
+            if ( sensor_id > 0 ) {
                 buf = unpackTransportValue(mydata, buf);
-                if ( verboseLevel & VERBOSECONFIG) {    
-                    printf("%sValue of Node: %u Data: %u ==> Channel: %u is %s\n", ts(tsbuf), node_id, mydata, channel, buf);
+                float val;
+                getValue(mydata, &val);
+                if ( channel == SENSOR_BATT ) {
+                    nodeClass.setVoltage(node_id, val);
+                    if ( verboseLevel & VERBOSECONFIG) {
+                        printf("%sVoltage of Node: %u is %.2fV\n", ts(tsbuf), node_id, val);
+                    }
+                } else {
+                    if ( verboseLevel & VERBOSECONFIG) {
+                        printf("%sValue of Node: %u Data: %u ==> Channel: %u is %.2f\n", ts(tsbuf), node_id, mydata, channel, val);
+                    }
                 }
                 sensorClass.updateLastVal(sensor_id, mydata);
                 database.storeSensorValue(sensor_id, buf);
@@ -486,23 +495,6 @@ void process_sensor(NODE_DATTYPE node_id, uint32_t mydata) {
         case REG_NOSTORE_FIRST ... REG_NOSTORE_LAST:
 	    // do nothing
         break;
-        case REG_BATT:
-        {
-	    // battery voltage
-            uint32_t sensor_id = sensorClass.getSensorByNodeChannel(node_id, channel);
-            buf = unpackTransportValue(mydata, buf);
-            if ( sensor_id > 0 ) {
-                if ( verboseLevel & VERBOSECONFIG) {
-                    printf("%sVoltage of Node: %u is %sV\n", ts(tsbuf), node_id, buf);
-                }
-                float val;
-                getValue(mydata, &val);
-                nodeClass.setVoltage(node_id, val);
-                database.storeSensorValue(sensor_id, buf);
-                send_fhem_cmd(node_id, channel, buf);
-            }
-        }
-// HIER KEIN break !!!!
         case REG_NORMAL_FIRST ... REG_NORMAL_LAST: 
         case REG_READONLY_FIRST ... REG_READONLY_LAST: 
         {
@@ -757,25 +749,24 @@ int main(int argc, char* argv[]) {
                     }
                     break;
                     case PAYLOAD_TYPE_HB: { // heartbeat message!!
-                        if ( nodeClass.isNewHB(payload.node_id, payload.heartbeatno, time(0)) ) {  // Got a new Heaqrtbeat -> process it!
-//                        database.lowVoltage(payload.node_id, payload.msg_flags & PAYLOAD_FLAG_NEEDHELP);
-                            process_payload(&payload);
-                            if ( nodeClass.isMasteredNode(payload.node_id) ) {
-                                if ( orderbuffer.nodeHasEntry(payload.node_id) ) {  // WE have orders for this node
+                        if ( nodeClass.isMasteredNode(payload.node_id) ) {
+                            if ( nodeClass.isNewHB(payload.node_id, payload.heartbeatno, time(0)) ) {  
+                            // Got a new Heaqrtbeat for a mastered Node-> process it!
+                                process_payload(&payload);
+                                if ( orderbuffer.nodeHasEntry(payload.node_id) ) {  
+                                    // WE have orders for this node
                                     make_order(payload.node_id, PAYLOAD_TYPE_DAT);
                                     if ( verboseLevel & VERBOSEORDER ) {
                                         printf("%sEntries for Heartbeat Node found, sending them\n",ts(tsbuf));
                                     }
                                 } else {
-                                    if ( nodeClass.isMasteredNode(payload.node_id) ) {
-                                        order.addOrder(payload.node_id, PAYLOAD_TYPE_HB_RESP, 0, mymillis());
-                                        order.modifyOrderFlags(payload.node_id, PAYLOAD_FLAG_LASTMESSAGE);
-                                    }
+                                    order.addOrder(payload.node_id, PAYLOAD_TYPE_HB_RESP, 0, mymillis());
+                                    order.modifyOrderFlags(payload.node_id, PAYLOAD_FLAG_LASTMESSAGE);
                                 }
-                            }
-                        } else {
+                            } else {
                             // reset stop counter (TTL) for message to send
-                            if ( nodeClass.isMasteredNode(payload.node_id) ) order.adjustEntryTime(payload.node_id, mymillis());
+                                order.adjustEntryTime(payload.node_id, mymillis());
+                            }
                         }
                     }
                     break;    
@@ -820,7 +811,7 @@ int main(int argc, char* argv[]) {
                     case PAYLOAD_TYPE_PING_END: {
                         if ( nodeClass.isNewHB(payload.node_id, payload.heartbeatno, time(0)) ) {  
                             // Got a new Heaqrtbeat -> process it!
-                            sprintf(buf,"%u",nodeClass.getPaLevel(payload.node_id));
+                            sprintf(buf,"%u",nodeClass.getRecLevel(payload.node_id));
                             database.storeNodeConfig(payload.node_id, REG_RECLEVEL, buf);
                         } else {
                         // nothing to do here !!!   

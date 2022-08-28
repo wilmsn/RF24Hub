@@ -168,13 +168,14 @@ void SensorClass::printBuffer(int tn_socket, bool html) {
     sprintf(client_message," ------ Sensor: ------\n"); 
     write(tn_socket , client_message , strlen(client_message));
     while (p_search) {
+        int fhemLen = strlen(p_search->fhem_dev);
 	sprintf(client_message,"Sensor: %u\tNode: %u%s\tChannel: %u,\tFHEM: %s%s\tVal:%s\t%s(%s)\n", 
             p_search->sensor_id, 
             p_search->node_id, 
             p_search->node_id<10? "  ":p_search->node_id<100? " ":"",
             p_search->channel, 
             p_search->fhem_dev, 
-            strlen(p_search->fhem_dev)<10? "\t\t\t":strlen(p_search->fhem_dev)<18? "\t\t":strlen(p_search->fhem_dev)<26? "\t":"",
+            fhemLen<2? "\t\t\t\t":fhemLen<10? "\t\t\t":fhemLen<18? "\t\t":fhemLen<26? "\t":"",
             unpackTransportValue(p_search->last_data, buf), 
             strlen(unpackTransportValue(p_search->last_data, buf))<5? "\t":"", 
             utime2str(p_search->last_utime, buf1, 1) 

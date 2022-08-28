@@ -1,2 +1,2 @@
-#define SWVERSION   2900
-#define SWVERSION_STR   "2.900dev"
+#define SWVERSION   2999
+#define SWVERSION_STR   "2.999dev"

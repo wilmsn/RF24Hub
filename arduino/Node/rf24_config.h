@@ -35,30 +35,29 @@
  * Achtung: Bereiche müssen streng getrennt sein und dürfen sich nicht überschneiden 
  * Es werden folgende Bereiche unterschieden:<br>
  * SENSOR_CHANNEL: In diesem Bereich sind die normalen Sensoren und Aktoren angesiedelt.<br>
+ * SENSOR_BATT: Ein Sensor mit Sonderbehandlung für die Batterie im Bereich der normalen Sensoren<br>
  * REG_NOSTORE: Hier sind die Register angesiedelt deren Inhalte (im Node) einmal verarbeitet und dann vergessen werden.<br>
- * REG_BATT: Ein Register mit Sonderbehandlung für die Batterie<br>
  * REG_NORMAL: Normale Register, die geschrieben, gelesen und wieder überschrieben werden können.<br>
  * REG_READONLY: Register, die nur gelesen werden können.<br>
  * 
  * @{
  */
 /// Erster normaler Sensorchannel
-#define SENSOR_CHANNEL_FIRST    1
+#define SENSOR_CHANNEL_FIRST        1
 /// Letzter normaler Sensorchannel
-#define SENSOR_CHANNEL_LAST     78
-// 79 ist die Batterie !!!!
+#define SENSOR_CHANNEL_LAST         79
 /// Erstes Register, das vom Hub nicht gespeichert wird
-#define REG_NOSTORE_FIRST       80
+#define REG_NOSTORE_FIRST           80
 /// Letztes Register, das vom Hub nicht gespeichert wird
-#define REG_NOSTORE_LAST        89
+#define REG_NOSTORE_LAST            89
 /// Erstes Register gilt die normale Behandlung
-#define REG_NORMAL_FIRST        90
+#define REG_NORMAL_FIRST            90
 /// Letztes Register gilt die normale Behandlung
-#define REG_NORMAL_LAST         120
+#define REG_NORMAL_LAST             120
 /// Erstes Read only Register
-#define REG_READONLY_FIRST      121
+#define REG_READONLY_FIRST          121
 /// Letztes Read only Register
-#define REG_READONLY_LAST       127
+#define REG_READONLY_LAST           127
 /// @}
 
 /**
@@ -68,8 +67,8 @@
  * Nicht jedes Register ist in jedem Node verfügbar. Dies ist abhängig von der verbauten Hardware und der eingespielten Software.
  * @{
  */
-/// Register für den Spannungswert der Batterie
-#define REG_BATT                    79
+/// Sensor für den Spannungswert der Batterie auf Channel 79
+#define SENSOR_BATT                 79
 /// Einmalige Korrektur der Schlafzeit in Sekunden
 /// Format: int16_t; Wertebereich: -1000 ... 1000
 #define	REG_SLEEPTIME_KOR           80
@@ -154,11 +153,11 @@
  */
 
 /// Leeres Messageflag
-#define PAYLOAD_FLAG_EMPTY       0b00000000
+#define PAYLOAD_FLAG_EMPTY          0b00000000
 /// Flag zeigt an das diese Nachricht die letzte (Teil-)Nachricht war
-#define PAYLOAD_FLAG_LASTMESSAGE 0b00000001
+#define PAYLOAD_FLAG_LASTMESSAGE    0b00000001
 /// Flag zeigt an das die Spannung im Node kritisch ist
-#define PAYLOAD_FLAG_LOWVOLTAGE  0b00000010
+#define PAYLOAD_FLAG_LOWVOLTAGE     0b00000010
 ///@}
 
 
@@ -174,51 +173,51 @@
  
 /// Nachricht ist ein Init
 /// Ursprung: Node; Empfänger: Hub
-#define PAYLOAD_TYPE_INIT        1
+#define PAYLOAD_TYPE_INIT           1
 
 /// Nachricht ist ein Messwert aus einem ESPNode
 /// Ursprung: ESPNode; Empfänger: Hub
 /// Diese Nachricht wird nicht vom Hub beantwortet
-#define PAYLOAD_TYPE_ESP         41
+#define PAYLOAD_TYPE_ESP            41
 
 /// Nachricht ist ein Heatbeat
 /// Ursprung: Node; Empfänger: Hub
-#define PAYLOAD_TYPE_HB          51
+#define PAYLOAD_TYPE_HB             51
 
 /// Nachricht ist eine Quittung für einen Heatbeat,
 /// Alle 6 data Felder sind leer (0)
 /// Ursprung: Hub; Empfänger: Node
-#define PAYLOAD_TYPE_HB_RESP      52
+#define PAYLOAD_TYPE_HB_RESP        52
 
 /// Daten Nachricht, erfolgt als Antwort auf einen Heartbeat wenn der Hub dem Node etwas mitteilen möchte.
 /// Ursprung: Hub; Empfänger: Node
-#define PAYLOAD_TYPE_DAT         61
+#define PAYLOAD_TYPE_DAT            61
 
 /// Antwort auf Daten Nachricht
 /// verarbeitete Daten werden unverändert zurückgesand
 /// Ursprung: Node; Empfänger: Hub
-#define PAYLOAD_TYPE_DATRESP     62
+#define PAYLOAD_TYPE_DATRESP        62
 
 // Antwort auf Datenantwort(PAYLOAD_TYPE_DATRES) / Stoppnachricht
 // Alle Datenfelder sind leer
 // Ursprung: Hub; Empfänger: Node
-#define PAYLOAD_TYPE_DATSTOP     63
+#define PAYLOAD_TYPE_DATSTOP        63
 
 /// Nachricht ist ein Ping.
 /// Sendeleistung ist Minimal (-18 dBm)
-#define PAYLOAD_TYPE_PING_POW_MIN 101
+#define PAYLOAD_TYPE_PING_POW_MIN   101
 /// Nachricht ist ein Ping.
 /// Sendeleistung ist Low (-12 dBm)
-#define PAYLOAD_TYPE_PING_POW_LOW 102
+#define PAYLOAD_TYPE_PING_POW_LOW   102
 /// Nachricht ist ein Ping.
 /// Sendeleistung ist High (-6 dBm)
-#define PAYLOAD_TYPE_PING_POW_HIGH 103
+#define PAYLOAD_TYPE_PING_POW_HIGH  103
 /// Nachricht ist ein Ping.
 /// Sendeleistung ist Max ( 0 dBm)
-#define PAYLOAD_TYPE_PING_POW_MAX 104
+#define PAYLOAD_TYPE_PING_POW_MAX   104
 /// Nachricht ist ein Ping.
 /// Ende des Tests Sendeleistung ist Max ( 0 dBm)
-#define PAYLOAD_TYPE_PING_END 105
+#define PAYLOAD_TYPE_PING_END       105
 /// @}
 
 /**
@@ -233,36 +232,36 @@ typedef struct {
     NODE_DATTYPE    node_id;         
 /// Die MSG_ID ist der eindeutige Identifizierer einer Nachricht.
 /// Muss einen Nachricht wiederholt werden, wird sie hochgezählt.
-    uint8_t     msg_id;          
+    uint8_t         msg_id;          
 /// Art der Nachricht, Definition siehe Nachrichtentyp.
-    uint8_t     msg_type;        
+    uint8_t         msg_type;        
 /// Nachrichtenflag, Definition siehe Nachrichtenflags.
-    uint8_t     msg_flags;   
-/// Ordernummern werden im Hub verwaltet und dort nach jederOrder hochgezählt.
-/// Auf eine Anfrage vom Hub wird immer mit der selben ORDER_NO geantwortet
+    uint8_t         msg_flags;   
+/// Ordernummern werden im Hub verwaltet und dort nach jeder Order hochgezählt.
+/// Auf eine Anfrage vom Hub wird immer mit der selben Ordernummer geantwortet.
 /// Nachrichten, die ihren Ursprung im Node haben ( z.B. Heatbeatmessages ) 
-/// erhalten die ORDER_NO "0", Ordernummern größer 250 diesen zur Messung des PA Levels.    
+/// erhalten die Ordernummer "0", Ordernummern größer 250 diesen zur Messung des PA Levels.    
     ONR_DATTYPE     orderno;         
 /// Die heartbeatno wird bei jedem neuen Heartbeat hochgezählt
 /// Da es sich um eine 8 Bit Zahl handelt wird der gültige Bereich für normale Heartbeats von 1...200 festgelegt
 /// Der Bereich 201...255 gilt für besondere Nachrichten (z.B. Initialisierung )
-    uint8_t     heartbeatno;      
+    uint8_t         heartbeatno;      
 /// noch nicht genutzt
-    uint8_t     reserved2;      
+    uint8_t         reserved1;      
 /// noch nicht genutzt
-    uint8_t     reserved3;      
+    uint8_t         reserved2;      
 /// Datenpaket 1 (32Bit)
-    uint32_t    data1;         
+    uint32_t        data1;         
 /// Datenpaket 2 (32Bit)
-    uint32_t    data2;         
+    uint32_t        data2;         
 /// Datenpaket 3 (32Bit)
-    uint32_t    data3;         
+    uint32_t        data3;         
 /// Datenpaket 4 (32Bit)
-    uint32_t    data4;         
+    uint32_t        data4;         
 /// Datenpaket 5 (32Bit)
-    uint32_t    data5;         
+    uint32_t        data5;         
 /// Datenpaket 6 (32Bit)
-    uint32_t    data6;         
+    uint32_t        data6;         
 } payload_t;
 
 /**

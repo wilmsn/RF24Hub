@@ -58,10 +58,10 @@ void NodeClass::addNode(NODE_DATTYPE node_id, char* node_name, bool isMastered, 
     p_new->hb_no = 0;
     p_new->hb_utime = 0;
     p_new->u_batt = 0;
-    if (_verboseLevel & VERBOSESENSOR) printf("%sNodeClass.addNodeClass: N:%u Ma:%s PA:%s Rec:%s LV:%fV Flag:%s \n",ts(tsbuf),node_id,          
+    if (_verboseLevel & VERBOSENODE) printf("%sNodeClass.addNodeClass: N:%u Ma:%s PA:%s Rec:%s LV:%fV Flag:%s \n",ts(tsbuf),node_id,          
                 isMastered? "    Mastered":"Not Mastered",
                 pa_level==0? "Low ":pa_level==1? "Min ":pa_level==2? "High":pa_level==3? "Max ":"??? ",
-                rec_level==0? "Low ":pa_level==1? "Min ":pa_level==2? "High":pa_level==3? "Max ":"??? ",
+                rec_level==0? "Low ":rec_level==1? "Min ":rec_level==2? "High":rec_level==3? "Max ":"??? ",
                 lv_volt, lv_flag? "ja  ":"nein" );
     newEntry(p_new);
 }
@@ -116,13 +116,13 @@ bool NodeClass::isNewHB(NODE_DATTYPE node_id, uint8_t hb_no, uint32_t hb_utime) 
     return retval;
 }
 
-void NodeClass::setRecLevel(NODE_DATTYPE node_id, uint8_t PALevel) {
+void NodeClass::setRecLevel(NODE_DATTYPE node_id, uint8_t rec_level) {
     nodeClass_t *p_search;
     p_search=p_initial;
-    if (_verboseLevel & VERBOSESENSOR) printf("%sNodeClass.setRecLevel: N:%u PA:%s\n",ts(tsbuf),node_id, PALevel==0? "Min ":PALevel==1? "Low ":PALevel==2? "High":PALevel==3? "Max ":"??? ");
+    if (_verboseLevel & VERBOSENODE) printf("%sNodeClass.setRecLevel: N:%u PA:%s\n",ts(tsbuf),node_id, rec_level==0? "Min ":rec_level==1? "Low ":rec_level==2? "High":rec_level==3? "Max ":"??? ");
     while (p_search) {
         if (p_search->node_id == node_id) {
-            p_search->rec_level = PALevel;
+            p_search->rec_level = rec_level;
             p_search = NULL;
         } else {
             p_search=p_search->p_next;
@@ -132,7 +132,7 @@ void NodeClass::setRecLevel(NODE_DATTYPE node_id, uint8_t PALevel) {
 
 uint8_t NodeClass::getRecLevel(NODE_DATTYPE node_id) {
     nodeClass_t *p_search;
-    uint8_t retval=0;
+    uint8_t retval=9;
     p_search=p_initial;
     while (p_search) {
         if (p_search->node_id == node_id) {
@@ -145,13 +145,13 @@ uint8_t NodeClass::getRecLevel(NODE_DATTYPE node_id) {
     return retval;
 }
 
-void NodeClass::setPaLevel(NODE_DATTYPE node_id, uint8_t PALevel) {
+void NodeClass::setPaLevel(NODE_DATTYPE node_id, uint8_t pa_level) {
     nodeClass_t *p_search;
     p_search=p_initial;
-    if (_verboseLevel & VERBOSESENSOR) printf("%sNodeClass.setPaLevel: N:%u PA:%s\n",ts(tsbuf),node_id, PALevel==0? "Min ":PALevel==1? "Low ":PALevel==2? "High":PALevel==3? "Max ":"??? ");
+    if (_verboseLevel & VERBOSENODE) printf("%sNodeClass.setPaLevel: N:%u PA:%s\n",ts(tsbuf),node_id, pa_level==0? "Min ":pa_level==1? "Low ":pa_level==2? "High":pa_level==3? "Max ":"??? ");
     while (p_search) {
         if (p_search->node_id == node_id) {
-            p_search->pa_level = PALevel;
+            p_search->pa_level = pa_level;
             p_search = NULL;
         } else {
             p_search=p_search->p_next;
@@ -161,7 +161,7 @@ void NodeClass::setPaLevel(NODE_DATTYPE node_id, uint8_t PALevel) {
 
 uint8_t NodeClass::getPaLevel(NODE_DATTYPE node_id) {
     nodeClass_t *p_search;
-    uint8_t retval=0;
+    uint8_t retval = 9;
     p_search=p_initial;
     while (p_search) {
         if (p_search->node_id == node_id) {
@@ -177,7 +177,7 @@ uint8_t NodeClass::getPaLevel(NODE_DATTYPE node_id) {
 void NodeClass::setVoltage(NODE_DATTYPE node_id, float u_batt) {
     nodeClass_t *p_search;
     p_search=p_initial;
-    if (_verboseLevel & VERBOSESENSOR) printf("%sNodeClass.setVoltage: N:%u U:%f\n",ts(tsbuf),node_id, u_batt);
+    if (_verboseLevel & VERBOSENODE) printf("%sNodeClass.setVoltage: N:%u U:%f\n",ts(tsbuf),node_id, u_batt);
     while (p_search) {
         if (p_search->node_id == node_id) {
             p_search->u_batt = u_batt;
@@ -200,7 +200,7 @@ bool NodeClass::isMasteredNode(NODE_DATTYPE node_id) {
             p_search=p_search->p_next;
         }
     }
-    if (_verboseLevel & VERBOSESENSOR) printf("%sNodeClass.isMasteredNodeClass: N:%u is %s\n", ts(tsbuf), node_id, retval? "Mastered":"Not Mastered");
+    if (_verboseLevel & VERBOSENODE) printf("%sNodeClass.isMasteredNodeClass: N:%u is %s\n", ts(tsbuf), node_id, retval? "Mastered":"Not Mastered");
     return retval;
 }
 
@@ -215,7 +215,7 @@ void NodeClass::setMasteredNode(NODE_DATTYPE node_id, bool isMastered){
             p_search=p_search->p_next;
         }
     }
-    if (_verboseLevel & VERBOSESENSOR) printf("%sNodeClass.setMasteredNodeClass: N:%u is %s\n", ts(tsbuf), node_id, isMastered? "Mastered":"Not Mastered");
+    if (_verboseLevel & VERBOSENODE) printf("%sNodeClass.setMasteredNodeClass: N:%u is %s\n", ts(tsbuf), node_id, isMastered? "Mastered":"Not Mastered");
 }
 
 bool NodeClass::setLVFlag(NODE_DATTYPE node_id, bool lv_flag) {
@@ -227,7 +227,7 @@ bool NodeClass::setLVFlag(NODE_DATTYPE node_id, bool lv_flag) {
             if (p_search->lv_flag != lv_flag) {
                 p_search->lv_flag = lv_flag;
                 retval=true;
-                if (_verboseLevel & VERBOSESENSOR) printf("%sNodeClass.setLVFlag: N:%u LV Flag %s\n", ts(tsbuf), node_id, lv_flag? "set":"Not set");    
+                if (_verboseLevel & VERBOSENODE) printf("%sNodeClass.setLVFlag: N:%u LV Flag %s\n", ts(tsbuf), node_id, lv_flag? "set":"Not set");    
             }
             p_search = NULL;
         } else {
@@ -243,7 +243,7 @@ void NodeClass::setLVVolt(NODE_DATTYPE node_id, float lv_volt) {
     while (p_search) {
         if (p_search->node_id == node_id) {
             p_search->lv_volt = lv_volt;
-            if (_verboseLevel & VERBOSESENSOR) printf("%sNodeClass.setLVFlag: N:%u LV: %fV\n", ts(tsbuf), node_id, lv_volt);    
+            if (_verboseLevel & VERBOSENODE) printf("%sNodeClass.setLVFlag: N:%u LV: %fV\n", ts(tsbuf), node_id, lv_volt);    
             p_search = NULL;
         } else {
             p_search=p_search->p_next;
@@ -255,16 +255,17 @@ void NodeClass::printBuffer(int out_socket, bool htmlformat) {
     char *client_message =  (char*) malloc (TELNETBUFFERSIZE);
     nodeClass_t *p_search;
     p_search = p_initial;
-    sprintf(client_message," ------ NodeClasss: ------\n"); 
+    sprintf(client_message," ------ Node: ------\n"); 
     write(out_socket , client_message , strlen(client_message));
     while (p_search) {
-        sprintf(client_message,"NodeClass %s%s%u,\t%s%s\tU-Batt:\t%f V,\t%s\tPA: gem:%s ist:%s\n", 
+        sprintf(client_message,"Node %s%s%u,\t%s%s\tU-Batt:\t%.2fV (LV: %.2fV),\t%s\tPA: gem:%s ist:%s\n", 
                 p_search->node_id<100? " ":"", p_search->node_id<10? " ":"", 
                 p_search->node_id, 
                 p_search->node_name, 
                 strlen(p_search->node_name)<8? "\t\t\t":strlen(p_search->node_name)<16? "\t\t":strlen(p_search->node_name)<24? "\t":"",
-                p_search->u_batt, p_search->is_mastered? 
-                "    Mastered":"Not Mastered",
+                p_search->u_batt, 
+                p_search->lv_volt,
+                p_search->is_mastered? "    Mastered":"Not Mastered",
                 p_search->rec_level==0? "Min ":p_search->rec_level==1? "Low ":p_search->rec_level==2? "High":p_search->rec_level==3? "Max ":"??? ",
                 p_search->pa_level==0? "Min ":p_search->pa_level==1? "Low ":p_search->pa_level==2? "High":p_search->pa_level==3? "Max ":"??? ");
         write(out_socket , client_message , strlen(client_message));
