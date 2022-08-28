@@ -1,3 +1,6 @@
+use rf24hub;
+
+
 --DROP TABLE IF EXISTS battery;
 
 CREATE TABLE battery
@@ -11,13 +14,12 @@ CREATE TABLE battery
 )
 ENGINE=InnoDB;
 
---DROP TABLE IF EXISTS dummy;
-
-CREATE TABLE dummy
-(
-   dummy  VARCHAR(20)   NOT NULL
-)
-ENGINE=InnoDB;
+INSERT INTO battery (battery_id,battery_name,u_empty,u_nominal,battery_sel_txt) 
+VALUES
+  (1,'2 Alkaline Zellen 3V',2.0,3.0,'2 Alka 3V'),
+  (2,'2 NMH Akkus 2,4V',2.0,2.4,'2 NiMH 2,4V'),
+  (3,'1 LiIo Zelle 3,7V',3.0,3.7,'1 LiIo 3,7V'),
+  (9,'Netzspannung',3.0,3.7,'Netzspannung');
 
 --DROP TABLE IF EXISTS gateway;
 
@@ -29,20 +31,25 @@ CREATE TABLE gateway
 )
 ENGINE=InnoDB;
 
+INSERT INTO gateway (gw_name,gw_no,isActive) 
+VALUES
+  ('rpi2.fritz.box',1,'j');
+
 --DROP TABLE IF EXISTS node;
 
 CREATE TABLE node
 (
-   node_id      INT UNSIGNED   NOT NULL,
-   node_name    VARCHAR(50)    DEFAULT NULL,
-   add_info     VARCHAR(500)   DEFAULT NULL,
-   battery_id   INT UNSIGNED   DEFAULT NULL,
-   html_show    CHAR(1)        DEFAULT NULL,
-   html_order   INT UNSIGNED   DEFAULT NULL,
-   pa_utime     INT UNSIGNED   DEFAULT NULL,
-   pa_level     INT UNSIGNED   DEFAULT NULL,
-   low_voltage  CHAR(1)        DEFAULT 'n',
-   mastered     CHAR(1)        DEFAULT NULL,
+   node_id     INT UNSIGNED   NOT NULL,
+   node_name   VARCHAR(50)    DEFAULT NULL,
+   add_info    VARCHAR(500)   DEFAULT NULL,
+   battery_id  INT UNSIGNED   DEFAULT NULL,
+   html_show   CHAR(1)        DEFAULT NULL,
+   html_order  INT UNSIGNED   DEFAULT NULL,
+   pa_level    INT UNSIGNED   DEFAULT NULL,
+   rec_level   INT UNSIGNED   DEFAULT NULL,
+   mastered    CHAR(1)        DEFAULT NULL,
+   volt_lv     FLOAT          DEFAULT NULL,
+   lv_flag     CHAR(1)        DEFAULT NULL,
    CONSTRAINT `PRIMARY` PRIMARY KEY (node_id)
 )
 ENGINE=InnoDB;
@@ -53,6 +60,15 @@ ALTER TABLE node
   ON UPDATE RESTRICT
   ON DELETE RESTRICT;
 
+INSERT INTO node (node_id,node_name,add_info,battery_id,html_show,html_order,pa_level,rec_level,mastered,volt_lv,lv_flag) 
+VALUES
+  (101,'Node 101','',3,'y',1,3,1,'y',2.0,'n'),
+  (105,'Bastelzimmer_sw','',3,'y',11,2,0,'y',3.6,'n'),
+  (110,'Ankleidezimmer','',3,'y',5,3,0,'y',3.5,'n'),
+  (201,'Aussenthermometer2','',1,'y',2,NULL,NULL,'y',2.0,'n'),
+  (202,'Solarnode','Solarnode Testnetz',2,'y',3,3,0,'y',2.2,'n'),
+  (240,'Testnode_240','',3,'y',100,3,0,'y',3.3,'n');
+
 --DROP TABLE IF EXISTS node_configdata;
 
 CREATE TABLE node_configdata
@@ -60,31 +76,47 @@ CREATE TABLE node_configdata
    node_id  INT UNSIGNED   NOT NULL,
    channel  INT UNSIGNED   NOT NULL,
    value    FLOAT          DEFAULT NULL,
-   utime    INT UNSIGNED   DEFAULT NULL,
-   CONSTRAINT `PRIMARY` PRIMARY KEY (node_id, channel)
-)
-ENGINE=InnoDB;
-
---DROP TABLE IF EXISTS node_configdata_im;
-
-CREATE TABLE node_configdata_im
-(
-   node_id  INT UNSIGNED   NOT NULL,
-   channel  INT UNSIGNED   NOT NULL,
-   value    FLOAT          DEFAULT NULL,
-   utime    INT UNSIGNED   DEFAULT NULL,
-   CONSTRAINT `PRIMARY` PRIMARY KEY (node_id, channel)
+   utime    INT UNSIGNED   DEFAULT NULL
 )
 ENGINE=MEMORY;
 
---DROP TABLE IF EXISTS numbers;
+CREATE UNIQUE INDEX node_configdata_idx
+   ON node_configdata (node_id, channel);
 
-CREATE TABLE numbers
+--DROP TABLE IF EXISTS node_configitem;
+
+CREATE TABLE node_configitem
 (
-   number  INT UNSIGNED   NOT NULL,
-   CONSTRAINT `PRIMARY` PRIMARY KEY (number)
+   channel     INT UNSIGNED   NOT NULL,
+   itemname    VARCHAR(200)   NOT NULL,
+   min         FLOAT          NOT NULL,
+   max         FLOAT          NOT NULL,
+   readonly    CHAR(1)        DEFAULT 'n' NOT NULL,
+   html_show   CHAR(1)        DEFAULT 'y' NOT NULL,
+   html_order  INT UNSIGNED   DEFAULT NULL,
+   CONSTRAINT `PRIMARY` PRIMARY KEY (channel)
 )
 ENGINE=InnoDB;
+
+INSERT INTO node_configitem (channel,itemname,min,max,readonly,html_show,html_order) 
+VALUES
+  (91,'Aktive Entladung Level 1',1.0,20.0,'n','y',21),
+  (92,'Aktive Entladung Level 2',1.0,20.0,'n','y',22),
+  (93,'Aktive Entladung Level 3',1.0,20.0,'n','y',23),
+  (94,'Load Ballancer Differenzspannung',0.01,1.0,'n','y',24),
+  (110,'Spannungsfaktor',0.1,10.0,'n','y',2),
+  (111,'Spannungsoffset',-10.0,10.0,'n','y',3),
+  (112,'Kritischer Spannungswert',1.0,5.0,'n','y',4),
+  (113,'Schlafzeit in Sekunden (kritische Spannung)',10.0,32400.0,'n','y',5),
+  (114,'Schlafzeit in Sekunden',10.0,32400.0,'n','y',10),
+  (115,'Sekundenjustierung (aprox. millisec)',500.0,2000.0,'n','y',16),
+  (116,'Wartezeit zwischen 2 Sendungen in ms',50.0,1000.0,'n','y',12),
+  (117,'Maximale Anzahl für normale Sendungen',1.0,20.0,'n','y',13),
+  (118,'Maximale Anzahl für Stopp Sendungen',1.0,2.0,'n','y',14),
+  (119,'Schleifen ohne Sendung',0.0,20.0,'n','y',11),
+  (120,'Sendestärke (0=Min 1=Low 2=High 3=Max)',0.0,9.0,'n','y',91),
+  (121,'Empfangsstärke gemessen (0=Min 1=Low 2=High 3=Max)',0.0,9.0,'y','y',90),
+  (125,'Softwareversion',0.0,0.0,'y','y',91);
 
 --DROP TABLE IF EXISTS sensor;
 
@@ -104,7 +136,27 @@ CREATE TABLE sensor
 )
 ENGINE=InnoDB;
 
-ENGINE=MEMORY;
+INSERT INTO sensor (sensor_id,sensor_name,add_info,node_id,channel,datatype,store_days,fhem_dev,html_show,html_order) 
+VALUES
+  (11,'Bastelzimmer_sw_temp','',105,1,0,-1,'','y',1),
+  (12,'Feld1','',105,21,0,-1,'','y',2),
+  (19,'Bastelzimmer_sw_ubatt','',105,79,0,-1,'','y',9),
+  (21,'Solarzelle','',202,5,0,-1,'Solarzelle','y',1),
+  (22,'Solarzelle2','',202,6,0,-1,'','y',2),
+  (23,'u_batt1','',202,7,0,-1,'','y',3),
+  (24,'Batt_Statusbits','',202,8,0,-1,'','y',4),
+  (29,'Solarnode_ubatt','',202,79,0,-1,'','y',9),
+  (31,'N110_temp','',110,1,0,-1,'','y',1),
+  (32,'Feld1','',110,21,0,-1,'','y',2),
+  (39,'N110_batt','',110,79,0,-1,'','y',9),
+  (41,'N101_Temp','',101,1,0,-1,'','y',1),
+  (42,'Feld1','',101,21,0,-1,'','y',2),
+  (43,'Feld2','',101,22,0,-1,'','y',3),
+  (44,'Feld3','',101,23,0,-1,'','y',4),
+  (45,'Feld4','',101,24,0,-1,'','y',5),
+  (49,'N101_Ubatt','',101,79,0,-1,'','y',9),
+  (101,'N240_Temp','',240,1,0,-1,'','y',1),
+  (102,'U_Batt','',240,79,0,-1,'','y',9);
 
 --DROP TABLE IF EXISTS sensordata;
 
@@ -119,8 +171,8 @@ ENGINE=InnoDB;
 
 CREATE INDEX sensordata_utime_idx
    ON sensordata (utime ASC);
-
-DROP TABLE IF EXISTS sensordata_d;
+   
+--DROP TABLE IF EXISTS sensordata_d;
 
 CREATE TABLE sensordata_d
 (
@@ -132,63 +184,17 @@ CREATE TABLE sensordata_d
 ENGINE=MEMORY;
 
 CREATE INDEX sensordata_d_utime
-   ON sensordata_d (Utime ASC);
-   
---drop  TRIGGER sensor_value;
+   ON sensordata_d (Utime);
 
-CREATE TRIGGER sensor_value 
-AFTER INSERT ON sensordata
-FOR EACH ROW 
-insert into sensor_im(sensor_id, value, last_utime) values( NEW.sensor_id, NEW.value, NEW.utime)
-ON DUPLICATE KEY UPDATE value= NEW.value, last_utime = NEW.utime;
+--DROP TABLE IF EXISTS numbers;
 
-INSERT INTO dummy (dummy) 
-VALUES
-  ('x');
-
-INSERT INTO battery (battery_id,battery_name,u_empty,u_nominal,battery_sel_txt) 
-VALUES
-  (1,'2 Alkaline Zellen 3V',2.0,3.0,'2 Alka 3V'),
-  (2,'2 NMH Akkus 2,4V',2.0,2.4,'2 NiMH 2,4V'),
-  (3,'1 LiIo Zelle 3,7V',3.0,3.7,'1 LiIo 3,7V'),
-  (9,'Netzspannung',3.0,3.7,'Netzspannung');
-  
-CREATE TABLE node_configitem
+CREATE TABLE numbers
 (
-   channel     INTEGER UNSIGNED   NOT NULL,
-   itemname    VARCHAR(200)       NOT NULL,
-   min         FLOAT              NOT NULL,
-   max         FLOAT              NOT NULL,
-   readonly    CHAR(1)            NOT NULL,
-   html_show   CHAR(1)            NOT NULL,
-   html_order  INTEGER UNSIGNED,
-   CONSTRAINT `PRIMARY` PRIMARY KEY (channel)
-);
+   number  INT UNSIGNED   NOT NULL,
+   CONSTRAINT `PRIMARY` PRIMARY KEY (number)
+)
+ENGINE=InnoDB;
 
-
-INSERT INTO node_configitem (channel,itemname,min,max,readonly,html_show,html_order) 
-VALUES
-  (80,'Schlafzeitkorrektur (einmalig) in Sekunden',-1000.0,1000.0,'n','y',900),
-  (81,'Register auslesen',0.0,10.0,'n','n',0),
-  (90,'Batteriespannung',0.0,9.0,'y','y',18),
-  (91,'Entladespannung 1',1.0,20.0,'y','y',19),
-  (92,'Entladespannung 2',1.0,20.0,'y','y',20),
-  (93,'Load Ballancer diff. U',0.01,1.0,'y','y',21),
-  (94,'Display Kontrast',0.0,100.0,'y','y',22),
-  (95,'Display Helligkeit',0.0,100.0,'y','y',23),
-  (115,'Spannungsfaktor',0.1,10.0,'n','y',2),
-  (116,'Spannungsoffset',-10.0,10.0,'n','y',3),
-  (117,'Low Voltage Spannungswert',1.0,5.0,'n','y',4),
-  (118,'Schlafzeit in Sekunden (Low Voltage)',10.0,32400.0,'n','y',6),
-  (119,'Schlafzeit in Sekunden',10.0,32400.0,'n','y',10),
-  (120,'Sekundenjustierung (aprox. millisec)',500.0,2000.0,'n','y',16),
-  (121,'Wartezeit zwischen 2 Sendungen in ms',50.0,1000.0,'n','y',12),
-  (122,'Maximale Anzahl für normale Sendungen',1.0,20.0,'n','y',13),
-  (123,'Maximale Anzahl für Stopp Sendungen',1.0,2.0,'n','y',14),
-  (124,'Schleifen ohne Sendung',0.0,20.0,'n','y',11),
-  (125,'Softwareversion',0.0,0.0,'y','y',901),
-  (127,'Gemessene Sendestärke am Hub (1=Min 2=Low 3=High 4=Max',0.0,9.0,'y','y',17);
-  
 INSERT INTO numbers (number) 
 VALUES
   (1),
@@ -691,6 +697,4 @@ VALUES
   (498),
   (499),
   (500);
-
-
 
