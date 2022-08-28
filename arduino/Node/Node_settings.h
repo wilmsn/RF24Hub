@@ -197,7 +197,7 @@
 // A dummy temperature
 #ifdef SENSOR_DUMMY
 #ifndef DUMMY_TEMP
-#define DUMMY_TEMP    33.3
+#define DUMMY_TEMP              33.3
 #endif
 // Channel for temperature
 #ifndef TEMPERATURE_CHANNEL
@@ -229,11 +229,11 @@
 #endif
 // Channel for temperature
 #ifndef PRESSURE_CHANNEL
-#define PRESSURE_CHANNEL     2
+#define PRESSURE_CHANNEL        2
 #endif
 // Channel for temperature
 #ifndef HUMIDITY_CHANNEL
-#define HUMIDITY_CHANNEL     3
+#define HUMIDITY_CHANNEL        3
 #endif
 #endif
 
@@ -283,12 +283,12 @@
 // Sleeptime in Seconds !! 
 // (valid: 10 ... 32.400)
 #ifndef SLEEPTIME
-#define SLEEPTIME   120
+#define SLEEPTIME       120
 #endif
 // adjust the length of a second (aprox. in ms) - will be used as a factor to sleep4ms()
 // (valid: 500 ... 2000)
 #ifndef SLEEP4MS_FAC
-#define SLEEP4MS_FAC   1000
+#define SLEEP4MS_FAC    1000
 #endif
 // number of empty loop after sending data
 // (valid: 0...20)
@@ -298,12 +298,12 @@
 // waiting time between 2 transmissions in ms
 // (valid 100 ... 1000)
 #ifndef SENDDELAY
-#define SENDDELAY       200
+#define SENDDELAY       300
 #endif
 // Max number of attempts to send for a nomal message!!
 // (valid 1 ... 20)
 #ifndef MAX_SENDCOUNT
-#define MAX_SENDCOUNT   5
+#define MAX_SENDCOUNT   3
 #endif
 // Max number of attempts to send for a stop message!!
 // (valid 1 ... 20)

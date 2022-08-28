@@ -78,14 +78,20 @@
 /// Schreiben eines beliebigen Wertes startet die PA Messung.
 /// Format: uint16_t; Wertebereich: beliebig
 #define	REG_TRANSPA                 82
+/// Schreiben eines beliebigen Wertes in dieses Register setzt alle EEPROM Werte auf Default zurück.
+/// Format: uint16_t; Wertebereich: beliebig
+#define REG_DEFAULT                 83
 /// EntladeSpannung Level 1<br>
 /// Bei Überschreiten dieser Spannung wird der ATMega nicht mehr in den Schlafmodus versetzt.
+/// Format: float; Wertebereich: 1...20
 #define	REG_DISCHARGE_LEV1          91
 /// EntladeSpannung Level 2<br>
 /// Bei Überschreiten dieser Spannung wird die Batterie zusätzlich über einen Widerstand entladen.
+/// Format: float; Wertebereich: 1...20
 #define	REG_DISCHARGE_LEV2          92
 /// EntladeSpannung Level 2<br>
 /// Bei Überschreiten dieser Spannung wird die Batterie zusätzlich über einen Widerstand entladen.
+/// Format: float; Wertebereich: 1...20
 #define	REG_DISCHARGE_LEV3          93
 /// Maximal zulässige Differenzspannung bei 2 Batterien.
 /// Wird diese Spannung überschritten, wirden die Spannungspegel durch gezieltes laden/entladen angepasst.

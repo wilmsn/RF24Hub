@@ -18,9 +18,9 @@
 //#define AUSSENTHERMOMETER2
 //#define BASTELZIMMERTHERMOMETER_SW
 //#define ANKLEIDEZIMMERTHERMOMETER
-#define NODE_101
+//#define NODE_101
 //----Testnodes-----
-//#define TESTNODE_240
+#define TESTNODE_240
 //#define TESTNODE_UNO
 //****************************************************
 // Default settings and settings for the individual nodes are in "Node_settings.h"
@@ -156,6 +156,7 @@ eeprom_t eeprom;
 boolean             low_voltage_flag = false;
 boolean             exec_pingTest = false;
 boolean             exec_RegTrans = false;
+boolean             set_default = false;
 float               cur_voltage;
 float               vcc_mess;
 uint16_t            loopcount;
@@ -469,8 +470,12 @@ uint32_t action_loop(uint32_t data) {
       {  
         exec_pingTest = true;
       }
-      break;      
-      case REG_SLEEPTIME: 
+      break;
+      case REG_DEFAULT:
+      {
+        set_default = true;
+      }
+      case REG_SLEEPTIME:
       {
         // sleeptime in sec!
         uint16_t val;
@@ -481,7 +486,7 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
-      case REG_SLEEP4MS_FAC: 
+      case REG_SLEEP4MS_FAC:
       {
         // sleeptime adjust in sec!
         int16_t val;
@@ -492,7 +497,7 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
-      case REG_EMPTYLOOPS: 
+      case REG_EMPTYLOOPS:
       {
         // emptyloops - number of loops without sending to hub / messure and display only!
         uint16_t val;
@@ -503,7 +508,7 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
-      case REG_SLEEPTIME_KOR: 
+      case REG_SLEEPTIME_KOR:
       {
         // sleeptime_kor: onetime adjust of sleeptime, will be reset to 0 after use 
         int16_t val;
@@ -513,7 +518,7 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
-      case REG_SENDDELAY: 
+      case REG_SENDDELAY:
       {
         // senddelay in millisec.
         uint16_t val;
@@ -524,7 +529,7 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
-      case REG_MAX_SENDCOUNT: 
+      case REG_MAX_SENDCOUNT:
       {
         // max_sendcount: numbers of attempts to send for normal messages
         uint16_t val;
@@ -535,7 +540,7 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
-      case REG_MAX_STOPCOUNT: 
+      case REG_MAX_STOPCOUNT:
       {
       // max_stopcount: numbers of attempts to send for stop messages
         uint16_t val;
@@ -546,7 +551,7 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
-      case REG_VOLT_FAC: 
+      case REG_VOLT_FAC:
       {
         // Volt_fac - V = Vmess * Volt_fac
         float val;
@@ -557,7 +562,7 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
-      case REG_VOLT_OFF: 
+      case REG_VOLT_OFF:
       {
         // Volt_off - V = (Vmess * Volt_fac) + Volt_off
         float val;
@@ -568,7 +573,7 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
-      case REG_VOLT_LV: 
+      case REG_VOLT_LV:
       {
         // Low Voltage Level
         float val;
@@ -579,7 +584,7 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
-      case REG_SLEEPTIME_LV: 
+      case REG_SLEEPTIME_LV:
       {
         // Low Voltage send interval
         uint16_t val;
@@ -590,7 +595,7 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
-      case REG_PALEVEL: 
+      case REG_PALEVEL:
       {
         // PA Level
         uint16_t val;
@@ -687,44 +692,10 @@ uint32_t action_loop(uint32_t data) {
     return data; 
 }  
 
-void setup(void) {
-  delay(500);
-#if defined(STATUSLED)
-  pinMode(STATUSLED, OUTPUT);     
-  digitalWrite(STATUSLED,STATUSLED_ON); 
-#endif  
-#if defined(DISCHARGE3_PIN)
-  pinMode(DISCHARGE3_PIN, OUTPUT);     
-  digitalWrite(DISCHARGE3_PIN,LOW); 
-#endif  
-#if defined(RELAIS_1)
-  pinMode(RELAIS_1, OUTPUT);     
-  digitalWrite(RELAIS_1,RELAIS_ON); 
-#endif
-#if defined(RELAIS_2)
-  pinMode(RELAIS_2, OUTPUT);     
-  digitalWrite(RELAIS_2,RELAIS_ON); 
-#endif
-#if defined(RELAIS_3)
-  pinMode(RELAIS_3, OUTPUT);     
-  digitalWrite(RELAIS_3,RELAIS_ON); 
-#endif
-#if defined(RELAIS_4)
-  pinMode(RELAIS_4, OUTPUT);     
-  digitalWrite(RELAIS_4,RELAIS_ON); 
-#endif
-#if defined(SOLARZELLE1)
-  pinMode(SOLARZELLE1, INPUT);
-#endif
-#if defined(SOLARZELLE2)
-  pinMode(SOLARZELLE2, INPUT);
-#endif
-#if defined(LOAD_BALLANCER)
-  pinMode(LOAD_BALLANCER, INPUT);
-#endif
+void init_eeprom(bool reset_eeprom) {
 // EEPROM_VERSION == 0 disables EEPROM !!!!
   EEPROM.get(0, eeprom);
-  if (eeprom.versionnumber != EEPROM_VERSION || EEPROM_VERSION == 0) {
+  if (eeprom.versionnumber != EEPROM_VERSION || EEPROM_VERSION == 0 || reset_eeprom) {
     eeprom.versionnumber    = EEPROM_VERSION;
 #if defined(DISPLAY_ALL)    
     eeprom.brightnes        = BRIGHTNES;
@@ -766,6 +737,47 @@ void setup(void) {
     eeprom.sleeptime_lv     = SLEEPTIME_LV;
     if (EEPROM_VERSION > 0) EEPROM.put(0, eeprom);
   }  
+}
+
+void setup(void) {
+  delay(500);
+#if defined(STATUSLED)
+  pinMode(STATUSLED, OUTPUT);
+  digitalWrite(STATUSLED,STATUSLED_ON);
+#endif
+
+// Init EEPROM
+init_eeprom(false);
+
+#if defined(DISCHARGE3_PIN)
+  pinMode(DISCHARGE3_PIN, OUTPUT);
+  digitalWrite(DISCHARGE3_PIN,LOW);
+#endif
+#if defined(RELAIS_1)
+  pinMode(RELAIS_1, OUTPUT);
+  digitalWrite(RELAIS_1,RELAIS_ON);
+#endif
+#if defined(RELAIS_2)
+  pinMode(RELAIS_2, OUTPUT);
+  digitalWrite(RELAIS_2,RELAIS_ON);
+#endif
+#if defined(RELAIS_3)
+  pinMode(RELAIS_3, OUTPUT);
+  digitalWrite(RELAIS_3,RELAIS_ON);
+#endif
+#if defined(RELAIS_4)
+  pinMode(RELAIS_4, OUTPUT);
+  digitalWrite(RELAIS_4,RELAIS_ON);
+#endif
+#if defined(SOLARZELLE1)
+  pinMode(SOLARZELLE1, INPUT);
+#endif
+#if defined(SOLARZELLE2)
+  pinMode(SOLARZELLE2, INPUT);
+#endif
+#if defined(LOAD_BALLANCER)
+  pinMode(LOAD_BALLANCER, INPUT);
+#endif
 #if defined(DEBUG_SERIAL)
   Serial.begin(115200);
   printf_begin();
@@ -1375,6 +1387,10 @@ void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, 
 
 void exec_jobs(void) {
   // Test if there are some jobs to do
+  if (set_default) {
+    init_eeprom(true);
+    exec_RegTrans = true;
+  }
   if (exec_pingTest) {
     pingTest();
     delay(200);

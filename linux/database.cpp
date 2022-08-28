@@ -106,6 +106,10 @@ void Database::sync_sensordata_d(void) {
     do_sql(sql_stmt);
     sprintf (sql_stmt, "%s", "drop table sensordata_max" );
     do_sql(sql_stmt);
+    sprintf (sql_stmt, "%s", "delete from sensordata_sum" );
+    do_sql(sql_stmt);
+    sprintf (sql_stmt, "%s", "insert into sensordata_sum (sensor_id, anzahl) select sensor_id, count(*) from sensordata group by sensor_id" );
+    do_sql(sql_stmt);
 }
 
 void Database::rebuild_sensordata_d(void) {
