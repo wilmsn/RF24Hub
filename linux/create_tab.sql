@@ -69,19 +69,17 @@ VALUES
   (202,'Solarnode','Solarnode Testnetz',2,'y',3,3,0,'y',2.2,'n'),
   (240,'Testnode_240','',3,'y',100,3,0,'y',3.3,'n');
 
---DROP TABLE IF EXISTS node_configdata;
+DROP TABLE IF EXISTS node_configdata;
 
 CREATE TABLE node_configdata
 (
    node_id  INT UNSIGNED   NOT NULL,
    channel  INT UNSIGNED   NOT NULL,
    value    FLOAT          DEFAULT NULL,
-   utime    INT UNSIGNED   DEFAULT NULL
+   utime    INT UNSIGNED   DEFAULT NULL,
+   CONSTRAINT `PRIMARY` PRIMARY KEY (node_id, channel)
 )
 ENGINE=MEMORY;
-
-CREATE UNIQUE INDEX node_configdata_idx
-   ON node_configdata (node_id, channel);
 
 --DROP TABLE IF EXISTS node_configitem;
 
@@ -104,6 +102,8 @@ VALUES
   (92,'Aktive Entladung Level 2',1.0,20.0,'n','y',22),
   (93,'Aktive Entladung Level 3',1.0,20.0,'n','y',23),
   (94,'Load Ballancer Differenzspannung',0.01,1.0,'n','y',24),
+  (95,'Display: Kontrast',0.0,100.0,'n','y',30),
+  (96,'Display: Helligkeit',0.0,100.0,'n','y',31),
   (110,'Spannungsfaktor',0.1,10.0,'n','y',2),
   (111,'Spannungsoffset',-10.0,10.0,'n','y',3),
   (112,'Kritischer Spannungswert',1.0,5.0,'n','y',4),
@@ -187,6 +187,13 @@ CREATE INDEX sensordata_d_utime
    ON sensordata_d (Utime);
 
 --DROP TABLE IF EXISTS numbers;
+
+CREATE TABLE sensordata_sum
+(
+   sensor_id  INT UNSIGNED   NOT NULL,
+   anzahl     INT UNSIGNED   DEFAULT NULL
+)
+ENGINE=MEMORY;
 
 CREATE TABLE numbers
 (

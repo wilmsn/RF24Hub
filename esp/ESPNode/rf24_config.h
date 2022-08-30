@@ -15,7 +15,7 @@
  *  @{
  */
 ///Der verwendete RF24 Funkkanal
-#define RF24_CHANNEL        95
+#define RF24_CHANNEL        92
 /// Die Übertragungsgeschwindigkeit
 #define RF24_SPEED          RF24_250KBPS
 /// Der Netzwerkschlüssel Hub zum Node
@@ -24,7 +24,7 @@
 #define RF24_NODE2HUB       { 0x33, 0xcc, 0xfc, 0xcc, 0xcc}
 /// Der Datentyp für die Node_ID. Ist aktuell auf 1...255 festgelegt. Werden mehr Nodes benötigt, kann der Datentyp hier zentral umgestellt werden.
 #define NODE_DATTYPE        uint8_t
-/// Der Datentyp für die Ordernummer. 
+/// Der Datentyp für die Ordernummer. Auch hier eine zentrale Festlegung des Datentyps, der ggf. die Umstellung vereinfacht.
 #define ONR_DATTYPE         uint8_t
 /// @}
 

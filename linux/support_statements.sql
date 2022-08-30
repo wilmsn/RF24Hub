@@ -14,10 +14,10 @@ from sensordata where utime > (select max_ts from sensordata_max) group by senso
 
 drop table sensordata_max;
 
+insert into sensordata_sum (sensor_id, anzahl)
+select sensor_id, count(*) from sensordata group by sensor_id;
 
-select * from sensor;
-select sensor_id, from_unixtime(max(utime)) from sensordata group by sensor_id;
-
+select * from sensordata_sum where sensor_id = 41;
 
 
 

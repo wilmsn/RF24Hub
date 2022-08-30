@@ -17,10 +17,10 @@
 //#define SOLARNODE
 //#define AUSSENTHERMOMETER2
 //#define BASTELZIMMERTHERMOMETER_SW
-//#define ANKLEIDEZIMMERTHERMOMETER
+#define ANKLEIDEZIMMERTHERMOMETER
 //#define NODE_101
 //----Testnodes-----
-#define TESTNODE_240
+//#define TESTNODE_240
 //#define TESTNODE_UNO
 //****************************************************
 // Default settings and settings for the individual nodes are in "Node_settings.h"
@@ -621,7 +621,7 @@ uint32_t action_loop(uint32_t data) {
           eeprom.contrast = val;
           EEPROM.put(0, eeprom);
         }
-        data = calcTransportValue(REG_LOAD_BALLANCER, eeprom.contrast);
+        data = calcTransportValue(REG_CONTRAST, eeprom.contrast);
       }
       break;
       case REG_BRIGHTNES:
@@ -632,7 +632,7 @@ uint32_t action_loop(uint32_t data) {
           eeprom.brightnes = val;
           EEPROM.put(0, eeprom);
         }
-        data = calcTransportValue(REG_LOAD_BALLANCER, eeprom.brightnes);
+        data = calcTransportValue(REG_BRIGHTNES, eeprom.brightnes);
       }
       break;
 #endif
@@ -1267,8 +1267,10 @@ void sendRegister(void) {
   sendRegister(calcTransportValue(REG_MAX_SENDCOUNT, eeprom.max_sendcount),&pos,&hbno);
   sendRegister(calcTransportValue(REG_MAX_STOPCOUNT, eeprom.max_stopcount),&pos,&hbno);
   sendRegister(calcTransportValue(REG_PALEVEL, eeprom.pa_level),&pos,&hbno);
-#if defined(DISPLAY_ALL)
+#if defined(DISPLAY_5110)
   sendRegister(calcTransportValue(REG_CONTRAST, eeprom.contrast),&pos,&hbno);
+#endif
+#if defined(DISPLAY_XXXX)
   sendRegister(calcTransportValue(REG_BRIGHTNES, eeprom.brightnes),&pos,&hbno);
 #endif
 #if defined(LOAD_BALLANCER)

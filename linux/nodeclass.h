@@ -108,14 +108,15 @@ bool isNewHB(NODE_DATTYPE node_id, uint8_t heartbeatno, uint32_t utime);
  * @param node_id Die Node-ID
  * @return "true" wenn der Node durch diesen Hub verwaltet wird, sonst "false" 
  */
-bool isMasteredNode(NODE_DATTYPE node_id);
+//bool isMasteredNode(NODE_DATTYPE node_id);
 
 /**
  *  Setzt einen Node in den Zustand "mastered" = von diesem Hub gesteuert; oder nicht 
  * @param node_id Die Node-ID
  * @param isMastered "true" wenn der Node durch diesen Hub verwaltet wird, sonst "false" 
+ * @return "true" wenn der Node in der Datenbank vorhanden ist, sonst "false" 
  */
-void setMasteredNode(NODE_DATTYPE node_id, bool isMastered);
+bool setMasteredNode(NODE_DATTYPE node_id, bool isMastered);
 
 /**
  * Setzt den letzten ermittelten Empfangslevel für diesen Node

@@ -10,7 +10,7 @@ LEDPWM
 Dallas Temperature Sensor 18B20
 Rf24GW
 
-On Branch: rf24hub@rpi2 => master  !!!!!
+On Branch: rf24hub@rpi2 => zahlenformat  !!!!!
 
 
 */
@@ -1007,7 +1007,7 @@ void handlesensor(char* myjson, call_t call) {
     case sensormqtt:
 #if defined(SENSOR_CHANNEL)
       snprintf(tmp,9,"%4.1f",tempC);
-      send_udp_msg(SENSOR_NODE, calcTransportValue_f(mykey,SENSOR_CHANNEL,tempC));
+      send_udp_msg(SENSOR_NODE, calcTransportValue(SENSOR_CHANNEL,tempC));
 #endif
     case sensorweb:
       sprintf(myjson,"{\"Sensor\":\"18B20\", \"Temperatur\":%4.1f, \"Resolution\":%u }", tempC, resolution);
@@ -1367,12 +1367,12 @@ char* printPayload(char* prefix, payload_t *payload, char* placeholder) {
   char buf6[10];
   snprintf(placeholder,INFOSIZE,"%s: N:%u T:%u m:%u F:0x%02x O:%u H:%u (%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)(%u/%s)", prefix
                      ,payload->node_id, payload->msg_type, payload->msg_id, payload->msg_flags, payload->orderno, payload->heartbeatno
-                     ,getChannel(mykey,payload->data1), unpackTransportValue(mykey,payload->data1, buf1)
-                     ,getChannel(mykey,payload->data2), unpackTransportValue(mykey,payload->data2, buf2)
-                     ,getChannel(mykey,payload->data3), unpackTransportValue(mykey,payload->data3, buf3)
-                     ,getChannel(mykey,payload->data4), unpackTransportValue(mykey,payload->data4, buf4)
-                     ,getChannel(mykey,payload->data5), unpackTransportValue(mykey,payload->data5, buf5)
-                     ,getChannel(mykey,payload->data6), unpackTransportValue(mykey,payload->data6, buf6)
+                     ,getChannel(payload->data1), unpackTransportValue(payload->data1, buf1)
+                     ,getChannel(payload->data2), unpackTransportValue(payload->data2, buf2)
+                     ,getChannel(payload->data3), unpackTransportValue(payload->data3, buf3)
+                     ,getChannel(payload->data4), unpackTransportValue(payload->data4, buf4)
+                     ,getChannel(payload->data5), unpackTransportValue(payload->data5, buf5)
+                     ,getChannel(payload->data6), unpackTransportValue(payload->data6, buf6)
                      );
   return placeholder;
 }

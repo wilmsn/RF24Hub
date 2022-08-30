@@ -290,10 +290,10 @@
 #ifndef SLEEP4MS_FAC
 #define SLEEP4MS_FAC    1000
 #endif
-// number of empty loop after sending data
+// number of empty loop (non sending loops) after sending data
 // (valid: 0...20)
 #ifndef EMPTYLOOPS
-#define EMPTYLOOPS      0
+#define EMPTYLOOPS      4
 #endif
 // waiting time between 2 transmissions in ms
 // (valid 100 ... 1000)
@@ -335,10 +335,10 @@
 #ifndef VOLT_LV
 #define VOLT_LV 2
 #endif
-// In case of low Voltage send every X Seconds
-// 90 => every 3 hours (sleeptime 120)
+// Sleeptime in case of low Voltage
+// 900 => every 2 hours (with emptyloops = 4)
 #ifndef SLEEPTIME_LV
-#define SLEEPTIME_LV  90
+#define SLEEPTIME_LV  1440
 #endif
 
 // PA_Level for the radio, default is maximum

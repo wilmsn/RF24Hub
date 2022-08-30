@@ -12,7 +12,7 @@ bool NodeClass::isValidNode(NODE_DATTYPE node_id) {
     bool retval = false;
     p_search = p_initial;
     while (p_search) {
-        if (p_search->node_id == node_id) {
+        if (p_search->node_id == node_id && p_search->is_mastered) {
             retval = true;
             p_search = NULL;
         } else {
@@ -187,7 +187,7 @@ void NodeClass::setVoltage(NODE_DATTYPE node_id, float u_batt) {
         }
     }
 }
-
+/*
 bool NodeClass::isMasteredNode(NODE_DATTYPE node_id) {
     bool retval=false;
     nodeClass_t *p_search;
@@ -203,19 +203,22 @@ bool NodeClass::isMasteredNode(NODE_DATTYPE node_id) {
     if (_verboseLevel & VERBOSENODE) printf("%sNodeClass.isMasteredNodeClass: N:%u is %s\n", ts(tsbuf), node_id, retval? "Mastered":"Not Mastered");
     return retval;
 }
-
-void NodeClass::setMasteredNode(NODE_DATTYPE node_id, bool isMastered){
+*/
+bool NodeClass::setMasteredNode(NODE_DATTYPE node_id, bool isMastered){
+    bool retval=false;
     nodeClass_t *p_search;
     p_search=p_initial;
     while (p_search) {
         if (p_search->node_id == node_id) {
             p_search->is_mastered = isMastered;
+            retval = true;
             p_search = NULL;
         } else {
             p_search=p_search->p_next;
         }
     }
     if (_verboseLevel & VERBOSENODE) printf("%sNodeClass.setMasteredNodeClass: N:%u is %s\n", ts(tsbuf), node_id, isMastered? "Mastered":"Not Mastered");
+    return retval;
 }
 
 bool NodeClass::setLVFlag(NODE_DATTYPE node_id, bool lv_flag) {

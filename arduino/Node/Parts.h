@@ -52,7 +52,7 @@
 // Set the limit voltage for it, low voltage handling is below
 #define VOLT_LV         2
 // In Low Power State we use a different sleeptime 
-#define SLEEPTIME_LV    90
+#define SLEEPTIME_LV    1440
 
 // Battery Management
 // If the akku is loaded by solarcell we have 2 methods to consume power
@@ -117,8 +117,7 @@
 // Status LED
 // mandatory: Set the Pin the Status LED is connected
 #define STATUSLED       <pin>
-// optional
-// the logic level to switch on and off
+// optional: the logic level to switch on and off
 #define STATUSLED_ON    HIGH
 #define STATUSLED_OFF   LOW
 
@@ -126,6 +125,8 @@
 // A Nokia 5110 Display
 // connected to pin: CLK 7; DIN 6; DC 5; RST 2; CE 4
 #define DISPLAY_5110
+// optional: set the contrast
+#define CONTRAST 65
 
 // Relais up to 4 pices
 // mandatory: Set the Pin the Relais is connected
@@ -133,7 +134,6 @@
 #define RELAIS_2    6
 #define RELAIS_3    7
 #define RELAIS_4    8
-// optional
-// the logic level to switch on and off
+// optional: the logic level to switch on and off
 #define RELAIS_ON     HIGH
 #define RELAIS_OFF    LOW
