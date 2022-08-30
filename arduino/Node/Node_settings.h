@@ -62,7 +62,7 @@ debugging options:
 #define USE_BATTERIE           2.6
 // Am DISCHARGE_PIN liegt ein Widerstand von 340 Ohm gegen Vcc 
 #define DISCHARGE_PIN          5
-// Spannungen oberhalb von DISCHARGE_U schalten den DISCHARGE_PIN ein = HIGH
+// Spannungen oberhalb von DISCHARGE_U schalten den DISCHARGE_PIN ein = LOW
 #define DISCHARGE_U            2.7
 // Load Ballancer
 #define LOAD_BALLANCER

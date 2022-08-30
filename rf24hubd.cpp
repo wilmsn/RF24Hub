@@ -651,12 +651,12 @@ int main(int argc, char* argv[]) {
 	if (UdpMsgLen > 0) {
 	    memcpy(&payload, &udpdata.payload, sizeof(payload) );
 	    //sprintf(gw_,"%s",inet_ntoa(udp_address_in.sin_addr));
-	    if ( verboselevel & VERBOSERF24 ) {
-		printf ("%sUDP Message from: %s \n",ts(tsbuf), inet_ntoa(udp_address_in.sin_addr));
-		sprintf(buf1,"G:%u>H", udpdata.gw_no);
-		printPayload(ts(tsbuf), buf1, &payload);
-	    }
-	    if ( gateway.isGateway(inet_ntoa(udp_address_in.sin_addr), udpdata.gw_no) ) {
+	    if ( gateway.isGateway(inet_ntoa(udp_address_in.sin_addr), udpdata.gw_no) && node.isMasteredNode(payload.node_id) ) {
+                if ( verboselevel & VERBOSERF24 ) {
+                    printf ("%sUDP Message from: %s \n",ts(tsbuf), inet_ntoa(udp_address_in.sin_addr));
+                    sprintf(buf1,"G:%u>H", udpdata.gw_no);
+                    printPayload(ts(tsbuf), buf1, &payload);
+                }
 		if (payload.msg_flags & PAYLOAD_FLAG_NEEDHELP ) {
 		    char* tn_buf;
 		    tn_buf = (char*)malloc(100);
@@ -681,27 +681,28 @@ int main(int argc, char* argv[]) {
 			if ( node.isNewHB(payload.node_id, payload.heartbeatno, time(0)) ) {  // Got a new Heaqrtbeat -> process it!
 			    database.lowVoltage(payload.node_id, payload.msg_flags & PAYLOAD_FLAG_NEEDHELP);
 			    process_payload(&payload);
-			    if ( node.isMasteredNode(payload.node_id) ) {
+			   // if ( node.isMasteredNode(payload.node_id) ) {
 				if ( orderbuffer.nodeHasEntry(payload.node_id) ) {  // WE have orders for this node
 				    make_order(payload.node_id, PAYLOAD_TYPE_DAT);
 				    if ( verboselevel & VERBOSEORDER ) {
 					printf("%sEntries for Heartbeat Node found, sending them\n",ts(tsbuf));
 				    }
 				} else {
-				    if ( node.isMasteredNode(payload.node_id) ) {
+				//    if ( node.isMasteredNode(payload.node_id) ) {
 					order.addOrder(payload.node_id, PAYLOAD_TYPE_HB_RESP, 0, mymillis());
 					order.modifyOrderFlags(payload.node_id, PAYLOAD_FLAG_LASTMESSAGE);
-				    }
+				  //  }
 				}
-			    }
+			   // }
 			} else {
 			    // reset stop counter (TTL) for message to send
-			    if ( node.isMasteredNode(payload.node_id) ) order.adjustEntryTime(payload.node_id, mymillis());
+			    //if ( node.isMasteredNode(payload.node_id) ) 
+                                order.adjustEntryTime(payload.node_id, mymillis());
 			}
 		    }
 		    break;    
 		    case PAYLOAD_TYPE_DATRESP: { // Quittung für eine Nachricht vom Typ PAYLOAD_TYPE_DATNOR !!
-			if ( node.isMasteredNode(payload.node_id) ) {
+			//if ( node.isMasteredNode(payload.node_id) ) {
 			    if ( order.isOrderNo(payload.orderno) ) {
 				process_payload(&payload);
 				order.delByOrderNo(payload.orderno);  // Nachricht ist angekommen => löschen
@@ -714,11 +715,11 @@ int main(int argc, char* argv[]) {
 				order.addOrder(payload.node_id, PAYLOAD_TYPE_DATSTOP, 0, mymillis());
 				order.modifyOrderFlags(payload.node_id, PAYLOAD_FLAG_LASTMESSAGE);
 			    }
-			}
+			//}
 		    }
 		    break;
 		    case PAYLOAD_TYPE_DATSTOP: { // Quittung für einen Heatbeatresponse!!
-			if ( node.isMasteredNode(payload.node_id) )
+			//if ( node.isMasteredNode(payload.node_id) )
 			    order.delByOrderNo(payload.orderno);  // Nachricht ist angekommen => löschen
 		    }
 		    break;
@@ -748,7 +749,7 @@ int main(int argc, char* argv[]) {
 		    }
 		    break;
 		    default: {	
-			if ( node.isMasteredNode(payload.node_id) ) {
+			//if ( node.isMasteredNode(payload.node_id) ) {
 			    if ( verboselevel & VERBOSEORDER) {
 				printf("%sProcessing Node:%u Type:%u Orderno: %u\n", ts(tsbuf), payload.node_id, payload.msg_type, payload.orderno);
 			    }
@@ -762,7 +763,7 @@ int main(int argc, char* argv[]) {
 				    }
 				}
 			    }
-			}
+			//}
 		    }
 		}
 	    }  // gateway.isGateway
