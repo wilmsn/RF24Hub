@@ -8,7 +8,29 @@
 //*****************************************************
 //    Individual settings
 //-----------------------------------------------------
-#if defined(SOLARNODE)
+#if defined(AUSSENTHERMOMETER1)
+#define RF24NODE        200
+#define SENSOR_BOSCH
+#define STATUSLED       3
+#define STATUSLED_ON    HIGH
+#define STATUSLED_OFF   LOW
+#define VOLT_LV         2
+#define EEPROM_VERSION  8
+#define SLEEPTIME_SEC   900
+#endif
+//-----------------------------------------------------
+#if defined(AUSSENTHERMOMETER2)
+#define RF24NODE        201
+#define SENSOR_BOSCH
+#define STATUSLED       7
+#define STATUSLED_ON    HIGH
+#define STATUSLED_OFF   LOW
+#define VOLT_LV         2
+#define EEPROM_VERSION  7
+#define SLEEPTIME_SEC   900
+#endif
+//-----------------------------------------------------
+#if defined(SOLARNODE1)
 #define RF24NODE               202
 #define VOLT_LV                2.2
 #define SLEEPTIME_LV           300
@@ -34,24 +56,56 @@
 #define LOAD_BALLANCER         0.1
 #endif
 //-----------------------------------------------------
-//-----------------------------------------------------
-#if defined(AUSSENTHERMOMETER)
-#define RF24NODE             200
-#define EEPROM_VERSION       5
-#define SENSOR_BOSCH
-#define VOLT_LV              2
-#define SLEEPTIME            900
+#if defined(SOLARNODE2)
+#define RF24NODE               203
+#define VOLT_LV                2.2
+#define SLEEPTIME_LV           300
+#define EEPROM_VERSION         7
+#define STATUSLED              A2
+#define SLEEPTIME              30
+#define EMPTYLOOPS             9
+// Mist die Spannung an der Referenzzelle die NUR mit einem Widerstand abgeschlossen ist
+#define SOLARZELLE1            A0
+// Mist die Spannung an der Versorgungssolarzelle vor dem Step-Up Wandler
+#define SOLARZELLE2            A3
+// Ist die Batteriespannung groesser als DISCHARGE1 wird der Tiefschlaf vom MC abgeschaltet
+#define DISCHARGE1             2.7
+// Ist die Batteriespannung groesser als DISCHARGE2 wird zusätzlich zu DISCHARGE1 die Status LED eingeschaltet
+#define DISCHARGE2             2.75
+// Ist die Batteriespannung groesser als DISCHARGE3 wird zusätzlich zu DISCHARGE2 Strom über einen Widerstand an DISCHARGE3_PIN gegen GND abgeleitet
+#define DISCHARGE3             2.8
+#define DISCHARGE3_PIN         5
+// Load Ballancer
+// Mittlerer Pol der Batterie ist über einen 680 Ohm Widerstand an den Pin angeschlossen
+#define LOAD_BALLANCER_PIN     A1
+// Maximale Differenzspannung zwischen den Zellen
+#define LOAD_BALLANCER         0.1
 #endif
+//-----------------------------------------------------
+#if defined(BASTELZIMMERTHERMOMETER)
+#define RF24NODE             100
+#define SENSOR_18B20         8
+#define DISPLAY_5110
+#define EEPROM_VERSION       4
+#define VOLT_OFF             0.55
+#define EMPTYLOOPS           9
+#define SLEEPTIME            120
+#define SLEEPTIME_LV         1200
+#define VOLT_LV              3.6
+#define STATUSLED_ON         LOW
+#define STATUSLED_OFF        HIGH
+#endif
+
 //-----------------------------------------------------
 #if defined(NODE_101)
 #define RF24NODE             101
 #define SENSOR_18B20         8
 #define DISPLAY_5110
-#define EEPROM_VERSION       3
+#define EEPROM_VERSION       4
 #define SLEEPTIME            60
 #define EMPTYLOOPS           4
 #define VOLT_OFF             0.55
-#define LOW_VOLT_LEVEL       3.6
+#define VOLT_LV              3.6
 #endif
 //-----------------------------------------------------
 #if defined(BASTELZIMMERTHERMOMETER_SW)

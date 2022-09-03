@@ -187,23 +187,7 @@ void NodeClass::setVoltage(NODE_DATTYPE node_id, float u_batt) {
         }
     }
 }
-/*
-bool NodeClass::isMasteredNode(NODE_DATTYPE node_id) {
-    bool retval=false;
-    nodeClass_t *p_search;
-    p_search=p_initial;
-    while (p_search) {
-        if (p_search->node_id == node_id) {
-            retval =  p_search->is_mastered;
-            p_search = NULL;
-        } else {
-            p_search=p_search->p_next;
-        }
-    }
-    if (_verboseLevel & VERBOSENODE) printf("%sNodeClass.isMasteredNodeClass: N:%u is %s\n", ts(tsbuf), node_id, retval? "Mastered":"Not Mastered");
-    return retval;
-}
-*/
+
 bool NodeClass::setMasteredNode(NODE_DATTYPE node_id, bool isMastered){
     bool retval=false;
     nodeClass_t *p_search;

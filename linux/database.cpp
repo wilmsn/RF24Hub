@@ -106,10 +106,8 @@ void Database::sync_sensordata_d(void) {
     do_sql(sql_stmt);
     sprintf (sql_stmt, "%s", "drop table sensordata_max" );
     do_sql(sql_stmt);
-    sprintf (sql_stmt, "%s", "delete from sensordata_sum" );
-    do_sql(sql_stmt);
-    sprintf (sql_stmt, "%s", "insert into sensordata_sum (sensor_id, anzahl) select sensor_id, count(*) from sensordata group by sensor_id" );
-    do_sql(sql_stmt);
+    sprintf (sql_stmt, "%s", "update sensor_im as a inner join ( select sensor_id, count(*) as records from sensordata group by sensor_id) as c on a.sensor_id = c.sensor_id set a.records = c.records" );
+    storeSQL(sql_stmt);
 }
 
 void Database::rebuild_sensordata_d(void) {
@@ -119,11 +117,17 @@ void Database::rebuild_sensordata_d(void) {
     do_sql(sql_stmt);
     sprintf (sql_stmt, "%s", "insert into sensordata_d(sensor_id, value, utime) select sensor_id, max(value) as max_val, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))+64800 from sensordata group by sensor_id, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))" );
     do_sql(sql_stmt);
+    sprintf (sql_stmt, "%s", "delete from sensordata_sum" );
+    do_sql(sql_stmt);
+    sprintf (sql_stmt, "%s", "insert into sensordata_sum (sensor_id, records) select sensor_id, count(*) from sensordata group by sensor_id" );
+    do_sql(sql_stmt);
 }
 
 void Database::initSystem(void) {
     // sensordata_d ist eine in Memory Tabelle und muss neu aufgebaut werden!
-    rebuild_sensordata_d();
+    //rebuild_sensordata_d();
+    // Wird nicht benötigt, da im rf24hubd jetzt ein täglicher sync durchgeführt wird!!!
+    //sync_sensordata_d();
 }
 
 void Database::initGateway(GatewayClass* gatewayClass) {
@@ -216,7 +220,7 @@ void Database::initNode(NodeClass* nodeClass) {
 	    if ( row[3] != NULL ) pa_level = strtoul(row[3], &pEnd, 10); else pa_level = 9;
 	    if ( row[4] != NULL ) rec_level = strtoul(row[4], &pEnd, 10); else rec_level = 9;
 	    if ( row[5] != NULL ) lv_volt = strtof(row[5], &pEnd);
-	    if ( row[6][0] == 'y' ) lv_flag = true; 
+	    if ( row[6] != NULL ) if( row[6][0] == 'y' ) lv_flag = true; else lv_flag = false;
 	    nodeClass->addNode(node_id, node_name, isMastered, pa_level, rec_level, lv_volt, lv_flag); 
 	}
 	mysql_free_result(result);    
@@ -305,25 +309,6 @@ void Database::updateNodeMastered(NODE_DATTYPE node_id, bool isMastered) {
     }
     do_sql(sql_stmt);
 }
-
-/*
-MYSQL* Database::connect(string _db_hostname, string _db_username, string _db_password, string _db_schema, int _db_port) {
-    snprintf(db_hostname, DB_HOSTNAME_SIZE, "%s", _db_hostname.c_str());
-    snprintf(db_username, DB_USERNAME_SIZE, "%s", _db_username.c_str());
-    snprintf(db_password, DB_PASSWORD_SIZE, "%s", _db_password.c_str());
-    snprintf(db_schema, DB_SCHEMA_SIZE, "%s", _db_schema.c_str());
-    db_port = _db_port;
-    if ( verboseLevel & VERBOSESTARTUP) {
-        printf("%sMaria-DB client version: %s\n", ts(tsbuf), mysql_get_client_info());
-    }
-    bool retval = connect();
-    if (retval) {
-	disconnect();
-        printf("Init finished sucessfull\n");
-    }
-    return retval;
-}
-*/
 
 MYSQL* Database::connect() {
     MYSQL* retval = NULL;

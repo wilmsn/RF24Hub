@@ -1,6 +1,5 @@
 use rf24hub;
 
-
 --DROP TABLE IF EXISTS battery;
 
 CREATE TABLE battery
@@ -60,15 +59,6 @@ ALTER TABLE node
   ON UPDATE RESTRICT
   ON DELETE RESTRICT;
 
-INSERT INTO node (node_id,node_name,add_info,battery_id,html_show,html_order,pa_level,rec_level,mastered,volt_lv,lv_flag) 
-VALUES
-  (101,'Node 101','',3,'y',1,3,1,'y',2.0,'n'),
-  (105,'Bastelzimmer_sw','',3,'y',11,2,0,'y',3.6,'n'),
-  (110,'Ankleidezimmer','',3,'y',5,3,0,'y',3.5,'n'),
-  (201,'Aussenthermometer2','',1,'y',2,NULL,NULL,'y',2.0,'n'),
-  (202,'Solarnode','Solarnode Testnetz',2,'y',3,3,0,'y',2.2,'n'),
-  (240,'Testnode_240','',3,'y',100,3,0,'y',3.3,'n');
-
 DROP TABLE IF EXISTS node_configdata;
 
 CREATE TABLE node_configdata
@@ -79,7 +69,7 @@ CREATE TABLE node_configdata
    utime    INT UNSIGNED   DEFAULT NULL,
    CONSTRAINT `PRIMARY` PRIMARY KEY (node_id, channel)
 )
-ENGINE=MEMORY;
+ENGINE=InnoDB;
 
 --DROP TABLE IF EXISTS node_configitem;
 
@@ -116,9 +106,9 @@ VALUES
   (119,'Schleifen ohne Sendung',0.0,20.0,'n','y',11),
   (120,'Sendestärke (0=Min 1=Low 2=High 3=Max)',0.0,9.0,'n','y',91),
   (121,'Empfangsstärke gemessen (0=Min 1=Low 2=High 3=Max)',0.0,9.0,'y','y',90),
-  (125,'Softwareversion',0.0,0.0,'y','y',91);
+  (125,'Softwareversion',0.0,0.0,'y','y',99);
 
---DROP TABLE IF EXISTS sensor;
+DROP TABLE IF EXISTS sensor;
 
 CREATE TABLE sensor
 (
@@ -136,64 +126,79 @@ CREATE TABLE sensor
 )
 ENGINE=InnoDB;
 
-INSERT INTO sensor (sensor_id,sensor_name,add_info,node_id,channel,datatype,store_days,fhem_dev,html_show,html_order) 
-VALUES
-  (11,'Bastelzimmer_sw_temp','',105,1,0,-1,'','y',1),
-  (12,'Feld1','',105,21,0,-1,'','y',2),
-  (19,'Bastelzimmer_sw_ubatt','',105,79,0,-1,'','y',9),
-  (21,'Solarzelle','',202,5,0,-1,'Solarzelle','y',1),
-  (22,'Solarzelle2','',202,6,0,-1,'','y',2),
-  (23,'u_batt1','',202,7,0,-1,'','y',3),
-  (24,'Batt_Statusbits','',202,8,0,-1,'','y',4),
-  (29,'Solarnode_ubatt','',202,79,0,-1,'','y',9),
-  (31,'N110_temp','',110,1,0,-1,'','y',1),
-  (32,'Feld1','',110,21,0,-1,'','y',2),
-  (39,'N110_batt','',110,79,0,-1,'','y',9),
-  (41,'N101_Temp','',101,1,0,-1,'','y',1),
-  (42,'Feld1','',101,21,0,-1,'','y',2),
-  (43,'Feld2','',101,22,0,-1,'','y',3),
-  (44,'Feld3','',101,23,0,-1,'','y',4),
-  (45,'Feld4','',101,24,0,-1,'','y',5),
-  (49,'N101_Ubatt','',101,79,0,-1,'','y',9),
-  (101,'N240_Temp','',240,1,0,-1,'','y',1),
-  (102,'U_Batt','',240,79,0,-1,'','y',9);
+
+DROP TABLE IF EXISTS sensor_im;
+  
+CREATE TABLE sensor_im
+(
+   sensor_id   INT UNSIGNED   NOT NULL,
+   value       VARCHAR(10)    DEFAULT NULL,
+   last_utime  INT UNSIGNED   DEFAULT NULL,
+   delta_utime INT UNSIGNED   DEFAULT NULL,
+   records     INT UNSIGNED   DEFAULT 10000,
+   CONSTRAINT `PRIMARY` PRIMARY KEY (sensor_id)
+)
+ENGINE=MEMORY;
 
 --DROP TABLE IF EXISTS sensordata;
 
-CREATE TABLE sensordata
-(
-   sensor_id  INT UNSIGNED   NOT NULL,
-   utime      INT UNSIGNED   NOT NULL,
-   value      FLOAT          DEFAULT NULL,
-   CONSTRAINT `PRIMARY` PRIMARY KEY (sensor_id, utime)
-)
-ENGINE=InnoDB;
+CREATE TABLE `sensordata` (
+  `sensor_id` int(10) unsigned NOT NULL,
+  `utime` int(10) unsigned NOT NULL,
+  `value` float DEFAULT NULL,
+  PRIMARY KEY (`sensor_id`,`utime`),
+  KEY `sensordata_utime_idx` (`utime`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+ PARTITION BY RANGE (`utime`)
+(PARTITION `p2014` VALUES LESS THAN (1420066800) ENGINE = InnoDB,
+ PARTITION `p2015` VALUES LESS THAN (1451602800) ENGINE = InnoDB,
+ PARTITION `p2016` VALUES LESS THAN (1483225200) ENGINE = InnoDB,
+ PARTITION `p2017` VALUES LESS THAN (1514761200) ENGINE = InnoDB,
+ PARTITION `p2018` VALUES LESS THAN (1546297200) ENGINE = InnoDB,
+ PARTITION `p2019` VALUES LESS THAN (1577833200) ENGINE = InnoDB,
+ PARTITION `p2020` VALUES LESS THAN (1609455600) ENGINE = InnoDB,
+ PARTITION `p2021` VALUES LESS THAN (1640991600) ENGINE = InnoDB,
+ PARTITION `pnow` VALUES LESS THAN MAXVALUE ENGINE = InnoDB);
 
-CREATE INDEX sensordata_utime_idx
-   ON sensordata (utime ASC);
+create index sensordata_id on sensordata(sensor_id);
+
+drop trigger insert_sensordata;
+
+DELIMITER //
+
+CREATE TRIGGER insert_sensordata	
+AFTER INSERT on sensordata	
+FOR EACH ROW 
+BEGIN
+select last_utime into @last_utime from sensor_im where sensor_id = NEW.sensor_id;
+insert into sensor_im(sensor_id, value, last_utime, records) values( NEW.sensor_id, NEW.value, NEW.utime, 10000)
+ON DUPLICATE KEY UPDATE value= NEW.value, last_utime = NEW.utime, records = records+1, delta_utime = NEW.utime - @last_utime;
+END; //
    
+DELIMITER ;
+
 --DROP TABLE IF EXISTS sensordata_d;
 
-CREATE TABLE sensordata_d
-(
-   sensor_id  INT UNSIGNED   NOT NULL,
-   Utime      INT UNSIGNED   NOT NULL,
-   Value      FLOAT          DEFAULT NULL,
-   CONSTRAINT `PRIMARY` PRIMARY KEY (sensor_id, Utime)
-)
-ENGINE=MEMORY;
-
-CREATE INDEX sensordata_d_utime
-   ON sensordata_d (Utime);
+CREATE TABLE `sensordata_d` (
+  `sensor_id` int(10) unsigned NOT NULL,
+  `utime` int(10) unsigned NOT NULL,
+  `value` float DEFAULT NULL,
+  PRIMARY KEY (`sensor_id`,`utime`),
+  KEY `sensordata_d_utime` (`utime`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+ PARTITION BY RANGE (`utime`)
+(PARTITION `p2014` VALUES LESS THAN (1420066800) ENGINE = InnoDB,
+ PARTITION `p2015` VALUES LESS THAN (1451602800) ENGINE = InnoDB,
+ PARTITION `p2016` VALUES LESS THAN (1483225200) ENGINE = InnoDB,
+ PARTITION `p2017` VALUES LESS THAN (1514761200) ENGINE = InnoDB,
+ PARTITION `p2018` VALUES LESS THAN (1546297200) ENGINE = InnoDB,
+ PARTITION `p2019` VALUES LESS THAN (1577833200) ENGINE = InnoDB,
+ PARTITION `p2020` VALUES LESS THAN (1609455600) ENGINE = InnoDB,
+ PARTITION `p2021` VALUES LESS THAN (1640991600) ENGINE = InnoDB,
+ PARTITION `p2022` VALUES LESS THAN (1672527600) ENGINE = InnoDB,
+ PARTITION `p_now` VALUES LESS THAN MAXVALUE ENGINE = InnoDB);
 
 --DROP TABLE IF EXISTS numbers;
-
-CREATE TABLE sensordata_sum
-(
-   sensor_id  INT UNSIGNED   NOT NULL,
-   anzahl     INT UNSIGNED   DEFAULT NULL
-)
-ENGINE=MEMORY;
 
 CREATE TABLE numbers
 (

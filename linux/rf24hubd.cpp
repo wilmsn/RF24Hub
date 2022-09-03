@@ -634,6 +634,7 @@ int main(int argc, char* argv[]) {
     }
     
     // Init Arrays
+    printf("%s Setting up tables - this may take a while ...\n", ts(tsbuf)); 
     nodeClass.setVerbose(verboseLevel);
     sensorClass.setVerbose(verboseLevel);
     order.setVerbose(verboseLevel);
@@ -717,13 +718,12 @@ int main(int argc, char* argv[]) {
         UdpMsgLen = recvfrom ( udp_sockfd_in, &udpdata, sizeof(udpdata), 0, (struct sockaddr *) &udp_address_in, &udp_addrlen );
         if (UdpMsgLen > 0) {
             memcpy(&payload, &udpdata.payload, sizeof(payload) );
-            //sprintf(gw_,"%s",inet_ntoa(udp_address_in.sin_addr));
-            if ( verboseLevel & VERBOSERF24 ) {
-                printf ("%sUDP Message from: %s \n",ts(tsbuf), inet_ntoa(udp_address_in.sin_addr));
-                sprintf(buf1,"G:%u>H", udpdata.gw_no);
-                printPayload(ts(tsbuf), buf1, &payload);
-            }
             if ( gatewayClass.isGateway(udpdata.gw_no) && nodeClass.isValidNode(payload.node_id) ) {
+                if ( verboseLevel & VERBOSERF24 ) {
+                    printf ("%sUDP Message from: %s \n",ts(tsbuf), inet_ntoa(udp_address_in.sin_addr));
+                    sprintf(buf1,"G:%u>H", udpdata.gw_no);
+                    printPayload(ts(tsbuf), buf1, &payload);
+                }
                 if (nodeClass.setLVFlag(payload.node_id, payload.msg_flags & PAYLOAD_FLAG_LOWVOLTAGE )) {
                     char* tn_buf;
                     tn_buf = (char*)malloc(100);
@@ -829,7 +829,11 @@ int main(int argc, char* argv[]) {
                         }
                     }
                 }
-            }  // isGateway && isValidNode
+            } else { // isGateway && isValidNode
+                if ( verboseLevel & VERBOSERF24 ) {
+                    printf ("%sUDP Message from: %s for Node %u dropped\n",ts(tsbuf), inet_ntoa(udp_address_in.sin_addr), udpdata.payload.node_id);
+                }
+            }
         } // UDP Message > 0
 //
 // Orderloop: Tell the nodes what they have to do

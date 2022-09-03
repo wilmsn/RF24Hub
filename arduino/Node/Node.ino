@@ -8,20 +8,30 @@
  * 
  * Build in Parts (cut and pasteable): see page Parts.txt
  * 
- * On Branch: zahlenformat  !!!!!
+ * On Branch: V3.0  !!!!!
  * 
  */
 //****************************************************
 // Select / enable your in "Node_settings" defined Nodes here
 // Select only one at one time !!!!
-//#define SOLARNODE
+// Node 200
+//#define AUSSENTHERMOMETER1
+// Node 201
 //#define AUSSENTHERMOMETER2
-//#define BASTELZIMMERTHERMOMETER_SW
-#define ANKLEIDEZIMMERTHERMOMETER
+// Node 202
+#define SOLARNODE1
+// Node 203
+//#define SOLARNODE2
+// Node 100
+//#define BASTELZIMMERTHERMOMETER
+// Node 101
 //#define NODE_101
+// Node 105
+//#define BASTELZIMMERTHERMOMETER_SW
+// Node 110
+//#define ANKLEIDEZIMMERTHERMOMETER    
 //----Testnodes-----
 //#define TESTNODE_240
-//#define TESTNODE_UNO
 //****************************************************
 // Default settings and settings for the individual nodes are in "Node_settings.h"
 #include "Node_settings.h"
@@ -1516,7 +1526,7 @@ void loop(void) {
     if ( sensor.hasTemperature() ) payload_data(pos, TEMPERATURE_CHANNEL, temp);
     pos++;
     if ( sensor.hasPressure() )    payload_data(pos, PRESSURE_CHANNEL, pres);
-    pos++
+    pos++;
     if ( sensor.hasHumidity() )    payload_data(pos, HUMIDITY_CHANNEL, humi);
     pos++;
 #endif
