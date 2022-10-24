@@ -755,7 +755,7 @@ int main(int argc, char* argv[]) {
                         process_payload(&payload);                    
                     }
                     break;
-                    case PAYLOAD_TYPE_HB: { // heartbeat message!!
+                    case PAYLOAD_TYPE_HB: { // Initial heartbeat message!!
                         if ( nodeClass.isNewHB(payload.node_id, payload.heartbeatno, time(0)) ) {
                         // Got a new Heaqrtbeat for a mastered Node-> process it!
                             process_payload(&payload);
@@ -774,7 +774,19 @@ int main(int argc, char* argv[]) {
                             order.adjustEntryTime(payload.node_id, mymillis());
                         }
                     }
-                    break;    
+                    break;
+                    case PAYLOAD_TYPE_HB_F: { // Followup heartbeat message!!
+                        if ( nodeClass.isCurHB(payload.node_id, payload.heartbeatno) ) {
+                        // Got a current Heaqrtbeat for a mastered Node-> process it!
+                            process_payload(&payload);
+                            order.addOrder(payload.node_id, PAYLOAD_TYPE_HB_F_RESP, 0, mymillis());
+                            order.modifyOrderFlags(payload.node_id, PAYLOAD_FLAG_LASTMESSAGE);
+                        } else {
+                        // reset stop counter (TTL) for message to send
+                            order.adjustEntryTime(payload.node_id, mymillis());
+                        }
+                    }
+                    break;
                     case PAYLOAD_TYPE_DATRESP: { // Quittung für eine Nachricht vom Typ PAYLOAD_TYPE_DATNOR !!
                         if ( order.isOrderNo(payload.orderno) ) {
                             process_payload(&payload);

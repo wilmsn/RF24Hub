@@ -47,7 +47,6 @@
 // Use a offset
 #define VOLT_OFF        0
 
-
 // Low Voltage Management
 // Set the limit voltage for it, low voltage handling is below
 #define VOLT_LV         2
@@ -100,15 +99,38 @@
 // optional
 // For calculating the Presure at sea level we need the altitude
 #define ALTITUDEABOVESEALEVEL   95.0
+// define a channel for the temperature (default is 1)
+#define TEMP_BOSCH_CHANNEL            4
+// define a channel for the pressure (default is 2)
+#define PRES_BOSCH_CHANNEL            5
+// define a channel for the humidity (default is 3)
+#define HUMI_BOSCH_CHANNEL            6
 
-// 4. A Solar Cell for measuring the solar power
+// 4. AHT20 Temperature and Humidity Sensor 
+// mandatory:
+#define SENSOR_AHT20
+// optional
+// define a channel for the temperature (default is 1)
+#define TEMP_AHT20_CHANNEL            2
+// define a channel for the humidity (default is 2)
+#define HUMI_AHT20_CHANNEL            3
+
+// 5. HTU2X Temperature and Humidity Sensor 
+// mandatory:
+#define SENSOR_HTU2X
+// optional
+// define a channel for the temperature (default is 1)
+#define TEMP_HTU2X_CHANNEL            7
+// define a channel for the humidity (default is 2)
+#define HUMI_HTU2X_CHANNEL            8
+
+// 6. A Solar Cell for measuring the solar power
 // mandatory: Set the Analog-Pin the Solarcell is connected
 // SOLARZELLE1 is connected with a resistor in parallel
 // Umax (solarcell) must be less than Vcc or you have to use a voltage divider!!!!
 #define SOLARZELLE1        <A-pin>
 // SOLARZELLE2 is used to charge the internal akku
 #define SOLARZELLE2        <A-pin>
-
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //                  Actors (Output Devices)
@@ -125,8 +147,15 @@
 // A Nokia 5110 Display
 // connected to pin: CLK 7; DIN 6; DC 5; RST 2; CE 4
 #define DISPLAY_5110
-// optional: set the contrast
+// optional: 
+// set the contrast
 #define CONTRAST 65
+
+// Design Pattern for all Displays (all optional)
+// The default layout has the Temperature in the top and 4 generic field in the bottom (default)
+#define DISPLAY_LAYOUT_DEFAULT
+// This Layout has the Temperature in the top and the Humidity in the bottom
+#define DISPLAY_LAYOUT_TEMPHUMI
 
 // Relais up to 4 pices
 // mandatory: Set the Pin the Relais is connected

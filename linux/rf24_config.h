@@ -186,7 +186,7 @@
 /// Diese Nachricht wird nicht vom Hub beantwortet
 #define PAYLOAD_TYPE_ESP            41
 
-/// Nachricht ist ein Heatbeat
+/// Nachricht ist ein initialer Heatbeat
 /// Ursprung: Node; Empfänger: Hub
 #define PAYLOAD_TYPE_HB             51
 
@@ -194,6 +194,15 @@
 /// Alle 6 data Felder sind leer (0)
 /// Ursprung: Hub; Empfänger: Node
 #define PAYLOAD_TYPE_HB_RESP        52
+
+/// Nachricht ist ein Folge Heatbeat
+/// Ursprung: Node; Empfänger: Hub
+#define PAYLOAD_TYPE_HB_F           55
+
+/// Nachricht ist eine Quittung für einen Folge Heatbeat,
+/// Alle 6 data Felder sind leer (0)
+/// Ursprung: Hub; Empfänger: Node
+#define PAYLOAD_TYPE_HB_F_RESP      56
 
 /// Daten Nachricht, erfolgt als Antwort auf einen Heartbeat wenn der Hub dem Node etwas mitteilen möchte.
 /// Ursprung: Hub; Empfänger: Node

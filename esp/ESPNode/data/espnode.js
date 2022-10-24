@@ -1,4 +1,4 @@
-var htmlversion = "2.16";
+var htmlversion = "2.21 / Jun. 5 2022";
 var msg1_active = 0;
 var msg2_active = 0;
 var sw1_active = 0;
@@ -378,6 +378,9 @@ function prozessJS( key, val ) {
         break;
         case "SW":
           $("#f_swversion").html(val);
+        break;
+        case "Vcc":
+          $("#f_vcc").html(val);
         break;
         case "UpTime":
           $("#f_uptime").html(val);

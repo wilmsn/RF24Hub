@@ -84,14 +84,14 @@ char* NodeClass::getNodeName(NODE_DATTYPE node_id) {
 bool NodeClass::isNewHB(NODE_DATTYPE node_id, uint8_t hb_no, uint32_t hb_utime) {
     nodeClass_t *p_search;
     bool retval = false;
-    p_search = p_initial;    
+    p_search = p_initial;
     if ( hb_no == 0 ) {
         retval = true;
     } else {
         while (p_search) {
             if (p_search->node_id == node_id) {
                 if (_verboseLevel & VERBOSEORDER)
-                    printf("%sNodeClass.is_new_HB: NodeClass:%u last HB %u (%u) this HB %u => ", ts(tsbuf), node_id, p_search->hb_no, p_search->hb_utime, hb_no );
+                    printf("%sNodeClass.is_new_HB: Node:%u last HB %u (%u) this HB %u => ", ts(tsbuf), node_id, p_search->hb_no, p_search->hb_utime, hb_no );
                 if ( hb_utime > p_search->hb_utime + 50 || 
                      hb_no > p_search->hb_no || 
                      (p_search->hb_no - hb_no > 50) || 
@@ -113,6 +113,30 @@ bool NodeClass::isNewHB(NODE_DATTYPE node_id, uint8_t hb_no, uint32_t hb_utime) 
             printf("Old HeartBeat\n");
         }
     }        
+    return retval;
+}
+
+bool NodeClass::isCurHB(NODE_DATTYPE node_id, uint8_t hb_no) {
+    nodeClass_t *p_search;
+    bool retval = false;
+    p_search = p_initial;
+    while (p_search) {
+        if (p_search->node_id == node_id && p_search->hb_no == hb_no) {
+            if (_verboseLevel & VERBOSEORDER)
+                printf("%sNodeClass.isCurHB: Node:%u last HB %u this HB %u => ", ts(tsbuf), node_id, p_search->hb_no, hb_no );
+            retval = true;
+            p_search = NULL;
+        } else {
+            p_search = p_search->p_next;
+        }
+    }
+    if (_verboseLevel & VERBOSEORDER) {
+        if (retval) {
+            printf("Current Heartbeat\n");
+        } else {
+            printf("Old HeartBeat\n");
+        }
+    }
     return retval;
 }
 

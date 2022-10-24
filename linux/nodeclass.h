@@ -104,6 +104,14 @@ char* getNodeName(NODE_DATTYPE node_id);
 bool isNewHB(NODE_DATTYPE node_id, uint8_t heartbeatno, uint32_t utime);
 
 /**
+ *  Prüft ob ein Heartbeat aktuell (=aktuelle heartbeatno) ist.
+ * @param node_id Die Node-ID
+ * @param heartbeatno Die vom Node übermittelte Heartbeat-Nummer
+ * @return "true" wenn es sich um einen neuen Heartbeat handelt, sonst "false" 
+ */
+bool isCurHB(NODE_DATTYPE node_id, uint8_t heartbeatno);
+
+/**
  *  Prüft ob ein Node ein Node von diesem Hub gesteuert wird oder nicht 
  * @param node_id Die Node-ID
  * @return "true" wenn der Node durch diesen Hub verwaltet wird, sonst "false" 

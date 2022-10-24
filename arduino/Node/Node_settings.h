@@ -9,25 +9,31 @@
 //    Individual settings
 //-----------------------------------------------------
 #if defined(AUSSENTHERMOMETER1)
-#define RF24NODE        200
+#define RF24NODE            200
 #define SENSOR_BOSCH
-#define STATUSLED       3
-#define STATUSLED_ON    HIGH
-#define STATUSLED_OFF   LOW
-#define VOLT_LV         2
-#define EEPROM_VERSION  8
-#define SLEEPTIME_SEC   900
+#define STATUSLED           3
+#define STATUSLED_ON        HIGH
+#define STATUSLED_OFF       LOW
+#define VOLT_LV             2.5
+#define SLEEPTIME           300
+#define SLEEPTIME_LV        3600
+#define EMPTYLOOPS          0
+#define SLEEP4MS_FAC        995
+#define EEPROM_VERSION      8
 #endif
 //-----------------------------------------------------
 #if defined(AUSSENTHERMOMETER2)
-#define RF24NODE        201
+#define RF24NODE            201
 #define SENSOR_BOSCH
-#define STATUSLED       7
-#define STATUSLED_ON    HIGH
-#define STATUSLED_OFF   LOW
-#define VOLT_LV         2
-#define EEPROM_VERSION  7
-#define SLEEPTIME_SEC   900
+#define STATUSLED           7
+#define STATUSLED_ON        HIGH
+#define STATUSLED_OFF       LOW
+#define VOLT_LV             2.5
+#define SLEEPTIME           300
+#define SLEEPTIME_LV        3600
+#define EMPTYLOOPS          0
+#define SLEEP4MS_FAC        976
+#define EEPROM_VERSION      7
 #endif
 //-----------------------------------------------------
 #if defined(SOLARNODE1)
@@ -81,6 +87,7 @@
 // Maximale Differenzspannung zwischen den Zellen
 #define LOAD_BALLANCER         0.1
 #endif
+
 //-----------------------------------------------------
 #if defined(BASTELZIMMERTHERMOMETER)
 #define RF24NODE             100
@@ -107,20 +114,99 @@
 #define VOLT_OFF             0.55
 #define VOLT_LV              3.6
 #endif
+
+//-----------------------------------------------------
+#if defined(SCHLAFZIMMERTHERMOMETER)
+#define RF24NODE             102
+#define SENSOR_BOSCH
+#define DISPLAY_5110
+#define EEPROM_VERSION       8
+#define EMPTYLOOPS           9
+#define VOLT_OFF             0.55
+#define VOLT_LV              3.6
+#endif
+
+//-----------------------------------------------------
+#if defined(KUECHENTHERMOMETER)
+#define RF24NODE             103
+#define SENSOR_18B20         8
+#define DISPLAY_5110
+#define EEPROM_VERSION       7
+#define EMPTYLOOPS           9
+#define SLEEPTIME            120
+#define SLEEPTIME_LV         1440
+#define VOLT_LV              3.6
+#define VOLT_OFF             0.55
+#define SLEEP4MS_FAC         990
+#define STATUSLED_ON         LOW
+#define STATUSLED_OFF        HIGH
+#endif
+
+//-----------------------------------------------------
+#if defined(GAESTEZIMMERTHERMOMETER)
+#define RF24NODE             104
+#define SLEEPTIME            900
+#define SLEEPTIME_LV         7200
+#define SLEEP4MS_FAC         878
+#define STATUSLED            7
+#define SENSOR_18B20         8
+#define EEPROM_VERSION       7
+#define EMPTYLOOPS           0
+#define VOLT_LV              3.6
+#endif
+
 //-----------------------------------------------------
 #if defined(BASTELZIMMERTHERMOMETER_SW)
 #define RF24NODE             105
 #define EEPROM_VERSION       5
 #define SENSOR_18B20         8
 #define DISPLAY_5110
-//#define MONITOR
 #define VOLT_OFF             0.55
 #define EMPTYLOOPS           9
 #define VOLT_LV              3.6
-#define SLEEPTIME_LV         1200
 #define STATUSLED_ON         LOW
 #define STATUSLED_OFF        HIGH
 #endif
+
+//-----------------------------------------------------
+#if defined(KUGELNODE1)
+#define RF24NODE             106
+#define SLEEPTIME_SEC        300
+#define SENSOR_BOSCH
+#define DISPLAY_5110
+#define EEPROM_VERSION       7
+#define SLEEPTIME            120
+#define EMPTYLOOPS           4
+#define VOLT_LV              3
+#define VOLT_OFF             0.55
+#define CONTRAST             55
+#endif
+//-----------------------------------------------------
+#if defined(KUGELNODE2)
+#define RF24NODE             107
+#define SLEEPTIME_SEC        300
+#define SENSOR_BOSCH
+#define DISPLAY_5110
+#define EEPROM_VERSION       3
+#define SLEEPTIME            120
+#define EMPTYLOOPS           4
+#define VOLT_LV              3.5
+#define VOLT_OFF             0.55
+#endif
+//-----------------------------------------------------
+#if defined(MW_WOHNZIMMER)
+#define RF24NODE             108
+#define SLEEPTIME_SEC        300
+#define SENSOR_HTU2X
+#define DISPLAY_5110
+#define DISPLAY_LAYOUT_TEMPHUMI
+#define EEPROM_VERSION       3
+#define SLEEPTIME            120
+#define EMPTYLOOPS           4
+#define VOLT_LV              3.5
+#define VOLT_OFF             0.55
+#endif
+
 //-----------------------------------------------------
 #if defined(ANKLEIDEZIMMERTHERMOMETER)
 #define RF24NODE             110
@@ -148,39 +234,33 @@
 #define EMPTYLOOPS                    4
 #define SENSOR_18B20                  8
 #define SENSOR_BOSCH
-#define TEMP_BOSCH_CHANNEL            2
-#define PRES_BOSCH_CHANNEL            3
-#define HUMI_BOSCH_CHANNEL            4
-#define SENSOR_AHT20
-#define TEMP_AHT20_CHANNEL            5
-#define HUMI_AHT20_CHANNEL            6
+#define TEMP_BOSCH_CHANNEL            4
+#define PRES_BOSCH_CHANNEL            5
+#define HUMI_BOSCH_CHANNEL            6
+//#define SENSOR_AHT20
+//#define TEMP_AHT20_CHANNEL            2
+//#define HUMI_AHT20_CHANNEL            3
 #define SENSOR_HTU2X
 #define TEMP_HTU2X_CHANNEL            7
 #define HUMI_HTU2X_CHANNEL            8
 #define STATUSLED                     7
 #endif
+
 //-----------------------------------------------------
 #if defined(TESTNODE_UNO)
-#define RF24NODE             165
-#define SLEEPTIME            60
-#define EMPTYLOOPS           0
+//#define RF24NODE                      241
+#define SLEEPTIME                     60
+#define EMPTYLOOPS                    0
 #define SENSOR_BOSCH
 #define DISPLAY_5110
-#define EEPROM_VERSION       2
-#define LOW_VOLT_LEVEL       3.5
+#define DISPLAY_LAYOUT_TEMPHUMI
+#define EEPROM_VERSION                5
+#define LOW_VOLT_LEVEL                3.5
 //#define VOLT_OFF             0.55
-#define CONTRAST             45
-#define DEBUG_SERIAL_SENSOR
-#define DEBUG_SERIAL_RADIO
-#define DEBUG_SERIAL_PROC
-#endif
-//-----------------------------------------------------
-#if defined(TESTNODE)
-#define RF24NODE             101
-#define SENSOR_18B20         8
-#define EEPROM_VERSION       1
-#define VOLT_OFF             0.55
-#define LOWVOLTAGELEVEL      2.0
+#define CONTRAST                      45
+//#define DEBUG_SERIAL_SENSOR
+//#define DEBUG_SERIAL_RADIO
+//#define DEBUG_SERIAL_PROC
 #endif
 
 
@@ -195,7 +275,7 @@
 #endif
 
 //         DO NOT EDIT BELOW 
-//   - unless you know what you do -
+//   - unless you know what you are doing -
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 //define constrains
@@ -430,12 +510,22 @@
 #endif
 
 // PA_Level for the radio, default is maximum
+#if defined(RF24NODE)
 #ifndef PA_LEVEL
 #define PA_LEVEL RF24_PA_MAX
+#endif
 #endif
 
 // Some definitions for the display
 #if defined(DISPLAY)
+
+// Choose a Layout
+#define DISPLAY_LAYOUT_DEFAULT
+
+#if defined(DISPLAY_LAYOUT_TEMPHUMI)
+#undef DISPLAY_LAYOUT_DEFAULT
+#endif
+
 // 5 voltages for the battery (empty ... full)
 #ifndef U0
 #define U0 3.6

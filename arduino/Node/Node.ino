@@ -26,12 +26,25 @@
 //#define BASTELZIMMERTHERMOMETER
 // Node 101
 //#define NODE_101
+// Node 102
+//#define SCHLAFZIMMERTHERMOMETER
+// Node 103
+//#define KUECHENTHERMOMETER
+// Node 104
+//#define GAESTEZIMMERTHERMOMETER
 // Node 105
 //#define BASTELZIMMERTHERMOMETER_SW
+// Node 106
+//#define KUGELNODE1
+// Node 107
+//#define KUGELNODE2
+// Node 108
+#define MW_WOHNZIMMER
 // Node 110
 //#define ANKLEIDEZIMMERTHERMOMETER    
 //----Testnodes-----
-#define TESTNODE_240
+//#define TESTNODE_240
+//#define TESTNODE_UNO
 //****************************************************
 // Default settings and settings for the individual nodes are in "Node_settings.h"
 #include "Node_settings.h"
@@ -41,8 +54,6 @@
 
 
 #include <avr/pgmspace.h>
-#include <nRF24L01.h>
-#include <RF24.h>
 #include <SPI.h>
 #include <sleeplib.h>
 #include <Vcc.h>
@@ -51,6 +62,11 @@
 #include "version.h"
 #include "config.h"
 #include "rf24_config.h"
+
+#if defined(RF24NODE)
+#include <nRF24L01.h>
+#include <RF24.h>
+#endif
 
 #if defined(DEBUG_SERIAL)
 #include "printf.h"
@@ -155,6 +171,7 @@ float    u_batt2;
 #endif
 
 payload_t r_payload, s_payload;    
+uint8_t payloadNo = 0;
 
 uint8_t  rf24_node2hub[] = RF24_NODE2HUB;
 uint8_t  rf24_hub2node[] = RF24_HUB2NODE;
@@ -204,7 +221,9 @@ boolean             display_on = true;
 
 // nRF24L01(+) radio attached using Getting Started board 
 // Usage: radio(CE_pin, CS_pin)
+#if defined(RF24NODE)
 RF24 radio(RADIO_CE_PIN,RADIO_CSN_PIN);
+#endif
 
 void get_sensordata(void) {
 
@@ -252,6 +271,7 @@ void get_sensordata(void) {
   sleep4ms(SENSOR_18B20_DELAYTIME);
   delay(2);
   temp_18b20=s_18b20.getTempCByIndex(0);
+#define DISPLAY_TEMP temp_18b20
 #if defined(DEBUG_SERIAL_SENSOR)
     Serial.print("Temp: ");
     Serial.print(temp_18b20);
@@ -269,6 +289,7 @@ void get_sensordata(void) {
   bosch.startSingleMeasure();
   if (bosch.hasTemperature() ) {
     temp_bosch = bosch.getTemperature();
+#define DISPLAY_TEMP temp_bosch
 #if defined(DEBUG_SERIAL_SENSOR)
     Serial.print("Temp: ");
     Serial.println(temp_bosch);
@@ -283,6 +304,7 @@ void get_sensordata(void) {
   }
   if (bosch.hasHumidity() )  {
     humi_bosch = bosch.getHumidity();
+#define DISPLAY_HUMI humi_bosch
 #if defined(DEBUG_SERIAL_SENSOR)
     Serial.print("Humi: ");
     Serial.println(humi_bosch);
@@ -294,13 +316,14 @@ void get_sensordata(void) {
 // Sensor HTU2X
 #if defined(SENSOR_HTU2X)
   htu2x.startSingleMeasure();
-  delay(100);
   temp_htu2x = htu2x.getTemperature();
+#define DISPLAY_TEMP temp_htu2x
 #if defined(DEBUG_SERIAL_SENSOR)
     Serial.print("Temp: ");
     Serial.println(temp_htu2x);
 #endif
   humi_htu2x = htu2x.getHumidity();
+#define DISPLAY_HUMI humi_htu2x
 #if defined(DEBUG_SERIAL_SENSOR)
     Serial.print("Humi: ");
     Serial.println(humi_htu2x);
@@ -311,13 +334,14 @@ void get_sensordata(void) {
 // Sensor AHT20
 #if defined(SENSOR_AHT20)
   aht20.startSingleMeasure();
-  delay(100);
   temp_aht20 = aht20.getTemperature();
+#define DISPLAY_TEMP temp_aht20
 #if defined(DEBUG_SERIAL_SENSOR)
     Serial.print("Temp: ");
     Serial.println(temp_aht20);
 #endif
   humi_aht20 = aht20.getHumidity();
+#define DISPLAY_HUMI humi_aht20
 #if defined(DEBUG_SERIAL_SENSOR)
     Serial.print("Humi: ");
     Serial.println(humi_aht20);
@@ -361,6 +385,7 @@ uint32_t action_loop(uint32_t data) {
 #endif  
     switch (channel) {
 #if defined(DISPLAY_ALL)
+#if defined(DISPLAY_LAYOUT_DEFAULT)
       case 21:
       {
         // Set field 1
@@ -393,6 +418,7 @@ uint32_t action_loop(uint32_t data) {
         print_field(val,4);
       }
       break;
+#endif
       case 51:
       {
         uint16_t val;
@@ -657,6 +683,7 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
+#if defined(RF24NODE)
       case REG_PALEVEL:
       {
         // PA Level
@@ -669,6 +696,7 @@ uint32_t action_loop(uint32_t data) {
         }
       }
       break;
+#endif
       case REG_SW:
       {
         data = calcTransportValue(REG_SW, SWVERSION);
@@ -775,7 +803,11 @@ void init_eeprom(bool reset_eeprom) {
     eeprom.volt_fac         = VOLT_FAC;
     eeprom.volt_off         = VOLT_OFF;
     eeprom.volt_lv          = VOLT_LV;
+#if defined(RF24NODE)
     eeprom.pa_level         = PA_LEVEL;
+#else
+    eeprom.pa_level         = 0;
+#endif
 #if defined(LOAD_BALLANCER)
     eeprom.volt_lb          = LOAD_BALLANCER;
 #else
@@ -875,6 +907,7 @@ init_eeprom(false);
   }
   neopixels.show();   
 #endif
+#if defined(RF24NODE)
   radio.begin();
   radio.setChannel(RF24_CHANNEL);
   radio.setDataRate(RF24_SPEED);
@@ -888,7 +921,8 @@ init_eeprom(false);
   radio.openReadingPipe(1,rf24_hub2node);
 #if defined(DEBUG_SERIAL_RADIO)
   radio.printDetails();
-#endif    
+#endif
+#endif  //RF24NODE    
   delay(100);
 #if defined(RELAIS_1)
   digitalWrite(RELAIS_1,RELAIS_OFF); 
@@ -913,8 +947,10 @@ init_eeprom(false);
   lcd.setFont(LCD5110::small);
   lcd.clear();
   lcd.println();
+#if defined(RF24NODE)
   lcd.print("Node: ");
   lcd.println(RF24NODE);
+#endif
   lcd.println();
   lcd.print("SW: ");
   lcd.println(SWVERSION);
@@ -925,7 +961,9 @@ init_eeprom(false);
 #if defined(MONITOR)
   monitor(1000);
 #endif
+#if defined(RF24NODE)
   draw_antenna(ANT_X0, ANT_Y0);
+#endif
   draw_therm(THERM_X0, THERM_Y0);
   draw_hb_countdown(8);
 #endif
@@ -934,8 +972,10 @@ init_eeprom(false);
   digitalWrite(STATUSLED,STATUSLED_OFF); 
 #endif
 // on init send config to hub
+#if defined(RF24NODE)
   pingTest();
   sendRegister();
+#endif
 }
 
 // Start of DISPLAY_ALL Block
@@ -1026,11 +1066,16 @@ void display_sleep(boolean displayGotoSleep) {
         lcd.on(); 
 #endif
         displayIsSleeping = false;
-        draw_temp(temp);
+        draw_temp(DISPLAY_TEMP);
+#if defined(DISPLAY_LAYOUT_TEMPHUMI)
+        draw_temp(DISPLAY_HUMI);
+#endif
+#if defined(DISPLAY_LAYOUT_DEFAULT)
         if (field1_val != 0) print_field(field1_val,1);
         if (field2_val != 0) print_field(field2_val,2);
         if (field3_val != 0) print_field(field3_val,3);
         if (field4_val != 0) print_field(field4_val,4);
+#endif
       }
     }
   }  
@@ -1084,6 +1129,18 @@ void draw_temp(float t) {
 #if defined(DISPLAY_5110)
     lcd.print(t,1);
     lcd.print("*");
+#endif
+  }
+}
+
+void draw_humi(float h) {
+  if ( display_on ) {
+#if defined(DISPLAY_5110)
+    lcd.drawRect(0,25,83,47,false,true,false);
+    lcd.setFont(LCD5110::medium);
+    lcd.setCursor(50,30);
+    lcd.print(h,0);
+    lcd.print("%");
 #endif
   }
 }
@@ -1154,6 +1211,7 @@ void draw_battery(int x, int y, float u) {
   }
 }
 
+#if defined(RF24NODE)
 void draw_antenna(int x, int y) {
   if ( display_on ) {
 #if defined(DISPLAY_5110)
@@ -1209,6 +1267,7 @@ void wipe_antenna(int x, int y) {
   }
 }  
 #endif
+#endif //RF24NODE
 
 void display_refresh() {
 #if defined(DISPLAY_5110)
@@ -1256,8 +1315,24 @@ void printPayload(payload_t* pl) {
 }
 #endif
 
-void payload_data(uint8_t pos, uint8_t channel, float value) {
-  switch (pos) {
+uint8_t mk_flags(bool last_msg) {
+  uint8_t retval = PAYLOAD_FLAG_EMPTY;
+  if (low_voltage_flag) retval |= PAYLOAD_FLAG_LOWVOLTAGE;
+  if (last_msg) retval |= PAYLOAD_FLAG_LASTMESSAGE;
+  return retval;
+}
+
+#if defined(RF24NODE)
+void payload_data(uint8_t* pos, uint8_t channel, float value) {
+  if ( (*pos) == 7 ) {
+    do_transmit(eeprom.max_sendcount, payloadNo == 0 ? PAYLOAD_TYPE_HB : PAYLOAD_TYPE_HB_F, mk_flags(false), payloadNo, heartbeatno);
+// Hub needs some time to prcess data !!!  
+    delay(500);
+    payloadInitData();
+    (*pos) = 1;
+    payloadNo++;
+  }
+  switch (*pos) {
     case 1:
       s_payload.data1 = calcTransportValue(channel, value);
     break;
@@ -1277,6 +1352,7 @@ void payload_data(uint8_t pos, uint8_t channel, float value) {
       s_payload.data6 = calcTransportValue(channel, value);
     break;    
   }
+  (*pos)++;
 }
 
 /*
@@ -1286,15 +1362,15 @@ void payload_data(uint8_t pos, uint8_t channel, float value) {
 
 void pingTest(void) {
   radio.setPALevel( RF24_PA_MAX) ;
-  do_transmit(3, PAYLOAD_TYPE_PING_POW_MAX, PAYLOAD_FLAG_LASTMESSAGE, 0, 251);
+  do_transmit(3, PAYLOAD_TYPE_PING_POW_MAX, mk_flags(false), 0, 251);
   radio.setPALevel( RF24_PA_HIGH) ;
-  do_transmit(3, PAYLOAD_TYPE_PING_POW_HIGH, PAYLOAD_FLAG_LASTMESSAGE, 0, 252);
+  do_transmit(3, PAYLOAD_TYPE_PING_POW_HIGH, mk_flags(false), 0, 252);
   radio.setPALevel( RF24_PA_LOW) ;
-  do_transmit(3, PAYLOAD_TYPE_PING_POW_LOW, PAYLOAD_FLAG_LASTMESSAGE, 0, 253);
+  do_transmit(3, PAYLOAD_TYPE_PING_POW_LOW, mk_flags(false), 0, 253);
   radio.setPALevel( RF24_PA_MIN) ;
-  do_transmit(3, PAYLOAD_TYPE_PING_POW_MIN, PAYLOAD_FLAG_LASTMESSAGE, 0, 254);
+  do_transmit(3, PAYLOAD_TYPE_PING_POW_MIN, mk_flags(false), 0, 254);
   radio.setPALevel( RF24_PA_MAX) ;
-  do_transmit(3, PAYLOAD_TYPE_PING_END, PAYLOAD_FLAG_LASTMESSAGE, 0, 255);
+  do_transmit(3, PAYLOAD_TYPE_PING_END, mk_flags(false), 0, 255);
   radio.setPALevel( eeprom.pa_level ); 
   exec_pingTest = false;
 }
@@ -1311,7 +1387,7 @@ void sendRegister(uint32_t data, uint8_t* pos, uint8_t* hbno) {
   }
   (*pos)++;
   if ((*pos) == 7) {
-    do_transmit(3,PAYLOAD_TYPE_INIT,PAYLOAD_FLAG_EMPTY,0, *hbno);
+    do_transmit(3,PAYLOAD_TYPE_INIT,mk_flags(false),0, *hbno);
     (*hbno)++;
     (*pos) = 1;
 // Hub needs some time to prcess data !!!  
@@ -1366,8 +1442,6 @@ void prep_data(uint8_t msg_type, uint8_t msg_flags, ONR_DATTYPE orderno, uint8_t
   if (myheartbeatno > 0) {
     s_payload.heartbeatno = myheartbeatno;
   } else {
-    heartbeatno++;
-    if ( heartbeatno > 200 ) heartbeatno = 1;
     s_payload.heartbeatno = heartbeatno;
   }
 }
@@ -1443,6 +1517,7 @@ void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, 
                 doLoop = false;;
               break;
               case PAYLOAD_TYPE_HB_RESP:
+              case PAYLOAD_TYPE_HB_F_RESP:
               case PAYLOAD_TYPE_DATSTOP:
                   tx_loopcount = max_tx_loopcount; 
                   doLoop = false;
@@ -1470,6 +1545,7 @@ void exec_jobs(void) {
     delay(200);
   }
 }
+#endif
 
 void batt_monitor() {
 #if defined (BATT_MONITOR)
@@ -1525,7 +1601,10 @@ void batt_monitor() {
 }
 
 void loop(void) {
-  delay(1);  
+  delay(1);
+  payloadNo = 0;
+  heartbeatno++;
+  if ( heartbeatno > 200 ) heartbeatno = 1;
   payloadInitData();
   get_sensordata();
 
@@ -1546,9 +1625,14 @@ void loop(void) {
     draw_battery(BATT_X0,BATT_Y0,cur_voltage);
     draw_therm(THERM_X0, THERM_Y0);
     draw_hb_countdown((uint8_t) 8 * (1- ((float)loopcount / eeprom.emptyloops)) );
+#if defined(RF24NODE)
     if ( loopcount == 0) draw_antenna(ANT_X0, ANT_Y0);
+#endif
     display_refresh();
-    draw_temp(temp);
+    draw_temp(DISPLAY_TEMP);
+#if defined(DISPLAY_LAYOUT_TEMPHUMI)
+    draw_humi(DISPLAY_HUMI);
+#endif
     wipe_therm(THERM_X0, THERM_Y0);
 #endif
     batt_monitor();
@@ -1558,6 +1642,7 @@ void loop(void) {
     delay(100);
     Serial.println("Radio WakeUp");
 #endif
+#if defined(RF24NODE)
     radio.powerUp();
     delay(1);
     radio.startListening();
@@ -1570,72 +1655,44 @@ void loop(void) {
       delay(10);
     }
     uint8_t pos=1;
-    payload_data(pos, SENSOR_BATT, cur_voltage);
-    pos++;
+    payload_data(&pos, SENSOR_BATT, cur_voltage);
 #if defined(SENSOR_DUMMY)
-    payload_data(pos, TEMP_DUMMY_CHANNEL, temp_dummy);
-    pos++;
+    payload_data(&pos, TEMP_DUMMY_CHANNEL, temp_dummy);
 #endif
 #if defined(SENSOR_18B20)
-    payload_data(pos, TEMP_18B20_CHANNEL, temp_18b20);
-    pos++;
+    payload_data(&pos, TEMP_18B20_CHANNEL, temp_18b20);
 #endif
 #if defined(SENSOR_BOSCH)
-    if ( bosch.hasTemperature() ) payload_data(pos, TEMP_BOSCH_CHANNEL, temp_bosch);
-    pos++;
-    if ( bosch.hasPressure() )  payload_data(pos, PRES_BOSCH_CHANNEL, pres_bosch);
-    pos++;
-    if ( bosch.hasHumidity() )  payload_data(pos, HUMI_BOSCH_CHANNEL, humi_bosch);
-    pos++;
+    if ( bosch.hasTemperature() ) payload_data(&pos, TEMP_BOSCH_CHANNEL, temp_bosch);
+    if ( bosch.hasPressure() )  payload_data(&pos, PRES_BOSCH_CHANNEL, pres_bosch);
+    if ( bosch.hasHumidity() )  payload_data(&pos, HUMI_BOSCH_CHANNEL, humi_bosch);
 #endif
 #if defined(SENSOR_HTU2X)
-    payload_data(pos, TEMP_HTU2X_CHANNEL, temp_htu2x);
-    pos++;
-    payload_data(pos, TEMP_HTU2X_CHANNEL, temp_htu2x);
-    pos++;
+    payload_data(&pos, TEMP_HTU2X_CHANNEL, temp_htu2x);
+    payload_data(&pos, HUMI_HTU2X_CHANNEL, humi_htu2x);
 #endif
 #if defined(SENSOR_AHT20)
-    payload_data(pos, TEMP_AHT20_CHANNEL, temp_aht20);
-    pos++;
-    payload_data(pos, TEMP_AHT20_CHANNEL, temp_aht20);
-    pos++;
+    payload_data(&pos, TEMP_AHT20_CHANNEL, temp_aht20);
+    payload_data(&pos, HUMI_AHT20_CHANNEL, humi_aht20);
 #endif
 #if defined(SOLARZELLE1)
-    payload_data( pos, SOLARZELLE1_CHANNEL, u_sol1_sum/(float)(eeprom.emptyloops+1));
+    payload_data(&pos, SOLARZELLE1_CHANNEL, u_sol1_sum/(float)(eeprom.emptyloops+1));
     u_sol1_sum = 0;
-    pos++;
-#if defined(DEBUG_SERIAL_RADIO)
-    Serial.print("U_sol: ");
-    Serial.println(u_sol);
-#endif
 #if defined(SOLARZELLE2)
-    payload_data(pos,SOLARZELLE2_CHANNEL,u_sol2);
-    pos++;
-#if defined(DEBUG_SERIAL_RADIO)
-    Serial.print("U_sol2: ");
-    Serial.println(u_sol2);
-#endif
+    payload_data(&pos,SOLARZELLE2_CHANNEL,u_sol2);
 #endif
 #if defined(LOAD_BALLANCER) || defined(DISCHARGE1) || defined(DISCHARGE2)
-    payload_data(pos,BATT1_CHANNEL,u_batt1);
-    pos++;
-#if defined(DEBUG_SERIAL_RADIO)
-    Serial.print("U_batt1: ");
-    Serial.println(u_batt1);
-#endif
+    payload_data(&pos,BATT1_CHANNEL,u_batt1);
 #endif
     uint16_t batt_mod = batt_mod1_s | batt_mod2_s | batt_mod3_s | batt_mod4_s | batt_mod5_s;
-    payload_data(pos,BATT_MOD_CHANNEL, batt_mod);
+    payload_data(&pos,BATT_MOD_CHANNEL, batt_mod);
     batt_mod1_s = 0;
     batt_mod2_s = 0;
     batt_mod3_s = 0;
     batt_mod4_s = 0;
     batt_mod5_s = 0;
-    pos++;
 #endif    
-    uint8_t msg_flags = PAYLOAD_FLAG_LASTMESSAGE;
-    if ( low_voltage_flag ) msg_flags |= PAYLOAD_FLAG_LOWVOLTAGE; 
-    do_transmit(eeprom.max_sendcount, PAYLOAD_TYPE_HB, msg_flags, 0, 0);
+    do_transmit(eeprom.max_sendcount, payloadNo == 0 ? PAYLOAD_TYPE_HB : PAYLOAD_TYPE_HB_F, mk_flags(true), 0, 0);
     exec_jobs();
     radio.stopListening();
     delay(1);
@@ -1647,6 +1704,7 @@ void loop(void) {
 #if defined(DISPLAY_ALL)
     wipe_antenna(ANT_X0, ANT_Y0);
 #endif
+#endif   //RF24NODE
   }
 #if defined(DISPLAY_ALL)
   display_refresh();

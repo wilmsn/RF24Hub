@@ -1,4 +1,4 @@
-// ToDo:
+// Aktuell ist ein Laderegler mit USB-C Buchse eingebaut
 
 use <nw_toolbox.scad>
 $fn = $preview ? 25 : 200;
@@ -6,13 +6,13 @@ $fn = $preview ? 25 : 200;
 durchmesser=100;
 wandstaerke=1;
 displayversatz=25;
-displayLochX=40;
-displayLochY=34;
+displayLochX=40.1;
+displayLochY=34.1;
 displayPlatineX=47;
 displayPlatineY=47;
 displayPlatinendicke=20;
-usbX=9;
-usbY=5;
+usbX=10;
+usbY=4;
 fussversatz=10;
 fusswinkel=-25;
 heckversatz=5;
@@ -26,11 +26,11 @@ resetschalterX=6.7;  //+0.4
 resetschalterY=6.7;
 resetschalterZ=4.2;  //+0.2
 resetschalterLoch=4.5;
-usbPlatineX=18.5;
-usbPlatineY=22.5;
+usbPlatineX=17.5;
+usbPlatineY=27;
 usbPlatineZ=2;
 //HauptPlatine: 6x4
-HP_LochX=54; HP_LochY=34; HP_X=60; HP_Y=40;
+HP_LochX=55.5; HP_LochY=35.9; HP_X=60; HP_Y=40;
 //HauptPlatine: 7x3
 //HP_LochX=64; HP_LochY=24; HP_X=70; HP_Y=30;
 AkkuX=25;
@@ -38,14 +38,14 @@ AkkuY=40;
 AkkuZ=12;
 Abstand18650=23;
 
-show_innenleben=true;
+show_innenleben=false;
 
 //------------------------------------
 radius=durchmesser/2;
 
 //druck_blende();
 
-//druck_vorderseite();
+druck_vorderseite();
 
 //druck_rueckseite();
 
@@ -55,7 +55,7 @@ radius=durchmesser/2;
 
 //vorderseite();
 
-rueckseite();
+//rueckseite();
 
 //kugelgeh();
 
@@ -218,11 +218,11 @@ color( "#FF0011" )
       union() {
         translate([0,-resetschalterX/2,0])
           rotate(270,[0,1,0])
-          Platinenhalter2(resetschalterX,1,resetschalterZ,0.5);
+          Halter_Platine2(resetschalterX,1,resetschalterZ,0.5);
         translate([0,resetschalterX/2,0])    
           mirror([0,1,0])
           rotate(270,[0,1,0])
-            Platinenhalter2(resetschalterX,1,resetschalterZ,0.5);
+            Halter_Platine2(resetschalterX,1,resetschalterZ,0.5);
         translate([-2,-1,resetschalterY/2])    
           cube([2,2,2]);
         translate([-2,-1,-resetschalterY/2-2])    
@@ -242,7 +242,7 @@ color( "#FF0011" )
           translate([0,0,-1.5])
           rotate(90,[1,0,0])
           rotate(270,[0,1,0])
-          Platinenhalter2(5,2,usbPlatineY,2);
+          Halter_Platine2(5,2,usbPlatineY,2);
     
       }
     // Halterung für den Temperatursensor
@@ -337,7 +337,7 @@ module aussparungen() {
     translate([displayversatz-radius+wandstaerke+displayPlatinendicke/2,0,0]) 
         cube([displayPlatinendicke, displayPlatineX, displayPlatineY], center=true);
     //USB Buchse
-    translate([radius-heckversatz,0,-5]) 
+    translate([radius-heckversatz,0,-5.5]) 
         cube([20, usbX, usbY], center=true);      
     //Reset Scalter
     translate([radius-heckversatz,0,10]) 
