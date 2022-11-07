@@ -1,4 +1,4 @@
-RF24Hub {#mainpage}
+RF24Hub
 =====
  
 A gateway and controler for Arduino nodes with nrf24l01 (demo nodes included)
@@ -30,8 +30,14 @@ With:
 - only free software
 - low energy cost
 
-[Quick Start Guide](https://wilmsn.github.io/rf24hub/doc/quickstartguide.html)
+## Guides
+[Quick Start](https://wilmsn.github.io/rf24hub/doc/quickstartguide.html)
 
+[Database](https://wilmsn.github.io/rf24hub/doc/dbguide.html)
+
+[Arduino Node](https://wilmsn.github.io/rf24hub/doc/arduinoguide.html)
+
+[ESP Node](https://wilmsn.github.io/rf24hub/doc/espguide.html)
 
 **Now its up to you:**
 **Feel free to fork, use or modify it.**
