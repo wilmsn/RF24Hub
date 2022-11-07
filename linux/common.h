@@ -44,6 +44,7 @@ enum sockType_t { TCP, UDP};
 struct TnData_t {
         char tntext[DEBUGSTRINGSIZE];
         int  tn_socket;    
+        char address[IPADDRESSLENGTH];
 };
 
 struct TnMsg_t {
@@ -51,8 +52,12 @@ struct TnMsg_t {
         struct TnData_t TnData;
 };
 
-struct thread_tn_data {
-   int tnsocket;
+/**
+ * Übergabedaten für den Thread "receive_tn_in"
+ */
+struct ThreadTnData_t {
+        int tnsocket;
+        char address[IPADDRESSLENGTH];
 };
 
 static const char date_format1[] = "%d.%m.%Y %H:%M:%S";
