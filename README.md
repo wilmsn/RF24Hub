@@ -28,9 +28,9 @@ With:
 - only free software
 - low energy cost
 
-##[Quick Start Guide](https://raw.githubusercontent.com/wilmsn/RF24Hub/master/doc/quickstartguide.html)
 
-##[Quick Start Guide](file:///home/norbert/projekte/RF24Hub/doc/quickstartguide.html)
+[Quick Start Guide](https://wilmsn.github.io/rf24hub/doc/quickstartguide.html)
+
 
 **Now its up to you:**
 **Feel free to fork, use or modify it.**
