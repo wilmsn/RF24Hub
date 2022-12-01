@@ -43,7 +43,6 @@
 // Node 110
 //#define ANKLEIDEZIMMERTHERMOMETER    
 //----Testnodes-----
-//#define TESTNODE_240
 #define TESTNODE
 //****************************************************
 // Default settings and settings for the individual nodes are in "Node_settings.h"
