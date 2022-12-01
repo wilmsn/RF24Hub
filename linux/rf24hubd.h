@@ -14,8 +14,8 @@
 #include <sstream>
 #include <string> 
 #include <iomanip>
-#include <RF24/RF24.h>
-#include <RF24/utility/RPi/bcm2835.h>
+//#include <RF24/RF24.h>
+//#include <RF24/utility/RPi/bcm2835.h>
 #include <time.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -51,7 +51,7 @@
 #include "rf24hub_text.h"
 #include "dataformat.h"
 #include "version.h"
-#include "secrets.h"
+//#include "secrets.h"
 
 #define BUF 1024
 
