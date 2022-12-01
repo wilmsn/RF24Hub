@@ -72,6 +72,8 @@ public:
 
     bool disconnect(MYSQL* mydb);
 
+    bool testDB();
+    
     void storeSQL(char* sqlstmt);
    
     char* getSQL(uint64_t* timestamp);

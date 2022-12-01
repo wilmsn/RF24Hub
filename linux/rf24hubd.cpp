@@ -13,13 +13,10 @@ void send_fhem_cmd(NODE_DATTYPE node_id, uint8_t channel, char* value) {
 // usage example: send_fhem_cmd("set device1 on");
 
 void send_fhem_tn(char* tn_cmd) {
-    char tn_quit[] =  "\r\nquit\r\n";
-    int sockfd, portno, n;
+    char tn_quit[] = "\r\nquit\r\n";
+    int sockfd, portno;
     struct sockaddr_in serv_addr;
     struct hostent *server;
-    if ( verboseLevel & VERBOSETELNET) {    
-        printf("%ssend_fhem_cmd: %s\n", ts(tsbuf), tn_cmd );
-    }
     portno = std::stoi(cfg.fhemPortNo);
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd != 0) {
@@ -30,69 +27,62 @@ void send_fhem_tn(char* tn_cmd) {
             bcopy((char *)server->h_addr, (char *)&serv_addr.sin_addr.s_addr, server->h_length);
             serv_addr.sin_port = htons(portno);
             if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0) {
-                printf("%sERROR: send_fhem_cmd: error connecting\n", ts(tsbuf));
+                printf("%sERROR: send_fhem_tn: error connecting\n", ts(tsbuf));
             } else {
-                n = write(sockfd,tn_cmd,strlen(tn_cmd));
-                if (n < 0) {
-                    printf("%sERROR: send_fhem_cmd: error writing to socket\n", ts(tsbuf));
+                if (write(sockfd,tn_cmd,strlen(tn_cmd)) < 1) {
+                    printf("%sERROR: send_fhem_tn: error writing to socket for telnet command\n", ts(tsbuf));
                 } else {
                     if ( verboseLevel & VERBOSETELNET) {
-                        printf("%ssend_fhem_cmd: Telnet to %s Port %u successfull Command: %s\n", ts(tsbuf), cfg.fhemHostName.c_str(), portno, tn_cmd);
+                        printf("%ssend_fhem_tn: Telnet to %s Port %u successfull; Command: %s\n", ts(tsbuf),
+                               cfg.fhemHostName.c_str(), portno, tn_cmd);
                     }
                 }
                 if (write(sockfd,tn_quit,strlen(tn_quit)) < 1) {
                 // TODO: Need a message here?
-                    printf("#1 Error in write socket länge < 1\n");
+                    printf("%sERROR: send_fhem_tn: error write socket for telnet quit command\n", ts(tsbuf));
                 }
             }
             close(sockfd);
         } else { // server == NULL
-            printf("%sERROR: send_fhem_cmd: no such host\n", ts(tsbuf));
+            printf("%sERROR: send_fhem_tn: no such host\n", ts(tsbuf));
         }
     } else { // sockfd == 0
-        printf("%sERROR: send_fhem_cmd: error opening socket\n", ts(tsbuf));
+        printf("%sERROR: send_fhem_tn: error opening socket\n", ts(tsbuf));
 	}	
 }
 
 /* Die Thread-Funktion fuer den Empfang von telnet Daten*/
 static void* receive_tn_in (void *arg) {
-    struct thread_tn_data *f = (struct thread_tn_data *)arg;
+    struct ThreadTnData_t *f = (struct ThreadTnData_t *)arg;
     char* buffer = alloc_str(verboseLevel,"receive_tn_in buffer",TELNETBUFFERSIZE,ts(tsbuf));
     char* client_message = alloc_str(verboseLevel,"receive_tn_in client_message",DEBUGSTRINGSIZE,ts(tsbuf));
-    ssize_t MsgLen;
     TnMsg_t TnMsg;
-    int ret;
     // send something like a prompt. perl telnet is waiting for it otherwise we get error
     // use this in perl: my $t = new Net::Telnet (Timeout => 2, Port => 7001, Prompt => '/rf24hub>/');
     sprintf(client_message,"rf24hub> ");
     if (write(f->tnsocket , client_message , strlen(client_message)) < 1 ) {
-       // TODO: Need a message here?
-        printf("#2 Error in write socket länge < 1\n");
+        printf("%sERROR: receive_tn_in: write socket for prompt\n", ts(tsbuf));
     }
-    MsgLen = recv(f->tnsocket, buffer, TELNETBUFFERSIZE, 0);
-    if (MsgLen>0) {
+    if (recv(f->tnsocket, buffer, TELNETBUFFERSIZE, 0) > 0) {
         int msgID = msgget(MSGKEYHUB, IPC_CREAT | 0600);
-        TnMsg.mtype = 1;
-        TnMsg.TnData.tn_socket = 0;
-        //printf("Incoming telnet data from %s:",inet_ntoa(address->sin_addr));
-        //sprintf(TnMsg.TnData.tntext,"Incoming telnet data from :");
-        if (msgID >= 0) msgsnd(msgID, &TnMsg, sizeof(TnMsg), 0);
+//        TnMsg.mtype = 1;
+//        TnMsg.TnData.tn_socket = 0;
+//        if (msgID >= 0) msgsnd(msgID, &TnMsg, sizeof(TnMsg), 0);
         TnMsg.mtype = 2;
         TnMsg.TnData.tn_socket = f->tnsocket;
+        sprintf(TnMsg.TnData.address,"%s",f->address);
         sprintf(TnMsg.TnData.tntext,"%s", trim(buffer));
         if (msgID >= 0) msgsnd(msgID, &TnMsg, sizeof(TnMsg), 0);
-            
         // Wait for a message with processing result            
-        ret=msgrcv(msgID, &TnMsg, sizeof(TnMsg), 9, 0);
-        if ( ret > 5 ) {
-            if (write(f->tnsocket, TnMsg.TnData.tntext, strlen(TnMsg.TnData.tntext)) < 1) {
-                // TODO: Need a message here?
+        if (msgrcv(msgID, &TnMsg, sizeof(TnMsg), 9, 0) > 5) {
+            int strSize = DEBUGSTRINGSIZE+5;
+            char tntext[strSize];
+            snprintf(tntext,strSize,"%s\n",TnMsg.TnData.tntext);
+            if (write(f->tnsocket, tntext, strlen(tntext)) < 1) {
+                printf("%sERROR: receive_tn_in: write socket for response\n", ts(tsbuf));
             }
         }
-        
     }
-    //sprintf(buffer,"%s %d\n",PRGNAME,SWVERSION);
-    //write(tnsocket , buffer , strlen(buffer));
     sleep(1);
     close (f->tnsocket);
     free(f);
@@ -112,7 +102,7 @@ static void* exec_sql (void *arg) {
 
 /* Die Thread-Funktion fuer den Speicherung der Sensor Daten*/
 
-bool process_tn_in( char* inbuffer, int tn_socket) {
+int process_tn_in( char* inbuffer, int tn_socket, char* tn_address) {
 /* Messages can look like this:
     word1		word2		word3		word4 				function
     set			sensor		<sensor#> 	<value>				Sets Sensor to Value (Store in Orderbuffer only)
@@ -124,14 +114,14 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
          cmp_off[]="off",
          cmp_add[]="add",
          cmp_delete[]="delete",
-	 cmp_sensor[]="sensor",
-	 cmp_node[]="node",
-	 cmp_mastered[]="mastered",
-	 cmp_unmastered[]="unmastered",
-	 cmp_set[]="set",
-	 cmp_html[]="html",
-	 cmp_order[]="order",
-	 cmp_verbose[]="verbose",
+         cmp_sensor[]="sensor",
+         cmp_node[]="node",
+         cmp_mastered[]="mastered",
+         cmp_unmastered[]="unmastered",
+         cmp_set[]="set",
+         cmp_html[]="html",
+         cmp_order[]="order",
+         cmp_verbose[]="verbose",
          cmp_push[]="push",
          cmp_show[]="show",
          cmp_sync[]="sync",
@@ -143,7 +133,9 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
     char *wort1, *wort2, *wort3, *wort4;
     char* message = alloc_str(verboseLevel,"process_tn_in message",120,ts(tsbuf));
     bool tn_input_ok = false;
+    bool sensor_ok = true;
     char delimiter[] = " ";
+    int retval = 0;
 	//trim(buffer);
     wort1a = strtok(inbuffer, delimiter);
     wort2a = strtok(NULL, delimiter);
@@ -182,47 +174,45 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
     // In word3 we may have a) the number of the sensor b) the name of the sensor c) the fhem_dev of a sensor
     // for the processing we need the number of the sensor ==> find it!
         NODE_DATTYPE node_id = 0;
-        uint8_t   channel = 0;
+        uint8_t channel = 0;
+        tn_input_ok = true;
+        sensor_ok = false;
         if ( wort3[0] >= 'A' && wort3[0] <= 'z' ) {
             if (sensorClass.getNodeChannelByFhemDev(&node_id, &channel, wort3) ) {
-		tn_input_ok = true;
+                sensor_ok = true;
             } else {
                 if (sensorClass.getNodeChannelBySensorName(&node_id, &channel, wort3) ) {
-                    tn_input_ok = true;
+                    sensor_ok = true;
                 }
             }
         } else {
             uint32_t sensor_id = strtol(wort3, &pEnd, 10);
             if ( sensorClass.getNodeChannelBySensorID(&node_id, &channel, sensor_id ) ) {
-                tn_input_ok = true;
+                sensor_ok = true;
             }
         }
         if ( node_id > 0 &&  channel > 0 ) {
-	    switch ( sensorClass.getDataTypeByNodeChannel(node_id, channel) ) {
-		case 0: 
-		{
-		    float val_f = strtof(wort4, &pEnd);
-		    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue(channel, val_f) );
-		    tn_input_ok = true;
-		}
-		break;
-		case 1:
-		{
-		    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue(channel, 
-						(int16_t)strtol(wort4, &pEnd, 10)) );
-		    tn_input_ok = true;
-		}
-		break;
-		case 2:
-		    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue(channel,
-						(uint16_t)strtoul(wort4, &pEnd, 10)) );
-		    tn_input_ok = true;
-		break;
-		default:
-		    tn_input_ok = false;
-	    }
+            switch ( sensorClass.getDataTypeByNodeChannel(node_id, channel) ) {
+                case 0: {
+                    float val_f = strtof(wort4, &pEnd);
+                    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue(channel, val_f) );
+                }
+                break;
+                case 1: {
+                    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue(channel,
+                        (int16_t)strtol(wort4, &pEnd, 10)) );
+                }
+                break;
+                case 2: {
+                    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue(channel,
+                        (uint16_t)strtoul(wort4, &pEnd, 10)) );
+                }
+                break;
+                default:
+                    sensor_ok = false;
+            }
         } else {
-            tn_input_ok = false;
+            sensor_ok = false;
         }
     }
     // push <node> <channel> <value>
@@ -381,14 +371,15 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
         tn_input_ok = true;
     }
     if ( ! tn_input_ok) {
+        retval = 1;
         bool cont = true;
-        printf("TN-Input: %s\n",inbuffer);
+        printf("%sTN-Input: %s from %s\n",ts(tsbuf),inbuffer, tn_address);
         for(unsigned int i=0; i < tn_usage_size; i++) {
             sprintf(message,"%s\n",tn_usage_txt[i]);
             if ( strlen(message) > 1 && cont ) {
                 if (write(tn_socket , message , strlen(message)) < 1) {
                     //TODO 
-                    printf("#4 Error in write socket länge < 1\n");
+                    printf("%s #4 Error in write socket länge < 1\n",ts(tsbuf));
                     cont = false;
                 }
             }
@@ -397,16 +388,17 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
         if ( strlen(message) > 1 && cont ) {
             if (write(tn_socket , message , strlen(message)) < 1) {
                 // TODO
-                printf("#5 Error in write socket länge < 1\n");
+                printf("%s #5 Error in write socket länge < 1\n",ts(tsbuf));
             }
         }
-    }		
+    }
+    if ( ! sensor_ok ) retval = 2;
     free_str(verboseLevel,"process_tn_in wort1",wort1,ts(tsbuf));
     free_str(verboseLevel,"process_tn_in wort2",wort2,ts(tsbuf));
     free_str(verboseLevel,"process_tn_in wort3",wort3,ts(tsbuf));
     free_str(verboseLevel,"process_tn_in wort4",wort4,ts(tsbuf));
     free_str(verboseLevel,"process_tn_in message", message,ts(tsbuf));
-    return tn_input_ok;
+    return retval;
 }
 
 void make_order(NODE_DATTYPE node_id, uint8_t msg_type) {
@@ -653,78 +645,81 @@ int main(int argc, char* argv[]) {
 
     // Main Loop
     while(1) {
+        // DB_SYNC:
         // sync sensordata to sensordata_d every day
         if ( time(NULL) - lastDBsync > DBSYNCINTERVAL ) {
            database.sync_sensordata_d();   
            lastDBsync = database.getBeginOfDay();
         }
-
-        /* Processing of stored SQL statements */
-        pthread_t b_thread;
-        int ret;
+        // DB_TREAD
+        // Processing of stored SQL statements
+        pthread_t db_thread;
         uint64_t myts;
-        char* mysql = database.getSQL(&myts);
-        if ( myts > 0 ) {
-            char* sqlstmt = (char*)malloc(strlen(mysql)+1);
-            sprintf(sqlstmt,"%s",mysql);
- //           printf("%llu %s\n",myts,sqlstmt);
-            database.delSQL(myts);
-            struct db_data_t *db_data;
-            db_data = (struct db_data_t *)malloc(sizeof(struct db_data_t));
-            db_data->sql = sqlstmt;
-            db_data->p_database = &database;
-            ret = pthread_create(&b_thread, NULL, &exec_sql, db_data);
-            if (ret == 0) {
-                pthread_detach(b_thread);
+        if ( database.testDB() ) {
+            char* mysql = database.getSQL(&myts);
+            if ( myts > 0 ) {
+                char* sqlstmt = (char*)malloc(strlen(mysql)+1);
+                sprintf(sqlstmt,"%s",mysql);
+                database.delSQL(myts);
+                struct db_data_t *db_data;
+                db_data = (struct db_data_t *)malloc(sizeof(struct db_data_t));
+                db_data->sql = sqlstmt;
+                db_data->p_database = &database;
+                if ( pthread_create(&db_thread, NULL, &exec_sql, db_data) == 0) {
+                    pthread_detach(db_thread);
+                }
             }
         }
-        /* Handling of incoming messages */
-            if ( cfg.hubTcpPortSet ) {
+        // TN_THREAD
+        // Handling of incoming telnet messages
+        if ( cfg.hubTcpPortSet ) {
+            // Hier wird geprüft ob neue Telnet Verbindungen anstehen.
+            // Wenn ja wird ein Thread für die neue Verbindung geöffnet.
             new_tn_in_socket = accept ( tcp_sockfd_in, (struct sockaddr *) &tcp_address_in, &tcp_addrlen );
             if (new_tn_in_socket > 0) {
-                if ( verboseLevel & VERBOSETELNET) {
-                    printf ("Client (%s) is connected ...\n", inet_ntoa(tcp_address_in.sin_addr));
-                }
-                pthread_t a_thread;
-                int ret;
-                struct thread_tn_data *f;
-                f = (struct thread_tn_data *)malloc(sizeof(struct thread_tn_data));
+                pthread_t tn_thread;
+                struct ThreadTnData_t *f;
+                f = (struct ThreadTnData_t *)malloc(sizeof(struct ThreadTnData_t));
                 f->tnsocket = new_tn_in_socket;
-                ret = pthread_create(&a_thread, NULL, &receive_tn_in, f);
-                if (ret == 0) {
-                    pthread_detach(a_thread);
-                }                
+                snprintf(f->address, 19, "%s", inet_ntoa(tcp_address_in.sin_addr));
+                if ( pthread_create(&tn_thread, NULL, &receive_tn_in, f) == 0) {
+                    pthread_detach(tn_thread);
+                }
             }
-            // Read the messagequeue
+            // IPC_EXEC_TELNET_CMD
+            // Die im Thread empfangene Telnetnachricht wird als IPC-Message zurückgegeben.
+            // Die Verarbeitung des empfangenen Befehls erfolgt im Hauptprogramm!
+            // Der Thread selber nimmt keine Veränderung an den Programmkomponenten vor!
             msgID = msgget(MSGKEYHUB, IPC_CREAT | 0600);
             if (msgID >= 0) {
-                int ret;
-                // Logmessages
-                ret=msgrcv(msgID, &LogMsg, sizeof(LogMsg), 1, IPC_NOWAIT);
-                if ( (ret > 5) && (verboseLevel & VERBOSETELNET)) {
-                    printf("%s%s\n", ts(tsbuf), LogMsg.TnData.tntext);
-                }
-                // store into orderbuffer and make order
-                ret=msgrcv(msgID, &LogMsg, sizeof(LogMsg), 2, IPC_NOWAIT);
-                if ( ret > 5 ) {
+                // Eine Nachricht vom mtype = 2 enthält den Telnetbefehl
+                // ==> process, store into orderbuffer and make order
+                if (msgrcv(msgID, &LogMsg, sizeof(LogMsg), 2, IPC_NOWAIT) > 5 ) {
                     if ( verboseLevel & VERBOSETELNET ) {
-                        printf("%s%s\n", ts(tsbuf), LogMsg.TnData.tntext);
+                        printf("%sTelnet message from %s: %s\n", ts(tsbuf), LogMsg.TnData.address, LogMsg.TnData.tntext);
                     }
                     char* tnstr = alloc_str(verboseLevel,"main tnstr",DEBUGSTRINGSIZE,ts(tsbuf));
                     strcpy(tnstr, LogMsg.TnData.tntext);
-                    bool result = process_tn_in(tnstr,LogMsg.TnData.tn_socket);
+                    int result = process_tn_in(tnstr,LogMsg.TnData.tn_socket,LogMsg.TnData.address);
                     free_str(verboseLevel,"main tnstr",tnstr,ts(tsbuf));
+                    // Das Ergebnis der Verarbeitung wird als mtype = 9 an den Telnetthread zurückgeschickt.
+                    // Dieser beendet sich daraufhin.
                     LogMsg.mtype = 9;
-                    if ( result ) {
-                        sprintf(LogMsg.TnData.tntext,"Command received => OK\n");
-                    } else {
-                        sprintf(LogMsg.TnData.tntext,"Command received => Error\n");
+                    switch ( result ) {
+                        case 1:
+                            sprintf(LogMsg.TnData.tntext,"Command received => Syntax Error");
+                        case 2:
+                            sprintf(LogMsg.TnData.tntext,"Command received => Sensor unknown");
+                        break;
+                        default:
+                        sprintf(LogMsg.TnData.tntext,"Command received => OK");
                     }
                     if (msgID >= 0) msgsnd(msgID, &LogMsg, sizeof(LogMsg), 0);
                 }
             }
         }
-// Verarbeitung von UDP Daten Eingang
+        // UDP_EXEC_DATA
+        // Verarbeitung von UDP Daten Eingang
         UdpMsgLen = recvfrom ( udp_sockfd_in, &udpdata, sizeof(udpdata), 0, (struct sockaddr *) &udp_address_in, &udp_addrlen );
         if (UdpMsgLen > 0) {
             memcpy(&payload, &udpdata.payload, sizeof(payload) );
@@ -853,13 +848,13 @@ int main(int argc, char* argv[]) {
                 }
             } else { // isGateway && isValidNode
                 if ( verboseLevel & VERBOSERF24 ) {
-                    printf ("%sUDP Message from: %s for Node %u dropped\n",ts(tsbuf), inet_ntoa(udp_address_in.sin_addr), udpdata.payload.node_id);
+                    printf ("%sUDP Message from: %s for Node %u dropped\n",ts(tsbuf), inet_ntoa(udp_address_in.sin_addr),
+                        udpdata.payload.node_id);
                 }
             }
         } // UDP Message > 0
-//
-// Orderloop: Tell the nodes what they have to do
-//
+        // ORDERLOOP
+        // Tell the nodes what they have to do
         if ( order.hasEntry() ) {  // go transmitting if its time to do ..
             // Look if we have something to send
             while ( order.getOrderForTransmission(&payload, mymillis() ) ) {
@@ -877,13 +872,10 @@ int main(int argc, char* argv[]) {
                     p_rec = gatewayClass.getGateway(p_rec, gw_name, &gw_no);
                 }
             }
-	    usleep(20000);
+            usleep(20000);
         } else {
             usleep(200000);
         }
-//
-//  end orderloop
-//
     } // while(1)
     return 0;
 }

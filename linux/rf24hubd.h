@@ -115,7 +115,7 @@ void send_fhem_cmd(NODE_DATTYPE node, uint8_t channel, char* value);
 /**
  * Verabeitet eine eingehende Telnet Nachricht
  */
-void process_tn_in(int new_socket, char* buffer, char* client_message);
+int process_tn_in(int new_socket, char* buffer, char* client_message);
 
 /**
  * Initialisierung des Systems

@@ -34,6 +34,7 @@
 #define SQLSTRINGSIZE 500
 #define TSBUFFERSTRING "                               "
 #define NODENAMESIZE 50
+#define IPADDRESSLENGTH 20
 
 // Verboselevel
 #define VERBOSECRITICAL          0b0000000000000001

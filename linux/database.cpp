@@ -339,6 +339,18 @@ bool Database::disconnect(MYSQL* mydb) {
     return true;
 }
 
+bool Database::testDB() {
+    bool retval = false;
+    MYSQL* mydb = mysql_init(NULL);
+    if (mydb != NULL) {
+        if (mysql_real_connect(mydb, db_hostname, db_username, db_password, db_schema, db_port, NULL, 0) != NULL) {
+            retval = true;
+            mysql_close(mydb);
+        }
+    }
+    return retval;
+}
+
 void Database::debugPrintSQL(char* sqlstmt) {
     if ( verboseLevel & VERBOSESQL) {    
         printf("%sSQL: %s\n", ts(tsbuf), sqlstmt);

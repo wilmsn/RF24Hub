@@ -3,7 +3,7 @@
 /* Die Thread-Funktion fuer den Empfang von telnet Daten*/
 
 static void* receive_tn_in (void *arg) {
-    struct thread_tn_data *f = (struct thread_tn_data *)arg;
+    struct ThreadTnData_t *f = (struct ThreadTnData_t *)arg;
     char *buffer =  (char*) malloc (TELNETBUFFERSIZE);
     memset(buffer, 0, TELNETBUFFERSIZE);
     //char* buffer = alloc_str(verboseLevel,"receive_tn_in buffer",TELNETBUFFERSIZE,ts(tsbuf));
@@ -416,8 +416,8 @@ int main(int argc, char* argv[]) {
             if (new_tn_in_socket > 0) {
                 pthread_t a_thread;
                 int ret;
-                struct thread_tn_data *f;
-                f = (struct thread_tn_data *)malloc(sizeof(struct thread_tn_data));
+                struct ThreadTnData_t *f;
+                f = (struct ThreadTnData_t *)malloc(sizeof(struct ThreadTnData_t));
                 f->tnsocket = new_tn_in_socket;
                 ret = pthread_create(&a_thread, NULL, &receive_tn_in, f);
                 if (ret == 0) {
@@ -457,13 +457,13 @@ int main(int argc, char* argv[]) {
 //
 // Receive loop: react on the message from the nodes
 //
-	    radio.read(&payload,sizeof(payload));
-            udpdata.gw_no = std::stoi(cfg.gwNo);
-            memcpy(&udpdata.payload, &payload, sizeof(payload) );
-            if ( verboseLevel & VERBOSERF24) printPayload(ts(tsbuf), "N>G", &udpdata.payload);
-	    sendUdpMessage(cfg.gwHubHostName.c_str(), cfg.hubUdpPortNo.c_str(), &udpdata); 
-            busyIndicator = 0;
-	} // radio.available
+        radio.read(&payload,sizeof(payload));
+        udpdata.gw_no = std::stoi(cfg.gwNo);
+        memcpy(&udpdata.payload, &payload, sizeof(payload) );
+        if ( verboseLevel & VERBOSERF24) printPayload(ts(tsbuf), "N>G", &udpdata.payload);
+        sendUdpMessage(cfg.gwHubHostName.c_str(), cfg.hubUdpPortNo.c_str(), &udpdata); 
+        busyIndicator = 0;
+    } // radio.available
 //
 // Orderloop: Tell the nodes what they have to do
 //
