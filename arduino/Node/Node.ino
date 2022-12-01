@@ -39,12 +39,12 @@
 // Node 107
 //#define KUGELNODE2
 // Node 108
-#define MW_WOHNZIMMER
+//#define MW_WOHNZIMMER
 // Node 110
 //#define ANKLEIDEZIMMERTHERMOMETER    
 //----Testnodes-----
 //#define TESTNODE_240
-//#define TESTNODE_UNO
+#define TESTNODE
 //****************************************************
 // Default settings and settings for the individual nodes are in "Node_settings.h"
 #include "Node_settings.h"
@@ -257,7 +257,7 @@ void get_sensordata(void) {
 
 // Sensor Dummy
 #if defined(SENSOR_DUMMY)
-    temp=DUMMY_TEMP;
+    temp_dummy=DUMMY_TEMP;
 #if defined(DEBUG_SERIAL_SENSOR)
     Serial.print("Temp: ");
     Serial.print(temp);

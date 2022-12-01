@@ -247,20 +247,12 @@
 #endif
 
 //-----------------------------------------------------
-#if defined(TESTNODE_UNO)
-//#define RF24NODE                      241
+#if defined(TESTNODE)
+#define RF24NODE                      100
 #define SLEEPTIME                     60
 #define EMPTYLOOPS                    0
-#define SENSOR_BOSCH
-#define DISPLAY_5110
-#define DISPLAY_LAYOUT_TEMPHUMI
-#define EEPROM_VERSION                5
-#define LOW_VOLT_LEVEL                3.5
-//#define VOLT_OFF             0.55
-#define CONTRAST                      45
-//#define DEBUG_SERIAL_SENSOR
-//#define DEBUG_SERIAL_RADIO
-//#define DEBUG_SERIAL_PROC
+#define SENSOR_DUMMY
+#define DUMMY_TEMP                    33.3
 #endif
 
 
