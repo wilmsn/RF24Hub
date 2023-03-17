@@ -19,12 +19,13 @@
 #define SLEEPTIME_LV        3600
 #define EMPTYLOOPS          0
 #define SLEEP4MS_FAC        995
-#define EEPROM_VERSION      8
+#define EEPROM_VERSION      9
 #endif
 //-----------------------------------------------------
 #if defined(AUSSENTHERMOMETER2)
 #define RF24NODE            201
-#define SENSOR_BOSCH
+#define SENSOR_HTU2X
+#define HUMI_HTU2X_CHANNEL  3
 #define STATUSLED           7
 #define STATUSLED_ON        HIGH
 #define STATUSLED_OFF       LOW

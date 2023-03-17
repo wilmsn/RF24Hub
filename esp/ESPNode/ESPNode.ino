@@ -10,17 +10,17 @@
   Dallas Temperature Sensor 18B20
   Rf24GW
 
-  On Branch: V3.0@rpi1  !!!!!
+  On Branch: master@rpi1  !!!!!
 
 
 */
 //****************************************************
 // My definitions for my nodes based on this sketch
 // Select only one at one time !!!!
-//#define TEICHPUMPE
+#define TEICHPUMPE
 //#define TERASSENNODE
 //#define FLURLICHT
-#define WOHNZIMMERNODE
+//#define WOHNZIMMERNODE
 //#define TESTNODE
 //#define WITTYNODE
 //#define RF24GWTEST
@@ -51,7 +51,7 @@
 #include <LittleFS.h>
 #include <PubSubClient.h>
 #include <time.h>
-#include <uptime.h>
+#include <Uptime.h>
 #include <strings.h>
 #include <logger.h>
 #include "config.h"
@@ -79,6 +79,7 @@
 ESP8266WebServer httpServer(80);
 ESP8266HTTPUpdateServer httpUpdater;
 WiFiClient mqtt_wifi_client;
+Uptime uptime;
 #if defined(MQTT)
 PubSubClient mqttClient(mqtt_wifi_client);
 #endif
@@ -728,9 +729,7 @@ void mqtt_send_swtch1() {
 
 void switchSwitch1(bool stat) {
 #if defined(SWITCH1_NODE)
-  //  char tmp[10];
-  //  snprintf(tmp,9,"%u",stat?1:0);
-  send_udp_msg(SWITCH1_NODE, calcTransportValue(mykey, SWITCH1_CHANNEL, stat ? 1 : 0 ));
+  send_udp_msg(SWITCH1_NODE, calcTransportValue((uint8_t)SWITCH1_CHANNEL, stat ? (uint16_t)1 : (uint16_t)0 ));
 #endif
   if ( stat ) {
 #if defined(SWITCH1PIN1)
@@ -806,9 +805,7 @@ void mqtt_send_swtch2() {
 
 void switchSwitch2(bool stat) {
 #if defined(SWITCH2_NODE)
-  char tmp[10];
-  snprintf(tmp, 9, "%u", stat ? 1 : 0);
-  send_udp_msg(SWITCH2_NODE, calcTransportValue(SWITCH2_CHANNEL, tmp ));
+  send_udp_msg(SWITCH2_NODE, calcTransportValue((uint8_t)SWITCH2_CHANNEL, stat ? (uint16_t)1 : (uint16_t)0 ));
 #endif
   if ( stat ) {
 #if defined(SWITCH2PIN1)
@@ -1142,11 +1139,15 @@ void fill_sysinfo4(char* mystr) {
   snprintf (mystr, INFOSIZE, "{\"DnsIP\":\"%s\", \"BSSID\":\"%s\", \"CoreVer\":\"%s\", \"IdeVer\":\"%u\", \"SdkVer\":\"%s\"}",
             WiFi.dnsIP().toString().c_str(), WiFi.BSSIDstr().c_str(), ESP.getCoreVersion().c_str(), ARDUINO, ESP.getSdkVersion());
 }
-
+/*
 void fill_sysinfo5(char* mystr) {
-  uptime::calculateUptime();
   snprintf (mystr, INFOSIZE, "{\"MQTT-Server\":\"%s\", \"MQTT-Hostname\":\"%s\", \"UpTime\":\"%uT%02u:%02u:%02u\", \"SW\":\"%s / %s\"}",
             MQTT_SERVER, MQTT_NODENAME, uptime::getDays(), uptime::getHours(), uptime::getMinutes(), uptime::getSeconds(), SWVERSION_STR, __DATE__ );
+}
+*/
+void fill_sysinfo5(char* mystr) {
+  snprintf (mystr, INFOSIZE, "{\"MQTT-Server\":\"%s\", \"MQTT-Hostname\":\"%s\", \"UpTime\":\"%s\", \"SW\":\"%s / %s\"}",
+            MQTT_SERVER, MQTT_NODENAME, uptime.uptimestr(), SWVERSION_STR, __DATE__ );
 }
 
 void fill_sysinfo6(char* mystr) {
@@ -1494,5 +1495,6 @@ void loop() {
   //  MDNS.update();
   //  ArduinoOTA.handle(); // Wait for OTA connection
   wifi_con();
+  uptime.update();
   delay(0);
 }

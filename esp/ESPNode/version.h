@@ -1,2 +1,1 @@
-#define SWVERSION   3000
-#define SWVERSION_STR   "3.000"
+../../version.h

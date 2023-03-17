@@ -111,7 +111,7 @@ optional:
 #define TITEL1                 "Flurlicht"
 #define TITEL2                 "Licht im Flur"
 #define LEDPWM
-#define LEDPWMINIT             10
+#define LEDPWMINIT             150
 #define SWITCH1               
 #define SWITCH1TXT             "Licht"
 #define SWITCH1MQTT            "licht"
