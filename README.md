@@ -19,7 +19,7 @@ Main features:
 More details (mainly german only): [rf24hub on github.io](http://wilmsn.github.io/rf24hub/doxygen/index.html)
 
 ## Environment:
-- Server: Raspberry PI
+- Server: Linux host (eg. Raspberry PI or your Linux computer)
 - Gateway: Raspberry Pi or ESP8266
 - Nodes: "Arduino" like build with minimal cost based on ATmega328P
 

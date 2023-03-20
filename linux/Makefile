@@ -8,7 +8,7 @@
 # 
 # Description:
 # ------------
-# use make all and make install to install the sensorhub 
+# use make all and make install to install the rf24hub 
 # use make installDB to install a new and empty database (existing database will be deleted)
 #
 PREFIX=/usr/local
