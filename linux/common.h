@@ -1,14 +1,4 @@
 /**
- * @mainpage RF24HUB A Network of Sensors communicating over an 2.4GHZ Network.
- * @image html overview.png
- * Components: 
- *- ATMEL/Arduino based Nodes
- *- Gateway based on ESP8266/ESP32 or Raspberry PI (ervery Linux System with useable GPIO Pins can be used)
- *- Hub as the cental Component based on any Linux System
- *- Further Details: 
- *- [Quick Install Guide and System Overview](README.md)
- *- [Configure and Build a Arduino-Node from the Template](NODE_HOWTO.md)
- *- [Configure and Build a ESP-Node from the Template](NODE_HOWTO.md)
  *
  */
 

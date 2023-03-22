@@ -17,23 +17,33 @@ Main features:
 
 ![alt text](https://raw.githubusercontent.com/wilmsn/RF24Hub/master/doc/overview.png "RF24Hub overview")
 
-More details (mainly german only): [rf24hub on github.io](http://wilmsn.github.io/rf24hub/index.html)
-
 ## Environment:
 - Server: Linux host (eg. Raspberry PI or your Linux computer)
 - Gateway: Raspberry Pi or ESP8266/ESP32
 - Nodes: "Arduino" like build with minimal cost based on ATmega328P
 
 ## Aim of the project:
-Build up a network of sensors and store and process the data on a server with:
-
+Build up a network of sensors and store and process the data on a server.
+With:
 - minimal hardware cost
 - only free software
 - low energy cost
 
-## Guides and Documentation Parts
+## Guides
+- [Quick Start](doc/quickstartguide.html)
 
-[rf24hub on github.io](http://wilmsn.github.io/rf24hub/index.html)
+- [Database](doc/dbguide.html)
+
+- [Avr Node](doc/avrguide.html)
+
+- [ESP Node](doc/espguide.html)
+
+## Documentation Parts
+- [Linux Programs](linux/index.html)
+
+- [Avr Node](avr/index.html)
+
+- [ESP Node](esp/index.html)
 
 
 **Now its up to you:**
