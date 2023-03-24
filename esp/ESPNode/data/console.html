@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<link rel='stylesheet' type='text/css' href='/style.css' />
+<script src="/espnode.js"></script> 
+<script type="text/javascript">
+var page="console";
+var title="Konsole";
+</script>
+
+</script>
+<title id="titel"></title>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="div_header">
+      <h2 id="titel1" class="titel1">Titel1</h2>
+      <h3 id="titel2" class="titel2">Titel2</h3>
+      <hr>
+    </div>
+    <div class="div_content">
+      <textarea readonly id='console' cols='340' wrap='off'></textarea>
+      <br>
+      <form method='get' onsubmit='return runCmd();'><input id='cmd' placeholder='Befehl eingeben' autofocus><br></form>
+    </div>
+    <button class="button bg_bk" onclick="window.location.href='/index.html'">Hauptseite</button>
+    <div class="div_footer">
+      <hr>
+      ESPNode von Norbert Wilms
+    </div>
+  </div>
+</body>
+</html>

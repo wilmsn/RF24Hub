@@ -1,0 +1,9 @@
+[Unit]
+Description=rf24gwd: a server to control rf24 communication to the nodes 
+After=systemd-user-sessions.service mariadb.service
+[Service]
+Type=forking
+ExecStart=/usr/local/bin/rf24gwd -d
+[Install]
+WantedBy=appl.target
+
