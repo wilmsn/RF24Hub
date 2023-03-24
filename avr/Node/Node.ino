@@ -17,7 +17,7 @@
 // Node 200
 //#define AUSSENTHERMOMETER1
 // Node 201
-#define AUSSENTHERMOMETER2
+//#define AUSSENTHERMOMETER2
 // Node 202
 //#define SOLARNODE1
 // Node 203
@@ -44,12 +44,12 @@
 //#define ANKLEIDEZIMMERTHERMOMETER    
 //----Testnodes-----
 //#define TESTNODE
+// ------ End of configuration part ------------
 //****************************************************
 // Default settings and settings for the individual nodes are in "Node_settings.h"
 #include "Node_settings.h"
 //-----------------------------------------------------
 //*****************************************************
-// ------ End of configuration part ------------
 
 
 #include <avr/pgmspace.h>
