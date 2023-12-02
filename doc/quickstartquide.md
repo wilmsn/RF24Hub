@@ -1,5 +1,9 @@
 # RF24Hub Quick Start Guide
+
+**RF24Hub startpage: [wilmsn.github.io/rf24hub](index.html)**
+
 ## 0. Prerequisite
+
 - MariaDB is installed
 - Developmenttools are installed
 - Arduino-IDE (or any other tool to compile the SW for the ATMEGA) is installed
@@ -7,8 +11,11 @@
 - - The nrf24l01 transceiver module is connected to your server/host
 - **Option 2:**
 - - Build an ESP32 or ESP8266 Node with the nrf24l01 transceiver module as Gateway
+
 ## 1. Go to your development directory
-    cd ~/entw
+
+	cd ~/entw
+
 ## 2. (Option 1 only) Clone, Compile and Install the RF24 Repo</h2>
 
 	git clone https://github.com/nRF24/RF24.git RF24
@@ -33,6 +40,7 @@
 [Have a look at the DB-Guide](https://wilmsn.github.io/rf24hub/arduinoguide.html)
 
 ## 5. Do a test run
+
 Edit the config file to your needs/environment: 
 
 	rf24hub.cfg

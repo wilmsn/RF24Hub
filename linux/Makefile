@@ -8,7 +8,7 @@
 # 
 # Description:
 # ------------
-# use make all and make install to install the rf24hub 
+# use make all and make install to install the sensorhub 
 # use make installDB to install a new and empty database (existing database will be deleted)
 #
 PREFIX=/usr/local
@@ -27,6 +27,13 @@ debug: rf24hubd_debug
 simu: clean4simulator simulator
 endif
 
+ifeq "$(shell uname -m)" "aarch64"
+ARCH=aarch64
+MARCH=arm
+CCFLAGS=-Ofast -std=c++0x -pthread
+all: rf24hubd rf24gwd
+debug: rf24hubd_debug
+endif
 
 ifeq "$(shell uname -m)" "x86_64"
 ARCH=x86-64
@@ -46,7 +53,7 @@ DEBUGFLAGS=-ggdb3 -O0
 #simu: clean4simulator simulator
 
 # Make the rf24hub deamon in debug mode
-rf24hubd_debug: cfg.o dataformat.o database.o node.o sensor.o orderbuffer.o order.o common.o rf24hubd.cpp
+rf24hubd_debug: cfg.o dataformat.o database.o nodeclass.o sensorclass.o orderbuffer.o order.o common.o rf24hubd.cpp
 	g++ ${CCFLAGS} ${DEBUGFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24 ${MYSQLLIBS} $^ -o $@
 
 # Make the rf24hub deamon
@@ -71,7 +78,7 @@ dataformattest: dataformat.o dataformattest.c
 	g++ -Wall -I ${INCLUDEDIR} $^ -o $@
 
 # Test of order object
-ordertest: sensor.o node.o orderbuffer.o common.o dataformat.o order.o order_test.cpp
+ordertest: sensorclass.o nodeclass.o orderbuffer.o common.o dataformat.o order.o order_test.cpp
 	g++ ${CCFLAGS} -Wall -I ${INCLUDEDIR} -I ${INCLUDEDIR1} -lrf24-bcm -lrf24network ${MYSQLLIBS} $^ -o $@
 
 # Test of orderbuffer object

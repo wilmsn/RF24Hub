@@ -137,10 +137,10 @@ bool process_tn_in( char* inbuffer, int tn_socket) {
 		tn_input_ok = true;
     }
 	if ( ! tn_input_ok) {
-        //printf("%u \n",sizeof(tn_usage_txt)/ sizeof(int));
-        for(unsigned int i=0; i<sizeof(tn_usage_txt)/ sizeof(int); i++) {
-            sprintf(message,"%s\n",tn_usage_txt[i]);
-            write(tn_socket , message , strlen(message));
+        //printf("%lu \n",sizeof(tn_usage_txt)/sizeof(char*));
+        for(unsigned int i=0; i < sizeof(tn_usage_txt) / sizeof(char*); i++) {
+           sprintf(message,"%s\n",tn_usage_txt[i]);
+           write(tn_socket , message , strlen(message));
         }
         sprintf(message,"%s version %s\n", PRGNAME, SWVERSION_STR);
         write(tn_socket , message , strlen(message));

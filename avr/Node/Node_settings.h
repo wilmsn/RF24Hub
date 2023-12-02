@@ -222,7 +222,42 @@
 #define STATUSLED_OFF        HIGH
 #endif
 //-----------------------------------------------------
+#if defined(GASZAEHLERNODE)
+#define RF24NODE                111
+#define EEPROM_VERSION          9
+#define ZAEHLERINTERRUPT
+#define ZAEHLER_LO_CHANNEL      11
+#define ZAEHLER_HI_CHANNEL      12
+#define ZAEHLER_CHANNEL         13
+#define ZAEHLER_LO_SET_CHANNEL  51 
+#define ZAEHLER_HI_SET_CHANNEL  52 
+#define SENSOR_BOSCH
+#define SLEEPTIME               60
+#define EMPTYLOOPS              4
+#define LOW_VOLT_LEVEL          2.0
+#define ZAEHLERSTART            285134
+#endif
+//-----------------------------------------------------
 //    Testnodes
+//-----------------------------------------------------
+#if defined(ZAEHLER_TEST_198)
+#define DEBUG_SERIAL_SENSOR
+#define DEBUG_SERIAL_RADIO
+#define SLEEPTYPE               delay
+#define RF24NODE                198
+#define EEPROM_VERSION          3
+#define ZAEHLERINTERRUPT
+#define ZAEHLER_LO_CHANNEL      11
+#define ZAEHLER_HI_CHANNEL      12
+#define ZAEHLER_CHANNEL         13
+#define ZAEHLER_LO_SET_CHANNEL  51 
+#define ZAEHLER_HI_SET_CHANNEL  52 
+#define SENSOR_BOSCH
+#define SLEEPTIME               60
+#define EMPTYLOOPS              4
+#define LOW_VOLT_LEVEL          2.0
+//#define SLEEP4MS_FAC           950
+#endif
 //-----------------------------------------------------
 #if defined(TESTNODE_240)
 #define RF24NODE                      240
@@ -272,6 +307,28 @@
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 //define constrains
+#if defined (ZAEHLERINTERRUPT)
+#ifndef ZAEHLER_CHANNEL
+#define ZAEHLER_CHANNEL        13
+#endif
+#ifndef ZAEHLER_LO_CHANNEL
+#define ZAEHLER_LO_CHANNEL      11
+#endif
+#ifndef ZAEHLER_HI_CHANNEL
+#define ZAEHLER_HI_CHANNEL      12
+#endif
+#ifndef ZAEHLER_LO_SET_CHANNEL
+#define ZAEHLER_LO_SET_CHANNEL  51
+#endif
+#ifndef ZAEHLER_HI_SET_CHANNEL
+#define ZAEHLER_HI_SET_CHANNEL  52
+#endif 
+
+#ifndef INTPIN
+#define INTPIN                 2
+#endif
+#endif
+
 #if defined(LOAD_BALANCER_PIN)
 #ifndef LOAD_BALANCER
 #define LOAD_BALANCER      0.2
@@ -440,6 +497,9 @@
 #ifndef NEOPIXEL_B_DEFAULT
 #define NEOPIXEL_B_DEFAULT 100
 #endif
+#endif
+#ifndef SLEEPTYPE
+#define SLEEPTYPE  sleep4ms
 #endif
 // Sleeptime in Seconds !! 
 // (valid: 10 ... 32.400)

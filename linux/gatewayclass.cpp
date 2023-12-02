@@ -2,7 +2,6 @@
 
 GatewayClass::GatewayClass(void) {
     p_initial = NULL;
-    p_contact_initial = NULL;
     verboseLevel = 0;
     buf = (char*)malloc(TSBUFFERSIZE);
     tsbuf = (char*)malloc(TSBUFFERSIZE);
@@ -173,12 +172,12 @@ void GatewayClass::printBuffer(int out_socket, bool htmlformat) {
         struct tm *tm = localtime(&p_search->last_contact);
         strftime(date, sizeof(date), "%d.%m.%Y %H:%M", tm);
         size_t nl = strlen(p_search->gw_hostname);
-        snprintf(tb,5," ");
+        snprintf(tb,4,"");
         //if (nl < 30) sprintf(ts,"%s%s",ts,"\t");
-        if (nl < 24) snprintf(tb,5,"%s","\t");
-        if (nl < 18) snprintf(tb,5,"%s","\t\t");
-        if (nl < 12) snprintf(tb,5,"%s","\t\t\t");
-        if (nl < 6) snprintf(tb,5,"%s","\t\t\t\t");
+        if (nl < 24) snprintf(tb,4,"%s","\t");
+        if (nl < 18) snprintf(tb,4,"%s","\t\t");
+        if (nl < 12) snprintf(tb,4,"%s","\t\t\t");
+        if (nl < 6) snprintf(tb,4,"%s","\t\t\t\t");
         sprintf(client_message,"GW.Name: %s%s\tGW.NO: %u\t %s  Last: %s\n", p_search->gw_hostname, tb, p_search->gw_no, p_search->isActive? "aktiv      ":"nicht aktiv", date );
 		write(out_socket , client_message , strlen(client_message));
         p_search=p_search->p_next;

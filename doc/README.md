@@ -30,15 +30,18 @@ With:
 - low energy cost
 
 ## Guides
-- [Quick Start](doc/quickstartguide.html)
+- [Quick Start](quickstartguide.html)
 
-- [Database](doc/dbguide.html)
+- [Database](dbguide.html)
 
-- [Avr Node](doc/avrguide.html)
+- [Avr Node](avrguide.html)
 
-- [ESP Node](doc/espguide.html)
+- [ESP Gateway](espguide.html)
 
 ## Documentation Parts
+
+- [Documentation](doku.html)
+
 - [Linux Programs](linux/index.html)
 
 - [Avr Node](avr/index.html)
