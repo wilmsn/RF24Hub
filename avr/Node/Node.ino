@@ -182,10 +182,10 @@ float    u_batt2;
 #endif
 
 #if defined (ZAEHLER)
-float       zaehlerF;
-uint32_t    zaehlerUI;
-uint8_t     statusStack;
-uint16_t    sumSleepTime;
+float          zaehlerF;
+uint32_t       zaehlerUI;
+uint8_t        statusStack;
+unsigned long  sumSleepTime_ms;
 #endif
 
 payload_t r_payload, s_payload;    
@@ -229,6 +229,7 @@ uint8_t             last_orderno = 0;
 uint8_t             msg_id = 0;
 uint8_t             heartbeatno=0;
 boolean             monitormode = false;
+unsigned long       tempsleeptime_ms;
 
 //Some Var for restore after sleep of display
 #if defined(DISPLAY_ALL)
@@ -890,7 +891,7 @@ void setup(void) {
   zaehlerF = 0;
   zaehlerUI = 0;
 #endif 
-  sumSleepTime = 0;
+  sumSleepTime_ms = 0;
   statusStack = 0;
 #endif
 
@@ -1822,15 +1823,18 @@ void loop(void) {
 #if defined(DISPLAY_ALL)
   display_refresh();
 #endif
-  long int tempsleeptime = eeprom.sleeptime;  // regelmaessige Schlafzeit in Sek.
-  if (low_voltage_flag) tempsleeptime = eeprom.sleeptime_lv;
-  tempsleeptime += sleeptime_kor;                 // einmalige Korrektur in Sek.
-  tempsleeptime *= eeprom.sleep4ms_fac;           // Umrechnung in Millisek.
+  if (low_voltage_flag) {
+    // Low Voltage Schlafzeit in Sek. * Korrekturfaktor
+    tempsleeptime_ms = (unsigned long)eeprom.sleeptime_lv * eeprom.sleep4ms_fac;
+  } else {
+    // (regelmaessige Schlafzeit in Sek. + einmalige Korrektur) * Korrekturfaktor
+    tempsleeptime_ms = ((unsigned long)eeprom.sleeptime + sleeptime_kor) * eeprom.sleep4ms_fac;
+  }
   sleeptime_kor = 0;  
 #if defined(DISCHARGE1)
   if (batt_mod1 == 1) {
     unsigned long mymillis = millis();
-    while ( millis() - mymillis < tempsleeptime ) {
+    while ( (uint16_t)(millis() - mymillis) < tempsleeptime ) {
       delay(1000);
       batt_monitor();
       if ( millis() < mymillis ) mymillis = 0;
@@ -1838,7 +1842,7 @@ void loop(void) {
   } else {
 #endif
 #ifdef ZAEHLER  // Sonderhehandlung für Zähler
-  while (sumSleepTime < tempsleeptime) {
+  while (sumSleepTime_ms < tempsleeptime_ms) {
     bool pinstate = digitalRead(ZAEHLER_PIN);
     if ( (statusStack & 0b00001111) == 0b00001111 && (pinstate == LOW) ) {
       zaehlerUI++;
@@ -1846,9 +1850,9 @@ void loop(void) {
     }  
     statusStack = (statusStack << 1) | (pinstate? 0b00000001:0b00000000);
     SLEEPTYPE(61);  //sleep 60ms
-    sumSleepTime += 60;
+    sumSleepTime_ms += 60;
   }
-  sumSleepTime = 0;
+  sumSleepTime_ms = 0;
 #else
 /*
  * Behandlung normale Nodes

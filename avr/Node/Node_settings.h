@@ -224,9 +224,9 @@
 //-----------------------------------------------------
 #if defined(GASZAEHLERNODE)
 #define RF24NODE                111
-#define EEPROM_VERSION          4
+#define EEPROM_VERSION          6
 #define SENSOR_BOSCH
-#define SLEEPTIME               60
+#define SLEEPTIME               120
 #define EMPTYLOOPS              0
 #define LOW_VOLT_LEVEL          2.0
 #define ZAEHLER
@@ -235,7 +235,7 @@
 #define ZAEHLER_CHANNEL         13
 #define ZAEHLER_LO_SET_CHANNEL  51 
 #define ZAEHLER_HI_SET_CHANNEL  52 
-#define ZAEHLER_START           287846
+#define ZAEHLER_START           288140
 #define SLEEP4MS_FAC            990
 #endif
 //-----------------------------------------------------
