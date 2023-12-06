@@ -79,6 +79,10 @@
 #include "LCD5110.h"
 #endif
 
+#if defined(DEBUG_DISPLAY_5110)
+#include "LCD5110_Logwriter.h"
+#endif
+
 #if defined(SENSOR_18B20)
 #include <OneWire.h>
 #include <DallasTemperature.h>
@@ -106,7 +110,11 @@ float u_ref;
 
 ISR(WDT_vect) { watchdogEvent(); }
 
-#if defined(DISPLAY_ALL)
+#if defined(DEBUG_DISPLAY)
+LCD5110 lcd(N5110_RST,N5110_CE,N5110_DC,N5110_DIN,N5110_CLK);
+#endif
+
+#if defined(DISPLAY_ALL) 
 bool displayIsSleeping = false;
 #if defined(DISPLAY_5110)
 LCD5110 lcd(N5110_RST,N5110_CE,N5110_DC,N5110_DIN,N5110_CLK);
@@ -173,18 +181,18 @@ float    u_batt1;
 float    u_batt2;
 #endif
 
-#if defined (ZAEHLERINTERRUPT)
-volatile float    intZaehlerF;
-volatile uint32_t intZaehlerUI;
-volatile uint8_t  intStatusStack;
-uint16_t          intSumSleepTime;
+#if defined (ZAEHLER)
+float       zaehlerF;
+uint32_t    zaehlerUI;
+uint8_t     statusStack;
+uint16_t    sumSleepTime;
 #endif
 
 payload_t r_payload, s_payload;    
-uint8_t payloadNo = 0;
+uint8_t     payloadNo = 0;
 
-uint8_t  rf24_node2hub[] = RF24_NODE2HUB;
-uint8_t  rf24_hub2node[] = RF24_HUB2NODE;
+uint8_t     rf24_node2hub[] = RF24_NODE2HUB;
+uint8_t     rf24_hub2node[] = RF24_HUB2NODE;
 
 struct eeprom_t {
    uint16_t versionnumber;
@@ -233,18 +241,6 @@ boolean             display_on = true;
 // Usage: radio(CE_pin, CS_pin)
 #if defined(RF24NODE)
 RF24 radio(RADIO_CE_PIN,RADIO_CSN_PIN);
-#endif
-
-#if defined (ZAEHLERINTERRUPT)
-void intZaehler_ISR() {
-  if ( digitalRead(INTPIN) == LOW ) {
-    intStatusStack = (intStatusStack << 1);
-    if ( (intStatusStack & 0b00001110) == 0b00001110 ) {
-      intZaehlerUI++;
-      intZaehlerF = (float)intZaehlerUI / 100;
-    }
-  }
-}
 #endif
 
 void get_sensordata(void) {
@@ -462,14 +458,14 @@ uint32_t action_loop(uint32_t data) {
       }
       break;
 #endif
-#if defined (ZAEHLERINTERRUPT)
+#if defined (ZAEHLER)
       case ZAEHLER_LO_SET_CHANNEL:
       {
         uint16_t val;
         getValue(data, &val);
-        intZaehlerUI = intZaehlerUI & 0xffff0000;
-        intZaehlerUI = intZaehlerUI | val;
-        intZaehlerF = (float)intZaehlerUI / 100;
+        zaehlerUI = zaehlerUI & 0xffff0000;
+        zaehlerUI = zaehlerUI | val;
+        zaehlerF = (float)zaehlerUI / 100;
       }
       break;
       case ZAEHLER_HI_SET_CHANNEL:
@@ -477,10 +473,10 @@ uint32_t action_loop(uint32_t data) {
         uint16_t val;
         uint32_t val1;
         getValue(data, &val);
-        intZaehlerUI = intZaehlerUI & 0x0000ffff;
+        zaehlerUI = zaehlerUI & 0x0000ffff;
         val1 = val;
-        intZaehlerUI = intZaehlerUI | (val1 << 16);
-        intZaehlerF = (float)intZaehlerUI / 100;
+        zaehlerUI = zaehlerUI | (val1 << 16);
+        zaehlerF = (float)zaehlerUI / 100;
       }
       break;
 #endif
@@ -878,29 +874,28 @@ void init_eeprom(bool reset_eeprom) {
 }
 
 void setup(void) {
-  delay(500);
+  delay(50);
   
 #if defined(STATUSLED)
   pinMode(STATUSLED, OUTPUT);
   digitalWrite(STATUSLED,STATUSLED_ON);
 #endif
 
-#if defined (ZAEHLERINTERRUPT)
-  pinMode(INTPIN, INPUT_PULLUP);
-#if defined (ZAEHLERSTART)
-  intZaehlerUI = ZAEHLERSTART;
-  intZaehlerF = ZAEHLERSTART / 100.0;
+#if defined (ZAEHLER)
+  pinMode(ZAEHLER_PIN, INPUT_PULLUP);
+#if defined (ZAEHLER_START)
+  zaehlerUI = ZAEHLER_START;
+  zaehlerF = ZAEHLER_START / 100.0;
 #else
-  intZaehlerF = 0;
-  intZaehlerUI = 0;
+  zaehlerF = 0;
+  zaehlerUI = 0;
 #endif 
-  intSumSleepTime = 0;
-  intStatusStack = 0;
-  attachInterrupt(digitalPinToInterrupt(INTPIN), intZaehler_ISR, FALLING);
+  sumSleepTime = 0;
+  statusStack = 0;
 #endif
 
 // Init EEPROM
-init_eeprom(false);
+  init_eeprom(false);
 
 #if defined(DISCHARGE3_PIN)
   pinMode(DISCHARGE3_PIN, OUTPUT);
@@ -979,6 +974,7 @@ init_eeprom(false);
   }
   neopixels.show();   
 #endif
+ 
 #if defined(RF24NODE)
   radio.begin();
   delay(100);
@@ -997,7 +993,9 @@ init_eeprom(false);
   radio.printDetails();
 #endif
 #endif  //RF24NODE    
+
   delay(100);
+
 #if defined(RELAIS_1)
   digitalWrite(RELAIS_1,RELAIS_OFF); 
 #endif
@@ -1010,10 +1008,17 @@ init_eeprom(false);
 #if defined(RELAIS_4)
   digitalWrite(RELAIS_4,RELAIS_OFF); 
 #endif
+
 #if defined(NEOPIXEL)
   neopixels.clear();
   neopixels.show();   
 #endif
+
+#if defined(DEBUG_DISPLAY_5110)
+  lcd.begin();
+  lcd.clear();
+#endif
+
 #if defined(DISPLAY_ALL)
 #if defined(DISPLAY_5110)
   lcd.begin();
@@ -1031,7 +1036,6 @@ init_eeprom(false);
   lcd.draw();
   delay(1000);
   lcd.clear();
-#endif
 #if defined(MONITOR)
   monitor(1000);
 #endif
@@ -1041,7 +1045,7 @@ init_eeprom(false);
   draw_therm(THERM_X0, THERM_Y0);
   draw_hb_countdown(8);
 #endif
-  loopcount = 0;
+#endif
 #if defined(STATUSLED)
   digitalWrite(STATUSLED,STATUSLED_OFF); 
 #endif
@@ -1050,6 +1054,7 @@ init_eeprom(false);
   pingTest();
   sendRegister();
 #endif
+  loopcount = 0;
 }
 
 // Start of DISPLAY_ALL Block
@@ -1537,6 +1542,9 @@ void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, 
       Serial.print("TX: ");
       printPayload(&s_payload);
 #endif
+#if defined(DEBUG_STATUSLED_RADIO_TX)
+      digitalWrite(STATUSLED, STATUSLED_ON);
+#endif
       radio.write(&s_payload, sizeof(s_payload));
       delay(1);
       radio.startListening(); 
@@ -1555,11 +1563,12 @@ void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, 
         }
 #endif
         if ( radio.available() ) {
-#if defined(DEBUG_SERIAL_RADIO)
-          Serial.print("RX: ");
-#endif
+//#if defined(DEBUG_SERIAL_RADIO)
+//          Serial.print("RX: ");
+//#endif
           radio.read(&r_payload, sizeof(r_payload));
 #if defined(DEBUG_SERIAL_RADIO)
+          Serial.println();
           printPayload(&r_payload);
           if (r_payload.node_id != RF24NODE) {
             Serial.println("Wrong Node, Message dropped!");
@@ -1599,6 +1608,9 @@ void do_transmit(uint8_t max_tx_loopcount, uint8_t msg_type, uint8_t msg_flags, 
           }
         }  //radio.available
       }
+#if defined(DEBUG_STATUSLED_RADIO_TX)
+      digitalWrite(STATUSLED, STATUSLED_OFF);
+#endif
       tx_loopcount++;
     }
 }
@@ -1674,7 +1686,7 @@ void batt_monitor() {
 #endif
 
 void loop(void) {
-#if defined(ZAEHLERINTERRUPT)
+#if defined(ZAEHLER)
   if (loopcount == 0)
 #endif  
   get_sensordata();
@@ -1766,23 +1778,35 @@ void loop(void) {
     batt_mod4_s = 0;
     batt_mod5_s = 0;
 #endif    
-#if defined(ZAEHLERINTERRUPT)
-    payload_data(&pos,ZAEHLER_CHANNEL,intZaehlerF);
+#if defined(ZAEHLER)
+    payload_data(&pos,ZAEHLER_CHANNEL,zaehlerF);
     uint16_t val;
-    val = intZaehlerUI;
+    val = zaehlerUI;
     payload_data(&pos,ZAEHLER_LO_CHANNEL,val);
-    val = intZaehlerUI >> 16;
+    val = zaehlerUI >> 16;
     payload_data(&pos,ZAEHLER_HI_CHANNEL,val);
 #if defined(DEBUG_SERIAL_SENSOR)
     Serial.print("zaehler: ");
     Serial.print("Rohdaten: ");
-    Serial.print(intZaehlerUI);
+    Serial.print(zaehlerUI);
     Serial.print("aufbereitet: ");
-    Serial.println(intZaehlerF);
+    Serial.println(zaehlerF);
 #endif
+#endif
+#if defined(DEBUG_SERIAL_RADIO)
+    Serial.println("Loop: Start transmit");
+#endif
+#if defined(DEBUG_STATUSLED_RADIO)
+    digitalWrite(STATUSLED, STATUSLED_ON);
 #endif
     do_transmit(eeprom.max_sendcount, payloadNo == 0 ? PAYLOAD_TYPE_HB : PAYLOAD_TYPE_HB_F, mk_flags(true), 0, 0);
     exec_jobs();
+#if defined(DEBUG_STATUSLED_RADIO)
+    digitalWrite(STATUSLED, STATUSLED_OFF);
+#endif
+#if defined(DEBUG_SERIAL_RADIO)
+    Serial.println("Loop: End transmit");
+#endif
     radio.stopListening();
     delay(1);
     radio.powerDown();
@@ -1798,24 +1822,6 @@ void loop(void) {
 #if defined(DISPLAY_ALL)
   display_refresh();
 #endif
-/*
- * Sonderbehandlung für Interruptbasierte Zähler
- */
-#ifdef ZAEHLERINTERRUPT
-    intStatusStack = (intStatusStack << 1) | (digitalRead(INTPIN)? 1:0);
-    if ( (intStatusStack & 0b00000111) == 0b00000111 ) {
-      while (intSumSleepTime < eeprom.sleeptime) {
-        dosleep(9);
-        intSumSleepTime += 8;
-      }
-    } else {
-      dosleep(5);
-      if (loopcount > 0) loopcount--;
-    }
-#else
-/*
- * Behandlung normale Nodes
- */
   long int tempsleeptime = eeprom.sleeptime;  // regelmaessige Schlafzeit in Sek.
   if (low_voltage_flag) tempsleeptime = eeprom.sleeptime_lv;
   tempsleeptime += sleeptime_kor;                 // einmalige Korrektur in Sek.
@@ -1829,20 +1835,36 @@ void loop(void) {
       batt_monitor();
       if ( millis() < mymillis ) mymillis = 0;
     }
-    //delay(tempsleeptime);
   } else {
 #endif
+#ifdef ZAEHLER  // Sonderhehandlung für Zähler
+  while (sumSleepTime < tempsleeptime) {
+    bool pinstate = digitalRead(ZAEHLER_PIN);
+    if ( (statusStack & 0b00001111) == 0b00001111 && (pinstate == LOW) ) {
+      zaehlerUI++;
+      zaehlerF = (float)zaehlerUI / 100;
+    }  
+    statusStack = (statusStack << 1) | (pinstate? 0b00000001:0b00000000);
+    SLEEPTYPE(61);  //sleep 60ms
+    sumSleepTime += 60;
+  }
+  sumSleepTime = 0;
+#else
+/*
+ * Behandlung normale Nodes
+ */
     SLEEPTYPE(tempsleeptime);
 #if defined(DISCHARGE1)
   }
 #endif
-#endif   //ZAEHLERINTERRUPT 
 /*
- * ENDE Sonderbehandlung für Interruptbasierte Zähler
+ * ENDE Trennung: Zählernodes / normale Nodes
  */
+#endif   //ZAEHLER
   loopcount++;
-#ifdef ZAEHLERINTERRUPT
-  intSumSleepTime = 0;
-#endif
   if ( loopcount > eeprom.emptyloops ) loopcount = 0;
+#ifdef DEBUG_SERIAL
+  Serial.print("Loopcount: ");
+  Serial.println(loopcount);
+#endif
 }

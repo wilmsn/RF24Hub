@@ -224,18 +224,19 @@
 //-----------------------------------------------------
 #if defined(GASZAEHLERNODE)
 #define RF24NODE                111
-#define EEPROM_VERSION          9
-#define ZAEHLERINTERRUPT
+#define EEPROM_VERSION          4
+#define SENSOR_BOSCH
+#define SLEEPTIME               60
+#define EMPTYLOOPS              0
+#define LOW_VOLT_LEVEL          2.0
+#define ZAEHLER
 #define ZAEHLER_LO_CHANNEL      11
 #define ZAEHLER_HI_CHANNEL      12
 #define ZAEHLER_CHANNEL         13
 #define ZAEHLER_LO_SET_CHANNEL  51 
 #define ZAEHLER_HI_SET_CHANNEL  52 
-#define SENSOR_BOSCH
-#define SLEEPTIME               60
-#define EMPTYLOOPS              4
-#define LOW_VOLT_LEVEL          2.0
-#define ZAEHLERSTART            285134
+#define ZAEHLER_START           287846
+#define SLEEP4MS_FAC            990
 #endif
 //-----------------------------------------------------
 //    Testnodes
@@ -243,10 +244,12 @@
 #if defined(ZAEHLER_TEST_198)
 #define DEBUG_SERIAL_SENSOR
 #define DEBUG_SERIAL_RADIO
+//#define DEBUG_DISPLAY_5110
+//#define DEBUG_DISPLAY
 #define SLEEPTYPE               delay
 #define RF24NODE                198
 #define EEPROM_VERSION          3
-#define ZAEHLERINTERRUPT
+#define ZAEHLER
 #define ZAEHLER_LO_CHANNEL      11
 #define ZAEHLER_HI_CHANNEL      12
 #define ZAEHLER_CHANNEL         13
@@ -254,7 +257,7 @@
 #define ZAEHLER_HI_SET_CHANNEL  52 
 #define SENSOR_BOSCH
 #define SLEEPTIME               60
-#define EMPTYLOOPS              4
+#define EMPTYLOOPS              1
 #define LOW_VOLT_LEVEL          2.0
 //#define SLEEP4MS_FAC           950
 #endif
@@ -307,7 +310,7 @@
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 //define constrains
-#if defined (ZAEHLERINTERRUPT)
+#if defined (ZAEHLER)
 #ifndef ZAEHLER_CHANNEL
 #define ZAEHLER_CHANNEL        13
 #endif
@@ -323,9 +326,8 @@
 #ifndef ZAEHLER_HI_SET_CHANNEL
 #define ZAEHLER_HI_SET_CHANNEL  52
 #endif 
-
-#ifndef INTPIN
-#define INTPIN                 2
+#ifndef ZAEHLER_PIN
+#define ZAEHLER_PIN             2
 #endif
 #endif
 
@@ -606,7 +608,7 @@
 //
 // Definitions for Nokia 5110 Display
 //
-#if defined(DISPLAY_5110)
+#if defined(DISPLAY_5110) || defined(DEBUG_DISPLAY_5110)
 // DISPLAY Nokia 5110 is 84 * 48 Pixel
 #ifndef N5110_CLK
 #define N5110_CLK         7
