@@ -126,7 +126,6 @@ int process_tn_in( char* inbuffer, int tn_socket, char* tn_address) {
          cmp_show[]="show",
          cmp_sync[]="sync",
          cmp_gateway[]="gateway",
-         cmp_database[]="database",
          cmp_truncate[]="truncate",
          cmp_logfile[]="logfile";
     char *wort1a, *wort2a, *wort3a, *wort4a;
@@ -304,7 +303,6 @@ int process_tn_in( char* inbuffer, int tn_socket, char* tn_address) {
 	gatewayClass.printBuffer(tn_socket, false);
     }
     // set node <node_id> <mastered/unmastered>
-    // syncronisation of all relevant tables of rf24hubd: stores in memory table data to database hard disk tables 
     if ( (strcmp(wort1,cmp_set) == 0) && (strcmp(wort2,cmp_node) == 0) && (strlen(wort3) > 0) && (strlen(wort4) > 0) ) {
         NODE_DATTYPE node_id = strtol(wort3, &pEnd, 10);
 	printf("%u\n", node_id);    
@@ -347,20 +345,16 @@ int process_tn_in( char* inbuffer, int tn_socket, char* tn_address) {
         sensorClass.printBuffer(tn_socket, false);
         gatewayClass.printBuffer(tn_socket, false);
     }
-    if ( (strcmp(wort1,cmp_sync) == 0) && (strcmp(wort2,cmp_node) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
+    // sync
+    if ( (strcmp(wort1,cmp_sync) == 0) && (strlen(wort2) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
         tn_input_ok = true;
+        // syncs all nodes to the system
         nodeClass.cleanup();
         database.initNode(&nodeClass);
-    }
-    if ( (strcmp(wort1,cmp_sync) == 0) && (strcmp(wort2,cmp_sensor) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
-        tn_input_ok = true;
+        // syncs all sensors to the system
         sensorClass.cleanup();
         database.initSensor(&sensorClass);        
-    }
-    // sync database
-    // syncs all relevant database tables
-    if ( (strcmp(wort1,cmp_sync) == 0) && (strcmp(wort2,cmp_database) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
-        tn_input_ok = true;
+        // syncs all relevant database tables
         database.sync_sensordata_d();        
     }
     // truncate logfile
