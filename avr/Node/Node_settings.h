@@ -265,24 +265,25 @@
 #if defined(TESTNODE_240)
 #define RF24NODE                      240
 #define EEPROM_VERSION                7
-#define BATTERY_READ_EXTERNAL         A2
-#define BATTERY_VOLTAGEDIVIDER_R1     220
-#define BATTERY_VOLTAGEDIVIDER_R2     220
+//#define BATTERY_READ_EXTERNAL         A2
+//#define BATTERY_VOLTAGEDIVIDER_R1     220
+//#define BATTERY_VOLTAGEDIVIDER_R2     220
 #define VOLT_LV                       3.3
 #define SLEEPTIME                     60
 #define EMPTYLOOPS                    4
-#define SENSOR_18B20                  8
+//#define SENSOR_18B20                  8
 #define SENSOR_BOSCH
-#define TEMP_BOSCH_CHANNEL            4
-#define PRES_BOSCH_CHANNEL            5
-#define HUMI_BOSCH_CHANNEL            6
+//#define TEMP_BOSCH_CHANNEL            4
+//#define PRES_BOSCH_CHANNEL            5
+//#define HUMI_BOSCH_CHANNEL            6
 //#define SENSOR_AHT20
 //#define TEMP_AHT20_CHANNEL            2
 //#define HUMI_AHT20_CHANNEL            3
-#define SENSOR_HTU2X
-#define TEMP_HTU2X_CHANNEL            7
-#define HUMI_HTU2X_CHANNEL            8
-#define STATUSLED                     7
+//#define SENSOR_HTU2X
+//#define TEMP_HTU2X_CHANNEL            7
+//#define HUMI_HTU2X_CHANNEL            8
+#define DISPLAY_5110
+//#define STATUSLED                     7
 #endif
 
 //-----------------------------------------------------

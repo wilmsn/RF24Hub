@@ -43,11 +43,13 @@
 // Node 110
 //#define ANKLEIDEZIMMERTHERMOMETER    
 // Node 111
-#define GASZAEHLERNODE
+//#define GASZAEHLERNODE
 //----Testnodes-----
 //#define TESTNODE
 // Node 198
 //#define ZAEHLER_TEST_198
+// Node 240
+#define TESTNODE_240
 // ------ End of configuration part ------------
 //****************************************************
 // Default settings and settings for the individual nodes are in "Node_settings.h"
@@ -1846,7 +1848,7 @@ void loop(void) {
     bool pinstate = digitalRead(ZAEHLER_PIN);
     if ( (statusStack & 0b00001111) == 0b00001111 && (pinstate == LOW) ) {
       zaehlerUI++;
-      zaehlerF = (float)zaehlerUI / 100;
+      zaehlerF = (float)zaehlerUI / 100.0;
     }  
     statusStack = (statusStack << 1) | (pinstate? 0b00000001:0b00000000);
     SLEEPTYPE(61);  //sleep 60ms
@@ -1857,7 +1859,7 @@ void loop(void) {
 /*
  * Behandlung normale Nodes
  */
-    SLEEPTYPE(tempsleeptime);
+    SLEEPTYPE(tempsleeptime_ms);
 #if defined(DISCHARGE1)
   }
 #endif
