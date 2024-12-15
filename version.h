@@ -1,2 +1,2 @@
-#define SWVERSION   3006
-#define SWVERSION_STR   "3.0.06"
+#define SWVERSION   3007
+#define SWVERSION_STR   "3.0.07"

@@ -210,8 +210,6 @@ int process_tn_in( char* inbuffer, int tn_socket, char* tn_address) {
                 default:
                     sensor_ok = false;
             }
-        } else {
-            sensor_ok = false;
         }
     }
     // push <node> <channel> <value>
@@ -220,57 +218,57 @@ int process_tn_in( char* inbuffer, int tn_socket, char* tn_address) {
         NODE_DATTYPE node_id = strtol(wort2, &pEnd, 10);
         uint8_t channel = strtol(wort3, &pEnd, 10);
         if ( nodeClass.isValidNode(node_id) ) {
-	    orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue(channel, wort4) );
-	    tn_input_ok = true;
+            orderbuffer.addOrderBuffer(mymillis(), node_id, channel, calcTransportValue(channel, wort4) );
+            tn_input_ok = true;
         }
     }
     // set verbose <new verboseLevel>
     // sets the new verboseLevel
     if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_verbose) == 0) && (strlen(wort3) > 0) && (strlen(wort4) == 0) ) {
-	tn_input_ok = true;
-	verboseLevel = decodeVerbose(verboseLevel, wort3);
-	nodeClass.setVerbose(verboseLevel);
-	sensorClass.setVerbose(verboseLevel);
-	order.setVerbose(verboseLevel);
-	orderbuffer.setVerbose(verboseLevel);
-	database.setVerbose(verboseLevel);
+        tn_input_ok = true;
+        verboseLevel = decodeVerbose(verboseLevel, wort3);
+        nodeClass.setVerbose(verboseLevel);
+        sensorClass.setVerbose(verboseLevel);
+        order.setVerbose(verboseLevel);
+        orderbuffer.setVerbose(verboseLevel);
+        database.setVerbose(verboseLevel);
     }
     // show order
     // lists the current orderbuffer
     if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_order) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
-	tn_input_ok = true;
+        tn_input_ok = true;
         orderbuffer.printBuffer(tn_socket, false);
         order.printBuffer(tn_socket, false);
     }
     // show sensor
     // lists the current node- and sensorbuffer
     if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_sensor) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
-	tn_input_ok = true;
+        tn_input_ok = true;
         sensorClass.printBuffer(tn_socket, false);
     }
     // show sensor
     // lists the current node- and sensorbuffer
     if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_node) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
-	tn_input_ok = true;
+        tn_input_ok = true;
         nodeClass.printBuffer(tn_socket, false);
     }
     // show gateway
     // lists the current gateway status
     if (( strcmp(wort1,cmp_show) == 0 ) && (strcmp(wort2,cmp_gateway) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
-	tn_input_ok = true;
+        tn_input_ok = true;
         gatewayClass.printBuffer(tn_socket, false);
     }
     // add gateway
     // adds a gateway in status active to database and system
     if (( strcmp(wort1,cmp_add) == 0 ) && (strcmp(wort2,cmp_gateway) == 0) && (strlen(wort3) > 0) && (strlen(wort4) > 0) ) {
         if ( wort3[0] >= 'A' && wort3[0] <= 'z' ) {
-	    uint16_t gw_id = strtol(wort4, &pEnd, 10);
-	    if ( gw_id > 0 ) {
-		tn_input_ok = true;
-		database.addGateway(wort3, gw_id);
-		gatewayClass.addGateway(wort3, gw_id, true);
-		gatewayClass.printBuffer(tn_socket, false);
-	    }
+            uint16_t gw_id = strtol(wort4, &pEnd, 10);
+            if ( gw_id > 0 ) {
+                tn_input_ok = true;
+                database.addGateway(wort3, gw_id);
+                gatewayClass.addGateway(wort3, gw_id, true);
+                gatewayClass.printBuffer(tn_socket, false);
+            }
         }
     }
     // delete gateway
@@ -278,34 +276,33 @@ int process_tn_in( char* inbuffer, int tn_socket, char* tn_address) {
     if (( strcmp(wort1,cmp_delete) == 0 ) && (strcmp(wort2,cmp_gateway) == 0) && (strlen(wort3) > 0) && (strlen(wort4) == 0) ) {
         uint16_t gw_id = strtol(wort3, &pEnd, 10);
         if ( gw_id > 0 ) {
-	    tn_input_ok = true;
-	    database.delGateway(gw_id);
-	    gatewayClass.delGateway(gw_id);
-	    gatewayClass.printBuffer(tn_socket, false);
+            tn_input_ok = true;
+            database.delGateway(gw_id);
+            gatewayClass.delGateway(gw_id);
+            gatewayClass.printBuffer(tn_socket, false);
         }
     }
     // set gateway <GW_NO> on
     // lists the current node- and sensorbuffer
     if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_gateway) == 0) && (strlen(wort3) > 0) && (strcmp(wort4,cmp_on) == 0) ) {
-	tn_input_ok = true;
-	uint16_t gw_id = (uint16_t)strtoul(wort3, &pEnd, 10);
-	database.enableGateway(gw_id);
-	gatewayClass.setGateway(gw_id, true);
-	gatewayClass.printBuffer(tn_socket, false);
+        tn_input_ok = true;
+        uint16_t gw_id = (uint16_t)strtoul(wort3, &pEnd, 10);
+        database.enableGateway(gw_id);
+        gatewayClass.setGateway(gw_id, true);
+        gatewayClass.printBuffer(tn_socket, false);
     }
     // set gateway <GW_NO> off
     // lists the current node- and sensorbuffer
     if (( strcmp(wort1,cmp_set) == 0 ) && (strcmp(wort2,cmp_gateway) == 0) && (strlen(wort3) > 0) && (strcmp(wort4,cmp_off) == 0) ) {
-	tn_input_ok = true;
-	uint16_t gw_id = (uint16_t)strtoul(wort3, &pEnd, 10);
-	database.disableGateway(gw_id);
-	gatewayClass.setGateway(gw_id, false);
-	gatewayClass.printBuffer(tn_socket, false);
+        tn_input_ok = true;
+        uint16_t gw_id = (uint16_t)strtoul(wort3, &pEnd, 10);
+        database.disableGateway(gw_id);
+        gatewayClass.setGateway(gw_id, false);
+        gatewayClass.printBuffer(tn_socket, false);
     }
     // set node <node_id> <mastered/unmastered>
     if ( (strcmp(wort1,cmp_set) == 0) && (strcmp(wort2,cmp_node) == 0) && (strlen(wort3) > 0) && (strlen(wort4) > 0) ) {
         NODE_DATTYPE node_id = strtol(wort3, &pEnd, 10);
-	printf("%u\n", node_id);    
         if (node_id > 0) {
             if (strcmp(wort4,cmp_mastered) == 0) {
                 tn_input_ok = true;
@@ -360,8 +357,8 @@ int process_tn_in( char* inbuffer, int tn_socket, char* tn_address) {
     // truncate logfile
     // truncation of the logfile for maintenance
     if ( (strcmp(wort1,cmp_truncate) == 0) && (strcmp(wort2,cmp_logfile) == 0) && (strlen(wort3) == 0) && (strlen(wort4) == 0) ) {
-       if( truncate (cfg.hubLogFileName.c_str(), 0))
-            printf(message, "Logfile: %s geleert", cfg.hubLogFileName.c_str());
+        if( truncate (cfg.hubLogFileName.c_str(), 0))
+        printf(message, "Logfile: %s geleert", cfg.hubLogFileName.c_str());
         tn_input_ok = true;
     }
     if ( ! tn_input_ok) {
@@ -717,7 +714,7 @@ int main(int argc, char* argv[]) {
         UdpMsgLen = recvfrom ( udp_sockfd_in, &udpdata, sizeof(udpdata), 0, (struct sockaddr *) &udp_address_in, &udp_addrlen );
         if (UdpMsgLen > 0) {
             memcpy(&payload, &udpdata.payload, sizeof(payload) );
-            if ( gatewayClass.isGateway(udpdata.gw_no) && nodeClass.isValidNode(payload.node_id) ) {
+            if ( gatewayClass.isGateway(udpdata.gw_no) && nodeClass.isValidNode(payload.node_id) && (udpdata.utime + 30) > time(0)) {
                 if ( verboseLevel & VERBOSERF24 ) {
                     printf ("%sUDP Message from: %s \n",ts(tsbuf), inet_ntoa(udp_address_in.sin_addr));
                     sprintf(buf1,"G:%u>H", udpdata.gw_no);

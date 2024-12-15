@@ -9,6 +9,8 @@
  * Zusätzlich sind hier die Payload Struktur und diee Udpdata Struktur definiert.
  */
 
+#include <time.h>
+
 /** @defgroup rf24makros RF24 Makros
  *  @addtogroup rf24makros
  *  @brief Definition der RF24 Netzwerk Einstellungen
@@ -289,6 +291,8 @@ typedef struct {
   uint16_t      gw_no;         // the number of the sending gateway
 /// Die Payloadstruktur wie unter payload_t definiert.
   payload_t     payload;      // the payload to send forward
+/// Der Unix Timestamp
+  time_t        utime;
 } udpdata_t;
 
 #endif

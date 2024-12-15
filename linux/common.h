@@ -22,7 +22,6 @@
 #include <stdint.h>
 #include <cstring>
 #include <ctype.h> 
-#include <time.h>
 #include <sys/time.h>
 #include <stdlib.h>
 #include <stdbool.h>
