@@ -717,7 +717,7 @@ int main(int argc, char* argv[]) {
             if ( gatewayClass.isGateway(udpdata.gw_no) && nodeClass.isValidNode(payload.node_id) && (udpdata.utime + 30) > time(0)) {
                 if ( verboseLevel & VERBOSERF24 ) {
                     printf ("%sUDP Message from: %s \n",ts(tsbuf), inet_ntoa(udp_address_in.sin_addr));
-                    sprintf(buf1,"G:%u>H", udpdata.gw_no);
+                    sprintf(buf1,"[%lu][%lu]G:%u>H", time(0), udpdata.utime, udpdata.gw_no);
                     printPayload(ts(tsbuf), buf1, &payload);
                 }
                 if (nodeClass.setLVFlag(payload.node_id, payload.msg_flags & PAYLOAD_FLAG_LOWVOLTAGE )) {
