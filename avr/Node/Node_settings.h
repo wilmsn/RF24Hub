@@ -65,12 +65,13 @@
 //-----------------------------------------------------
 #if defined(SOLARNODE2)
 #define RF24NODE               203
-#define VOLT_LV                2.2
+#define VOLT_LV                2.4
 #define SLEEPTIME_LV           300
 #define EEPROM_VERSION         7
 #define STATUSLED              A2
 #define SLEEPTIME              30
 #define EMPTYLOOPS             9
+#define SENSOR_BOSCH
 // Mist die Spannung an der Referenzzelle die NUR mit einem Widerstand abgeschlossen ist
 #define SOLARZELLE1            A0
 // Mist die Spannung an der Versorgungssolarzelle vor dem Step-Up Wandler
@@ -132,7 +133,7 @@
 #define RF24NODE             103
 #define SENSOR_18B20         8
 #define DISPLAY_5110
-#define EEPROM_VERSION       7
+#define EEPROM_VERSION       8
 #define EMPTYLOOPS           9
 #define SLEEPTIME            120
 #define SLEEPTIME_LV         1440
@@ -141,6 +142,7 @@
 #define SLEEP4MS_FAC         990
 #define STATUSLED_ON         LOW
 #define STATUSLED_OFF        HIGH
+#define REG_CONTRAST         70
 #endif
 
 //-----------------------------------------------------
@@ -406,11 +408,11 @@
 #ifdef SENSOR_18B20
 // Resolution for DS18B20 sensor
 #ifndef SENSOR_18B20_RESOLUTION
-#define SENSOR_18B20_RESOLUTION 9
+#define SENSOR_18B20_RESOLUTION 11
 #endif
 // Delaytime for 18B20 measurement
 #ifndef SENSOR_18B20_DELAYTIME
-#define SENSOR_18B20_DELAYTIME  100
+#define SENSOR_18B20_DELAYTIME  400
 #endif
 // Channel for temperature
 #ifndef TEMP_18B20_CHANNEL
