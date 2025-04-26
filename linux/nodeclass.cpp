@@ -81,6 +81,13 @@ char* NodeClass::getNodeName(NODE_DATTYPE node_id) {
     return retval;
 }
 
+/**************************************
+ * Ein Hartbeat ist neu wenn:
+ * 1) Seine Nummer grösser ist als sein Vorgänger
+ * 2) Ab Nummer 200 startet die Nummer wieder bei 1
+ *    => Ist eine Nummer > 190 ist eine Nummer < 10 NEU
+ * 3) Zusätzlich muss der Zeitstempel neuer sein
+ * ************************************/
 bool NodeClass::isNewHB(NODE_DATTYPE node_id, uint8_t hb_no, uint32_t hb_utime) {
     nodeClass_t *p_search;
     bool retval = false;
@@ -92,10 +99,7 @@ bool NodeClass::isNewHB(NODE_DATTYPE node_id, uint8_t hb_no, uint32_t hb_utime) 
             if (p_search->node_id == node_id) {
                 if (_verboseLevel & VERBOSEORDER)
                     printf("%sNodeClass.is_new_HB: Node:%u last HB %u (%u) this HB %u => ", ts(tsbuf), node_id, p_search->hb_no, p_search->hb_utime, hb_no );
-                if ( hb_utime > p_search->hb_utime + 50 || 
-                     hb_no > p_search->hb_no || 
-                     (p_search->hb_no - hb_no > 50) || 
-                     (p_search->hb_no > 200 && p_search->hb_no != hb_no) ) {
+                if ( (hb_no > p_search->hb_no || ((p_search->hb_no > 190) && (hb_no < 10))) && p_search->hb_utime < hb_utime ) {
                     retval = true;
                     p_search->hb_no = hb_no;
                     p_search->hb_utime = hb_utime;
