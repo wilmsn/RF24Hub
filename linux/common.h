@@ -138,11 +138,12 @@ uint16_t decodeVerbose(uint16_t verboseLevel, char* verboseSet);
 
 /**
  * Verschickt eine UDP Nachricht
+ * @param verboseLevel Der aktuelle Verboselevel
  * @param host Der Empfängerhost
  * @param port Der UDP Port auf dem Empfängerhost
  * @param udpdata Die zu übertragenen Daten als Datentyp udpdata_t
  */
-void sendUdpMessage(const char* host, const char* port, udpdata_t * udpdata );
+void sendUdpMessage(uint16_t verboseLevel, const char* host, const char* port, udpdata_t * udpdata );
 
 /**
  * Öffnet ein Socket auf dem localen Host

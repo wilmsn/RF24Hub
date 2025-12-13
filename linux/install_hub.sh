@@ -1,7 +1,7 @@
 #!/bin/sh
 #######################################
 #
-# Installskript for sensorhub deamon
+# Installskript for rf24hub deamon
 #
 #######################################
 ID=`id | cut -d "=" -f 2 | cut -d "(" -f 1`

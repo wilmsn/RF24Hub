@@ -183,11 +183,6 @@
 /// Ursprung: Node; Empfänger: Hub
 #define PAYLOAD_TYPE_INIT           1
 
-/// Nachricht ist ein Messwert aus einem ESPNode
-/// Ursprung: ESPNode; Empfänger: Hub
-/// Diese Nachricht wird nicht vom Hub beantwortet
-#define PAYLOAD_TYPE_ESP            41
-
 /// Nachricht ist ein initialer Heatbeat
 /// Ursprung: Node; Empfänger: Hub
 #define PAYLOAD_TYPE_HB             51

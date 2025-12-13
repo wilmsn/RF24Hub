@@ -341,7 +341,7 @@ int main(int argc, char* argv[]) {
 
     printf("Checking Network ..");
     memset(&udpdata, 0x00, sizeof(udpdata));
-    sendUdpMessage(cfg.gwHubHostName.c_str(), cfg.hubUdpPortNo.c_str(), &udpdata); 
+    sendUdpMessage(verboseLevel, cfg.gwHubHostName.c_str(), cfg.hubUdpPortNo.c_str(), &udpdata);
     printf(".OK\n");
     
     // run as daemon if started with -d
@@ -461,7 +461,7 @@ int main(int argc, char* argv[]) {
         udpdata.gw_no = std::stoi(cfg.gwNo);
         memcpy(&udpdata.payload, &payload, sizeof(payload) );
         if ( verboseLevel & VERBOSERF24) printPayload(ts(tsbuf), "N>G", &udpdata.payload);
-        sendUdpMessage(cfg.gwHubHostName.c_str(), cfg.hubUdpPortNo.c_str(), &udpdata); 
+        sendUdpMessage(verboseLevel, cfg.gwHubHostName.c_str(), cfg.hubUdpPortNo.c_str(), &udpdata);
         busyIndicator = 0;
     } // radio.available
 //

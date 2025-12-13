@@ -39,7 +39,7 @@ class Database {
 private:
 
     struct sqlStore_t {
-        uint64_t            entrytime;
+        uint32_t            entryno;
         char*               sqlstmt;
         sqlStore_t*         p_next;
     };
@@ -61,8 +61,8 @@ private:
     void debugPrintSQL(char* sqlstmt);
     void db_check_error(MYSQL* mydb);
     
+    uint32_t getSQLmaxNo();
 
-    
 public:
 
 /**
@@ -74,12 +74,12 @@ public:
 
     bool testDB();
     
+    void delSQL(uint32_t entryno);
+
+    char* getSQL(uint32_t* entryno);
+
     void storeSQL(char* sqlstmt);
    
-    char* getSQL(uint64_t* timestamp);
-   
-    void delSQL(uint64_t timestamp);
-
     void exec_sql(char* stmt);
 
 /**
@@ -155,16 +155,6 @@ public:
  */
     void initSystem(void);
 
-/**
- * Refreshes the table sensordata_d from scratch
- */
-    void rebuild_sensordata_d(void);
-    
-/**
- * Refreshes the table sensordata_d 
- */
-    void sync_sensordata_d(void);
-    
 /**
  * Gets the begin of this day as unix time
  */    

@@ -10,6 +10,9 @@ clean:
 rf24hubd:
 	cd linux; make rf24hubd
 
+install:
+	cd linux; make install_hub
+
 html_doc:
 	cd doc; make doc
 

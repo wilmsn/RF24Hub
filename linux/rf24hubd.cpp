@@ -352,7 +352,7 @@ int process_tn_in( char* inbuffer, int tn_socket, char* tn_address) {
         sensorClass.cleanup();
         database.initSensor(&sensorClass);        
         // syncs all relevant database tables
-        database.sync_sensordata_d();        
+//        database.sync_sensordata_d();
     }
     // truncate logfile
     // truncation of the logfile for maintenance
@@ -540,7 +540,6 @@ int main(int argc, char* argv[]) {
     int msgID;
     TnMsg_t LogMsg;
     ssize_t UdpMsgLen;
-    unsigned long lastDBsync = 0;
 
     tcp_addrlen = sizeof(tcp_address_in);
     udp_addrlen = sizeof(udp_address_in);
@@ -636,22 +635,16 @@ int main(int argc, char* argv[]) {
 
     // Main Loop
     while(1) {
-        // DB_SYNC:
-        // sync sensordata to sensordata_d every day
-        if ( time(NULL) - lastDBsync > DBSYNCINTERVAL ) {
-           database.sync_sensordata_d();   
-           lastDBsync = database.getBeginOfDay();
-        }
         // DB_TREAD
         // Processing of stored SQL statements
         pthread_t db_thread;
-        uint64_t myts;
+        uint32_t myno;
         if ( database.testDB() ) {
-            char* mysql = database.getSQL(&myts);
-            if ( myts > 0 ) {
+            char* mysql = database.getSQL(&myno);
+            if ( myno > 0 ) {
                 char* sqlstmt = (char*)malloc(strlen(mysql)+1);
                 sprintf(sqlstmt,"%s",mysql);
-                database.delSQL(myts);
+                database.delSQL(myno);
                 struct db_data_t *db_data;
                 db_data = (struct db_data_t *)malloc(sizeof(struct db_data_t));
                 db_data->sql = sqlstmt;
@@ -730,15 +723,7 @@ int main(int argc, char* argv[]) {
                 }
                 switch ( payload.msg_type ) {
                     case PAYLOAD_TYPE_INIT: { // Init message from a node!!
-                        if ( nodeClass.isNewHB(payload.node_id, payload.heartbeatno, time(0)) ) {
-                            process_payload(&payload);
-                        } else {
-                        // nothing to do here !!!   
-                        }
-                    }
-                    break;
-                    case PAYLOAD_TYPE_ESP: { // Message from ESP Node - will not be answered
-                        process_payload(&payload);                    
+                        process_payload(&payload);
                     }
                     break;
                     case PAYLOAD_TYPE_HB: { // Initial heartbeat message!!
@@ -839,8 +824,12 @@ int main(int argc, char* argv[]) {
                 }
             } else { // isGateway && isValidNode
                 if ( verboseLevel & VERBOSERF24 ) {
-                    printf ("%sUDP Message from: %s for Node %u dropped\n",ts(tsbuf), inet_ntoa(udp_address_in.sin_addr),
-                        udpdata.payload.node_id);
+                    if ( ! gatewayClass.isGateway(udpdata.gw_no) ) {
+                        printf ("%sUDP Message from: %s for Node %u from GW %u dropped reason: invalid gateway\n",ts(tsbuf), inet_ntoa(udp_address_in.sin_addr), udpdata.payload.node_id, udpdata.gw_no);
+                    }
+                    if ( ! nodeClass.isValidNode(payload.node_id) ) {
+                        printf ("%sUDP Message from: %s for Node %u from GW %u dropped reason: invalid node\n",ts(tsbuf), inet_ntoa(udp_address_in.sin_addr), udpdata.payload.node_id, udpdata.gw_no);
+                    }
                 }
             }
         } // UDP Message > 0
@@ -859,7 +848,7 @@ int main(int argc, char* argv[]) {
                     }
                     udpdata.gw_no=0;
                     memcpy(&udpdata.payload, &payload, sizeof(payload) );
-                    sendUdpMessage(gw_name, cfg.gwUdpPortNo.c_str(), &udpdata);
+                    sendUdpMessage(verboseLevel, gw_name, cfg.gwUdpPortNo.c_str(), &udpdata);
                     p_rec = gatewayClass.getGateway(p_rec, gw_name, &gw_no);
                 }
             }

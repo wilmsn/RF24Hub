@@ -87,7 +87,7 @@ void GatewayClass::addGateway(char* gw_hostname, uint16_t gw_no, bool isActive) 
     p_new->last_contact = 0;
     sprintf(p_new->gw_hostname,"%s",gw_hostname);
     p_new->isActive = isActive;
-    if (verboseLevel & VERBOSESENSOR) printf("%sGateway.addGateway: Name:%s No:%u %s\n",ts(tsbuf), gw_hostname, gw_no, isActive? "aktiv":"nicht aktiv");
+    if (verboseLevel & VERBOSETELNET) printf("%sGateway.addGateway: Name:%s No:%u %s\n",ts(tsbuf), gw_hostname, gw_no, isActive? "aktiv":"nicht aktiv");
     newEntry(p_new);
 }
 
@@ -146,9 +146,9 @@ bool GatewayClass::isGateway(uint16_t gw_no) {
     while (p_search) {
         if (p_search->gw_no == gw_no) {
             p_search->last_contact = time(NULL);
-            if (verboseLevel & VERBOSEORDER) 
+            if (verboseLevel & VERBOSETELNET)
                 printf("%sGateway.isGW: GW.Name:%s %s\n", ts(tsbuf), p_search->gw_hostname, p_search->isActive? "aktiv":"nicht aktiv");
-            if (p_search->isActive) retval = true;
+            retval = p_search->isActive;
             p_search = NULL;
         } else {
             p_search = p_search->p_next;

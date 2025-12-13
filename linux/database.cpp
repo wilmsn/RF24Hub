@@ -19,13 +19,26 @@ void Database::set_var(const char* _db_hostname, const char* _db_username, const
     verboseLevel = 0;
 }
 
+uint32_t Database::getSQLmaxNo() {
+    uint32_t retval = 0;
+    sqlStore_t *p_search;
+    if (p_initial) {
+        p_search = p_initial;
+        while (p_search->p_next) {
+            if (p_search->entryno > retval) retval = p_search->entryno;
+            p_search = p_search->p_next;
+        }
+    }
+    return retval;
+}
+
 void Database::storeSQL(char* sqlstmt) {
     sqlStore_t *p_search;
     sqlStore_t *p_new = new sqlStore_t;
     char* mysql = (char*)malloc(strlen(sqlstmt)+1);
     sprintf(mysql,"%s",sqlstmt);
     p_new->sqlstmt = mysql;
-    p_new->entrytime = mymillis();
+    p_new->entryno = getSQLmaxNo() +1;
     p_new->p_next = NULL;
     if (p_initial) {
         p_search = p_initial;
@@ -38,37 +51,37 @@ void Database::storeSQL(char* sqlstmt) {
     }
 }
 
-char* Database::getSQL(uint64_t* timestamp) {
+char* Database::getSQL(uint32_t* entryno) {
     char* retval = NULL;
     if (p_initial) {
 	retval = p_initial->sqlstmt;
-	(*timestamp) = p_initial->entrytime;
+	(*entryno) = p_initial->entryno;
     } else {
-	(*timestamp) = 0;
+	(*entryno) = 0;
     }
     return retval;
 }
 
-void Database::delSQL(uint64_t timestamp) {
+void Database::delSQL(uint32_t entryno) {
     sqlStore_t *p_search, *p_tmp;
-    p_search = p_initial;    
+    p_search = p_initial;
     p_tmp = p_initial;
     while (p_search) {
-        if (p_search->entrytime == timestamp ) {
+        if (p_search->entryno == entryno ) {
             if (p_search == p_initial) {
-                if (p_initial->p_next) { 
+                if (p_initial->p_next) {
                     p_tmp=p_initial->p_next;
-		    free(p_initial->sqlstmt);
-		    delete p_initial;
+                    free(p_initial->sqlstmt);
+                    delete p_initial;
                     p_initial=p_tmp;
                 } else {
-		    free(p_initial->sqlstmt);
+                    free(p_initial->sqlstmt);
                     delete p_initial;
                     p_initial = NULL;
                 }
             } else            {
                 p_tmp->p_next=p_search->p_next;
-		free(p_search->sqlstmt);
+                free(p_search->sqlstmt);
                 delete p_search;
             }
             p_search = NULL;
@@ -92,34 +105,6 @@ void Database::setLVVolt(NODE_DATTYPE node_id, float lv_volt) {
 
 void Database::setLVFlag(NODE_DATTYPE node_id, bool lv_flag) {
     sprintf (sql_stmt, "update node set lv_flag = '%s' where node_id = %u", lv_flag? "y":"n", node_id);
-    do_sql(sql_stmt);
-}
-
-void Database::sync_sensordata_d(void) {
-    sprintf (sql_stmt, "%s", "create table sensordata_max engine = MEMORY as select UNIX_TIMESTAMP(FROM_UNIXTIME(max(utime),'%Y%m%d')) max_ts from sensordata_d");
-    do_sql(sql_stmt);
-    sprintf (sql_stmt, "%s", "delete from sensordata_d where utime > (select max_ts from sensordata_max)" );
-    do_sql(sql_stmt);
-    sprintf (sql_stmt, "%s", "insert into sensordata_d(sensor_id, value, utime) select sensor_id as s_id, min(value) as min_val, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))+21600 as ts from sensordata where utime > (select max_ts from sensordata_max) group by sensor_id, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))" );
-    do_sql(sql_stmt);
-    sprintf (sql_stmt, "%s", "insert into sensordata_d(sensor_id, value, utime) select sensor_id as s_id, max(value) as max_val, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))+64800 as ts from sensordata where utime > (select max_ts from sensordata_max) group by sensor_id, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))" );
-    do_sql(sql_stmt);
-    sprintf (sql_stmt, "%s", "drop table sensordata_max" );
-    do_sql(sql_stmt);
-    sprintf (sql_stmt, "%s", "update sensor_im as a inner join ( select sensor_id, count(*) as records from sensordata group by sensor_id) as c on a.sensor_id = c.sensor_id set a.records = c.records" );
-    storeSQL(sql_stmt);
-}
-
-void Database::rebuild_sensordata_d(void) {
-    sprintf (sql_stmt, "truncate table sensordata_d");
-    do_sql(sql_stmt);
-    sprintf (sql_stmt, "%s", "insert into sensordata_d(sensor_id, value, utime) select sensor_id, min(value) as min_val, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))+21600 from sensordata group by sensor_id, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))" );
-    do_sql(sql_stmt);
-    sprintf (sql_stmt, "%s", "insert into sensordata_d(sensor_id, value, utime) select sensor_id, max(value) as max_val, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))+64800 from sensordata group by sensor_id, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d'))" );
-    do_sql(sql_stmt);
-    sprintf (sql_stmt, "%s", "delete from sensordata_sum" );
-    do_sql(sql_stmt);
-    sprintf (sql_stmt, "%s", "insert into sensordata_sum (sensor_id, records) select sensor_id, count(*) from sensordata group by sensor_id" );
     do_sql(sql_stmt);
 }
 

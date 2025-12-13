@@ -181,7 +181,7 @@ uint16_t decodeVerbose(uint16_t verboseLevel, char* verboseSet) {
     }
     if (strcmp(verboseSet,cmp_rmVBpnt) == 0) {
         retval = verboseLevel ^ VERBOSEPOINTER;
-    }    
+    }
     return retval;
 }
 
@@ -208,7 +208,7 @@ void free_str(uint16_t verboseLevel, const char* msgTxt, char* str, char* timest
     }    
 }
 
-void sendUdpMessage(const char* host, const char* port, udpdata_t * udpdata ) {
+void sendUdpMessage(uint16_t verboseLevel, const char* host, const char* port, udpdata_t * udpdata ) {
 	int sockfd;
 	struct addrinfo hints, *servinfo, *p;
 	int rv;
@@ -220,27 +220,38 @@ void sendUdpMessage(const char* host, const char* port, udpdata_t * udpdata ) {
 
 	rv = getaddrinfo(host, port, &hints, &servinfo);
 	if ( rv != 0 ) {
-	fprintf(stderr, "Host: %s Port: %p \n", host, port);
-		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
-//		exit(1);
+        if ( verboseLevel & VERBOSETELNET ) {
+            printf("ERROR sendUDPMessage: Host: %s Port: %s getaddrinfo: %s\n", host, port, gai_strerror(rv));
+        }
+       //		exit(1);
 	} else {
 		// loop through all the results and make a socket
 		for(p = servinfo; p != NULL; p = p->ai_next) {
 			sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
 			if ( sockfd == -1 ) {
-				perror("Error: socket");
+                if ( verboseLevel & VERBOSETELNET ) {
+                    printf("Error: sendUdpMessage open socket");
+                }
 				continue;
 			}
 			break;
 		}
 		if (p == NULL) {
-			fprintf(stderr, "Error: failed to bind socket\n");
+            if ( verboseLevel & VERBOSETELNET ) {
+                printf("Error: sendUdpMessage failed to bind socket\n");
+            }
 			//exit(1);
 		} else {
 			if ((numbytes = sendto(sockfd, udpdata, sizeof(udpdata_t), 0, p->ai_addr, p->ai_addrlen)) == -1) {
-				perror("Error: sendto error");
-				//exit(1);
-			}
+                if ( verboseLevel & VERBOSETELNET ) {
+                    printf("Error: sendUdpMessage sendto error");
+                }
+                //exit(1);
+			} else {
+                if ( verboseLevel & VERBOSETELNET ) {
+                    printf("sendUDPMessage: Send Message to %s %s Bytes: %i \n",host, port, numbytes);
+                }
+            }
 		}
 		if ( sockfd != -1 ) close(sockfd);
         }
